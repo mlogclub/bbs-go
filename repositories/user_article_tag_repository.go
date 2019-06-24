@@ -1,10 +1,9 @@
-
 package repositories
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
 )
 
 type UserArticleTagRepository struct {
@@ -37,7 +36,7 @@ func (this *UserArticleTagRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd
 
 func (this *UserArticleTagRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.UserArticleTag, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
-    queries.StartCount(db).Model(&model.UserArticleTag{}).Count(&queries.Paging.Total)
+	queries.StartCount(db).Model(&model.UserArticleTag{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
@@ -65,4 +64,3 @@ func (this *UserArticleTagRepository) UpdateColumn(db *gorm.DB, id int64, name s
 func (this *UserArticleTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.UserArticleTag{}).Delete("id", id)
 }
-

@@ -18,5 +18,4 @@
 
 ## 注意事项
 
-- 后台管理项目使用vue+elementui编写，采用前后端分离方案，后台工程在`web/admin`请自行编辑。
-- 后台是使用sso登录的，sso登录服务是单独部署的，sso服务也是使用golang开发的，项目主页为：https://github.com/mlogclub/user-center
+- 后台管理项目使用vue+element-ui编写，采用前后端分离方案，后台工程在`web/admin`请自行编辑。

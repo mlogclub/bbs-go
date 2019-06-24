@@ -1,10 +1,9 @@
-
 package repositories
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
 )
 
 type MessageRepository struct {
@@ -37,7 +36,7 @@ func (this *MessageRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list
 
 func (this *MessageRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
-    queries.StartCount(db).Model(&model.Message{}).Count(&queries.Paging.Total)
+	queries.StartCount(db).Model(&model.Message{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
@@ -65,4 +64,3 @@ func (this *MessageRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (this *MessageRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Message{}).Delete("id", id)
 }
-

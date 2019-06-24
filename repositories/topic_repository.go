@@ -1,10 +1,9 @@
-
 package repositories
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
 )
 
 type TopicRepository struct {
@@ -37,7 +36,7 @@ func (this *TopicRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list [
 
 func (this *TopicRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
-    queries.StartCount(db).Model(&model.Topic{}).Count(&queries.Paging.Total)
+	queries.StartCount(db).Model(&model.Topic{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
@@ -65,4 +64,3 @@ func (this *TopicRepository) UpdateColumn(db *gorm.DB, id int64, name string, va
 func (this *TopicRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Topic{}).Delete("id", id)
 }
-

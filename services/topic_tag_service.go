@@ -1,4 +1,3 @@
-
 package services
 
 import (
@@ -12,9 +11,9 @@ type TopicTagService struct {
 }
 
 func NewTopicTagService() *TopicTagService {
-	return &TopicTagService {
-        TopicTagRepository: repositories.NewTopicTagRepository(),
-    }
+	return &TopicTagService{
+		TopicTagRepository: repositories.NewTopicTagRepository(),
+	}
 }
 
 func (this *TopicTagService) Get(id int64) *model.TopicTag {
@@ -52,4 +51,3 @@ func (this *TopicTagService) UpdateColumn(id int64, name string, value interface
 func (this *TopicTagService) Delete(id int64) {
 	this.TopicTagRepository.Delete(simple.GetDB(), id)
 }
-

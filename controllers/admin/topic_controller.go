@@ -1,17 +1,16 @@
-
 package admin
 
 import (
+	"github.com/kataras/iris"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/simple"
-	"github.com/kataras/iris"
 	"strconv"
 )
 
 type TopicController struct {
-	Ctx             iris.Context
-	TopicService      *services.TopicService
+	Ctx          iris.Context
+	TopicService *services.TopicService
 }
 
 func (this *TopicController) GetBy(id int64) *simple.JsonResult {
@@ -56,4 +55,3 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 	}
 	return simple.JsonData(t)
 }
-
