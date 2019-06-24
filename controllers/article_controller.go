@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
+	"io/ioutil"
 	"strconv"
 	"strings"
 
@@ -219,6 +220,14 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 
 // 微信采集发布接口
 func (this *ArticleController) PostWxpublish() *simple.JsonResult {
+	token := this.Ctx.FormValue("token")
+	data, err := ioutil.ReadFile("/data/publish_token")
+	if err != nil {
+		return simple.ErrorMsg("ReadToken error: " + err.Error())
+	}
+	if token != string(data) {
+		return simple.ErrorMsg("Token invalidate")
+	}
 	article := &collect.WxArticle{}
 	err := this.Ctx.ReadJSON(article)
 	if err != nil {
