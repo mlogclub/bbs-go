@@ -7,6 +7,8 @@ import (
 	"github.com/mlogclub/simple"
 )
 
+type ScanTopicCallback func(topics []model.Topic)
+
 type TopicService struct {
 	TopicRepository    *repositories.TopicRepository
 	TagRepository      *repositories.TagRepository
@@ -55,6 +57,23 @@ func (this *TopicService) UpdateColumn(id int64, name string, value interface{})
 
 func (this *TopicService) Delete(id int64) {
 	this.TopicRepository.Delete(simple.GetDB(), id)
+}
+
+// 扫描
+func (this *TopicService) Scan(cb ScanTopicCallback) {
+	var cursor int64
+	for {
+		list, err := this.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
+			cursor).Order("id asc").Size(300))
+		if err != nil {
+			break
+		}
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		cb(list)
+	}
 }
 
 func (this *TopicService) Publish(userId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {

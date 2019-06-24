@@ -16,11 +16,12 @@
                         <label class="label"><span style="color:red;">*&nbsp;</span>用户名</label>
                         <div class="control has-icons-left">
                             <input class="input is-success" type="text" disabled="disabled"
-                                   value="{{.CurrentUser.Nickname}}">
+                                   value="{{.CurrentUser.Username}}">
                             <span class="icon is-small is-left"><i class="iconfont icon-username"></i></span>
                         </div>
                     </div>
 
+                    {{if .CurrentUser.Email}}
                     <div class="field">
                         <label class="label"><span style="color:red;">*&nbsp;</span>邮箱</label>
                         <div class="control has-icons-left">
@@ -29,6 +30,7 @@
                             <span class="icon is-small is-left"><i class="iconfont icon-email"></i></span>
                         </div>
                     </div>
+                    {{end}}
 
                     <div class="field">
                         <label class="label"><span style="color:red;">*&nbsp;</span>昵称</label>
