@@ -1,0 +1,58 @@
+{{template "common/header.html" .}}
+
+{{template "common/nav.html" .}}
+
+<section class="main">
+    <div class="container">
+
+        <div class="columns">
+            <div class="column is-9">
+                <div class="main-body">
+                    {{if .Tags}}
+                        <div class="widget">
+                            <div class="header">
+                                <span>标签</span>
+                            </div>
+                            <div class="content">
+                                <div class="tags are-medium">
+                                    {{range .Tags}}
+                                        <span class="tag is-normal"><a href="{{tagArticlesUrl .TagId 1}}"
+                                                                       title="{{.TagName}}"
+                                                                       target="_blank">{{.TagName}}</a></span>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <nav class="pagination is-rounded is-small" role="navigation" aria-label="pagination">
+                            {{if gt .Page.Page 1}}
+                                <a class="pagination-previous" href="{{.PrePageUrl}}"><i class="iconfont icon-left"></i>
+                                    上一页</a>
+                            {{else }}
+                                <a class="pagination-previous" href="javascript:;"><i class="iconfont icon-left"></i>
+                                    上一页</a>
+                            {{end}}
+
+                            {{if lt .Page.Page .Page.TotalPage}}
+                                <a class="pagination-next" href="{{.NextPageUrl}}">下一页 <i
+                                            class="iconfont icon-right"></i></a>
+                            {{else }}
+                                <a class="pagination-next" href="javascript:;">下一页 <i
+                                            class="iconfont icon-right"></i></a>
+                            {{end}}
+                        </nav>
+
+                    {{end}}
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="main-aside">
+                    {{template "common/aside.html" .}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{{template "common/footer.html" .}}

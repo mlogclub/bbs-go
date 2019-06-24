@@ -1,0 +1,25 @@
+<li>
+    <div class="topic-item">
+        <div class="left">
+            <img class="avatar" src="{{.User.Avatar}}"/>
+        </div>
+        <div class="right">
+            <a href="{{baseUrl}}/topic/{{.TopicId}}" target="_blank" title="{{.Title}}">
+                <div class="topic-title">{{.Title}}</div>
+            </a>
+
+            <div class="topic-meta">
+                <span><a href="{{baseUrl}}/user/{{.User.Id}}"><i
+                                class="iconfont icon-username"></i>&nbsp;{{.User.Nickname}}</a></span>
+                <span><i class="iconfont icon-clock"></i>&nbsp;{{prettyTime .LastCommentTime}}</span>
+                <span><i class="iconfont icon-see"></i>&nbsp;{{.ViewCount}}</span>
+                {{if .Tags}}
+                    {{range .Tags}}
+                        <span class="article-meta-item tag is-light is-normal"><i class="iconfont icon-tag"></i>&nbsp;<a
+                                    href="#" target="_blank">{{.TagName}}</a></span>
+                    {{end}}
+                {{end}}
+            </div>
+        </div>
+    </div>
+</li>

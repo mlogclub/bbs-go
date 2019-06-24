@@ -1,0 +1,28 @@
+<li>
+
+    <article class="article-item">
+        <div class="article-title">
+            <a href="{{baseUrl}}/article/{{.ArticleId}}">{{.Title}}</a>
+        </div>
+
+        <div class="article-summary">
+            {{.Summary}}
+        </div>
+
+        <div class="article-meta">
+            <span class="article-meta-item"><a href="{{baseUrl}}/user/{{.User.Id}}">{{.User.Nickname}}</a></span>
+            {{if .Category}}
+                <span class="article-meta-item"><a
+                            href="{{categoryArticlesUrl .Category.CategoryId 1}}">{{.Category.CategoryName}}</a></span>
+            {{end}}
+            {{if .Tags}}
+                {{range .Tags}}
+                    <span class="article-meta-item"><a href="{{tagArticlesUrl .TagId 1}}">{{.TagName}}</a></span>
+                {{end}}
+            {{end}}
+            <span class="article-meta-item"><time datetime="{{prettyTime .CreateTime}}"
+                                                  itemprop="datePublished">{{prettyTime .CreateTime}}</time></span>
+        </div>
+    </article>
+
+</li>

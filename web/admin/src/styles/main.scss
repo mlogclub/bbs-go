@@ -1,0 +1,21 @@
+.show-more-dialog {
+  width: auto;
+  max-width: 1000px;
+  height: auto;
+  max-height: 800px;
+
+  pre {
+    overflow: auto;
+    background: #f4f4f5;
+    padding: 10px;
+  }
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+}
+
+.el-icon-arrow-down {
+  font-size: 12px;
+}

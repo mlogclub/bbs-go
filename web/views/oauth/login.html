@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录</title>
+    <link href="//cdn.bootcss.com/bulma/0.7.2/css/bulma.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <form method="post" action="/oauth/login">
+            <input type="hidden" name="client_id" value="{{.client_id}}"/>
+            <input type="hidden" name="redirect_uri" value="{{.redirect_uri}}"/>
+            <input type="hidden" name="response_type" value="{{.response_type}}"/>
+            <input type="hidden" name="state" value="{{.state}}"/>
+            <div class="field">
+                <label class="label">用户名/邮箱</label>
+                <div class="control">
+                    <input class="input" type="text" name="username" id="username" placeholder="请输入用户名或邮箱"
+                           value="{{.Username}}">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">密码</label>
+                <div class="control">
+                    <input class="input" type="password" name="password" id="password" placeholder="请输入密码"
+                           value="{{.Password}}">
+                </div>
+            </div>
+            {{if .ErrMsg}}
+                <div style="color: red; font-weight: bold;">{{.ErrMsg}}</div>
+            {{end}}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-link">登录</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

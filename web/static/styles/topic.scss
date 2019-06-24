@@ -1,0 +1,124 @@
+.topic-list {
+  margin-bottom: 10px;
+
+  li {
+    padding: 6px 0;
+    position: relative;
+    overflow: hidden;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+
+    .topic-item {
+      display: flex;
+
+      .left {
+        min-width: 45px;
+        min-height: 45px;
+
+        img.avatar {
+          width: 45px;
+          height: 45px;
+          border-radius: 8px;
+        }
+      }
+
+
+      .right {
+        margin-left: 10px;
+
+        .topic-title {
+          color: #636363;
+          font-size: 18px;
+          line-height: normal;
+          font-weight: normal;
+
+          overflow: hidden;
+          word-break: break-all;
+          -webkit-line-clamp: 1;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          display: -webkit-box;
+        }
+
+        .topic-meta {
+          position: relative;
+          font-size: 12px;
+          color: #bbb;
+
+          span {
+            &:not(:last-child) {
+              margin-right: 3px;
+            }
+          }
+
+          a {
+            color: #778087;
+          }
+        }
+
+      }
+
+
+      //.topic-summary, .topic-summary a {
+      //  color: #000;
+      //  overflow: hidden;
+      //  padding-top: 6px;
+      //  text-overflow: ellipsis;
+      //  display: -webkit-box;
+      //  -webkit-box-orient: vertical;
+      //  -webkit-line-clamp: 3;
+      //  word-break: break-all;
+      //  text-align: justify;
+      //  font-size: 14px;
+      //}
+
+    }
+
+  }
+
+}
+
+
+.topic-detail {
+  .header {
+    display: flex;
+    border-bottom: 1px dashed #f4f4f5;
+
+    .left {
+      min-width: 80px;
+      min-height: 80px;
+
+      img.avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 10%;
+      }
+    }
+
+    .right {
+      margin-left: 15px;
+
+      .topic-title {
+        color: #000;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .topic-meta {
+        * {
+          font-size: 12px;
+        }
+      }
+    }
+
+  }
+
+  .content {
+    padding-top: 10px;
+    font-size: 15px;
+    color: #000;
+  }
+}

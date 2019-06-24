@@ -1,0 +1,59 @@
+<aside class="sidebar">
+    {{if .ActiveUsers}}
+        <div class="widget">
+            <div class="header">活跃</div>
+            <div class="content">
+                {{range $index,$user := .ActiveUsers}}
+                    <div style="display: flex; margin: 8px;">
+                        <a href="{{userUrl $user.Id}}" title="{{$user.Nickname}}" style="font-weight: bold;">
+                            <div style="background: url('{{$user.Avatar}}') no-repeat; background-size: contain; width: 50px; height: 50px; min-width: 50px; min-height: 50px; border-radius: 50%;"></div>
+                        </a>
+                        <div style="display: block; margin-left: 10px; vertical-align: middle;">
+                            <div>
+                                <a href="{{userUrl $user.Id}}" title="{{$user.Nickname}}"
+                                   style="font-weight: bold;">{{$user.Nickname}}</a>
+                            </div>
+                            <div style="word-break: break-all; -webkit-line-clamp: 2; overflow: hidden!important; text-overflow: ellipsis; -webkit-box-orient: vertical; display: -webkit-box;">{{$user.Description}}</div>
+                        </div>
+                    </div>
+
+                    {{if eq $index 3 }}
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-ig-s+1x-t-q"
+                         data-ad-client="ca-pub-5683711753850351"
+                         data-ad-slot="4728140043"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    {{end}}
+
+                    {{if eq $index 6}}
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-ig-s+1x-t-q"
+                         data-ad-client="ca-pub-5683711753850351"
+                         data-ad-slot="4728140043"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    {{end}}
+                {{end}}
+            </div>
+        </div>
+    {{end}}
+
+    <!-- 正方形 -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5683711753850351"
+         data-ad-slot="1787062187"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+</aside>

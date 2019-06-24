@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content">
+    <div class="sect5">
+        <h6 id="gui_Table">3.5.2.1.43. 表格</h6>
+        <div class="manual-live-demo-container">
+            <a href="https://demo.cuba-platform.com/sampler/open?screen=simple-table" class="live-demo-btn" target="_blank">在线示例</a>
+        </div>
+        <div class="manual-live-demo-container">
+            <a href="http://files.cuba-platform.com/javadoc/cuba/7.0/com/haulmont/cuba/gui/components/Table.html" class="api-docs-btn" target="_blank">API 文档</a>
+        </div>
+        <div class="paragraph">
+            <p><code>Table</code> 组件以表格的方式展示信息，对数据进行排序 、管理表格列和表头，并对选中的行执行操作。</p>
+        </div>
+        <div class="imageblock" style="text-align: center">
+            <div class="content">
+                <img src="./img/gui_table.png" alt="gui table">
+            </div>
+        </div>
+        <div class="paragraph">
+            <p>组件对应的 XML 名称： <code>table</code></p>
+        </div>
+        <div class="paragraph">
+            <p>在界面 XML 描述中定义组件的示例：</p>
+        </div>
+        <div class="listingblock">
+            <div class="content">
+   <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;data</span> <span class="attribute-name">readOnly</span>=<span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;collection</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersDc</span><span class="delimiter">"</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">com.company.sales.entity.Order</span><span class="delimiter">"</span></span> <span class="attribute-name">view</span>=<span class="string"><span class="delimiter">"</span><span class="content">order-with-customer</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;loader</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersDl</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;query&gt;</span>
+                <span class="inline-delimiter">&lt;![CDATA[</span>select e from sales_Order e<span class="inline-delimiter">]]&gt;</span>
+            <span class="tag">&lt;/query&gt;</span>
+        <span class="tag">&lt;/loader&gt;</span>
+    <span class="tag">&lt;/collection&gt;</span>
+<span class="tag">&lt;/data&gt;</span>
+<span class="tag">&lt;layout&gt;</span>
+<span class="tag">&lt;table</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersTable</span><span class="delimiter">"</span></span> <span class="attribute-name">dataContainer</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersDc</span><span class="delimiter">"</span></span> <span class="attribute-name">width</span>=<span class="string"><span class="delimiter">"</span><span class="content">100%</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;columns&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">date</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">amount</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">customer</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/columns&gt;</span>
+    <span class="tag">&lt;rowsCount</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+<span class="tag">&lt;/layout&gt;</span></code></pre>
+            </div>
+        </div>
+        <div class="paragraph">
+            <p>在上面的示例中，<code>data</code> 元素定义<a href="gui_collection_container.html">集合数据容器</a>，它使用 <a href="glossary.html#jpql">JPQL</a> 查询 <code>Order</code> 实体。<code>table</code> 元素定义数据容器，而 <code>columns</code> 元素定义哪些实体属性用作表格列。</p>
+        </div>
+        <div class="paragraph">
+            <p><code>table</code> 元素:</p>
+        </div>
+        <div id="gui_Table_rows" class="ulist"><a class="anchor" href="#gui_Table_rows"></a>
+            <ul>
+                <li> <p><code>rows</code> – 如果使用 <a href="gui_attributes.html#gui_attr_datasource">datasource</a> 属性来做数据绑定，则必须设置此元素。</p>
+                    <div class="paragraph">
+                        <p>每行可以在左侧的附加列中有一个图标。在界面控制器中创建 <code>ListComponent.IconProvider</code> 接口的实现，并将其设置给表格：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">private</span> Table&lt;Customer&gt; table;
+
+<span class="annotation">@Subscribe</span>
+<span class="directive">protected</span> <span class="type">void</span> onInit(InitEvent event) {
+    table.setIconProvider(<span class="keyword">new</span> ListComponent.IconProvider&lt;Customer&gt;() {
+        <span class="annotation">@Nullable</span>
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="predefined-type">String</span> getItemIcon(Customer entity) {
+            CustomerGrade grade = entity.getGrade();
+            <span class="keyword">switch</span> (grade) {
+                <span class="keyword">case</span> PREMIUM: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">icons/premium_grade.png</span><span class="delimiter">"</span></span>;
+                <span class="keyword">case</span> HIGH: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">icons/high_grade.png</span><span class="delimiter">"</span></span>;
+                <span class="keyword">case</span> MEDIUM: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">icons/medium_grade.png</span><span class="delimiter">"</span></span>;
+                <span class="keyword">default</span>: <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+            }
+        }
+    });
+}</code></pre>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_columns" class="ulist"><a class="anchor" href="#gui_Table_columns"></a>
+            <ul>
+                <li> <p><code>columns</code> – 定义表格列的必须元素。</p>
+                    <div class="paragraph">
+                        <p>每个列都在嵌套的 <code>column</code> 元素中描述，<code>column</code> 元素具有以下属性：</p>
+                    </div>
+                    <div class="openblock">
+                        <div class="content">
+                            <div id="gui_Table_column_id" class="ulist"><a class="anchor" href="#gui_Table_column_id"></a>
+                                <ul>
+                                    <li> <p><code>id</code> − 必须属性，包含列中要显示的实体属性的名称。可以是来自数据容器的实体的属性，也可以是关联实体的属性（使用 "." 来指定属性在对象关系图中的路径）。例如：</p>
+                                        <div class="listingblock">
+                                            <div class="content">
+           <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;columns&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">date</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">customer</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">customer.name</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">customer.address.country</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/columns&gt;</span></code></pre>
+                                            </div>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_caption" class="ulist"><a class="anchor" href="#gui_Table_column_caption"></a>
+                                <ul>
+                                    <li> <p><code>caption</code> − 包含列标题的可选属性。如果不指定，将显示<a href="entity_localization.html">本地化属性名称</a>。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_collapsed" class="ulist"><a class="anchor" href="#gui_Table_column_collapsed"></a>
+                                <ul>
+                                    <li> <p><code>collapsed</code> − 可选属性；当设置为 <code>true</code> 时默认隐藏列。当表格的 <code>columnControlVisible</code> 属性不是 <code>false</code> 时，用户可以通过表格右上角的菜单中的按钮 <span class="image"><img src="./img/gui_table_columnControl.png" alt="gui_table_columnControl"></span> 控制列的可见性。默认情况下，<code>collapsed</code> 是 <code>false</code>。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_width" class="ulist"><a class="anchor" href="#gui_Table_column_width"></a>
+                                <ul>
+                                    <li> <p><code>width</code> − 可选属性，控制默认列宽。只能是以像素为单位的数值。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_align" class="ulist"><a class="anchor" href="#gui_Table_column_align"></a>
+                                <ul>
+                                    <li> <p><code>align</code> − 可选属性，用于设置单元格的文本对齐方式。可选值：<code>LEFT</code> 、 <code>RIGHT</code> 、 <code>CENTER</code>。默认为 <code>LEFT</code>。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_editable" class="ulist"><a class="anchor" href="#gui_Table_column_editable"></a>
+                                <ul>
+                                    <li> <p><code>editable</code> − 可选属性，允许编辑表中的相应列。为了使列可编辑，整个表的 <a href="#gui_Table_editable">editable</a> 属性也应设置为 <code>true</code>。不支持在运行时更改此属性。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_sortable" class="ulist"><a class="anchor" href="#gui_Table_column_sortable"></a>
+                                <ul>
+                                    <li> <p><code>sortable</code> − 可选属性，用于禁用列的排序。整个表的 <a href="#gui_Table_sortable">sortable</a> 属性为 <code>true</code> 此属性有效（默认为 <code>true</code>）。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_maxTextLength" class="ulist"><a class="anchor" href="#gui_Table_column_maxTextLength"></a>
+                                <ul>
+                                    <li> <p><code>maxTextLength</code> – 可选属性，允许限制单元格中的字符数。如果实际值和最大允许字符数之间的差异不超过 10 个字符，则多出来的字符不会被隐藏。用户可以点击可见部分来查看完整的文本。例如一列的字符数限制为 10 个字符：</p>
+                                        <div class="imageblock" style="text-align: center">
+                                            <div class="content">
+                                                <img src="./img/gui_table_column_maxTextLength.png" alt="gui table column maxTextLength">
+                                            </div>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_link" class="ulist"><a class="anchor" href="#gui_Table_column_link"></a>
+                                <ul>
+                                    <li> <p><code>link</code> - 如果设置为 <code>true</code>，则允许列中显示指向实体编辑器的链接。对于基本类型的列，<code>link</code> 属性也可以设置为 true; 在这种情况下，将打开主实体编辑器。这个方法可用于简化导航：用户能够通过单击一些关键属性快速地打开实体编辑器。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_linkScreen" class="ulist"><a class="anchor" href="#gui_Table_column_linkScreen"></a>
+                                <ul>
+                                    <li> <p><code>linkScreen</code> - 设置单击 <code>link</code> 属性为 <code>true</code> 的列中的链接时打开的界面的标识符。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_linkScreenOpenType" class="ulist"><a class="anchor" href="#gui_Table_column_linkScreenOpenType"></a>
+                                <ul>
+                                    <li> <p><code>linkScreenOpenType</code> - 设置界面打开模式（<code>THIS_TAB</code> 、 <code>NEW_TAB</code> 或者 <code>DIALOG</code>）。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_linkInvoke" class="ulist"><a class="anchor" href="#gui_Table_column_linkInvoke"></a>
+                                <ul>
+                                    <li> <p><code>linkInvoke</code> - 单击链接时调用控制器方法而不是打开界面。</p>
+                                        <div class="listingblock">
+                                            <div class="content">
+           <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">private</span> Notifications notifications;
+
+<span class="directive">public</span> <span class="type">void</span> linkedMethod(<span class="predefined-type">Entity</span> item, <span class="predefined-type">String</span> columnId) {
+    Customer customer = (Customer) item;
+    notifications.create()
+            .withCaption(customer.getName())
+            .show();
+}</code></pre>
+                                            </div>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_captionProperty" class="ulist"><a class="anchor" href="#gui_Table_column_captionProperty"></a>
+                                <ul>
+                                    <li> <p><code>captionProperty</code> - 指定一个要显示在列中的实体属性名称，而不是显示 <a href="#gui_Table_column_id">id</a> 指定的实体属性值。例如，如果有一个包含 <code>name</code> 和 <code>orderNo</code> 属性的实体 <code>Priority</code>，则可以定义以下列：</p>
+                                        <div class="listingblock">
+                                            <div class="content">
+                                                <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">priority.orderNo</span><span class="delimiter">"</span></span> <span class="attribute-name">captionProperty</span>=<span class="string"><span class="delimiter">"</span><span class="content">priority.name</span><span class="delimiter">"</span></span> <span class="attribute-name">caption</span>=<span class="string"><span class="delimiter">"</span><span class="content">msg://priority</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span></code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="paragraph">
+                                            <p>此时，列中将会显示 <code>Priority</code> 实体的 <code>name</code> 属性，但是列的排序是根据 <code>Priority</code> 实体的 <code>orderNo</code> 属性。</p>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_generator" class="ulist"><a class="anchor" href="#gui_Table_column_generator"></a>
+                                <ul>
+                                    <li> <p>可选的 <code>generator</code> 属性包含指向界面控制器中方法，该方法可创建一个可视化组件显示在表格单元格中：</p>
+                                        <div class="listingblock">
+                                            <div class="content">
+           <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;columns&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">imageFile</span><span class="delimiter">"</span></span>
+            <span class="attribute-name">generator</span>=<span class="string"><span class="delimiter">"</span><span class="content">generateImageFileCell</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/columns&gt;</span></code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="listingblock">
+                                            <div class="content">
+           <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">Component</span> generateImageFileCell(Employee entity){
+    <span class="predefined-type">Image</span> image = uiComponents.create(<span class="predefined-type">Image</span>.NAME);
+    image.setSource(FileDescriptorResource.class).setFileDescriptor(entity.getImageFile());
+    <span class="keyword">return</span> image;
+}</code></pre>
+                                            </div>
+                                        </div>
+                                        <div class="paragraph">
+                                            <p>它可以用来为 <a href="#gui_Table_addGeneratedColumn">addGeneratedColumn()</a> 方法提供一个 <code>Table.ColumnGenerator</code> 的实现</p>
+                                        </div> </li>
+                                    <li> <p><code>column</code> 元素可能包含一个嵌套的<a href="gui_formatter.html">formatter</a>元素，它允许以不同于<a href="datatype.html">Datatype</a>的标准格式显示属性值：</p>
+                                        <div class="listingblock">
+                                            <div class="content">
+           <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">date</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;formatter</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">com.haulmont.cuba.gui.components.formatters.DateFormatter</span><span class="delimiter">"</span></span>
+               <span class="attribute-name">format</span>=<span class="string"><span class="delimiter">"</span><span class="content">yyyy-MM-dd HH:mm:ss</span><span class="delimiter">"</span></span>
+               <span class="attribute-name">useUserTimezone</span>=<span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/column&gt;</span></code></pre>
+                                            </div>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_rowsCount" class="ulist"><a class="anchor" href="#gui_Table_rowsCount"></a>
+            <ul>
+                <li> <p><code>rowsCount</code> − 可选元素，为表格添加 <code>RowsCount</code> 组件；此组件能够分页加载表格数据。可以使用<a href="gui_data_loaders.html">数据加载器</a>的 <code>setMaxResults()</code> 方法限制数据容器中的记录数来定义分页的大小。这个方法通常是由链接到表格数据加载器的<a href="gui_Filter.html">过滤器</a>组件来执行的。如果表格没有通用过滤器，则可以直接从界面控制器调用此方法。</p>
+                    <div class="paragraph">
+                        <p><code>RowsCount</code> 组件还可以显示当前数据容器查询的记录总数，而无需提取这些记录。当用户单击 <strong>?</strong> 图标时，它会调用 <code>com.haulmont.cuba.core.global.DataManager#getCount</code> 方法，执行与当前查询条件相同的数据库查询，不过会使用 <code>COUNT(*)</code> 聚合函数代替查询列。然后显示检索到的数字，代替 <strong>?</strong> 图标。</p>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_actions" class="ulist"><a class="anchor" href="#gui_Table_actions"></a>
+            <ul>
+                <li> <p><code>actions</code> − 可选元素，用于描述和表格相关的<a href="gui_Action.html">操作</a>。除了自定义的操作外，该元素还支持以下在 <code>com.haulmont.cuba.gui.actions.list</code> 里定义<a href="std_list_actions.html">标准操作</a>：<code>create</code> 、 <code>edit</code> 、 <code>remove</code> 、 <code>refresh</code> 、 <code>add</code> 、 <code>exclude</code> 、 <code>excel</code>。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_buttonsPanel" class="ulist"><a class="anchor" href="#gui_Table_buttonsPanel"></a>
+            <ul>
+                <li> <p>可选元素，在表格上方添加一个 <a href="gui_ButtonsPanel.html">ButtonsPanel</a> 容器来显示操作按钮。</p> </li>
+            </ul>
+        </div>
+        <div class="paragraph">
+            <p><code>table</code> 属性:</p>
+        </div>
+        <div id="gui_Table_multiselect" class="ulist"><a class="anchor" href="#gui_Table_multiselect"></a>
+            <ul>
+                <li> <p><code>multiselect</code> 属性可以为表格行设置多选模式。如果 <code>multiselect</code> 为 <code>true</code>，用户可以按住 <strong>Ctrl</strong> 或 <strong>Shift</strong> 键在表格中选择多行。默认情况下关闭多选模式。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_sortable" class="ulist"><a class="anchor" href="#gui_Table_sortable"></a>
+            <ul>
+                <li> <p><code>sortable</code> 属性可以对表中的数据进行排序。默认情况下，它设置为 <code>true</code> 。如果允许排序，单击列标题在列名称右侧将显示图标 <span class="image"><img src="./img/gui_sortable_down.png" alt="gui_sortable_down"></span> / <span class="image"><img src="./img/gui_sortable_up.png" alt="gui_sortable_up"></span>。可以使用<a href="#gui_Table_column_sortable">sortable</a>属性禁用特定列的排序。</p>
+                    <div class="paragraph">
+                        <p>根据是否将所有记录放在了一页上来使用不同的方式进行排序。如果所有记录在一页，则在内存中执行排序而不需要数据库查询。如果数据有多页，则通过发送具有相应 <code>ORDER BY</code> 条件的新的查询请求在数据库中执行排序。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>一个表格中的列可能包含本地属性或实体链接。例如：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;table</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersTable</span><span class="delimiter">"</span></span>
+       <span class="attribute-name">dataContainer</span>=<span class="string"><span class="delimiter">"</span><span class="content">ordersDc</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;columns&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">customer.name</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span> <span class="comment">&lt;!-- the 'name' attribute of the 'Customer' entity --&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">contract</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>      <span class="comment">&lt;!-- the 'Contract' entity --&gt;</span>
+    <span class="tag">&lt;/columns&gt;</span>
+<span class="tag">&lt;/table&gt;</span></code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>在后一种情况下，数据排序是根据关联实体的 <code>@NamePattern</code> 注解中定义的属性进行的。如果实体中没有这个注解，则仅仅在内存中对当前页的数据进行排序。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>如果列引用了非持久化实体属性，则数据排序将根据 <code>@MetaProperty</code> 注解的 <code>related()</code> 参数中定义的属性执行。如果未指定相关属性，则仅仅在内存中对当前页的数据进行排序。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>如果表格链接到一个嵌套的<a href="gui_property_containers.html">属性容器</a>，这个属性容器包含相关实体的集合。这个集合属性必须是有序类型（<code>List</code> 或 <code>LinkedHashSet</code>）才能使表格支持排序。如果属性的类型为 <code>Set</code>，则 <code>sortable</code> 属性不起作用，并且用户无法对表格进行排序。</p>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_presentations" class="ulist"><a class="anchor" href="#gui_Table_presentations"></a>
+            <ul>
+                <li> <p><code>presentations</code> 属性控制<a href="gui_presentations.html">展示设置</a>。默认情况下，该值为 <code>false</code>。如果属性值为 <code>true</code>，则会在表格的右上角添加相应的图标 <span class="image"><img src="./img/gui_presentation.png" alt="gui_presentation"></span>。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_columnControlVisible" class="ulist"><a class="anchor" href="#gui_Table_columnControlVisible"></a>
+            <ul>
+                <li> <p>如果 <code>columnControlVisible</code> 属性设置为 <code>false</code>，则用户无法使用位于表头的右侧的下拉菜单按钮 <span class="image"><img src="./img/gui_table_columnControl.png" alt="gui_table_columnControl"></span> 隐藏列：<span class="image"><img src="./img/gui_table_columnControl.png" alt="gui_table_columnControl"></span> 按钮位于表头的右侧。当前显示的列在菜单中标记为选中状态。</p> </li>
+            </ul>
+        </div>
+        <div class="imageblock" style="text-align: center">
+            <div class="content">
+                <img src="./img/gui_table_columnControl_all.png" alt="gui table columnControl all">
+            </div>
+        </div>
+        <div id="gui_Table_reorderingAllowed" class="ulist"><a class="anchor" href="#gui_Table_reorderingAllowed"></a>
+            <ul>
+                <li> <p>如果 <code>reorderingAllowed</code> 属性设置为 <code>false</code>，则用户不能通过用鼠标拖动来更改列顺序。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_columnHeaderVisible" class="ulist"><a class="anchor" href="#gui_Table_columnHeaderVisible"></a>
+            <ul>
+                <li> <p>如果 <code>columnHeaderVisible</code> 属性设置为 <code>false</code>，则该表没有列标题。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_showSelection" class="ulist"><a class="anchor" href="#gui_Table_showSelection"></a>
+            <ul>
+                <li> <p>如果 <code>showSelection</code> 属性设置为 <code>false</code>，则不突出显示当前行。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_allowPopupMenu" class="ulist"><a class="anchor" href="#gui_Table_allowPopupMenu"></a>
+            <ul>
+                <li> <p><code>contextMenuEnabled</code> 属性启用右键菜单。默认情况下，此属性设置为 <code>true</code>。右键菜单中会列出表格操作（如果有的话）和 <strong>System Information</strong> 菜单项（如果用户具有 <code>cuba.gui.showInfo</code> <a href="permissions.html">权限</a>），通过 <strong>System Information</strong> 菜单项可查看选中实体的详细信息。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_multiLineCells" class="ulist"><a class="anchor" href="#gui_Table_multiLineCells"></a>
+            <ul>
+                <li> <p>将 <code>multiLineCells</code> 设置为 <code>true</code> 可以让包含多行文本的单元格显示多行文本。在这种模式下，浏览器会一次加载表格中当前页的所有行，而不是延迟加载表格的可见部分。这就要求在 Web 客户端中适当的滚动。默认值为“false”。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_aggregatable" class="ulist"><a class="anchor" href="#gui_Table_aggregatable"></a>
+            <ul>
+                <li> <p><code>aggregatable</code> 属性启用表格行的聚合运算。支持以下操作：</p>
+                    <div class="openblock">
+                        <div class="content">
+                            <div class="ulist">
+                                <ul>
+                                    <li> <p><code>SUM</code> – 计算总和</p> </li>
+                                    <li> <p><code>AVG</code> – 计算平均值</p> </li>
+                                    <li> <p><code>COUNT</code> – 计算总数</p> </li>
+                                    <li> <p><code>MIN</code> – 找到最小值</p> </li>
+                                    <li> <p><code>MAX</code> – 找到最大值</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_Table_column_aggregation" class="paragraph">
+                                <p>聚合列的 <code>aggregation</code> 元素应该设置 <code>type</code> 属性，在这个属性中设置聚合函数。默认情况下，聚合列仅支持数值类型，例如 <code>Integer 、 Double 、 Long</code> 和 <code>BigDecimal</code>。聚合表格值显示在表格顶部的附加行中。这是一个定义聚合表示例：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;table</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">itemsTable</span><span class="delimiter">"</span></span> <span class="attribute-name">aggregatable</span>=<span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span> <span class="attribute-name">dataContainer</span>=<span class="string"><span class="delimiter">"</span><span class="content">itemsDc</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;columns&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">product</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">quantity</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">amount</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;aggregation</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">SUM</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/column&gt;</span>
+    <span class="tag">&lt;/columns&gt;</span>
+<span class="tag">&lt;/table&gt;</span></code></pre>
+                                </div>
+                            </div>
+                            <div id="gui_Table_column_aggregation_strategyClass" class="paragraph">
+                                <p><code>aggregation</code> 元素还可以包含 <code>strategyClass</code> 属性，指定一个实现 <code>AggregationStrategy</code> 接口的类（参阅下面以编程方式设置聚合策略的示例）。</p>
+                            </div>
+                            <div class="paragraph">
+                                <p>可以指定不同于 <a href="datatype.html">Datatype</a> 标准格式的<a href="gui_formatter.html">格式化器</a>显示聚合值：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">amount</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;aggregation</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">SUM</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;formatter</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">com.company.sample.MyFormatter</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/aggregation&gt;</span>
+<span class="tag">&lt;/column&gt;</span></code></pre>
+                                </div>
+                            </div>
+                            <div id="gui_Table_aggregationStyle" class="paragraph">
+                                <p><code>aggregationStyle</code> 属性允许指定聚合行的位置：<code>TOP</code> 或 <code>BOTTOM</code>。默认情况下使用 <code>TOP</code>。</p>
+                            </div>
+                            <div class="paragraph">
+                                <p>除了上面列出的操作之外，还可以自定义聚合策略，通过实现 <code>AggregationStrategy</code> 接口并将其传递给 <code>AggregationInfo</code> 实例中 <code>Table.Column</code> 类的 <code>setAggregation()</code> 方法。例如：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">TimeEntryAggregation</span> <span class="directive">implements</span> AggregationStrategy&lt;<span class="predefined-type">List</span>&lt;TimeEntry&gt;, <span class="predefined-type">String</span>&gt; {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> aggregate(<span class="predefined-type">Collection</span>&lt;<span class="predefined-type">List</span>&lt;TimeEntry&gt;&gt; propertyValues) {
+        HoursAndMinutes total = <span class="keyword">new</span> HoursAndMinutes();
+        <span class="keyword">for</span> (<span class="predefined-type">List</span>&lt;TimeEntry&gt; list : propertyValues) {
+            <span class="keyword">for</span> (TimeEntry timeEntry : list) {
+                total.add(HoursAndMinutes.fromTimeEntry(timeEntry));
+            }
+        }
+        <span class="keyword">return</span> StringFormatHelper.getTotalDayAggregationString(total);
+    }
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Class</span>&lt;<span class="predefined-type">String</span>&gt; getResultClass() {
+        <span class="keyword">return</span> <span class="predefined-type">String</span>.class;
+    }
+}</code></pre>
+                                </div>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="java">AggregationInfo info = <span class="keyword">new</span> AggregationInfo();
+info.setPropertyPath(metaPropertyPath);
+info.setStrategy(<span class="keyword">new</span> TimeEntryAggregation());
+
+Table.Column column = weeklyReportsTable.getColumn(columnId);
+column.setAggregation(info);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_editable" class="ulist"><a class="anchor" href="#gui_Table_editable"></a>
+            <ul>
+                <li> <p><code>editable</code> 属性可以将表格转换为即时编辑模式。在这种模式下，具有 <code>editable = true</code> 属性的列显示用于编辑相应实体属性的组件。</p>
+                    <div class="paragraph">
+                        <p>根据相应实体属性的类型自动选择每个可编辑列的组件类型。例如，对于字符串和数字属性，应用程序将使用 <a href="gui_TextField.html">TextField</a>；对于 <code>Date</code> 将使用 <a href="gui_DateField.html">DateField</a>；对于列表将使用 <a href="gui_LookupField.html">LookupField</a>；对于指向其它实体的链接将使用 <a href="gui_PickerField.html">PickerField</a>。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>对于 <code>Date</code> 类型的可编辑列，还可以定义 <code>dateFormat</code> 或 <code>resolution</code> 属性，类似于为 <a href="gui_DateField.html">DateField</a> 的属性。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>可以为显示链接实体的可编辑列定义 <a href="gui_attributes.html#gui_attr_optionsContainer">optionsContainer</a> 和 <a href="gui_attributes.html#gui_attr_captionProperty">captionProperty</a> 属性。如果设置了 <code>optionsContainer</code> 属性，应用程序将使用 <a href="gui_LookupField.html">LookupField</a> 而不是 <a href="gui_PickerField.html">PickerField</a>。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>可以使用 <code>Table.addGeneratedColumn()</code> 方法实现单元格的自定义配置（包括编辑） - 见下文。</p>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_stylename" class="ulist"><a class="anchor" href="#gui_Table_stylename"></a>
+            <ul>
+                <li> <p>在具有基于 Halo-based 主题的 Web 客户端中，<code>stylename</code> 属性可以在 XML 描述中或者界面控制器中为 <code>Table</code> 组件设置预定义样式：</p>
+                    <div class="openblock">
+                        <div class="content">
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;table</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">table</span><span class="delimiter">"</span></span>
+       <span class="attribute-name">dataContainer</span>=<span class="string"><span class="delimiter">"</span><span class="content">itemsDc</span><span class="delimiter">"</span></span>
+       <span class="attribute-name">stylename</span>=<span class="string"><span class="delimiter">"</span><span class="content">no-stripes</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;columns&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">product</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;column</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">quantity</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/columns&gt;</span>
+<span class="tag">&lt;/table&gt;</span></code></pre>
+                                </div>
+                            </div>
+                            <div class="paragraph">
+                                <p>当以编程方式设置样式时，需要选择 <code>HaloTheme</code> 类的一个以 <code>TABLE_</code> 为前缀的常量：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+                                    <pre class="CodeRay highlight"><code data-lang="java">table.setStyleName(HaloTheme.TABLE_NO_STRIPES);</code></pre>
+                                </div>
+                            </div>
+                            <div class="paragraph">
+                                <p>表格样式:</p>
+                            </div>
+                            <div id="gui_table_borderless" class="ulist"><a class="anchor" href="#gui_table_borderless"></a>
+                                <ul>
+                                    <li> <p><code>borderless</code> - 不显示表格的外部边线。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_compact" class="ulist"><a class="anchor" href="#gui_table_compact"></a>
+                                <ul>
+                                    <li> <p><code>compact</code> - 减少表格单元格内的空白区域。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_no-header" class="ulist"><a class="anchor" href="#gui_table_no-header"></a>
+                                <ul>
+                                    <li> <p><code>no-header</code> - 隐藏表格的列标题。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_no-horizontal-lines" class="ulist"><a class="anchor" href="#gui_table_no-horizontal-lines"></a>
+                                <ul>
+                                    <li> <p><code>no-horizontal-lines</code> - 删除行之间的水平分隔线。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_no-stripes" class="ulist"><a class="anchor" href="#gui_table_no-stripes"></a>
+                                <ul>
+                                    <li> <p><code>no-stripes</code> - 删除交替的行颜色。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_no-vertical-lines" class="ulist"><a class="anchor" href="#gui_table_no-vertical-lines"></a>
+                                <ul>
+                                    <li> <p><code>no-vertical-lines</code> - 删除列之间的垂直分隔线。</p> </li>
+                                </ul>
+                            </div>
+                            <div id="gui_table_small" class="ulist"><a class="anchor" href="#gui_table_small"></a>
+                                <ul>
+                                    <li> <p><code>small</code> - 使用小字体并减少表格单元格内的空白区域。</p> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div class="paragraph">
+            <p><code>Table</code> 接口的方法:</p>
+        </div>
+        <div id="gui_Table_ColumnCollapseListener" class="ulist"><a class="anchor" href="#gui_Table_ColumnCollapseListener"></a>
+            <ul>
+                <li> <p>可以使用 <code>addColumnCollapsedListener</code> 方法和 <code>ColumnCollapsedListener</code> 接口的实现跟踪列的可视化状态。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_getSelected" class="ulist"><a class="anchor" href="#gui_Table_getSelected"></a>
+            <ul>
+                <li> <p><code>getSelected()</code> 、 <code>getSingleSelected()</code> 返回表格中的选定行对应的实体实例。可以通过调用 <code>getSelected()</code> 方法来获得集合。如果未选择任何内容，则程序将返回空集。如果禁用了 <code>multiselect</code>，应该使用 <code>getSingleSelected()</code> 方法返回一个选定实体，如果没有选择任何内容则返回 <code>null</code>。</p> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_SelectionListener" class="ulist"><a class="anchor" href="#gui_Table_SelectionListener"></a>
+            <ul>
+                <li> <p><code>addSelectionListener()</code> 可以跟踪表格选中行的变化，示例：</p>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java">customersTable.addSelectionListener(customerSelectionEvent -&gt;
+        notifications.create()
+                .withCaption(<span class="string"><span class="delimiter">"</span><span class="content">You selected </span><span class="delimiter">"</span></span> + customerSelectionEvent.getSelected().size() + <span class="string"><span class="delimiter">"</span><span class="content"> customers</span><span class="delimiter">"</span></span>)
+                .show());</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>也可以通过订阅相应的事件来跟踪选中行的变化：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Subscribe</span>(<span class="string"><span class="delimiter">"</span><span class="content">customersTable</span><span class="delimiter">"</span></span>)
+<span class="directive">protected</span> <span class="type">void</span> onCustomersTableSelection(Table.SelectionEvent&lt;Customer&gt; event) {
+    notifications.create()
+            .withCaption(<span class="string"><span class="delimiter">"</span><span class="content">You selected </span><span class="delimiter">"</span></span> + customerSelectionEvent.getSelected().size() + <span class="string"><span class="delimiter">"</span><span class="content"> customers</span><span class="delimiter">"</span></span>)
+            .show();
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>可以使用<a href="gui_api.html#gui_api_UserOriginated">isUserOriginated()</a> 方法跟踪 <code>SelectionEvent</code> 事件的来源。</p>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_addGeneratedColumn" class="ulist"><a class="anchor" href="#gui_Table_addGeneratedColumn"></a>
+            <ul>
+                <li> <p><code>addGeneratedColumn()</code> 方法允许在列中自定义数据的表现方式。它需要两个参数：列的标识符和 <code>Table.ColumnGenerator</code> 接口的实现。如果标识符可以匹配 XML 描述中为表格列设置的标识符 - 在这种情况下，插入新列代替 XML 中定义的列。如果标识符与任何列都不匹配，则会在右侧添加新列。</p>
+                    <div class="openblock">
+                        <div class="content">
+                            <div id="gui_Table_generateCell" class="paragraph">
+                                <p>对于表的每一行将调用 <code>Table.ColumnGenerator</code> 接口的 <code>generateCell()</code> 方法。该方法接受在相应行中显示的实体实例作为参数。<code>generateCell()</code> 方法应该返回一个可视化组件，该组件将显示在单元格中。</p>
+                            </div>
+                            <div class="paragraph">
+                                <p>使用组件的示例：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+        <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">private</span> GroupTable&lt;Car&gt; carsTable;
+<span class="annotation">@Inject</span>
+<span class="directive">private</span> CollectionContainer&lt;Car&gt; carsDc;
+<span class="annotation">@Inject</span>
+<span class="directive">private</span> CollectionContainer&lt;<span class="predefined-type">Color</span>&gt; colorsDc;
+<span class="annotation">@Inject</span>
+<span class="directive">private</span> UiComponents uiComponents;
+<span class="annotation">@Inject</span>
+<span class="directive">private</span> Actions actions;
+
+<span class="annotation">@Subscribe</span>
+<span class="directive">protected</span> <span class="type">void</span> onInit(InitEvent event) {
+    carsTable.addGeneratedColumn(<span class="string"><span class="delimiter">"</span><span class="content">color</span><span class="delimiter">"</span></span>, entity -&gt; {
+        LookupPickerField&lt;<span class="predefined-type">Color</span>&gt; field = uiComponents.create(LookupPickerField.NAME);
+        field.setValueSource(<span class="keyword">new</span> ContainerValueSource&lt;&gt;(carsDc, <span class="string"><span class="delimiter">"</span><span class="content">color</span><span class="delimiter">"</span></span>));
+        field.setOptions(<span class="keyword">new</span> ContainerOptions&lt;&gt;(colorsDc));
+        field.addAction(actions.create(LookupAction.class));
+        field.addAction(actions.create(OpenAction.class));
+        <span class="keyword">return</span> field;
+    });
+}</code></pre>
+                                </div>
+                            </div>
+                            <div class="paragraph">
+                                <p>在上面的示例中，表中 <code>color</code> 列中的所有单元格都显示了 <a href="gui_LookupPickerField.html">LookupPickerField</a> 组件。组件应将它的值保存到相应的行中的实体的 <code>color</code> 属性中。</p>
+                            </div>
+                            <div class="paragraph">
+                                <p>如果要显示动态文本，请使用特殊类 <code>Table.PlainTextCell</code> 而不是 <a href="gui_Label.html">Label</a> 组件。它将简化渲染过程并使表格运行更快。</p>
+                            </div>
+                            <div class="paragraph">
+                                <p>如果 <code>addGeneratedColumn()</code> 方法接收到的参数是未在 XML 描述中声明的列的标识符，则新列的标题将设置如下：</p>
+                            </div>
+                            <div class="listingblock">
+                                <div class="content">
+                                    <pre class="CodeRay highlight"><code data-lang="java">carsTable.getColumn(<span class="string"><span class="delimiter">"</span><span class="content">colour</span><span class="delimiter">"</span></span>).setCaption(<span class="string"><span class="delimiter">"</span><span class="content">Colour</span><span class="delimiter">"</span></span>);</code></pre>
+                                </div>
+                            </div>
+                            <div class="paragraph">
+                                <p>还可以考虑使用 XML 的 <a href="#gui_Table_column_generator">generator</a> 属性做更具声明性的设置方案。</p>
+                            </div>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_requestFocus" class="ulist"><a class="anchor" href="#gui_Table_requestFocus"></a>
+            <ul>
+                <li> <p><code>requestFocus()</code> 方法允许将焦点设置在某一行的具体的可编辑字段上。需要两个参数：表示行的实体实例和列的标识符。请求焦点的示例如下：</p>
+                    <div class="listingblock">
+                        <div class="content">
+                            <pre class="CodeRay highlight"><code data-lang="java">table.requestFocus(item, <span class="string"><span class="delimiter">"</span><span class="content">count</span><span class="delimiter">"</span></span>);</code></pre>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_scrollTo" class="ulist"><a class="anchor" href="#gui_Table_scrollTo"></a>
+            <ul>
+                <li> <p><code>scrollTo()</code> 方法允许将表格滚动到具体行。需要一个参数：表示行的实体实例。</p>
+                    <div class="paragraph">
+                        <p>滚动条的示例：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+                            <pre class="CodeRay highlight"><code data-lang="java">table.scrollTo(item);</code></pre>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_CellClickListener" class="ulist"><a class="anchor" href="#gui_Table_CellClickListener"></a>
+            <ul>
+                <li> <p>如果需要在单元格中显示自定义内容并且在用户单击单元格的时候能收到通知，可以使用 <code>setClickListener()</code> 方法实现这些功能。<code>CellClickListener</code> 接口的实现接收选中实体和列标识符作为参数。这些单元格的内容将被包装在一个 span 元素中，这个 span 元素带有 <code>cuba-table-clickable-cell</code> 样式，可以利用该样式来定义单元格外观。</p>
+                    <div class="paragraph">
+                        <p>使用 <code>CellClickListener</code> 的示例：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">private</span> Table&lt;Customer&gt; customersTable;
+<span class="annotation">@Inject</span>
+<span class="directive">private</span> Notifications notifications;
+
+<span class="annotation">@Subscribe</span>
+<span class="directive">protected</span> <span class="type">void</span> onInit(InitEvent event) {
+    customersTable.setCellClickListener(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, customerCellClickEvent -&gt;
+            notifications.create()
+                    .withCaption(customerCellClickEvent.getItem().getName())
+                    .show());
+}</code></pre>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_setStyleProvider" class="ulist"><a class="anchor" href="#gui_Table_setStyleProvider"></a>
+            <ul>
+                <li> <p><code>setStyleProvider()</code> 方法可以设置表格单元格显示样式。该方法接受 <code>Table.StyleProvider</code> 接口的实现类作为参数。表格的每一行和每个单元分别调用这个接口的 <code>getStyleName()</code> 方法。如果某一行调用该方法，则第一个参数包含该行显示的实体实例，第二个参数为 <code>null</code>。如果单元格调用该方法，则第二个参数包含单元格显示的属性的名称。</p>
+                    <div class="paragraph">
+                        <p>设置样式的示例：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">protected</span> Table customersTable;
+
+<span class="annotation">@Subscribe</span>
+<span class="directive">protected</span> <span class="type">void</span> onInit(InitEvent event) {
+    customersTable.setStyleProvider((customer, property) -&gt; {
+        <span class="keyword">if</span> (property == <span class="predefined-constant">null</span>) {
+        <span class="comment">// style for row</span>
+        <span class="keyword">if</span> (hasComplaints(customer)) {
+            <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">unsatisfied-customer</span><span class="delimiter">"</span></span>;
+        }
+    } <span class="keyword">else</span> <span class="keyword">if</span> (property.equals(<span class="string"><span class="delimiter">"</span><span class="content">grade</span><span class="delimiter">"</span></span>)) {
+        <span class="comment">// style for column "grade"</span>
+        <span class="keyword">switch</span> (customer.getGrade()) {
+            <span class="keyword">case</span> PREMIUM: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">premium-grade</span><span class="delimiter">"</span></span>;
+            <span class="keyword">case</span> HIGH: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">high-grade</span><span class="delimiter">"</span></span>;
+            <span class="keyword">case</span> MEDIUM: <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">medium-grade</span><span class="delimiter">"</span></span>;
+            <span class="keyword">default</span>: <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+        }
+    }
+        <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+    });
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>然后应该在应用程序主题中设置的单元格和行样式。有关创建主题的详细信息，请参阅 <a href="gui_themes.html">主题</a>。对于 Web 客户端，新样式在 <code>styles.scss</code> 文件中。在控制器中定义的样式名称，以及表格行和列的前缀标识符构成 CSS 选择器。例如：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="css"><span class="class">.v-table-row</span><span class="class">.unsatisfied-customer</span> {
+  <span class="key">font-weight</span>: <span class="value">bold</span>;
+}
+<span class="class">.v-table-cell-content</span><span class="class">.premium-grade</span> {
+  <span class="key">background-color</span>: <span class="value">red</span>;
+}
+<span class="class">.v-table-cell-content</span><span class="class">.high-grade</span> {
+  <span class="key">background-color</span>: <span class="value">green</span>;
+}
+<span class="class">.v-table-cell-content</span><span class="class">.medium-grade</span> {
+  <span class="key">background-color</span>: <span class="value">blue</span>;
+}</code></pre>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_addPrintable" class="ulist"><a class="anchor" href="#gui_Table_addPrintable"></a>
+            <ul>
+                <li> <p><code>addPrintable()</code> 当通过 <code>excel</code> <a href="standard_actions.html">标准操作</a>或直接使用 <code>ExcelExporter</code> 类导出数据到 XLS 文件时，此方法可以给列中数据设置自定义展现。该方法接收的两个参数为列标识符和为列提供的 <code>Table.Printable</code> 接口实现。例如：</p>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java">ordersTable.addPrintable(<span class="string"><span class="delimiter">"</span><span class="content">customer</span><span class="delimiter">"</span></span>, <span class="keyword">new</span> Table.Printable&lt;Customer, <span class="predefined-type">String</span>&gt;() {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> getValue(Customer customer) {
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">Name: </span><span class="delimiter">"</span></span> + customer.getName;
+    }
+});</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p><code>Table.Printable</code> 接口的 <code>getValue()</code> 方法应该返回在表格单元格中显示的数据。返回的数据不一定是字符串类型，该方法可以返回其它类型的值，比如数字或日期，它们将在 XLS 文件中以相应的类型展示。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>如果生成的列需要在输出到 XLS 时带有格式，则应该使用 <code>addGeneratedColumn()</code> 方法，传递一个 <code>Table.PrintableColumnGenerator</code> 接口的实现作为参数。XLS 文档中单元格的值在这个接口的 <code>getValue()</code> 方法中定义：</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+      <pre class="CodeRay highlight"><code data-lang="java">ordersTable.addGeneratedColumn(<span class="string"><span class="delimiter">"</span><span class="content">product</span><span class="delimiter">"</span></span>, <span class="keyword">new</span> Table.PrintableColumnGenerator&lt;Order, <span class="predefined-type">String</span>&gt;() {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">Component</span> generateCell(Order entity) {
+        <span class="predefined-type">Label</span> label = uiComponents.create(<span class="predefined-type">Label</span>.NAME);
+        Product product = order.getProduct();
+        label.setValue(product.getName() + <span class="string"><span class="delimiter">"</span><span class="content">, </span><span class="delimiter">"</span></span> + product.getCost());
+        <span class="keyword">return</span> label;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> getValue(Order entity) {
+        Product product = order.getProduct();
+        <span class="keyword">return</span> product.getName() + <span class="string"><span class="delimiter">"</span><span class="content">, </span><span class="delimiter">"</span></span> + product.getCost();
+    }
+});</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>如果没有以某种方式为生成的列定义 <code>Printable</code> 描述，那么该列将显示相应实体属性的值，如果没有关联的实体属性，则不显示任何内容。</p>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_setItemClickAction" class="ulist"><a class="anchor" href="#gui_Table_setItemClickAction"></a>
+            <ul>
+                <li> <p><code>setItemClickAction()</code> 方法能够定义一个双击表格行时将执行的<a href="gui_Action.html">操作</a>。如果未定义此操作，表格将尝试按以下顺序在其操作列表中查找适当的操作：</p>
+                    <div class="ulist">
+                        <ul>
+                            <li> <p>由 <code>shortcut</code> 属性指定给 Enter 键的操作</p> </li>
+                            <li> <p><code>edit</code> 操作</p> </li>
+                            <li> <p><code>view</code> 操作</p>
+                                <div class="paragraph">
+                                    <p>如果找到此操作，并且操作具有 <code>enabled=true</code> 属性，则执行该操作。</p>
+                                </div> </li>
+                        </ul>
+                    </div> </li>
+            </ul>
+        </div>
+        <div id="gui_Table_setEnterPressAction" class="ulist"><a class="anchor" href="#gui_Table_setEnterPressAction"></a>
+            <ul>
+                <li> <p><code>setEnterPressAction()</code> 方法可以定义按下 Enter 键时执行的<a href="gui_Action.html">操作</a>。如果未定义此操作，则表将尝试按以下顺序在其操作列表中查找适当的操作：</p>
+                    <div class="openblock">
+                        <div class="content">
+                            <div class="ulist">
+                                <ul>
+                                    <li> <p>由 <code>setItemClickAction()</code> 方法定义的动作</p> </li>
+                                    <li> <p>由 <code>shortcut</code> 属性指定给 Enter 键的操作</p> </li>
+                                    <li> <p><code>edit</code> 操作</p> </li>
+                                    <li> <p><code>view</code> 操作</p> </li>
+                                </ul>
+                            </div>
+                            <div class="paragraph">
+                                <p>如果找到此操作，并且操作具有 <code>enabled=true</code> 属性，则执行该操作。</p>
+                            </div>
+                        </div>
+                    </div> </li>
+            </ul>
+        </div>
+        <hr>
+        <div class="dlist">
+            <dl>
+                <dt class="hdlist1">
+                    table 的属性
+                </dt>
+                <dd>
+                    <p><a href="gui_attributes.html#gui_attr_align">align</a> - <a href="#gui_Table_aggregatable">aggregatable</a> - <a href="#gui_Table_aggregationStyle">aggregationStyle</a> - <a href="gui_attributes.html#gui_attr_caption">caption</a> - <a href="gui_attributes.html#gui_attr_captionAsHtml">captionAsHtml</a> - <a href="#gui_Table_columnControlVisible">columnControlVisible</a> - <a href="#gui_Table_columnHeaderVisible">columnHeaderVisible</a> - <a href="gui_attributes.html#gui_attr_contextHelpText">contextHelpText</a> - <a href="gui_attributes.html#gui_attr_contextHelpTextHtmlEnabled">contextHelpTextHtmlEnabled</a> - <a href="#gui_Table_allowPopupMenu">contextMenuEnabled</a> - <a href="gui_attributes.html#gui_attr_css">css</a> - <a href="gui_attributes.html#gui_attr_dataContainer">dataContainer</a> - <a href="gui_attributes.html#gui_attr_description">description</a> - <a href="gui_attributes.html#gui_attr_descriptionAsHtml">descriptionAsHtml</a> - <a href="#gui_Table_editable">editable</a> - <a href="gui_attributes.html#gui_attr_enable">enable</a> - <a href="gui_attributes.html#gui_attr_expandRatio">box.expandRatio</a> - <a href="gui_attributes.html#gui_attr_height">height</a> - <a href="gui_attributes.html#gui_attr_id">id</a> - <a href="#gui_Table_multiLineCells">multiLineCells</a> - <a href="#gui_Table_multiselect">multiselect</a> - <a href="#gui_Table_presentations">presentations</a> - <a href="#gui_Table_reorderingAllowed">reorderingAllowed</a> - <a href="gui_attributes.html#gui_attr_settingsEnabled">settingsEnabled</a> - <a href="#gui_Table_showSelection">showSelection</a> - <a href="#gui_Table_sortable">sortable</a> - <a href="#gui_Table_stylename">stylename</a> - <a href="gui_attributes.html#gui_attr_tabIndex">tabIndex</a> - <a href="gui_attributes.html#gui_attr_textSelectionEnabled">textSelectionEnabled</a> - <a href="gui_attributes.html#gui_attr_visible">visible</a> - <a href="gui_attributes.html#gui_attr_width">width</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    table 的元素
+                </dt>
+                <dd>
+                    <p><a href="#gui_Table_actions">actions</a> - <a href="#gui_Table_buttonsPanel">buttonsPanel</a> - <a href="#gui_Table_columns">columns</a> - <a href="#gui_Table_rows">rows</a> - <a href="#gui_Table_rowsCount">rowsCount</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    <a href="#gui_Table_columns">column</a> 元素的属性
+                </dt>
+                <dd>
+                    <p><a href="#gui_Table_column_align">align</a> - <a href="#gui_Table_column_caption">caption</a> - <a href="#gui_Table_column_captionProperty">captionProperty</a> - <a href="#gui_Table_column_collapsed">collapsed</a> - <a href="gui_DateField.html#gui_DateField_dateFormat">dateFormat</a> - <a href="#gui_Table_column_editable">editable</a> - <a href="#gui_Table_column_generator">generator</a> - <a href="#gui_Table_column_id">id</a> - <a href="#gui_Table_column_link">link</a> - <a href="#gui_Table_column_linkInvoke">linkInvoke</a> - <a href="#gui_Table_column_linkScreen">linkScreen</a> - <a href="#gui_Table_column_linkScreenOpenType">linkScreenOpenType</a> - <a href="#gui_Table_column_maxTextLength">maxTextLength</a> - <a href="gui_attributes.html#gui_attr_optionsDatasource">optionsDatasource</a> - <a href="gui_DateField.html#gui_DateField_resolution">resolution</a> - <a href="#gui_Table_column_sortable">sortable</a> - <a href="gui_attributes.html#gui_attr_visible">visible</a> - <a href="#gui_Table_column_width">width</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    <a href="#gui_Table_columns">column</a>的元素
+                </dt>
+                <dd>
+                    <p><a href="#gui_Table_column_aggregation">aggregation</a> - <a href="gui_formatter.html">formatter</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    <a href="#gui_Table_column_aggregation">aggregation</a>的属性
+                </dt>
+                <dd>
+                    <p><a href="#gui_Table_column_aggregation">type</a> - <a href="#gui_Table_column_aggregation_strategyClass">strategyClass</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    <a href="#gui_Table_rows">rows</a>的属性
+                </dt>
+                <dd>
+                    <p><a href="gui_attributes.html#gui_attr_datasource">datasource</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    table 的预定义样式
+                </dt>
+                <dd>
+                    <p><a href="#gui_table_borderless">borderless</a> - <a href="#gui_table_compact">compact</a> - <a href="#gui_table_no-header">no-header</a> - <a href="#gui_table_no-horizontal-lines">no-horizontal-lines</a> - <a href="#gui_table_no-stripes">no-stripes</a> - <a href="#gui_table_no-vertical-lines">no-vertical-lines</a> - <a href="#gui_table_small">small</a></p>
+                </dd>
+                <dt class="hdlist1">
+                    API
+                </dt>
+                <dd>
+                    <p><a href="#gui_Table_addGeneratedColumn">addGeneratedColumn</a> - <a href="#gui_Table_addPrintable">addPrintable</a> - <a href="#gui_Table_ColumnCollapseListener">addColumnCollapseListener</a> - <a href="#gui_Table_SelectionListener">addSelectionListener</a> - <a href="gui_api.html#gui_api_settings">applySettings</a> - <a href="#gui_Table_generateCell">generateCell</a> - <a href="#gui_Table_getSelected">getSelected</a> - <a href="#gui_Table_requestFocus">requestFocus</a> - <a href="gui_api.html#gui_api_settings">saveSettings</a> - <a href="#gui_Table_scrollTo">scrollTo</a> - <a href="#gui_Table_CellClickListener">setClickListener</a> - <a href="#gui_Table_setEnterPressAction">setEnterPressAction</a> - <a href="#gui_Table_setItemClickAction">setItemClickAction</a> - <a href="#gui_Table_setStyleProvider">setStyleProvider</a></p>
+                </dd>
+            </dl>
+        </div>
+        <hr>
+    </div>
+</div>
+</body>
+</html>
