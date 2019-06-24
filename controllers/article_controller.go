@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -225,11 +226,13 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg("ReadToken error: " + err.Error())
 	}
-	if token != string(data) {
+	token2 := strings.TrimSpace(string(data))
+	logrus.Info("token: " + token + ", token2: " + token2)
+	if token != token2 {
 		return simple.ErrorMsg("Token invalidate")
 	}
 	article := &collect.WxArticle{}
-	err := this.Ctx.ReadJSON(article)
+	err = this.Ctx.ReadJSON(article)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

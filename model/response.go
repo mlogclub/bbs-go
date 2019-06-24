@@ -4,7 +4,7 @@ import (
 	"html/template"
 )
 
-type UserResponse struct {
+type UserInfo struct {
 	Id          int64    `json:"id"`
 	Username    string   `json:"username"`
 	Nickname    string   `json:"nickname"`
@@ -16,7 +16,7 @@ type UserResponse struct {
 	CreateTime  int64    `json:"createTime"`
 }
 
-func (this *UserResponse) HasRole(role string) bool {
+func (this *UserInfo) HasRole(role string) bool {
 	if len(this.Roles) == 0 {
 		return false
 	}
@@ -41,7 +41,7 @@ type TagResponse struct {
 
 type ArticleResponse struct {
 	ArticleId  int64             `json:"articleId"`
-	User       *UserResponse     `json:"user"`
+	User       *UserInfo         `json:"user"`
 	Category   *CategoryResponse `json:"category"`
 	Tags       *[]TagResponse    `json:"tags"`
 	Title      string            `json:"title"`
@@ -53,7 +53,7 @@ type ArticleResponse struct {
 
 type TopicResponse struct {
 	TopicId         int64          `json:"topicId"`
-	User            *UserResponse  `json:"user"`
+	User            *UserInfo      `json:"user"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
 	Content         template.HTML  `json:"content"`
@@ -64,7 +64,7 @@ type TopicResponse struct {
 
 type CommentResponse struct {
 	CommentId    int64            `json:"commentId"`
-	User         *UserResponse    `json:"user"`
+	User         *UserInfo        `json:"user"`
 	EntityType   string           `json:"entityType"`
 	EntityId     int64            `json:"entityId"`
 	Content      template.HTML    `json:"content"`
@@ -76,26 +76,26 @@ type CommentResponse struct {
 }
 
 type FavoriteResponse struct {
-	FavoriteId int64         `json:"favoriteId"`
-	EntityType string        `json:"entityType"`
-	EntityId   int64         `json:"entityId"`
-	Deleted    bool          `json:"deleted"`
-	Title      string        `json:"title"`
-	Content    string        `json:"content"`
-	User       *UserResponse `json:"user"`
-	Url        string        `json:"url"`
-	CreateTime int64         `json:"createTime"`
+	FavoriteId int64     `json:"favoriteId"`
+	EntityType string    `json:"entityType"`
+	EntityId   int64     `json:"entityId"`
+	Deleted    bool      `json:"deleted"`
+	Title      string    `json:"title"`
+	Content    string    `json:"content"`
+	User       *UserInfo `json:"user"`
+	Url        string    `json:"url"`
+	CreateTime int64     `json:"createTime"`
 }
 
 // 消息
 type MessageResponse struct {
-	MessageId    int64         `json:"messageId"`
-	UserId       int64         `json:"userId"`
-	User         *UserResponse `json:"user"`
-	Content      string        `json:"content"`
-	QuoteContent string        `json:"quoteContent"`
-	Type         int           `json:"type"`
-	ExtraData    string        `json:"extraData"`
-	Status       int           `json:"status"`
-	CreateTime   int64         `json:"createTime"`
+	MessageId    int64     `json:"messageId"`
+	UserId       int64     `json:"userId"`
+	User         *UserInfo `json:"user"`
+	Content      string    `json:"content"`
+	QuoteContent string    `json:"quoteContent"`
+	Type         int       `json:"type"`
+	ExtraData    string    `json:"extraData"`
+	Status       int       `json:"status"`
+	CreateTime   int64     `json:"createTime"`
 }

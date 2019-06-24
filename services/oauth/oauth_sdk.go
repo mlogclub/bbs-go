@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GetUserInfoByRequest(r *http.Request) *model.UserResponse {
+func GetUserInfoByRequest(r *http.Request) *model.UserInfo {
 	token, err := ServerInstance.Srv.ValidationBearerToken(r)
 	if err != nil {
 		logrus.Errorln(err)
@@ -19,7 +19,7 @@ func GetUserInfoByRequest(r *http.Request) *model.UserResponse {
 	return GetUserInfoByToken(token)
 }
 
-func GetUserInfo(accessToken string) *model.UserResponse {
+func GetUserInfo(accessToken string) *model.UserInfo {
 	if len(accessToken) == 0 {
 		return nil
 	}
@@ -31,7 +31,7 @@ func GetUserInfo(accessToken string) *model.UserResponse {
 	return GetUserInfoByToken(token)
 }
 
-func GetUserInfoByToken(token oauth2.TokenInfo) *model.UserResponse {
+func GetUserInfoByToken(token oauth2.TokenInfo) *model.UserInfo {
 	userId, err := strconv.ParseInt(token.GetUserID(), 10, 64)
 	if err != nil {
 		logrus.Errorln(err)

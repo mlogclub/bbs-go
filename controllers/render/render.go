@@ -51,7 +51,7 @@ func GetDefaultAvatar(id int64) string {
 	return DefaultAvatars[i]
 }
 
-func BuildUserDefaultIfNull(id int64) *model.UserResponse {
+func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
 	if user == nil {
 		user = &model.User{}
@@ -63,7 +63,7 @@ func BuildUserDefaultIfNull(id int64) *model.UserResponse {
 	return BuildUser(user)
 }
 
-func BuildCurrentUser(ctx context.Context) *model.UserResponse {
+func BuildCurrentUser(ctx context.Context) *model.UserInfo {
 	currentUser := utils.GetCurrentUser(ctx)
 	if currentUser == nil {
 		return nil
@@ -71,7 +71,7 @@ func BuildCurrentUser(ctx context.Context) *model.UserResponse {
 	return BuildUserById(currentUser.Id)
 }
 
-func BuildUserById(id int64) *model.UserResponse {
+func BuildUserById(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
 	if user == nil {
 		return nil
@@ -79,7 +79,7 @@ func BuildUserById(id int64) *model.UserResponse {
 	return BuildUser(user)
 }
 
-func BuildUser(user *model.User) *model.UserResponse {
+func BuildUser(user *model.User) *model.UserInfo {
 	if user == nil {
 		return nil
 	}
@@ -88,7 +88,7 @@ func BuildUser(user *model.User) *model.UserResponse {
 		avatar = GetDefaultAvatar(user.Id)
 	}
 	roles := strings.Split(user.Roles, ",")
-	return &model.UserResponse{
+	return &model.UserInfo{
 		Id:          user.Id,
 		Username:    user.Username,
 		Nickname:    user.Nickname,
@@ -101,11 +101,11 @@ func BuildUser(user *model.User) *model.UserResponse {
 	}
 }
 
-func BuildUsers(users []model.User) []model.UserResponse {
+func BuildUsers(users []model.User) []model.UserInfo {
 	if len(users) == 0 {
 		return nil
 	}
-	var responses []model.UserResponse
+	var responses []model.UserInfo
 	for _, user := range users {
 		item := BuildUser(&user)
 		if item != nil {

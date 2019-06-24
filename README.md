@@ -8,6 +8,7 @@
 - cron (https://github.com/robfig/cron) 定时任务
 - goquery（https://github.com/PuerkitoBio/goquery）html dom元素解析
 - Element-UI (https://element.eleme.cn) 饿了么开源的基于vue.js的前端库 
+- vditor (https://github.com/b3log/vditor) Markdown编辑器
 
 
 ## startup
@@ -19,3 +20,7 @@
 ## 注意事项
 
 - 后台管理项目使用vue+element-ui编写，采用前后端分离方案，后台工程在`web/admin`请自行编辑。
+
+## 如有问题，请反馈到这里：
+
+https://mlog.club/topics
