@@ -5,6 +5,7 @@ import (
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 )
 
 type ScanTopicCallback func(topics []model.Topic)
@@ -76,6 +77,7 @@ func (this *TopicService) Scan(cb ScanTopicCallback) {
 	}
 }
 
+// 发表
 func (this *TopicService) Publish(userId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
@@ -108,6 +110,7 @@ func (this *TopicService) Publish(userId int64, tags []string, title, content st
 	return topic, simple.NewError2(err)
 }
 
+// 帖子标签
 func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags, err := this.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
 	if err != nil {
@@ -122,6 +125,15 @@ func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 	return this.TagRepository.GetTagInIds(tagIds)
 }
 
+// 浏览数+1
 func (this *TopicService) IncrViewCount(topicId int64) {
 	simple.GetDB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
+}
+
+// 更新最后回复时间
+func (this *TopicService) SetLastCommentTime(topicId, lastCommentTime int64) {
+	err := this.UpdateColumn(topicId, "last_comment_time", lastCommentTime)
+	if err != nil {
+		logrus.Error(err)
+	}
 }

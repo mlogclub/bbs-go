@@ -14,6 +14,7 @@ type CommentController struct {
 	Ctx            iris.Context
 	CommentService *services.CommentService
 	MessageService *services.MessageService
+	TopicService   *services.TopicService
 }
 
 func (this *CommentController) GetList() *simple.JsonResult {
@@ -73,6 +74,10 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 	err = this.CommentService.Create(comment)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
+	}
+
+	if entityType == model.EntityTypeTopic {
+		this.TopicService.SetLastCommentTime(entityId, simple.NowTimestamp())
 	}
 
 	this.MessageService.SendCommentMsg(comment)

@@ -83,7 +83,7 @@ func GetTopics(ctx context.Context) {
 
 	topics, paging := services.TopicServiceInstance.Query(simple.NewParamQueries(ctx).
 		Eq("status", model.TopicStatusOk).
-		Page(page, 20).Desc("id"))
+		Page(page, 20).Desc("last_comment_time"))
 
 	render.View(ctx, "topic/index.html", iris.Map{
 		utils.GlobalFieldSiteTitle: "讨论",
