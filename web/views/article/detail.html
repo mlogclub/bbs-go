@@ -11,7 +11,8 @@
                         <div class="article-item-left">
                             <a href="{{baseUrl}}/user/{{.Article.User.Id}}" title="{{.Article.User.Nickname}}"
                                target="_blank">
-                                <img class="avatar" src="{{.Article.User.Avatar}}">
+                                <div class="avatar" style="background-image:url('{{.Article.User.Avatar}}')"></div>
+                                {{/*                                <img class="avatar" src="">*/}}
                             </a>
                         </div>
 
@@ -124,7 +125,7 @@
                             </div>
                             <a href="{{baseUrl}}/user/{{.Article.User.Id}}" title="{{.Article.User.Nickname}}"
                                target="_blank">
-                                <div style="width:150px;height: 150px; background: url('{{.Article.User.Avatar}}') no-repeat;background-size: contain;"></div>
+                                <div class="avatar" style="width:150px; height: 150px; background-image: url('{{.Article.User.Avatar}}');"></div>
                             </a>
                             {{if .Article.User.Description}}
                                 <p>{{.Article.User.Description}}</p>

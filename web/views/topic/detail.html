@@ -12,7 +12,7 @@
                             <div class="left">
                                 <a href="{{baseUrl}}/user/{{.Topic.User.Id}}" title="{{.Topic.User.Nickname}}"
                                    target="_blank">
-                                    <img class="avatar" src="{{.Topic.User.Avatar}}">
+                                    <div class="avatar" style="background-image: url('{{.Topic.User.Avatar}}');"></div>
                                 </a>
                             </div>
 
@@ -72,7 +72,8 @@
                             </div>
                             <a href="{{baseUrl}}/user/{{.Topic.User.Id}}" title="{{.Topic.User.Nickname}}"
                                target="_blank">
-                                <div style="width:150px;height: 150px; background: url('{{.Topic.User.Avatar}}') no-repeat;background-size: contain;"></div>
+                                <div class="avatar"
+                                     style="width:150px;height: 150px; background-image: url('{{.Topic.User.Avatar}}');"></div>
                             </a>
                             {{if .Topic.User.Description}}
                                 <p>{{.Topic.User.Description}}</p>
