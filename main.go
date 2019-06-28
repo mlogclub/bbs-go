@@ -13,7 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var configFile = flag.String("config", "./mlog.json", "配置文件路径")
+var configFile = flag.String("config", "./mlog.yaml", "配置文件路径")
 
 func init() {
 	flag.Parse()

@@ -110,6 +110,32 @@ func (this *TopicService) Publish(userId int64, tags []string, title, content st
 	return topic, simple.NewError2(err)
 }
 
+// 更新
+func (this *TopicService) Edit(topicId int64, tags []string, title, content string) *simple.CodeError {
+	if len(title) == 0 {
+		return simple.NewErrorMsg("标题不能为空")
+	}
+
+	if simple.RuneLen(title) > 128 {
+		return simple.NewErrorMsg("标题长度不能超过128")
+	}
+
+	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		tagIds := this.TagRepository.GetOrCreates(tx, tags)
+		err := this.TopicRepository.Updates(simple.GetDB(), topicId, map[string]interface{}{
+			"title":   title,
+			"content": content,
+		})
+		if err != nil {
+			return err
+		}
+		this.TopicTagRepository.RemoveTopicTags(tx, topicId)      // 先删掉所有的标签
+		this.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
+		return nil
+	})
+	return simple.NewError2(err)
+}
+
 // 帖子标签
 func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags, err := this.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))

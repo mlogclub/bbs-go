@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	SessionCurrentUser = "CurrentUser"
+	CurrentUser = "CurrentUser"
 )
 
 func InitSessionManager() {
@@ -43,7 +43,7 @@ func StartByRequest(w http.ResponseWriter, r *http.Request) session.Store {
 
 func SetCurrentUser(ctx context.Context, user *model.User) {
 	store := Start(ctx)
-	store.Set(SessionCurrentUser, user)
+	store.Set(CurrentUser, user)
 	err := store.Save()
 	if err != nil {
 		logrus.Error(err)
@@ -55,7 +55,7 @@ func GetCurrentUser(ctx context.Context) *model.User {
 }
 
 func GetCurrentUserByRequest(w http.ResponseWriter, r *http.Request) *model.User {
-	val, exists := StartByRequest(w, r).Get(SessionCurrentUser)
+	val, exists := StartByRequest(w, r).Get(CurrentUser)
 	if exists {
 		json, err := simple.FormatJson(val)
 		if err != nil {
@@ -74,7 +74,7 @@ func GetCurrentUserByRequest(w http.ResponseWriter, r *http.Request) *model.User
 
 func DelCurrentUser(ctx context.Context) {
 	store := Start(ctx)
-	store.Delete(SessionCurrentUser)
+	store.Delete(CurrentUser)
 	err := store.Save()
 	if err != nil {
 		logrus.Error(err)

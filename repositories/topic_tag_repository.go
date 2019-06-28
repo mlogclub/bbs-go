@@ -78,3 +78,11 @@ func (this *TopicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds 
 		})
 	}
 }
+
+func (this *TopicTagRepository) RemoveTopicTags(db *gorm.DB, topicId int64) {
+	if topicId <= 0 {
+		return
+	}
+
+	db.Where("topic_id = ?", topicId).Delete(model.TopicTag{})
+}

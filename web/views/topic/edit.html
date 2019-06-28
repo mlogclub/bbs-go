@@ -11,7 +11,7 @@
                         <nav class="breadcrumb" aria-label="breadcrumbs">
                             <ul>
                                 <li><a href="{{baseUrl}}">首页</a></li>
-                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}">{{.CurrentUser.Nickname}}</a></li>
+                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}?tab=topics">{{.CurrentUser.Nickname}}</a></li>
                                 <li class="is-active"><a href="#" aria-current="page">讨论</a></li>
                             </ul>
                         </nav>
@@ -19,14 +19,14 @@
                     <div class="content">
                         <div class="field">
                             <div class="control">
-                                <input name="title" id="title" class="input" type="text"
+                                <input name="title" id="title" class="input" type="text" value="{{.Topic.Title}}"
                                        placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空">
                             </div>
                         </div>
 
                         <div class="field">
                             <div class="control">
-                                <div name="content" id="editor" style="border: 1px solid #d1d5da;"></div>
+                                <div id="editor" style="border: 1px solid #d1d5da;"></div>
                             </div>
                         </div>
 
@@ -54,7 +54,7 @@
 
                         <div class="field is-grouped">
                             <div class="control">
-                                <a class="button is-success" id="topicCreateSubmit">发表讨论</a>
+                                <a class="button is-success" id="topicEditSubmit">发表讨论</a>
                             </div>
                         </div>
                     </div>
@@ -101,15 +101,16 @@
         }
       },
     })
+    vditor.setValue('{{.Topic.Content}}')
     vditor.focus()
 
-    $('#topicCreateSubmit').click(function () {
+    $('#topicEditSubmit').click(function () {
       var params = {
         title: $('#title').val(),
         content: vditor.getValue(),
         tags: $('#tags').val(),
       }
-      httpPost('{{baseUrl}}/topic/create', params).then(function (data) {
+      httpPost('{{baseUrl}}/topic/edit/{{.Topic.TopicId}}', params).then(function (data) {
         window.location = '{{baseUrl}}/topic/' + data.topicId
       }, function (response) {
         alert(response.message)
@@ -121,7 +122,9 @@
     el: '#select-tags',
     data: {
       inputTag: '',
-      tags: []
+      tags: [
+          {{if .Topic.Tags}} {{range .Topic.Tags}} '{{.}}', {{end}} {{end}}
+      ]
     },
     mounted() {
     },

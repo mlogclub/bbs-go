@@ -65,6 +65,59 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("topicId", topic.Id).JsonResult()
 }
 
+func (this *TopicController) GetEditBy(topicId int64) {
+	user := session.GetCurrentUser(this.Ctx)
+	if user == nil {
+		this.Ctx.StatusCode(403)
+		return
+	}
+
+	topic := this.TopicService.Get(topicId)
+	if topic == nil || topic.Status != model.TopicStatusOk || topic.UserId != user.Id {
+		this.Ctx.StatusCode(404)
+		return
+	}
+
+	tags := this.TopicService.GetTopicTags(topicId)
+	var tagNames []string
+	if len(tags) > 0 {
+		for _, tag := range tags {
+			tagNames = append(tagNames, tag.Name)
+		}
+	}
+
+	render.View(this.Ctx, "topic/edit.html", iris.Map{
+		"Topic": iris.Map{
+			"TopicId": topic.Id,
+			"Title":   topic.Title,
+			"Content": topic.Content,
+			"Tags":    tagNames,
+		},
+	})
+}
+
+func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
+	user := session.GetCurrentUser(this.Ctx)
+	if user == nil {
+		return simple.Error(simple.ErrorNotLogin)
+	}
+
+	topic := this.TopicService.Get(topicId)
+	if topic == nil || topic.Status != model.TopicStatusOk || topic.UserId != user.Id {
+		return simple.ErrorMsg("话题不存在或已被删除")
+	}
+
+	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
+	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
+	tags := simple.FormValueStringArray(this.Ctx, "tags")
+
+	err := this.TopicService.Edit(topicId, tags, title, content)
+	if err != nil {
+		return simple.Error(err)
+	}
+	return simple.NewEmptyRspBuilder().Put("topicId", topic.Id).JsonResult()
+}
+
 // 收藏
 func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
