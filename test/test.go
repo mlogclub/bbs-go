@@ -27,7 +27,7 @@ func main() {
 
 	// fmt.Println(strings.Split("管理员", ","))
 
-	config := config2.GetConfig("./mlog.yaml")
-	data, _ := json.Marshal(config)
+	config2.InitConfig("./mlog.yaml")
+	data, _ := json.Marshal(config2.Conf)
 	fmt.Println(string(data))
 }

@@ -11,7 +11,7 @@ var Conf *Config
 type Config struct {
 	Env        string `yaml:"Env"`        // 环境：prod、dev
 	BaseUrl    string `yaml:"BaseUrl"`    // base url
-	SiteTitle  string `json:"SiteTitle" ` // 网站标题
+	SiteTitle  string `yaml:"SiteTitle" ` // 网站标题
 	Port       string `yaml:"Port"`       // 端口
 	ShowSql    bool   `yaml:"ShowSql"`    // 是否显示日志
 	ViewsPath  string `yaml:"ViewsPath"`  // 模板路径
