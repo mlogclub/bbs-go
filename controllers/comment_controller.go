@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"github.com/kataras/iris"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils"
 )
 
 type CommentController struct {
@@ -44,7 +44,7 @@ func (this *CommentController) GetList() *simple.JsonResult {
 }
 
 func (this *CommentController) PostCreate() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}

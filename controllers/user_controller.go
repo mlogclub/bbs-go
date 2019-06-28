@@ -4,6 +4,7 @@ import (
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/mlog/utils/github"
+	"github.com/mlogclub/mlog/utils/session"
 	"strconv"
 
 	"github.com/kataras/iris"
@@ -38,7 +39,7 @@ func (this *UserController) GetBy(userId int64) {
 		return
 	}
 
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 
 	tab := this.Ctx.FormValueDefault("tab", "articles")
 	owner := currentUser != nil && currentUser.Id == user.Id // 是否是主人态
@@ -59,7 +60,7 @@ func (this *UserController) GetBy(userId int64) {
 	} else if tab == "messages" && owner {
 		messages, _ = this.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
 	} else if tab == "favorites" && owner {
-		currentUser := utils.GetCurrentUser(this.Ctx)
+		currentUser := session.GetCurrentUser(this.Ctx)
 		if currentUser != nil && currentUser.Id == user.Id {
 			favorites, _ = this.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
 		}
@@ -79,7 +80,7 @@ func (this *UserController) GetBy(userId int64) {
 
 // 编辑资料页面
 func (this *UserController) GetEditBy(userId int64) {
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
 		this.Ctx.Redirect("/user/signin", iris.StatusSeeOther)
 		return
@@ -91,7 +92,7 @@ func (this *UserController) GetEditBy(userId int64) {
 
 // 提交编辑资料
 func (this *UserController) PostEditBy(userId int64) {
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
 		this.Ctx.Redirect("/user/signin", iris.StatusSeeOther)
 		return
@@ -126,7 +127,7 @@ func (this *UserController) PostEditBy(userId int64) {
 
 // 当前登录用户
 func (this *UserController) GetCurrent() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -135,7 +136,7 @@ func (this *UserController) GetCurrent() *simple.JsonResult {
 
 // 登录页面
 func (this *UserController) GetSignin() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user != nil {
 		this.Ctx.Redirect("/", iris.StatusSeeOther)
 		return
@@ -162,7 +163,7 @@ func (this *UserController) PostSignin() {
 		return
 	}
 
-	utils.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {
@@ -174,7 +175,7 @@ func (this *UserController) PostSignin() {
 
 // 注册
 func (this *UserController) GetSignup() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user != nil {
 		this.Ctx.Redirect("/", iris.StatusSeeOther)
 		return
@@ -204,7 +205,7 @@ func (this *UserController) PostSignup() {
 		})
 		return
 	}
-	utils.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {
@@ -216,7 +217,7 @@ func (this *UserController) PostSignup() {
 
 // 退出登录
 func (this *UserController) AnySignout() {
-	utils.DelCurrentUser(this.Ctx)
+	session.DelCurrentUser(this.Ctx)
 	this.Ctx.Redirect(config.Conf.BaseUrl, iris.StatusSeeOther)
 }
 
@@ -253,7 +254,7 @@ func (this *UserController) GetGithubCallback() {
 			this.Ctx.StatusCode(500)
 		}
 	} else { // 直接登录
-		utils.SetCurrentUser(this.Ctx, user)
+		session.SetCurrentUser(this.Ctx, user)
 		this.Ctx.Redirect("/", iris.StatusSeeOther)
 	}
 }
@@ -323,7 +324,7 @@ func (this *UserController) PostGithubBind() {
 		})
 		return
 	}
-	utils.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {
@@ -335,7 +336,7 @@ func (this *UserController) PostGithubBind() {
 
 // 未读消息数量
 func (this *UserController) GetMsgcount() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	var count int64 = 0
 	if user != nil {
 		count = this.MessageService.GetUnReadCount(user.Id)
@@ -370,7 +371,7 @@ func GetUserArticles(ctx context.Context) {
 
 // 用户中心 - 用户所有的标签
 func GetUserTags(ctx context.Context) {
-	user := utils.GetCurrentUser(ctx)
+	user := session.GetCurrentUser(ctx)
 	userId := ctx.Params().GetInt64Default("userId", 0)
 	page := ctx.Params().GetIntDefault("page", 1)
 
@@ -406,7 +407,7 @@ func GetUserTags(ctx context.Context) {
 
 // 用户中心 - 用户所有的搜藏列表
 func GetUserFavorites(ctx context.Context) {
-	user := utils.GetCurrentUser(ctx)
+	user := session.GetCurrentUser(ctx)
 	userId := ctx.Params().GetInt64Default("userId", 0)
 	page := ctx.Params().GetIntDefault("page", 1)
 
@@ -437,7 +438,7 @@ func GetUserFavorites(ctx context.Context) {
 
 // 用户中心 - 消息列表
 func GetUserMessages(ctx context.Context) {
-	user := utils.GetCurrentUser(ctx)
+	user := session.GetCurrentUser(ctx)
 	userId := ctx.Params().GetInt64Default("userId", 0)
 	page := ctx.Params().GetIntDefault("page", 1)
 

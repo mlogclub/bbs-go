@@ -3,7 +3,7 @@ package oauth
 import (
 	"github.com/kataras/iris"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/session"
 	"gopkg.in/oauth2.v3/errors"
 	"gopkg.in/oauth2.v3/manage"
 	"gopkg.in/oauth2.v3/server"
@@ -51,7 +51,7 @@ func NewOauthServer() *Server {
 		return
 	})
 	srv.SetUserAuthorizationHandler(func(w http.ResponseWriter, r *http.Request) (userID string, err error) {
-		user := utils.GetCurrentUserByRequest(w, r)
+		user := session.GetCurrentUserByRequest(w, r)
 		if user == nil {
 			redirectToLogin(w, r)
 		} else {

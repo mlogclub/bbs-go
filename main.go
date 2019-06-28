@@ -8,6 +8,7 @@ import (
 	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/mlog/utils/github"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 )
@@ -20,7 +21,7 @@ func init() {
 	initLogrus()
 
 	config.InitConfig(*configFile) // 初始化配置
-	utils.InitSessionManager()     // 初始化sessionManager
+	session.InitSessionManager()   // 初始化sessionManager
 	utils.InitEmail()              // 初始化邮件
 	github.InitConfig()            // 初始化Github
 	initDB()                       // 初始化数据库

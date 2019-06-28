@@ -7,6 +7,7 @@ import (
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/mlogclub/simple"
 	"strings"
 )
@@ -37,7 +38,7 @@ func (this *TopicController) GetBy(topicId int64) {
 }
 
 func (this *TopicController) GetCreate() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		this.Ctx.Redirect("/user/signin?redirectUrl=/topic/create", iris.StatusSeeOther)
 		return
@@ -49,7 +50,7 @@ func (this *TopicController) GetCreate() {
 }
 
 func (this *TopicController) PostCreate() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -66,7 +67,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 
 // 收藏
 func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}

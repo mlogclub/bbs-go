@@ -6,7 +6,7 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/oauth"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/session"
 	"net/http"
 
 	"github.com/kataras/iris/context"
@@ -86,7 +86,7 @@ func (c *OauthServerController) PostLogin() {
 		})
 		return
 	}
-	utils.SetCurrentUser(c.Ctx, user)
+	session.SetCurrentUser(c.Ctx, user)
 
 	// TODO 登录成功之后的跳转地址先写死，后面将它配置到数据库中
 	c.Ctx.Redirect("/oauth/client", iris.StatusSeeOther)

@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
@@ -19,7 +20,7 @@ type UserTagController struct {
 
 // 标签列表页面
 func (this *UserTagController) GetList() mvc.View {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 	list, paging := this.UserArticleTagService.Query(simple.NewParamQueries(this.Ctx).Eq("user_id", user.Id).Page(page, 20).Desc("id"))
 

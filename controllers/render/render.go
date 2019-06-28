@@ -2,6 +2,7 @@ package render
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/session"
 	"html/template"
 	"math/rand"
 	"net/url"
@@ -64,7 +65,7 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 }
 
 func BuildCurrentUser(ctx context.Context) *model.UserInfo {
-	currentUser := utils.GetCurrentUser(ctx)
+	currentUser := session.GetCurrentUser(ctx)
 	if currentUser == nil {
 		return nil
 	}

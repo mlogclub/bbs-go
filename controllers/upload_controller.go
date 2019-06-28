@@ -2,13 +2,12 @@ package controllers
 
 import (
 	"github.com/mlogclub/mlog/utils/oss"
+	"github.com/mlogclub/mlog/utils/session"
 	"io/ioutil"
 
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
-
-	"github.com/mlogclub/mlog/utils"
 )
 
 const avatarMaxBytes int64 = 1024 * 1024 // 1M
@@ -18,7 +17,7 @@ type UploadController struct {
 }
 
 func (this *UploadController) Post() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -49,7 +48,7 @@ func (this *UploadController) Post() *simple.JsonResult {
 
 // 编辑器中上传
 func (this *UploadController) PostEditor() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		_, _ = this.Ctx.JSON(iris.Map{
 			"msg":  "请先登录",
@@ -110,7 +109,7 @@ func (this *UploadController) PostEditor() {
 }
 
 func (this *UploadController) PostFetch() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		_, _ = this.Ctx.JSON(iris.Map{
 			"msg":  "请先登录",

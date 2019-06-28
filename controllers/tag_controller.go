@@ -7,6 +7,7 @@ import (
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"strconv"
@@ -23,7 +24,7 @@ type TagController struct {
 
 // 添加标签页面
 func (this *TagController) GetAdd() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	// 必须要求登录
 	if user == nil {
 		this.Ctx.Redirect("/user/signin?redirect=/tag/add", iris.StatusSeeOther)
@@ -35,7 +36,7 @@ func (this *TagController) GetAdd() {
 
 // 添加标签
 func (this *TagController) PostAdd() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	// 必须要求登录
 	if user == nil {
 		this.Ctx.Redirect("/user/signin?redirect=/tag/add", iris.StatusSeeOther)
@@ -64,7 +65,7 @@ func (this *TagController) PostAdd() {
 
 // 用户标签列表
 func (this *TagController) GetUsertags() *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}

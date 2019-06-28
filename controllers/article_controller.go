@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/session"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"strconv"
@@ -63,7 +64,7 @@ func (this *ArticleController) GetBy(articleId int64) {
 
 // 创建文章页面
 func (this *ArticleController) GetCreate() {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		this.Ctx.Redirect("/user/signin?redirectUrl=/article/create", iris.StatusTemporaryRedirect)
 		return
@@ -78,7 +79,7 @@ func (this *ArticleController) GetCreate() {
 
 // 创建文章
 func (this *ArticleController) PostCreate() *simple.JsonResult {
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -113,7 +114,7 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 
 // 编辑文章页面
 func (this *ArticleController) GetEditBy(articleId int64) {
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
 		this.Ctx.Redirect("/user/signin?redirectUrl=/article/edit/"+strconv.FormatInt(articleId, 10), iris.StatusTemporaryRedirect)
 		return
@@ -139,7 +140,7 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 
 // 编辑文章
 func (this *ArticleController) PostEdit() *simple.JsonResult {
-	currentUser := utils.GetCurrentUser(this.Ctx)
+	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -185,7 +186,7 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 
 // 删除文章
 func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
@@ -208,7 +209,7 @@ func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult 
 
 // 收藏文章
 func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResult {
-	user := utils.GetCurrentUser(this.Ctx)
+	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
