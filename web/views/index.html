@@ -1,0 +1,87 @@
+{{template "common/header.html" .}}
+
+{{template "common/nav.html" .}}
+{{if .ActiveTags}}
+    <section class="main">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12">
+
+                    <div class="widget">
+                        <div class="header">
+                            <span>今日热议</span>
+                            <div class="slot">
+                                <a href="{{baseUrl}}/tags">查看更多>></a>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="tags are-medium">
+                                {{range .ActiveTags}}
+                                    <span class="tag is-normal is-white"><a href="{{tagArticlesUrl .TagId 1}}"
+                                                                            title="{{.TagName}}">{{.TagName}}</a></span>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+{{end}}
+
+<section class="main">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-9">
+
+                <div class="categories">
+                    {{if .Categories}}
+                        <div class="widget">
+                            <div class="content">
+                                <div class="tags are-medium">
+                                    {{range .Categories}}
+                                        <span class="tag is-normal is-light"><a
+                                                    href="{{categoryArticlesUrl .CategoryId 1}}"
+                                                    title="{{.CategoryName}}">{{.CategoryName}}</a></span>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+
+                <div class="main-body">
+                    {{if .Articles}}
+                        <div class="widget">
+                            <div class="header">
+                                <span>最新文章</span>
+                                <div class="slot">
+                                    <a href="{{baseUrl}}/articles">查看更多>></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <ul class="article-list">
+                                    {{range .Articles}}
+                                        {{template "partials/article/list-item.html" .}}
+                                    {{end}}
+                                    <li class="more">
+                                        <a href="{{baseUrl}}/articles">点击查看更多</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="main-aside">
+                    {{template "common/aside.html" .}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{{template "common/footer.html" .}}

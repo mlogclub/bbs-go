@@ -1,0 +1,123 @@
+{{template "common/header.html" .}}
+{{template "common/nav.html" .}}
+
+<section class="main">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-9">
+                <div class="main-body">
+                    <div class="topic-detail">
+
+                        <div class="header">
+                            <div class="left">
+                                <a href="{{baseUrl}}/user/{{.Topic.User.Id}}" title="{{.Topic.User.Nickname}}"
+                                   target="_blank">
+                                    <div class="avatar radius8"
+                                         style="background-image: url('{{.Topic.User.Avatar}}');"></div>
+                                </a>
+                            </div>
+
+                            <div class="right">
+                                <div class="topic-title">{{.Topic.Title}}</div>
+
+                                <div class="topic-meta">
+                                    <span><a href="{{baseUrl}}/user/{{.Topic.User.Id}}">{{.Topic.User.Nickname}}</a></span>
+                                    <span>{{prettyTime .Topic.LastCommentTime}}</span>
+                                    <span>{{.Topic.ViewCount}}</span>
+                                    {{if .Topic.Tags}}
+                                        {{range .Topic.Tags}}
+                                            <span class="tag"><a href="#" target="_blank">{{.TagName}}</a></span>
+                                        {{end}}
+                                    {{end}}
+                                    <span><i class="iconfont icon-favorite"></i><a
+                                                href="javascript:addFavorite({{.Topic.TopicId}})">收藏</a></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="content">
+                            {{.Topic.Content}}
+                        </div>
+
+                        <!-- 展示广告-横幅 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-5683711753850351"
+                             data-ad-slot="1742173616"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                          (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+
+                    </div>
+
+                    {{template "comment/index.html" .}}
+
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="main-aside">
+
+                    <div class="widget">
+                        <div class="header">{{.Topic.User.Nickname}}</div>
+                        <div class="content">
+                            <div>
+                            <span>
+                                <i class="iconfont icon-username"></i>
+                                <a href="{{baseUrl}}/user/{{.Topic.User.Id}}">{{.Topic.User.Nickname}}</a>
+                            </span>
+                            </div>
+                            <a href="{{baseUrl}}/user/{{.Topic.User.Id}}" title="{{.Topic.User.Nickname}}"
+                               target="_blank">
+                                <div class="avatar"
+                                     style="width:150px;height: 150px; background-image: url('{{.Topic.User.Avatar}}');"></div>
+                            </a>
+                            {{if .Topic.User.Description}}
+                                <p>{{.Topic.User.Description}}</p>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{if eq .Topic.User.Type 1}}
+                        <div class="widget">
+                            <div class="header">关注公众号</div>
+                            <div class="content">
+                                <img src="https://open.weixin.qq.com/qr/code?username={{.Topic.User.Username}}"/>
+                            </div>
+                        </div>
+                    {{end}}
+
+                    <!-- 正方形 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-5683711753850351"
+                         data-ad-slot="1787062187"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                      (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{{/*高亮*/}}
+<link href="//cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
+<script src="//cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+<script type="text/javascript">
+  function addFavorite(topicId) {
+    httpPost('{{baseUrl}}/topic/favorite/' + topicId)
+      .then(function (data) {
+        alert('收藏成功')
+      }, function (response) {
+        console.error(response)
+      })
+  }
+</script>
+{{template "common/footer.html" .}}

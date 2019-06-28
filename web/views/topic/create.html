@@ -1,0 +1,157 @@
+{{template "common/header.html" .}}
+{{template "common/nav.html" .}}
+
+<section class="main">
+    <div class="container">
+
+        <div class="columns">
+            <div class="column is-21">
+                <div class="widget">
+                    <div class="header">
+                        <nav class="breadcrumb" aria-label="breadcrumbs">
+                            <ul>
+                                <li><a href="{{baseUrl}}">首页</a></li>
+                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}">{{.CurrentUser.Nickname}}</a></li>
+                                <li class="is-active"><a href="#" aria-current="page">讨论</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="content">
+                        <div class="field">
+                            <div class="control">
+                                <input name="title" id="title" class="input" type="text"
+                                       placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <div name="content" id="editor" style="border: 1px solid #d1d5da;"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="field">
+                            <label class="label">标签</label>
+                            <div class="control">
+                                <div id="select-tags" class="select-tags">
+                                    <input id="tags" name="tags" type="hidden" v-model="tags"/>
+                                    <div class="tags-selected">
+                                        <span class="tag-item" v-for="tag in tags" :key="tag">
+                                            <span class="text">{{html "{{tag}}"}}<i
+                                                        class="iconfont icon-close"></i></span>
+                                        </span>
+                                    </div>
+                                    <input ref="tagInput" class="input" type="text" v-model="inputTag"
+                                           @keydown.delete="removeTag" @keydown.enter="addTag"
+                                           @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
+                                           placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <a class="button is-success" id="topicCreateSubmit">发表讨论</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="widget">
+                    <div class="header">Markdown 语法参考</div>
+                    <div class="content">
+                        <ol>
+                            <li><tt>### 单行的标题</tt></li>
+                            <li><tt>**粗体**</tt></li>
+                            <li><tt>`console.log('行内代码')`</tt></li>
+                            <li><tt>```js\n code \n```</tt> 标记代码块</li>
+                            <li><tt>[内容](链接)</tt></li>
+                            <li><tt>![文字说明](图片链接)</tt></li>
+                        </ol>
+                        <span><a href="https://www.mlog.club/article/5522" target="_blank">Markdown 文档</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css"/>
+<script src="//cdn.jsdelivr.net/npm/vditor/dist/index.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    const vditor = new Vditor('editor', {
+      cache: false,
+      height: 400,
+      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'list', 'ordered-list', 'check', 'code',
+        'inline-code', 'undo', 'redo', 'upload', 'link', 'table', 'preview', 'fullscreen'],
+      placeholder: '讨论内容（可为空）',
+      upload: {
+        accept: 'image/*,.pdf',
+        token: 'test',
+        url: '{{baseUrl}}/upload/editor',
+        linkToImgUrl: '{{baseUrl}}/upload/fetch',
+        filename(name) {
+          return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
+        }
+      },
+    })
+    vditor.focus()
+
+    $('#topicCreateSubmit').click(function () {
+      var params = {
+        title: $('#title').val(),
+        content: vditor.getValue(),
+        tags: $('#tags').val(),
+      }
+      httpPost('{{baseUrl}}/topic/create', params).then(function (data) {
+        window.location = '{{baseUrl}}/topic/' + data.topicId
+      }, function (response) {
+        alert(response.message)
+      })
+    })
+  })
+
+  var app = new Vue({
+    el: '#select-tags',
+    data: {
+      inputTag: '',
+      tags: []
+    },
+    mounted() {
+    },
+    methods: {
+      removeTag(event, tag) {
+        var selectionStart = this.$refs.tagInput.selectionStart
+        if (!this.inputTag || selectionStart === 0) { // input框没内容，或者光标在首位的时候就删除最后一个标签
+          this.tags.splice(this.tags.length - 1, 1);
+        }
+      },
+
+      addTag(event) {
+        event.stopPropagation()
+        event.preventDefault()
+
+        if (!this.inputTag) {
+          return;
+        }
+        if (this.tags.indexOf(this.inputTag) !== -1) {
+          return;
+        }
+        if (this.tags.length >= 4) { // 最多四个标签
+          return;
+        }
+        if (this.inputTag.length > 15) { // 每个标签最多15个字符
+          return;
+        }
+        this.tags.push(this.inputTag);
+        this.inputTag = ''
+      }
+    }
+  })
+</script>
+
+{{template "common/footer.html" .}}

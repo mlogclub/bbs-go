@@ -1,0 +1,37 @@
+Env: prod
+BaseUrl: https://mlog.club
+SiteTitle: M-LOG
+Port: '8082'
+ShowSql: false
+ViewsPath: "./web/views"
+StaticPath: "./web/static"
+
+MySqlUrl: root:xxx@tcp(localhost:3306)/mlog_db?charset=utf8&parseTime=True&loc=Local
+RedisAddr: 127.0.0.1:6379
+
+OauthServer:
+  AuthUrl: https://mlog.club/oauth/authorize
+  TokenUrl: https://mlog.club/oauth/token
+
+OauthClient:
+  ClientId: xxx
+  ClientSecret: xxx
+  ClientRedirectUrl: https://mlog.club/oauth/client/callback
+  ClientSuccessUrl: https://admin.mlog.club/mlog/login_success.html
+
+Github:
+  ClientID:
+  ClientSecret:
+
+AliyunOss:
+  Host: xx
+  Bucket: bucket-name
+  Endpoint: xx
+  AccessId: xx
+  AccessSecret: xx
+
+Smtp:
+  Addr: smtp.qq.com
+  Port: '25'
+  Username: xxx
+  Password: xxx

@@ -1,0 +1,183 @@
+{{template "common/header.html" .}}
+{{template "common/nav.html" .}}
+
+<section class="main">
+    <div class="container">
+
+        <div class="columns">
+            <div class="column is-9">
+                <div class="main-body">
+                    <div class="tabs" style="margin-bottom: 0px;">
+                        <ul>
+                            <li {{if eq .Tab "articles"}}class="is-active"{{end}}>
+                                <a href="{{baseUrl}}/user/{{.User.Id}}?tab=articles">
+                                <span class="icon is-small"><i class="iconfont icon-article"
+                                                               aria-hidden="true"></i></span>
+                                    <span>文章</span>
+                                </a>
+                            </li>
+                            <li {{if eq .Tab "topics"}}class="is-active"{{end}}>
+                                <a href="{{baseUrl}}/user/{{.User.Id}}?tab=topics">
+                                <span class="icon is-small"><i class="iconfont icon-topic"
+                                                               aria-hidden="true"></i></span>
+                                    <span>讨论</span>
+                                </a>
+                            </li>
+                            {{if .CurrentUser}}
+                                {{if eq .User.Id .CurrentUser.Id}}
+                                    <li {{if eq .Tab "tags"}}class="is-active"{{end}}>
+                                        <a href="{{baseUrl}}/user/{{.User.Id}}?tab=tags">
+                                            <span class="icon is-small"><i class="iconfont icon-tags"
+                                                                           aria-hidden="true"></i></span>
+                                            <span>标签</span>
+                                        </a>
+                                    </li>
+                                {{end}}
+                            {{end}}
+                            {{if .CurrentUser}}
+                                {{if eq .User.Id .CurrentUser.Id}}
+                                    <li {{if eq .Tab "messages"}}class="is-active"{{end}}>
+                                        <a href="{{baseUrl}}/user/{{.User.Id}}?tab=messages">
+                                        <span class="icon is-small"><i class="iconfont icon-message"
+                                                                       aria-hidden="true"></i></span>
+                                            <span>消息</span>
+                                        </a>
+                                    </li>
+                                {{end}}
+                            {{end}}
+                            {{if .CurrentUser}}
+                                {{if eq .User.Id .CurrentUser.Id}}
+                                    <li {{if eq .Tab "favorites"}}class="is-active"{{end}}>
+                                        <a href="{{baseUrl}}/user/{{.User.Id}}?tab=favorites">
+                                        <span class="icon is-small"><i class="iconfont icon-favorites"
+                                                                       aria-hidden="true"></i></span>
+                                            <span>收藏</span>
+                                        </a>
+                                    </li>
+                                {{end}}
+                            {{end}}
+                        </ul>
+                    </div>
+
+                    {{if .Articles}}
+                        <ul class="article-list">
+                            {{range .Articles}}
+                                {{template "partials/article/list-item.html" .}}
+                            {{end}}
+                        </ul>
+                        <div style="text-align: right;">
+                            <a href="{{baseUrl}}/user/{{.User.Id}}/articles">查看更多&gt;&gt;</a>
+                        </div>
+                    {{else if eq .Tab "articles"}}
+                        <div class="notification is-primary" style="margin-top: 10px;">
+                            暂无文章...
+                        </div>
+                    {{end}}
+
+                    {{if .Topics}}
+                        <ul class="topic-list">
+                            {{range .Topics}}
+                                {{template "topic/list-item.html" .}}
+                            {{end}}
+                        </ul>
+                        <div style="text-align: right;">
+                            <a href="{{baseUrl}}/user/{{.User.Id}}/topics">查看更多&gt;&gt;</a>
+                        </div>
+                    {{else if eq .Tab "topics"}}
+                        <div class="notification is-primary" style="margin-top: 10px;">
+                            暂无内容...
+                        </div>
+                    {{end}}
+
+                    {{if eq .Tab "tags"}}
+                        <div style="padding-top: 10px;">
+                            <div style="float:right; padding-bottom: 10px;">
+                                <a class="button is-primary" href="{{baseUrl}}/tag/add">
+                                    <span class="icon is-small"><i class="iconfont icon-edit"></i></span>
+                                    <span>添加标签</span>
+                                </a>
+                            </div>
+                            <div>
+                                <table class="table is-fullwidth is-bordered is-hoverable">
+                                    <thead>
+                                    <tr>
+                                        <th>标签</th>
+                                        <th>文章数量</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {{if .Tags}}
+                                        {{range .Tags}}
+                                            <tr>
+                                                <td>{{.TagName}}</td>
+                                                <td>0</td>
+                                                <td><a class="button is-light">删除</a></td>
+                                            </tr>
+                                        {{end}}
+                                    {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {{end}}
+
+                    {{if .Messages}}
+                        <ul class="message-list">
+                            {{range .Messages}}
+                                <li class="message-item">
+                                    <div class="message-item-left">
+                                        <img src="{{.User.Avatar}}"/>
+                                    </div>
+                                    <div class="message-item-right">
+                                        <div class="message-item-meta">
+                                            <span class="nickname"><a href="{{userUrl .User.Id}}"
+                                                                      target="_blank">{{.User.Nickname}}</a></span>
+                                            <span class="time">{{prettyTime .CreateTime}}</span>
+                                        </div>
+                                        <div class="content">
+                                            {{.Content}}
+                                            <blockquote>{{.QuoteContent}}</blockquote>
+                                        </div>
+                                    </div>
+                                </li>
+                            {{end}}
+                        </ul>
+                        <div style="text-align: right;">
+                            <a href="{{baseUrl}}/user/{{.User.Id}}/messages">查看更多&gt;&gt;</a>
+                        </div>
+                    {{else if eq .Tab "messages"}}
+                        <div class="notification is-primary" style="margin-top: 10px;">
+                            暂无消息...
+                        </div>
+                    {{end}}
+
+                    {{if .Favorites}}
+                        <ul class="article-list">
+                            {{range .Favorites}}
+                                {{template "partials/favorite/list-item.html" .}}
+                            {{end}}
+                        </ul>
+
+                        <div style="text-align: right;">
+                            <a href="{{baseUrl}}/user/{{.User.Id}}/favorites">查看更多&gt;&gt;</a>
+                        </div>
+                    {{else if eq .Tab "favorites"}}
+                        <div class="notification is-primary" style="margin-top: 10px;">
+                            暂无收藏...
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="main-aside">
+                    {{template "user/user-profile.html" .}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{{template "common/footer.html" .}}
