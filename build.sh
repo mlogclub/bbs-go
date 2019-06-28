@@ -29,7 +29,7 @@ cp -r $dir/web/views $outDir/web/views
 cp -r $dir/web/static $outDir/web/static
 #cp -r $dir/web/admin/dist $outDir/web/admin
 
-echo "nohup ./$projectName -config /data/$projectName.json > ./output.log 2>&1 &" >> $outDir/start.sh
+echo "nohup ./$projectName -config /data/$projectName.yaml > ./output.log 2>&1 &" >> $outDir/start.sh
 chmod +x $outDir/$projectName
 chmod +x $outDir/start.sh
 
