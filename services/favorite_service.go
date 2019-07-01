@@ -77,7 +77,7 @@ func (this *FavoriteService) AddArticleFavorite(userId, articleId int64) error {
 	})
 }
 
-// 收藏帖子
+// 收藏主题
 func (this *FavoriteService) AddTopicFavorite(userId, topicId int64) error {
 	topic := this.TopicRepository.Get(simple.GetDB(), topicId)
 	if topic == nil || topic.Status != model.TopicStatusOk {

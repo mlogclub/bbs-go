@@ -92,7 +92,7 @@ func BuildTopicsUrl(page int) string {
 	return BuildAbsUrl("/topics")
 }
 
-// 用户帖子列表
+// 用户主题列表
 func BuildUserTopicsUrl(userId int64, page int) string {
 	path := "/user/" + strconv.FormatInt(userId, 10) + "/topics"
 	if page > 1 {

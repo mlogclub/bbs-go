@@ -136,7 +136,7 @@ func (this *TopicService) Edit(topicId int64, tags []string, title, content stri
 	return simple.NewError2(err)
 }
 
-// 帖子标签
+// 主题标签
 func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags, err := this.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
 	if err != nil {

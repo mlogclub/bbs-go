@@ -44,7 +44,7 @@ func (this *TopicController) GetCreate() {
 		return
 	}
 	render.View(this.Ctx, "topic/create.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "发起讨论",
+		utils.GlobalFieldSiteTitle: "发表主题",
 	})
 	return
 }
@@ -131,7 +131,7 @@ func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
 	return simple.Success()
 }
 
-// 帖子列表
+// 主题列表
 func GetTopics(ctx context.Context) {
 	page := ctx.Params().GetIntDefault("page", 1)
 
@@ -140,7 +140,7 @@ func GetTopics(ctx context.Context) {
 		Page(page, 20).Desc("last_comment_time"))
 
 	render.View(ctx, "topic/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "讨论",
+		utils.GlobalFieldSiteTitle: "主题",
 		"Topics":                   render.BuildTopics(topics),
 		"Page":                     paging,
 		"PrePageUrl":               utils.BuildTopicsUrl(page - 1),

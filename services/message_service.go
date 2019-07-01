@@ -170,7 +170,7 @@ func (this *MessageService) SendCommentMsg(comment *model.Comment) {
 			topic := this.TopicRepository.Get(simple.GetDB(), comment.EntityId)
 			if topic != nil && topic.UserId != comment.UserId {
 				userId = topic.UserId
-				msgContent = commentUser.Nickname + " 回复了你的讨论：" + commentSummary
+				msgContent = commentUser.Nickname + " 回复了你的主题：" + commentSummary
 				msgQuoteContent = "《" + topic.Title + "》"
 			}
 		}

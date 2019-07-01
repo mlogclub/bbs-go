@@ -12,7 +12,7 @@
                             <ul>
                                 <li><a href="{{baseUrl}}">首页</a></li>
                                 <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}?tab=topics">{{.CurrentUser.Nickname}}</a></li>
-                                <li class="is-active"><a href="#" aria-current="page">讨论</a></li>
+                                <li class="is-active"><a href="#" aria-current="page">主题</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -90,7 +90,7 @@
       height: 400,
       toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'list', 'ordered-list', 'check', 'code',
         'inline-code', 'undo', 'redo', 'upload', 'link', 'table', 'preview', 'fullscreen'],
-      placeholder: '讨论内容（可为空）',
+      placeholder: '主题内容（可为空）',
       upload: {
         accept: 'image/*',
         token: 'test',

@@ -165,7 +165,7 @@ type ArticleShare struct {
 	CreateTime  int64  `json:"createTime" form:"createTime"`                           // 创建时间
 }
 
-// 帖子
+// 主题
 type Topic struct {
 	Model
 	UserId          int64  `gorm:"not null" json:"userId" form:"userId"`        // 用户
@@ -177,10 +177,10 @@ type Topic struct {
 	CreateTime      int64  `json:"createTime" form:"createTime"`                // 创建时间
 }
 
-// 帖子标签
+// 主题标签
 type TopicTag struct {
 	Model
-	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"` // 帖子编号
+	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"` // 主题编号
 	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`     // 标签编号
 	CreateTime int64 `json:"createTime" form:"createTime"`           // 创建时间
 }

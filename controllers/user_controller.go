@@ -471,7 +471,7 @@ func GetUserMessages(ctx context.Context) {
 	})
 }
 
-// 用户中心 - 帖子列表
+// 用户中心 - 主题列表
 func GetUserTopics(ctx context.Context) {
 	userId := ctx.Params().GetInt64Default("userId", 0)
 	page := ctx.Params().GetIntDefault("page", 1)

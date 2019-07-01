@@ -15,7 +15,7 @@
             <div class="navbar-start">
                 <a class="navbar-item" href="{{baseUrl}}">首页</a>
                 <a class="navbar-item" href="{{baseUrl}}/articles">文章</a>
-                <a class="navbar-item" href="{{baseUrl}}/topics">讨论</a>
+                <a class="navbar-item" href="{{baseUrl}}/topics">主题</a>
             </div>
 
 
@@ -34,7 +34,7 @@
                     <div class="buttons">
                         {{/*<a class="button is-success" href="{{baseUrl}}/article/create"><strong>发表文章</strong></a>*/}}
                         <a class="button is-success" href="{{baseUrl}}/topic/create"><i
-                                    class="iconfont icon-topic"></i>&nbsp;<strong>讨论</strong></a>
+                                    class="iconfont icon-topic"></i>&nbsp;<strong>发帖</strong></a>
                     </div>
                 </div>
                 {{/*
@@ -42,7 +42,7 @@
                     <a class="navbar-link"><strong>发表</strong></a>
                     <div class="navbar-dropdown">
                         <a class="navbar-item" href="{{baseUrl}}/article/create">发表文章</a>
-                        <a class="navbar-item" href="{{baseUrl}}/topic/create">发表讨论</a>
+                        <a class="navbar-item" href="{{baseUrl}}/topic/create">发表主题</a>
                     </div>
                 </div>
                 */}}
@@ -55,7 +55,7 @@
                         </a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" href="{{baseUrl}}/topic/create"><i
-                                        class="iconfont icon-topic"></i>&nbsp;发表讨论</a>
+                                        class="iconfont icon-topic"></i>&nbsp;发表主题</a>
                             <a class="navbar-item" href="{{baseUrl}}/article/create"><i
                                         class="iconfont icon-publish"></i>&nbsp;发表文章</a>
                             <a class="navbar-item" href="{{baseUrl}}/user/{{.CurrentUser.Id}}/messages"><i
