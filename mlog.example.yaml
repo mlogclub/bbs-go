@@ -28,11 +28,11 @@ Github:
 
 # 阿里云oss配置
 AliyunOss:
-  Host: oss-cn.aliyuncs.com
+  Host: https://file.mlog.club/
   Bucket: bucket-name
-  Endpoint: xx
-  AccessId: xx
-  AccessSecret: xx
+  Endpoint: oss-cn-hongkong-internal.aliyuncs.com
+  AccessId: accessId
+  AccessSecret: accessSecret
 
 # 邮件服务器配置
 Smtp:

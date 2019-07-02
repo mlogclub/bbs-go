@@ -27,6 +27,7 @@
       </el-table-column>
       <el-table-column prop="username" label="用户名信息">
         <template scope="scope">
+          <div>{{scope.row.nickname}}</div>
           <div>{{scope.row.username}}</div>
           <div>{{scope.row.email}}</div>
           <div v-if="scope.row.roles && scope.row.roles.length">
