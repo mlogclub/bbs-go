@@ -13,10 +13,10 @@ import (
 )
 
 type IndexController struct {
-	Ctx                 iris.Context
-	TagService          *services.TagService
-	ArticleService      *services.ArticleService
-	ArticleShareService *services.ArticleShareService
+	Ctx            iris.Context
+	TagService     *services.TagService
+	ArticleService *services.ArticleService
+	TopicService   *services.TopicService
 }
 
 func (this *IndexController) Any() mvc.View {
@@ -27,6 +27,8 @@ func (this *IndexController) Any() mvc.View {
 	articles, _ := this.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).
 		Order("id desc").Size(20))
 
+	topics, _ := this.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
+
 	return mvc.View{
 		Name: "index.html",
 		Data: iris.Map{
@@ -34,6 +36,7 @@ func (this *IndexController) Any() mvc.View {
 			utils.GlobalFieldSiteKeywords:    "Go中国，Golang, Golang学习,Golang教程,Golang社区,Go基金会,Go语言中文网,Go,Go语言,主题,资源,文章,图书,开源项目,M-LOG",
 			"Categories":                     categories,
 			"Articles":                       render.BuildArticles(articles),
+			"Topics":                         render.BuildTopics(topics),
 			"ActiveUsers":                    render.BuildUsers(activeUsers),
 			"ActiveTags":                     render.BuildTags(activeTags),
 		},

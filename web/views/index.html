@@ -52,6 +52,27 @@
                 </div>
 
                 <div class="main-body">
+                    {{if .Topics}}
+                        <div class="widget">
+                            <div class="header">
+                                <span>最新主题</span>
+                                <div class="slot">
+                                    <a href="{{baseUrl}}/topics">查看更多>></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <ul class="topic-list">
+                                    {{range .Topics}}
+                                        {{template "topic/list-item.html" .}}
+                                    {{end}}
+                                    <li class="more">
+                                        <a href="{{baseUrl}}/topics">点击查看更多</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    {{end}}
+
                     {{if .Articles}}
                         <div class="widget">
                             <div class="header">
