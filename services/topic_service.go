@@ -1,11 +1,18 @@
 package services
 
 import (
+	"github.com/gorilla/feeds"
+	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
+	"path"
+	"time"
 )
 
 type ScanTopicCallback func(topics []model.Topic)
@@ -161,5 +168,77 @@ func (this *TopicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 	err := this.UpdateColumn(topicId, "last_comment_time", lastCommentTime)
 	if err != nil {
 		logrus.Error(err)
+	}
+}
+
+// sitemap
+func (this *TopicService) GenerateSitemap() {
+	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
+		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+
+	sm := stm.NewSitemap(0)
+	sm.SetDefaultHost(config.Conf.BaseUrl)
+	sm.Create()
+
+	for _, topic := range topics {
+		topicUrl := utils.BuildTopicUrl(topic.Id)
+		sm.Add(stm.URL{{"loc", topicUrl}, {"lastmod", simple.TimeFromTimestamp(topic.CreateTime)}})
+	}
+
+	data := sm.XMLContent()
+	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_sitemap.xml"), string(data), false)
+}
+
+// rss
+func (this *TopicService) GenerateRss() {
+	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
+		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+
+	var items []*feeds.Item
+
+	for _, topic := range topics {
+		topicUrl := utils.BuildTopicUrl(topic.Id)
+		user := cache.UserCache.Get(topic.UserId)
+		if user == nil {
+			continue
+		}
+		item := &feeds.Item{
+			Title:       topic.Title,
+			Link:        &feeds.Link{Href: topicUrl},
+			Description: utils.GetMarkdownSummary(topic.Content),
+			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
+			Created:     simple.TimeFromTimestamp(topic.CreateTime),
+		}
+		items = append(items, item)
+	}
+
+	feed := &feeds.Feed{
+		Title:       config.Conf.SiteTitle,
+		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
+		Description: "分享生活",
+		Author:      &feeds.Author{Name: config.Conf.SiteTitle},
+		Created:     time.Now(),
+		Items:       items,
+	}
+	atom, err := feed.ToAtom()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_atom.xml"), atom, false)
+	}
+
+	rss, err := feed.ToRss()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_rss.xml"), rss, false)
 	}
 }

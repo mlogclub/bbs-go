@@ -17,6 +17,10 @@ func startSchedule() {
 		articleService := services.NewArticleService()
 		articleService.GenerateSitemap()
 		articleService.GenerateRss()
+
+		topicService := services.NewTopicService()
+		topicService.GenerateSitemap()
+		topicService.GenerateRss()
 	})
 
 	// 码农日报
