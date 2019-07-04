@@ -73,6 +73,12 @@ func (this *TagController) GetUsertags() *simple.JsonResult {
 	return simple.JsonData(render.BuildTags(tags))
 }
 
+func (this *TagController) GetAutocomplete() *simple.JsonResult {
+	input := this.Ctx.FormValue("input")
+	tags := this.TagService.Autocomplete(input)
+	return simple.JsonData(tags)
+}
+
 // 所有标签列表
 func GetTags(ctx iris.Context) {
 	page := ctx.Params().GetIntDefault("page", 1)

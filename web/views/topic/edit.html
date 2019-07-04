@@ -11,7 +11,9 @@
                         <nav class="breadcrumb" aria-label="breadcrumbs">
                             <ul>
                                 <li><a href="{{baseUrl}}">首页</a></li>
-                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}?tab=topics">{{.CurrentUser.Nickname}}</a></li>
+                                <li>
+                                    <a href="{{baseUrl}}/user/{{.CurrentUser.Id}}?tab=topics">{{.CurrentUser.Nickname}}</a>
+                                </li>
                                 <li class="is-active"><a href="#" aria-current="page">主题</a></li>
                             </ul>
                         </nav>
@@ -34,21 +36,8 @@
                         <div class="field">
                             <label class="label">标签</label>
                             <div class="control">
-                                <div id="select-tags" class="select-tags">
-                                    <input id="tags" name="tags" type="hidden" v-model="tags"/>
-                                    <div class="tags-selected">
-                                        <span class="tag-item" v-for="tag in tags" :key="tag">
-                                            <span class="text">{{html "{{tag}}"}}<i
-                                                        class="iconfont icon-close"
-                                                        @click="clickRemoveTag"
-                                                        :data-name="tag"></i></span>
-                                        </span>
-                                    </div>
-                                    <input ref="tagInput" class="input" type="text" v-model="inputTag"
-                                           @keydown.delete="removeTag" @keydown.enter="addTag"
-                                           @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
-                                           placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
-                                </div>
+                                {{$Tags := .Topic.Tags}}
+                                {{template "topic/taginput.html" $Tags }}
                             </div>
                         </div>
 
@@ -116,56 +105,6 @@
         alert(response.message)
       })
     })
-  })
-
-  var app = new Vue({
-    el: '#select-tags',
-    data: {
-      inputTag: '',
-      tags: [
-          {{if .Topic.Tags}} {{range .Topic.Tags}} '{{.}}', {{end}} {{end}}
-      ]
-    },
-    mounted() {
-    },
-    methods: {
-      removeTag(event, tag) {
-        var selectionStart = this.$refs.tagInput.selectionStart
-        if (!this.inputTag || selectionStart === 0) { // input框没内容，或者光标在首位的时候就删除最后一个标签
-          this.tags.splice(this.tags.length - 1, 1);
-        }
-      },
-
-      clickRemoveTag(event) {
-        var tag = event.target.dataset.name
-        if (tag) {
-          var index = this.tags.indexOf(tag)
-          if (index !== -1) {
-            this.tags.splice(index, 1);
-          }
-        }
-      },
-
-      addTag(event) {
-        event.stopPropagation()
-        event.preventDefault()
-
-        if (!this.inputTag) {
-          return;
-        }
-        if (this.tags.indexOf(this.inputTag) !== -1) {
-          return;
-        }
-        if (this.tags.length >= 4) { // 最多四个标签
-          return;
-        }
-        if (this.inputTag.length > 15) { // 每个标签最多15个字符
-          return;
-        }
-        this.tags.push(this.inputTag);
-        this.inputTag = ''
-      }
-    }
   })
 </script>
 

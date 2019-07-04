@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/mlogclub/simple"
+	"strings"
 
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
@@ -53,6 +54,16 @@ func (this *TagService) UpdateColumn(id int64, name string, value interface{}) e
 
 func (this *TagService) Delete(id int64) {
 	this.TagRepository.Delete(simple.GetDB(), id)
+}
+
+// 自动完成
+func (this *TagService) Autocomplete(input string) []model.Tag {
+	input = strings.TrimSpace(input)
+	if len(input) == 0 {
+		return nil
+	}
+	list, _ := this.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("name like %?%", input))
+	return list
 }
 
 func (this *TagService) GetOrCreate(name string) (*model.Tag, error) {
