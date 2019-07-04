@@ -62,7 +62,8 @@ func (this *TagService) Autocomplete(input string) []model.Tag {
 	if len(input) == 0 {
 		return nil
 	}
-	list, _ := this.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("name like %?%", input))
+	list, _ := this.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("status = ? and name like ?",
+		model.TagStatusOk, "%"+input+"%").Size(6))
 	return list
 }
 

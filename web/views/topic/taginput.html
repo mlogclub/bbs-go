@@ -6,10 +6,19 @@
                                                     :data-name="tag"></i></span>
         </span>
     </div>
-    <input ref="tagInput" class="input" type="text" v-model="inputTag"
+    <input ref="tagInput" class="input" type="text" v-model="inputTag" @input="autocomplete"
            @keydown.delete="removeTag" @keydown.enter="addTag"
            @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
+           @keydown.38="selectUp" @keydown.40="selectDown"
            placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
+    <div v-if="autocompleteTags.length > 0" class="autocomplete">
+        <div class="ac-container">
+            <section class="ac-section">
+                <div v-for="(item, index) in autocompleteTags" :key="item" class="ac-item"
+                     :class="{active: index === selectIndex}" v-text="item"></div>
+            </section>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -19,7 +28,9 @@
       inputTag: '',
       tags: [
           {{if .}} {{range .}} '{{.}}', {{end}} {{end}}
-      ]
+      ],
+      autocompleteTags: [],
+      selectIndex: -1
     },
     mounted() {
     },
@@ -45,20 +56,71 @@
         event.stopPropagation()
         event.preventDefault()
 
-        if (!this.inputTag) {
-          return;
+        if (this.selectIndex >= 0 && this.autocompleteTags.length > this.selectIndex) {
+          this._addTag(this.autocompleteTags[this.selectIndex])
+          this.autocompleteTags = []
+          this.selectIndex = -1
+        } else {
+          this._addTag(this.inputTag)
         }
-        if (this.tags.indexOf(this.inputTag) !== -1) {
+      },
+
+      _addTag(tagName) {
+        if (!tagName) {
           return;
         }
         if (this.tags.length >= 4) { // 最多四个标签
           return;
         }
-        if (this.inputTag.length > 15) { // 每个标签最多15个字符
+        if (tagName.length > 15) { // 每个标签最多15个字符
           return;
         }
-        this.tags.push(this.inputTag);
+
+        if (this.tags.indexOf(tagName) === -1) {
+          this.tags.push(tagName);
+        }
         this.inputTag = ''
+      },
+
+      autocomplete() {
+        if (!this.inputTag) {
+          return
+        }
+        var me = this
+        httpPost('/tag/autocomplete', {
+          "input": me.inputTag
+        }).then(function (data) {
+          me.autocompleteTags = []
+          if (data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+              me.autocompleteTags.push(data[i].name)
+            }
+          }
+        })
+      },
+
+      selectUp(event) {
+        event.stopPropagation()
+        event.preventDefault()
+        let curIndex = this.selectIndex
+        let maxIndex = this.autocompleteTags.length - 1
+        if (maxIndex < 0 || curIndex < 0) {
+          // 已经在最顶部
+          return
+        }
+        this.selectIndex--
+      },
+
+      selectDown(event) {
+        event.stopPropagation()
+        event.preventDefault()
+        let curIndex = this.selectIndex
+        let maxIndex = this.autocompleteTags.length - 1
+        if (maxIndex < 0 || curIndex >= maxIndex) {
+          // 已经在最底部
+          return
+        }
+        this.selectIndex++
       }
     }
   })

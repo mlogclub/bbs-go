@@ -73,7 +73,7 @@ func (this *TagController) GetUsertags() *simple.JsonResult {
 	return simple.JsonData(render.BuildTags(tags))
 }
 
-func (this *TagController) GetAutocomplete() *simple.JsonResult {
+func (this *TagController) PostAutocomplete() *simple.JsonResult {
 	input := this.Ctx.FormValue("input")
 	tags := this.TagService.Autocomplete(input)
 	return simple.JsonData(tags)

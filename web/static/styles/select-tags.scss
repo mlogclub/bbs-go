@@ -2,8 +2,8 @@
   display: flex;
   background-color: #fff;
   border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  box-shadow: inset 0 1px 2px rgba(10, 10, 10, .1);
+  //border-radius: 4px;
+  //box-shadow: inset 0 1px 2px rgba(10, 10, 10, .1);
   color: #363636;
   padding: 0 8px;
 
@@ -39,6 +39,42 @@
         i:hover {
           color: red;
           cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .autocomplete {
+    z-index: 999;
+    left: 0;
+    right: 0;
+    top: 38px;
+    bottom: 0;
+    position: absolute;
+    //height: 100px;
+    //overflow-y: auto;
+    //scroll-behavior: smooth;
+
+    .ac-container {
+      scroll-behavior: smooth;
+      position: relative;
+      background: #f7f7f7;
+      border-left: 1px solid #dbdbdb;
+      border-right: 1px solid #dbdbdb;
+      border-bottom: 1px solid #dbdbdb;
+
+      .ac-section {
+        font-size: 14px;
+        line-height: 16px;
+
+        .ac-item {
+          padding: 8px 15px;
+          cursor: pointer;
+
+          &.active {
+            color: #fff;
+            background: #006bde;
+          }
         }
       }
     }
