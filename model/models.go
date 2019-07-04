@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&ArticleShare{}, &UserArticleTag{}, &Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{},
+	&UserArticleTag{}, &Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{},
 }
 
 type Model struct {
@@ -34,9 +34,6 @@ const (
 
 	CommentStatusOk      = 0
 	CommentStatusDeleted = 1
-
-	ArticleShareStatusOk      = 0
-	ArticleShareStatusDeleted = 1
 
 	EntityTypeArticle = "article"
 	EntityTypeTopic   = "topic"
@@ -147,22 +144,6 @@ type Favorite struct {
 	EntityType string `gorm:"index:idx_entity_type;not null" json:"entityType" form:"entityType"` // 收藏实体类型
 	EntityId   int64  `gorm:"index:idx_entity_id;not null" json:"entityId" form:"entityId"`       // 收藏实体编号
 	CreateTime int64  `json:"createTime" form:"createTime"`                                       // 创建时间
-}
-
-// 文章分享
-type ArticleShare struct {
-	Model
-	UserId      int64  `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"` // 用户编号
-	CategoryId  int64  `gorm:"not null" json:"categoryId" form:"categoryId"`           // 分类
-	ArticleId   int64  `gorm:"not null" json:"articleId" form:"articleId"`             // 对应的文章编号
-	TagIds      string `gorm:"type:text" json:"tagIds" form:"tagIds"`                  // 标签，多个用逗号分隔
-	Title       string `gorm:"size:128;not null;" json:"title" form:"title"`           // 标题
-	Summary     string `gorm:"type:longtext" json:"summary" form:"summary"`            // 摘要
-	HtmlContent string `gorm:"type:longtext" json:"htmlContent" form:"htmlContent"`    // html内容
-	MdContent   string `gorm:"type:longtext" json:"mdContent" form:"mdContent"`        // markdown内容
-	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`            // 原文链接
-	Status      int    `gorm:"int" json:"status" form:"status"`                        // 状态：0：正常、1：删除
-	CreateTime  int64  `json:"createTime" form:"createTime"`                           // 创建时间
 }
 
 // 主题

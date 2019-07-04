@@ -104,8 +104,6 @@ func InitIris() {
 			m.Router.Get("/tags", controllers.GetTags)
 			m.Router.Get("/tags/{page:int}", controllers.GetTags)
 
-			m.Party("/share").Handle(new(controllers.ArticleShareController))
-
 			m.Router.Get("/redirect", func(ctx context.Context) {
 				url := ctx.FormValue("url")
 				render.View(ctx, "redirect.html", iris.Map{

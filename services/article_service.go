@@ -103,7 +103,7 @@ func (this *ArticleService) Publish(userId int64, title, summary, content, conte
 		Content:     content,
 		ContentType: contentType,
 		CategoryId:  categoryId,
-		Status:      model.ArticleShareStatusOk,
+		Status:      model.ArticleStatusPublished,
 		SourceUrl:   sourceUrl,
 		CreateTime:  simple.NowTimestamp(),
 		UpdateTime:  simple.NowTimestamp(),
