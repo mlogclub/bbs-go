@@ -18,7 +18,7 @@ func newUserCache() *userCache {
 	return &userCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.NewUserRepository().Get(simple.GetDB(), Key2Int64(key))
+				value = repositories.UserRepository.Get(simple.GetDB(), Key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),

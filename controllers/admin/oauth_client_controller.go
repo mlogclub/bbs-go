@@ -9,12 +9,11 @@ import (
 )
 
 type OauthClientController struct {
-	Ctx                iris.Context
-	OauthClientService *services.OauthClientService
+	Ctx iris.Context
 }
 
 func (this *OauthClientController) GetBy(id int64) *simple.JsonResult {
-	t := this.OauthClientService.Get(id)
+	t := services.OauthClientService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -22,7 +21,7 @@ func (this *OauthClientController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *OauthClientController) AnyList() *simple.JsonResult {
-	list, paging := this.OauthClientService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.OauthClientService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -46,7 +45,7 @@ func (this *OauthClientController) PostCreate() *simple.JsonResult {
 		return simple.ErrorMsg("callbackUrl 不能为空")
 	}
 
-	err = this.OauthClientService.Create(t)
+	err = services.OauthClientService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -58,7 +57,7 @@ func (this *OauthClientController) PostUpdate() *simple.JsonResult {
 	if id <= 0 {
 		return simple.ErrorMsg("id is required")
 	}
-	t := this.OauthClientService.Get(id)
+	t := services.OauthClientService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
@@ -81,7 +80,7 @@ func (this *OauthClientController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg("callbackUrl 不能为空")
 	}
 
-	err = this.OauthClientService.Update(t)
+	err = services.OauthClientService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

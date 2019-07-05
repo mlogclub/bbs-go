@@ -9,16 +9,15 @@ import (
 	"gopkg.in/oauth2.v3/models"
 )
 
-type OauthClientStore struct {
-	OauthClientRepository *repositories.OauthClientRepository
+type clientStore struct {
 }
 
-func NewOauthClientStore() *OauthClientStore {
-	return &OauthClientStore{OauthClientRepository: repositories.NewOauthClientRepository()}
+func newClientStore() *clientStore {
+	return &clientStore{}
 }
 
-func (s *OauthClientStore) GetByID(id string) (oauth2.ClientInfo, error) {
-	oauthClient := s.OauthClientRepository.GetByClientId(simple.GetDB(), id)
+func (s *clientStore) GetByID(id string) (oauth2.ClientInfo, error) {
+	oauthClient := repositories.OauthClientRepository.GetByClientId(simple.GetDB(), id)
 	if oauthClient == nil {
 		return nil, errors.New("Client not found:" + id)
 	}

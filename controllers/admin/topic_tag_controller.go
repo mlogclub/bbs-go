@@ -9,12 +9,11 @@ import (
 )
 
 type TopicTagController struct {
-	Ctx             iris.Context
-	TopicTagService *services.TopicTagService
+	Ctx iris.Context
 }
 
 func (this *TopicTagController) GetBy(id int64) *simple.JsonResult {
-	t := this.TopicTagService.Get(id)
+	t := services.TopicTagService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -22,7 +21,7 @@ func (this *TopicTagController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TopicTagController) AnyList() *simple.JsonResult {
-	list, paging := this.TopicTagService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.TopicTagService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -30,7 +29,7 @@ func (this *TopicTagController) PostCreate() *simple.JsonResult {
 	t := &model.TopicTag{}
 	this.Ctx.ReadForm(t)
 
-	err := this.TopicTagService.Create(t)
+	err := services.TopicTagService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -42,14 +41,14 @@ func (this *TopicTagController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.TopicTagService.Get(id)
+	t := services.TopicTagService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
-	err = this.TopicTagService.Update(t)
+	err = services.TopicTagService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

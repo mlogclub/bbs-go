@@ -3,20 +3,17 @@ package controllers
 import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
+	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils"
 )
 
 type IndexController struct {
-	Ctx            iris.Context
-	TagService     *services.TagService
-	ArticleService *services.ArticleService
-	TopicService   *services.TopicService
+	Ctx iris.Context
 }
 
 func (this *IndexController) Any() mvc.View {
@@ -24,10 +21,10 @@ func (this *IndexController) Any() mvc.View {
 	activeUsers := cache.UserCache.GetActiveUsers()
 	activeTags := cache.TagCache.GetActiveTags()
 
-	articles, _ := this.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).
+	articles, _ := services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).
 		Order("id desc").Size(20))
 
-	topics, _ := this.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
+	topics, _ := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
 
 	return mvc.View{
 		Name: "index.html",

@@ -11,12 +11,11 @@ import (
 )
 
 type GithubUserController struct {
-	Ctx               iris.Context
-	GithubUserService *services.GithubUserService
+	Ctx iris.Context
 }
 
 func (this *GithubUserController) GetBy(id int64) *simple.JsonResult {
-	t := this.GithubUserService.Get(id)
+	t := services.GithubUserService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -24,7 +23,7 @@ func (this *GithubUserController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *GithubUserController) AnyList() *simple.JsonResult {
-	list, paging := this.GithubUserService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.GithubUserService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -32,7 +31,7 @@ func (this *GithubUserController) PostCreate() *simple.JsonResult {
 	t := &model.GithubUser{}
 	this.Ctx.ReadForm(t)
 
-	err := this.GithubUserService.Create(t)
+	err := services.GithubUserService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -44,14 +43,14 @@ func (this *GithubUserController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.GithubUserService.Get(id)
+	t := services.GithubUserService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
-	err = this.GithubUserService.Update(t)
+	err = services.GithubUserService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

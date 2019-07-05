@@ -11,12 +11,11 @@ import (
 )
 
 type UserArticleTagController struct {
-	Ctx                   iris.Context
-	UserArticleTagService *services.UserArticleTagService
+	Ctx iris.Context
 }
 
 func (this *UserArticleTagController) GetBy(id int64) *simple.JsonResult {
-	t := this.UserArticleTagService.Get(id)
+	t := services.UserArticleTagService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -24,7 +23,7 @@ func (this *UserArticleTagController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *UserArticleTagController) AnyList() *simple.JsonResult {
-	list, paging := this.UserArticleTagService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.UserArticleTagService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -32,7 +31,7 @@ func (this *UserArticleTagController) PostCreate() *simple.JsonResult {
 	t := &model.UserArticleTag{}
 	this.Ctx.ReadForm(t)
 
-	err := this.UserArticleTagService.Create(t)
+	err := services.UserArticleTagService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -44,14 +43,14 @@ func (this *UserArticleTagController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.UserArticleTagService.Get(id)
+	t := services.UserArticleTagService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
-	err = this.UserArticleTagService.Update(t)
+	err = services.UserArticleTagService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

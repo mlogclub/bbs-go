@@ -18,7 +18,7 @@ func newCategoryCache() *categoryCache {
 	return &categoryCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.NewCategoryRepository().Get(simple.GetDB(), Key2Int64(key))
+				value = repositories.CategoryRepository.Get(simple.GetDB(), Key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),
@@ -26,7 +26,7 @@ func newCategoryCache() *categoryCache {
 		),
 		allCategoriesCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				list, e := repositories.NewCategoryRepository().GetCategories()
+				list, e := repositories.CategoryRepository.GetCategories()
 				if e != nil {
 					return
 				}

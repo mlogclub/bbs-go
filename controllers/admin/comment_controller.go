@@ -12,12 +12,11 @@ import (
 )
 
 type CommentController struct {
-	Ctx            iris.Context
-	CommentService *services.CommentService
+	Ctx iris.Context
 }
 
 func (this *CommentController) GetBy(id int64) *simple.JsonResult {
-	t := this.CommentService.Get(id)
+	t := services.CommentService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -25,7 +24,7 @@ func (this *CommentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CommentController) AnyList() *simple.JsonResult {
-	list, paging := this.CommentService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.CommentService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, comment := range list {
@@ -48,7 +47,7 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 	t := &model.Comment{}
 	this.Ctx.ReadForm(t)
 
-	err := this.CommentService.Create(t)
+	err := services.CommentService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -60,14 +59,14 @@ func (this *CommentController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.CommentService.Get(id)
+	t := services.CommentService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
-	err = this.CommentService.Update(t)
+	err = services.CommentService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

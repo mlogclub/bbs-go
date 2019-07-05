@@ -13,13 +13,11 @@ import (
 )
 
 type TopicController struct {
-	Ctx             iris.Context
-	TopicService    *services.TopicService
-	FavoriteService *services.FavoriteService
+	Ctx iris.Context
 }
 
 func (this *TopicController) GetBy(topicId int64) {
-	topic := this.TopicService.Get(topicId)
+	topic := services.TopicService.Get(topicId)
 
 	if topic == nil || topic.Status != model.TopicStatusOk {
 		this.Ctx.StatusCode(404)
@@ -27,7 +25,7 @@ func (this *TopicController) GetBy(topicId int64) {
 	}
 
 	// 浏览数量+1
-	this.TopicService.IncrViewCount(topicId)
+	services.TopicService.IncrViewCount(topicId)
 
 	render.View(this.Ctx, "topic/detail.html", iris.Map{
 		utils.GlobalFieldSiteTitle: topic.Title,
@@ -58,7 +56,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
 
-	topic, err := this.TopicService.Publish(user.Id, tags, title, content)
+	topic, err := services.TopicService.Publish(user.Id, tags, title, content)
 	if err != nil {
 		return simple.Error(err)
 	}
@@ -72,13 +70,13 @@ func (this *TopicController) GetEditBy(topicId int64) {
 		return
 	}
 
-	topic := this.TopicService.Get(topicId)
+	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != model.TopicStatusOk || topic.UserId != user.Id {
 		this.Ctx.StatusCode(404)
 		return
 	}
 
-	tags := this.TopicService.GetTopicTags(topicId)
+	tags := services.TopicService.GetTopicTags(topicId)
 	var tagNames []string
 	if len(tags) > 0 {
 		for _, tag := range tags {
@@ -102,7 +100,7 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 		return simple.Error(simple.ErrorNotLogin)
 	}
 
-	topic := this.TopicService.Get(topicId)
+	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != model.TopicStatusOk || topic.UserId != user.Id {
 		return simple.ErrorMsg("话题不存在或已被删除")
 	}
@@ -111,7 +109,7 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
 
-	err := this.TopicService.Edit(topicId, tags, title, content)
+	err := services.TopicService.Edit(topicId, tags, title, content)
 	if err != nil {
 		return simple.Error(err)
 	}
@@ -124,7 +122,7 @@ func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
-	err := this.FavoriteService.AddTopicFavorite(user.Id, topicId)
+	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -135,7 +133,7 @@ func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
 func GetTopics(ctx context.Context) {
 	page := ctx.Params().GetIntDefault("page", 1)
 
-	topics, paging := services.TopicServiceInstance.Query(simple.NewParamQueries(ctx).
+	topics, paging := services.TopicService.Query(simple.NewParamQueries(ctx).
 		Eq("status", model.TopicStatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
@@ -153,14 +151,14 @@ func GetTagTopics(ctx iris.Context) {
 	tagId := ctx.Params().GetInt64Default("tagId", 0)
 	page := ctx.Params().GetIntDefault("page", 1)
 
-	tag := services.TagServiceInstance.Get(tagId)
+	tag := services.TagService.Get(tagId)
 
 	title := "主题"
 	if tag != nil {
 		title = tag.Name + " - " + title
 	}
 
-	topics, paging := services.TopicServiceInstance.GetTagTopics(tagId, page)
+	topics, paging := services.TopicService.GetTagTopics(tagId, page)
 
 	render.View(ctx, "topic/index.html", iris.Map{
 		utils.GlobalFieldSiteTitle: title,

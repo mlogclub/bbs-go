@@ -11,12 +11,11 @@ import (
 )
 
 type CategoryController struct {
-	Ctx             iris.Context
-	CategoryService *services.CategoryService
+	Ctx iris.Context
 }
 
 func (this *CategoryController) GetBy(id int64) *simple.JsonResult {
-	t := this.CategoryService.Get(id)
+	t := services.CategoryService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -24,7 +23,7 @@ func (this *CategoryController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CategoryController) AnyList() *simple.JsonResult {
-	list, paging := this.CategoryService.Query(simple.NewParamQueries(this.Ctx).
+	list, paging := services.CategoryService.Query(simple.NewParamQueries(this.Ctx).
 		EqAuto("status").
 		PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
@@ -38,7 +37,7 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 		return simple.ErrorMsg("name is required")
 	}
 
-	if this.CategoryService.FindByName(t.Name) != nil {
+	if services.CategoryService.FindByName(t.Name) != nil {
 		return simple.ErrorMsg("分类「" + t.Name + "」已存在")
 	}
 
@@ -46,7 +45,7 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 	t.CreateTime = simple.NowTimestamp()
 	t.UpdateTime = simple.NowTimestamp()
 
-	err := this.CategoryService.Create(t)
+	err := services.CategoryService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -58,7 +57,7 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 	if id <= 0 {
 		return simple.ErrorMsg("id is required")
 	}
-	t := this.CategoryService.Get(id)
+	t := services.CategoryService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
@@ -69,13 +68,13 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg("name is required")
 	}
 
-	if tmp := this.CategoryService.FindByName(t.Name); tmp != nil && tmp.Id != id {
+	if tmp := services.CategoryService.FindByName(t.Name); tmp != nil && tmp.Id != id {
 		return simple.ErrorMsg("分类「" + t.Name + "」已存在")
 	}
 
 	t.UpdateTime = simple.NowTimestamp()
 
-	err := this.CategoryService.Update(t)
+	err := services.CategoryService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -84,7 +83,7 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 
 // options选项
 func (this *CategoryController) AnyOptions() *simple.JsonResult {
-	categories, err := this.CategoryService.GetCategories()
+	categories, err := services.CategoryService.GetCategories()
 	if err != nil {
 		return simple.JsonData([]interface{}{})
 	}

@@ -7,14 +7,16 @@ import (
 	"github.com/mlogclub/mlog/model"
 )
 
-type UserRepository struct {
+var UserRepository = newUserRepository()
+
+func newUserRepository() *userRepository {
+	return &userRepository{}
 }
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+type userRepository struct {
 }
 
-func (this *UserRepository) Get(db *gorm.DB, id int64) *model.User {
+func (this *userRepository) Get(db *gorm.DB, id int64) *model.User {
 	ret := &model.User{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -22,7 +24,7 @@ func (this *UserRepository) Get(db *gorm.DB, id int64) *model.User {
 	return ret
 }
 
-func (this *UserRepository) Take(db *gorm.DB, where ...interface{}) *model.User {
+func (this *userRepository) Take(db *gorm.DB, where ...interface{}) *model.User {
 	ret := &model.User{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -30,46 +32,46 @@ func (this *UserRepository) Take(db *gorm.DB, where ...interface{}) *model.User 
 	return ret
 }
 
-func (this *UserRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.User, err error) {
+func (this *userRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.User, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *UserRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
+func (this *userRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.User{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *UserRepository) Create(db *gorm.DB, t *model.User) (err error) {
+func (this *userRepository) Create(db *gorm.DB, t *model.User) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *UserRepository) Update(db *gorm.DB, t *model.User) (err error) {
+func (this *userRepository) Update(db *gorm.DB, t *model.User) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *UserRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *userRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.User{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *UserRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *userRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.User{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *UserRepository) Delete(db *gorm.DB, id int64) {
+func (this *userRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.User{}).Delete("id", id)
 }
 
-func (this *UserRepository) GetByEmail(db *gorm.DB, email string) *model.User {
+func (this *userRepository) GetByEmail(db *gorm.DB, email string) *model.User {
 	return this.Take(db, "email = ?", email)
 }
 
-func (this *UserRepository) GetByUsername(db *gorm.DB, username string) *model.User {
+func (this *userRepository) GetByUsername(db *gorm.DB, username string) *model.User {
 	return this.Take(db, "username = ?", username)
 }

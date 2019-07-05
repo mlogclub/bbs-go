@@ -6,48 +6,47 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-type TopicTagService struct {
-	TopicTagRepository *repositories.TopicTagRepository
+var TopicTagService = newTopicTagService()
+
+func newTopicTagService() *topicTagService {
+	return &topicTagService{}
 }
 
-func NewTopicTagService() *TopicTagService {
-	return &TopicTagService{
-		TopicTagRepository: repositories.NewTopicTagRepository(),
-	}
+type topicTagService struct {
 }
 
-func (this *TopicTagService) Get(id int64) *model.TopicTag {
-	return this.TopicTagRepository.Get(simple.GetDB(), id)
+func (this *topicTagService) Get(id int64) *model.TopicTag {
+	return repositories.TopicTagRepository.Get(simple.GetDB(), id)
 }
 
-func (this *TopicTagService) Take(where ...interface{}) *model.TopicTag {
-	return this.TopicTagRepository.Take(simple.GetDB(), where...)
+func (this *topicTagService) Take(where ...interface{}) *model.TopicTag {
+	return repositories.TopicTagRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *TopicTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
-	return this.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *topicTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
+	return repositories.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *TopicTagService) Query(queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
-	return this.TopicTagRepository.Query(simple.GetDB(), queries)
+func (this *topicTagService) Query(queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
+	return repositories.TopicTagRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *TopicTagService) Create(t *model.TopicTag) error {
-	return this.TopicTagRepository.Create(simple.GetDB(), t)
+func (this *topicTagService) Create(t *model.TopicTag) error {
+	return repositories.TopicTagRepository.Create(simple.GetDB(), t)
 }
 
-func (this *TopicTagService) Update(t *model.TopicTag) error {
-	return this.TopicTagRepository.Update(simple.GetDB(), t)
+func (this *topicTagService) Update(t *model.TopicTag) error {
+	return repositories.TopicTagRepository.Update(simple.GetDB(), t)
 }
 
-func (this *TopicTagService) Updates(id int64, columns map[string]interface{}) error {
-	return this.TopicTagRepository.Updates(simple.GetDB(), id, columns)
+func (this *topicTagService) Updates(id int64, columns map[string]interface{}) error {
+	return repositories.TopicTagRepository.Updates(simple.GetDB(), id, columns)
 }
 
-func (this *TopicTagService) UpdateColumn(id int64, name string, value interface{}) error {
-	return this.TopicTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
+func (this *topicTagService) UpdateColumn(id int64, name string, value interface{}) error {
+	return repositories.TopicTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *TopicTagService) Delete(id int64) {
-	this.TopicTagRepository.Delete(simple.GetDB(), id)
+func (this *topicTagService) Delete(id int64) {
+	repositories.TopicTagRepository.Delete(simple.GetDB(), id)
 }

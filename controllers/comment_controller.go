@@ -11,10 +11,7 @@ import (
 )
 
 type CommentController struct {
-	Ctx            iris.Context
-	CommentService *services.CommentService
-	MessageService *services.MessageService
-	TopicService   *services.TopicService
+	Ctx iris.Context
 }
 
 func (this *CommentController) GetList() *simple.JsonResult {
@@ -29,7 +26,7 @@ func (this *CommentController) GetList() *simple.JsonResult {
 
 	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 
-	list, err := this.CommentService.List(entityType, entityId, cursor)
+	list, err := services.CommentService.List(entityType, entityId, cursor)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -71,16 +68,16 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 		Status:     model.CommentStatusOk,
 		CreateTime: simple.NowTimestamp(),
 	}
-	err = this.CommentService.Create(comment)
+	err = services.CommentService.Create(comment)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
 
 	if entityType == model.EntityTypeTopic {
-		this.TopicService.SetLastCommentTime(entityId, simple.NowTimestamp())
+		services.TopicService.SetLastCommentTime(entityId, simple.NowTimestamp())
 	}
 
-	this.MessageService.SendCommentMsg(comment)
+	services.MessageService.SendCommentMsg(comment)
 
 	return simple.JsonData(render.BuildComment(*comment))
 }

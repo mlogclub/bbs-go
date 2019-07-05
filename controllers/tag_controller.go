@@ -15,11 +15,7 @@ import (
 )
 
 type TagController struct {
-	Ctx                   iris.Context
-	CategoryService       *services.CategoryService
-	TagService            *services.TagService
-	ArticleService        *services.ArticleService
-	UserArticleTagService *services.UserArticleTagService
+	Ctx iris.Context
 }
 
 // 添加标签页面
@@ -51,7 +47,7 @@ func (this *TagController) PostAdd() {
 		return
 	}
 
-	err := this.UserArticleTagService.AddUserTag(user.Id, name)
+	err := services.UserArticleTagService.AddUserTag(user.Id, name)
 	if err != nil {
 		logrus.Error(err)
 		render.View(this.Ctx, "/tag/add_tag.html", iris.Map{
@@ -69,13 +65,13 @@ func (this *TagController) GetUsertags() *simple.JsonResult {
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
-	tags := this.UserArticleTagService.GetUserTags(user.Id)
+	tags := services.UserArticleTagService.GetUserTags(user.Id)
 	return simple.JsonData(render.BuildTags(tags))
 }
 
 func (this *TagController) PostAutocomplete() *simple.JsonResult {
 	input := this.Ctx.FormValue("input")
-	tags := this.TagService.Autocomplete(input)
+	tags := services.TagService.Autocomplete(input)
 	return simple.JsonData(tags)
 }
 
@@ -84,7 +80,7 @@ func GetTags(ctx iris.Context) {
 	page := ctx.Params().GetIntDefault("page", 1)
 	activeUsers := cache.UserCache.GetActiveUsers()
 
-	tags, paging := services.TagServiceInstance.Query(simple.NewParamQueries(ctx).
+	tags, paging := services.TagService.Query(simple.NewParamQueries(ctx).
 		Eq("status", model.TagStatusOk).
 		Page(page, 200).Desc("id"))
 

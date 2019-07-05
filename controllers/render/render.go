@@ -191,7 +191,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.CreateTime = topic.CreateTime
 	rsp.ViewCount = topic.ViewCount
 
-	tags := services.TopicServiceInstance.GetTopicTags(topic.Id)
+	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
 	// tagIds := cache.ArticleTagCache.Get(article.Id)
@@ -238,7 +238,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	}
 
 	if buildQuote && comment.QuoteId > 0 {
-		quote := _buildComment(services.CommentServiceInstance.Get(comment.QuoteId), false)
+		quote := _buildComment(services.CommentService.Get(comment.QuoteId), false)
 		if quote != nil {
 			ret.Quote = quote
 			ret.QuoteContent = template.HTML(quote.User.Nickname+"：") + quote.Content
@@ -272,7 +272,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 	rsp.CreateTime = favorite.CreateTime
 
 	if favorite.EntityType == model.EntityTypeArticle {
-		article := services.ArticleServiceInstance.Get(favorite.EntityId)
+		article := services.ArticleService.Get(favorite.EntityId)
 		if article == nil || article.Status != model.ArticleStatusPublished {
 			rsp.Deleted = true
 		} else {
@@ -290,7 +290,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 			}
 		}
 	} else {
-		topic := services.TopicServiceInstance.Get(favorite.EntityId)
+		topic := services.TopicService.Get(favorite.EntityId)
 		if topic == nil || topic.Status != model.TopicStatusOk {
 			rsp.Deleted = true
 		} else {

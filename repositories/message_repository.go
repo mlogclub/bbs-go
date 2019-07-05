@@ -6,14 +6,16 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-type MessageRepository struct {
+var MessageRepository = newMessageRepository()
+
+func newMessageRepository() *messageRepository {
+	return &messageRepository{}
 }
 
-func NewMessageRepository() *MessageRepository {
-	return &MessageRepository{}
+type messageRepository struct {
 }
 
-func (this *MessageRepository) Get(db *gorm.DB, id int64) *model.Message {
+func (this *messageRepository) Get(db *gorm.DB, id int64) *model.Message {
 	ret := &model.Message{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -21,7 +23,7 @@ func (this *MessageRepository) Get(db *gorm.DB, id int64) *model.Message {
 	return ret
 }
 
-func (this *MessageRepository) Take(db *gorm.DB, where ...interface{}) *model.Message {
+func (this *messageRepository) Take(db *gorm.DB, where ...interface{}) *model.Message {
 	ret := &model.Message{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -29,38 +31,38 @@ func (this *MessageRepository) Take(db *gorm.DB, where ...interface{}) *model.Me
 	return ret
 }
 
-func (this *MessageRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Message, err error) {
+func (this *messageRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Message, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *MessageRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
+func (this *messageRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.Message{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *MessageRepository) Create(db *gorm.DB, t *model.Message) (err error) {
+func (this *messageRepository) Create(db *gorm.DB, t *model.Message) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *MessageRepository) Update(db *gorm.DB, t *model.Message) (err error) {
+func (this *messageRepository) Update(db *gorm.DB, t *model.Message) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *MessageRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *messageRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Message{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *MessageRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *messageRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Message{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *MessageRepository) Delete(db *gorm.DB, id int64) {
+func (this *messageRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Message{}).Delete("id", id)
 }
