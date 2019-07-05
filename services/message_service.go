@@ -13,56 +13,46 @@ import (
 var MessageService = newMessageService()
 
 func newMessageService() *messageService {
-	return &messageService{
-		MessageRepository: repositories.NewMessageRepository(),
-		CommentRepository: repositories.NewCommentRepository(),
-		ArticleRepository: repositories.NewArticleRepository(),
-		TopicRepository:   repositories.NewTopicRepository(),
-	}
+	return &messageService{}
 }
 
 type messageService struct {
-	MessageRepository *repositories.MessageRepository
-	UserRepository    *repositories.UserRepository
-	CommentRepository *repositories.CommentRepository
-	ArticleRepository *repositories.ArticleRepository
-	TopicRepository   *repositories.TopicRepository
 }
 
 func (this *messageService) Get(id int64) *model.Message {
-	return this.MessageRepository.Get(simple.GetDB(), id)
+	return repositories.MessageRepository.Get(simple.GetDB(), id)
 }
 
 func (this *messageService) Take(where ...interface{}) *model.Message {
-	return this.MessageRepository.Take(simple.GetDB(), where...)
+	return repositories.MessageRepository.Take(simple.GetDB(), where...)
 }
 
 func (this *messageService) QueryCnd(cnd *simple.QueryCnd) (list []model.Message, err error) {
-	return this.MessageRepository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.MessageRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
 func (this *messageService) Query(queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
-	return this.MessageRepository.Query(simple.GetDB(), queries)
+	return repositories.MessageRepository.Query(simple.GetDB(), queries)
 }
 
 func (this *messageService) Create(t *model.Message) error {
-	return this.MessageRepository.Create(simple.GetDB(), t)
+	return repositories.MessageRepository.Create(simple.GetDB(), t)
 }
 
 func (this *messageService) Update(t *model.Message) error {
-	return this.MessageRepository.Update(simple.GetDB(), t)
+	return repositories.MessageRepository.Update(simple.GetDB(), t)
 }
 
 func (this *messageService) Updates(id int64, columns map[string]interface{}) error {
-	return this.MessageRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.MessageRepository.Updates(simple.GetDB(), id, columns)
 }
 
 func (this *messageService) UpdateColumn(id int64, name string, value interface{}) error {
-	return this.MessageRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.MessageRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
 func (this *messageService) Delete(id int64) {
-	this.MessageRepository.Delete(simple.GetDB(), id)
+	repositories.MessageRepository.Delete(simple.GetDB(), id)
 }
 
 func (this *messageService) GetUnReadCount(userId int64) (count int64) {
@@ -139,11 +129,11 @@ func (this *messageService) sendEmailNotice(message *model.Message) {
 }
 
 func (this *messageService) SendCommentMsg(comment *model.Comment) {
-	commentUser := this.UserRepository.Get(simple.GetDB(), comment.UserId)
+	commentUser := repositories.UserRepository.Get(simple.GetDB(), comment.UserId)
 	commentSummary := utils.GetMarkdownSummary(comment.Content)
 	// 引用消息
 	if comment.QuoteId > 0 {
-		quote := this.CommentRepository.Get(simple.GetDB(), comment.QuoteId)
+		quote := repositories.CommentRepository.Get(simple.GetDB(), comment.QuoteId)
 		if quote != nil && quote.UserId != comment.UserId {
 			msgContent := commentUser.Nickname + " 回复了你的评论：" + commentSummary
 			quoteContent := utils.GetMarkdownSummary(quote.Content)
@@ -162,14 +152,14 @@ func (this *messageService) SendCommentMsg(comment *model.Comment) {
 		var msgContent = ""
 		var msgQuoteContent = ""
 		if comment.EntityType == model.EntityTypeArticle {
-			article := this.ArticleRepository.Get(simple.GetDB(), comment.EntityId)
+			article := repositories.ArticleRepository.Get(simple.GetDB(), comment.EntityId)
 			if article != nil && article.UserId != comment.UserId {
 				userId = article.UserId
 				msgContent = commentUser.Nickname + " 回复了你的文章：" + commentSummary
 				msgQuoteContent = "《" + article.Title + "》"
 			}
 		} else if comment.EntityType == model.EntityTypeTopic {
-			topic := this.TopicRepository.Get(simple.GetDB(), comment.EntityId)
+			topic := repositories.TopicRepository.Get(simple.GetDB(), comment.EntityId)
 			if topic != nil && topic.UserId != comment.UserId {
 				userId = topic.UserId
 				msgContent = commentUser.Nickname + " 回复了你的主题：" + commentSummary

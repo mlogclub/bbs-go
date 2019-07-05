@@ -7,14 +7,16 @@ import (
 	"github.com/mlogclub/mlog/model"
 )
 
-type GithubUserRepository struct {
+var GithubUserRepository = newGithubUserRepository()
+
+func newGithubUserRepository() *githubUserRepository {
+	return &githubUserRepository{}
 }
 
-func NewGithubUserRepository() *GithubUserRepository {
-	return &GithubUserRepository{}
+type githubUserRepository struct {
 }
 
-func (this *GithubUserRepository) Get(db *gorm.DB, id int64) *model.GithubUser {
+func (this *githubUserRepository) Get(db *gorm.DB, id int64) *model.GithubUser {
 	ret := &model.GithubUser{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -22,7 +24,7 @@ func (this *GithubUserRepository) Get(db *gorm.DB, id int64) *model.GithubUser {
 	return ret
 }
 
-func (this *GithubUserRepository) Take(db *gorm.DB, where ...interface{}) *model.GithubUser {
+func (this *githubUserRepository) Take(db *gorm.DB, where ...interface{}) *model.GithubUser {
 	ret := &model.GithubUser{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -30,42 +32,42 @@ func (this *GithubUserRepository) Take(db *gorm.DB, where ...interface{}) *model
 	return ret
 }
 
-func (this *GithubUserRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.GithubUser, err error) {
+func (this *githubUserRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.GithubUser, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *GithubUserRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.GithubUser, paging *simple.Paging) {
+func (this *githubUserRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.GithubUser, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.GithubUser{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *GithubUserRepository) Create(db *gorm.DB, t *model.GithubUser) (err error) {
+func (this *githubUserRepository) Create(db *gorm.DB, t *model.GithubUser) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *GithubUserRepository) Update(db *gorm.DB, t *model.GithubUser) (err error) {
+func (this *githubUserRepository) Update(db *gorm.DB, t *model.GithubUser) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *GithubUserRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *githubUserRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.GithubUser{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *GithubUserRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *githubUserRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.GithubUser{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *GithubUserRepository) Delete(db *gorm.DB, id int64) {
+func (this *githubUserRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.GithubUser{}).Delete("id", id)
 }
 
-func (this *GithubUserRepository) GetByGithubId(db *gorm.DB, githubId int64) *model.GithubUser {
+func (this *githubUserRepository) GetByGithubId(db *gorm.DB, githubId int64) *model.GithubUser {
 	return this.Take(db, "github_id = ?", githubId)
 }

@@ -7,14 +7,16 @@ import (
 	"github.com/mlogclub/mlog/model"
 )
 
-type CommentRepository struct {
+var CommentRepository = newCommentRepository()
+
+func newCommentRepository() *commentRepository {
+	return &commentRepository{}
 }
 
-func NewCommentRepository() *CommentRepository {
-	return &CommentRepository{}
+type commentRepository struct {
 }
 
-func (this *CommentRepository) Get(db *gorm.DB, id int64) *model.Comment {
+func (this *commentRepository) Get(db *gorm.DB, id int64) *model.Comment {
 	ret := &model.Comment{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -22,7 +24,7 @@ func (this *CommentRepository) Get(db *gorm.DB, id int64) *model.Comment {
 	return ret
 }
 
-func (this *CommentRepository) Take(db *gorm.DB, where ...interface{}) *model.Comment {
+func (this *commentRepository) Take(db *gorm.DB, where ...interface{}) *model.Comment {
 	ret := &model.Comment{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -30,38 +32,38 @@ func (this *CommentRepository) Take(db *gorm.DB, where ...interface{}) *model.Co
 	return ret
 }
 
-func (this *CommentRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Comment, err error) {
+func (this *commentRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Comment, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *CommentRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
+func (this *commentRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.Comment{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *CommentRepository) Create(db *gorm.DB, t *model.Comment) (err error) {
+func (this *commentRepository) Create(db *gorm.DB, t *model.Comment) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *CommentRepository) Update(db *gorm.DB, t *model.Comment) (err error) {
+func (this *commentRepository) Update(db *gorm.DB, t *model.Comment) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *CommentRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *commentRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Comment{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *CommentRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *commentRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Comment{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *CommentRepository) Delete(db *gorm.DB, id int64) {
+func (this *commentRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Comment{}).Delete("id", id)
 }

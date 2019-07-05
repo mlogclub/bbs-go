@@ -14,13 +14,10 @@ import (
 )
 
 type WxbotApi struct {
-	UserRepository *repositories.UserRepository
 }
 
 func NewWxbotApi() *WxbotApi {
-	return &WxbotApi{
-		UserRepository: repositories.NewUserRepository(),
-	}
+	return &WxbotApi{}
 }
 
 func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
@@ -37,11 +34,11 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 }
 
 func (this *WxbotApi) initUser(db *gorm.DB, article *WxArticle) (int64, error) {
-	user := this.UserRepository.Take(db, "username = ?", article.AppID)
+	user := repositories.UserRepository.Take(db, "username = ?", article.AppID)
 	if user != nil {
 		user.Nickname = article.AppName
 		user.Description = article.WxIntro
-		this.UserRepository.Update(db, user)
+		repositories.UserRepository.Update(db, user)
 		return user.Id, nil
 	} else {
 		avatar, err := oss.CopyImage(article.OriHead)
@@ -58,7 +55,7 @@ func (this *WxbotApi) initUser(db *gorm.DB, article *WxArticle) (int64, error) {
 			CreateTime:  simple.NowTimestamp(),
 			UpdateTime:  simple.NowTimestamp(),
 		}
-		err = this.UserRepository.Create(db, user)
+		err = repositories.UserRepository.Create(db, user)
 		if err != nil {
 			return 0, err
 		}

@@ -16,65 +16,61 @@ import (
 var UserService = newUserService()
 
 func newUserService() *userService {
-	return &userService{
-		UserRepository: repositories.NewUserRepository(),
-	}
+	return &userService{}
 }
 
 type userService struct {
-	UserRepository       *repositories.UserRepository
-	GithubUserRepository *repositories.GithubUserRepository
 }
 
 func (this *userService) Get(id int64) *model.User {
-	return this.UserRepository.Get(simple.GetDB(), id)
+	return repositories.UserRepository.Get(simple.GetDB(), id)
 }
 
 func (this *userService) Take(where ...interface{}) *model.User {
-	return this.UserRepository.Take(simple.GetDB(), where...)
+	return repositories.UserRepository.Take(simple.GetDB(), where...)
 }
 
 func (this *userService) QueryCnd(cnd *simple.QueryCnd) (list []model.User, err error) {
-	return this.UserRepository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.UserRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
 func (this *userService) Query(queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
-	return this.UserRepository.Query(simple.GetDB(), queries)
+	return repositories.UserRepository.Query(simple.GetDB(), queries)
 }
 
 func (this *userService) Create(t *model.User) error {
-	return this.UserRepository.Create(simple.GetDB(), t)
+	return repositories.UserRepository.Create(simple.GetDB(), t)
 }
 
 func (this *userService) Update(t *model.User) error {
-	err := this.UserRepository.Update(simple.GetDB(), t)
+	err := repositories.UserRepository.Update(simple.GetDB(), t)
 	cache.UserCache.Invalidate(t.Id)
 	return err
 }
 
 func (this *userService) Updates(id int64, columns map[string]interface{}) error {
-	err := this.UserRepository.Updates(simple.GetDB(), id, columns)
+	err := repositories.UserRepository.Updates(simple.GetDB(), id, columns)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (this *userService) UpdateColumn(id int64, name string, value interface{}) error {
-	err := this.UserRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	err := repositories.UserRepository.UpdateColumn(simple.GetDB(), id, name, value)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (this *userService) Delete(id int64) {
-	this.UserRepository.Delete(simple.GetDB(), id)
+	repositories.UserRepository.Delete(simple.GetDB(), id)
 	cache.UserCache.Invalidate(id)
 }
 
 func (this *userService) GetByEmail(email string) *model.User {
-	return this.UserRepository.GetByEmail(simple.GetDB(), email)
+	return repositories.UserRepository.GetByEmail(simple.GetDB(), email)
 }
 
 func (this *userService) GetByUsername(username string) *model.User {
-	return this.UserRepository.GetByUsername(simple.GetDB(), username)
+	return repositories.UserRepository.GetByUsername(simple.GetDB(), username)
 }
 
 // 登录
@@ -158,7 +154,7 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 
 // 绑定账号
 func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
-	githubUser := this.GithubUserRepository.Get(simple.GetDB(), githubId)
+	githubUser := repositories.GithubUserRepository.Get(simple.GetDB(), githubId)
 	if githubUser == nil {
 		err = errors.New("Github账号未找到")
 		return
@@ -188,7 +184,7 @@ func (this *userService) Bind(githubId int64, bindType, username, email, passwor
 	// 执行绑定
 	githubUser.UserId = user.Id
 	githubUser.UpdateTime = simple.NowTimestamp()
-	err = this.GithubUserRepository.Update(simple.GetDB(), githubUser)
+	err = repositories.GithubUserRepository.Update(simple.GetDB(), githubUser)
 	return
 }
 
@@ -210,11 +206,11 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 			UpdateTime: simple.NowTimestamp(),
 		}
 		err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
-			err := this.UserRepository.Create(tx, user)
+			err := repositories.UserRepository.Create(tx, user)
 			if err != nil {
 				return err
 			}
-			err = this.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
+			err = repositories.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
 			if err != nil {
 				return err
 			}

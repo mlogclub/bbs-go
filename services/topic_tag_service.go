@@ -9,47 +9,44 @@ import (
 var TopicTagService = newTopicTagService()
 
 func newTopicTagService() *topicTagService {
-	return &topicTagService{
-		TopicTagRepository: repositories.NewTopicTagRepository(),
-	}
+	return &topicTagService{}
 }
 
 type topicTagService struct {
-	TopicTagRepository *repositories.TopicTagRepository
 }
 
 func (this *topicTagService) Get(id int64) *model.TopicTag {
-	return this.TopicTagRepository.Get(simple.GetDB(), id)
+	return repositories.TopicTagRepository.Get(simple.GetDB(), id)
 }
 
 func (this *topicTagService) Take(where ...interface{}) *model.TopicTag {
-	return this.TopicTagRepository.Take(simple.GetDB(), where...)
+	return repositories.TopicTagRepository.Take(simple.GetDB(), where...)
 }
 
 func (this *topicTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
-	return this.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
 func (this *topicTagService) Query(queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
-	return this.TopicTagRepository.Query(simple.GetDB(), queries)
+	return repositories.TopicTagRepository.Query(simple.GetDB(), queries)
 }
 
 func (this *topicTagService) Create(t *model.TopicTag) error {
-	return this.TopicTagRepository.Create(simple.GetDB(), t)
+	return repositories.TopicTagRepository.Create(simple.GetDB(), t)
 }
 
 func (this *topicTagService) Update(t *model.TopicTag) error {
-	return this.TopicTagRepository.Update(simple.GetDB(), t)
+	return repositories.TopicTagRepository.Update(simple.GetDB(), t)
 }
 
 func (this *topicTagService) Updates(id int64, columns map[string]interface{}) error {
-	return this.TopicTagRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.TopicTagRepository.Updates(simple.GetDB(), id, columns)
 }
 
 func (this *topicTagService) UpdateColumn(id int64, name string, value interface{}) error {
-	return this.TopicTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.TopicTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
 func (this *topicTagService) Delete(id int64) {
-	this.TopicTagRepository.Delete(simple.GetDB(), id)
+	repositories.TopicTagRepository.Delete(simple.GetDB(), id)
 }

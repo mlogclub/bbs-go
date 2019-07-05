@@ -45,11 +45,3 @@ func (this *IndexController) GetAbout() mvc.View {
 		Name: "about.html",
 	}
 }
-
-func (this *IndexController) GetIncr() *simple.JsonResult {
-	return simple.JsonData(services.FuckService.Incr())
-}
-
-func (this *IndexController) GetCount() *simple.JsonResult {
-	return simple.JsonData(services.FuckService.Get())
-}

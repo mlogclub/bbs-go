@@ -10,15 +10,14 @@ import (
 )
 
 type clientStore struct {
-	OauthClientRepository *repositories.OauthClientRepository
 }
 
 func newClientStore() *clientStore {
-	return &clientStore{OauthClientRepository: repositories.NewOauthClientRepository()}
+	return &clientStore{}
 }
 
 func (s *clientStore) GetByID(id string) (oauth2.ClientInfo, error) {
-	oauthClient := s.OauthClientRepository.GetByClientId(simple.GetDB(), id)
+	oauthClient := repositories.OauthClientRepository.GetByClientId(simple.GetDB(), id)
 	if oauthClient == nil {
 		return nil, errors.New("Client not found:" + id)
 	}

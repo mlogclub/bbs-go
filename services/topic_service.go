@@ -20,60 +20,52 @@ type ScanTopicCallback func(topics []model.Topic)
 var TopicService = newTopicService()
 
 func newTopicService() *topicService {
-	return &topicService{
-		TopicRepository:    repositories.NewTopicRepository(),
-		TagRepository:      repositories.NewTagRepository(),
-		TopicTagRepository: repositories.NewTopicTagRepository(),
-	}
+	return &topicService{}
 }
 
-type topicService struct {
-	TopicRepository    *repositories.TopicRepository
-	TagRepository      *repositories.TagRepository
-	TopicTagRepository *repositories.TopicTagRepository
-}
+type topicService struct{}
 
 func (this *topicService) Get(id int64) *model.Topic {
-	return this.TopicRepository.Get(simple.GetDB(), id)
+	return repositories.TopicRepository.Get(simple.GetDB(), id)
 }
 
 func (this *topicService) Take(where ...interface{}) *model.Topic {
-	return this.TopicRepository.Take(simple.GetDB(), where...)
+	return repositories.TopicRepository.Take(simple.GetDB(), where...)
 }
 
 func (this *topicService) QueryCnd(cnd *simple.QueryCnd) (list []model.Topic, err error) {
-	return this.TopicRepository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.TopicRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
 func (this *topicService) Query(queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
-	return this.TopicRepository.Query(simple.GetDB(), queries)
+	return repositories.TopicRepository.Query(simple.GetDB(), queries)
 }
 
 func (this *topicService) Create(t *model.Topic) error {
-	return this.TopicRepository.Create(simple.GetDB(), t)
+	return repositories.TopicRepository.Create(simple.GetDB(), t)
 }
 
 func (this *topicService) Update(t *model.Topic) error {
-	return this.TopicRepository.Update(simple.GetDB(), t)
+	return repositories.TopicRepository.Update(simple.GetDB(), t)
 }
 
 func (this *topicService) Updates(id int64, columns map[string]interface{}) error {
-	return this.TopicRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.TopicRepository.Updates(simple.GetDB(), id, columns)
 }
 
 func (this *topicService) UpdateColumn(id int64, name string, value interface{}) error {
-	return this.TopicRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
 func (this *topicService) Delete(id int64) {
-	this.TopicRepository.Delete(simple.GetDB(), id)
+	repositories.TopicRepository.Delete(simple.GetDB(), id)
 }
 
 // 扫描
 func (this *topicService) Scan(cb ScanTopicCallback) {
 	var cursor int64
 	for {
-		list, err := this.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
+		list, err := repositories.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
 			cursor).Order("id asc").Size(300))
 		if err != nil {
 			break
@@ -107,13 +99,13 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 	}
 
 	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
-		tagIds := this.TagRepository.GetOrCreates(tx, tags)
-		err := this.TopicRepository.Create(simple.GetDB(), topic)
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		err := repositories.TopicRepository.Create(simple.GetDB(), topic)
 		if err != nil {
 			return err
 		}
 
-		this.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
+		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
 	return topic, simple.NewError2(err)
@@ -130,16 +122,16 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 	}
 
 	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
-		tagIds := this.TagRepository.GetOrCreates(tx, tags)
-		err := this.TopicRepository.Updates(simple.GetDB(), topicId, map[string]interface{}{
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		err := repositories.TopicRepository.Updates(simple.GetDB(), topicId, map[string]interface{}{
 			"title":   title,
 			"content": content,
 		})
 		if err != nil {
 			return err
 		}
-		this.TopicTagRepository.RemoveTopicTags(tx, topicId)      // 先删掉所有的标签
-		this.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
+		repositories.TopicTagRepository.RemoveTopicTags(tx, topicId)      // 先删掉所有的标签
+		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
 	return simple.NewError2(err)
@@ -147,7 +139,7 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 
 // 主题标签
 func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
-	topicTags, err := this.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
+	topicTags, err := repositories.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
 	if err != nil {
 		return nil
 	}
@@ -157,12 +149,12 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 		tagIds = append(tagIds, topicTag.TagId)
 	}
 
-	return this.TagRepository.GetTagInIds(tagIds)
+	return repositories.TagRepository.GetTagInIds(tagIds)
 }
 
 // 指定标签下的主题列表
 func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
-	topicTags, paging := this.TopicTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
+	topicTags, paging := repositories.TopicTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
 		Eq("tag_id", tagId).
 		Page(page, 20).Desc("id"))
 	if len(topicTags) > 0 {
@@ -200,7 +192,7 @@ func (this *topicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 
 // sitemap
 func (this *topicService) GenerateSitemap() {
-	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
+	topics, err := repositories.TopicRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
 	if err != nil {
 		logrus.Error(err)
@@ -222,7 +214,7 @@ func (this *topicService) GenerateSitemap() {
 
 // rss
 func (this *topicService) GenerateRss() {
-	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
+	topics, err := repositories.TopicRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
 	if err != nil {
 		logrus.Error(err)

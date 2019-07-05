@@ -12,12 +12,11 @@ import (
 
 // TokenStore实现
 type tokenStore struct {
-	OauthTokenRepository *repositories.OauthTokenRepository
 }
 
 // 存储oauth token
 func newTokenStore() *tokenStore {
-	return &tokenStore{OauthTokenRepository: repositories.NewOauthTokenRepository()}
+	return &tokenStore{}
 }
 
 func (s *tokenStore) Create(info oauth2.TokenInfo) error {
@@ -37,21 +36,21 @@ func (s *tokenStore) Create(info oauth2.TokenInfo) error {
 			item.ExpiredAt = info.GetRefreshCreateAt().Add(info.GetRefreshExpiresIn()).Unix()
 		}
 	}
-	return s.OauthTokenRepository.Create(simple.GetDB(), item)
+	return repositories.OauthTokenRepository.Create(simple.GetDB(), item)
 }
 
 func (s *tokenStore) RemoveByCode(code string) error {
-	s.OauthTokenRepository.RemoveByCode(simple.GetDB(), code)
+	repositories.OauthTokenRepository.RemoveByCode(simple.GetDB(), code)
 	return nil
 }
 
 func (s *tokenStore) RemoveByAccess(access string) error {
-	s.OauthTokenRepository.RemoveByAccessToken(simple.GetDB(), access)
+	repositories.OauthTokenRepository.RemoveByAccessToken(simple.GetDB(), access)
 	return nil
 }
 
 func (s *tokenStore) RemoveByRefresh(refresh string) error {
-	s.OauthTokenRepository.RemoveByRefreshToken(simple.GetDB(), refresh)
+	repositories.OauthTokenRepository.RemoveByRefreshToken(simple.GetDB(), refresh)
 	return nil
 }
 
@@ -59,7 +58,7 @@ func (s *tokenStore) GetByCode(code string) (oauth2.TokenInfo, error) {
 	if len(code) == 0 {
 		return nil, nil
 	}
-	oauthToken := s.OauthTokenRepository.GetByCode(simple.GetDB(), code)
+	oauthToken := repositories.OauthTokenRepository.GetByCode(simple.GetDB(), code)
 	if oauthToken == nil {
 		return nil, errors.New("invalidate code")
 	}
@@ -70,7 +69,7 @@ func (s *tokenStore) GetByAccess(access string) (oauth2.TokenInfo, error) {
 	if len(access) == 0 {
 		return nil, nil
 	}
-	oauthToken := s.OauthTokenRepository.GetByAccessToken(simple.GetDB(), access)
+	oauthToken := repositories.OauthTokenRepository.GetByAccessToken(simple.GetDB(), access)
 	if oauthToken == nil {
 		return nil, errors.New("invalidate access token")
 	}
@@ -81,7 +80,7 @@ func (s *tokenStore) GetByRefresh(refresh string) (oauth2.TokenInfo, error) {
 	if len(refresh) == 0 {
 		return nil, nil
 	}
-	oauthToken := s.OauthTokenRepository.GetByRefreshToken(simple.GetDB(), refresh)
+	oauthToken := repositories.OauthTokenRepository.GetByRefreshToken(simple.GetDB(), refresh)
 	if oauthToken == nil {
 		return nil, errors.New("invalidate refresh token")
 	}

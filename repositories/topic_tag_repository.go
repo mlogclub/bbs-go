@@ -6,14 +6,16 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-type TopicTagRepository struct {
+var TopicTagRepository = newTopicTagRepository()
+
+func newTopicTagRepository() *topicTagRepository {
+	return &topicTagRepository{}
 }
 
-func NewTopicTagRepository() *TopicTagRepository {
-	return &TopicTagRepository{}
+type topicTagRepository struct {
 }
 
-func (this *TopicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
+func (this *topicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -21,7 +23,7 @@ func (this *TopicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
 	return ret
 }
 
-func (this *TopicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.TopicTag {
+func (this *topicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -29,43 +31,43 @@ func (this *TopicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.T
 	return ret
 }
 
-func (this *TopicTagRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
+func (this *topicTagRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *TopicTagRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
+func (this *topicTagRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.TopicTag{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *TopicTagRepository) Create(db *gorm.DB, t *model.TopicTag) (err error) {
+func (this *topicTagRepository) Create(db *gorm.DB, t *model.TopicTag) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *TopicTagRepository) Update(db *gorm.DB, t *model.TopicTag) (err error) {
+func (this *topicTagRepository) Update(db *gorm.DB, t *model.TopicTag) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *TopicTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *topicTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.TopicTag{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *TopicTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *topicTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.TopicTag{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *TopicTagRepository) Delete(db *gorm.DB, id int64) {
+func (this *topicTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.TopicTag{}).Delete("id", id)
 }
 
-func (this *TopicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {
+func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {
 	if topicId <= 0 || len(tagIds) == 0 {
 		return
 	}
@@ -79,7 +81,7 @@ func (this *TopicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds 
 	}
 }
 
-func (this *TopicTagRepository) RemoveTopicTags(db *gorm.DB, topicId int64) {
+func (this *topicTagRepository) RemoveTopicTags(db *gorm.DB, topicId int64) {
 	if topicId <= 0 {
 		return
 	}

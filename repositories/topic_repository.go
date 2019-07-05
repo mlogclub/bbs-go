@@ -6,14 +6,16 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-type TopicRepository struct {
+var TopicRepository = newTopicRepository()
+
+func newTopicRepository() *topicRepository {
+	return &topicRepository{}
 }
 
-func NewTopicRepository() *TopicRepository {
-	return &TopicRepository{}
+type topicRepository struct {
 }
 
-func (this *TopicRepository) Get(db *gorm.DB, id int64) *model.Topic {
+func (this *topicRepository) Get(db *gorm.DB, id int64) *model.Topic {
 	ret := &model.Topic{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -21,7 +23,7 @@ func (this *TopicRepository) Get(db *gorm.DB, id int64) *model.Topic {
 	return ret
 }
 
-func (this *TopicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topic {
+func (this *topicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topic {
 	ret := &model.Topic{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -29,38 +31,38 @@ func (this *TopicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topi
 	return ret
 }
 
-func (this *TopicRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Topic, err error) {
+func (this *topicRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Topic, err error) {
 	err = cnd.DoQuery(db).Find(&list).Error
 	return
 }
 
-func (this *TopicRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
+func (this *topicRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
 	queries.StartCount(db).Model(&model.Topic{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
 	return
 }
 
-func (this *TopicRepository) Create(db *gorm.DB, t *model.Topic) (err error) {
+func (this *topicRepository) Create(db *gorm.DB, t *model.Topic) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *TopicRepository) Update(db *gorm.DB, t *model.Topic) (err error) {
+func (this *topicRepository) Update(db *gorm.DB, t *model.Topic) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *TopicRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (this *topicRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Topic{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *TopicRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (this *topicRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Topic{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *TopicRepository) Delete(db *gorm.DB, id int64) {
+func (this *topicRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Topic{}).Delete("id", id)
 }

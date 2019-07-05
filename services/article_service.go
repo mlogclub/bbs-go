@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/emirpasic/gods/sets/hashset"
+	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
 	"path"
@@ -15,7 +16,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/utils"
 )
 
@@ -25,48 +25,42 @@ var ArticleService = newArticleService()
 
 func newArticleService() *articleService {
 	return &articleService{
-		ArticleRepository:    repositories.NewArticleRepository(),
-		ArticleTagRepository: repositories.NewArticleTagRepository(),
-		TagRepository:        repositories.NewTagRepository(),
 	}
 }
 
 type articleService struct {
-	ArticleRepository    *repositories.ArticleRepository
-	ArticleTagRepository *repositories.ArticleTagRepository
-	TagRepository        *repositories.TagRepository
 }
 
 func (this *articleService) Get(id int64) *model.Article {
-	return this.ArticleRepository.Get(simple.GetDB(), id)
+	return repositories.ArticleRepository.Get(simple.GetDB(), id)
 }
 
 func (this *articleService) Take(where ...interface{}) *model.Article {
-	return this.ArticleRepository.Take(simple.GetDB(), where...)
+	return repositories.ArticleRepository.Take(simple.GetDB(), where...)
 }
 
 func (this *articleService) QueryCnd(cnd *simple.QueryCnd) (list []model.Article, err error) {
-	return this.ArticleRepository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.ArticleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
 func (this *articleService) Query(queries *simple.ParamQueries) (list []model.Article, paging *simple.Paging) {
-	return this.ArticleRepository.Query(simple.GetDB(), queries)
+	return repositories.ArticleRepository.Query(simple.GetDB(), queries)
 }
 
 func (this *articleService) Update(t *model.Article) error {
-	return this.ArticleRepository.Update(simple.GetDB(), t)
+	return repositories.ArticleRepository.Update(simple.GetDB(), t)
 }
 
 func (this *articleService) Updates(id int64, columns map[string]interface{}) error {
-	return this.ArticleRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.ArticleRepository.Updates(simple.GetDB(), id, columns)
 }
 
 func (this *articleService) UpdateColumn(id int64, name string, value interface{}) error {
-	return this.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
 func (this *articleService) Delete(id int64) error {
-	return this.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
+	return repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
 }
 
 // 根据文章编号批量获取文章
@@ -81,7 +75,7 @@ func (this *articleService) GetArticleInIds(articleIds []int64) []model.Article 
 
 // 标签文章列表
 func (this *articleService) GetTagArticles(tagId int64, page int) (articles []model.Article, paging *simple.Paging) {
-	articleTags, paging := this.ArticleTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
+	articleTags, paging := repositories.ArticleTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
 		Eq("tag_id", tagId).
 		Page(page, 20).Desc("id"))
 	if len(articleTags) > 0 {
@@ -122,7 +116,7 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	}
 
 	err = simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
-		err := this.ArticleRepository.Create(tx, article)
+		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
 			return err
 		}
@@ -132,7 +126,7 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 				if tagId <= 0 {
 					continue
 				}
-				err := this.ArticleTagRepository.Create(tx, &model.ArticleTag{
+				err := repositories.ArticleTagRepository.Create(tx, &model.ArticleTag{
 					ArticleId:  article.Id,
 					TagId:      tagId,
 					CreateTime: simple.NowTimestamp(),
@@ -153,11 +147,11 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 
 // 添加文章标签
 func (this *articleService) AddArticleTag(articleId, tagId int64) {
-	articleTag := this.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
+	articleTag := repositories.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
 	if articleTag != nil {
 		return
 	}
-	_ = this.ArticleTagRepository.Create(simple.GetDB(), &model.ArticleTag{
+	_ = repositories.ArticleTagRepository.Create(simple.GetDB(), &model.ArticleTag{
 		ArticleId:  articleId,
 		TagId:      tagId,
 		CreateTime: simple.NowTimestamp(),
@@ -166,11 +160,11 @@ func (this *articleService) AddArticleTag(articleId, tagId int64) {
 
 // 删除文章标签
 func (this *articleService) DelArticleTag(articleId, tagId int64) {
-	articleTag := this.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
+	articleTag := repositories.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
 	if articleTag == nil {
 		return
 	}
-	this.ArticleTagRepository.Delete(simple.GetDB(), articleTag.Id)
+	repositories.ArticleTagRepository.Delete(simple.GetDB(), articleTag.Id)
 }
 
 // 相关文章
@@ -201,7 +195,7 @@ func (this *articleService) GetRelatedArticles(articleId int64) []model.Article 
 
 // 最新文章
 func (this *articleService) GetUserNewestArticles(userId int64) []model.Article {
-	articles, err := this.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("user_id = ? and status = ?",
+	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("user_id = ? and status = ?",
 		userId, model.ArticleStatusPublished).Order("id desc").Size(10))
 	if err != nil {
 		return nil
@@ -213,7 +207,7 @@ func (this *articleService) GetUserNewestArticles(userId int64) []model.Article 
 func (this *articleService) Scan(cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := this.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? ",
+		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? ",
 			cursor, model.ArticleStatusPublished).Order("id asc").Size(300))
 		if err != nil {
 			break
@@ -233,7 +227,7 @@ func (this *articleService) Scan(cb ScanArticleCallback) {
 func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := this.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? and create_time >= ? and create_time < ?",
+		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? and create_time >= ? and create_time < ?",
 			cursor, model.ArticleStatusPublished, dateFrom, dateTo).Order("id asc").Size(300))
 		if err != nil {
 			break
@@ -248,7 +242,7 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 
 // sitemap
 func (this *articleService) GenerateSitemap() {
-	articles, err := this.ArticleRepository.QueryCnd(simple.GetDB(),
+	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(1000))
 	if err != nil {
 		logrus.Error(err)
@@ -270,7 +264,7 @@ func (this *articleService) GenerateSitemap() {
 
 // rss
 func (this *articleService) GenerateRss() {
-	articles, err := this.ArticleRepository.QueryCnd(simple.GetDB(),
+	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(1000))
 	if err != nil {
 		logrus.Error(err)
