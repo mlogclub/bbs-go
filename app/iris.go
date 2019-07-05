@@ -84,6 +84,8 @@ func InitIris() {
 			m.Party("/topic").Handle(new(controllers.TopicController))
 			m.Router.Get("/topics", controllers.GetTopics)
 			m.Router.Get("/topics/{page:int}", controllers.GetTopics)
+			m.Router.Get("/topics/tag/{tagId:int64}", controllers.GetTagTopics)
+			m.Router.Get("/topics/tag/{tagId:int64}/{page:int}", controllers.GetTagTopics)
 
 			m.Party("/comment").Handle(new(controllers.CommentController))
 
@@ -197,6 +199,15 @@ func viewFunctions(engine *view.HTMLEngine) {
 	})
 	engine.AddFunc("categoryArticlesUrl", func(categoryId int64, page int) string {
 		return utils.BuildCategoryArticlesUrl(categoryId, page)
+	})
+	engine.AddFunc("topicUrl", func(topicId int64) string {
+		return utils.BuildTopicUrl(topicId)
+	})
+	engine.AddFunc("topicsUrl", func(page int) string {
+		return utils.BuildTopicsUrl(page)
+	})
+	engine.AddFunc("tagTopicsUrl", func(tagId int64, page int) string {
+		return utils.BuildTagTopicsUrl(tagId, page)
 	})
 	engine.AddFunc("userUrl", func(userId int64) string {
 		return utils.BuildUserUrl(userId)

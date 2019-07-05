@@ -15,7 +15,7 @@
                 {{if .Tags}}
                     {{range .Tags}}
                         <span class="tag"><a
-                                    href="#" target="_blank">{{.TagName}}</a></span>
+                                    href="{{tagTopicsUrl .TagId 1}}" target="_blank">{{.TagName}}</a></span>
                     {{end}}
                 {{end}}
             </div>

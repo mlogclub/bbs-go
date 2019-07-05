@@ -92,6 +92,14 @@ func BuildTopicsUrl(page int) string {
 	return BuildAbsUrl("/topics")
 }
 
+// 标签话题列表
+func BuildTagTopicsUrl(tagId int64, page int) string {
+	if page < 1 {
+		page = 1
+	}
+	return BuildAbsUrl("/topics/tag/" + strconv.FormatInt(tagId, 10) + "/" + strconv.Itoa(page))
+}
+
 // 用户主题列表
 func BuildUserTopicsUrl(userId int64, page int) string {
 	path := "/user/" + strconv.FormatInt(userId, 10) + "/topics"

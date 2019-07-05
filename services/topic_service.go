@@ -158,6 +158,31 @@ func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 	return this.TagRepository.GetTagInIds(tagIds)
 }
 
+// 指定标签下的主题列表
+func (this *TopicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
+	topicTags, paging := this.TopicTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
+		Eq("tag_id", tagId).
+		Page(page, 20).Desc("id"))
+	if len(topicTags) > 0 {
+		var topicIds []int64
+		for _, topicTag := range topicTags {
+			topicIds = append(topicIds, topicTag.TopicId)
+		}
+		topics = this.GetTopicInIds(topicIds)
+	}
+	return
+}
+
+// 根据编号批量获取主题
+func (this *TopicService) GetTopicInIds(topicIds []int64) []model.Topic {
+	if len(topicIds) == 0 {
+		return nil
+	}
+	var topics []model.Topic
+	simple.GetDB().Where("id in (?)", topicIds).Find(&topics)
+	return topics
+}
+
 // 浏览数+1
 func (this *TopicService) IncrViewCount(topicId int64) {
 	simple.GetDB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)

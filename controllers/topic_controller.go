@@ -147,3 +147,26 @@ func GetTopics(ctx context.Context) {
 		"NextPageUrl":              utils.BuildTopicsUrl(page + 1),
 	})
 }
+
+// 标签主题列表
+func GetTagTopics(ctx iris.Context) {
+	tagId := ctx.Params().GetInt64Default("tagId", 0)
+	page := ctx.Params().GetIntDefault("page", 1)
+
+	tag := services.TagServiceInstance.Get(tagId)
+
+	title := "主题"
+	if tag != nil {
+		title = tag.Name + " - " + title
+	}
+
+	topics, paging := services.TopicServiceInstance.GetTagTopics(tagId, page)
+
+	render.View(ctx, "topic/index.html", iris.Map{
+		utils.GlobalFieldSiteTitle: title,
+		"Topics":                   render.BuildTopics(topics),
+		"Page":                     paging,
+		"PrePageUrl":               utils.BuildTagTopicsUrl(tagId, page-1),
+		"NextPageUrl":              utils.BuildTagTopicsUrl(tagId, page+1),
+	})
+}
