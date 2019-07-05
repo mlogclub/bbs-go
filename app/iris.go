@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/mlogclub/mlog/controllers/web"
 	"github.com/mlogclub/mlog/utils/config"
 	"net/http"
 	"os"
@@ -18,7 +19,6 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/controllers"
 	"github.com/mlogclub/mlog/controllers/admin"
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/middleware"
@@ -66,42 +66,42 @@ func InitIris() {
 		mvc.Configure(app.Party("/"), func(m *mvc.Application) {
 			m.Router.Use(middleware.NewGlobalMiddleware())
 
-			m.Party("/upload").Handle(new(controllers.UploadController))
+			m.Party("/upload").Handle(new(web.UploadController))
 
-			m.Party("/").Handle(new(controllers.IndexController))
+			m.Party("/").Handle(new(web.IndexController))
 
-			m.Party("/article").Handle(new(controllers.ArticleController))
-			m.Router.Get("/articles", controllers.GetArticles)
-			m.Router.Get("/articles/{page:int}", controllers.GetArticles)
-			m.Router.Get("/articles/tag/{tagId:int64}", controllers.GetTagArticles)
-			m.Router.Get("/articles/tag/{tagId:int64}/{page:int}", controllers.GetTagArticles)
-			m.Router.Get("/articles/cat/{categoryId:int64}", controllers.GetCategoryArticles)
-			m.Router.Get("/articles/cat/{categoryId:int64}/{page:int}", controllers.GetCategoryArticles)
+			m.Party("/article").Handle(new(web.ArticleController))
+			m.Router.Get("/articles", web.GetArticles)
+			m.Router.Get("/articles/{page:int}", web.GetArticles)
+			m.Router.Get("/articles/tag/{tagId:int64}", web.GetTagArticles)
+			m.Router.Get("/articles/tag/{tagId:int64}/{page:int}", web.GetTagArticles)
+			m.Router.Get("/articles/cat/{categoryId:int64}", web.GetCategoryArticles)
+			m.Router.Get("/articles/cat/{categoryId:int64}/{page:int}", web.GetCategoryArticles)
 
-			m.Party("/topic").Handle(new(controllers.TopicController))
-			m.Router.Get("/topics", controllers.GetTopics)
-			m.Router.Get("/topics/{page:int}", controllers.GetTopics)
-			m.Router.Get("/topics/tag/{tagId:int64}", controllers.GetTagTopics)
-			m.Router.Get("/topics/tag/{tagId:int64}/{page:int}", controllers.GetTagTopics)
+			m.Party("/topic").Handle(new(web.TopicController))
+			m.Router.Get("/topics", web.GetTopics)
+			m.Router.Get("/topics/{page:int}", web.GetTopics)
+			m.Router.Get("/topics/tag/{tagId:int64}", web.GetTagTopics)
+			m.Router.Get("/topics/tag/{tagId:int64}/{page:int}", web.GetTagTopics)
 
-			m.Party("/comment").Handle(new(controllers.CommentController))
+			m.Party("/comment").Handle(new(web.CommentController))
 
-			m.Party("/user").Handle(new(controllers.UserController))
-			m.Router.Get("/user/{userId:int64}/articles", controllers.GetUserArticles)
-			m.Router.Get("/user/{userId:int64}/articles/{page:int}", controllers.GetUserArticles)
-			m.Router.Get("/user/{userId:int64}/topics", controllers.GetUserTopics)
-			m.Router.Get("/user/{userId:int64}/topics/{page:int}", controllers.GetUserTopics)
-			m.Router.Get("/user/{userId:int64}/tags", controllers.GetUserTags)
-			m.Router.Get("/user/{userId:int64}/tags/{page:int}", controllers.GetUserTags)
-			m.Router.Get("/user/{userId:int64}/messages", controllers.GetUserMessages)
-			m.Router.Get("/user/{userId:int64}/messages/{page:int}", controllers.GetUserMessages)
-			m.Router.Get("/user/{userId:int64}/favorites", controllers.GetUserFavorites)
-			m.Router.Get("/user/{userId:int64}/favorites/{page:int}", controllers.GetUserFavorites)
+			m.Party("/user").Handle(new(web.UserController))
+			m.Router.Get("/user/{userId:int64}/articles", web.GetUserArticles)
+			m.Router.Get("/user/{userId:int64}/articles/{page:int}", web.GetUserArticles)
+			m.Router.Get("/user/{userId:int64}/topics", web.GetUserTopics)
+			m.Router.Get("/user/{userId:int64}/topics/{page:int}", web.GetUserTopics)
+			m.Router.Get("/user/{userId:int64}/tags", web.GetUserTags)
+			m.Router.Get("/user/{userId:int64}/tags/{page:int}", web.GetUserTags)
+			m.Router.Get("/user/{userId:int64}/messages", web.GetUserMessages)
+			m.Router.Get("/user/{userId:int64}/messages/{page:int}", web.GetUserMessages)
+			m.Router.Get("/user/{userId:int64}/favorites", web.GetUserFavorites)
+			m.Router.Get("/user/{userId:int64}/favorites/{page:int}", web.GetUserFavorites)
 
 			// 标签
-			m.Party("/tag").Handle(new(controllers.TagController))
-			m.Router.Get("/tags", controllers.GetTags)
-			m.Router.Get("/tags/{page:int}", controllers.GetTags)
+			m.Party("/tag").Handle(new(web.TagController))
+			m.Router.Get("/tags", web.GetTags)
+			m.Router.Get("/tags/{page:int}", web.GetTags)
 
 			m.Router.Get("/redirect", func(ctx context.Context) {
 				url := ctx.FormValue("url")
@@ -128,11 +128,11 @@ func InitIris() {
 		})
 
 		mvc.Configure(app.Party("/oauth"), func(m *mvc.Application) {
-			m.Party("/").Handle(new(controllers.OauthServerController))
+			m.Party("/").Handle(new(web.OauthServerController))
 		})
 
 		mvc.Configure(app.Party("/oauth/client"), func(m *mvc.Application) {
-			m.Party("/").Handle(new(controllers.OauthClientController))
+			m.Party("/").Handle(new(web.OauthClientController))
 		})
 	}
 

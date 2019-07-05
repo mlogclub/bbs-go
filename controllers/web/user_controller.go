@@ -1,4 +1,4 @@
-package controllers
+package web
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
