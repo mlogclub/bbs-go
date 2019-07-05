@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/simple"
+	"regexp"
 	"strings"
 )
 
@@ -50,4 +51,17 @@ func GetUserRoles(roles string) []string {
 		}
 	}
 	return ret
+}
+
+// 验证用户名合法性，用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。
+func IsValidateUsername(username string) bool {
+	matched, err := regexp.MatchString("^[0-9a-zA-Z_-]{5,12}$", username)
+	if err != nil || !matched {
+		return false
+	}
+	matched, err = regexp.MatchString("^[a-zA-Z]", username)
+	if err != nil || !matched {
+		return false
+	}
+	return true
 }

@@ -101,11 +101,8 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 
-	if len(username) == 0 {
-		return nil, errors.New("请输入用户名")
-	}
-	if simple.RuneLen(username) < 5 {
-		return nil, errors.New("用户名长度不能少于5个字符")
+	if !utils.IsValidateUsername(username) {
+		return nil, errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
 	}
 	if !validate.IsEmail(email) {
 		return nil, errors.New("请输入合法的邮箱")
@@ -154,6 +151,10 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 
 // 绑定账号
 func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
+	if !utils.IsValidateUsername(username) {
+		err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
+		return
+	}
 	githubUser := repositories.GithubUserRepository.Get(simple.GetDB(), githubId)
 	if githubUser == nil {
 		err = errors.New("Github账号未找到")
