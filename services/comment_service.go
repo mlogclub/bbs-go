@@ -1,7 +1,9 @@
 package services
 
 import (
+	"errors"
 	"github.com/mlogclub/simple"
+	"strings"
 
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
@@ -50,6 +52,42 @@ func (this *commentService) UpdateColumn(id int64, name string, value interface{
 
 func (this *commentService) Delete(id int64) {
 	repositories.CommentRepository.Delete(simple.GetDB(), id)
+}
+
+func (this *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
+	form.Content = strings.TrimSpace(form.Content)
+
+	if len(form.EntityType) == 0 {
+		return nil, errors.New("参数非法")
+	}
+	if form.EntityId <= 0 {
+		return nil, errors.New("参数非法")
+	}
+	if len(form.Content) == 0 {
+		return nil, errors.New("请输入评论内容")
+	}
+	comment := &model.Comment{
+		UserId:     userId,
+		EntityType: form.EntityType,
+		EntityId:   form.EntityId,
+		Content:    form.Content,
+		QuoteId:    form.QuoteId,
+		Status:     model.CommentStatusOk,
+		CreateTime: simple.NowTimestamp(),
+	}
+	if err := repositories.CommentRepository.Create(simple.GetDB(), comment); err != nil {
+		return nil, err
+	}
+
+	// 更新帖子最后回复时间
+	if form.EntityType == model.EntityTypeTopic {
+		TopicService.SetLastCommentTime(form.EntityId, simple.NowTimestamp())
+	}
+
+	// 发送消息
+	MessageService.SendCommentMsg(comment)
+
+	return comment, nil
 }
 
 func (this *commentService) List(entityType string, entityId int64, cursor int64) (list []model.Comment, err error) {

@@ -1,13 +1,11 @@
 package services
 
 import (
-	"bytes"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/simple"
-	"html/template"
 )
 
 var MessageService = newMessageService()
@@ -96,36 +94,12 @@ func (this *messageService) Send(userId int64, content, quoteContent string, msg
 
 func (this *messageService) sendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
-	if len(user.Email) == 0 {
+	if user == nil || len(user.Email) == 0 {
 		return
 	}
-
-	tpl, err := template.New("msg").Parse(`
-<div style="font-size: 14px;">
-	<div style="margin-bottom: 10px;">{{.Content}}</div>
-	{{if .QuoteContent}}
-		<blockquote style="font-size:12px; padding: 10px 15px; margin: 0 0 20px; border: 1px dotted #eeeeee; border-left: 3px solid #eeeeee; background-color: #fbfbfb;">
-		{{.QuoteContent}}
-		</blockquote>
-	{{end}}
-	点击查看详情：<a href="{{.Url}}" target="_blank">{{.Url}}</a>
-</div>
-`)
-	if err != nil {
-		return
-	}
-
-	var b bytes.Buffer
-	err = tpl.Execute(&b, map[string]interface{}{
-		"Url":          utils.BuildUserUrl(message.UserId) + "/messages",
-		"Content":      message.Content,
-		"QuoteContent": message.QuoteContent,
-	})
-	if err != nil {
-		return
-	}
-
-	_ = utils.SendEmail(user.Email, "M-LOG：消息提醒", b.String())
+	url := utils.BuildUserUrl(message.UserId) + "/messages"
+	_ = utils.SendTemplateEmail(user.Email, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
+		message.QuoteContent, url)
 }
 
 func (this *messageService) SendCommentMsg(comment *model.Comment) {

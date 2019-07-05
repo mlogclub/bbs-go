@@ -45,39 +45,17 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
-	entityType, err := simple.FormValueRequired(this.Ctx, "entityType")
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-	entityId, err := simple.FormValueInt64(this.Ctx, "entityId")
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-	content, err := simple.FormValueRequired(this.Ctx, "content")
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-	quoteId := simple.FormValueInt64Default(this.Ctx, "quoteId", 0)
 
-	comment := &model.Comment{
-		UserId:     user.Id,
-		EntityType: entityType,
-		EntityId:   entityId,
-		Content:    content,
-		QuoteId:    quoteId,
-		Status:     model.CommentStatusOk,
-		CreateTime: simple.NowTimestamp(),
-	}
-	err = services.CommentService.Create(comment)
+	form := &model.CreateCommentForm{}
+	err := this.Ctx.ReadForm(form)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
 
-	if entityType == model.EntityTypeTopic {
-		services.TopicService.SetLastCommentTime(entityId, simple.NowTimestamp())
+	comment, err := services.CommentService.Publish(user.Id, form)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
 	}
-
-	services.MessageService.SendCommentMsg(comment)
 
 	return simple.JsonData(render.BuildComment(*comment))
 }
