@@ -15,7 +15,7 @@
         <div class="ac-container">
             <section class="ac-section">
                 <div v-for="(item, index) in autocompleteTags" :key="item" class="ac-item"
-                     :class="{active: index === selectIndex}" v-text="item"></div>
+                     :class="{active: index === selectIndex}" @click="selectTag(index)" v-text="item"></div>
             </section>
         </div>
     </div>
@@ -52,16 +52,31 @@
         }
       },
 
+      /**
+       * 手动点击选择标签
+       * @param index
+       */
+      selectTag(index) {
+        this.selectIndex = index
+        this.addTag()
+      },
+
+      /**
+       * 添加标签
+       * @param event
+       */
       addTag(event) {
-        event.stopPropagation()
-        event.preventDefault()
+        if (event) {
+          event.stopPropagation()
+          event.preventDefault()
+        }
 
         if (this.selectIndex >= 0 && this.autocompleteTags.length > this.selectIndex) {
-          this._addTag(this.autocompleteTags[this.selectIndex])
-          this.autocompleteTags = []
-          this.selectIndex = -1
+          this._addTag(this.autocompleteTags[this.selectIndex]);
+          this.autocompleteTags = [];
+          this.selectIndex = -1;
         } else {
-          this._addTag(this.inputTag)
+          this._addTag(this.inputTag);
         }
       },
 
@@ -83,20 +98,22 @@
       },
 
       autocomplete() {
+        this.selectIndex = -1
         if (!this.inputTag) {
-          return
-        }
-        var me = this
-        httpPost('/tag/autocomplete', {
-          "input": me.inputTag
-        }).then(function (data) {
-          me.autocompleteTags = []
-          if (data.length > 0) {
-            for (let i = 0; i < data.length; i++) {
-              me.autocompleteTags.push(data[i].name)
+          this.autocompleteTags = []
+        } else {
+          var me = this
+          httpPost('/tag/autocomplete', {
+            "input": me.inputTag
+          }).then(function (data) {
+            me.autocompleteTags = []
+            if (data.length > 0) {
+              for (let i = 0; i < data.length; i++) {
+                me.autocompleteTags.push(data[i].name)
+              }
             }
-          }
-        })
+          })
+        }
       },
 
       selectUp(event) {

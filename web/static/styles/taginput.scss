@@ -71,7 +71,7 @@
           padding: 8px 15px;
           cursor: pointer;
 
-          &.active {
+          &.active, &:hover {
             color: #fff;
             background: #006bde;
           }
