@@ -11,13 +11,14 @@
                         <nav class="breadcrumb" aria-label="breadcrumbs">
                             <ul>
                                 <li><a href="{{baseUrl}}">首页</a></li>
-                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}">{{.CurrentUser.Nickname}}</a></li>
+                                <li><a href="{{baseUrl}}/user/{{.CurrentUser.Id}}?tab=topics">{{.CurrentUser.Nickname}}</a></li>
                                 <li class="is-active"><a href="#" aria-current="page">主题</a></li>
                             </ul>
                         </nav>
                     </div>
                     <div class="content">
                         <div class="field">
+                            {{/*<label class="label">标题</label>*/}}
                             <div class="control">
                                 <input name="title" id="title" class="input" type="text"
                                        placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空">
@@ -25,16 +26,15 @@
                         </div>
 
                         <div class="field">
+                            {{/*<label class="label">标签</label>*/}}
                             <div class="control">
-                                <div id="editor" style="border: 1px solid #d1d5da;"></div>
+                                {{template "topic/taginput.html"}}
                             </div>
                         </div>
 
-
                         <div class="field">
-                            <label class="label">标签</label>
                             <div class="control">
-                                {{template "topic/taginput.html"}}
+                                <div id="editor" style="border: 1px solid #d1d5da;"></div>
                             </div>
                         </div>
 

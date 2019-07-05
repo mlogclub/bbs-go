@@ -27,19 +27,19 @@
                         </div>
 
                         <div class="field">
-                            <div class="control">
-                                <div id="editor" style="border: 1px solid #d1d5da;"></div>
-                            </div>
-                        </div>
-
-
-                        <div class="field">
-                            <label class="label">标签</label>
+                            {{/*<label class="label">标签</label>*/}}
                             <div class="control">
                                 {{$Tags := .Topic.Tags}}
                                 {{template "topic/taginput.html" $Tags }}
                             </div>
                         </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <div id="editor" style="border: 1px solid #d1d5da;"></div>
+                            </div>
+                        </div>
+
 
                         <div class="field is-grouped">
                             <div class="control">
