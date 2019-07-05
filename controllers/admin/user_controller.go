@@ -13,12 +13,11 @@ import (
 )
 
 type UserController struct {
-	Ctx         iris.Context
-	UserService *services.UserService
+	Ctx iris.Context
 }
 
 func (this *UserController) GetBy(id int64) *simple.JsonResult {
-	t := this.UserService.Get(id)
+	t := services.UserService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -26,7 +25,7 @@ func (this *UserController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *UserController) AnyList() *simple.JsonResult {
-	list, paging := this.UserService.Query(simple.NewParamQueries(this.Ctx).EqAuto("id").EqAuto("username").PageAuto().Desc("id"))
+	list, paging := services.UserService.Query(simple.NewParamQueries(this.Ctx).EqAuto("id").EqAuto("username").PageAuto().Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
 		itemList = append(itemList, this.buildUserItem(&user))
@@ -40,7 +39,7 @@ func (this *UserController) PostCreate() *simple.JsonResult {
 	password := simple.FormValue(this.Ctx, "password")
 	nickname := simple.FormValue(this.Ctx, "nickname")
 
-	user, err := this.UserService.SignUp(username, email, password, password, nickname, "")
+	user, err := services.UserService.SignUp(username, email, password, password, nickname, "")
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -52,7 +51,7 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.UserService.Get(id)
+	t := services.UserService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
@@ -82,7 +81,7 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 
 	t.Roles = strings.Join(roles, ",")
 
-	err = this.UserService.Update(t)
+	err = services.UserService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

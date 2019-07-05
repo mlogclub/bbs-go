@@ -10,12 +10,11 @@ import (
 )
 
 type TopicController struct {
-	Ctx          iris.Context
-	TopicService *services.TopicService
+	Ctx iris.Context
 }
 
 func (this *TopicController) GetBy(id int64) *simple.JsonResult {
-	t := this.TopicService.Get(id)
+	t := services.TopicService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -23,7 +22,7 @@ func (this *TopicController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TopicController) AnyList() *simple.JsonResult {
-	list, paging := this.TopicService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, topic := range list {
@@ -37,7 +36,7 @@ func (this *TopicController) AnyList() *simple.JsonResult {
 		builder.Put("summary", mr.SummaryText)
 
 		// 标签
-		tags := this.TopicService.GetTopicTags(topic.Id)
+		tags := services.TopicService.GetTopicTags(topic.Id)
 		builder.Put("tags", render.BuildTags(tags))
 
 		results = append(results, builder.Build())
@@ -54,7 +53,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 		return simple.ErrorMsg(err.Error())
 	}
 
-	err = this.TopicService.Create(t)
+	err = services.TopicService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -66,7 +65,7 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.TopicService.Get(id)
+	t := services.TopicService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
@@ -76,7 +75,7 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg(err.Error())
 	}
 
-	err = this.TopicService.Update(t)
+	err = services.TopicService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

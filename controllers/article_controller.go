@@ -20,23 +20,19 @@ import (
 )
 
 type ArticleController struct {
-	Ctx                   iris.Context
-	TagService            *services.TagService
-	ArticleService        *services.ArticleService
-	UserArticleTagService *services.UserArticleTagService
-	FavoriteService       *services.FavoriteService
+	Ctx iris.Context
 }
 
 // 文章详情页
 func (this *ArticleController) GetBy(articleId int64) {
-	article := this.ArticleService.Get(articleId)
+	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != model.ArticleStatusPublished {
 		this.Ctx.StatusCode(404)
 		return
 	}
 
-	relatedArticles := this.ArticleService.GetRelatedArticles(articleId)
-	newestArticles := this.ArticleService.GetUserNewestArticles(article.UserId)
+	relatedArticles := services.ArticleService.GetRelatedArticles(articleId)
+	newestArticles := services.ArticleService.GetUserNewestArticles(article.UserId)
 
 	tagIds := cache.ArticleTagCache.Get(articleId)
 	tags := cache.TagCache.GetList(tagIds)
@@ -70,7 +66,7 @@ func (this *ArticleController) GetCreate() {
 		return
 	}
 
-	tags := this.UserArticleTagService.GetUserTags(user.Id)
+	tags := services.UserArticleTagService.GetUserTags(user.Id)
 
 	render.View(this.Ctx, "article/create.html", iris.Map{
 		"Tags": render.BuildTags(tags),
@@ -100,12 +96,12 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 		return simple.ErrorMsg("请填写文章内容")
 	}
 
-	tag := this.TagService.Get(tagId)
+	tag := services.TagService.Get(tagId)
 	if tag == nil {
 		return simple.ErrorMsg("标签不存在")
 	}
 
-	article, err := this.ArticleService.Publish(currentUser.Id, title, summary, content, model.ArticleContentTypeMarkdown, 0, []int64{tagId}, "")
+	article, err := services.ArticleService.Publish(currentUser.Id, title, summary, content, model.ArticleContentTypeMarkdown, 0, []int64{tagId}, "")
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -119,7 +115,7 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 		this.Ctx.Redirect("/user/signin?redirectUrl=/article/edit/"+strconv.FormatInt(articleId, 10), iris.StatusTemporaryRedirect)
 		return
 	}
-	article := this.ArticleService.Get(articleId)
+	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
 		this.Ctx.StatusCode(404)
 		return
@@ -130,7 +126,7 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 		return
 	}
 
-	tags := this.TagService.GetTags()
+	tags := services.TagService.GetTags()
 
 	render.View(this.Ctx, "article/edit.html", iris.Map{
 		"Tags":    tags,
@@ -161,12 +157,12 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 		return simple.ErrorMsg("请填写文章内容")
 	}
 
-	tag := this.TagService.Get(tagId)
+	tag := services.TagService.Get(tagId)
 	if tag == nil {
 		return simple.ErrorMsg("标签不存在")
 	}
 
-	article := this.ArticleService.Get(articleId)
+	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
 		return simple.ErrorMsg("文章不存在")
 	}
@@ -177,7 +173,7 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 
 	article.Title = title
 	article.Content = content
-	err := this.ArticleService.Update(article)
+	err := services.ArticleService.Update(article)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -191,7 +187,7 @@ func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult 
 		return simple.Error(simple.ErrorNotLogin)
 	}
 
-	article := this.ArticleService.Get(articleId)
+	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
 		return simple.ErrorMsg("文章不存在")
 	}
@@ -200,7 +196,7 @@ func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult 
 		return simple.ErrorMsg("无权限")
 	}
 
-	err := this.ArticleService.Delete(articleId)
+	err := services.ArticleService.Delete(articleId)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -213,7 +209,7 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
-	err := this.FavoriteService.AddArticleFavorite(user.Id, articleId)
+	err := services.FavoriteService.AddArticleFavorite(user.Id, articleId)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -247,7 +243,7 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 // 提交百度网址
 func (this *ArticleController) GetBaidu() *simple.JsonResult {
 	go func() {
-		this.ArticleService.Scan(func(articles []model.Article) bool {
+		services.ArticleService.Scan(func(articles []model.Article) bool {
 			if articles != nil {
 				var urls []string
 				for _, article := range articles {
@@ -261,14 +257,6 @@ func (this *ArticleController) GetBaidu() *simple.JsonResult {
 	return simple.Success()
 }
 
-// 生成每日分享
-func (this *ArticleController) GetDaily() *simple.JsonResult {
-	services.NewArticleService().CreateDailyShare("M-LOG码农分享", "", []int64{
-		177, 79, 105, 115, 197, 88, 29, 171, 60, 53, 128, 143, 20,
-	})
-	return simple.Success()
-}
-
 // 文章列表
 func GetArticles(ctx iris.Context) {
 	page := ctx.Params().GetIntDefault("page", 1)
@@ -276,7 +264,7 @@ func GetArticles(ctx iris.Context) {
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
 
-	articles, paging := services.ArticleServiceInstance.Query(simple.NewParamQueries(ctx).
+	articles, paging := services.ArticleService.Query(simple.NewParamQueries(ctx).
 		Eq("status", model.ArticleStatusPublished).
 		NotEq("category_id", 4).
 		Page(page, 20).Desc("id"))
@@ -299,14 +287,14 @@ func GetCategoryArticles(ctx iris.Context) {
 
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
-	category := services.CategoryServiceInstance.Get(categoryId)
+	category := services.CategoryService.Get(categoryId)
 
 	title := "文章"
 	if category != nil {
 		title = category.Name + " - " + title
 	}
 
-	articles, paging := services.ArticleServiceInstance.Query(simple.NewParamQueries(ctx).
+	articles, paging := services.ArticleService.Query(simple.NewParamQueries(ctx).
 		Eq("category_id", categoryId).
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))
@@ -329,14 +317,14 @@ func GetTagArticles(ctx iris.Context) {
 
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
-	tag := services.TagServiceInstance.Get(tagId)
+	tag := services.TagService.Get(tagId)
 
 	title := "文章"
 	if tag != nil {
 		title = tag.Name + " - " + title
 	}
 
-	articles, paging := services.ArticleServiceInstance.GetTagArticles(tagId, page)
+	articles, paging := services.ArticleService.GetTagArticles(tagId, page)
 
 	render.View(ctx, "article/index.html", iris.Map{
 		utils.GlobalFieldSiteTitle: title,

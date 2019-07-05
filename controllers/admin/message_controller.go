@@ -9,12 +9,11 @@ import (
 )
 
 type MessageController struct {
-	Ctx            iris.Context
-	MessageService *services.MessageService
+	Ctx iris.Context
 }
 
 func (this *MessageController) GetBy(id int64) *simple.JsonResult {
-	t := this.MessageService.Get(id)
+	t := services.MessageService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -22,7 +21,7 @@ func (this *MessageController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *MessageController) AnyList() *simple.JsonResult {
-	list, paging := this.MessageService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.MessageService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -30,7 +29,7 @@ func (this *MessageController) PostCreate() *simple.JsonResult {
 	t := &model.Message{}
 	this.Ctx.ReadForm(t)
 
-	err := this.MessageService.Create(t)
+	err := services.MessageService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -42,14 +41,14 @@ func (this *MessageController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := this.MessageService.Get(id)
+	t := services.MessageService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
-	err = this.MessageService.Update(t)
+	err = services.MessageService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

@@ -14,8 +14,7 @@ import (
 )
 
 type OauthServerController struct {
-	Ctx         context.Context
-	UserService *services.UserService
+	Ctx context.Context
 }
 
 // 请求授权，返回code
@@ -73,7 +72,7 @@ func (c *OauthServerController) PostLogin() {
 		username     = c.Ctx.FormValue("username")
 		password     = c.Ctx.FormValue("password")
 	)
-	user, err := c.UserService.SignIn(username, password)
+	user, err := services.UserService.SignIn(username, password)
 	if err != nil {
 		render.View(c.Ctx, "oauth/login.html", iris.Map{
 			"client_id":     clientId,

@@ -11,6 +11,8 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+mlog
+
 mlog.yaml
 mlog.prod.yaml
 

@@ -8,12 +8,11 @@ import (
 )
 
 type OauthTokenController struct {
-	Ctx               iris.Context
-	OauthTokenService *services.OauthTokenService
+	Ctx iris.Context
 }
 
 func (this *OauthTokenController) GetBy(id int64) *simple.JsonResult {
-	t := this.OauthTokenService.Get(id)
+	t := services.OauthTokenService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -21,6 +20,6 @@ func (this *OauthTokenController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *OauthTokenController) AnyList() *simple.JsonResult {
-	list, paging := this.OauthTokenService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.OauthTokenService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }

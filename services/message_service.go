@@ -10,16 +10,10 @@ import (
 	"html/template"
 )
 
-type MessageService struct {
-	MessageRepository *repositories.MessageRepository
-	UserRepository    *repositories.UserRepository
-	CommentRepository *repositories.CommentRepository
-	ArticleRepository *repositories.ArticleRepository
-	TopicRepository   *repositories.TopicRepository
-}
+var MessageService = newMessageService()
 
-func NewMessageService() *MessageService {
-	return &MessageService{
+func newMessageService() *messageService {
+	return &messageService{
 		MessageRepository: repositories.NewMessageRepository(),
 		CommentRepository: repositories.NewCommentRepository(),
 		ArticleRepository: repositories.NewArticleRepository(),
@@ -27,49 +21,57 @@ func NewMessageService() *MessageService {
 	}
 }
 
-func (this *MessageService) Get(id int64) *model.Message {
+type messageService struct {
+	MessageRepository *repositories.MessageRepository
+	UserRepository    *repositories.UserRepository
+	CommentRepository *repositories.CommentRepository
+	ArticleRepository *repositories.ArticleRepository
+	TopicRepository   *repositories.TopicRepository
+}
+
+func (this *messageService) Get(id int64) *model.Message {
 	return this.MessageRepository.Get(simple.GetDB(), id)
 }
 
-func (this *MessageService) Take(where ...interface{}) *model.Message {
+func (this *messageService) Take(where ...interface{}) *model.Message {
 	return this.MessageRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *MessageService) QueryCnd(cnd *simple.QueryCnd) (list []model.Message, err error) {
+func (this *messageService) QueryCnd(cnd *simple.QueryCnd) (list []model.Message, err error) {
 	return this.MessageRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *MessageService) Query(queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
+func (this *messageService) Query(queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
 	return this.MessageRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *MessageService) Create(t *model.Message) error {
+func (this *messageService) Create(t *model.Message) error {
 	return this.MessageRepository.Create(simple.GetDB(), t)
 }
 
-func (this *MessageService) Update(t *model.Message) error {
+func (this *messageService) Update(t *model.Message) error {
 	return this.MessageRepository.Update(simple.GetDB(), t)
 }
 
-func (this *MessageService) Updates(id int64, columns map[string]interface{}) error {
+func (this *messageService) Updates(id int64, columns map[string]interface{}) error {
 	return this.MessageRepository.Updates(simple.GetDB(), id, columns)
 }
 
-func (this *MessageService) UpdateColumn(id int64, name string, value interface{}) error {
+func (this *messageService) UpdateColumn(id int64, name string, value interface{}) error {
 	return this.MessageRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *MessageService) Delete(id int64) {
+func (this *messageService) Delete(id int64) {
 	this.MessageRepository.Delete(simple.GetDB(), id)
 }
 
-func (this *MessageService) GetUnReadCount(userId int64) (count int64) {
+func (this *messageService) GetUnReadCount(userId int64) (count int64) {
 	simple.GetDB().Where("user_id = ? and status = ?", userId, model.MsgStatusUnread).Model(&model.Message{}).Count(&count)
 	return
 }
 
 // 读消息
-func (this *MessageService) Read(id int64) *model.Message {
+func (this *messageService) Read(id int64) *model.Message {
 	msg := this.Get(id)
 	if msg != nil && msg.Status == model.MsgStatusUnread {
 		_ = this.UpdateColumn(id, "status", model.MsgStatusReaded) // 标记为已读
@@ -78,12 +80,12 @@ func (this *MessageService) Read(id int64) *model.Message {
 }
 
 // 将所有消息标记为已读
-func (this *MessageService) MarkReadAll(userId int64) {
+func (this *messageService) MarkReadAll(userId int64) {
 	simple.GetDB().Exec("update t_message set status = ? where user_id = ? and status = ?", model.MsgStatusReaded,
 		userId, model.MsgStatusUnread)
 }
 
-func (this *MessageService) Send(userId int64, content, quoteContent string, msgType int, extraData map[string]interface{}) {
+func (this *messageService) Send(userId int64, content, quoteContent string, msgType int, extraData map[string]interface{}) {
 	extraDataStr, _ := simple.FormatJson(extraData)
 	message := &model.Message{
 		UserId:       userId,
@@ -102,7 +104,7 @@ func (this *MessageService) Send(userId int64, content, quoteContent string, msg
 	}
 }
 
-func (this *MessageService) sendEmailNotice(message *model.Message) {
+func (this *messageService) sendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
 	if len(user.Email) == 0 {
 		return
@@ -136,7 +138,7 @@ func (this *MessageService) sendEmailNotice(message *model.Message) {
 	_ = utils.SendEmail(user.Email, "M-LOG：消息提醒", b.String())
 }
 
-func (this *MessageService) SendCommentMsg(comment *model.Comment) {
+func (this *messageService) SendCommentMsg(comment *model.Comment) {
 	commentUser := this.UserRepository.Get(simple.GetDB(), comment.UserId)
 	commentSummary := utils.GetMarkdownSummary(comment.Content)
 	// 引用消息

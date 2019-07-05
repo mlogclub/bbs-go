@@ -21,14 +21,7 @@ import (
 const oauthStateString = "random"
 
 type UserController struct {
-	Ctx                   iris.Context
-	UserService           *services.UserService
-	GithubUserService     *services.GithubUserService
-	ArticleService        *services.ArticleService
-	UserArticleTagService *services.UserArticleTagService
-	FavoriteService       *services.FavoriteService
-	TopicService          *services.TopicService
-	MessageService        *services.MessageService
+	Ctx iris.Context
 }
 
 // 用户主页
@@ -50,19 +43,19 @@ func (this *UserController) GetBy(userId int64) {
 	var messages []model.Message
 	var favorites []model.Favorite
 	if tab == "articles" {
-		articles, _ = this.ArticleService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId,
+		articles, _ = services.ArticleService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId,
 			model.ArticleStatusPublished).Order("id desc").Size(10))
 	} else if tab == "topics" {
-		topics, _ = this.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).
+		topics, _ = services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).
 			Order("id desc").Size(10))
 	} else if tab == "tags" && owner {
-		tags = this.UserArticleTagService.GetUserTags(userId)
+		tags = services.UserArticleTagService.GetUserTags(userId)
 	} else if tab == "messages" && owner {
-		messages, _ = this.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
+		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
 	} else if tab == "favorites" && owner {
 		currentUser := session.GetCurrentUser(this.Ctx)
 		if currentUser != nil && currentUser.Id == user.Id {
-			favorites, _ = this.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
+			favorites, _ = services.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
 		}
 	}
 
@@ -116,7 +109,7 @@ func (this *UserController) PostEditBy(userId int64) {
 	}
 	description := simple.FormValue(this.Ctx, "description")
 
-	_ = this.UserService.Updates(currentUser.Id, map[string]interface{}{
+	_ = services.UserService.Updates(currentUser.Id, map[string]interface{}{
 		"nickname":    nickname,
 		"avatar":      avatar,
 		"description": description,
@@ -153,7 +146,7 @@ func (this *UserController) PostSignin() {
 	username := this.Ctx.PostValueTrim("username")
 	password := this.Ctx.PostValueTrim("password")
 
-	user, err := this.UserService.SignIn(username, password)
+	user, err := services.UserService.SignIn(username, password)
 	if err != nil {
 		render.View(this.Ctx, "user/signin.html", iris.Map{
 			"ErrMsg":   err.Error(),
@@ -193,7 +186,7 @@ func (this *UserController) PostSignup() {
 	rePassword := this.Ctx.PostValueTrim("rePassword")
 	nickname := this.Ctx.PostValueTrim("nickname")
 
-	user, err := this.UserService.SignUp(username, email, password, rePassword, nickname, "")
+	user, err := services.UserService.SignUp(username, email, password, rePassword, nickname, "")
 	if err != nil {
 		render.View(this.Ctx, "user/signup.html", iris.Map{
 			"ErrMsg":     err.Error(),
@@ -237,7 +230,7 @@ func (this *UserController) GetGithubCallback() {
 	}
 
 	code := this.Ctx.FormValue("code")
-	githubUser, err := this.GithubUserService.GetGithubUser(code)
+	githubUser, err := services.GithubUserService.GetGithubUser(code)
 
 	if err != nil {
 		logrus.Errorf("Code exchange failed with '%s'", err)
@@ -245,7 +238,7 @@ func (this *UserController) GetGithubCallback() {
 		return
 	}
 
-	user, codeErr := this.UserService.SignInByGithub(githubUser)
+	user, codeErr := services.UserService.SignInByGithub(githubUser)
 	if codeErr != nil {
 		if codeErr.Code == utils.ErrorCodeUserNameExists {
 			this.Ctx.Redirect("/user/github/bind?id="+strconv.FormatInt(githubUser.Id, 10), iris.StatusSeeOther)
@@ -269,7 +262,7 @@ func (this *UserController) GetGithubBind() {
 		return
 	}
 
-	githubUser := this.GithubUserService.Get(githubUserId)
+	githubUser := services.GithubUserService.Get(githubUserId)
 	if githubUser == nil {
 		render.View(this.Ctx, "/user/github_bind.html", iris.Map{
 			"ErrMsg": "数据错误",
@@ -310,7 +303,7 @@ func (this *UserController) PostGithubBind() {
 		return
 	}
 
-	user, err := this.UserService.Bind(githubId, bindType, username, email, password, rePassword, nickname)
+	user, err := services.UserService.Bind(githubId, bindType, username, email, password, rePassword, nickname)
 	if err != nil {
 		render.View(this.Ctx, "/user/github_bind.html", iris.Map{
 			"ErrMsg":     err.Error(),
@@ -339,7 +332,7 @@ func (this *UserController) GetMsgcount() *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	var count int64 = 0
 	if user != nil {
-		count = this.MessageService.GetUnReadCount(user.Id)
+		count = services.MessageService.GetUnReadCount(user.Id)
 	}
 	return simple.NewEmptyRspBuilder().Put("count", count).JsonResult()
 }
@@ -354,7 +347,7 @@ func GetUserArticles(ctx context.Context) {
 		return
 	}
 
-	articles, paging := services.ArticleServiceInstance.Query(simple.NewParamQueries(ctx).
+	articles, paging := services.ArticleService.Query(simple.NewParamQueries(ctx).
 		Eq("user_id", userId).
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))
@@ -387,7 +380,7 @@ func GetUserTags(ctx context.Context) {
 		return
 	}
 
-	list, paging := services.UserArticleTagServiceInstance.Query(simple.NewParamQueries(ctx).Eq("user_id", userId).
+	list, paging := services.UserArticleTagService.Query(simple.NewParamQueries(ctx).Eq("user_id", userId).
 		Page(page, 20).Desc("id"))
 
 	var tags []model.Tag
@@ -422,7 +415,7 @@ func GetUserFavorites(ctx context.Context) {
 		return
 	}
 
-	favorites, paging := services.FavoriteServiceInstance.Query(simple.NewParamQueries(ctx).
+	favorites, paging := services.FavoriteService.Query(simple.NewParamQueries(ctx).
 		Eq("user_id", userId).
 		Page(page, 20).Desc("id"))
 
@@ -455,11 +448,11 @@ func GetUserMessages(ctx context.Context) {
 	}
 
 	// 查询列表
-	messages, paging := services.MessageServiceInstance.Query(simple.NewParamQueries(ctx).
+	messages, paging := services.MessageService.Query(simple.NewParamQueries(ctx).
 		Eq("user_id", user.Id).Page(page, 20).Desc("id"))
 
 	// 全部标记为已读
-	services.MessageServiceInstance.MarkReadAll(user.Id)
+	services.MessageService.MarkReadAll(user.Id)
 
 	render.View(ctx, "user/messages.html", iris.Map{
 		"User":                     render.BuildUser(user),
@@ -483,7 +476,7 @@ func GetUserTopics(ctx context.Context) {
 	}
 
 	// 查询列表
-	topics, paging := services.TopicServiceInstance.Query(simple.NewParamQueries(ctx).
+	topics, paging := services.TopicService.Query(simple.NewParamQueries(ctx).
 		Eq("user_id", userId).Page(page, 20).Desc("id"))
 
 	render.View(ctx, "user/topics.html", iris.Map{

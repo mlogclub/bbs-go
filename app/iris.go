@@ -22,7 +22,6 @@ import (
 	"github.com/mlogclub/mlog/controllers/admin"
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/middleware"
-	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils"
 )
 
@@ -65,8 +64,6 @@ func InitIris() {
 
 	{
 		mvc.Configure(app.Party("/"), func(m *mvc.Application) {
-			m.Register(services.Instances...)
-
 			m.Router.Use(middleware.NewGlobalMiddleware())
 
 			m.Party("/upload").Handle(new(controllers.UploadController))
@@ -116,8 +113,6 @@ func InitIris() {
 		})
 
 		mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
-			m.Register(services.Instances...)
-
 			m.Router.Use(middleware.AdminAuthHandler)
 			m.Party("/user").Handle(new(admin.UserController))
 			m.Party("/github-user").Handle(new(admin.GithubUserController))
@@ -133,7 +128,6 @@ func InitIris() {
 		})
 
 		mvc.Configure(app.Party("/oauth"), func(m *mvc.Application) {
-			m.Register(services.Instances...)
 			m.Party("/").Handle(new(controllers.OauthServerController))
 		})
 

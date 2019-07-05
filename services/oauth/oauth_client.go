@@ -59,7 +59,7 @@ func GetSuccessHtml(token *oauth2.Token, webUrl string) string {
 }
 
 func GetOauthConfig() *oauth2.Config {
-	config := &oauth2.Config{
+	return &oauth2.Config{
 		ClientID:     config.Conf.OauthClient.ClientId,
 		ClientSecret: config.Conf.OauthClient.ClientSecret,
 		RedirectURL:  config.Conf.OauthClient.ClientRedirectUrl,
@@ -69,5 +69,4 @@ func GetOauthConfig() *oauth2.Config {
 			TokenURL: config.Conf.OauthServer.TokenUrl,
 		},
 	}
-	return config
 }

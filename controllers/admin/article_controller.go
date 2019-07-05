@@ -17,14 +17,11 @@ import (
 )
 
 type ArticleController struct {
-	Ctx            iris.Context
-	ArticleService *services.ArticleService
-	TagService     *services.TagService
-	UserService    *services.UserService
+	Ctx iris.Context
 }
 
 func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
-	t := this.ArticleService.Get(id)
+	t := services.ArticleService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
@@ -32,7 +29,7 @@ func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *ArticleController) AnyList() *simple.JsonResult {
-	list, paging := this.ArticleService.Query(simple.NewParamQueries(this.Ctx).
+	list, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
 		EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
@@ -80,7 +77,7 @@ func (this *ArticleController) PostUpdate() *simple.JsonResult {
 	if id <= 0 {
 		return simple.ErrorMsg("id is required")
 	}
-	t := this.ArticleService.Get(id)
+	t := services.ArticleService.Get(id)
 	if t == nil {
 		return simple.ErrorMsg("entity not found")
 	}
@@ -99,7 +96,7 @@ func (this *ArticleController) PostUpdate() *simple.JsonResult {
 	}
 
 	t.UpdateTime = simple.NowTimestamp()
-	err := this.ArticleService.Update(t)
+	err := services.ArticleService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -112,7 +109,7 @@ func (this *ArticleController) PostDelete() *simple.JsonResult {
 	if id <= 0 {
 		return simple.ErrorMsg("id is required")
 	}
-	this.ArticleService.UpdateColumn(id, "status", model.ArticleStatusDeleted)
+	services.ArticleService.UpdateColumn(id, "status", model.ArticleStatusDeleted)
 	return simple.Success()
 }
 

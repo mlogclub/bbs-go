@@ -17,58 +17,60 @@ import (
 
 type ScanTopicCallback func(topics []model.Topic)
 
-type TopicService struct {
-	TopicRepository    *repositories.TopicRepository
-	TagRepository      *repositories.TagRepository
-	TopicTagRepository *repositories.TopicTagRepository
-}
+var TopicService = newTopicService()
 
-func NewTopicService() *TopicService {
-	return &TopicService{
+func newTopicService() *topicService {
+	return &topicService{
 		TopicRepository:    repositories.NewTopicRepository(),
 		TagRepository:      repositories.NewTagRepository(),
 		TopicTagRepository: repositories.NewTopicTagRepository(),
 	}
 }
 
-func (this *TopicService) Get(id int64) *model.Topic {
+type topicService struct {
+	TopicRepository    *repositories.TopicRepository
+	TagRepository      *repositories.TagRepository
+	TopicTagRepository *repositories.TopicTagRepository
+}
+
+func (this *topicService) Get(id int64) *model.Topic {
 	return this.TopicRepository.Get(simple.GetDB(), id)
 }
 
-func (this *TopicService) Take(where ...interface{}) *model.Topic {
+func (this *topicService) Take(where ...interface{}) *model.Topic {
 	return this.TopicRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *TopicService) QueryCnd(cnd *simple.QueryCnd) (list []model.Topic, err error) {
+func (this *topicService) QueryCnd(cnd *simple.QueryCnd) (list []model.Topic, err error) {
 	return this.TopicRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *TopicService) Query(queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
+func (this *topicService) Query(queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
 	return this.TopicRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *TopicService) Create(t *model.Topic) error {
+func (this *topicService) Create(t *model.Topic) error {
 	return this.TopicRepository.Create(simple.GetDB(), t)
 }
 
-func (this *TopicService) Update(t *model.Topic) error {
+func (this *topicService) Update(t *model.Topic) error {
 	return this.TopicRepository.Update(simple.GetDB(), t)
 }
 
-func (this *TopicService) Updates(id int64, columns map[string]interface{}) error {
+func (this *topicService) Updates(id int64, columns map[string]interface{}) error {
 	return this.TopicRepository.Updates(simple.GetDB(), id, columns)
 }
 
-func (this *TopicService) UpdateColumn(id int64, name string, value interface{}) error {
+func (this *topicService) UpdateColumn(id int64, name string, value interface{}) error {
 	return this.TopicRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *TopicService) Delete(id int64) {
+func (this *topicService) Delete(id int64) {
 	this.TopicRepository.Delete(simple.GetDB(), id)
 }
 
 // 扫描
-func (this *TopicService) Scan(cb ScanTopicCallback) {
+func (this *topicService) Scan(cb ScanTopicCallback) {
 	var cursor int64
 	for {
 		list, err := this.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
@@ -85,7 +87,7 @@ func (this *TopicService) Scan(cb ScanTopicCallback) {
 }
 
 // 发表
-func (this *TopicService) Publish(userId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
+func (this *topicService) Publish(userId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -118,7 +120,7 @@ func (this *TopicService) Publish(userId int64, tags []string, title, content st
 }
 
 // 更新
-func (this *TopicService) Edit(topicId int64, tags []string, title, content string) *simple.CodeError {
+func (this *topicService) Edit(topicId int64, tags []string, title, content string) *simple.CodeError {
 	if len(title) == 0 {
 		return simple.NewErrorMsg("标题不能为空")
 	}
@@ -144,7 +146,7 @@ func (this *TopicService) Edit(topicId int64, tags []string, title, content stri
 }
 
 // 主题标签
-func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
+func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags, err := this.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
 	if err != nil {
 		return nil
@@ -159,7 +161,7 @@ func (this *TopicService) GetTopicTags(topicId int64) []model.Tag {
 }
 
 // 指定标签下的主题列表
-func (this *TopicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
+func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := this.TopicTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
 		Eq("tag_id", tagId).
 		Page(page, 20).Desc("id"))
@@ -174,7 +176,7 @@ func (this *TopicService) GetTagTopics(tagId int64, page int) (topics []model.To
 }
 
 // 根据编号批量获取主题
-func (this *TopicService) GetTopicInIds(topicIds []int64) []model.Topic {
+func (this *topicService) GetTopicInIds(topicIds []int64) []model.Topic {
 	if len(topicIds) == 0 {
 		return nil
 	}
@@ -184,12 +186,12 @@ func (this *TopicService) GetTopicInIds(topicIds []int64) []model.Topic {
 }
 
 // 浏览数+1
-func (this *TopicService) IncrViewCount(topicId int64) {
+func (this *topicService) IncrViewCount(topicId int64) {
 	simple.GetDB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
 }
 
 // 更新最后回复时间
-func (this *TopicService) SetLastCommentTime(topicId, lastCommentTime int64) {
+func (this *topicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 	err := this.UpdateColumn(topicId, "last_comment_time", lastCommentTime)
 	if err != nil {
 		logrus.Error(err)
@@ -197,7 +199,7 @@ func (this *TopicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 }
 
 // sitemap
-func (this *TopicService) GenerateSitemap() {
+func (this *topicService) GenerateSitemap() {
 	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
 	if err != nil {
@@ -219,7 +221,7 @@ func (this *TopicService) GenerateSitemap() {
 }
 
 // rss
-func (this *TopicService) GenerateRss() {
+func (this *topicService) GenerateRss() {
 	topics, err := this.TopicRepository.QueryCnd(simple.GetDB(),
 		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
 	if err != nil {

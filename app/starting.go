@@ -17,8 +17,9 @@ func StartOn() {
 // 生成sitemap和rss
 func generateSitemapAndRss() {
 	go func() {
-		articleService := services.NewArticleService()
-		articleService.GenerateSitemap()
-		articleService.GenerateRss()
+		services.ArticleService.GenerateSitemap()
+		services.ArticleService.GenerateRss()
+		services.TopicService.GenerateSitemap()
+		services.TopicService.GenerateRss()
 	}()
 }

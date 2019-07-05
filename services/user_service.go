@@ -13,70 +13,72 @@ import (
 	"github.com/mlogclub/mlog/repositories"
 )
 
-type UserService struct {
-	UserRepository       *repositories.UserRepository
-	GithubUserRepository *repositories.GithubUserRepository
-}
+var UserService = newUserService()
 
-func NewUserService() *UserService {
-	return &UserService{
+func newUserService() *userService {
+	return &userService{
 		UserRepository: repositories.NewUserRepository(),
 	}
 }
 
-func (this *UserService) Get(id int64) *model.User {
+type userService struct {
+	UserRepository       *repositories.UserRepository
+	GithubUserRepository *repositories.GithubUserRepository
+}
+
+func (this *userService) Get(id int64) *model.User {
 	return this.UserRepository.Get(simple.GetDB(), id)
 }
 
-func (this *UserService) Take(where ...interface{}) *model.User {
+func (this *userService) Take(where ...interface{}) *model.User {
 	return this.UserRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *UserService) QueryCnd(cnd *simple.QueryCnd) (list []model.User, err error) {
+func (this *userService) QueryCnd(cnd *simple.QueryCnd) (list []model.User, err error) {
 	return this.UserRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *UserService) Query(queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
+func (this *userService) Query(queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
 	return this.UserRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *UserService) Create(t *model.User) error {
+func (this *userService) Create(t *model.User) error {
 	return this.UserRepository.Create(simple.GetDB(), t)
 }
 
-func (this *UserService) Update(t *model.User) error {
+func (this *userService) Update(t *model.User) error {
 	err := this.UserRepository.Update(simple.GetDB(), t)
 	cache.UserCache.Invalidate(t.Id)
 	return err
 }
 
-func (this *UserService) Updates(id int64, columns map[string]interface{}) error {
+func (this *userService) Updates(id int64, columns map[string]interface{}) error {
 	err := this.UserRepository.Updates(simple.GetDB(), id, columns)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
-func (this *UserService) UpdateColumn(id int64, name string, value interface{}) error {
+func (this *userService) UpdateColumn(id int64, name string, value interface{}) error {
 	err := this.UserRepository.UpdateColumn(simple.GetDB(), id, name, value)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
-func (this *UserService) Delete(id int64) {
+func (this *userService) Delete(id int64) {
 	this.UserRepository.Delete(simple.GetDB(), id)
 	cache.UserCache.Invalidate(id)
 }
 
-func (this *UserService) GetByEmail(email string) *model.User {
+func (this *userService) GetByEmail(email string) *model.User {
 	return this.UserRepository.GetByEmail(simple.GetDB(), email)
 }
 
-func (this *UserService) GetByUsername(username string) *model.User {
+func (this *userService) GetByUsername(username string) *model.User {
 	return this.UserRepository.GetByUsername(simple.GetDB(), username)
 }
 
 // 登录
-func (this *UserService) SignIn(username, password string) (*model.User, error) {
+func (this *userService) SignIn(username, password string) (*model.User, error) {
 	if len(username) == 0 {
 		return nil, errors.New("用户名/邮箱不能为空")
 	}
@@ -99,7 +101,7 @@ func (this *UserService) SignIn(username, password string) (*model.User, error) 
 }
 
 // 注册
-func (this *UserService) SignUp(username, email, password, rePassword, nickname, avatar string) (*model.User, error) {
+func (this *userService) SignUp(username, email, password, rePassword, nickname, avatar string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 
@@ -155,7 +157,7 @@ func (this *UserService) SignUp(username, email, password, rePassword, nickname,
 }
 
 // 绑定账号
-func (this *UserService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
+func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
 	githubUser := this.GithubUserRepository.Get(simple.GetDB(), githubId)
 	if githubUser == nil {
 		err = errors.New("Github账号未找到")
@@ -191,7 +193,7 @@ func (this *UserService) Bind(githubId int64, bindType, username, email, passwor
 }
 
 // Github账号登录
-func (this *UserService) SignInByGithub(githubUser *model.GithubUser) (*model.User, *simple.CodeError) {
+func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.User, *simple.CodeError) {
 	user := this.Get(githubUser.UserId)
 	if user != nil {
 		return user, nil

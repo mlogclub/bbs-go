@@ -10,58 +10,60 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type UserArticleTagService struct {
-	UserArticleTagRepository *repositories.UserArticleTagRepository
-	TagRepository            *repositories.TagRepository
-}
+var UserArticleTagService = newUserArticleTagService()
 
-func NewUserArticleTagService() *UserArticleTagService {
-	return &UserArticleTagService{
+func newUserArticleTagService() *userArticleTagService {
+	return &userArticleTagService{
 		UserArticleTagRepository: repositories.NewUserArticleTagRepository(),
 	}
 }
 
-func (this *UserArticleTagService) Get(id int64) *model.UserArticleTag {
+type userArticleTagService struct {
+	UserArticleTagRepository *repositories.UserArticleTagRepository
+	TagRepository            *repositories.TagRepository
+}
+
+func (this *userArticleTagService) Get(id int64) *model.UserArticleTag {
 	return this.UserArticleTagRepository.Get(simple.GetDB(), id)
 }
 
-func (this *UserArticleTagService) Take(where ...interface{}) *model.UserArticleTag {
+func (this *userArticleTagService) Take(where ...interface{}) *model.UserArticleTag {
 	return this.UserArticleTagRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *UserArticleTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.UserArticleTag, err error) {
+func (this *userArticleTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.UserArticleTag, err error) {
 	return this.UserArticleTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *UserArticleTagService) Query(queries *simple.ParamQueries) (list []model.UserArticleTag, paging *simple.Paging) {
+func (this *userArticleTagService) Query(queries *simple.ParamQueries) (list []model.UserArticleTag, paging *simple.Paging) {
 	return this.UserArticleTagRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *UserArticleTagService) Create(t *model.UserArticleTag) error {
+func (this *userArticleTagService) Create(t *model.UserArticleTag) error {
 	return this.UserArticleTagRepository.Create(simple.GetDB(), t)
 }
 
-func (this *UserArticleTagService) Update(t *model.UserArticleTag) error {
+func (this *userArticleTagService) Update(t *model.UserArticleTag) error {
 	return this.UserArticleTagRepository.Update(simple.GetDB(), t)
 }
 
-func (this *UserArticleTagService) Updates(id int64, columns map[string]interface{}) error {
+func (this *userArticleTagService) Updates(id int64, columns map[string]interface{}) error {
 	return this.UserArticleTagRepository.Updates(simple.GetDB(), id, columns)
 }
 
-func (this *UserArticleTagService) UpdateColumn(id int64, name string, value interface{}) error {
+func (this *userArticleTagService) UpdateColumn(id int64, name string, value interface{}) error {
 	return this.UserArticleTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *UserArticleTagService) Delete(id int64) {
+func (this *userArticleTagService) Delete(id int64) {
 	this.UserArticleTagRepository.Delete(simple.GetDB(), id)
 }
 
-func (this *UserArticleTagService) GetBy(userId, tagId int64) *model.UserArticleTag {
+func (this *userArticleTagService) GetBy(userId, tagId int64) *model.UserArticleTag {
 	return this.UserArticleTagRepository.Take(simple.GetDB(), "user_id = ? and tag_id = ?", userId, tagId)
 }
 
-func (this *UserArticleTagService) GetUserTags(userId int64) (tags []model.Tag) {
+func (this *userArticleTagService) GetUserTags(userId int64) (tags []model.Tag) {
 	list, err := this.UserArticleTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("user_id = ?", userId).Order("id desc"))
 	if err != nil {
 		logrus.Error(err)
@@ -76,7 +78,7 @@ func (this *UserArticleTagService) GetUserTags(userId int64) (tags []model.Tag) 
 	return
 }
 
-func (this *UserArticleTagService) AddUserTag(userId int64, name string) error {
+func (this *userArticleTagService) AddUserTag(userId int64, name string) error {
 	return simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
 		tag, err := this.TagRepository.GetOrCreate(tx, name)
 		if err != nil {

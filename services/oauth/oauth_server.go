@@ -21,8 +21,8 @@ type Server struct {
 }
 
 func NewOauthServer() *Server {
-	oauthTokenStore := NewOauthTokenStore()
-	oauthClientStore := NewOauthClientStore()
+	oauthTokenStore := newTokenStore()
+	oauthClientStore := newClientStore()
 
 	manager := manage.NewDefaultManager()
 	manager.MapTokenStorage(oauthTokenStore)
@@ -42,7 +42,7 @@ func NewOauthServer() *Server {
 		log.Println("Response Error:", re.Error.Error())
 	})
 	srv.SetPasswordAuthorizationHandler(func(username, password string) (userId string, err error) {
-		user, err := services.UserServiceInstance.SignIn(username, password)
+		user, err := services.UserService.SignIn(username, password)
 		if err != nil {
 			err = errors.ErrAccessDenied
 		} else {

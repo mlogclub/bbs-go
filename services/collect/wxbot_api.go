@@ -14,18 +14,12 @@ import (
 )
 
 type WxbotApi struct {
-	CategoryService *services.CategoryService
-	TagService      *services.TagService
-	UserRepository  *repositories.UserRepository
-	ArticleService  *services.ArticleService
+	UserRepository *repositories.UserRepository
 }
 
 func NewWxbotApi() *WxbotApi {
 	return &WxbotApi{
-		CategoryService: services.NewCategoryService(),
-		TagService:      services.NewTagService(),
-		UserRepository:  repositories.NewUserRepository(),
-		ArticleService:  services.NewArticleService(),
+		UserRepository: repositories.NewUserRepository(),
 	}
 }
 
@@ -38,7 +32,7 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 	categoryId := this.initCategory(simple.GetDB(), wxArticle)
 	tagIds := this.initTags(simple.GetDB(), wxArticle)
 
-	return this.ArticleService.Publish(userId, wxArticle.Title, simple.GetSummary(wxArticle.TextContent, 256),
+	return services.ArticleService.Publish(userId, wxArticle.Title, simple.GetSummary(wxArticle.TextContent, 256),
 		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tagIds, wxArticle.SourceURL)
 }
 
@@ -76,7 +70,7 @@ func (this *WxbotApi) initCategory(db *gorm.DB, wxArticle *WxArticle) int64 {
 	if len(wxArticle.Category) == 0 {
 		return 0
 	}
-	cat := this.CategoryService.GetOrCreate(wxArticle.Category)
+	cat := services.CategoryService.GetOrCreate(wxArticle.Category)
 	if cat != nil {
 		return cat.Id
 	}
@@ -112,7 +106,7 @@ func (this *WxbotApi) initTags(db *gorm.DB, wxArticle *WxArticle) (tagIds []int6
 
 	if tagNames != nil && len(tagNames) > 0 {
 		for _, tagName := range tagNames {
-			tag, _ := this.TagService.GetOrCreate(tagName)
+			tag, _ := services.TagService.GetOrCreate(tagName)
 			if tag != nil {
 				tagIds = append(tagIds, tag.Id)
 			}
