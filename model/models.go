@@ -169,7 +169,8 @@ type TopicTag struct {
 // 消息
 type Message struct {
 	Model
-	UserId       int64  `gorm:"not null" json:"userId" form:"userId"`              // 用户编号
+	FromId       int64  `gorm:"not null" json:"fromId" form:"fromId"`              // 消息发送人
+	UserId       int64  `gorm:"not null" json:"userId" form:"userId"`              // 用户编号(消息接收人)
 	Content      string `gorm:"type:text;not null" json:"content" form:"content"`  // 消息内容
 	QuoteContent string `gorm:"type:text" json:"quoteContent" form:"quoteContent"` // 引用内容
 	Type         int    `gorm:"not null" json:"type" form:"type"`                  // 消息类型

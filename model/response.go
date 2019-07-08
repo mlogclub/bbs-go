@@ -90,8 +90,8 @@ type FavoriteResponse struct {
 // 消息
 type MessageResponse struct {
 	MessageId    int64     `json:"messageId"`
-	UserId       int64     `json:"userId"`
-	User         *UserInfo `json:"user"`
+	From         *UserInfo `json:"from"`   // 消息发送人
+	UserId       int64     `json:"userId"` // 消息接收人编号
 	Content      string    `json:"content"`
 	QuoteContent string    `json:"quoteContent"`
 	Type         int       `json:"type"`

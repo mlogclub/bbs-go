@@ -2,12 +2,17 @@
     {{range .Messages}}
         <li class="message-item">
             <div class="message-item-left">
-                <img src="{{.User.Avatar}}"/>
+                <div class="avatar is-rounded has-border" style="background-image: url({{.From.Avatar}});"></div>
             </div>
             <div class="message-item-right">
                 <div class="message-item-meta">
-                    <span class="nickname"><a href="{{userUrl .User.Id}}"
-                                              target="_blank">{{.User.Nickname}}</a></span>
+                    {{if gt .From.Id 0}}
+                        <span class="nickname"><a href="{{userUrl .From.Id}}"
+                                                  target="_blank">{{.From.Nickname}}</a></span>
+                    {{else}}
+                        <span class="nickname"><a href="javascript:void(0)"
+                                                  target="_blank">{{.From.Nickname}}</a></span>
+                    {{end}}
                     <span class="time">{{prettyTime .CreateTime}}</span>
                 </div>
                 <div class="content">

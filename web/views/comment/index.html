@@ -40,7 +40,8 @@
     <div v-if="!loading" v-for="comment in itemList">
         <div class="comment">
             <div class="comment-avatar">
-                <img :src="comment.user.avatar"/>
+                <div class="avatar has-border is-rounded"
+                     :style="{backgroundImage:'url(' + comment.user.avatar + ')'}"></div>
             </div>
             <div class="comment-meta">
                 <div>

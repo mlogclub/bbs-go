@@ -73,10 +73,14 @@ func (this *messageService) MarkReadAll(userId int64) {
 		userId, model.MsgStatusUnread)
 }
 
-func (this *messageService) Send(userId int64, content, quoteContent string, msgType int, extraData map[string]interface{}) {
+// 发送消息
+// fromId: 消息发送人
+// toId: 消息接收人
+func (this *messageService) Send(fromId, toId int64, content, quoteContent string, msgType int, extraData map[string]interface{}) {
 	extraDataStr, _ := simple.FormatJson(extraData)
 	message := &model.Message{
-		UserId:       userId,
+		FromId:       fromId,
+		UserId:       toId,
 		Content:      content,
 		QuoteContent: quoteContent,
 		Type:         msgType,
@@ -111,7 +115,7 @@ func (this *messageService) SendCommentMsg(comment *model.Comment) {
 		if quote != nil && quote.UserId != comment.UserId {
 			msgContent := commentUser.Nickname + " 回复了你的评论：" + commentSummary
 			quoteContent := utils.GetMarkdownSummary(quote.Content)
-			this.Send(quote.UserId, msgContent, quoteContent, model.MsgTypeComment, map[string]interface{}{
+			this.Send(comment.UserId, quote.UserId, msgContent, quoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
@@ -141,10 +145,11 @@ func (this *messageService) SendCommentMsg(comment *model.Comment) {
 			}
 		}
 		if userId > 0 {
-			this.Send(userId, msgContent, msgQuoteContent, model.MsgTypeComment, map[string]interface{}{
+			this.Send(comment.UserId, userId, msgContent, msgQuoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
+				"quoteId":    comment.QuoteId,
 			})
 		}
 	}

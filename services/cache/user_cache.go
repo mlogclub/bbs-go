@@ -54,6 +54,9 @@ func newUserCache() *userCache {
 }
 
 func (this *userCache) Get(userId int64) *model.User {
+	if userId <= 0 {
+		return nil
+	}
 	val, err := this.cache.Get(userId)
 	if err != nil {
 		return nil

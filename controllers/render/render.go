@@ -319,7 +319,6 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 	if message == nil {
 		return nil
 	}
-	user := BuildUserDefaultIfNull(message.UserId)
 
 	detailUrl := ""
 	if message.Type == model.MsgTypeComment {
@@ -331,10 +330,15 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 			detailUrl = utils.BuildTopicUrl(entityId.Int())
 		}
 	}
+	from := BuildUserDefaultIfNull(message.FromId)
+	if message.FromId <= 0 {
+		from.Nickname = "系统通知"
+		from.Avatar = DefaultAvatars[0]
+	}
 	return &model.MessageResponse{
 		MessageId:    message.Id,
+		From:         from,
 		UserId:       message.UserId,
-		User:         user,
 		Content:      message.Content,
 		QuoteContent: message.QuoteContent,
 		Type:         message.Type,
