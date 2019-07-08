@@ -10,15 +10,6 @@
       border-bottom: 1px solid #f2f2f2;
     }
 
-    &.more {
-      text-align: center;
-
-      a {
-        font-size: 15px;
-        font-weight: bold;
-      }
-    }
-
     .message-item-left {
       img {
         width: 50px;
@@ -47,8 +38,21 @@
 
       .content {
         margin-top: 5px;
+        margin-bottom: 0px;
         font-size: 14px;
         color: #4a4a4a;
+
+        blockquote {
+          margin: 0px;
+        }
+      }
+
+      .show-more {
+        text-align: right;
+
+        a {
+          font-size: 13px;
+        }
       }
     }
   }

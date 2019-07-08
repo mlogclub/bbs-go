@@ -3,6 +3,7 @@ package render
 import (
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/session"
+	"github.com/tidwall/gjson"
 	"html/template"
 	"math/rand"
 	"net/url"
@@ -319,6 +320,17 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 		return nil
 	}
 	user := BuildUserDefaultIfNull(message.UserId)
+
+	detailUrl := ""
+	if message.Type == model.MsgTypeComment {
+		entityType := gjson.Get(message.ExtraData, "entityType")
+		entityId := gjson.Get(message.ExtraData, "entityId")
+		if entityType.String() == model.EntityTypeArticle {
+			detailUrl = utils.BuildArticleUrl(entityId.Int())
+		} else if entityType.String() == model.EntityTypeTopic {
+			detailUrl = utils.BuildTopicUrl(entityId.Int())
+		}
+	}
 	return &model.MessageResponse{
 		MessageId:    message.Id,
 		UserId:       message.UserId,
@@ -326,6 +338,7 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 		Content:      message.Content,
 		QuoteContent: message.QuoteContent,
 		Type:         message.Type,
+		DetailUrl:    detailUrl,
 		ExtraData:    message.ExtraData,
 		Status:       message.Status,
 		CreateTime:   message.CreateTime,

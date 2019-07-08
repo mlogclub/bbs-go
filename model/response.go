@@ -95,6 +95,7 @@ type MessageResponse struct {
 	Content      string    `json:"content"`
 	QuoteContent string    `json:"quoteContent"`
 	Type         int       `json:"type"`
+	DetailUrl    string    `json:"detailUrl"` // 消息详情url
 	ExtraData    string    `json:"extraData"`
 	Status       int       `json:"status"`
 	CreateTime   int64     `json:"createTime"`

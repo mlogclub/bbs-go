@@ -14,36 +14,20 @@
                             <li class="is-active"><a href="#" aria-current="page">消息</a></li>
                         </ul>
                     </nav>
-                    <ul class="message-list">
-                        {{range .Messages}}
-                            <li class="message-item">
-                                <div class="message-item-left">
-                                    <img src="{{.User.Avatar}}"/>
-                                </div>
-                                <div class="message-item-right">
-                                    <div class="message-item-meta">
-                                            <span class="nickname"><a href="{{userUrl .User.Id}}"
-                                                                      target="_blank">{{.User.Nickname}}</a></span>
-                                        <span class="time">{{prettyTime .CreateTime}}</span>
-                                    </div>
-                                    <div class="content">
-                                        {{.Content}}
-                                        <blockquote>{{.QuoteContent}}</blockquote>
-                                    </div>
-                                </div>
-                            </li>
-                        {{end}}
-                    </ul>
+
+                    {{template "user/message-list.html" .}}
 
                     <nav class="pagination is-rounded is-small" role="navigation" aria-label="pagination">
                         {{if gt .Page.Page 1}}
                             <a class="pagination-previous" href="{{.PrePageUrl}}"><i class="iconfont icon-left"></i> 上一页</a>
                         {{else }}
-                            <a class="pagination-previous" href="javascript:;"><i class="iconfont icon-left"></i> 上一页</a>
+                            <a class="pagination-previous" href="javascript:;"><i class="iconfont icon-left"></i>
+                                上一页</a>
                         {{end}}
 
                         {{if lt .Page.Page .Page.TotalPage}}
-                            <a class="pagination-next" href="{{.NextPageUrl}}">下一页 <i class="iconfont icon-right"></i></a>
+                            <a class="pagination-next" href="{{.NextPageUrl}}">下一页 <i
+                                        class="iconfont icon-right"></i></a>
                         {{else }}
                             <a class="pagination-next" href="javascript:;">下一页 <i class="iconfont icon-right"></i></a>
                         {{end}}
