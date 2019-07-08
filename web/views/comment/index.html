@@ -17,7 +17,8 @@
                 <i class="iconfont icon-close" @click="cancelReply"></i>
             </div>
             <textarea ref="commentEditor" class="comment-input" placeholder="发表你的观点..." v-model="content"
-                      @keyup.ctrl.enter="create"
+                      @keydown.ctrl.enter="ctrlEnterCreate"
+                      @keydown.cmd.enter="ctrlEnterCreate"
                       @input="autoHeight"></textarea>
         </div>
         <div class="comment-button-wrapper">
@@ -107,6 +108,11 @@
         }, function (response) {
           console.error(response)
         })
+      },
+      ctrlEnterCreate(event) {
+        event.stopPropagation()
+        event.preventDefault()
+        this.create()
       },
       create() {
         var me = this
