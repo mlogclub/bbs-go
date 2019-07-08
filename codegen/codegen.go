@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/mlogclub/simple/codegen"
+	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/model"
 )
 
 func main() {
-	codegen.Generate("./", "github.com/mlogclub/mlog", codegen.GetGenerateStruct(&model.OauthClient{}))
-	codegen.Generate("./", "github.com/mlogclub/mlog", codegen.GetGenerateStruct(&model.OauthToken{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.OauthClient{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.OauthToken{}))
 }

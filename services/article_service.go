@@ -25,6 +25,7 @@ var ArticleService = newArticleService()
 
 func newArticleService() *articleService {
 	return &articleService{
+
 	}
 }
 

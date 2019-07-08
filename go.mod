@@ -23,7 +23,7 @@ require (
 	github.com/kataras/golog v0.0.0-20190624001437-99c81de45f40 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/mattn/go-runewidth v0.0.4
-	github.com/mlogclub/simple v1.0.1
+	github.com/mlogclub/simple v1.0.2
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
