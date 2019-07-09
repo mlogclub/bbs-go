@@ -7,7 +7,7 @@
             </div>
             <textarea ref="commentEditor" class="comment-input" placeholder="发表你的观点..." v-model="content"
                       @keydown.ctrl.enter="ctrlEnterCreate"
-                      @keydown.cmd.enter="ctrlEnterCreate"
+                      @keydown.meta.enter="ctrlEnterCreate"
                       @input="autoHeight"></textarea>
         </div>
         <div class="comment-button-wrapper">
