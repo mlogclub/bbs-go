@@ -146,6 +146,7 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 		return nil, err
 	}
 
+	cache.UserCache.Invalidate(user.Id)
 	return user, nil
 }
 
@@ -220,6 +221,7 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		if err != nil {
 			return nil, simple.NewError2(err)
 		}
+		cache.UserCache.Invalidate(user.Id)
 		return user, nil
 	} else { // 用户名称已经存在，那么要让用户修改
 		return nil, simple.NewError(utils.ErrorCodeUserNameExists, "用户名已存在")
