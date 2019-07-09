@@ -1,3 +1,16 @@
+{{if .CurrentUser}}
+    {{if eq .User.Id .CurrentUser.Id}}
+        <div class="widget">
+            <div class="content">
+                <a class="button is-primary" href="{{baseUrl}}/topic/create"><i
+                            class="iconfont icon-topic"></i>&nbsp;<strong>发表主题</strong></a>
+                <a class="button is-success" href="{{baseUrl}}/article/create"><i
+                            class="iconfont icon-publish"></i>&nbsp;<strong>发表文章</strong></a>
+            </div>
+        </div>
+    {{end}}
+{{end}}
+
 <div class="widget">
     <div class="header">
         个人资料
