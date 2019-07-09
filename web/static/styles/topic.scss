@@ -1,5 +1,5 @@
 .topic-list {
-  margin: 0 0 10px 0!important;
+  margin: 0 0 10px 0 !important;
 
   li {
     padding: 3px 0;
@@ -87,11 +87,13 @@
 
 }
 
-
 .topic-detail {
+  margin-bottom: 20px;
+
   .header {
     display: flex;
     border-bottom: 1px dashed #f4f4f5;
+    padding-bottom: 5px;
 
     .left {
       //min-width: 80px;

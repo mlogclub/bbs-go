@@ -23,8 +23,7 @@
         </div>
     </div>
     <div class="comment-not-login" v-else>
-        <div class="comment-login-div">请先<a href="{{baseUrl}}/user/signup">注册</a>
-            或<a href="javascript:toSignin()">登录</a>后发表观点!
+        <div class="comment-login-div">请<a href="{{baseUrl}}/user/github/login">登录</a>后发表观点
         </div>
     </div>
     <div v-if="!loading" v-for="comment in itemList">
