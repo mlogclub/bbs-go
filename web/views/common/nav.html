@@ -74,8 +74,13 @@
                 {{else}}
                     <div class="navbar-item">
                         <div class="buttons">
+                            {{/*
                             <a class="button is-primary" href="{{baseUrl}}/user/signup"><strong>注册</strong></a>
-                            <a class="button is-light" href="javascript:toSignin()">登录</a>
+                            <a class="button is-dark" href="javascript:toSignin()"><i
+                                        class="iconfont icon-github"></i>&nbsp;登录</a>
+                            */}}
+                            <a class="button is-dark" href="{{baseUrl}}/user/github/login"><i
+                                        class="iconfont icon-github"></i>&nbsp;登录</a>
                         </div>
                     </div>
                 {{end}}
