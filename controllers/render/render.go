@@ -5,7 +5,6 @@ import (
 	"github.com/mlogclub/mlog/utils/session"
 	"github.com/tidwall/gjson"
 	"html/template"
-	"math/rand"
 	"net/url"
 	"strconv"
 	"strings"
@@ -48,8 +47,7 @@ func GetDefaultAvatar(id int64) string {
 	if id <= 0 {
 		return DefaultAvatars[0]
 	}
-	// i := len(DefaultAvatars) % int(id)
-	i := rand.Intn(len(DefaultAvatars))
+	i := int(id) % len(DefaultAvatars)
 	return DefaultAvatars[i]
 }
 
