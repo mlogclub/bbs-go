@@ -39,7 +39,11 @@ func (this *userService) Query(queries *simple.ParamQueries) (list []model.User,
 }
 
 func (this *userService) Create(t *model.User) error {
-	return repositories.UserRepository.Create(simple.GetDB(), t)
+	err := repositories.UserRepository.Create(simple.GetDB(), t);
+	if err == nil {
+		cache.UserCache.Invalidate(t.Id)
+	}
+	return nil
 }
 
 func (this *userService) Update(t *model.User) error {

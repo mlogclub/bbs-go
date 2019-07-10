@@ -10,7 +10,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
 )
 
 type WxbotApi struct {
@@ -25,7 +24,7 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 		return nil, errors.New("内容为空")
 	}
 
-	userId, _ := this.initUser(simple.GetDB(), wxArticle)
+	userId, _ := this.initUser(wxArticle)
 	categoryId := this.initCategory(simple.GetDB(), wxArticle)
 	tagIds := this.initTags(simple.GetDB(), wxArticle)
 
@@ -33,12 +32,12 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tagIds, wxArticle.SourceURL)
 }
 
-func (this *WxbotApi) initUser(db *gorm.DB, article *WxArticle) (int64, error) {
-	user := repositories.UserRepository.Take(db, "username = ?", article.AppID)
+func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
+	user := services.UserService.GetByUsername(article.AppID)
 	if user != nil {
 		user.Nickname = article.AppName
 		user.Description = article.WxIntro
-		repositories.UserRepository.Update(db, user)
+		_ = services.UserService.Update(user)
 		return user.Id, nil
 	} else {
 		avatar, err := oss.CopyImage(article.OriHead)
@@ -55,7 +54,7 @@ func (this *WxbotApi) initUser(db *gorm.DB, article *WxArticle) (int64, error) {
 			CreateTime:  simple.NowTimestamp(),
 			UpdateTime:  simple.NowTimestamp(),
 		}
-		err = repositories.UserRepository.Create(db, user)
+		err = services.UserService.Create(user)
 		if err != nil {
 			return 0, err
 		}
@@ -67,7 +66,7 @@ func (this *WxbotApi) initCategory(db *gorm.DB, wxArticle *WxArticle) int64 {
 	if len(wxArticle.Category) == 0 {
 		return 0
 	}
-	cat := services.CategoryService.GetOrCreate(wxArticle.Category)
+	cat, _ := services.CategoryService.GetOrCreate(wxArticle.Category)
 	if cat != nil {
 		return cat.Id
 	}

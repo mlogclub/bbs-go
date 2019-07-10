@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/model"
@@ -33,29 +34,51 @@ func (this *categoryService) Query(queries *simple.ParamQueries) (list []model.C
 }
 
 func (this *categoryService) Create(t *model.Category) error {
-	return repositories.CategoryRepository.Create(simple.GetDB(), t)
+	err := repositories.CategoryRepository.Create(simple.GetDB(), t)
+	if err == nil {
+		cache.CategoryCache.Invalidate(t.Id)
+		cache.CategoryCache.InvalidateAll()
+	}
+	return err
 }
 
 func (this *categoryService) Update(t *model.Category) error {
-	return repositories.CategoryRepository.Update(simple.GetDB(), t)
+	err := repositories.CategoryRepository.Update(simple.GetDB(), t)
+	if err == nil {
+		cache.CategoryCache.Invalidate(t.Id)
+		cache.CategoryCache.InvalidateAll()
+	}
+	return err
 }
 
 func (this *categoryService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.CategoryRepository.Updates(simple.GetDB(), id, columns)
+	err := repositories.CategoryRepository.Updates(simple.GetDB(), id, columns)
+	if err == nil {
+		cache.CategoryCache.Invalidate(id)
+		cache.CategoryCache.InvalidateAll()
+	}
+	return err
 }
 
 func (this *categoryService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.CategoryRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	err := repositories.CategoryRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	if err == nil {
+		cache.CategoryCache.Invalidate(id)
+		cache.CategoryCache.InvalidateAll()
+	}
+	return err
 }
 
 func (this *categoryService) Delete(id int64) {
 	repositories.CategoryRepository.Delete(simple.GetDB(), id)
+	cache.CategoryCache.Invalidate(id)
+	cache.CategoryCache.InvalidateAll()
 }
 
-func (this *categoryService) GetOrCreate(name string) *model.Category {
+func (this *categoryService) GetOrCreate(name string) (*model.Category, error) {
 	category := this.FindByName(name)
 	if category != nil {
-		return category
+		return category, nil
 	} else {
 		category = &model.Category{
 			Name:       name,
@@ -63,8 +86,11 @@ func (this *categoryService) GetOrCreate(name string) *model.Category {
 			CreateTime: simple.NowTimestamp(),
 			UpdateTime: simple.NowTimestamp(),
 		}
-		this.Create(category)
-		return category
+		err := this.Create(category)
+		if err != nil {
+			return nil, err
+		}
+		return category, nil
 	}
 }
 

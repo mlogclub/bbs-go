@@ -70,3 +70,7 @@ func (this *categoryCache) GetAllCategories() []model.CategoryResponse {
 	}
 	return val.([]model.CategoryResponse)
 }
+
+func (this *categoryCache) InvalidateAll() {
+	this.allCategoriesCache.InvalidateAll()
+}
