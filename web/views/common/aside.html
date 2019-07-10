@@ -21,4 +21,33 @@
         </div>
     {{end}}
 
+    {{if .ActiveTags}}
+        <section class="main">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-12">
+
+                        <div class="widget">
+                            <div class="header">
+                                <span>今日热议</span>
+                                <div class="slot">
+                                    <a href="{{baseUrl}}/tags">查看更多>></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="tags are-medium">
+                                    {{range .ActiveTags}}
+                                        <span class="tag is-normal is-white"><a href="{{tagArticlesUrl .TagId 1}}"
+                                                                                title="{{.TagName}}">{{.TagName}}</a></span>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    {{end}}
+
 </aside>

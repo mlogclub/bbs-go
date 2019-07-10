@@ -29,7 +29,7 @@ func newTagCache() *tagCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
 				rows, e := simple.GetDB().Raw("select tag_id, count(*) c from t_article_tag where create_time > ?"+
-					" group by tag_id order by c desc limit 30", dateFrom).Rows()
+					" group by tag_id order by c desc limit 50", dateFrom).Rows()
 
 				// rows, e := simple.GetDB().Raw("select tag_id, count(*) c from t_article_tag" +
 				// 	" group by tag_id order by c desc limit 20").Rows()
