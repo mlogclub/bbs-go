@@ -263,6 +263,7 @@ func GetArticles(ctx iris.Context) {
 
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
+	activeTags := cache.TagCache.GetActiveTags()
 
 	articles, paging := services.ArticleService.Query(simple.NewParamQueries(ctx).
 		Eq("status", model.ArticleStatusPublished).
@@ -274,6 +275,7 @@ func GetArticles(ctx iris.Context) {
 		"Categories":               categories,
 		"Articles":                 render.BuildArticles(articles),
 		"ActiveUsers":              render.BuildUsers(activeUsers),
+		"ActiveTags":               render.BuildTags(activeTags),
 		"Page":                     paging,
 		"PrePageUrl":               utils.BuildArticlesUrl(page - 1),
 		"NextPageUrl":              utils.BuildArticlesUrl(page + 1),
@@ -287,6 +289,7 @@ func GetCategoryArticles(ctx iris.Context) {
 
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
+	activeTags := cache.TagCache.GetActiveTags()
 	category := services.CategoryService.Get(categoryId)
 
 	title := "文章"
@@ -304,6 +307,7 @@ func GetCategoryArticles(ctx iris.Context) {
 		"Categories":               categories,
 		"Articles":                 render.BuildArticles(articles),
 		"ActiveUsers":              render.BuildUsers(activeUsers),
+		"ActiveTags":               render.BuildTags(activeTags),
 		"Page":                     paging,
 		"PrePageUrl":               utils.BuildCategoryArticlesUrl(categoryId, page-1),
 		"NextPageUrl":              utils.BuildCategoryArticlesUrl(categoryId, page+1),
@@ -317,6 +321,7 @@ func GetTagArticles(ctx iris.Context) {
 
 	categories := cache.CategoryCache.GetAllCategories()
 	activeUsers := cache.UserCache.GetActiveUsers()
+	activeTags := cache.TagCache.GetActiveTags()
 	tag := services.TagService.Get(tagId)
 
 	title := "文章"
@@ -331,6 +336,7 @@ func GetTagArticles(ctx iris.Context) {
 		"Categories":               categories,
 		"Articles":                 render.BuildArticles(articles),
 		"ActiveUsers":              render.BuildUsers(activeUsers),
+		"ActiveTags":               render.BuildTags(activeTags),
 		"Page":                     paging,
 		"PrePageUrl":               utils.BuildTagArticlesUrl(tagId, page-1),
 		"NextPageUrl":              utils.BuildTagArticlesUrl(tagId, page+1),
