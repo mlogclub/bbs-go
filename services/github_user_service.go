@@ -78,6 +78,10 @@ func (this *githubUserService) GetGithubUser(code string) (*model.GithubUser, er
 		HtmlUrl:    third.HtmlUrl,
 		Email:      third.Email,
 		Name:       third.Name,
+		Bio:        third.Bio,
+		Company:    third.Company,
+		Blog:       third.Blog,
+		Location:   third.Location,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}

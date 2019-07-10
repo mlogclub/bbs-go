@@ -70,6 +70,10 @@ type GithubUser struct {
 	HtmlUrl    string `gorm:"size:1024" json:"htmlUrl" form:"htmlUrl"`
 	Email      string `gorm:"size:512" json:"email" form:"email"`
 	Name       string `gorm:"size:32" json:"name" form:"name"`
+	Bio        string `gorm:"type:text" json:"bio" form:"bio"`
+	Company    string `gorm:"size:128" json:"company" form:"company"`
+	Blog       string `gorm:"type:text" json:"blog" form:"blog"`
+	Location   string `gorm:"size:128" json:"location" form:"location"`
 	CreateTime int64  `json:"createTime" form:"createTime"`
 	UpdateTime int64  `json:"updateTime" form:"updateTime"`
 }

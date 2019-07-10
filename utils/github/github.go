@@ -32,6 +32,10 @@ type UserInfo struct {
 	HtmlUrl   string `json:"html_url"`
 	Email     string `json:"email"`
 	Name      string `json:"name"`
+	Bio       string `json:"bio"`
+	Company   string `json:"company"`
+	Blog      string `json:"blog"`
+	Location  string `json:"location"`
 }
 
 func GetUserInfo(accessToken string) (*UserInfo, error) {
