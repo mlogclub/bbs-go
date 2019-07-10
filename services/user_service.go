@@ -156,10 +156,6 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 
 // 绑定账号
 func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
-	if !utils.IsValidateUsername(username) {
-		err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
-		return
-	}
 	githubUser := repositories.GithubUserRepository.Get(simple.GetDB(), githubId)
 	if githubUser == nil {
 		err = errors.New("Github账号未找到")
@@ -176,6 +172,10 @@ func (this *userService) Bind(githubId int64, bindType, username, email, passwor
 			return
 		}
 	} else { // 注册绑定
+		if !utils.IsValidateUsername(username) {
+			err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
+			return
+		}
 		user, err = this.SignUp(username, email, password, rePassword, nickname, githubUser.AvatarUrl)
 		if err != nil {
 			return
@@ -201,33 +201,50 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		return user, nil
 	}
 
-	if this.GetByUsername(githubUser.Login) == nil { // 用户名没有被占用，直接注册
-		user = &model.User{
-			Username:   githubUser.Login,
-			Email:      githubUser.Email,
-			Nickname:   githubUser.Name,
-			Avatar:     githubUser.AvatarUrl,
-			Status:     model.UserStatusOk,
-			CreateTime: simple.NowTimestamp(),
-			UpdateTime: simple.NowTimestamp(),
-		}
-		err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
-			err := repositories.UserRepository.Create(tx, user)
-			if err != nil {
-				return err
-			}
-			err = repositories.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
-			if err != nil {
-				return err
-			}
-			return nil
-		})
-		if err != nil {
-			return nil, simple.NewError2(err)
-		}
-		cache.UserCache.Invalidate(user.Id)
-		return user, nil
-	} else { // 用户名称已经存在，那么要让用户修改
-		return nil, simple.NewError(utils.ErrorCodeUserNameExists, "用户名已存在")
+	if this.isUsernameExists(githubUser.Login) {
+		return nil, simple.NewError(utils.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在")
 	}
+
+	if this.isEmailExists(githubUser.Email) {
+		return nil, simple.NewError(utils.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在")
+	}
+
+	user = &model.User{
+		Username:   githubUser.Login,
+		Email:      githubUser.Email,
+		Nickname:   githubUser.Name,
+		Avatar:     githubUser.AvatarUrl,
+		Status:     model.UserStatusOk,
+		CreateTime: simple.NowTimestamp(),
+		UpdateTime: simple.NowTimestamp(),
+	}
+	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		err := repositories.UserRepository.Create(tx, user)
+		if err != nil {
+			return err
+		}
+		err = repositories.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, simple.NewError2(err)
+	}
+	cache.UserCache.Invalidate(user.Id)
+	return user, nil
+}
+
+// 邮箱是否存在
+func (this *userService) isEmailExists(email string) bool {
+	if len(email) == 0 { // 如果邮箱为空，那么就认为是不存在
+		return false
+	}
+	return this.GetByEmail(email) != nil
+}
+
+// 用户名是否存在
+func (this *userService) isUsernameExists(username string) bool {
+	return this.GetByUsername(username) != nil
 }

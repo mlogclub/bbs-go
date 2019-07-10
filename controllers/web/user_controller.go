@@ -6,6 +6,7 @@ import (
 	"github.com/mlogclub/mlog/utils/github"
 	"github.com/mlogclub/mlog/utils/session"
 	"strconv"
+	"strings"
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
@@ -91,23 +92,32 @@ func (this *UserController) PostEditBy(userId int64) {
 		return
 	}
 
-	nickname, err := simple.FormValueRequired(this.Ctx, "nickname")
-	if err != nil {
-		render.View(this.Ctx, "user/edit.html", iris.Map{
-			"ErrMsg":                   "昵称不能为空",
-			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-		})
-		return
-	}
-	avatar, err := simple.FormValueRequired(this.Ctx, "avatar")
-	if err != nil {
-		render.View(this.Ctx, "user/edit.html", iris.Map{
-			"ErrMsg":                   "昵称不能为空",
-			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-		})
-		return
-	}
+	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
+	// email := strings.TrimSpace(simple.FormValue(this.Ctx, "email"))
+	avatar := strings.TrimSpace(simple.FormValue(this.Ctx, "avatar"))
 	description := simple.FormValue(this.Ctx, "description")
+
+	if len(nickname) == 0 {
+		render.View(this.Ctx, "user/edit.html", iris.Map{
+			"ErrMsg":                   "昵称不能为空",
+			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+		})
+		return
+	}
+	// if !validate.IsEmail(email) {
+	// 	render.View(this.Ctx, "user/edit.html", iris.Map{
+	// 		"ErrMsg":                   "请输入正确的邮箱",
+	// 		utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+	// 	})
+	// 	return
+	// }
+	if len(avatar) == 0 {
+		render.View(this.Ctx, "user/edit.html", iris.Map{
+			"ErrMsg":                   "头像不能为空",
+			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+		})
+		return
+	}
 
 	_ = services.UserService.Updates(currentUser.Id, map[string]interface{}{
 		"nickname":    nickname,
@@ -241,6 +251,8 @@ func (this *UserController) GetGithubCallback() {
 	user, codeErr := services.UserService.SignInByGithub(githubUser)
 	if codeErr != nil {
 		if codeErr.Code == utils.ErrorCodeUserNameExists {
+			this.Ctx.Redirect("/user/github/bind?id="+strconv.FormatInt(githubUser.Id, 10), iris.StatusSeeOther)
+		} else if codeErr.Code == utils.ErrorCodeEmailExists {
 			this.Ctx.Redirect("/user/github/bind?id="+strconv.FormatInt(githubUser.Id, 10), iris.StatusSeeOther)
 		} else {
 			logrus.Errorf("Code exchange failed with '%s'", codeErr)
