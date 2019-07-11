@@ -24,7 +24,7 @@ type GetImageAbsoluteUrlFunc func(inputSrc string) string
 
 // 自动采集
 func Collect(articleUrl string, toMarkdown bool) (title, content string, err error) {
-	response, err := resty.R().Get(articleUrl)
+	response, err := resty.SetRedirectPolicy(resty.FlexibleRedirectPolicy(3)).R().Get(articleUrl)
 	if err != nil {
 		return "", "", err
 	}
