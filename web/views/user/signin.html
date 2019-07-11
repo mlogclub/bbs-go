@@ -4,7 +4,7 @@
 <section class="main">
     <div class="container">
         <div class="columns">
-            <div class="column is-9">
+            <div class="column is-12">
                 <form method="POST" action="{{baseUrl}}/user/signin">
                     <input type="hidden" name="redirectUrl" value="{{.RedirectUrl}}"/>
 
@@ -41,6 +41,8 @@
                             <div class="field">
                                 <div class="control">
                                     <button id="btnSignIn" type="submit" class="button is-success">登录</button>
+                                    <a class="button is-danger" href="{{baseUrl}}/user/github/login"><i
+                                                class="iconfont icon-github"></i>&nbsp;<strong>推荐使用Github一键登录</strong></a>
                                     <a class="button is-text" href="{{baseUrl}}/user/signup">没有账号？点击这里去注册！</a>
                                 </div>
                             </div>
@@ -49,15 +51,7 @@
                     </div>
                 </form>
             </div>
-            <div class="column is-3">
-                <div class="widget">
-                    <div class="header">登录</div>
-                    <div class="content">
-                        <a class="button is-dark" href="{{baseUrl}}/user/github/login"><i
-                                    class="iconfont icon-github"></i>&nbsp;使用Github登录</a>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
 
