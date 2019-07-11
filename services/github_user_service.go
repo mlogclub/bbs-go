@@ -63,7 +63,11 @@ func (this *githubUserService) GetGithubUser(code string) (*model.GithubUser, er
 		return nil, err
 	}
 
-	third, _ := github.GetUserInfo(token.AccessToken)
+	third, err := github.GetUserInfo(token.AccessToken)
+	if err != nil {
+		return nil, err
+	}
+
 	githubUser := this.GetByGithubId(third.Id)
 
 	if githubUser != nil {
