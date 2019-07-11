@@ -81,6 +81,12 @@ func (this *UserController) GetEditBy(userId int64) {
 	}
 	render.View(this.Ctx, "user/edit.html", iris.Map{
 		utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+		"UserId":                   currentUser.Id,
+		"Username":                 currentUser.Username,
+		"Email":                    currentUser.Email,
+		"Nickname":                 currentUser.Nickname,
+		"Avatar":                   currentUser.Avatar,
+		"Description":              currentUser.Description,
 	})
 }
 
@@ -93,7 +99,6 @@ func (this *UserController) PostEditBy(userId int64) {
 	}
 
 	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
-	// email := strings.TrimSpace(simple.FormValue(this.Ctx, "email"))
 	avatar := strings.TrimSpace(simple.FormValue(this.Ctx, "avatar"))
 	description := simple.FormValue(this.Ctx, "description")
 
@@ -101,20 +106,25 @@ func (this *UserController) PostEditBy(userId int64) {
 		render.View(this.Ctx, "user/edit.html", iris.Map{
 			"ErrMsg":                   "昵称不能为空",
 			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+			"UserId":                   currentUser.Id,
+			"Username":                 currentUser.Username,
+			"Email":                    currentUser.Email,
+			"Nickname":                 nickname,
+			"Avatar":                   avatar,
+			"Description":              description,
 		})
 		return
 	}
-	// if !validate.IsEmail(email) {
-	// 	render.View(this.Ctx, "user/edit.html", iris.Map{
-	// 		"ErrMsg":                   "请输入正确的邮箱",
-	// 		utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-	// 	})
-	// 	return
-	// }
 	if len(avatar) == 0 {
 		render.View(this.Ctx, "user/edit.html", iris.Map{
 			"ErrMsg":                   "头像不能为空",
 			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
+			"UserId":                   currentUser.Id,
+			"Username":                 currentUser.Username,
+			"Email":                    currentUser.Email,
+			"Nickname":                 nickname,
+			"Avatar":                   avatar,
+			"Description":              description,
 		})
 		return
 	}
@@ -124,8 +134,7 @@ func (this *UserController) PostEditBy(userId int64) {
 		"avatar":      avatar,
 		"description": description,
 	})
-	cache.UserCache.Invalidate(currentUser.Id)
-	this.Ctx.Redirect(utils.BuildUserUrl(currentUser.Id), iris.StatusSeeOther)
+	this.Ctx.Redirect("/user/edit/"+strconv.FormatInt(currentUser.Id, 10), iris.StatusSeeOther)
 }
 
 // 当前登录用户

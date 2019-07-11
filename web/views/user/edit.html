@@ -10,13 +10,13 @@
             </header>
             <div class="card-content">
 
-                <form method="post" action="{{baseUrl}}/user/edit/{{.CurrentUser.Id}}">
+                <form method="post" action="{{baseUrl}}/user/edit/{{.UserId}}">
 
                     <div class="field">
                         <label class="label"><span style="color:red;">*&nbsp;</span>用户名</label>
                         <div class="control has-icons-left">
                             <input class="input is-success" type="text" disabled="disabled"
-                                   value="{{.CurrentUser.Username}}">
+                                   value="{{.Username}}">
                             <span class="icon is-small is-left"><i class="iconfont icon-username"></i></span>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                         <label class="label"><span style="color:red;">*&nbsp;</span>邮箱</label>
                         <div class="control has-icons-left">
                             <input class="input is-success" type="text" disabled="disabled"
-                                   value="{{.CurrentUser.Email}}">
+                                   value="{{.Email}}">
                             <span class="icon is-small is-left"><i class="iconfont icon-email"></i></span>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                         <label class="label"><span style="color:red;">*&nbsp;</span>昵称</label>
                         <div class="control has-icons-left">
                             <input name="nickname" class="input is-success" type="text"
-                                   placeholder="请输入昵称" value="{{.CurrentUser.Nickname}}">
+                                   placeholder="请输入昵称" value="{{.Nickname}}">
                             <span class="icon is-small is-left"><i class="iconfont icon-username"></i></span>
                         </div>
                     </div>
@@ -42,8 +42,8 @@
                     <div class="field">
                         <label class="label"><span style="color:red;">*&nbsp;</span>头像</label>
                         <div class="control">
-                            <img id="avatarImg" src="{{.CurrentUser.Avatar}}" style="width: 150px;height:150px;"/>
-                            <input id="avatar" name="avatar" type="hidden" value="{{.CurrentUser.Avatar}}"/>
+                            <img id="avatarImg" src="{{.Avatar}}" style="width: 150px;height:150px;"/>
+                            <input id="avatar" name="avatar" type="hidden" value="{{.Avatar}}"/>
                             <div class="file">
                                 <label class="file-label">
                                     <input class="file-input" type="file" id="avatar-input">
@@ -59,7 +59,7 @@
                         <label class="label">简介</label>
                         <div class="control">
                             <textarea name="description" class="textarea" rows="2"
-                                      placeholder="一句话介绍你自己">{{.CurrentUser.Description}}</textarea>
+                                      placeholder="一句话介绍你自己">{{.Description}}</textarea>
                         </div>
                     </div>
 

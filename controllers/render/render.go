@@ -2,6 +2,7 @@ package render
 
 import (
 	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/avatar"
 	"github.com/mlogclub/mlog/utils/session"
 	"github.com/tidwall/gjson"
 	"html/template"
@@ -20,15 +21,6 @@ import (
 	"github.com/mlogclub/mlog/utils"
 )
 
-var DefaultAvatars = []string{
-	"https://file.mlog.club/avatar/club_default_avatar1.png",
-	"https://file.mlog.club/avatar/club_default_avatar2.png",
-	"https://file.mlog.club/avatar/club_default_avatar3.png",
-	"https://file.mlog.club/avatar/club_default_avatar4.png",
-	"https://file.mlog.club/avatar/club_default_avatar5.png",
-	"https://file.mlog.club/avatar/club_default_avatar6.png",
-}
-
 func View(ctx context.Context, filename string, viewModel iris.Map) {
 	if viewModel == nil {
 		viewModel = iris.Map{}
@@ -43,21 +35,13 @@ func View(ctx context.Context, filename string, viewModel iris.Map) {
 	}
 }
 
-func GetDefaultAvatar(id int64) string {
-	if id <= 0 {
-		return DefaultAvatars[0]
-	}
-	i := int(id) % len(DefaultAvatars)
-	return DefaultAvatars[i]
-}
-
 func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
 	if user == nil {
 		user = &model.User{}
 		user.Id = id
 		user.Username = strconv.FormatInt(id, 10)
-		user.Avatar = GetDefaultAvatar(id)
+		user.Avatar = avatar.GetDefaultAvatar(id)
 		user.CreateTime = simple.NowTimestamp()
 	}
 	return BuildUser(user)
@@ -83,16 +67,16 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if user == nil {
 		return nil
 	}
-	avatar := user.Avatar
-	if len(avatar) == 0 {
-		avatar = GetDefaultAvatar(user.Id)
+	a := user.Avatar
+	if len(a) == 0 {
+		a = avatar.GetDefaultAvatar(user.Id)
 	}
 	roles := strings.Split(user.Roles, ",")
 	return &model.UserInfo{
 		Id:          user.Id,
 		Username:    user.Username,
 		Nickname:    user.Nickname,
-		Avatar:      avatar,
+		Avatar:      a,
 		Email:       user.Email,
 		Type:        user.Type,
 		Roles:       roles,
@@ -331,7 +315,7 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 	from := BuildUserDefaultIfNull(message.FromId)
 	if message.FromId <= 0 {
 		from.Nickname = "系统通知"
-		from.Avatar = DefaultAvatars[0]
+		from.Avatar = avatar.DefaultAvatars[0]
 	}
 	return &model.MessageResponse{
 		MessageId:    message.Id,

@@ -5,6 +5,7 @@ import (
 	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/avatar"
 	"github.com/mlogclub/mlog/utils/validate"
 	"github.com/mlogclub/simple"
 	"strings"
@@ -170,6 +171,8 @@ func (this *userService) Bind(githubId int64, bindType, username, email, passwor
 		user, err = this.SignIn(username, password)
 		if err != nil {
 			return
+		} else if avatar.IsDefaultAvatar(user.Avatar) { // 如果是默认头像，那么更新一下头像
+			_ = this.UpdateColumn(user.Id, "avatar", githubUser.AvatarUrl)
 		}
 	} else { // 注册绑定
 		if !utils.IsValidateUsername(username) {
