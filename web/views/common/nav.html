@@ -18,7 +18,6 @@
                 <a class="navbar-item" href="{{baseUrl}}/topics">主题</a>
             </div>
 
-
             <div class="navbar-end">
                 <div class="navbar-item">
                     <form id="searchForm" action="https://www.google.com/search" target="_blank">
@@ -37,16 +36,6 @@
                                     class="iconfont icon-topic"></i>&nbsp;<strong>发帖</strong></a>
                     </div>
                 </div>
-                {{/*
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link"><strong>发表</strong></a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="{{baseUrl}}/article/create">发表文章</a>
-                        <a class="navbar-item" href="{{baseUrl}}/topic/create">发表主题</a>
-                    </div>
-                </div>
-                */}}
-
 
                 {{if .CurrentUser}}
                     <div class="navbar-item has-dropdown is-hoverable" id="userDiv">

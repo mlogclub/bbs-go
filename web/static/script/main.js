@@ -33,6 +33,28 @@ function toSignin() {
   window.location = '/user/signin?redirectUrl=' + encodeURI(redirectUrl)
 }
 
+// 跳转到Github登录
+function toGithubSignin() {
+  var redirectUrl = getQueryParam("redirectUrl") // 优先从url中获取，如果没获取到再取当前网页地址
+  if (!redirectUrl) {
+    redirectUrl = window.location.pathname
+  }
+  window.location = '/user/github/login?redirectUrl=' + encodeURI(redirectUrl)
+}
+
+// 获取url中的query参数
+function getQueryParam(paramName) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] === paramName) {
+      return pair[1];
+    }
+  }
+  return "";
+}
+
 // Get请求
 function httpGet(path, params) {
   params = params || {}
