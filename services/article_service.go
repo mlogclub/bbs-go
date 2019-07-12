@@ -94,6 +94,25 @@ func (this *articleService) GetTagArticles(tagId int64, page int) (articles []mo
 func (this *articleService) Publish(userId int64, title, summary, content, contentType string, categoryId int64,
 	tagIds []int64, sourceUrl string, share bool) (article *model.Article, err error) {
 
+	title = strings.TrimSpace(title)
+	summary = strings.TrimSpace(summary)
+	content = strings.TrimSpace(content)
+
+	if len(title) == 0 {
+		return nil, errors.New("标题不能为空")
+	}
+	if share { // 如果是分享的内容，必须有Summary和SourceUrl
+		if len(summary) == 0 {
+			return nil, errors.New("分享内容摘要不能为空")
+		}
+		if len(sourceUrl) == 0 {
+			return nil, errors.New("分享内容原文链接不能为空")
+		}
+	} else {
+		if len(content) == 0 {
+			return nil, errors.New("内容不能为空")
+		}
+	}
 	article = &model.Article{
 		UserId:      userId,
 		Title:       title,
@@ -106,16 +125,6 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 		SourceUrl:   sourceUrl,
 		CreateTime:  simple.NowTimestamp(),
 		UpdateTime:  simple.NowTimestamp(),
-	}
-
-	// 如果是分享的内容，必须有Summary和SourceUrl
-	if share {
-		if len(summary) == 0 {
-			return nil, errors.New("分享内容摘要不能为空")
-		}
-		if len(sourceUrl) == 0 {
-			return nil, errors.New("分享内容原文链接不能为空")
-		}
 	}
 
 	// 标签滤重

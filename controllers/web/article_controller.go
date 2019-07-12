@@ -89,13 +89,6 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	if tagId <= 0 {
 		return simple.ErrorMsg("请选择标签")
 	}
-	if len(title) == 0 {
-		return simple.ErrorMsg("请输入标题")
-	}
-	if len(content) == 0 {
-		return simple.ErrorMsg("请填写文章内容")
-	}
-
 	tag := services.TagService.Get(tagId)
 	if tag == nil {
 		return simple.ErrorMsg("标签不存在")
