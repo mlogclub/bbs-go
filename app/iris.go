@@ -157,12 +157,15 @@ func InitIris() {
 }
 
 func handleViews(app *iris.Application) {
-	app.StaticWeb("/static", config.Conf.StaticPath)
-	app.StaticWeb("/", config.Conf.StaticPath)
+	if len(config.Conf.RootStaticPath) > 0 {
+		app.StaticWeb("/", config.Conf.RootStaticPath)
+	}
+	if len(config.Conf.StaticPath) > 0 {
+		app.StaticWeb("/static", config.Conf.StaticPath)
+	}
 
 	engine := iris.HTML(config.Conf.ViewsPath, ".html").Reload(true)
 	viewFunctions(engine)
-
 	app.RegisterView(engine)
 }
 

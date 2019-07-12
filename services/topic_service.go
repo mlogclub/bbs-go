@@ -209,7 +209,7 @@ func (this *topicService) GenerateSitemap() {
 	}
 
 	data := sm.XMLContent()
-	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_sitemap.xml"), string(data), false)
+	_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "topic_sitemap.xml"), string(data), false)
 }
 
 // rss
@@ -251,13 +251,13 @@ func (this *topicService) GenerateRss() {
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_atom.xml"), atom, false)
+		_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "topic_atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_rss.xml"), rss, false)
+		_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "topic_rss.xml"), rss, false)
 	}
 }

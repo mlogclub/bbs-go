@@ -9,13 +9,14 @@ import (
 var Conf *Config
 
 type Config struct {
-	Env        string `yaml:"Env"`        // 环境：prod、dev
-	BaseUrl    string `yaml:"BaseUrl"`    // base url
-	SiteTitle  string `yaml:"SiteTitle" ` // 网站标题
-	Port       string `yaml:"Port"`       // 端口
-	ShowSql    bool   `yaml:"ShowSql"`    // 是否显示日志
-	ViewsPath  string `yaml:"ViewsPath"`  // 模板路径
-	StaticPath string `yaml:"StaticPath"` // 静态文件路径
+	Env            string `yaml:"Env"`            // 环境：prod、dev
+	BaseUrl        string `yaml:"BaseUrl"`        // base url
+	SiteTitle      string `yaml:"SiteTitle" `     // 网站标题
+	Port           string `yaml:"Port"`           // 端口
+	ShowSql        bool   `yaml:"ShowSql"`        // 是否显示日志
+	ViewsPath      string `yaml:"ViewsPath"`      // 模板路径
+	RootStaticPath string `yaml:"RootStaticPath"` // 根路径下的静态文件目录
+	StaticPath     string `yaml:"StaticPath"`     // 静态文件路径
 
 	MySqlUrl  string `yaml:"MySqlUrl"`  // 数据库连接地址
 	RedisAddr string `yaml:"RedisAddr"` // redis

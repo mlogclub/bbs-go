@@ -260,7 +260,7 @@ func (this *articleService) GenerateSitemap() {
 	}
 
 	data := sm.XMLContent()
-	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "sitemap.xml"), string(data), false)
+	_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "sitemap.xml"), string(data), false)
 }
 
 // rss
@@ -302,14 +302,14 @@ func (this *articleService) GenerateRss() {
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "atom.xml"), atom, false)
+		_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "rss.xml"), rss, false)
+		_ = simple.WriteString(path.Join(config.Conf.RootStaticPath, "rss.xml"), rss, false)
 	}
 }
 
