@@ -54,10 +54,10 @@
                         <div class="header">{{.Topic.User.Nickname}}</div>
                         <div class="content">
                             <div>
-                            <span>
-                                <i class="iconfont icon-username"></i>
-                                <a href="{{baseUrl}}/user/{{.Topic.User.Id}}">{{.Topic.User.Nickname}}</a>
-                            </span>
+                                <span>
+                                    <i class="iconfont icon-username"></i>
+                                    <a href="{{baseUrl}}/user/{{.Topic.User.Id}}">{{.Topic.User.Nickname}}</a>
+                                </span>
                             </div>
                             <a href="{{baseUrl}}/user/{{.Topic.User.Id}}" title="{{.Topic.User.Nickname}}"
                                target="_blank">
@@ -69,6 +69,7 @@
                             {{end}}
                         </div>
                     </div>
+                    {{/*
                     {{if eq .Topic.User.Type 1}}
                         <div class="widget">
                             <div class="header">关注公众号</div>
@@ -77,6 +78,7 @@
                             </div>
                         </div>
                     {{end}}
+                    */}}
                 </div>
             </div>
         </div>

@@ -53,23 +53,22 @@
                         </div>
 
                         <div class="article-content content">
-                            {{.Article.Content}}
+                            {{if .Article.Share}}
+                                <a class="article-share-summary" href="{{baseUrl}}/article/redirect/{{.Article.ArticleId}}"
+                                   target="_blank">{{.Article.Summary}}</a>
+
+                                <a href="{{baseUrl}}/article/redirect/{{.Article.ArticleId}}"
+                                   target="_blank">点击阅读原文>></a>
+                            {{else}}
+                                {{.Article.Content}}
+                            {{end}}
                         </div>
 
                         <div class="article-footer">
 
                             <blockquote>
                                 <ul>
-                                    {{if .Article.SourceUrl}}
-                                        {{/*
-                                        <li>
-                                            <strong>原文地址：</strong>
-                                            <a href="{{.Article.SourceUrl}}" target="_blank"
-                                               rel='external nofollow'>{{.Article.SourceUrl}}</a>
-                                        </li>
-                                        */}}
-                                    {{else}}
-                                        {{/*
+                                    {{if not .Article.Share}}
                                         <li>
                                             <strong>本文链接：</strong>
                                             <a href="{{baseUrl}}/article/{{.Article.ArticleId}}"
@@ -77,7 +76,6 @@
                                                target="_blank" rel="external">{{baseUrl}}
                                                 /article/{{.Article.ArticleId}}</a>
                                         </li>
-                                        */}}
                                         <li>
                                             <strong>版权声明： </strong>所有文章除特别声明外，均采用 <a
                                                     href="http://creativecommons.org/licenses/by/4.0/deed.zh"
@@ -123,6 +121,7 @@
                             {{end}}
                         </div>
                     </div>
+                    {{/*
                     {{if eq .Article.User.Type 1}}
                         <div class="widget">
                             <div class="header">关注公众号</div>
@@ -131,7 +130,7 @@
                             </div>
                         </div>
                     {{end}}
-
+                    */}}
                     {{if .NewestArticles}}
                         <div class="widget">
                             <div class="header">最新文章</div>
