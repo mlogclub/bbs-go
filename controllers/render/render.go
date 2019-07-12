@@ -115,7 +115,6 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	}
 
 	rsp := &model.ArticleResponse{}
-
 	rsp.ArticleId = article.Id
 	rsp.Title = article.Title
 	rsp.Summary = article.Summary
@@ -138,15 +137,21 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	} else {
 		rsp.Content = template.HTML(BuildHtmlContent(article.Content))
 		if len(rsp.Summary) == 0 {
-			doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
-			if err == nil {
-				text := doc.Text()
-				rsp.Summary = simple.GetSummary(text, 256)
-			}
+			rsp.Summary = simple.GetSummary(article.Content, 256)
 		}
 	}
 
 	return rsp
+}
+
+// 获取html内容摘要
+func GetHtmlSummary(htmlContent string, length int) string {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
+	if err != nil {
+		logrus.Error(err)
+		return ""
+	}
+	return simple.GetSummary(doc.Text(), length)
 }
 
 func BuildArticles(articles []model.Article) []model.ArticleResponse {
