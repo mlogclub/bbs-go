@@ -101,7 +101,8 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 		return simple.ErrorMsg("标签不存在")
 	}
 
-	article, err := services.ArticleService.Publish(currentUser.Id, title, summary, content, model.ArticleContentTypeMarkdown, 0, []int64{tagId}, "")
+	article, err := services.ArticleService.Publish(currentUser.Id, title, summary, content,
+		model.ArticleContentTypeMarkdown, 0, []int64{tagId}, "", false)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

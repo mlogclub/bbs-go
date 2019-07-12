@@ -47,6 +47,7 @@ type ArticleResponse struct {
 	Title      string            `json:"title"`
 	Summary    string            `json:"summary"`
 	Content    template.HTML     `json:"content"`
+	Share      bool              `json:"share"`
 	SourceUrl  string            `json:"sourceUrl"`
 	CreateTime int64             `json:"createTime"`
 }
