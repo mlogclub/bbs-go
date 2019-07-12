@@ -118,6 +118,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.ArticleId = article.Id
 	rsp.Title = article.Title
 	rsp.Summary = article.Summary
+	rsp.Share = article.Share
 	rsp.SourceUrl = article.SourceUrl
 	rsp.CreateTime = article.CreateTime
 
