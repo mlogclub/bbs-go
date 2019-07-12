@@ -29,7 +29,7 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 	tagIds := this.initTags(simple.GetDB(), wxArticle)
 
 	return services.ArticleService.Publish(userId, wxArticle.Title, simple.GetSummary(wxArticle.TextContent, 256),
-		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tagIds, wxArticle.SourceURL)
+		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tagIds, wxArticle.Url)
 }
 
 func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
