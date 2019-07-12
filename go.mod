@@ -23,11 +23,13 @@ require (
 	github.com/kataras/golog v0.0.0-20190624001437-99c81de45f40 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/mattn/go-runewidth v0.0.4
+	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
 	github.com/mlogclub/simple v1.0.2
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.3.0
+	github.com/sundy-li/html2article v0.0.0-20180131134645-09ac198090c2
 	github.com/tidwall/gjson v1.1.3
 	golang.org/x/net v0.0.0-20190424112056-4829fb13d2c6
 	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a

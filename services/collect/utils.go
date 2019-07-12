@@ -3,17 +3,16 @@ package collect
 import (
 	"bytes"
 	"errors"
+	"github.com/mattn/godown"
 	"github.com/mlogclub/mlog/utils/oss"
 	"github.com/mlogclub/simple"
+	"github.com/sundy-li/html2article"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/resty.v1"
-
-	"github.com/mlogclub/mlog/utils/godown"
-	"github.com/mlogclub/mlog/utils/html2article"
 )
 
 const (
