@@ -6,7 +6,7 @@ ShowSql: false # 是否打印sql
 ViewsPath: "./web/views" # views模版文件目录，可配置绝对路径
 StaticPath: "./web/static" # 静态文件目录，可配置绝对路径
 
-MySqlUrl: username:password@tcp(localhost:3306)/mlog_db?charset=utf8&parseTime=True&loc=Local  # 数据库链接
+MySqlUrl: username:password@tcp(localhost:3306)/mlog_db?charset=utf8mb4&parseTime=True&loc=Local  # 数据库链接
 RedisAddr: 127.0.0.1:6379 # redis链接
 
 # oauth服务端配置
