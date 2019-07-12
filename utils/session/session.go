@@ -18,9 +18,13 @@ const (
 )
 
 func InitSessionManager() {
+	if config.Conf.RedisAddr != "" {
+		config.Conf.Redis.Addr = config.Conf.RedisAddr
+	}
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: config.Conf.RedisAddr,
+			Addr:     config.Conf.Redis.Addr,
+			Password: config.Conf.Redis.Password,
 		})),
 		session.SetCookieName("mlog_session_id"),
 		session.SetExpired(86400),
