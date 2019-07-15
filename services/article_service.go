@@ -162,6 +162,8 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	})
 
 	if err == nil {
+		// 清理首页文章列表缓存
+		cache.ArticleCache.InvalidateIndexList()
 		utils.BaiduUrlPush([]string{utils.BuildArticleUrl(article.Id)})
 	}
 	return

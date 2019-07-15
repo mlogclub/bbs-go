@@ -5,4 +5,5 @@ var (
 	CategoryCache   = newCategoryCache()
 	UserCache       = newUserCache()
 	ArticleTagCache = newArticleTagCache()
+	ArticleCache    = newArticleCache()
 )
