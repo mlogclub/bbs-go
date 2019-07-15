@@ -175,7 +175,7 @@ func (this *UserController) PostSignin() {
 		return
 	}
 
-	session.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user.Id)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {
@@ -217,7 +217,7 @@ func (this *UserController) PostSignup() {
 		})
 		return
 	}
-	session.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user.Id)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {
@@ -268,7 +268,7 @@ func (this *UserController) GetGithubCallback() {
 			this.Ctx.StatusCode(500)
 		}
 	} else { // 直接登录
-		session.SetCurrentUser(this.Ctx, user)
+		session.SetCurrentUser(this.Ctx, user.Id)
 		this.Ctx.Redirect("/", iris.StatusSeeOther)
 	}
 }
@@ -338,7 +338,7 @@ func (this *UserController) PostGithubBind() {
 		})
 		return
 	}
-	session.SetCurrentUser(this.Ctx, user)
+	session.SetCurrentUser(this.Ctx, user.Id)
 
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	if len(redirectUrl) > 0 {

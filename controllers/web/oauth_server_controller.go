@@ -85,7 +85,7 @@ func (c *OauthServerController) PostLogin() {
 		})
 		return
 	}
-	session.SetCurrentUser(c.Ctx, user)
+	session.SetCurrentUser(c.Ctx, user.Id)
 
 	// TODO 登录成功之后的跳转地址先写死，后面将它配置到数据库中
 	c.Ctx.Redirect("/oauth/client", iris.StatusSeeOther)

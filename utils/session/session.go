@@ -5,12 +5,12 @@ import (
 	"github.com/go-session/redis"
 	"github.com/go-session/session"
 	"github.com/kataras/iris/context"
+	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"net/http"
-
-	"github.com/mlogclub/mlog/model"
+	"strconv"
 )
 
 const (
@@ -45,9 +45,9 @@ func StartByRequest(w http.ResponseWriter, r *http.Request) session.Store {
 	return store
 }
 
-func SetCurrentUser(ctx context.Context, user *model.User) {
+func SetCurrentUser(ctx context.Context, userId int64) {
 	store := Start(ctx)
-	store.Set(CurrentUser, user)
+	store.Set(CurrentUser, strconv.FormatInt(userId, 10))
 	err := store.Save()
 	if err != nil {
 		logrus.Error(err)
@@ -61,17 +61,14 @@ func GetCurrentUser(ctx context.Context) *model.User {
 func GetCurrentUserByRequest(w http.ResponseWriter, r *http.Request) *model.User {
 	val, exists := StartByRequest(w, r).Get(CurrentUser)
 	if exists {
-		json, err := simple.FormatJson(val)
-		if err != nil {
-			logrus.Error(err)
-			return nil
+		switch val.(type) {
+		case string:
+			userId, err := strconv.ParseInt(val.(string), 10, 64)
+			if err == nil {
+				return cache.UserCache.Get(userId)
+			}
+			break
 		}
-		user := &model.User{}
-		err = simple.ParseJson(json, user)
-		if err != nil {
-			logrus.Error(err)
-		}
-		return user
 	}
 	return nil
 }
