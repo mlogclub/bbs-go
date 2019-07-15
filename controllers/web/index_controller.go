@@ -21,8 +21,16 @@ func (this *IndexController) Any() mvc.View {
 	activeUsers := cache.UserCache.GetActiveUsers()
 	activeTags := cache.TagCache.GetActiveTags()
 
-	articles, _ := services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).
-		Order("id desc").Size(20))
+	var articles []model.Article
+	//存在缓存从缓存里面取
+	articleCache, b := cache.Cache.GetIfPresent(cache.IndexArticleCacheKey)
+	if b {
+		articles = articleCache.([]model.Article)
+	} else {
+		articles, _ = services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).
+			Order("id desc").Size(20))
+		cache.Cache.Put(cache.IndexArticleCacheKey, articles)
+	}
 
 	topics, _ := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
 

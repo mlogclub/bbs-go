@@ -245,6 +245,8 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
+	//清理首页文章列表缓存
+	cache.Cache.Invalidate(cache.IndexArticleCacheKey)
 	return simple.NewEmptyRspBuilder().Put("id", t.Id).JsonResult()
 }
 

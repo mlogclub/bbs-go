@@ -21,6 +21,12 @@ type Config struct {
 	MySqlUrl  string `yaml:"MySqlUrl"`  // 数据库连接地址
 	RedisAddr string `yaml:"RedisAddr"` // redis
 
+	// redis
+	Redis struct {
+		Addr     string `yaml:"Addr"`     // redis链接
+		Password string `yaml:"Password"` //redis 密码
+	} `yaml:"Redis"`
+
 	// oauth server
 	OauthServer struct {
 		AuthUrl  string `yaml:"AuthUrl"`
