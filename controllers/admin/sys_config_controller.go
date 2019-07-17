@@ -33,7 +33,7 @@ func (this *SysConfigController) GetAll() *simple.JsonResult {
 func (this *SysConfigController) PostSave() *simple.JsonResult {
 	config := this.Ctx.FormValue("config")
 	data := make(map[string]string)
-	err := json.Unmarshal([]byte(config), data)
+	err := json.Unmarshal([]byte(config), &data)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

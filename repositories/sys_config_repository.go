@@ -71,5 +71,5 @@ func (this *sysConfigRepository) GetByKey(db *gorm.DB, key string) *model.SysCon
 	if len(key) == 0 {
 		return nil
 	}
-	return this.Take(db, "key = ?", key)
+	return this.Take(db, "`key` = ?", key)
 }
