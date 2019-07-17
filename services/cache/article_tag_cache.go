@@ -12,6 +12,8 @@ type articleTagCache struct {
 	cache cache.LoadingCache
 }
 
+var ArticleTagCache = newArticleTagCache()
+
 func newArticleTagCache() *articleTagCache {
 	return &articleTagCache{
 		cache: cache.NewLoadingCache(

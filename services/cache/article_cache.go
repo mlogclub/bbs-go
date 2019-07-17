@@ -13,6 +13,8 @@ var (
 	indexArticleCacheKey = "index_article_cache"
 )
 
+var ArticleCache = newArticleCache()
+
 type articleCache struct {
 	indexArticlesCache cache.LoadingCache
 }

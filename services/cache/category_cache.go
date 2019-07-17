@@ -14,6 +14,8 @@ type categoryCache struct {
 	allCategoriesCache cache.LoadingCache
 }
 
+var CategoryCache = newCategoryCache()
+
 func newCategoryCache() *categoryCache {
 	return &categoryCache{
 		cache: cache.NewLoadingCache(

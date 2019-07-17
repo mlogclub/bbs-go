@@ -14,6 +14,8 @@ type userCache struct {
 	activeUserCache cache.LoadingCache // 活跃用户缓存
 }
 
+var UserCache = newUserCache()
+
 func newUserCache() *userCache {
 	return &userCache{
 		cache: cache.NewLoadingCache(

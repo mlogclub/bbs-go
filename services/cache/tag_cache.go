@@ -15,6 +15,8 @@ type tagCache struct {
 	allTagsCache    cache.LoadingCache // 所有标签
 }
 
+var TagCache = newTagCache()
+
 func newTagCache() *tagCache {
 	return &tagCache{
 		cache: cache.NewLoadingCache(
