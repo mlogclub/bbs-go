@@ -3,14 +3,12 @@ package web
 import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
-	"github.com/mlogclub/mlog/model/constants"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/utils"
 )
 
 type IndexController struct {
@@ -30,13 +28,13 @@ func (this *IndexController) Any() mvc.View {
 	return mvc.View{
 		Name: "index.html",
 		Data: iris.Map{
-			utils.GlobalFieldSiteDescription: cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription),
-			utils.GlobalFieldSiteKeywords:    cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords),
-			"Categories":                     categories,
-			"Articles":                       render.BuildArticles(articles),
-			"Topics":                         render.BuildTopics(topics),
-			"ActiveUsers":                    render.BuildUsers(activeUsers),
-			"ActiveTags":                     render.BuildTags(activeTags),
+			model.TplSiteDescription: cache.SysConfigCache.GetValue(model.SysConfigSiteDescription),
+			model.TplSiteKeywords:    cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords),
+			"Categories":             categories,
+			"Articles":               render.BuildArticles(articles),
+			"Topics":                 render.BuildTopics(topics),
+			"ActiveUsers":            render.BuildUsers(activeUsers),
+			"ActiveTags":             render.BuildTags(activeTags),
 		},
 	}
 }

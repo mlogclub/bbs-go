@@ -27,7 +27,7 @@ func View(ctx context.Context, filename string, viewModel iris.Map) {
 	}
 
 	// 公用
-	viewModel[utils.GlobalFieldCurrentUser] = BuildCurrentUser(ctx)
+	viewModel[model.TplCurrentUser] = BuildCurrentUser(ctx)
 
 	err := ctx.View(filename, viewModel)
 	if err != nil {

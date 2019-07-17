@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/mlogclub/mlog/controllers/web"
-	"github.com/mlogclub/mlog/model/constants"
+	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
 	"net/http"
@@ -108,8 +108,8 @@ func InitIris() {
 			m.Router.Get("/redirect", func(ctx context.Context) {
 				url := ctx.FormValue("url")
 				render.View(ctx, "redirect.html", iris.Map{
-					utils.GlobalFieldSiteTitle: "跳转中",
-					"Url":                      url,
+					model.TplSiteTitle: "跳转中",
+					"Url":              url,
 				})
 			})
 		})
@@ -174,7 +174,7 @@ func handleViews(app *iris.Application) {
 
 func viewFunctions(engine *view.HTMLEngine) {
 	engine.AddFunc("siteTitle", func(title string) string {
-		siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
 		if len(title) > 0 {
 			return title + " | " + siteTitle
 		}

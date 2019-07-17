@@ -61,14 +61,14 @@ func (this *UserController) GetBy(userId int64) {
 	}
 
 	render.View(this.Ctx, "user/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: user.Nickname,
-		"User":                     render.BuildUser(user),
-		"Tab":                      tab,
-		"Articles":                 render.BuildArticles(articles),
-		"Topics":                   render.BuildTopics(topics),
-		"Tags":                     render.BuildTags(tags),
-		"Messages":                 render.BuildMessages(messages),
-		"Favorites":                render.BuildFavorites(favorites),
+		model.TplSiteTitle: user.Nickname,
+		"User":             render.BuildUser(user),
+		"Tab":              tab,
+		"Articles":         render.BuildArticles(articles),
+		"Topics":           render.BuildTopics(topics),
+		"Tags":             render.BuildTags(tags),
+		"Messages":         render.BuildMessages(messages),
+		"Favorites":        render.BuildFavorites(favorites),
 	})
 }
 
@@ -80,13 +80,13 @@ func (this *UserController) GetEditBy(userId int64) {
 		return
 	}
 	render.View(this.Ctx, "user/edit.html", iris.Map{
-		utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-		"UserId":                   currentUser.Id,
-		"Username":                 currentUser.Username,
-		"Email":                    currentUser.Email,
-		"Nickname":                 currentUser.Nickname,
-		"Avatar":                   currentUser.Avatar,
-		"Description":              currentUser.Description,
+		model.TplSiteTitle: currentUser.Nickname + " - 编辑资料",
+		"UserId":           currentUser.Id,
+		"Username":         currentUser.Username,
+		"Email":            currentUser.Email,
+		"Nickname":         currentUser.Nickname,
+		"Avatar":           currentUser.Avatar,
+		"Description":      currentUser.Description,
 	})
 }
 
@@ -104,27 +104,27 @@ func (this *UserController) PostEditBy(userId int64) {
 
 	if len(nickname) == 0 {
 		render.View(this.Ctx, "user/edit.html", iris.Map{
-			"ErrMsg":                   "昵称不能为空",
-			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-			"UserId":                   currentUser.Id,
-			"Username":                 currentUser.Username,
-			"Email":                    currentUser.Email,
-			"Nickname":                 nickname,
-			"Avatar":                   avatar,
-			"Description":              description,
+			"ErrMsg":           "昵称不能为空",
+			model.TplSiteTitle: currentUser.Nickname + " - 编辑资料",
+			"UserId":           currentUser.Id,
+			"Username":         currentUser.Username,
+			"Email":            currentUser.Email,
+			"Nickname":         nickname,
+			"Avatar":           avatar,
+			"Description":      description,
 		})
 		return
 	}
 	if len(avatar) == 0 {
 		render.View(this.Ctx, "user/edit.html", iris.Map{
-			"ErrMsg":                   "头像不能为空",
-			utils.GlobalFieldSiteTitle: currentUser.Nickname + " - 编辑资料",
-			"UserId":                   currentUser.Id,
-			"Username":                 currentUser.Username,
-			"Email":                    currentUser.Email,
-			"Nickname":                 nickname,
-			"Avatar":                   avatar,
-			"Description":              description,
+			"ErrMsg":           "头像不能为空",
+			model.TplSiteTitle: currentUser.Nickname + " - 编辑资料",
+			"UserId":           currentUser.Id,
+			"Username":         currentUser.Username,
+			"Email":            currentUser.Email,
+			"Nickname":         nickname,
+			"Avatar":           avatar,
+			"Description":      description,
 		})
 		return
 	}
@@ -155,8 +155,8 @@ func (this *UserController) GetSignin() {
 	}
 	redirectUrl := simple.FormValue(this.Ctx, "redirectUrl")
 	render.View(this.Ctx, "user/signin.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "登录",
-		"RedirectUrl":              redirectUrl,
+		model.TplSiteTitle: "登录",
+		"RedirectUrl":      redirectUrl,
 	})
 }
 
@@ -193,7 +193,7 @@ func (this *UserController) GetSignup() {
 		return
 	}
 	render.View(this.Ctx, "user/signup.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "注册",
+		model.TplSiteTitle: "注册",
 	})
 }
 
@@ -259,9 +259,9 @@ func (this *UserController) GetGithubCallback() {
 
 	user, codeErr := services.UserService.SignInByGithub(githubUser)
 	if codeErr != nil {
-		if codeErr.Code == utils.ErrorCodeUserNameExists {
+		if codeErr.Code == model.ErrorCodeUserNameExists {
 			this.Ctx.Redirect("/user/github/bind?id="+strconv.FormatInt(githubUser.Id, 10), iris.StatusSeeOther)
-		} else if codeErr.Code == utils.ErrorCodeEmailExists {
+		} else if codeErr.Code == model.ErrorCodeEmailExists {
 			this.Ctx.Redirect("/user/github/bind?id="+strconv.FormatInt(githubUser.Id, 10), iris.StatusSeeOther)
 		} else {
 			logrus.Errorf("Code exchange failed with '%s'", codeErr)
@@ -374,12 +374,12 @@ func GetUserArticles(ctx context.Context) {
 		Page(page, 20).Desc("id"))
 
 	render.View(ctx, "user/articles.html", iris.Map{
-		"User":                     render.BuildUser(user),
-		"Articles":                 render.BuildArticles(articles),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildUserArticlesUrl(userId, page-1),
-		"NextPageUrl":              utils.BuildUserArticlesUrl(userId, page+1),
-		utils.GlobalFieldSiteTitle: user.Nickname + " - 文章列表",
+		"User":             render.BuildUser(user),
+		"Articles":         render.BuildArticles(articles),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildUserArticlesUrl(userId, page-1),
+		"NextPageUrl":      utils.BuildUserArticlesUrl(userId, page+1),
+		model.TplSiteTitle: user.Nickname + " - 文章列表",
 	})
 }
 
@@ -412,10 +412,10 @@ func GetUserTags(ctx context.Context) {
 	}
 
 	render.View(ctx, "user/tags.html", iris.Map{
-		"User":                     render.BuildUser(user),
-		"Tags":                     render.BuildTags(tags),
-		"Page":                     paging,
-		utils.GlobalFieldSiteTitle: user.Nickname + " - 标签列表",
+		"User":             render.BuildUser(user),
+		"Tags":             render.BuildTags(tags),
+		"Page":             paging,
+		model.TplSiteTitle: user.Nickname + " - 标签列表",
 	})
 }
 
@@ -441,12 +441,12 @@ func GetUserFavorites(ctx context.Context) {
 		Page(page, 20).Desc("id"))
 
 	render.View(ctx, "user/favorites.html", iris.Map{
-		"User":                     render.BuildUser(user),
-		"Favorites":                render.BuildFavorites(favorites),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildUserFavoritesUrl(userId, page-1),
-		"NextPageUrl":              utils.BuildUserFavoritesUrl(userId, page+1),
-		utils.GlobalFieldSiteTitle: user.Nickname + " - 收藏列表",
+		"User":             render.BuildUser(user),
+		"Favorites":        render.BuildFavorites(favorites),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildUserFavoritesUrl(userId, page-1),
+		"NextPageUrl":      utils.BuildUserFavoritesUrl(userId, page+1),
+		model.TplSiteTitle: user.Nickname + " - 收藏列表",
 	})
 }
 
@@ -476,12 +476,12 @@ func GetUserMessages(ctx context.Context) {
 	services.MessageService.MarkReadAll(user.Id)
 
 	render.View(ctx, "user/messages.html", iris.Map{
-		"User":                     render.BuildUser(user),
-		"Messages":                 render.BuildMessages(messages),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildMessagesUrl(page - 1),
-		"NextPageUrl":              utils.BuildMessagesUrl(page + 1),
-		utils.GlobalFieldSiteTitle: user.Nickname + " - 消息",
+		"User":             render.BuildUser(user),
+		"Messages":         render.BuildMessages(messages),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildMessagesUrl(page - 1),
+		"NextPageUrl":      utils.BuildMessagesUrl(page + 1),
+		model.TplSiteTitle: user.Nickname + " - 消息",
 	})
 }
 
@@ -501,11 +501,11 @@ func GetUserTopics(ctx context.Context) {
 		Eq("user_id", userId).Page(page, 20).Desc("id"))
 
 	render.View(ctx, "user/topics.html", iris.Map{
-		"User":                     render.BuildUser(user),
-		"Topics":                   render.BuildTopics(topics),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildUserTopicsUrl(userId, page-1),
-		"NextPageUrl":              utils.BuildUserTopicsUrl(userId, page+1),
-		utils.GlobalFieldSiteTitle: user.Nickname + " - 话题",
+		"User":             render.BuildUser(user),
+		"Topics":           render.BuildTopics(topics),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildUserTopicsUrl(userId, page-1),
+		"NextPageUrl":      utils.BuildUserTopicsUrl(userId, page+1),
+		model.TplSiteTitle: user.Nickname + " - 话题",
 	})
 }

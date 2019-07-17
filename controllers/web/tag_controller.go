@@ -85,11 +85,11 @@ func GetTags(ctx iris.Context) {
 		Page(page, 200).Desc("id"))
 
 	render.View(ctx, "tag/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "标签列表",
-		"ActiveUsers":              render.BuildUsers(activeUsers),
-		"Tags":                     render.BuildTags(tags),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildTagsUrl(page - 1),
-		"NextPageUrl":              utils.BuildTagsUrl(page + 1),
+		model.TplSiteTitle: "标签列表",
+		"ActiveUsers":      render.BuildUsers(activeUsers),
+		"Tags":             render.BuildTags(tags),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildTagsUrl(page - 1),
+		"NextPageUrl":      utils.BuildTagsUrl(page + 1),
 	})
 }

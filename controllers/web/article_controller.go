@@ -44,17 +44,17 @@ func (this *ArticleController) GetBy(articleId int64) {
 	}
 
 	render.View(this.Ctx, "article/detail.html", iris.Map{
-		utils.GlobalFieldSiteTitle:       article.Title,
-		utils.GlobalFieldSiteKeywords:    strings.Join(keywords, ","),
-		utils.GlobalFieldSiteDescription: article.Summary,
-		"CurrentCategoryId":              0,
-		"CurrentTagId":                   0,
-		"Tags":                           tags,
-		"CommentEntityType":              model.EntityTypeArticle,
-		"CommentEntityId":                article.Id,
-		"Article":                        render.BuildArticle(article),
-		"RelatedArticles":                render.BuildArticles(relatedArticles),
-		"NewestArticles":                 render.BuildArticles(newestArticles),
+		model.TplSiteTitle:       article.Title,
+		model.TplSiteKeywords:    strings.Join(keywords, ","),
+		model.TplSiteDescription: article.Summary,
+		"CurrentCategoryId":      0,
+		"CurrentTagId":           0,
+		"Tags":                   tags,
+		"CommentEntityType":      model.EntityTypeArticle,
+		"CommentEntityId":        article.Id,
+		"Article":                render.BuildArticle(article),
+		"RelatedArticles":        render.BuildArticles(relatedArticles),
+		"NewestArticles":         render.BuildArticles(newestArticles),
 	})
 }
 
@@ -279,14 +279,14 @@ func GetArticles(ctx iris.Context) {
 		Page(page, 20).Desc("id"))
 
 	render.View(ctx, "article/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "文章",
-		"Categories":               categories,
-		"Articles":                 render.BuildArticles(articles),
-		"ActiveUsers":              render.BuildUsers(activeUsers),
-		"ActiveTags":               render.BuildTags(activeTags),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildArticlesUrl(page - 1),
-		"NextPageUrl":              utils.BuildArticlesUrl(page + 1),
+		model.TplSiteTitle: "文章",
+		"Categories":       categories,
+		"Articles":         render.BuildArticles(articles),
+		"ActiveUsers":      render.BuildUsers(activeUsers),
+		"ActiveTags":       render.BuildTags(activeTags),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildArticlesUrl(page - 1),
+		"NextPageUrl":      utils.BuildArticlesUrl(page + 1),
 	})
 }
 
@@ -311,14 +311,14 @@ func GetCategoryArticles(ctx iris.Context) {
 		Page(page, 20).Desc("id"))
 
 	render.View(ctx, "article/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: title,
-		"Categories":               categories,
-		"Articles":                 render.BuildArticles(articles),
-		"ActiveUsers":              render.BuildUsers(activeUsers),
-		"ActiveTags":               render.BuildTags(activeTags),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildCategoryArticlesUrl(categoryId, page-1),
-		"NextPageUrl":              utils.BuildCategoryArticlesUrl(categoryId, page+1),
+		model.TplSiteTitle: title,
+		"Categories":       categories,
+		"Articles":         render.BuildArticles(articles),
+		"ActiveUsers":      render.BuildUsers(activeUsers),
+		"ActiveTags":       render.BuildTags(activeTags),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildCategoryArticlesUrl(categoryId, page-1),
+		"NextPageUrl":      utils.BuildCategoryArticlesUrl(categoryId, page+1),
 	})
 }
 
@@ -340,13 +340,13 @@ func GetTagArticles(ctx iris.Context) {
 	articles, paging := services.ArticleService.GetTagArticles(tagId, page)
 
 	render.View(ctx, "article/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: title,
-		"Categories":               categories,
-		"Articles":                 render.BuildArticles(articles),
-		"ActiveUsers":              render.BuildUsers(activeUsers),
-		"ActiveTags":               render.BuildTags(activeTags),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildTagArticlesUrl(tagId, page-1),
-		"NextPageUrl":              utils.BuildTagArticlesUrl(tagId, page+1),
+		model.TplSiteTitle: title,
+		"Categories":       categories,
+		"Articles":         render.BuildArticles(articles),
+		"ActiveUsers":      render.BuildUsers(activeUsers),
+		"ActiveTags":       render.BuildTags(activeTags),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildTagArticlesUrl(tagId, page-1),
+		"NextPageUrl":      utils.BuildTagArticlesUrl(tagId, page+1),
 	})
 }

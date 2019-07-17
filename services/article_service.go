@@ -3,7 +3,6 @@ package services
 import (
 	"errors"
 	"github.com/emirpasic/gods/sets/hashset"
-	"github.com/mlogclub/mlog/model/constants"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
@@ -314,7 +313,7 @@ func (this *articleService) GenerateRss() {
 		items = append(items, item)
 	}
 
-	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Conf.BaseUrl},

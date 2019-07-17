@@ -10,7 +10,6 @@ import (
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils"
 )
 
 type UserTagController struct {
@@ -32,10 +31,10 @@ func (this *UserTagController) GetList() mvc.View {
 	return mvc.View{
 		Name: "user/tag/list.html",
 		Data: iris.Map{
-			"User":                     render.BuildUser(user),
-			"Tags":                     render.BuildTags(tags),
-			"Page":                     paging,
-			utils.GlobalFieldSiteTitle: user.Nickname + " - 标签列表",
+			"User":             render.BuildUser(user),
+			"Tags":             render.BuildTags(tags),
+			"Page":             paging,
+			model.TplSiteTitle: user.Nickname + " - 标签列表",
 		},
 	}
 }

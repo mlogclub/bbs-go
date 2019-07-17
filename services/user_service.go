@@ -205,11 +205,11 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 	}
 
 	if this.isUsernameExists(githubUser.Login) {
-		return nil, simple.NewError(utils.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在")
+		return nil, simple.NewError(model.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在")
 	}
 
 	if this.isEmailExists(githubUser.Email) {
-		return nil, simple.NewError(utils.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在")
+		return nil, simple.NewError(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在")
 	}
 
 	user = &model.User{

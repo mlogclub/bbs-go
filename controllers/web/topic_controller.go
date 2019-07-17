@@ -28,10 +28,10 @@ func (this *TopicController) GetBy(topicId int64) {
 	services.TopicService.IncrViewCount(topicId)
 
 	render.View(this.Ctx, "topic/detail.html", iris.Map{
-		utils.GlobalFieldSiteTitle: topic.Title,
-		"CommentEntityType":        model.EntityTypeTopic,
-		"CommentEntityId":          topic.Id,
-		"Topic":                    render.BuildTopic(topic),
+		model.TplSiteTitle:  topic.Title,
+		"CommentEntityType": model.EntityTypeTopic,
+		"CommentEntityId":   topic.Id,
+		"Topic":             render.BuildTopic(topic),
 	})
 }
 
@@ -42,7 +42,7 @@ func (this *TopicController) GetCreate() {
 		return
 	}
 	render.View(this.Ctx, "topic/create.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "发表主题",
+		model.TplSiteTitle: "发表主题",
 	})
 	return
 }
@@ -138,11 +138,11 @@ func GetTopics(ctx context.Context) {
 		Page(page, 20).Desc("last_comment_time"))
 
 	render.View(ctx, "topic/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: "主题",
-		"Topics":                   render.BuildTopics(topics),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildTopicsUrl(page - 1),
-		"NextPageUrl":              utils.BuildTopicsUrl(page + 1),
+		model.TplSiteTitle: "主题",
+		"Topics":           render.BuildTopics(topics),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildTopicsUrl(page - 1),
+		"NextPageUrl":      utils.BuildTopicsUrl(page + 1),
 	})
 }
 
@@ -161,10 +161,10 @@ func GetTagTopics(ctx iris.Context) {
 	topics, paging := services.TopicService.GetTagTopics(tagId, page)
 
 	render.View(ctx, "topic/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle: title,
-		"Topics":                   render.BuildTopics(topics),
-		"Page":                     paging,
-		"PrePageUrl":               utils.BuildTagTopicsUrl(tagId, page-1),
-		"NextPageUrl":              utils.BuildTagTopicsUrl(tagId, page+1),
+		model.TplSiteTitle: title,
+		"Topics":           render.BuildTopics(topics),
+		"Page":             paging,
+		"PrePageUrl":       utils.BuildTagTopicsUrl(tagId, page-1),
+		"NextPageUrl":      utils.BuildTagTopicsUrl(tagId, page+1),
 	})
 }
