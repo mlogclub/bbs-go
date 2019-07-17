@@ -217,7 +217,6 @@
     },
     mounted() {
       this.list()
-      this.loadOptions()
     },
     methods: {
       list() {
@@ -234,13 +233,6 @@
           })
           .finally(() => {
             me.listLoading = false
-          })
-      },
-      loadOptions() {
-        let me = this
-        TagApi.cascader()
-          .then(data => {
-            me.tagOptions = data
           })
       },
       handlePageChange(val) {

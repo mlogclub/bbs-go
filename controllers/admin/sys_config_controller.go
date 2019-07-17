@@ -1,8 +1,8 @@
 package admin
 
 import (
+	"encoding/json"
 	"github.com/kataras/iris"
-	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/simple"
 	"strconv"
@@ -25,38 +25,21 @@ func (this *SysConfigController) AnyList() *simple.JsonResult {
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *SysConfigController) PostCreate() *simple.JsonResult {
-	t := &model.SysConfig{}
-	err := this.Ctx.ReadForm(t)
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-
-	err = services.SysConfigService.Create(t)
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
+func (this *SysConfigController) GetAll() *simple.JsonResult {
+	list := services.SysConfigService.GetAll()
+	return simple.JsonData(list)
 }
 
-func (this *SysConfigController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (this *SysConfigController) PostSave() *simple.JsonResult {
+	config := this.Ctx.FormValue("config")
+	data := make(map[string]string)
+	err := json.Unmarshal([]byte(config), data)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	t := services.SysConfigService.Get(id)
-	if t == nil {
-		return simple.ErrorMsg("entity not found")
-	}
-
-	err = this.Ctx.ReadForm(t)
+	err = services.SysConfigService.SetAll(data)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-
-	err = services.SysConfigService.Update(t)
-	if err != nil {
-		return simple.ErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
+	return simple.Success()
 }

@@ -2,23 +2,21 @@
   <el-menu router :default-active="$route.path" @open="handleOpen" @close="handleClose"
            @select="handleSelect" :collapse="collapsed" class="side-menu">
 
-    <template v-for="(item, index) in $router.options.routes" v-if="!item.hidden">
-
-      <el-submenu :index="'root-' +index" v-if="!item.leaf && item.children.length > 0">
+    <template v-for="(item, index) in $router.options.routes">
+      <el-submenu v-if="!item.hidden && item.children && item.children.length > 0"
+                  :index="'root-' + index"
+                  :key="item.path">
         <template slot="title">
           <i v-if="item.iconCls" :class="item.iconCls"></i>
           <span slot="title">{{item.name}}</span>
         </template>
-        <el-menu-item v-for="child in item.children" :index="child.path" v-if="!child.hidden">
-          <i v-if="child.iconCls" :class="child.iconCls"></i>
-          {{child.name}}
-        </el-menu-item>
+        <template v-for="child in item.children">
+          <el-menu-item v-if="!child.hidden" :index="child.path" :key="child.path">
+            <i v-if="child.iconCls" :class="child.iconCls"></i>
+            {{child.name}}
+          </el-menu-item>
+        </template>
       </el-submenu>
-
-      <el-menu-item v-if="item.leaf && item.children.length === 1" :index="item.children[0].path">
-        <i v-if="item.children[0].iconCls" :class="item.children[0].iconCls"></i>
-        {{item.children[0].name}}
-      </el-menu-item>
 
     </template>
 

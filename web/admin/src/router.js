@@ -9,6 +9,7 @@ import ArticleIndex from './views/article/Index';
 import CommentIndex from './views/comment/Index';
 import OauthClientIndex from './views/oauth-client/Index'
 import OauthTokenIndex from './views/oauth-token/Index'
+import SysConfigIndex from './views/sys-config/Index'
 
 Vue.use(Router);
 
@@ -19,14 +20,14 @@ export default new Router({
       name: '首页',
       hidden: true,
       redirect: {
-        path: '/category/index'
+        path: '/article/index'
       }
     },
-
     {
       path: '1',
       component: Home,
       name: '内容管理',
+      iconCls: 'iconfont icon-article',
       children: [
         {
           path: '/article/index',
@@ -58,6 +59,12 @@ export default new Router({
           name: '评论',
           iconCls: 'iconfont icon-comment'
         },
+        {
+          path: '/sys-config/index',
+          component: SysConfigIndex,
+          name: '系统配置',
+          iconCls: 'iconfont icon-setting',
+        },
       ]
     },
 
@@ -65,6 +72,7 @@ export default new Router({
       path: '2',
       component: Home,
       name: '用户管理',
+      iconCls: 'iconfont icon-user',
       children: [
         {
           path: '/user/index',
@@ -82,7 +90,7 @@ export default new Router({
           path: '/oauth-token/index',
           component: OauthTokenIndex,
           name: 'OauthToken',
-          iconCls: 'iconfont icon-menu'
+          iconCls: 'iconfont icon-menu',
         },
       ]
     },

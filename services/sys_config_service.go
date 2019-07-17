@@ -1,8 +1,11 @@
 package services
 
 import (
+	"errors"
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/simple"
 )
 
@@ -31,22 +34,64 @@ func (this *sysConfigService) Query(queries *simple.ParamQueries) (list []model.
 	return repositories.SysConfigRepository.Query(simple.GetDB(), queries)
 }
 
-func (this *sysConfigService) Create(t *model.SysConfig) error {
-	return repositories.SysConfigRepository.Create(simple.GetDB(), t)
+func (this *sysConfigService) GetAll() (list []model.SysConfig) {
+	simple.GetDB().Order("id asc").Find(&list)
+	return
 }
 
-func (this *sysConfigService) Update(t *model.SysConfig) error {
-	return repositories.SysConfigRepository.Update(simple.GetDB(), t)
+func (this *sysConfigService) SetAll(configs map[string]string) error {
+	if len(configs) == 0 {
+		return nil
+	}
+	return simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		for k, v := range configs {
+			if _, err := this.setSingle(tx, k, v, "", ""); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
-func (this *sysConfigService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.SysConfigRepository.Updates(simple.GetDB(), id, columns)
+// 设置配置，如果配置不存在，那么创建
+func (this *sysConfigService) Set(key, value, name, description string) error {
+	return simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		if _, err := this.setSingle(tx, key, value, name, description); err != nil {
+			return err
+		}
+		return nil
+	})
 }
+func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) (*model.SysConfig, error) {
+	if len(key) == 0 {
+		return nil, errors.New("sys config key is null")
+	}
+	sysConfig := repositories.SysConfigRepository.GetByKey(simple.GetDB(), key)
+	if sysConfig == nil {
+		sysConfig = &model.SysConfig{
+			Key:        key,
+			Value:      value,
+			CreateTime: simple.NowTimestamp(),
+		}
+	}
+	sysConfig.UpdateTime = simple.NowTimestamp()
 
-func (this *sysConfigService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.SysConfigRepository.UpdateColumn(simple.GetDB(), id, name, value)
-}
+	if len(name) > 0 {
+		sysConfig.Name = name
+	}
+	if len(description) > 0 {
+		sysConfig.Description = description
+	}
 
-func (this *sysConfigService) Delete(id int64) {
-	repositories.SysConfigRepository.Delete(simple.GetDB(), id)
+	var err error
+	if sysConfig.Id > 0 {
+		err = repositories.SysConfigRepository.Update(simple.GetDB(), sysConfig)
+	} else {
+		err = repositories.SysConfigRepository.Create(simple.GetDB(), sysConfig)
+	}
+	if err != nil {
+		return nil, err
+	}
+	cache.SysConfigCache.Invalidate(key)
+	return sysConfig, nil
 }
