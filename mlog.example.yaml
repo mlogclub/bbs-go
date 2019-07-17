@@ -1,6 +1,5 @@
 Env: prod # 环境，线上环境：prod、测试环境：dev
 BaseUrl: https://mlog.club # 网站域名
-SiteTitle: M-LOG # 网站标题
 Port: '8082' # 端口
 ShowSql: false # 是否打印sql
 ViewsPath: ./web/views  # views模版文件目录，可配置绝对路径

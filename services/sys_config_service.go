@@ -69,11 +69,11 @@ func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, descripti
 	sysConfig := repositories.SysConfigRepository.GetByKey(simple.GetDB(), key)
 	if sysConfig == nil {
 		sysConfig = &model.SysConfig{
-			Key:        key,
-			Value:      value,
 			CreateTime: simple.NowTimestamp(),
 		}
 	}
+	sysConfig.Key = key
+	sysConfig.Value = value
 	sysConfig.UpdateTime = simple.NowTimestamp()
 
 	if len(name) > 0 {

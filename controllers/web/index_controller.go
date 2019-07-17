@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
+	"github.com/mlogclub/mlog/model/constants"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/simple"
@@ -29,8 +30,8 @@ func (this *IndexController) Any() mvc.View {
 	return mvc.View{
 		Name: "index.html",
 		Data: iris.Map{
-			utils.GlobalFieldSiteDescription: "M-LOG分享",
-			utils.GlobalFieldSiteKeywords:    "Go中国，Golang, Golang学习,Golang教程,Golang社区,Go基金会,Go语言中文网,Go,Go语言,主题,资源,文章,图书,开源项目,M-LOG",
+			utils.GlobalFieldSiteDescription: cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription),
+			utils.GlobalFieldSiteKeywords:    cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords),
 			"Categories":                     categories,
 			"Articles":                       render.BuildArticles(articles),
 			"Topics":                         render.BuildTopics(topics),

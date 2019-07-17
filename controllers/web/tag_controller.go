@@ -85,13 +85,11 @@ func GetTags(ctx iris.Context) {
 		Page(page, 200).Desc("id"))
 
 	render.View(ctx, "tag/index.html", iris.Map{
-		utils.GlobalFieldSiteTitle:       "标签列表",
-		utils.GlobalFieldSiteDescription: "M-LOG分享",
-		utils.GlobalFieldSiteKeywords:    "Go中国，Golang, Golang学习,Golang教程,Golang社区,Go基金会,Go语言中文网,Go,Go语言,主题,资源,文章,图书,开源项目,M-LOG",
-		"ActiveUsers":                    render.BuildUsers(activeUsers),
-		"Tags":                           render.BuildTags(tags),
-		"Page":                           paging,
-		"PrePageUrl":                     utils.BuildTagsUrl(page - 1),
-		"NextPageUrl":                    utils.BuildTagsUrl(page + 1),
+		utils.GlobalFieldSiteTitle: "标签列表",
+		"ActiveUsers":              render.BuildUsers(activeUsers),
+		"Tags":                     render.BuildTags(tags),
+		"Page":                     paging,
+		"PrePageUrl":               utils.BuildTagsUrl(page - 1),
+		"NextPageUrl":              utils.BuildTagsUrl(page + 1),
 	})
 }

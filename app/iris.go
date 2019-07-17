@@ -2,6 +2,8 @@ package app
 
 import (
 	"github.com/mlogclub/mlog/controllers/web"
+	"github.com/mlogclub/mlog/model/constants"
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
 	"net/http"
 	"os"
@@ -171,11 +173,12 @@ func handleViews(app *iris.Application) {
 }
 
 func viewFunctions(engine *view.HTMLEngine) {
-	engine.AddFunc("siteTitle", func(siteTitle string) string {
-		if len(siteTitle) > 0 {
-			return siteTitle + " | " + config.Conf.SiteTitle
+	engine.AddFunc("siteTitle", func(title string) string {
+		siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		if len(title) > 0 {
+			return title + " | " + siteTitle
 		}
-		return config.Conf.SiteTitle
+		return siteTitle
 	})
 	engine.AddFunc("formatDate", func(timestamp int64) string {
 		return simple.TimeFormat(simple.TimeFromTimestamp(timestamp), simple.FMT_DATE_TIME)

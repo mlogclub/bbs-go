@@ -5,6 +5,7 @@ import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/model/constants"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
@@ -238,12 +239,12 @@ func (this *topicService) GenerateRss() {
 		}
 		items = append(items, item)
 	}
-
+	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 	feed := &feeds.Feed{
-		Title:       config.Conf.SiteTitle,
+		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
 		Description: "分享生活",
-		Author:      &feeds.Author{Name: config.Conf.SiteTitle},
+		Author:      &feeds.Author{Name: siteTitle},
 		Created:     time.Now(),
 		Items:       items,
 	}
