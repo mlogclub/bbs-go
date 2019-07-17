@@ -125,6 +125,7 @@ func InitIris() {
 			m.Party("/topic").Handle(new(admin.TopicController))
 			m.Party("/oauth-client").Handle(new(admin.OauthClientController))
 			m.Party("/oauth-token").Handle(new(admin.OauthTokenController))
+			m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		})
 
 		mvc.Configure(app.Party("/oauth"), func(m *mvc.Application) {

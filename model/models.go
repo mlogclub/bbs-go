@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&UserArticleTag{}, &Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{},
+	&UserArticleTag{}, &Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{}, &SysConfig{},
 }
 
 type Model struct {
@@ -182,4 +182,15 @@ type Message struct {
 	ExtraData    string `gorm:"type:text" json:"extraData" form:"extraData"`       // 扩展数据
 	Status       int    `gorm:"not null" json:"status" form:"status"`              // 状态：0：未读、1：已读
 	CreateTime   int64  `json:"createTime" form:"createTime"`                      // 创建时间
+}
+
+// 系统配置
+type SysConfig struct {
+	Model
+	Key         string `gorm:"not null;size:128;unique" json:"key" form:"key"` // 配置key
+	Value       string `gorm:"not null;type:text" json:"value" form:"value"`   // 配置值
+	Name        string `gorm:"not null;size:32" json:"name" form:"name"`       // 配置名称
+	Description string `gorm:"size:128" json:"description" form:"description"` // 配置描述
+	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
+	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`   // 更新时间
 }
