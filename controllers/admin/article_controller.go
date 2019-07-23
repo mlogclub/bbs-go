@@ -41,7 +41,7 @@ func (this *ArticleController) AnyList() *simple.JsonResult {
 
 		// 简介
 		if article.ContentType == model.ArticleContentTypeMarkdown {
-			mr := simple.Markdown(article.Content)
+			mr := simple.NewMd().Run(article.Content)
 			if len(article.Summary) == 0 {
 				builder.Put("summary", mr.SummaryText)
 			}

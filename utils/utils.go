@@ -30,8 +30,8 @@ func GetMarkdownSummary(markdown string) string {
 	if len(markdown) == 0 {
 		return ""
 	}
-	markdownResult := simple.Markdown(markdown)
-	return markdownResult.SummaryText
+	mdResult := simple.NewMd().Run(markdown)
+	return mdResult.SummaryText
 }
 
 // 获取用户角色

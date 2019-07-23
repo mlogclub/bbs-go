@@ -1,5 +1,3 @@
-window.appLogin = null // 登录组件
-
 // 时间格式化
 function formatDate(timestamp, fmt) {
   fmt = fmt || 'yyyy-MM-dd HH:mm:ss'
@@ -121,3 +119,72 @@ $(document).ready(function () {
     $('.navbar-menu').toggleClass('is-active')
   })
 })
+
+// 处理toc目录
+function handleToc(tocSelector) {
+  let tocList = document.querySelectorAll(tocSelector)
+
+  window.addEventListener("scroll", event => {
+    let fromTop = window.scrollY;
+    let mainNavLinks = document.querySelectorAll(tocSelector + ' a');
+    mainNavLinks.forEach((link, index) => {
+      let section = document.getElementById(decodeURI(link.hash).substring(1));
+      let nextSection = null;
+      if (mainNavLinks[index + 1]) {
+        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+      }
+      if (section.offsetTop <= fromTop) {
+        if (nextSection) {
+          if (nextSection.offsetTop > fromTop) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        } else {
+          link.classList.add('active');
+        }
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  });
+
+  changeSize()
+  window.addEventListener('resize', event => {
+    changeSize()
+  });
+
+  // 滚动的时候控制toc位置
+  window.addEventListener('scroll', event => {
+    tocList.forEach((toc, index) => {
+      changePos(toc, toc.offsetTop)
+    });
+  });
+
+  // 更改toc位置
+  function changePos(obj, height) {
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop < height + 100) { // 这里+100，控制还没滚动到顶部的时候就固定toc
+      obj.style.position = 'relative';
+    } else {
+      obj.style.position = 'fixed';
+      obj.style.top = '5px';
+    }
+  }
+
+  // 设置toc width
+  function changeSize() {
+    tocList.forEach((toc, index) => {
+      toc.style.width = toc.parentNode.clientWidth + 'px'
+
+      let $toc = $(toc)
+      let height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 55; // 容器高度
+      let contentHeight = $('.content > ul', $toc).height(); // 内容的高度
+      if (contentHeight >= height) {
+        $('.content', $toc).css('height', height + 'px');
+        $('.content', $toc).css('overflow', 'auto')
+      }
+    });
+  }
+
+}

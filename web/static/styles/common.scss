@@ -119,3 +119,61 @@ div.avatar {
   min-width: 36px;
   min-height: 36px;
 }
+
+
+.toc {
+  position: relative;
+
+  ul, ul ul {
+    margin: 0px;
+    list-style: square;
+    padding-left: 15px;
+
+    li {
+      a {
+        display: block;
+        padding: 3px 0;
+        color: #000;
+        background: transparent;
+      }
+
+      a.active {
+        color: #009a61;
+        font-weight: bold;
+      }
+    }
+  }
+
+  & > ul:not(li a) {
+    list-style: none;
+  }
+
+  .content {
+    overflow: auto;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  // 屏幕宽度小于768的时候隐藏toc目录
+  .toc {
+    display: none;
+  }
+}

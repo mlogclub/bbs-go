@@ -130,8 +130,9 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if article.ContentType == model.ArticleContentTypeMarkdown {
-		mr := simple.Markdown(article.Content)
+		mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
 		rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
+		rsp.Toc = template.HTML(mr.TocHtml)
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = mr.SummaryText
 		}
@@ -143,16 +144,6 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	}
 
 	return rsp
-}
-
-// 获取html内容摘要
-func GetHtmlSummary(htmlContent string, length int) string {
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
-	if err != nil {
-		logrus.Error(err)
-		return ""
-	}
-	return simple.GetSummary(doc.Text(), length)
 }
 
 func BuildArticles(articles []model.Article) []model.ArticleResponse {
@@ -187,8 +178,9 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	// tags := cache.TagCache.GetList(tagIds)
 	// rsp.Tags = BuildTags(tags)
 
-	mr := simple.Markdown(topic.Content)
+	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
+	rsp.Toc = template.HTML(mr.TocHtml)
 
 	return rsp
 }
@@ -212,7 +204,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	if comment == nil {
 		return nil
 	}
-	markdownResult := simple.Markdown(comment.Content)
+	markdownResult := simple.NewMd().Run(comment.Content)
 	content := template.HTML(markdownResult.ContentHtml)
 
 	ret := &model.CommentResponse{

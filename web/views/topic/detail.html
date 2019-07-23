@@ -69,6 +69,17 @@
                             {{end}}
                         </div>
                     </div>
+
+
+                    {{if .Topic.Toc}}
+                        <div class="toc widget">
+                            <div class="header">目录</div>
+                            <div class="content">
+                                {{.Topic.Toc}}
+                            </div>
+                        </div>
+                    {{end}}
+
                     {{/*
                     {{if eq .Topic.User.Type 1}}
                         <div class="widget">
@@ -86,12 +97,17 @@
 </section>
 
 
-{{/*高亮*/}}
 <link href="//cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
 <script src="//cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 
 <script type="text/javascript">
+  // 高亮
+  hljs.initHighlightingOnLoad()
+
+  // 处理toc目录
+  handleToc('.toc')
+
+  // 收藏
   function addFavorite(topicId) {
     httpPost('{{baseUrl}}/topic/favorite/' + topicId)
       .then(function (data) {
@@ -101,4 +117,5 @@
       })
   }
 </script>
+
 {{template "common/footer.html" .}}

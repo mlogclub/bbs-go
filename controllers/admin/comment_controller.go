@@ -34,7 +34,7 @@ func (this *CommentController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(comment.UserId))
 
 		// 简介
-		mr := simple.Markdown(comment.Content)
+		mr := simple.NewMd().Run(comment.Content)
 		builder.Put("content", mr.ContentHtml)
 
 		results = append(results, builder.Build())

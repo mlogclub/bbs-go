@@ -32,7 +32,7 @@ func (this *TopicController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(topic.UserId))
 
 		// 简介
-		mr := simple.Markdown(topic.Content)
+		mr := simple.NewMd().Run(topic.Content)
 		builder.Put("summary", mr.SummaryText)
 
 		// 标签

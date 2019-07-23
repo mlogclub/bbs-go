@@ -47,6 +47,7 @@ type ArticleResponse struct {
 	Title      string            `json:"title"`
 	Summary    string            `json:"summary"`
 	Content    template.HTML     `json:"content"`
+	Toc        template.HTML     `json:"toc"`
 	Share      bool              `json:"share"`
 	SourceUrl  string            `json:"sourceUrl"`
 	CreateTime int64             `json:"createTime"`
@@ -58,6 +59,7 @@ type TopicResponse struct {
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
 	Content         template.HTML  `json:"content"`
+	Toc             template.HTML  `json:"toc"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CreateTime      int64          `json:"createTime"`
