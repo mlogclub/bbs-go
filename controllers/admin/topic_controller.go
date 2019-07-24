@@ -22,7 +22,8 @@ func (this *TopicController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TopicController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).
+		EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, topic := range list {
@@ -80,4 +81,17 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
+}
+
+func (this *TopicController) PostDelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(this.Ctx, "id")
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+
+	err = services.TopicService.Delete(id)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.Success()
 }

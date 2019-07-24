@@ -4,7 +4,13 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="名称"></el-input>
+          <el-input v-model="filters.title" placeholder="标题"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="删除" value="1"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="list">查询</el-button>
@@ -17,26 +23,6 @@
       </el-form>
     </el-col>
 
-
-    <!--
-    <el-table :data="results" highlight-current-row v-loading="listLoading"
-              style="width: 100%;" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="userId" label="用户编号"></el-table-column>
-      <el-table-column prop="title" label="标题"></el-table-column>
-      <el-table-column prop="content" label="内容"></el-table-column>
-      <el-table-column prop="status" label="状态"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template scope="scope">{{scope.row.createTime | formatDate}}</template>
-      </el-table-column>
-      <el-table-column label="操作" width="150">
-        <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    -->
 
     <div class="topics">
       <div class="topic" v-for="item in results" :key="item.id">
@@ -57,6 +43,12 @@
 
         <div class="summary">
           {{item.summary}}
+        </div>
+
+        <div class="topic-footer">
+          <span class="danger" v-if="item.status === 1">已删除</span>
+          <span class="info">编号：{{item.id}}</span>
+          <a class="btn" @click="deleteSubmit(item)">删除</a>
         </div>
       </div>
     </div>
@@ -251,7 +243,17 @@
             me.$notify.error({title: '错误', message: rsp.message})
           })
       },
-
+      deleteSubmit(row) {
+        let me = this
+        HttpClient.post('/api/admin/topic/delete', {id: row.id})
+          .then(data => {
+            me.$message({message: '删除成功', type: 'success'})
+            me.list()
+          })
+          .catch(rsp => {
+            me.$notify.error({title: '错误', message: rsp.message})
+          })
+      },
       handleSelectionChange(val) {
         this.selectedRows = val
       },
@@ -346,6 +348,33 @@
         font-weight: 400;
         line-height: 1.5;
       }
+
+      .topic-footer {
+        text-align: right;
+
+        span.info {
+          font-size: 12px;
+          margin-right: 10px;
+          background: #eee;
+          padding: 2px 5px 2px 5px;
+        }
+
+        span.danger {
+          font-size: 12px;
+          margin-right: 10px;
+          background: #eee;
+          color: red;
+          padding: 2px 5px 2px 5px;
+        }
+
+        a.btn {
+          font-size: 12px;
+          margin-right: 10px;
+          color: blue;
+          cursor: pointer;
+        }
+      }
+
     }
 
   }

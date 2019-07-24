@@ -57,8 +57,8 @@ func (this *topicService) UpdateColumn(id int64, name string, value interface{})
 	return repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *topicService) Delete(id int64) {
-	repositories.TopicRepository.Delete(simple.GetDB(), id)
+func (this *topicService) Delete(id int64) error {
+	return repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, "status", model.TopicStatusDeleted)
 }
 
 // 扫描
