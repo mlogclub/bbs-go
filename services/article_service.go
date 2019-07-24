@@ -108,7 +108,7 @@ func (this *articleService) GetTagArticles(tagId int64, page int) (articles []mo
 
 // 发布文章
 func (this *articleService) Publish(userId int64, title, summary, content, contentType string, categoryId int64,
-	tagIds []int64, sourceUrl string, share bool) (article *model.Article, err error) {
+	tags []string, sourceUrl string, share bool) (article *model.Article, err error) {
 
 	title = strings.TrimSpace(title)
 	summary = strings.TrimSpace(summary)
@@ -143,37 +143,13 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 		UpdateTime:  simple.NowTimestamp(),
 	}
 
-	// 标签滤重
-	var tagIdsUnique []int64
-	if tagIds != nil && len(tagIds) > 0 {
-		for _, tagId := range tagIds {
-			if !simple.Contains(tagId, tagIdsUnique) {
-				tagIdsUnique = append(tagIdsUnique, tagId)
-			}
-		}
-	}
-
 	err = simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
 			return err
 		}
-
-		if tagIdsUnique != nil && len(tagIdsUnique) > 0 {
-			for _, tagId := range tagIdsUnique {
-				if tagId <= 0 {
-					continue
-				}
-				err := repositories.ArticleTagRepository.Create(tx, &model.ArticleTag{
-					ArticleId:  article.Id,
-					TagId:      tagId,
-					CreateTime: simple.NowTimestamp(),
-				})
-				if err != nil {
-					return err
-				}
-			}
-		}
+		repositories.ArticleTagRepository.AddArticleTags(tx, article.Id, tagIds)
 		return nil
 	})
 

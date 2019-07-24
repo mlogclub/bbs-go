@@ -17,6 +17,7 @@
                         </nav>
                     </div>
                     <div class="content">
+                        {{/*
                         <div class="columns" style="margin:0px;">
                             <div class="column is-3" style="padding-left: 0px!important;">
 
@@ -47,7 +48,19 @@
 
                             </div>
                         </div>
+                        */}}
 
+                        <div class="field">
+                            <div class="control">
+                                <input name="title" id="title" class="input" type="text" placeholder="标题">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                {{template "common/taginput.html"}}
+                            </div>
+                        </div>
 
                         <div class="field">
                             <div class="control">
@@ -107,9 +120,9 @@
 
     $('#articleCreateSubmit').click(function () {
       var params = {
-        tagId: $('#tagId').val(),
         title: $('#title').val(),
         content: vditor.getValue(),
+        tags: $('#tags').val(),
       }
       httpPost('{{baseUrl}}/article/create', params).then(function (data) {
         window.location = '{{baseUrl}}/article/' + data.articleId

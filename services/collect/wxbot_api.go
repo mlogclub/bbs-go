@@ -26,10 +26,10 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 
 	userId, _ := this.initUser(wxArticle)
 	categoryId := this.initCategory(simple.GetDB(), wxArticle)
-	tagIds := this.initTags(simple.GetDB(), wxArticle)
+	tags := this.initTags(simple.GetDB(), wxArticle)
 
 	return services.ArticleService.Publish(userId, wxArticle.Title, simple.GetSummary(wxArticle.TextContent, 256),
-		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tagIds, wxArticle.Url, true)
+		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tags, wxArticle.Url, true)
 }
 
 func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
@@ -73,7 +73,7 @@ func (this *WxbotApi) initCategory(db *gorm.DB, wxArticle *WxArticle) int64 {
 	return 0
 }
 
-func (this *WxbotApi) initTags(db *gorm.DB, wxArticle *WxArticle) (tagIds []int64) {
+func (this *WxbotApi) initTags(db *gorm.DB, wxArticle *WxArticle) []string {
 	var tagNames []string
 
 	if len(wxArticle.Categories) > 0 {
@@ -99,16 +99,7 @@ func (this *WxbotApi) initTags(db *gorm.DB, wxArticle *WxArticle) (tagIds []int6
 			}
 		}
 	}
-
-	if tagNames != nil && len(tagNames) > 0 {
-		for _, tagName := range tagNames {
-			tag, _ := services.TagService.GetOrCreate(tagName)
-			if tag != nil {
-				tagIds = append(tagIds, tag.Id)
-			}
-		}
-	}
-	return
+	return tagNames
 }
 
 type WxArticle struct {

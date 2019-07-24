@@ -81,21 +81,14 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	}
 
 	var (
-		tagId   = this.Ctx.PostValueInt64Default("tagId", 0)
+		tags    = simple.FormValueStringArray(this.Ctx, "tags")
 		title   = this.Ctx.PostValue("title")
 		summary = this.Ctx.PostValue("summary")
 		content = this.Ctx.PostValue("content")
 	)
-	if tagId <= 0 {
-		return simple.ErrorMsg("请选择标签")
-	}
-	tag := services.TagService.Get(tagId)
-	if tag == nil {
-		return simple.ErrorMsg("标签不存在")
-	}
 
 	article, err := services.ArticleService.Publish(currentUser.Id, title, summary, content,
-		model.ArticleContentTypeMarkdown, 0, []int64{tagId}, "", false)
+		model.ArticleContentTypeMarkdown, 0, tags, "", false)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}

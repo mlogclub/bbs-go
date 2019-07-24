@@ -98,9 +98,8 @@
        * @param tagName
        */
       addRecommendTag(tagName) {
-        if (this.addTagName(tagName)) {
-          this.closeRecommendTags()
-        }
+        this.addTagName(tagName)
+        this.closeRecommendTags()
       },
 
       /**
@@ -139,7 +138,7 @@
         if (!this.inputTag) {
           this.autocompleteTags = []
         } else {
-          var me = this
+          let me = this
           httpPost('/tag/autocomplete', {
             "input": me.inputTag
           }).then(function (data) {

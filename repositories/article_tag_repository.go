@@ -67,6 +67,20 @@ func (this *articleTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.ArticleTag{}).Delete("id", id)
 }
 
+func (this *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, tagIds []int64) {
+	if articleId <= 0 || len(tagIds) == 0 {
+		return
+	}
+
+	for _, tagId := range tagIds {
+		_ = this.Create(db, &model.ArticleTag{
+			ArticleId:  articleId,
+			TagId:      tagId,
+			CreateTime: simple.NowTimestamp(),
+		})
+	}
+}
+
 func (this *articleTagRepository) GetUnique(db *gorm.DB, articleId, tagId int64) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := db.First(ret, "article_id = ? and tag_id = ?", articleId, tagId).Error; err != nil {
