@@ -1,37 +1,39 @@
-<div id="select-tags" class="select-tags">
-    <input id="tags" name="tags" type="hidden" v-model="tags"/>
-    <div class="tags-selected">
+<template id="taginput">
+    <div class="select-tags">
+        <input id="tags" name="tags" type="hidden" v-model="tags"/>
+        <div class="tags-selected">
         <span class="tag-item" v-for="tag in tags" :key="tag">
             <span class="text">{{html "{{tag}}"}}<i class="iconfont icon-close" @click="clickRemoveTag"
                                                     :data-name="tag"></i></span>
         </span>
-    </div>
-    <input ref="tagInput" class="input" type="text" v-model="inputTag" @input="autocomplete"
-           @keydown.delete="removeTag" @keydown.enter="addTag"
-           @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
-           @keydown.38="selectUp" @keydown.40="selectDown"
-           @focus="openRecommendTags"
-           @click="openRecommendTags"
-           placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
-    <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
-        <div class="tags-container">
-            <section class="tag-section">
-                <div v-for="(item, index) in autocompleteTags" :key="item" class="tag-item"
-                     :class="{active: index === selectIndex}" @click="selectTag(index)" v-text="item"></div>
-            </section>
+        </div>
+        <input ref="tagInput" class="input" type="text" v-model="inputTag" @input="autocomplete"
+               @keydown.delete="removeTag" @keydown.enter="addTag"
+               @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
+               @keydown.38="selectUp" @keydown.40="selectDown"
+               @focus="openRecommendTags"
+               @click="openRecommendTags"
+               placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
+        <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
+            <div class="tags-container">
+                <section class="tag-section">
+                    <div v-for="(item, index) in autocompleteTags" :key="item" class="tag-item"
+                         :class="{active: index === selectIndex}" @click="selectTag(index)" v-text="item"></div>
+                </section>
+            </div>
+        </div>
+        <div v-if="showRecommendTags" class="recommend-tags">
+            <div class="tags-container">
+                <div class="tip">推荐标签</div>
+                <a v-for="tag in recommendTags" :key="tag" @click="addRecommendTag(tag)" class="tag-item" v-text="tag"></a>
+            </div>
         </div>
     </div>
-    <div v-if="showRecommendTags" class="recommend-tags">
-        <div class="tags-container">
-            <div class="tip">推荐标签</div>
-            <a v-for="tag in recommendTags" :key="tag" @click="addRecommendTag(tag)" class="tag-item" v-text="tag"></a>
-        </div>
-    </div>
-</div>
+</template>
 
 <script type="text/javascript">
   new Vue({
-    el: '#select-tags',
+    el: '#taginput',
     data: {
       maxTagCount: 5, // 最多可以选择的标签数量
       maxWordCount: 15, // 每个标签最大字数

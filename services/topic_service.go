@@ -143,13 +143,11 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 	if err != nil {
 		return nil
 	}
-
 	var tagIds []int64
 	for _, topicTag := range topicTags {
 		tagIds = append(tagIds, topicTag.TagId)
 	}
-
-	return repositories.TagRepository.GetTagInIds(tagIds)
+	return cache.TagCache.GetList(tagIds)
 }
 
 // 指定标签下的主题列表

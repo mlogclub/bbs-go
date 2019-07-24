@@ -16,42 +16,22 @@
                         </nav>
                     </div>
                     <div class="content">
-                        <input type="hidden" name="id" id="id" value="{{.Article.Id}}"/>
-                        <div class="columns" style="margin:0px;">
-                            <div class="column is-3" style="padding-left: 0px!important;">
+                        <input type="hidden" name="id" id="id" value="{{.Article.ArticleId}}"/>
 
-                                <div class="field">
-                                    <div class="control has-icons-left">
-                                    <span class="select" style="width:100%">
-                                        <select name="tagId" id="tagId" class="input">
-                                            <option value="">请选择标签</option>
-                                            {{range .Tags}}
-                                                {{if eq .TagId $.Article.TagId}}
-                                                    <option value="{{.TagId}}" selected>{{.TagName}}</option>
-                                                {{else}}
-                                                    <option value="{{.TagId}}">{{.TagName}}</option>
-                                                {{end}}
-                                            {{end}}
-                                        </select>
-                                    </span>
-                                        <span class="icon is-small is-left"><i class="iconfont icon-tag"></i></span>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="column is-9" style="padding-right: 0px!important;">
-
-                                <div class="field">
-                                    <div class="control">
-                                        <input name="title" id="title" class="input" type="text"
-                                               value="{{.Article.Title}}"
-                                               placeholder="标题">
-                                    </div>
-                                </div>
-
+                        <div class="field">
+                            <div class="control">
+                                <input name="title" id="title" class="input" type="text"
+                                       value="{{.Article.Title}}"
+                                       placeholder="标题">
                             </div>
                         </div>
 
+                        <div class="field">
+                            <div class="control">
+                                {{$Tags := .Article.Tags}}
+                                {{template "common/taginput.html" $Tags}}
+                            </div>
+                        </div>
 
                         <div class="field">
                             <div class="control">
@@ -113,7 +93,7 @@
     $('#articleEditSubmit').click(function () {
       var params = {
         id: $('#id').val(),
-        tagId: $('#tagId').val(),
+        tags: $('#tags').val(),
         title: $('#title').val(),
         content: vditor.getValue(),
       }

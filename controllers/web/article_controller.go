@@ -113,11 +113,21 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 		return
 	}
 
-	tags := services.TagService.GetTags()
+	tags := services.ArticleService.GetArticleTags(articleId)
+	var tagNames []string
+	if len(tags) > 0 {
+		for _, tag := range tags {
+			tagNames = append(tagNames, tag.Name)
+		}
+	}
 
 	render.View(this.Ctx, "article/edit.html", iris.Map{
-		"Tags":    tags,
-		"Article": article,
+		"Article": iris.Map{
+			"ArticleId": article.Id,
+			"Title":   article.Title,
+			"Content": article.Content,
+			"Tags":    tagNames,
+		},
 	})
 }
 
@@ -130,24 +140,10 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 
 	var (
 		articleId = this.Ctx.PostValueInt64Default("id", 0)
-		tagId     = this.Ctx.PostValueInt64Default("tagId", 0)
+		tags      = simple.FormValueStringArray(this.Ctx, "tags")
 		title     = this.Ctx.PostValue("title")
 		content   = this.Ctx.PostValue("content")
 	)
-	if tagId <= 0 {
-		return simple.ErrorMsg("请选择标签")
-	}
-	if len(title) == 0 {
-		return simple.ErrorMsg("请输入标题")
-	}
-	if len(content) == 0 {
-		return simple.ErrorMsg("请填写文章内容")
-	}
-
-	tag := services.TagService.Get(tagId)
-	if tag == nil {
-		return simple.ErrorMsg("标签不存在")
-	}
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
@@ -158,11 +154,9 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 		return simple.ErrorMsg("无权限")
 	}
 
-	article.Title = title
-	article.Content = content
-	err := services.ArticleService.Update(article)
+	err := services.ArticleService.Edit(articleId, tags, title, content)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.Error(err)
 	}
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }

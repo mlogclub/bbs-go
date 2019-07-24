@@ -81,6 +81,14 @@ func (this *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, t
 	}
 }
 
+func (this *articleTagRepository) RemoveArticleTags(db *gorm.DB, articleId int64) {
+	if articleId <= 0 {
+		return
+	}
+
+	db.Where("article_id = ?", articleId).Delete(model.ArticleTag{})
+}
+
 func (this *articleTagRepository) GetUnique(db *gorm.DB, articleId, tagId int64) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := db.First(ret, "article_id = ? and tag_id = ?", articleId, tagId).Error; err != nil {

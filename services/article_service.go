@@ -91,6 +91,19 @@ func (this *articleService) GetArticleInIds(articleIds []int64) []model.Article 
 	return articles
 }
 
+// 获取文章对应的标签
+func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
+	articleTags, err := repositories.ArticleTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("article_id = ?", articleId))
+	if err != nil {
+		return nil
+	}
+	var tagIds []int64
+	for _, articleTag := range articleTags {
+		tagIds = append(tagIds, articleTag.TagId)
+	}
+	return cache.TagCache.GetList(tagIds)
+}
+
 // 标签文章列表
 func (this *articleService) GetTagArticles(tagId int64, page int) (articles []model.Article, paging *simple.Paging) {
 	articleTags, paging := repositories.ArticleTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
@@ -161,26 +174,30 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	return
 }
 
-// 添加文章标签
-func (this *articleService) AddArticleTag(articleId, tagId int64) {
-	articleTag := repositories.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
-	if articleTag != nil {
-		return
+// 修改文章
+func (this *articleService) Edit(articleId int64, tags []string, title, content string) *simple.CodeError {
+	if len(title) == 0 {
+		return simple.NewErrorMsg("请输入标题")
 	}
-	_ = repositories.ArticleTagRepository.Create(simple.GetDB(), &model.ArticleTag{
-		ArticleId:  articleId,
-		TagId:      tagId,
-		CreateTime: simple.NowTimestamp(),
-	})
-}
+	if len(content) == 0 {
+		return simple.NewErrorMsg("请填写文章内容")
+	}
 
-// 删除文章标签
-func (this *articleService) DelArticleTag(articleId, tagId int64) {
-	articleTag := repositories.ArticleTagRepository.GetUnique(simple.GetDB(), articleId, tagId)
-	if articleTag == nil {
-		return
-	}
-	repositories.ArticleTagRepository.Delete(simple.GetDB(), articleTag.Id)
+	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		err := repositories.ArticleRepository.Updates(simple.GetDB(), articleId, map[string]interface{}{
+			"title":   title,
+			"content": content,
+		})
+		if err != nil {
+			return err
+		}
+		repositories.ArticleTagRepository.RemoveArticleTags(tx, articleId)      // 先删掉所有的标签
+		repositories.ArticleTagRepository.AddArticleTags(tx, articleId, tagIds) // 然后重新添加标签
+		return nil
+	})
+	cache.ArticleTagCache.Invalidate(articleId)
+	return simple.NewError2(err)
 }
 
 // 相关文章
