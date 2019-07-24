@@ -24,7 +24,10 @@
         </div>
         <div v-if="showRecommendTags" class="recommend-tags">
             <div class="tags-container">
-                <div class="tip">推荐标签</div>
+                <div class="header">
+                    <span>推荐标签</span>
+                    <span class="close-recommend"><i class="iconfont icon-close" @click="closeRecommendTags"></i></span>
+                </div>
                 <a v-for="tag in recommendTags" :key="tag" @click="addRecommendTag(tag)" class="tag-item" v-text="tag"></a>
             </div>
         </div>

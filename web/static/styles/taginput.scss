@@ -100,7 +100,7 @@
       border-bottom: 1px solid #dbdbdb;
       padding: 0 10px 10px 10px;
 
-      .tip {
+      .header {
         font-weight: bold;
         font-size: 15px;
         color: #017E66;
@@ -108,6 +108,14 @@
         margin-bottom: 5px;
         padding-top: 5px;
         padding-bottom: 5px;
+
+        .close-recommend {
+          float: right;
+          cursor: pointer;
+          &:hover {
+            color: red;
+          }
+        }
       }
 
       .tag-item {
