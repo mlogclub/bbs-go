@@ -41,9 +41,6 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 	if services.TagService.GetByName(t.Name) != nil {
 		return simple.ErrorMsg("标签「" + t.Name + "」已存在")
 	}
-	if t.CategoryId <= 0 {
-		return simple.ErrorMsg("请选择标签分类")
-	}
 
 	t.Status = model.TagStatusOk
 	t.CreateTime = simple.NowTimestamp()
@@ -76,9 +73,6 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 	}
 	if tmp := services.TagService.GetByName(t.Name); tmp != nil && tmp.Id != id {
 		return simple.ErrorMsg("标签「" + t.Name + "」已存在")
-	}
-	if t.CategoryId <= 0 {
-		return simple.ErrorMsg("请选择标签分类")
 	}
 
 	t.UpdateTime = simple.NowTimestamp()

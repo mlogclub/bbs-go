@@ -54,12 +54,6 @@
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="分类" prop="categoryId">
-          <el-select v-model="addForm.categoryId" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
@@ -77,12 +71,6 @@
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-input v-model="editForm.id" type="hidden"></el-input>
-        <el-form-item label="分类" prop="categoryId">
-          <el-select v-model="editForm.categoryId" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
@@ -116,8 +104,6 @@
         page: {},
         filters: {},
 
-        options: [],
-
         addForm: {
           categoryId: 0,
           name: '',
@@ -141,7 +127,6 @@
     },
     mounted() {
       this.list()
-      this.loadOptions()
     },
     methods: {
       list() {
@@ -160,16 +145,6 @@
           })
           .finally(() => {
             me.listLoading = false
-          })
-      },
-      loadOptions() {
-        let me = this
-        HttpClient.get("/api/admin/category/options")
-          .then(data => {
-            me.options = data
-          })
-          .catch(rsp => {
-            console.error(rsp)
           })
       },
       handleAdd() {

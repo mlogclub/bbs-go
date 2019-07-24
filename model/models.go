@@ -91,7 +91,6 @@ type Category struct {
 // 标签
 type Tag struct {
 	Model
-	CategoryId  int64  `gorm:"index:idx_category_id;not null" json:"categoryId" form:"categoryId"`
 	Name        string `gorm:"size:32;unique;not null" json:"name" form:"name"`
 	Description string `gorm:"size:1024" json:"description" form:"description"`
 	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`

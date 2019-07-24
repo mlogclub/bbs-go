@@ -7,6 +7,12 @@
           <el-input v-model="filters.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
+          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="禁用" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" v-on:click="list">查询</el-button>
         </el-form-item>
         <el-form-item>
