@@ -99,12 +99,11 @@
 </template>
 
 <script>
-  import TagApi from '../../apis/TagApi'
-  import CategoryApi from '../../apis/CategoryApi'
+  import HttpClient from '@/apis/HttpClient'
 
   export default {
     name: 'List',
-    data () {
+    data() {
       return {
         results: [],
         listLoading: false,
@@ -134,15 +133,21 @@
         editLoading: false,
       }
     },
-    mounted () {
+    mounted() {
       this.list()
       this.loadOptions()
     },
     methods: {
-      list () {
+      list() {
         let me = this
         me.listLoading = true
-        TagApi.list()
+
+        let params = Object.assign(me.filters, {
+          page: me.page.page,
+          limit: me.page.limit
+        })
+
+        HttpClient.post('/api/admin/tag/list', params)
           .then(data => {
             me.results = data.results
             me.page = data.page
@@ -151,9 +156,9 @@
             me.listLoading = false
           })
       },
-      loadOptions () {
+      loadOptions() {
         let me = this
-        CategoryApi.options()
+        HttpClient.get("/api/admin/category/options")
           .then(data => {
             me.options = data
           })
@@ -161,7 +166,7 @@
             console.error(rsp)
           })
       },
-      handleAdd () {
+      handleAdd() {
         this.addForm = {
           categoryId: '',
           name: '',
@@ -169,9 +174,9 @@
         }
         this.addFormVisible = true
       },
-      addSubmit () {
+      addSubmit() {
         let me = this
-        TagApi.create(this.addForm)
+        HttpClient.post('/api/admin/tag/create', this.addForm)
           .then(data => {
             me.$message({message: '提交成功', type: 'success'})
             me.addFormVisible = false
@@ -181,9 +186,9 @@
             me.$notify.error({title: '错误', message: rsp.message})
           })
       },
-      handleEdit (index, row) {
+      handleEdit(index, row) {
         let me = this
-        TagApi.get(row.id)
+        HttpClient.get("/api/admin/tag/" + row.id)
           .then(data => {
             me.editForm = Object.assign({}, data)
             me.editFormVisible = true
@@ -192,9 +197,9 @@
             me.$notify.error({title: '错误', message: rsp.message})
           })
       },
-      editSubmit () {
+      editSubmit() {
         let me = this
-        TagApi.update(me.editForm)
+        HttpClient.post("/api/admin/tag/update", me.editForm)
           .then(data => {
             me.list()
             me.editFormVisible = false

@@ -166,7 +166,6 @@
 <script>
   import config from '../../apis/Config'
   import HttpClient from '../../apis/HttpClient'
-  import TagApi from '../../apis/TagApi'
   import MarkdownEditor from '../../components/MarkdownEditor'
   import HtmlEditor from '../../components/HtmlEditor'
 

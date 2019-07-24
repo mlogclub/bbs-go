@@ -89,7 +89,7 @@
 </template>
 
 <script>
-  import CategoryApi from '../../apis/CategoryApi';
+  import HttpClient from '@/apis/HttpClient'
 
   export default {
     name: 'List',
@@ -130,7 +130,7 @@
           page: me.page.page,
           limit: me.page.limit,
         });
-        CategoryApi.list(params)
+        HttpClient.post('/api/admin/category/list', params)
           .then((data) => {
             me.results = data.results;
             me.page = data.page;
@@ -156,7 +156,7 @@
       },
       addSubmit() {
         const me = this;
-        CategoryApi.create(this.addForm)
+        HttpClient.post('/api/admin/category/create', me.addForm)
           .then((data) => {
             me.$message({message: '提交成功', type: 'success'});
             me.addFormVisible = false;
@@ -168,7 +168,7 @@
       },
       handleEdit(index, row) {
         const me = this;
-        CategoryApi.get(row.id)
+        HttpClient.get("/api/admin/category/" + row.id)
           .then((data) => {
             me.editForm = Object.assign({}, data);
             me.editFormVisible = true;
@@ -179,7 +179,7 @@
       },
       editSubmit() {
         const me = this;
-        CategoryApi.update(me.editForm)
+        HttpClient.post("/api/admin/category/update", me.editForm)
           .then((data) => {
             me.list();
             me.editFormVisible = false;
