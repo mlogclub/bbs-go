@@ -25,17 +25,6 @@
                             </li>
                             {{if .CurrentUser}}
                                 {{if eq .User.Id .CurrentUser.Id}}
-                                    <li {{if eq .Tab "tags"}}class="is-active"{{end}}>
-                                        <a href="{{baseUrl}}/user/{{.User.Id}}?tab=tags">
-                                            <span class="icon is-small"><i class="iconfont icon-tags"
-                                                                           aria-hidden="true"></i></span>
-                                            <span>标签</span>
-                                        </a>
-                                    </li>
-                                {{end}}
-                            {{end}}
-                            {{if .CurrentUser}}
-                                {{if eq .User.Id .CurrentUser.Id}}
                                     <li {{if eq .Tab "messages"}}class="is-active"{{end}}>
                                         <a href="{{baseUrl}}/user/{{.User.Id}}?tab=messages">
                                         <span class="icon is-small"><i class="iconfont icon-message"
@@ -86,40 +75,6 @@
                     {{else if eq .Tab "topics"}}
                         <div class="notification is-primary" style="margin-top: 10px;">
                             暂无内容...
-                        </div>
-                    {{end}}
-
-                    {{if eq .Tab "tags"}}
-                        <div style="padding-top: 10px;">
-                            <div style="float:right; padding-bottom: 10px;">
-                                <a class="button is-primary" href="{{baseUrl}}/tag/add">
-                                    <span class="icon is-small"><i class="iconfont icon-edit"></i></span>
-                                    <span>添加标签</span>
-                                </a>
-                            </div>
-                            <div>
-                                <table class="table is-fullwidth is-bordered is-hoverable">
-                                    <thead>
-                                    <tr>
-                                        <th>标签</th>
-                                        <th>文章数量</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    {{if .Tags}}
-                                        {{range .Tags}}
-                                            <tr>
-                                                <td>{{.TagName}}</td>
-                                                <td>0</td>
-                                                <td><a class="button is-light">删除</a></td>
-                                            </tr>
-                                        {{end}}
-                                    {{end}}
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     {{end}}
 

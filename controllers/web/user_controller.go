@@ -49,8 +49,6 @@ func (this *UserController) GetBy(userId int64) {
 	} else if tab == "topics" {
 		topics, _ = services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).
 			Order("id desc").Size(10))
-	} else if tab == "tags" && owner {
-		tags = services.UserArticleTagService.GetUserTags(userId)
 	} else if tab == "messages" && owner {
 		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?", userId).Order("id desc").Size(10))
 	} else if tab == "favorites" && owner {
@@ -380,42 +378,6 @@ func GetUserArticles(ctx context.Context) {
 		"PrePageUrl":       utils.BuildUserArticlesUrl(userId, page-1),
 		"NextPageUrl":      utils.BuildUserArticlesUrl(userId, page+1),
 		model.TplSiteTitle: user.Nickname + " - 文章列表",
-	})
-}
-
-// 用户中心 - 用户所有的标签
-func GetUserTags(ctx context.Context) {
-	user := session.GetCurrentUser(ctx)
-	userId := ctx.Params().GetInt64Default("userId", 0)
-	page := ctx.Params().GetIntDefault("page", 1)
-
-	// 用户必须登录
-	if user == nil {
-		ctx.Redirect("/user/signin", iris.StatusSeeOther)
-		return
-	}
-
-	// 只能查看自己的收藏
-	if userId != user.Id {
-		ctx.StatusCode(403)
-		return
-	}
-
-	list, paging := services.UserArticleTagService.Query(simple.NewParamQueries(ctx).Eq("user_id", userId).
-		Page(page, 20).Desc("id"))
-
-	var tags []model.Tag
-	if len(list) > 0 {
-		for _, v := range list {
-			tags = append(tags, *cache.TagCache.Get(v.TagId))
-		}
-	}
-
-	render.View(ctx, "user/tags.html", iris.Map{
-		"User":             render.BuildUser(user),
-		"Tags":             render.BuildTags(tags),
-		"Page":             paging,
-		model.TplSiteTitle: user.Nickname + " - 标签列表",
 	})
 }
 

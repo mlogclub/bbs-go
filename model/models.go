@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&UserArticleTag{}, &Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{}, &SysConfig{},
+	&Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{}, &SysConfig{},
 }
 
 type Model struct {
@@ -120,13 +120,6 @@ type ArticleTag struct {
 	ArticleId  int64 `gorm:"not null" json:"articleId" form:"articleId"` // 文章编号
 	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`         // 标签编号
 	CreateTime int64 `json:"createTime" form:"createTime"`               // 创建时间
-}
-
-// 用户文章标签
-type UserArticleTag struct {
-	Model
-	UserId int64 `gorm:"not null" json:"userId" form:"userId"` // 用户编号
-	TagId  int64 `gorm:"not null" json:"tagId" form:"tagId"`   // 标签编号
 }
 
 // 评论

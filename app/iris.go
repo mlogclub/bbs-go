@@ -93,8 +93,6 @@ func InitIris() {
 			m.Router.Get("/user/{userId:int64}/articles/{page:int}", web.GetUserArticles)
 			m.Router.Get("/user/{userId:int64}/topics", web.GetUserTopics)
 			m.Router.Get("/user/{userId:int64}/topics/{page:int}", web.GetUserTopics)
-			m.Router.Get("/user/{userId:int64}/tags", web.GetUserTags)
-			m.Router.Get("/user/{userId:int64}/tags/{page:int}", web.GetUserTags)
 			m.Router.Get("/user/{userId:int64}/messages", web.GetUserMessages)
 			m.Router.Get("/user/{userId:int64}/messages/{page:int}", web.GetUserMessages)
 			m.Router.Get("/user/{userId:int64}/favorites", web.GetUserFavorites)

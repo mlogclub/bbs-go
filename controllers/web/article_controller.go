@@ -65,12 +65,7 @@ func (this *ArticleController) GetCreate() {
 		this.Ctx.Redirect("/user/signin?redirectUrl=/article/create", iris.StatusTemporaryRedirect)
 		return
 	}
-
-	tags := services.UserArticleTagService.GetUserTags(user.Id)
-
-	render.View(this.Ctx, "article/create.html", iris.Map{
-		"Tags": render.BuildTags(tags),
-	})
+	render.View(this.Ctx, "article/create.html", iris.Map{})
 }
 
 // 创建文章
@@ -124,9 +119,9 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 	render.View(this.Ctx, "article/edit.html", iris.Map{
 		"Article": iris.Map{
 			"ArticleId": article.Id,
-			"Title":   article.Title,
-			"Content": article.Content,
-			"Tags":    tagNames,
+			"Title":     article.Title,
+			"Content":   article.Content,
+			"Tags":      tagNames,
 		},
 	})
 }
