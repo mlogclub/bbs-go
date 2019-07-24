@@ -42,6 +42,11 @@
         <div class="summary">
           {{item.summary}}
         </div>
+        <div class="article-footer">
+          <span class="danger" v-if="item.status === 1">已删除</span>
+          <span class="info">编号：{{item.id}}</span>
+          <a class="btn" @click="deleteSubmit(item)">删除</a>
+        </div>
       </div>
 
     </div>
@@ -288,6 +293,17 @@
             me.$notify.error({title: '错误', message: rsp.message})
           })
       },
+      deleteSubmit(row) {
+        let me = this
+        HttpClient.post('/api/admin/article/delete', {id: row.id})
+          .then(data => {
+            me.$message({message: '删除成功', type: 'success'})
+            me.list()
+          })
+          .catch(rsp => {
+            me.$notify.error({title: '错误', message: rsp.message})
+          })
+      },
       doCollect() {
         let me = this
         if (!me.collectUrl) {
@@ -407,6 +423,32 @@
         font-size: 12px;
         font-weight: 400;
         line-height: 1.5;
+      }
+
+      .article-footer {
+        text-align: right;
+
+        span.info {
+          font-size: 12px;
+          margin-right: 10px;
+          background: #eee;
+          padding: 2px 5px 2px 5px;
+        }
+
+        span.danger {
+          font-size: 12px;
+          margin-right: 10px;
+          background: #eee;
+          color: red;
+          padding: 2px 5px 2px 5px;
+        }
+
+        a.btn {
+          font-size: 12px;
+          margin-right: 10px;
+          color: blue;
+          cursor: pointer;
+        }
       }
     }
 

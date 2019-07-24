@@ -50,19 +50,35 @@ func (this *articleService) Query(queries *simple.ParamQueries) (list []model.Ar
 }
 
 func (this *articleService) Update(t *model.Article) error {
-	return repositories.ArticleRepository.Update(simple.GetDB(), t)
+	err := repositories.ArticleRepository.Update(simple.GetDB(), t)
+	if err == nil {
+		cache.ArticleCache.InvalidateIndexList()
+	}
+	return err
 }
 
 func (this *articleService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ArticleRepository.Updates(simple.GetDB(), id, columns)
+	err := repositories.ArticleRepository.Updates(simple.GetDB(), id, columns)
+	if err == nil {
+		cache.ArticleCache.InvalidateIndexList()
+	}
+	return err
 }
 
 func (this *articleService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	if err == nil {
+		cache.ArticleCache.InvalidateIndexList()
+	}
+	return err
 }
 
 func (this *articleService) Delete(id int64) error {
-	return repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
+	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
+	if err == nil {
+		cache.ArticleCache.InvalidateIndexList()
+	}
+	return err
 }
 
 // 根据文章编号批量获取文章

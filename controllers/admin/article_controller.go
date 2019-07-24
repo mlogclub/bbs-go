@@ -109,7 +109,10 @@ func (this *ArticleController) PostDelete() *simple.JsonResult {
 	if id <= 0 {
 		return simple.ErrorMsg("id is required")
 	}
-	services.ArticleService.UpdateColumn(id, "status", model.ArticleStatusDeleted)
+	err := services.ArticleService.Delete(id)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 	return simple.Success()
 }
 
