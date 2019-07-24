@@ -103,3 +103,20 @@ article {
   margin-top: 20px;
   word-break: break-all;
 }
+
+.article-related {
+  margin-top: 20px;
+  //border-top: 2px solid #009A61;
+
+  .widget > .header {
+    color: #000;
+    font-size: 20px;
+  }
+
+  //.widget > .content {
+  //  a {
+  //    font-weight: bold;
+  //    color: #009a61;
+  //  }
+  //}
+}

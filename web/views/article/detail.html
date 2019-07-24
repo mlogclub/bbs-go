@@ -98,6 +98,43 @@
 
                     {{template "comment/index.html" .}}
 
+                    <div class="columns article-related">
+                        <div class="column">
+                            {{if .NewestArticles}}
+                                <div class="widget">
+                                    <div class="header">最新文章</div>
+                                    <div class="content">
+                                        <ul>
+                                            {{range .NewestArticles}}
+                                                <li>
+                                                    <a href="{{articleUrl .ArticleId}}" title="{{.Title}}"
+                                                       target="_blank">{{.Title}}</a>
+                                                </li>
+                                            {{end}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {{end}}
+                        </div>
+                        <div class="column">
+                            {{if .RelatedArticles}}
+                                <div class="widget">
+                                    <div class="header">相关文章</div>
+                                    <div class="content">
+                                        <ul>
+                                            {{range .RelatedArticles}}
+                                                <li>
+                                                    <a href="{{articleUrl .ArticleId}}" title="{{.Title}}"
+                                                       target="_blank">{{.Title}}</a>
+                                                </li>
+                                            {{end}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {{end}}
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="column is-3">
@@ -143,37 +180,6 @@
                     </div>
                     {{end}}
                     */}}
-                    {{if .NewestArticles}}
-                        <div class="widget">
-                            <div class="header">最新文章</div>
-                            <div class="content">
-                                <ul>
-                                    {{range .NewestArticles}}
-                                        <li>
-                                            <a href="{{articleUrl .ArticleId}}" title="{{.Title}}"
-                                               target="_blank">{{.Title}}</a>
-                                        </li>
-                                    {{end}}
-                                </ul>
-                            </div>
-                        </div>
-                    {{end}}
-
-                    {{if .RelatedArticles}}
-                        <div class="widget">
-                            <div class="header">相关文章</div>
-                            <div class="content">
-                                <ul>
-                                    {{range .RelatedArticles}}
-                                        <li>
-                                            <a href="{{articleUrl .ArticleId}}" title="{{.Title}}"
-                                               target="_blank">{{.Title}}</a>
-                                        </li>
-                                    {{end}}
-                                </ul>
-                            </div>
-                        </div>
-                    {{end}}
                 </div>
             </div>
         </div>
