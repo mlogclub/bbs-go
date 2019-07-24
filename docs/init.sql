@@ -10,4 +10,5 @@ INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`
 insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `update_time`) values
     ('site.title', 'M-LOG', '站点标题', '站点标题', 1555419028975, 1555419028975),
     ('site.description', 'M-LOG社区，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
-    ('site.keywords', 'M-LOG,Go语言', '站点关键字', '站点关键字', 1555419028975, 1555419028975);
+    ('site.keywords', 'M-LOG,Go语言', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
+    ('recommend.tags', '', '推荐标签', '推荐标签，多个标签之间用英文逗号分隔', 1555419028975, 1555419028975);

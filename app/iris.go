@@ -105,6 +105,9 @@ func InitIris() {
 			m.Router.Get("/tags", web.GetTags)
 			m.Router.Get("/tags/{page:int}", web.GetTags)
 
+			// 配置
+			m.Party("/config").Handle(new(web.ConfigController))
+
 			m.Router.Get("/redirect", func(ctx context.Context) {
 				url := ctx.FormValue("url")
 				render.View(ctx, "redirect.html", iris.Map{

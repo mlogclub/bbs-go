@@ -10,21 +10,33 @@
            @keydown.delete="removeTag" @keydown.enter="addTag"
            @keydown.32="addTag" @keydown.186="addTag" @keydown.188="addTag"
            @keydown.38="selectUp" @keydown.40="selectDown"
+           @focus="openRecommendTags"
+           @click="openRecommendTags"
            placeholder="标签（请用逗号分隔每个标签，最多4个，每个最长15字符）">
-    <div v-if="autocompleteTags.length > 0" class="autocomplete">
-        <div class="ac-container">
-            <section class="ac-section">
-                <div v-for="(item, index) in autocompleteTags" :key="item" class="ac-item"
+    <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
+        <div class="tags-container">
+            <section class="tag-section">
+                <div v-for="(item, index) in autocompleteTags" :key="item" class="tag-item"
                      :class="{active: index === selectIndex}" @click="selectTag(index)" v-text="item"></div>
             </section>
+        </div>
+    </div>
+    <div v-if="showRecommendTags" class="recommend-tags">
+        <div class="tags-container">
+            <div class="tip">推荐标签</div>
+            <a v-for="tag in recommendTags" :key="tag" @click="addRecommendTag(tag)" class="tag-item" v-text="tag"></a>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-  var app = new Vue({
+  new Vue({
     el: '#select-tags',
     data: {
+      maxTagCount: 5, // 最多可以选择的标签数量
+      maxWordCount: 15, // 每个标签最大字数
+      showRecommendTags: false, // 是否显示推荐
+      recommendTags: [], // 推荐标签
       inputTag: '',
       tags: [
           {{if .}} {{range .}} '{{.}}', {{end}} {{end}}
@@ -33,6 +45,7 @@
       selectIndex: -1
     },
     mounted() {
+      this.getRecommendTags()
     },
     methods: {
       removeTag(event, tag) {
@@ -72,32 +85,56 @@
         }
 
         if (this.selectIndex >= 0 && this.autocompleteTags.length > this.selectIndex) {
-          this._addTag(this.autocompleteTags[this.selectIndex]);
+          this.addTagName(this.autocompleteTags[this.selectIndex]);
           this.autocompleteTags = [];
           this.selectIndex = -1;
         } else {
-          this._addTag(this.inputTag);
+          this.addTagName(this.inputTag);
         }
       },
 
-      _addTag(tagName) {
+      /**
+       * 添加推荐标签
+       * @param tagName
+       */
+      addRecommendTag(tagName) {
+        if (this.addTagName(tagName)) {
+          this.closeRecommendTags()
+        }
+      },
+
+      /**
+       * 添加标签
+       * @param tagName 标签名称
+       * @returns {boolean} 是否成功
+       */
+      addTagName(tagName) {
         if (!tagName) {
-          return;
-        }
-        if (this.tags.length >= 4) { // 最多四个标签
-          return;
-        }
-        if (tagName.length > 15) { // 每个标签最多15个字符
-          return;
+          return false
         }
 
-        if (this.tags.indexOf(tagName) === -1) {
-          this.tags.push(tagName);
+        // 最多四个标签
+        if (this.tags.length >= this.maxTagCount) {
+          return false
         }
+
+        // 每个标签最多15个字符
+        if (tagName.length > this.maxWordCount) {
+          return false
+        }
+
+        // 标签已经存在
+        if (this.tags.indexOf(tagName) !== -1) {
+          return false
+        }
+
+        this.tags.push(tagName);
         this.inputTag = ''
+        return true
       },
 
       autocomplete() {
+        this.closeRecommendTags()
         this.selectIndex = -1
         if (!this.inputTag) {
           this.autocompleteTags = []
@@ -138,6 +175,27 @@
           return
         }
         this.selectIndex++
+      },
+
+      // 关闭推荐
+      openRecommendTags() {
+        this.showRecommendTags = true
+      },
+
+      // 开启推荐
+      closeRecommendTags() {
+        this.showRecommendTags = false
+      },
+
+      // 加载推荐标签
+      getRecommendTags() {
+        let me = this
+        httpGet('/config/recommendtags')
+          .then(data => {
+            if (data && data.length) {
+              me.recommendTags = data
+            }
+          })
       }
     }
   })

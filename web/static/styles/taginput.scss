@@ -44,7 +44,7 @@
     }
   }
 
-  .autocomplete {
+  .autocomplete-tags {
     z-index: 999;
     left: 0;
     right: 0;
@@ -55,7 +55,7 @@
     //overflow-y: auto;
     //scroll-behavior: smooth;
 
-    .ac-container {
+    .tags-container {
       scroll-behavior: smooth;
       position: relative;
       background: #f7f7f7;
@@ -63,11 +63,11 @@
       border-right: 1px solid #dbdbdb;
       border-bottom: 1px solid #dbdbdb;
 
-      .ac-section {
+      .tag-section {
         font-size: 14px;
         line-height: 16px;
 
-        .ac-item {
+        .tag-item {
           padding: 8px 15px;
           cursor: pointer;
 
@@ -76,6 +76,70 @@
             background: #006bde;
           }
         }
+      }
+    }
+  }
+
+  .recommend-tags {
+    z-index: 999;
+    left: 0;
+    right: 0;
+    top: 38px;
+    bottom: 0;
+    position: absolute;
+    //height: 100px;
+    //overflow-y: auto;
+    //scroll-behavior: smooth;
+
+    .tags-container {
+      scroll-behavior: smooth;
+      position: relative;
+      background: #f7f7f7;
+      border-left: 1px solid #dbdbdb;
+      border-right: 1px solid #dbdbdb;
+      border-bottom: 1px solid #dbdbdb;
+      padding: 0 10px 10px 10px;
+
+      .tip {
+        font-weight: bold;
+        font-size: 15px;
+        color: #017E66;
+        border-bottom: 1px solid #dbdbdb;
+        margin-bottom: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      .tag-item {
+        padding: 0 11px;
+        border-radius: 11px;
+        display: inline-block;
+        color: #017E66;
+        background-color: rgba(1, 126, 102, 0.08);
+        height: 22px;
+        line-height: 22px;
+        font-weight: normal;
+        font-size: 13px;
+        text-align: center;
+
+        &:not(:last-child) {
+          margin-right: 5px;
+        }
+
+        img {
+          width: 16px;
+          height: 16px;
+          margin-right: 5px;
+          margin-top: -1px;
+          vertical-align: middle;
+        }
+      }
+
+      .tag-item:hover,
+      .tag-item:focus {
+        background-color: #017e66;
+        color: #fff;
+        text-decoration: none;
       }
     }
   }

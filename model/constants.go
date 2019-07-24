@@ -5,6 +5,7 @@ var (
 	SysConfigSiteTitle       = "site.title"
 	SysConfigSiteDescription = "site.description"
 	SysConfigSiteKeywords    = "site.keywords"
+	SysConfigRecommendTags   = "recommend.tags"
 
 	// 模版全局变量
 	TplCurrentUser     = "CurrentUser"
