@@ -22,7 +22,7 @@ func (this *TagController) GetBy(id int64) *simple.JsonResult {
 
 func (this *TagController) AnyList() *simple.JsonResult {
 	list, paging := services.TagService.Query(simple.NewParamQueries(this.Ctx).
-		EqAuto("category_id").
+		LikeAuto("name").
 		EqAuto("status").
 		PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
@@ -30,7 +30,10 @@ func (this *TagController) AnyList() *simple.JsonResult {
 
 func (this *TagController) PostCreate() *simple.JsonResult {
 	t := &model.Tag{}
-	this.Ctx.ReadForm(t)
+	err := this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
 	if len(t.Name) == 0 {
 		return simple.ErrorMsg("name is required")
@@ -46,7 +49,7 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 	t.CreateTime = simple.NowTimestamp()
 	t.UpdateTime = simple.NowTimestamp()
 
-	err := services.TagService.Create(t)
+	err = services.TagService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -63,7 +66,10 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg("entity not found")
 	}
 
-	this.Ctx.ReadForm(t)
+	err = this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
 	if len(t.Name) == 0 {
 		return simple.ErrorMsg("name is required")

@@ -24,6 +24,7 @@ func (this *CategoryController) GetBy(id int64) *simple.JsonResult {
 
 func (this *CategoryController) AnyList() *simple.JsonResult {
 	list, paging := services.CategoryService.Query(simple.NewParamQueries(this.Ctx).
+		LikeAuto("name").
 		EqAuto("status").
 		PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
@@ -31,7 +32,10 @@ func (this *CategoryController) AnyList() *simple.JsonResult {
 
 func (this *CategoryController) PostCreate() *simple.JsonResult {
 	t := &model.Category{}
-	this.Ctx.ReadForm(t)
+	err := this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
 	if len(t.Name) == 0 {
 		return simple.ErrorMsg("name is required")
@@ -45,7 +49,7 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 	t.CreateTime = simple.NowTimestamp()
 	t.UpdateTime = simple.NowTimestamp()
 
-	err := services.CategoryService.Create(t)
+	err = services.CategoryService.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -62,7 +66,10 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg("entity not found")
 	}
 
-	this.Ctx.ReadForm(t)
+	err := this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
 	if len(t.Name) == 0 {
 		return simple.ErrorMsg("name is required")
@@ -74,7 +81,7 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 
 	t.UpdateTime = simple.NowTimestamp()
 
-	err := services.CategoryService.Update(t)
+	err = services.CategoryService.Update(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
