@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/mlogclub/mlog/controllers/api"
 	"github.com/mlogclub/mlog/controllers/web"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services/cache"
@@ -65,6 +66,7 @@ func InitIris() {
 	handleViews(app)
 
 	{
+		// web
 		mvc.Configure(app.Party("/"), func(m *mvc.Application) {
 			m.Router.Use(middleware.NewGlobalMiddleware())
 
@@ -115,6 +117,13 @@ func InitIris() {
 			})
 		})
 
+		// api
+		mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
+			m.Party("/topic").Handle(new(api.TopicController))
+			m.Party("/login").Handle(new(api.LoginController))
+		})
+
+		// admin
 		mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 			m.Router.Use(middleware.AdminAuthHandler)
 			m.Party("/user").Handle(new(admin.UserController))

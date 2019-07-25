@@ -1,11 +1,12 @@
 package github
 
 import (
-	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"gopkg.in/resty.v1"
+
+	"github.com/mlogclub/mlog/utils/config"
 )
 
 var OauthConfig *oauth2.Config
@@ -14,7 +15,7 @@ func InitConfig() {
 	OauthConfig = &oauth2.Config{
 		ClientID:     config.Conf.Github.ClientID,
 		ClientSecret: config.Conf.Github.ClientSecret,
-		RedirectURL:  config.Conf.BaseUrl + "/user/github/callback",
+		RedirectURL:  "http://localhost:3000/user/github/callback", // RedirectURL:  config.Conf.BaseUrl + "/user/github/callback",
 		Scopes:       []string{"public_repo", "user"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://github.com/login/oauth/authorize",

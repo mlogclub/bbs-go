@@ -7,8 +7,6 @@ import (
 )
 
 func Key2Int64(key cache.Key) int64 {
-	// str := key.(string)
-	// return ToInt64(str)
 	return key.(int64)
 }
 

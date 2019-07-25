@@ -1,0 +1,64 @@
+
+package admin
+
+import (
+	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/simple"
+	"github.com/kataras/iris"
+	"strconv"
+)
+
+type UserTokenController struct {
+	Ctx             iris.Context
+}
+
+func (this *UserTokenController) GetBy(id int64) *simple.JsonResult {
+	t := services.UserTokenService.Get(id)
+	if t == nil {
+		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+	}
+	return simple.JsonData(t)
+}
+
+func (this *UserTokenController) AnyList() *simple.JsonResult {
+	list, paging := services.UserTokenService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
+}
+
+func (this *UserTokenController) PostCreate() *simple.JsonResult {
+	t := &model.UserToken{}
+	err := this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+
+	err = services.UserTokenService.Create(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.JsonData(t)
+}
+
+func (this *UserTokenController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(this.Ctx, "id")
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	t := services.UserTokenService.Get(id)
+	if t == nil {
+		return simple.ErrorMsg("entity not found")
+	}
+
+	err = this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+
+	err = services.UserTokenService.Update(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.JsonData(t)
+}
+
