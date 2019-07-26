@@ -123,6 +123,7 @@ func InitIris() {
 			m.Party("/topic").Handle(new(api.TopicController))
 			m.Party("/login").Handle(new(api.LoginController))
 			m.Party("/user").Handle(new(api.UserController))
+			m.Party("/tag").Handle(new(api.TagController))
 		})
 
 		// admin
