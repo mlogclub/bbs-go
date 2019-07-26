@@ -9,6 +9,7 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/utils/session"
 )
 
 type TopicController struct {
@@ -60,4 +61,17 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 	}
 	topics, paging := services.TopicService.GetTagTopics(tagId, page)
 	return simple.JsonPageData(render.BuildTopics(topics), paging)
+}
+
+// 收藏
+func (this *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
+
+	if user == nil {
+		return simple.Error(simple.ErrorNotLogin)
+	}
+	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.Success()
 }
