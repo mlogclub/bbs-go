@@ -1,16 +1,17 @@
 package app
 
 import (
-	"github.com/mlogclub/mlog/controllers/api"
-	"github.com/mlogclub/mlog/controllers/web"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/config"
 	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/mlogclub/mlog/controllers/api"
+	"github.com/mlogclub/mlog/controllers/web"
+	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/config"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
@@ -121,6 +122,7 @@ func InitIris() {
 		mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
 			m.Party("/topic").Handle(new(api.TopicController))
 			m.Party("/login").Handle(new(api.LoginController))
+			m.Party("/user").Handle(new(api.UserController))
 		})
 
 		// admin

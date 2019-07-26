@@ -14,11 +14,13 @@ type LoginController struct {
 	Ctx iris.Context
 }
 
+// 获取Github授权地址
 func (this *LoginController) GetGithub() *simple.JsonResult {
 	url := github.OauthConfig.AuthCodeURL(simple.Uuid())
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
+// 获取Github回调信息获取
 func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	code := this.Ctx.FormValue("code")
 	githubUser, err := services.GithubUserService.GetGithubUser(code)

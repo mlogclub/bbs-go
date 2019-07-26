@@ -20,8 +20,8 @@ func newUserTokenService() *userTokenService {
 type userTokenService struct {
 }
 
-// 授权
-func (this *userTokenService) Auth(ctx context.Context) *model.User {
+// 获取当前登录用户
+func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
 	token := this.getUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
