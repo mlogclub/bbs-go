@@ -9,7 +9,6 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils/session"
 )
 
 type TopicController struct {
@@ -65,7 +64,7 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 
 // 收藏
 func (this *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
-
+	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
