@@ -48,7 +48,7 @@ func (this *TopicController) GetTopics() *simple.JsonResult {
 		Eq("status", model.TopicStatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
-	return simple.JsonPageData(render.BuildTopics(topics), paging)
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
 }
 
 // 标签帖子列表
@@ -59,7 +59,7 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 		return simple.ErrorMsg(err.Error())
 	}
 	topics, paging := services.TopicService.GetTagTopics(tagId, page)
-	return simple.JsonPageData(render.BuildTopics(topics), paging)
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
 }
 
 // 收藏

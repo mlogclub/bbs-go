@@ -174,10 +174,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
-	// tagIds := cache.ArticleTagCache.Get(article.Id)
-	// tags := cache.TagCache.GetList(tagIds)
-	// rsp.Tags = BuildTags(tags)
-
 	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
@@ -192,6 +188,37 @@ func BuildTopics(topics []model.Topic) []model.TopicResponse {
 	var responses []model.TopicResponse
 	for _, topic := range topics {
 		responses = append(responses, *BuildTopic(&topic))
+	}
+	return responses
+}
+
+func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
+	if topic == nil {
+		return nil
+	}
+
+	rsp := &model.TopicSimpleResponse{}
+
+	rsp.TopicId = topic.Id
+	rsp.Title = topic.Title
+	rsp.User = BuildUserDefaultIfNull(topic.UserId)
+	rsp.LastCommentTime = topic.LastCommentTime
+	rsp.CreateTime = topic.CreateTime
+	rsp.ViewCount = topic.ViewCount
+
+	tags := services.TopicService.GetTopicTags(topic.Id)
+	rsp.Tags = BuildTags(tags)
+	return rsp
+}
+
+
+func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
+	if topics == nil || len(topics) == 0 {
+		return nil
+	}
+	var responses []model.TopicSimpleResponse
+	for _, topic := range topics {
+		responses = append(responses, *BuildSimpleTopic(&topic))
 	}
 	return responses
 }
