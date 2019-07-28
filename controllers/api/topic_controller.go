@@ -55,11 +55,11 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).Order("id desc").Size(20))
+	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).Order("id desc").Size(10))
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
+	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
 // 帖子列表
