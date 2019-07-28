@@ -40,6 +40,15 @@ func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	return simple.JsonData(render.BuildTopic(topic))
 }
 
+// 最新帖子
+func (this *TopicController) GetRecent() *simple.JsonResult {
+	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(20))
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
+}
+
 // 帖子列表
 func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
