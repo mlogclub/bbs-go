@@ -7,8 +7,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils/oss"
-	"github.com/mlogclub/mlog/utils/session"
 )
 
 const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M
@@ -18,7 +18,7 @@ type UploadController struct {
 }
 
 func (this *UploadController) Post() *simple.JsonResult {
-	user := session.GetCurrentUser(this.Ctx)
+	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		return simple.Error(simple.ErrorNotLogin)
 	}
