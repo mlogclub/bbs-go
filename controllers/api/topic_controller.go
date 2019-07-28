@@ -49,6 +49,19 @@ func (this *TopicController) GetRecent() *simple.JsonResult {
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
 }
 
+// 用户最近的帖子
+func (this *TopicController) GetUserRecent() *simple.JsonResult {
+    userId, err := simple.FormValueInt64(this.Ctx,"userId")
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).Order("id desc").Size(20))
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
+}
+
 // 帖子列表
 func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
