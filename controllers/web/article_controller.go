@@ -72,7 +72,7 @@ func (this *ArticleController) GetCreate() {
 func (this *ArticleController) PostCreate() *simple.JsonResult {
 	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	var (
@@ -85,7 +85,7 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	article, err := services.ArticleService.Publish(currentUser.Id, title, summary, content,
 		model.ArticleContentTypeMarkdown, 0, tags, "", false)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }
@@ -130,7 +130,7 @@ func (this *ArticleController) GetEditBy(articleId int64) {
 func (this *ArticleController) PostEdit() *simple.JsonResult {
 	currentUser := session.GetCurrentUser(this.Ctx)
 	if currentUser == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	var (
@@ -142,16 +142,16 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
-		return simple.ErrorMsg("文章不存在")
+		return simple.JsonErrorMsg("文章不存在")
 	}
 
 	if article.UserId != currentUser.Id {
-		return simple.ErrorMsg("无权限")
+		return simple.JsonErrorMsg("无权限")
 	}
 
 	err := services.ArticleService.Edit(articleId, tags, title, content)
 	if err != nil {
-		return simple.Error(err)
+		return simple.JsonError(err)
 	}
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }
@@ -160,36 +160,36 @@ func (this *ArticleController) PostEdit() *simple.JsonResult {
 func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.ArticleStatusDeleted {
-		return simple.ErrorMsg("文章不存在")
+		return simple.JsonErrorMsg("文章不存在")
 	}
 
 	if article.UserId != user.Id {
-		return simple.ErrorMsg("无权限")
+		return simple.JsonErrorMsg("无权限")
 	}
 
 	err := services.ArticleService.Delete(articleId)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 收藏文章
 func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	err := services.FavoriteService.AddArticleFavorite(user.Id, articleId)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 跳转到文章的原始链接
@@ -211,21 +211,21 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 	token := this.Ctx.FormValue("token")
 	data, err := ioutil.ReadFile("/data/publish_token")
 	if err != nil {
-		return simple.ErrorMsg("ReadToken error: " + err.Error())
+		return simple.JsonErrorMsg("ReadToken error: " + err.Error())
 	}
 	token2 := strings.TrimSpace(string(data))
 	logrus.Info("token: " + token + ", token2: " + token2)
 	if token != token2 {
-		return simple.ErrorMsg("Token invalidate")
+		return simple.JsonErrorMsg("Token invalidate")
 	}
 	article := &collect.WxArticle{}
 	err = this.Ctx.ReadJSON(article)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	t, err := collect.NewWxbotApi().Publish(article)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.NewEmptyRspBuilder().Put("id", t.Id).JsonResult()
 }
@@ -244,7 +244,7 @@ func (this *ArticleController) GetBaidu() *simple.JsonResult {
 			return true
 		})
 	}()
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 文章列表

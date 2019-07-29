@@ -16,7 +16,7 @@ type UserTokenController struct {
 func (this *UserTokenController) GetBy(id int64) *simple.JsonResult {
 	t := services.UserTokenService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }

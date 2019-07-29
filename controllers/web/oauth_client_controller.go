@@ -26,13 +26,13 @@ func (c *OauthClientController) Any() {
 func (c *OauthClientController) AnyCallback() {
 	state := c.Ctx.FormValue("state")
 	if state != oauthState {
-		_, _ = c.Ctx.JSON(simple.ErrorMsg("State invalid"))
+		_, _ = c.Ctx.JSON(simple.JsonErrorMsg("State invalid"))
 		return
 	}
 	code := c.Ctx.FormValue("code")
 	token, err := oauth.GetOauthConfig().Exchange(context2.TODO(), code)
 	if err != nil {
-		_, _ = c.Ctx.JSON(simple.ErrorMsg("Code exchange failed with " + err.Error()))
+		_, _ = c.Ctx.JSON(simple.JsonErrorMsg("Code exchange failed with " + err.Error()))
 		return
 	}
 	_, _ = c.Ctx.HTML(oauth.GetSuccessHtml(token, config.Conf.OauthClient.ClientSuccessUrl))
@@ -45,7 +45,7 @@ func (c *OauthClientController) AnyRefresh() *simple.JsonResult {
 	ts := oauth.GetOauthConfig().TokenSource(context2.TODO(), token)
 	newToken, err := ts.Token()
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(newToken)
 }

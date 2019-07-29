@@ -1,12 +1,13 @@
 package web
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils/config"
 	"github.com/mlogclub/mlog/utils/github"
 	"github.com/mlogclub/mlog/utils/session"
-	"strconv"
-	"strings"
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
@@ -139,7 +140,7 @@ func (this *UserController) PostEditBy(userId int64) {
 func (this *UserController) GetCurrent() *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	return simple.JsonData(render.BuildUserById(user.Id))
 }

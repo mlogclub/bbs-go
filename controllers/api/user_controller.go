@@ -21,7 +21,7 @@ func (this *UserController) GetCurrent() *simple.JsonResult {
 	if user != nil {
 		return simple.JsonData(render.BuildUser(user))
 	}
-	return simple.ErrorMsg("未登录")
+	return simple.JsonSuccess()
 }
 
 // 用户详情
@@ -30,26 +30,26 @@ func (this *UserController) GetBy(userId int64) *simple.JsonResult {
 	if user != nil {
 		return simple.JsonData(render.BuildUser(user))
 	}
-	return simple.ErrorMsg("用户不存在")
+	return simple.JsonErrorMsg("用户不存在")
 }
 
 func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	if user.Id != userId {
-		return simple.ErrorMsg("无权限")
+		return simple.JsonErrorMsg("无权限")
 	}
 	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
 	avatar := strings.TrimSpace(simple.FormValue(this.Ctx, "avatar"))
 	description := simple.FormValue(this.Ctx, "description")
 
 	if len(nickname) == 0 {
-		return simple.ErrorMsg("昵称不能为空")
+		return simple.JsonErrorMsg("昵称不能为空")
 	}
 	if len(avatar) == 0 {
-		return simple.ErrorMsg("头像不能为空")
+		return simple.JsonErrorMsg("头像不能为空")
 	}
 
 	err := services.UserService.Updates(user.Id, map[string]interface{}{
@@ -58,9 +58,9 @@ func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
 		"description": description,
 	})
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 未读消息数量

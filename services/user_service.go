@@ -233,7 +233,7 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		return nil
 	})
 	if err != nil {
-		return nil, simple.NewError2(err)
+		return nil, simple.FromError(err)
 	}
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil

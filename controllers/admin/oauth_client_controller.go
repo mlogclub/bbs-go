@@ -15,7 +15,7 @@ type OauthClientController struct {
 func (this *OauthClientController) GetBy(id int64) *simple.JsonResult {
 	t := services.OauthClientService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -29,25 +29,25 @@ func (this *OauthClientController) PostCreate() *simple.JsonResult {
 	t := &model.OauthClient{}
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.ClientId) == 0 {
-		return simple.ErrorMsg("clientId 不能为空")
+		return simple.JsonErrorMsg("clientId 不能为空")
 	}
 	if len(t.ClientSecret) == 0 {
-		return simple.ErrorMsg("clientSecret 不能为空")
+		return simple.JsonErrorMsg("clientSecret 不能为空")
 	}
 	if len(t.Domain) == 0 {
-		return simple.ErrorMsg("domain 不能为空")
+		return simple.JsonErrorMsg("domain 不能为空")
 	}
 	if len(t.CallbackUrl) == 0 {
-		return simple.ErrorMsg("callbackUrl 不能为空")
+		return simple.JsonErrorMsg("callbackUrl 不能为空")
 	}
 
 	err = services.OauthClientService.Create(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -55,34 +55,34 @@ func (this *OauthClientController) PostCreate() *simple.JsonResult {
 func (this *OauthClientController) PostUpdate() *simple.JsonResult {
 	id := this.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
-		return simple.ErrorMsg("id is required")
+		return simple.JsonErrorMsg("id is required")
 	}
 	t := services.OauthClientService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.ClientId) == 0 {
-		return simple.ErrorMsg("clientId 不能为空")
+		return simple.JsonErrorMsg("clientId 不能为空")
 	}
 	if len(t.ClientSecret) == 0 {
-		return simple.ErrorMsg("clientSecret 不能为空")
+		return simple.JsonErrorMsg("clientSecret 不能为空")
 	}
 	if len(t.Domain) == 0 {
-		return simple.ErrorMsg("domain 不能为空")
+		return simple.JsonErrorMsg("domain 不能为空")
 	}
 	if len(t.CallbackUrl) == 0 {
-		return simple.ErrorMsg("callbackUrl 不能为空")
+		return simple.JsonErrorMsg("callbackUrl 不能为空")
 	}
 
 	err = services.OauthClientService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }

@@ -47,7 +47,7 @@ func InitIris() {
 		path := ctx.Path()
 		var err error
 		if strings.Contains(path, "/api/admin/") {
-			_, err = ctx.JSON(simple.ErrorCode(ctx.GetStatusCode(), "Http error"))
+			_, err = ctx.JSON(simple.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		} else {
 			if ctx.GetStatusCode() == 404 {
 				render.View(ctx, "404.html", iris.Map{

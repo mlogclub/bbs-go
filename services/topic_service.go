@@ -108,7 +108,7 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
-	return topic, simple.NewError2(err)
+	return topic, simple.FromError(err)
 }
 
 // 更新
@@ -134,7 +134,7 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
-	return simple.NewError2(err)
+	return simple.FromError(err)
 }
 
 // 主题标签

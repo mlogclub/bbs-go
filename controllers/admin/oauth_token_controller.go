@@ -14,7 +14,7 @@ type OauthTokenController struct {
 func (this *OauthTokenController) GetBy(id int64) *simple.JsonResult {
 	t := services.OauthTokenService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }

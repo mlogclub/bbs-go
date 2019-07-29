@@ -36,6 +36,6 @@ func getUserToken(ctx context.Context) string {
 }
 
 func notLogin(ctx context.Context) {
-	_, _ = ctx.JSON(simple.Error(simple.ErrorNotLogin))
+	_, _ = ctx.JSON(simple.JsonError(simple.ErrorNotLogin))
 	ctx.StopExecution()
 }

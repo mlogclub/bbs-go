@@ -23,7 +23,7 @@ type ArticleController struct {
 func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
 	t := services.ArticleService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -69,36 +69,36 @@ func (this *ArticleController) AnyList() *simple.JsonResult {
 }
 
 func (this *ArticleController) PostCreate() *simple.JsonResult {
-	return simple.ErrorMsg("为实现")
+	return simple.JsonErrorMsg("为实现")
 }
 
 func (this *ArticleController) PostUpdate() *simple.JsonResult {
 	id := this.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
-		return simple.ErrorMsg("id is required")
+		return simple.JsonErrorMsg("id is required")
 	}
 	t := services.ArticleService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
 	// 数据校验
 	if len(t.Title) == 0 {
-		return simple.ErrorMsg("标题不能为空")
+		return simple.JsonErrorMsg("标题不能为空")
 	}
 	if len(t.Content) == 0 {
-		return simple.ErrorMsg("内容不能为空")
+		return simple.JsonErrorMsg("内容不能为空")
 	}
 	if len(t.ContentType) == 0 {
-		return simple.ErrorMsg("请选择内容格式")
+		return simple.JsonErrorMsg("请选择内容格式")
 	}
 
 	t.UpdateTime = simple.NowTimestamp()
 	err := services.ArticleService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	return simple.JsonData(t)
@@ -107,23 +107,23 @@ func (this *ArticleController) PostUpdate() *simple.JsonResult {
 func (this *ArticleController) PostDelete() *simple.JsonResult {
 	id := this.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
-		return simple.ErrorMsg("id is required")
+		return simple.JsonErrorMsg("id is required")
 	}
 	err := services.ArticleService.Delete(id)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 func (this *ArticleController) PostCollect() *simple.JsonResult {
 	url := this.Ctx.PostValue("url")
 	if len(url) == 0 {
-		return simple.ErrorMsg("链接不存在")
+		return simple.JsonErrorMsg("链接不存在")
 	}
 	title, content, err := collect.Collect(url, true)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.NewEmptyRspBuilder().Put("title", title).Put("content", content).JsonResult()
 }

@@ -17,18 +17,18 @@ type CommentController struct {
 func (this *CommentController) GetList() *simple.JsonResult {
 	entityType, err := simple.FormValueRequired(this.Ctx, "entityType")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	entityId, err := simple.FormValueInt64(this.Ctx, "entityId")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 
 	list, err := services.CommentService.List(entityType, entityId, cursor)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	nextCursor := cursor
@@ -43,18 +43,18 @@ func (this *CommentController) GetList() *simple.JsonResult {
 func (this *CommentController) PostCreate() *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	form := &model.CreateCommentForm{}
 	err := this.Ctx.ReadForm(form)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	comment, err := services.CommentService.Publish(user.Id, form)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	return simple.JsonData(render.BuildComment(*comment))

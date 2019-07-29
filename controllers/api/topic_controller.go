@@ -19,14 +19,14 @@ type TopicController struct {
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
 	topic, err := services.TopicService.Publish(user.Id, tags, title, content)
 	if err != nil {
-		return simple.Error(err)
+		return simple.JsonError(err)
 	}
 	return simple.JsonData(render.BuildTopic(topic))
 }
@@ -35,7 +35,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != model.TopicStatusOk {
-		return simple.ErrorMsg("主题不存在")
+		return simple.JsonErrorMsg("主题不存在")
 	}
 	return simple.JsonData(render.BuildTopic(topic))
 }
@@ -44,7 +44,7 @@ func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 func (this *TopicController) GetRecent() *simple.JsonResult {
 	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(20))
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
 }
@@ -53,11 +53,11 @@ func (this *TopicController) GetRecent() *simple.JsonResult {
 func (this *TopicController) GetUserRecent() *simple.JsonResult {
     userId, err := simple.FormValueInt64(this.Ctx,"userId")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).Order("id desc").Size(10))
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
@@ -78,7 +78,7 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 	tagId, err := simple.FormValueInt64(this.Ctx, "tagId")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	topics, paging := services.TopicService.GetTagTopics(tagId, page)
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -88,11 +88,11 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 func (this *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }

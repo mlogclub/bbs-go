@@ -18,7 +18,7 @@ type CommentController struct {
 func (this *CommentController) GetBy(id int64) *simple.JsonResult {
 	t := services.CommentService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -49,7 +49,7 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 
 	err := services.CommentService.Create(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -57,18 +57,18 @@ func (this *CommentController) PostCreate() *simple.JsonResult {
 func (this *CommentController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	t := services.CommentService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	this.Ctx.ReadForm(t)
 
 	err = services.CommentService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }

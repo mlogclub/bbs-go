@@ -50,7 +50,7 @@ func (this *TopicController) GetCreate() {
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
@@ -58,7 +58,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 
 	topic, err := services.TopicService.Publish(user.Id, tags, title, content)
 	if err != nil {
-		return simple.Error(err)
+		return simple.JsonError(err)
 	}
 	return simple.NewEmptyRspBuilder().Put("topicId", topic.Id).JsonResult()
 }
@@ -97,12 +97,12 @@ func (this *TopicController) GetEditBy(topicId int64) {
 func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != model.TopicStatusOk || topic.UserId != user.Id {
-		return simple.ErrorMsg("话题不存在或已被删除")
+		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
@@ -111,7 +111,7 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 
 	err := services.TopicService.Edit(topicId, tags, title, content)
 	if err != nil {
-		return simple.Error(err)
+		return simple.JsonError(err)
 	}
 	return simple.NewEmptyRspBuilder().Put("topicId", topic.Id).JsonResult()
 }
@@ -120,13 +120,13 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 func (this *TopicController) PostFavoriteBy(topicId int64) *simple.JsonResult {
 	user := session.GetCurrentUser(this.Ctx)
 	if user == nil {
-		return simple.Error(simple.ErrorNotLogin)
+		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 主题列表

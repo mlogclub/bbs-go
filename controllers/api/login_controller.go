@@ -18,9 +18,9 @@ type LoginController struct {
 func (this *LoginController) GetSignout() *simple.JsonResult {
 	err := services.UserTokenService.Signout(this.Ctx)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }
 
 // 获取Github授权地址
@@ -35,16 +35,16 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	githubUser, err := services.GithubUserService.GetGithubUser(code)
 	if err != nil {
 		logrus.Errorf("Code exchange failed with '%s'", err)
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	user, codeErr := services.UserService.SignInByGithub(githubUser)
 	if codeErr != nil {
-		return simple.Error(codeErr)
+		return simple.JsonError(codeErr)
 	} else { // 直接登录
 		token, err := services.UserTokenService.Generate(user.Id)
 		if err != nil {
-			return simple.ErrorMsg(err.Error())
+			return simple.JsonErrorMsg(err.Error())
 		}
 		return simple.NewEmptyRspBuilder().
 			Put("token", token).

@@ -37,7 +37,7 @@ func (c *OauthServerController) AnyToken() {
 func (c *OauthServerController) AnyUserinfo() *simple.JsonResult {
 	user := oauth.GetUserInfoByRequest(c.Ctx.Request())
 	if user == nil {
-		return simple.ErrorMsg("User not found")
+		return simple.JsonErrorMsg("User not found")
 	}
 	return simple.JsonData(user)
 }

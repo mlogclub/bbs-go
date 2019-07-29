@@ -19,7 +19,7 @@ type UserController struct {
 func (this *UserController) GetBy(id int64) *simple.JsonResult {
 	t := services.UserService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(this.buildUserItem(t))
 }
@@ -41,7 +41,7 @@ func (this *UserController) PostCreate() *simple.JsonResult {
 
 	user, err := services.UserService.SignUp(username, email, password, password, nickname, "")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(this.buildUserItem(user))
 }
@@ -49,11 +49,11 @@ func (this *UserController) PostCreate() *simple.JsonResult {
 func (this *UserController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	t := services.UserService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	username := simple.FormValue(this.Ctx, "username")
@@ -83,7 +83,7 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 
 	err = services.UserService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }

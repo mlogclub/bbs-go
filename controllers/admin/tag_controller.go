@@ -15,7 +15,7 @@ type TagController struct {
 func (this *TagController) GetBy(id int64) *simple.JsonResult {
 	t := services.TagService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -32,14 +32,14 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 	t := &model.Tag{}
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return simple.ErrorMsg("name is required")
+		return simple.JsonErrorMsg("name is required")
 	}
 	if services.TagService.GetByName(t.Name) != nil {
-		return simple.ErrorMsg("标签「" + t.Name + "」已存在")
+		return simple.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
 	t.Status = model.TagStatusOk
@@ -48,7 +48,7 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 
 	err = services.TagService.Create(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -56,29 +56,29 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 func (this *TagController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	t := services.TagService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	err = this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return simple.ErrorMsg("name is required")
+		return simple.JsonErrorMsg("name is required")
 	}
 	if tmp := services.TagService.GetByName(t.Name); tmp != nil && tmp.Id != id {
-		return simple.ErrorMsg("标签「" + t.Name + "」已存在")
+		return simple.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
 	t.UpdateTime = simple.NowTimestamp()
 	err = services.TagService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -86,10 +86,10 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 func (this *TagController) AnyListAll() *simple.JsonResult {
 	categoryId, err := strconv.ParseInt(this.Ctx.FormValue("categoryId"), 10, 64)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	if categoryId < 0 {
-		return simple.ErrorMsg("请指定categoryId")
+		return simple.JsonErrorMsg("请指定categoryId")
 	}
 	list, err := services.TagService.ListAll(categoryId)
 	if err != nil {
@@ -102,7 +102,7 @@ func (this *TagController) AnyListAll() *simple.JsonResult {
 func (this *TagController) GetCascader() *simple.JsonResult {
 	categories, err := services.CategoryService.GetCategories()
 	if err != nil {
-		return simple.ErrorMsg("数据加载失败")
+		return simple.JsonErrorMsg("数据加载失败")
 	}
 
 	var results []map[string]interface{}
