@@ -22,7 +22,7 @@ type userTokenService struct {
 
 // 获取当前登录用户
 func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
-	token := this.getUserToken(ctx)
+	token := this.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
 	if userToken == nil || userToken.Status == model.UserTokenStatusDisabled {
@@ -35,8 +35,18 @@ func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
 	return cache.UserCache.Get(userToken.UserId)
 }
 
+// 退出登录
+func (this *userTokenService) Signout(ctx context.Context) error {
+	token := this.GetUserToken(ctx)
+	userToken := repositories.UserTokenRepository.GetByToken(simple.GetDB(), token)
+	if userToken == nil {
+		return nil
+	}
+	return repositories.UserTokenRepository.UpdateColumn(simple.GetDB(), userToken.Id, "status", model.UserTokenStatusDisabled)
+}
+
 // 从请求体中获取UserToken
-func (this *userTokenService) getUserToken(ctx context.Context) string {
+func (this *userTokenService) GetUserToken(ctx context.Context) string {
 	userToken := ctx.FormValue("userToken")
 	if len(userToken) > 0 {
 		return userToken

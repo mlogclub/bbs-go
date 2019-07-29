@@ -14,6 +14,15 @@ type LoginController struct {
 	Ctx iris.Context
 }
 
+// 退出登录
+func (this *LoginController) GetSignout() *simple.JsonResult {
+	err := services.UserTokenService.Signout(this.Ctx)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
+	return simple.Success()
+}
+
 // 获取Github授权地址
 func (this *LoginController) GetGithub() *simple.JsonResult {
 	url := github.OauthConfig.AuthCodeURL(simple.Uuid())
