@@ -1,14 +1,16 @@
 package render
 
 import (
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/avatar"
-	"github.com/mlogclub/mlog/utils/session"
-	"github.com/tidwall/gjson"
 	"html/template"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/tidwall/gjson"
+
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/avatar"
+	"github.com/mlogclub/mlog/utils/session"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kataras/iris"
@@ -157,6 +159,51 @@ func BuildArticles(articles []model.Article) []model.ArticleResponse {
 	return responses
 }
 
+func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
+	if article == nil {
+		return nil
+	}
+
+	rsp := &model.ArticleSimpleResponse{}
+	rsp.ArticleId = article.Id
+	rsp.Title = article.Title
+	rsp.Summary = article.Summary
+	rsp.Share = article.Share
+	rsp.SourceUrl = article.SourceUrl
+	rsp.CreateTime = article.CreateTime
+
+	rsp.User = BuildUserDefaultIfNull(article.UserId)
+	rsp.Category = BuildCategory(article.CategoryId)
+
+	tagIds := cache.ArticleTagCache.Get(article.Id)
+	tags := cache.TagCache.GetList(tagIds)
+	rsp.Tags = BuildTags(tags)
+
+	if article.ContentType == model.ArticleContentTypeMarkdown {
+		if len(rsp.Summary) == 0 {
+			mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
+			rsp.Summary = mr.SummaryText
+		}
+	} else {
+		if len(rsp.Summary) == 0 {
+			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), 256)
+		}
+	}
+
+	return rsp
+}
+
+func BuildSimpleArticles(articles []model.Article) []model.ArticleSimpleResponse {
+	if articles == nil || len(articles) == 0 {
+		return nil
+	}
+	var responses []model.ArticleSimpleResponse
+	for _, article := range articles {
+		responses = append(responses, *BuildSimpleArticle(&article))
+	}
+	return responses
+}
+
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	if topic == nil {
 		return nil
@@ -210,7 +257,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.Tags = BuildTags(tags)
 	return rsp
 }
-
 
 func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
 	if topics == nil || len(topics) == 0 {

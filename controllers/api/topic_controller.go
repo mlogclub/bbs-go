@@ -62,6 +62,22 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
+// 用户帖子列表
+func (this *TopicController) GetUserTopics() *simple.JsonResult {
+	userId, err := simple.FormValueInt64(this.Ctx,"userId")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+
+	topics, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).
+		Eq("user_id", userId).
+		Eq("status", model.TopicStatusOk).
+		Page(page, 20).Desc("id"))
+
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+}
+
 // 帖子列表
 func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
