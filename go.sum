@@ -190,8 +190,8 @@ github.com/mattn/goveralls v0.0.2/go.mod h1:8d1ZMHsd7fW6IRPKQh46F2WRpyib5/X4FOpe
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/microcosm-cc/bluemonday v1.0.2 h1:5lPfLTTAvAbtS0VqT+94yOtFnGfUWYyx0+iToC3Os3s=
 github.com/microcosm-cc/bluemonday v1.0.2/go.mod h1:iVP4YcDBq+n/5fb23BhYFvIMq/leAFZyRl6bYmGDlGc=
-github.com/mlogclub/simple v1.0.16 h1:rART1COAxMKqBs5ahpLG+cRGsJdTvRHTcbNb/LUVg8Q=
-github.com/mlogclub/simple v1.0.16/go.mod h1:E2wqzXAuk/x/0GLpY7gkExTf05VwUCcsxZkbT65fQnM=
+github.com/mlogclub/simple v1.0.18 h1:UY5Mjfu2IfyyQ4Ioknneu4hZaX4on69pw2csRAAVtts=
+github.com/mlogclub/simple v1.0.18/go.mod h1:E2wqzXAuk/x/0GLpY7gkExTf05VwUCcsxZkbT65fQnM=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.1 h1:9f412s+6RmYXLWZSEzVVgPGK7C2PphHj5RJrvfx9AWI=

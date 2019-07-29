@@ -1,14 +1,16 @@
 package services
 
 import (
+	"strings"
+
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/core/errors"
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/mlog/utils/avatar"
 	"github.com/mlogclub/mlog/utils/validate"
-	"github.com/mlogclub/simple"
-	"strings"
 
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
@@ -205,11 +207,11 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 	}
 
 	if this.isUsernameExists(githubUser.Login) {
-		return nil, simple.NewError(model.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在")
+		return nil, simple.NewErrorData(model.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在", githubUser)
 	}
 
 	if this.isEmailExists(githubUser.Email) {
-		return nil, simple.NewError(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在")
+		return nil, simple.NewErrorData(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在", githubUser)
 	}
 
 	user = &model.User{
