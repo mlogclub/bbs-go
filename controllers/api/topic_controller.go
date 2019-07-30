@@ -28,7 +28,84 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonError(err)
 	}
-	return simple.JsonData(render.BuildTopic(topic))
+	return simple.JsonData(render.BuildSimpleTopic(topic))
+}
+
+// 编辑时获取详情
+func (this *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != model.TopicStatusOk {
+		return simple.JsonErrorMsg("话题不存在或已被删除")
+	}
+	if topic.UserId != user.Id {
+		return simple.JsonErrorMsg("无权限")
+	}
+
+	tags := services.TopicService.GetTopicTags(topicId)
+	var tagNames []string
+	if len(tags) > 0 {
+		for _, tag := range tags {
+			tagNames = append(tagNames, tag.Name)
+		}
+	}
+
+	return simple.NewEmptyRspBuilder().
+		Put("topicId", topic.Id).
+		Put("title", topic.Title).
+		Put("content", topic.Content).
+		Put("tags", tagNames).
+		JsonResult()
+}
+
+// 编辑帖子
+func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != model.TopicStatusOk {
+		return simple.JsonErrorMsg("话题不存在或已被删除")
+	}
+	if topic.UserId != user.Id {
+		return simple.JsonErrorMsg("无权限")
+	}
+
+	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
+	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
+	tags := simple.FormValueStringArray(this.Ctx, "tags")
+
+	err := services.TopicService.Edit(topicId, tags, title, content)
+	if err != nil {
+		return simple.JsonError(err)
+	}
+	return simple.JsonData(render.BuildSimpleTopic(topic))
+}
+
+// 删除帖子
+func (this *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != model.TopicStatusOk {
+		return simple.JsonSuccess()
+	}
+	if topic.UserId != user.Id {
+		return simple.JsonErrorMsg("无权限")
+	}
+	err := services.TopicService.Delete(topicId)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
 }
 
 // 帖子详情
@@ -51,7 +128,7 @@ func (this *TopicController) GetRecent() *simple.JsonResult {
 
 // 用户最近的帖子
 func (this *TopicController) GetUserRecent() *simple.JsonResult {
-    userId, err := simple.FormValueInt64(this.Ctx,"userId")
+	userId, err := simple.FormValueInt64(this.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -64,7 +141,7 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 
 // 用户帖子列表
 func (this *TopicController) GetUserTopics() *simple.JsonResult {
-	userId, err := simple.FormValueInt64(this.Ctx,"userId")
+	userId, err := simple.FormValueInt64(this.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
