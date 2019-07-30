@@ -1,12 +1,14 @@
 package api
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
+	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 )
@@ -78,4 +80,61 @@ func (this *UserController) GetMsgcount() *simple.JsonResult {
 func (this *UserController) GetActive() *simple.JsonResult {
 	users := cache.UserCache.GetActiveUsers()
 	return simple.JsonData(render.BuildUsers(users))
+}
+
+// 用户收藏
+func (this *UserController) GetFavorites() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+
+	// 用户必须登录
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	// 查询列表
+	var favorites []model.Favorite
+	if cursor > 0 {
+		favorites, _ = services.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ? and id < ?",
+			user.Id, cursor).Order("id desc").Size(20))
+	} else {
+		favorites, _ = services.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ?",
+			user.Id).Order("id desc").Size(20))
+	}
+
+	if len(favorites) > 0 {
+		cursor = favorites[len(favorites)-1].Id
+	}
+
+	return simple.JsonCursorData(render.BuildFavorites(favorites), strconv.FormatInt(cursor, 10))
+}
+
+// 用户消息
+func (this *UserController) GetMessages() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+
+	// 用户必须登录
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	// 查询列表
+	var messages []model.Message
+	if cursor > 0 {
+		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ? and id < ?",
+			user.Id, cursor).Order("id desc").Size(20))
+	} else {
+		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?",
+			user.Id).Order("id desc").Size(20))
+	}
+
+	if len(messages) > 0 {
+		cursor = messages[len(messages)-1].Id
+	}
+
+	// 全部标记为已读
+	services.MessageService.MarkReadAll(user.Id)
+
+	return simple.JsonCursorData(render.BuildMessages(messages), strconv.FormatInt(cursor, 10))
 }

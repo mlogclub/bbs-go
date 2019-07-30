@@ -425,7 +425,7 @@ func GetUserMessages(ctx context.Context) {
 		return
 	}
 
-	// 只能查看自己的收藏
+	// 只能查看自己的消息
 	if userId != user.Id {
 		ctx.StatusCode(403)
 		return
