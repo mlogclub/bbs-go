@@ -13,6 +13,15 @@ type ArticleController struct {
 	Ctx context.Context
 }
 
+// 文章详情
+func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
+	article := services.ArticleService.Get(articleId)
+	if article == nil || article.Status != model.ArticleStatusPublished {
+		return simple.JsonErrorMsg("文章不存在")
+	}
+	return simple.JsonData(render.BuildArticle(article))
+}
+
 // 发表文章
 func (this *ArticleController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
@@ -34,27 +43,48 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(render.BuildArticle(article))
 }
 
-// 文章详情
-func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
+// 编辑时获取详情
+func (this *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != model.ArticleStatusPublished {
-		return simple.JsonErrorMsg("文章不存在")
+		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
-	return simple.JsonData(render.BuildArticle(article))
+	if article.UserId != user.Id {
+		return simple.JsonErrorMsg("无权限")
+	}
+
+	tags := services.ArticleService.GetArticleTags(articleId)
+	var tagNames []string
+	if len(tags) > 0 {
+		for _, tag := range tags {
+			tagNames = append(tagNames, tag.Name)
+		}
+	}
+
+	return simple.NewEmptyRspBuilder().
+		Put("articleId", article.Id).
+		Put("title", article.Title).
+		Put("content", article.Content).
+		Put("tags", tagNames).
+		JsonResult()
 }
 
 // 编辑文章
-func (this *ArticleController) PostEdit() *simple.JsonResult {
+func (this *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	var (
-		articleId = this.Ctx.PostValueInt64Default("id", 0)
-		tags      = simple.FormValueStringArray(this.Ctx, "tags")
-		title     = this.Ctx.PostValue("title")
-		content   = this.Ctx.PostValue("content")
+		tags    = simple.FormValueStringArray(this.Ctx, "tags")
+		title   = this.Ctx.PostValue("title")
+		content = this.Ctx.PostValue("content")
 	)
 
 	article := services.ArticleService.Get(articleId)
