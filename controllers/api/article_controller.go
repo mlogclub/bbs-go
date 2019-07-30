@@ -1,7 +1,6 @@
 package api
 
 import (
-	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
@@ -148,7 +147,6 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 		return simple.JsonErrorMsg("文章不存在")
 	}
 	if article.Share && len(article.SourceUrl) > 0 {
-		this.Ctx.Redirect(article.SourceUrl, iris.StatusFound)
 		return simple.NewEmptyRspBuilder().Put("url", article.SourceUrl).JsonResult()
 	} else {
 		return simple.NewEmptyRspBuilder().Put("url", utils.BuildArticleUrl(articleId)).JsonResult()
