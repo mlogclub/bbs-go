@@ -101,14 +101,11 @@ func BuildUsers(users []model.User) []model.UserInfo {
 	return responses
 }
 
-func BuildCategory(categoryId int64) *model.CategoryResponse {
-	if categoryId > 0 {
-		cat := cache.CategoryCache.Get(categoryId)
-		if cat != nil {
-			return &model.CategoryResponse{CategoryId: cat.Id, CategoryName: cat.Name}
-		}
+func BuildCategory(category *model.Category) *model.CategoryResponse {
+	if category == nil {
+		return nil
 	}
-	return nil
+	return &model.CategoryResponse{CategoryId: category.Id, CategoryName: category.Name}
 }
 
 func BuildArticle(article *model.Article) *model.ArticleResponse {
@@ -125,7 +122,11 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
-	rsp.Category = BuildCategory(article.CategoryId)
+
+	if article.CategoryId > 0 {
+		category := cache.CategoryCache.Get(article.CategoryId)
+		rsp.Category = BuildCategory(category)
+	}
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
@@ -173,7 +174,11 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
-	rsp.Category = BuildCategory(article.CategoryId)
+
+	if article.CategoryId > 0 {
+		category := cache.CategoryCache.Get(article.CategoryId)
+		rsp.Category = BuildCategory(category)
+	}
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)

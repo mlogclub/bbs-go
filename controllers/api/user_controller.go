@@ -33,6 +33,7 @@ func (this *UserController) GetBy(userId int64) *simple.JsonResult {
 	return simple.JsonErrorMsg("用户不存在")
 }
 
+// 修改用户资料
 func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
@@ -71,4 +72,10 @@ func (this *UserController) GetMsgcount() *simple.JsonResult {
 		count = services.MessageService.GetUnReadCount(user.Id)
 	}
 	return simple.NewEmptyRspBuilder().Put("count", count).JsonResult()
+}
+
+// 活跃用户
+func (this *UserController) GetActive() *simple.JsonResult {
+	users := cache.UserCache.GetActiveUsers()
+	return simple.JsonData(render.BuildUsers(users))
 }

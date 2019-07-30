@@ -42,11 +42,11 @@ func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (this *TopicController) GetRecent() *simple.JsonResult {
-	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(20))
+	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), nil)
+	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
 // 用户最近的帖子

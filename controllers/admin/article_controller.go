@@ -55,7 +55,10 @@ func (this *ArticleController) AnyList() *simple.JsonResult {
 		}
 
 		// 分类
-		builder.Put("category", render.BuildCategory(article.CategoryId))
+		if article.CategoryId > 0 {
+			category := cache.CategoryCache.Get(article.CategoryId)
+			builder.Put("category", render.BuildCategory(category))
+		}
 
 		// 标签
 		tagIds := cache.ArticleTagCache.Get(article.Id)

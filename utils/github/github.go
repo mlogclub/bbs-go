@@ -15,8 +15,9 @@ func InitConfig() {
 	OauthConfig = &oauth2.Config{
 		ClientID:     config.Conf.Github.ClientID,
 		ClientSecret: config.Conf.Github.ClientSecret,
-		RedirectURL:  "http://localhost:3000/user/github/callback", // RedirectURL:  config.Conf.BaseUrl + "/user/github/callback",
-		Scopes:       []string{"public_repo", "user"},
+		RedirectURL:  "http://localhost:3000/user/github/callback",
+		// RedirectURL: config.Conf.BaseUrl + "/user/github/callback",
+		Scopes:      []string{"public_repo", "user"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://github.com/login/oauth/authorize",
 			TokenURL: "https://github.com/login/oauth/access_token",

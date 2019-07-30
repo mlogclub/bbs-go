@@ -125,6 +125,7 @@ func InitIris() {
 			m.Party("/login").Handle(new(api.LoginController))
 			m.Party("/user").Handle(new(api.UserController))
 			m.Party("/tag").Handle(new(api.TagController))
+			m.Party("/category").Handle(new(api.CategoryController))
 			m.Party("/comment").Handle(new(api.CommentController))
 			m.Party("/upload").Handle(new(api.UploadController))
 		})

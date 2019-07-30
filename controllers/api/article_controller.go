@@ -111,11 +111,11 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 
 // 最近文章
 func (this *ArticleController) GetRecent() *simple.JsonResult {
-	articles, err := services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(20))
+	articles, err := services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonPageData(render.BuildSimpleArticles(articles), nil)
+	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
 // 用户最近的文章
