@@ -222,3 +222,16 @@ func (this *ArticleController) GetCategoryArticles() *simple.JsonResult {
 
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
 }
+
+// 用户最新的文章
+func (this *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult {
+	newestArticles := services.ArticleService.GetUserNewestArticles(userId)
+	return simple.JsonData(render.BuildSimpleArticles(newestArticles))
+}
+
+// 相关文章
+func (this *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
+	relatedArticles := services.ArticleService.GetRelatedArticles(articleId)
+	return simple.JsonData(render.BuildSimpleArticles(relatedArticles))
+}
+
