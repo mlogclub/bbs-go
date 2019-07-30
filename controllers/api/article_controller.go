@@ -1,12 +1,14 @@
 package api
 
 import (
+	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/utils"
 )
 
 type ArticleController struct {
@@ -137,6 +139,20 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
+}
+
+// 文章跳转链接
+func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
+	article := services.ArticleService.Get(articleId)
+	if article == nil || article.Status != model.ArticleStatusPublished {
+		return simple.JsonErrorMsg("文章不存在")
+	}
+	if article.Share && len(article.SourceUrl) > 0 {
+		this.Ctx.Redirect(article.SourceUrl, iris.StatusFound)
+		return simple.NewEmptyRspBuilder().Put("url", article.SourceUrl).JsonResult()
+	} else {
+		return simple.NewEmptyRspBuilder().Put("url", utils.BuildArticleUrl(articleId)).JsonResult()
+	}
 }
 
 // 最近文章
