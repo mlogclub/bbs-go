@@ -1,3 +1,11 @@
+# 介绍
+该项目使用Golang进行构建，具体参见：https://mlog.club
+
+关联项目：
+- mlog-club：https://github.com/mlogclub/mlog
+- mlog-club-site：https://github.com/mlogclub/mlog-club-site
+- mlog-club-admin：https://github.com/mlogclub/mlog-club-admin
+
 # 使用帮助
 [https://mlog.club/topic/17](https://mlog.club/topic/17)
 
