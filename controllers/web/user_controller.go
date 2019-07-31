@@ -234,7 +234,7 @@ func (this *UserController) AnySignout() {
 
 // 跳转到Github登录页面
 func (this *UserController) GetGithubLogin() {
-	url := github.OauthConfig.AuthCodeURL(oauthStateString)
+	url := github.GetOauthConfig(nil).AuthCodeURL(oauthStateString)
 	this.Ctx.Redirect(url, iris.StatusSeeOther)
 }
 

@@ -3,15 +3,31 @@ package api
 import (
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/controllers/render"
+	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils/github"
 )
 
 type LoginController struct {
 	Ctx iris.Context
+}
+
+// 用户名密码登录
+func (this *LoginController) PostSignin() *simple.JsonResult {
+	var (
+		username = this.Ctx.PostValueTrim("username")
+		password = this.Ctx.PostValueTrim("password")
+		ref      = this.Ctx.FormValue("ref")
+	)
+
+	user, err := services.UserService.SignIn(username, password)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	return this.generateTokenResult(user, ref)
 }
 
 // 退出登录
@@ -25,31 +41,26 @@ func (this *LoginController) GetSignout() *simple.JsonResult {
 
 // 获取Github授权地址
 func (this *LoginController) GetGithub() *simple.JsonResult {
-	url := github.OauthConfig.AuthCodeURL(simple.Uuid())
+	ref := this.Ctx.FormValue("ref")
+	url := github.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
 // 获取Github回调信息获取
 func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	code := this.Ctx.FormValue("code")
+	ref := this.Ctx.FormValue("ref")
+
 	githubUser, err := services.GithubUserService.GetGithubUser(code)
 	if err != nil {
-		logrus.Errorf("Code exchange failed with '%s'", err)
 		return simple.JsonErrorMsg(err.Error())
 	}
 
 	user, codeErr := services.UserService.SignInByGithub(githubUser)
-	if codeErr != nil {
+	if codeErr != nil { // 出现错误，需要进行处理
 		return simple.JsonError(codeErr)
 	} else { // 直接登录
-		token, err := services.UserTokenService.Generate(user.Id)
-		if err != nil {
-			return simple.JsonErrorMsg(err.Error())
-		}
-		return simple.NewEmptyRspBuilder().
-			Put("token", token).
-			Put("user", render.BuildUser(user)).
-			JsonResult()
+		return this.generateTokenResult(user, ref)
 	}
 }
 
@@ -83,6 +94,11 @@ func (this *LoginController) PostGithubBind() *simple.JsonResult {
 	}
 
 	// 绑定成功，执行登录
+	return this.generateTokenResult(user, "")
+}
+
+// user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
+func (this *LoginController) generateTokenResult(user *model.User, ref string) *simple.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -90,5 +106,6 @@ func (this *LoginController) PostGithubBind() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().
 		Put("token", token).
 		Put("user", render.BuildUser(user)).
+		Put("ref", ref).
 		JsonResult()
 }

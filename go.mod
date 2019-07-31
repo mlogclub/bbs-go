@@ -22,9 +22,9 @@ require (
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
-	github.com/mlogclub/simple v1.0.19
+	github.com/mlogclub/simple v1.0.20
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
-	github.com/satori/go.uuid v1.2.0
+	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/sundy-li/html2article v0.0.0-20180131134645-09ac198090c2
