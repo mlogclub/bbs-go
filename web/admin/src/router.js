@@ -79,19 +79,7 @@ export default new Router({
           component: UserIndex,
           name: '用户',
           iconCls: 'iconfont icon-user'
-        },
-        {
-          path: '/oauth-client/index',
-          component: OauthClientIndex,
-          name: 'OauthClient',
-          iconCls: 'iconfont icon-menu'
-        },
-        {
-          path: '/oauth-token/index',
-          component: OauthTokenIndex,
-          name: 'OauthToken',
-          iconCls: 'iconfont icon-menu',
-        },
+        }
       ]
     },
 

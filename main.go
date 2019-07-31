@@ -11,7 +11,6 @@ import (
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/mlog/utils/config"
-	"github.com/mlogclub/mlog/utils/session"
 )
 
 var configFile = flag.String("config", "./mlog.yaml", "配置文件路径")
@@ -22,7 +21,6 @@ func init() {
 	initLogrus()
 
 	config.InitConfig(*configFile) // 初始化配置
-	session.InitSessionManager()   // 初始化sessionManager
 	utils.InitEmail()              // 初始化邮件
 	initDB()                       // 初始化数据库
 }

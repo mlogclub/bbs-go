@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{}, &SysConfig{},
+	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{},
 }
 
 type Model struct {

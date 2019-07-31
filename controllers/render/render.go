@@ -8,34 +8,15 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/avatar"
-	"github.com/mlogclub/mlog/utils/session"
-
 	"github.com/PuerkitoBio/goquery"
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/utils/avatar"
 )
-
-func View(ctx context.Context, filename string, viewModel iris.Map) {
-	if viewModel == nil {
-		viewModel = iris.Map{}
-	}
-
-	// 公用
-	viewModel[model.TplCurrentUser] = BuildCurrentUser(ctx)
-
-	err := ctx.View(filename, viewModel)
-	if err != nil {
-		logrus.Error(err)
-	}
-}
 
 func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
@@ -47,14 +28,6 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 		user.CreateTime = simple.NowTimestamp()
 	}
 	return BuildUser(user)
-}
-
-func BuildCurrentUser(ctx context.Context) *model.UserInfo {
-	currentUser := session.GetCurrentUser(ctx)
-	if currentUser == nil {
-		return nil
-	}
-	return BuildUserById(currentUser.Id)
 }
 
 func BuildUserById(id int64) *model.UserInfo {
