@@ -49,7 +49,6 @@ func (this *LoginController) GetGithub() *simple.JsonResult {
 // 获取Github回调信息获取
 func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	code := this.Ctx.FormValue("code")
-	ref := this.Ctx.FormValue("ref")
 
 	githubUser, err := services.GithubUserService.GetGithubUser(code)
 	if err != nil {
@@ -60,7 +59,7 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	if codeErr != nil { // 出现错误，需要进行处理
 		return simple.JsonError(codeErr)
 	} else { // 直接登录
-		return this.generateTokenResult(user, ref)
+		return this.generateTokenResult(user, "")
 	}
 }
 
@@ -82,6 +81,7 @@ func (this *LoginController) PostGithubBind() *simple.JsonResult {
 	password := this.Ctx.PostValueTrim("password")
 	rePassword := this.Ctx.PostValueTrim("rePassword")
 	nickname := this.Ctx.PostValueTrim("nickname")
+	ref := this.Ctx.PostValueTrim("ref")
 
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -94,7 +94,7 @@ func (this *LoginController) PostGithubBind() *simple.JsonResult {
 	}
 
 	// 绑定成功，执行登录
-	return this.generateTokenResult(user, "")
+	return this.generateTokenResult(user, ref)
 }
 
 // user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
