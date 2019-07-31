@@ -1,15 +1,17 @@
 package app
 
 import (
-	"github.com/mlogclub/mlog/controllers/web"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/config"
 	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/mlogclub/mlog/controllers/api"
+	"github.com/mlogclub/mlog/controllers/web"
+	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/config"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
@@ -45,7 +47,7 @@ func InitIris() {
 		path := ctx.Path()
 		var err error
 		if strings.Contains(path, "/api/admin/") {
-			_, err = ctx.JSON(simple.ErrorCode(ctx.GetStatusCode(), "Http error"))
+			_, err = ctx.JSON(simple.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		} else {
 			if ctx.GetStatusCode() == 404 {
 				render.View(ctx, "404.html", iris.Map{
@@ -65,6 +67,7 @@ func InitIris() {
 	handleViews(app)
 
 	{
+		// web
 		mvc.Configure(app.Party("/"), func(m *mvc.Application) {
 			m.Router.Use(middleware.NewGlobalMiddleware())
 
@@ -115,6 +118,19 @@ func InitIris() {
 			})
 		})
 
+		// api
+		mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
+			m.Party("/topic").Handle(new(api.TopicController))
+			m.Party("/article").Handle(new(api.ArticleController))
+			m.Party("/login").Handle(new(api.LoginController))
+			m.Party("/user").Handle(new(api.UserController))
+			m.Party("/tag").Handle(new(api.TagController))
+			m.Party("/category").Handle(new(api.CategoryController))
+			m.Party("/comment").Handle(new(api.CommentController))
+			m.Party("/upload").Handle(new(api.UploadController))
+		})
+
+		// admin
 		mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 			m.Router.Use(middleware.AdminAuthHandler)
 			m.Party("/user").Handle(new(admin.UserController))

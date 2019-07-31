@@ -1,8 +1,7 @@
-package web
+package api
 
 import (
-	"github.com/kataras/iris"
-	"github.com/mlogclub/mlog/utils/session"
+	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/controllers/render"
@@ -11,10 +10,12 @@ import (
 )
 
 type CommentController struct {
-	Ctx iris.Context
+	Ctx context.Context
 }
 
 func (this *CommentController) GetList() *simple.JsonResult {
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+
 	entityType, err := simple.FormValueRequired(this.Ctx, "entityType")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -23,8 +24,6 @@ func (this *CommentController) GetList() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 
 	list, err := services.CommentService.List(entityType, entityId, cursor)
 	if err != nil {
@@ -41,7 +40,7 @@ func (this *CommentController) GetList() *simple.JsonResult {
 }
 
 func (this *CommentController) PostCreate() *simple.JsonResult {
-	user := session.GetCurrentUser(this.Ctx)
+	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}

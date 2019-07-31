@@ -2,13 +2,15 @@ package services
 
 import (
 	"errors"
-	"github.com/emirpasic/gods/sets/hashset"
-	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/config"
 	"path"
 	"strings"
 	"time"
+
+	"github.com/emirpasic/gods/sets/hashset"
+
+	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/config"
 
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -197,7 +199,7 @@ func (this *articleService) Edit(articleId int64, tags []string, title, content 
 		return nil
 	})
 	cache.ArticleTagCache.Invalidate(articleId)
-	return simple.NewError2(err)
+	return simple.FromError(err)
 }
 
 // 相关文章

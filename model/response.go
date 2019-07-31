@@ -39,30 +39,40 @@ type TagResponse struct {
 	TagName string `json:"tagName"`
 }
 
-type ArticleResponse struct {
+type ArticleSimpleResponse struct {
 	ArticleId  int64             `json:"articleId"`
 	User       *UserInfo         `json:"user"`
 	Category   *CategoryResponse `json:"category"`
 	Tags       *[]TagResponse    `json:"tags"`
 	Title      string            `json:"title"`
 	Summary    string            `json:"summary"`
-	Content    template.HTML     `json:"content"`
-	Toc        template.HTML     `json:"toc"`
 	Share      bool              `json:"share"`
 	SourceUrl  string            `json:"sourceUrl"`
 	CreateTime int64             `json:"createTime"`
 }
 
-type TopicResponse struct {
+type ArticleResponse struct {
+	ArticleSimpleResponse
+	Content template.HTML `json:"content"`
+	Toc     template.HTML `json:"toc"`
+}
+
+// 帖子列表返回实体
+type TopicSimpleResponse struct {
 	TopicId         int64          `json:"topicId"`
 	User            *UserInfo      `json:"user"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
-	Content         template.HTML  `json:"content"`
-	Toc             template.HTML  `json:"toc"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CreateTime      int64          `json:"createTime"`
+}
+
+// 帖子详情返回实体
+type TopicResponse struct {
+	TopicSimpleResponse
+	Content template.HTML `json:"content"`
+	Toc     template.HTML `json:"toc"`
 }
 
 type CommentResponse struct {

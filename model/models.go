@@ -1,7 +1,7 @@
 package model
 
 var Models = []interface{}{
-	&User{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
+	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicTag{}, &Message{}, &OauthClient{}, &OauthToken{}, &SysConfig{},
 }
 
@@ -12,6 +12,9 @@ type Model struct {
 const (
 	UserStatusOk       = 0
 	UserStatusDisabled = 1
+
+	UserTokenStatusOk       = 0
+	UserTokenStatusDisabled = 1
 
 	UserTypeNormal = 0 // 普通用户
 	UserTypeGzh    = 1 // 公众号用户
@@ -57,6 +60,15 @@ type User struct {
 	Description string `gorm:"type:text" json:"description" form:"description"`
 	CreateTime  int64  `json:"createTime" form:"createTime"`
 	UpdateTime  int64  `json:"updateTime" form:"updateTime"`
+}
+
+type UserToken struct {
+	Model
+	Token      string `gorm:"size:32;unique;not null" json:"token" form:"token"`
+	UserId     int64  `gorm:"not null" json:"userId" form:"userId"`
+	ExpiredAt  int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
+	Status     int    `gorm:"not null" json:"status" form:"status"`
+	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`
 }
 
 type GithubUser struct {

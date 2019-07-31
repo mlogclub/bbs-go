@@ -58,7 +58,7 @@ func (this *githubUserService) GetByGithubId(githubId int64) *model.GithubUser {
 }
 
 func (this *githubUserService) GetGithubUser(code string) (*model.GithubUser, error) {
-	token, err := github.OauthConfig.Exchange(context2.TODO(), code)
+	token, err := github.GetOauthConfig(nil).Exchange(context2.TODO(), code)
 	if err != nil {
 		return nil, err
 	}

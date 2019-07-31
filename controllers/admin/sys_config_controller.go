@@ -15,7 +15,7 @@ type SysConfigController struct {
 func (this *SysConfigController) GetBy(id int64) *simple.JsonResult {
 	t := services.SysConfigService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -35,11 +35,11 @@ func (this *SysConfigController) PostSave() *simple.JsonResult {
 	data := make(map[string]string)
 	err := json.Unmarshal([]byte(config), &data)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	err = services.SysConfigService.SetAll(data)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.Success()
+	return simple.JsonSuccess()
 }

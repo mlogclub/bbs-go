@@ -17,7 +17,7 @@ type CategoryController struct {
 func (this *CategoryController) GetBy(id int64) *simple.JsonResult {
 	t := services.CategoryService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -34,15 +34,15 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 	t := &model.Category{}
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return simple.ErrorMsg("name is required")
+		return simple.JsonErrorMsg("name is required")
 	}
 
 	if services.CategoryService.FindByName(t.Name) != nil {
-		return simple.ErrorMsg("分类「" + t.Name + "」已存在")
+		return simple.JsonErrorMsg("分类「" + t.Name + "」已存在")
 	}
 
 	t.Status = model.CategoryStatusOk
@@ -51,7 +51,7 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 
 	err = services.CategoryService.Create(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -59,31 +59,31 @@ func (this *CategoryController) PostCreate() *simple.JsonResult {
 func (this *CategoryController) PostUpdate() *simple.JsonResult {
 	id := this.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
-		return simple.ErrorMsg("id is required")
+		return simple.JsonErrorMsg("id is required")
 	}
 	t := services.CategoryService.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return simple.ErrorMsg("name is required")
+		return simple.JsonErrorMsg("name is required")
 	}
 
 	if tmp := services.CategoryService.FindByName(t.Name); tmp != nil && tmp.Id != id {
-		return simple.ErrorMsg("分类「" + t.Name + "」已存在")
+		return simple.JsonErrorMsg("分类「" + t.Name + "」已存在")
 	}
 
 	t.UpdateTime = simple.NowTimestamp()
 
 	err = services.CategoryService.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }

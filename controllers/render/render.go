@@ -1,14 +1,16 @@
 package render
 
 import (
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/avatar"
-	"github.com/mlogclub/mlog/utils/session"
-	"github.com/tidwall/gjson"
 	"html/template"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/tidwall/gjson"
+
+	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/mlog/utils/avatar"
+	"github.com/mlogclub/mlog/utils/session"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kataras/iris"
@@ -99,14 +101,11 @@ func BuildUsers(users []model.User) []model.UserInfo {
 	return responses
 }
 
-func BuildCategory(categoryId int64) *model.CategoryResponse {
-	if categoryId > 0 {
-		cat := cache.CategoryCache.Get(categoryId)
-		if cat != nil {
-			return &model.CategoryResponse{CategoryId: cat.Id, CategoryName: cat.Name}
-		}
+func BuildCategory(category *model.Category) *model.CategoryResponse {
+	if category == nil {
+		return nil
 	}
-	return nil
+	return &model.CategoryResponse{CategoryId: category.Id, CategoryName: category.Name}
 }
 
 func BuildArticle(article *model.Article) *model.ArticleResponse {
@@ -123,7 +122,11 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
-	rsp.Category = BuildCategory(article.CategoryId)
+
+	if article.CategoryId > 0 {
+		category := cache.CategoryCache.Get(article.CategoryId)
+		rsp.Category = BuildCategory(category)
+	}
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
@@ -157,6 +160,55 @@ func BuildArticles(articles []model.Article) []model.ArticleResponse {
 	return responses
 }
 
+func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
+	if article == nil {
+		return nil
+	}
+
+	rsp := &model.ArticleSimpleResponse{}
+	rsp.ArticleId = article.Id
+	rsp.Title = article.Title
+	rsp.Summary = article.Summary
+	rsp.Share = article.Share
+	rsp.SourceUrl = article.SourceUrl
+	rsp.CreateTime = article.CreateTime
+
+	rsp.User = BuildUserDefaultIfNull(article.UserId)
+
+	if article.CategoryId > 0 {
+		category := cache.CategoryCache.Get(article.CategoryId)
+		rsp.Category = BuildCategory(category)
+	}
+
+	tagIds := cache.ArticleTagCache.Get(article.Id)
+	tags := cache.TagCache.GetList(tagIds)
+	rsp.Tags = BuildTags(tags)
+
+	if article.ContentType == model.ArticleContentTypeMarkdown {
+		if len(rsp.Summary) == 0 {
+			mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
+			rsp.Summary = mr.SummaryText
+		}
+	} else {
+		if len(rsp.Summary) == 0 {
+			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), 256)
+		}
+	}
+
+	return rsp
+}
+
+func BuildSimpleArticles(articles []model.Article) []model.ArticleSimpleResponse {
+	if articles == nil || len(articles) == 0 {
+		return nil
+	}
+	var responses []model.ArticleSimpleResponse
+	for _, article := range articles {
+		responses = append(responses, *BuildSimpleArticle(&article))
+	}
+	return responses
+}
+
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	if topic == nil {
 		return nil
@@ -174,10 +226,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
-	// tagIds := cache.ArticleTagCache.Get(article.Id)
-	// tags := cache.TagCache.GetList(tagIds)
-	// rsp.Tags = BuildTags(tags)
-
 	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
@@ -192,6 +240,36 @@ func BuildTopics(topics []model.Topic) []model.TopicResponse {
 	var responses []model.TopicResponse
 	for _, topic := range topics {
 		responses = append(responses, *BuildTopic(&topic))
+	}
+	return responses
+}
+
+func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
+	if topic == nil {
+		return nil
+	}
+
+	rsp := &model.TopicSimpleResponse{}
+
+	rsp.TopicId = topic.Id
+	rsp.Title = topic.Title
+	rsp.User = BuildUserDefaultIfNull(topic.UserId)
+	rsp.LastCommentTime = topic.LastCommentTime
+	rsp.CreateTime = topic.CreateTime
+	rsp.ViewCount = topic.ViewCount
+
+	tags := services.TopicService.GetTopicTags(topic.Id)
+	rsp.Tags = BuildTags(tags)
+	return rsp
+}
+
+func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
+	if topics == nil || len(topics) == 0 {
+		return nil
+	}
+	var responses []model.TopicSimpleResponse
+	for _, topic := range topics {
+		responses = append(responses, *BuildSimpleTopic(&topic))
 	}
 	return responses
 }

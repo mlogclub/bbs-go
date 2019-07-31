@@ -1,18 +1,20 @@
 package services
 
 import (
+	"path"
+	"time"
+
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
+
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/mlog/utils/config"
-	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
-	"path"
-	"time"
 )
 
 type ScanTopicCallback func(topics []model.Topic)
@@ -108,7 +110,10 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
-	return topic, simple.NewError2(err)
+	if err == nil {
+		utils.BaiduUrlPush([]string{utils.BuildTopicUrl(topic.Id)})
+	}
+	return topic, simple.FromError(err)
 }
 
 // 更新
@@ -134,7 +139,7 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
-	return simple.NewError2(err)
+	return simple.FromError(err)
 }
 
 // 主题标签

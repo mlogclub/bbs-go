@@ -15,12 +15,12 @@ func AdminAuthHandler(ctx context.Context) {
 	}
 	userInfo := oauth.GetUserInfoByRequest(ctx.Request())
 	if userInfo == nil {
-		_, _ = ctx.JSON(simple.ErrorCode(1, "Not Login"))
+		_, _ = ctx.JSON(simple.JsonErrorCode(1, "Not Login"))
 		ctx.StopExecution()
 		return
 	}
 	if !userInfo.HasRole("管理员") {
-		_, _ = ctx.JSON(simple.ErrorCode(2, "无权限"))
+		_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
 		ctx.StopExecution()
 		return
 	}
