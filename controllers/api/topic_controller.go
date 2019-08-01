@@ -114,6 +114,7 @@ func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	if topic == nil || topic.Status != model.TopicStatusOk {
 		return simple.JsonErrorMsg("主题不存在")
 	}
+	services.TopicService.IncrViewCount(topicId) // 增加浏览量
 	return simple.JsonData(render.BuildTopic(topic))
 }
 
