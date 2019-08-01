@@ -214,10 +214,14 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		return nil, simple.NewErrorData(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在", githubUser)
 	}
 
+	nickname := strings.TrimSpace(githubUser.Name)
+	if len(nickname) == 0 {
+		nickname = githubUser.Login
+	}
 	user = &model.User{
 		Username:   githubUser.Login,
 		Email:      githubUser.Email,
-		Nickname:   githubUser.Name,
+		Nickname:   nickname,
 		Avatar:     githubUser.AvatarUrl,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
