@@ -31,6 +31,7 @@ require (
 	github.com/tidwall/gjson v1.1.3
 	golang.org/x/net v0.0.0-20190424112056-4829fb13d2c6 // indirect
 	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a
+	golang.org/x/tools v0.0.0-20190328211700-ab21143f2384
 	gopkg.in/oauth2.v3 v3.10.0
 	gopkg.in/resty.v1 v1.12.0
 	gopkg.in/yaml.v2 v2.2.2

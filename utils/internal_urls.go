@@ -1,10 +1,23 @@
 package utils
 
 import (
+	"net/url"
 	"strconv"
+	"strings"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/utils/config"
 )
+
+func IsInternalUrl(rawUrl string) bool {
+	u, err := url.Parse(config.Conf.BaseUrl)
+	if err != nil {
+		logrus.Error(err)
+		return false
+	}
+	return strings.Contains(rawUrl, u.Host)
+}
 
 func BuildAbsUrl(path string) string {
 	return config.Conf.BaseUrl + path

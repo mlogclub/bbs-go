@@ -406,7 +406,7 @@ func BuildHtmlContent(htmlContent string) string {
 		// }
 
 		// 内部跳转
-		if len(href) > 0 && !strings.Contains(href, "mlog.club") {
+		if len(href) > 0 && !utils.IsInternalUrl(href) {
 			v := url.Values{}
 			v.Add("url", href)
 			u, _ := url.Parse(utils.BuildAbsUrl("/redirect"))
