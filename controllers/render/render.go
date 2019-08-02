@@ -2,7 +2,6 @@ package render
 
 import (
 	"html/template"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -407,11 +406,8 @@ func BuildHtmlContent(htmlContent string) string {
 
 		// 内部跳转
 		if len(href) > 0 && !utils.IsInternalUrl(href) {
-			v := url.Values{}
-			v.Add("url", href)
-			u, _ := url.Parse(utils.BuildAbsUrl("/redirect"))
-			u.RawQuery = v.Encode()
-			selection.SetAttr("href", u.String())
+			newHref := simple.ParseUrl(utils.BuildAbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+			selection.SetAttr("href", newHref)
 			selection.SetAttr("target", "_blank")
 		}
 
