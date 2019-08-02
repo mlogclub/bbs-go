@@ -1,9 +1,10 @@
 package cache
 
 import (
+	"time"
+
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
-	"time"
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple"

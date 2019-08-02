@@ -1,12 +1,17 @@
 package api
 
 import (
+	"io/ioutil"
+	"strings"
+
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/services/collect"
 	"github.com/mlogclub/mlog/utils"
 )
 
@@ -235,3 +240,26 @@ func (this *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult 
 	return simple.JsonData(render.BuildSimpleArticles(relatedArticles))
 }
 
+// 微信采集发布接口
+func (this *ArticleController) PostWxpublish() *simple.JsonResult {
+	token := this.Ctx.FormValue("token")
+	data, err := ioutil.ReadFile("/data/publish_token")
+	if err != nil {
+		return simple.JsonErrorMsg("ReadToken error: " + err.Error())
+	}
+	token2 := strings.TrimSpace(string(data))
+	logrus.Info("token: " + token + ", token2: " + token2)
+	if token != token2 {
+		return simple.JsonErrorMsg("Token invalidate")
+	}
+	article := &collect.WxArticle{}
+	err = this.Ctx.ReadJSON(article)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	t, err := collect.NewWxbotApi().Publish(article)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().Put("id", t.Id).JsonResult()
+}
