@@ -9,10 +9,33 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/services/collect"
 )
 
 type TopicController struct {
 	Ctx iris.Context
+}
+
+func (this *TopicController) GetGithub() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil || user.Id != 1 {
+		return simple.JsonErrorMsg("无权限")
+	}
+	go func() {
+		collect.CollectGithub(func(repo *collect.GithubRepo) {
+			content := ""
+			if len(repo.Url) > 0 {
+				content += "项目地址：" + repo.Url + "\n"
+			}
+			if len(repo.Description) > 0 {
+				content += "项目简介：" + repo.Description + "\n\n"
+			}
+			content += repo.Readme
+			_, _ = services.TopicService.Publish(user.Id, []string{"开源项目", "Go语言"}, repo.Name, content,
+				simple.NewEmptyRspBuilder().Put("url", repo.Url).Put("full_name", repo.FullName).Build())
+		})
+	}()
+	return simple.JsonSuccess()
 }
 
 // 发表帖子
@@ -24,7 +47,7 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
-	topic, err := services.TopicService.Publish(user.Id, tags, title, content)
+	topic, err := services.TopicService.Publish(user.Id, tags, title, content, nil)
 	if err != nil {
 		return simple.JsonError(err)
 	}

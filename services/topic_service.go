@@ -81,7 +81,7 @@ func (this *topicService) Scan(cb ScanTopicCallback) {
 }
 
 // 发表
-func (this *topicService) Publish(userId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
+func (this *topicService) Publish(userId int64, tags []string, title, content string, extra map[string]interface{}) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -98,6 +98,9 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		Status:          model.TopicStatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
+	}
+	if len(extra) > 0 {
+		topic.ExtraData, _ = simple.FormatJson(extra)
 	}
 
 	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
