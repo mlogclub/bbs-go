@@ -2,9 +2,11 @@ package services
 
 import (
 	"errors"
+
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var FavoriteService = newFavoriteService()
@@ -53,8 +55,9 @@ func (this *favoriteService) Delete(id int64) {
 	repositories.FavoriteRepository.Delete(simple.GetDB(), id)
 }
 
-func (this *favoriteService) GetBy(entityType string, entityId int64) *model.Favorite {
-	return repositories.FavoriteRepository.Take(simple.GetDB(), "entity_type = ? and entity_id = ?", entityType, entityId)
+func (this *favoriteService) GetBy(userId int64, entityType string, entityId int64) *model.Favorite {
+	return repositories.FavoriteRepository.Take(simple.GetDB(), "user_id = ? and entity_type = ? and entity_id = ?",
+		userId, entityType, entityId)
 }
 
 // 收藏文章
@@ -63,16 +66,7 @@ func (this *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 	if article == nil || article.Status != model.ArticleStatusPublished {
 		return errors.New("收藏的文章不存在")
 	}
-	temp := this.GetBy(model.EntityTypeArticle, articleId)
-	if temp != nil { // 已经收藏
-		return nil
-	}
-	return repositories.FavoriteRepository.Create(simple.GetDB(), &model.Favorite{
-		UserId:     userId,
-		EntityType: model.EntityTypeArticle,
-		EntityId:   articleId,
-		CreateTime: simple.NowTimestamp(),
-	})
+	return this.addFavorite(userId, model.EntityTypeArticle, articleId)
 }
 
 // 收藏主题
@@ -81,14 +75,18 @@ func (this *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 	if topic == nil || topic.Status != model.TopicStatusOk {
 		return errors.New("收藏的话题不存在")
 	}
-	temp := this.GetBy(model.EntityTypeTopic, topicId)
+	return this.addFavorite(userId, model.EntityTypeTopic, topicId)
+}
+
+func (this *favoriteService) addFavorite(userId int64, entityType string, entityId int64) error {
+	temp := this.GetBy(userId, entityType, entityId)
 	if temp != nil { // 已经收藏
 		return nil
 	}
 	return repositories.FavoriteRepository.Create(simple.GetDB(), &model.Favorite{
 		UserId:     userId,
-		EntityType: model.EntityTypeTopic,
-		EntityId:   topicId,
+		EntityType: entityType,
+		EntityId:   entityId,
 		CreateTime: simple.NowTimestamp(),
 	})
 }
