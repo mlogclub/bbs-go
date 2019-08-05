@@ -25,6 +25,16 @@ func (this *TagController) GetBy(tagId int64) *simple.JsonResult {
 	return simple.JsonData(render.BuildTag(tag))
 }
 
+// 标签列表
+func (this *TagController) GetTags() *simple.JsonResult {
+	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+	tags, paging := services.TagService.Query(simple.NewParamQueries(this.Ctx).
+		Eq("status", model.TagStatusOk).
+		Page(page, 200).Desc("id"))
+
+	return simple.JsonPageData(render.BuildTags(tags), paging)
+}
+
 // 标签自动完成
 func (this *TagController) PostAutocomplete() *simple.JsonResult {
 	input := this.Ctx.FormValue("input")
