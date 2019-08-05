@@ -13,6 +13,7 @@ type Config struct {
 	Env        string `yaml:"Env"`        // 环境：prod、dev
 	BaseUrl    string `yaml:"BaseUrl"`    // base url
 	Port       string `yaml:"Port"`       // 端口
+	LogFile    string `yaml:"LogFile"`    // 日志文件
 	ShowSql    bool   `yaml:"ShowSql"`    // 是否显示日志
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
 

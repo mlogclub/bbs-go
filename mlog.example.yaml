@@ -1,6 +1,7 @@
 Env: prod # 环境，线上环境：prod、测试环境：dev
 BaseUrl: https://mlog.club # 网站域名
 Port: '8082' # 端口
+LogFile: /data/logs/mlog.log # 日志文件
 ShowSql: false # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 

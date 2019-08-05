@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"os"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/mlogclub/simple"
@@ -18,18 +19,20 @@ var configFile = flag.String("config", "./mlog.yaml", "配置文件路径")
 func init() {
 	flag.Parse()
 
-	initLogrus()
-
 	config.InitConfig(*configFile) // 初始化配置
+	initLogrus()                   // 初始化日志
 	utils.InitEmail()              // 初始化邮件
 	initDB()                       // 初始化数据库
 }
 
 func initLogrus() {
-	logrus.SetFormatter(&logrus.JSONFormatter{
-		PrettyPrint: true,
-	})
-	logrus.SetLevel(logrus.InfoLevel)
+	file, err := os.OpenFile(config.Conf.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err == nil {
+		logrus.SetLevel(logrus.InfoLevel)
+		logrus.SetOutput(file)
+	} else {
+		logrus.Error(err)
+	}
 }
 
 func initDB() {
