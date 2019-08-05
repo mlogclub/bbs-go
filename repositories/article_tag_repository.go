@@ -64,7 +64,7 @@ func (this *articleTagRepository) UpdateColumn(db *gorm.DB, id int64, name strin
 }
 
 func (this *articleTagRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.ArticleTag{}).Delete("id", id)
+	db.Delete(&model.ArticleTag{}, "id = ?", id)
 }
 
 func (this *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, tagIds []int64) {

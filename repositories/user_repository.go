@@ -65,7 +65,7 @@ func (this *userRepository) UpdateColumn(db *gorm.DB, id int64, name string, val
 }
 
 func (this *userRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.User{}).Delete("id", id)
+	db.Delete(&model.User{}, "id = ?", id)
 }
 
 func (this *userRepository) GetByEmail(db *gorm.DB, email string) *model.User {

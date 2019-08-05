@@ -64,5 +64,5 @@ func (this *topicRepository) UpdateColumn(db *gorm.DB, id int64, name string, va
 }
 
 func (this *topicRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.Topic{}).Delete("id", id)
+	db.Delete(&model.Topic{}, "id = ?", id)
 }

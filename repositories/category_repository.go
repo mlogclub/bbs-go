@@ -65,7 +65,7 @@ func (this *categoryRepository) UpdateColumn(db *gorm.DB, id int64, name string,
 }
 
 func (this *categoryRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.Category{}).Delete("id", id)
+	db.Delete(&model.Category{}, "id = ?", id)
 }
 
 func (this *categoryRepository) GetCategories() ([]model.Category, error) {

@@ -64,7 +64,7 @@ func (this *topicTagRepository) UpdateColumn(db *gorm.DB, id int64, name string,
 }
 
 func (this *topicTagRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.TopicTag{}).Delete("id", id)
+	db.Delete(&model.TopicTag{}, "id = ?", id)
 }
 
 func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {

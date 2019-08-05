@@ -72,5 +72,5 @@ func (this *userTokenRepository) UpdateColumn(db *gorm.DB, id int64, name string
 }
 
 func (this *userTokenRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.UserToken{}).Delete("id", id)
+	db.Delete(&model.UserToken{}, "id = ?", id)
 }

@@ -64,7 +64,7 @@ func (this *sysConfigRepository) UpdateColumn(db *gorm.DB, id int64, name string
 }
 
 func (this *sysConfigRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.SysConfig{}).Delete("id", id)
+	db.Delete(&model.SysConfig{}, "id = ?", id)
 }
 
 func (this *sysConfigRepository) GetByKey(db *gorm.DB, key string) *model.SysConfig {

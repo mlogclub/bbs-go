@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/mlog/model"
 )
 
 var FavoriteRepository = newFavoriteRepository()
@@ -64,5 +65,5 @@ func (this *favoriteRepository) UpdateColumn(db *gorm.DB, id int64, name string,
 }
 
 func (this *favoriteRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.Favorite{}).Delete("id", id)
+	db.Delete(&model.Favorite{}, "id = ?", id)
 }

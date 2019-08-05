@@ -65,7 +65,7 @@ func (this *githubUserRepository) UpdateColumn(db *gorm.DB, id int64, name strin
 }
 
 func (this *githubUserRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.GithubUser{}).Delete("id", id)
+	db.Delete(&model.GithubUser{}, "id = ?", id)
 }
 
 func (this *githubUserRepository) GetByGithubId(db *gorm.DB, githubId int64) *model.GithubUser {

@@ -64,5 +64,5 @@ func (this *messageRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 }
 
 func (this *messageRepository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.Message{}).Delete("id", id)
+	db.Delete(&model.Message{}, "id = ?", id)
 }
