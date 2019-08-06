@@ -15,9 +15,9 @@ type ConfigController struct {
 
 func (this *ConfigController) GetConfigs() *simple.JsonResult {
 	var (
-		siteTitle       = cache.SysConfigCache.Get(model.SysConfigSiteTitle)
-		siteDescription = cache.SysConfigCache.Get(model.SysConfigSiteDescription)
-		siteKeywords    = cache.SysConfigCache.Get(model.SysConfigSiteKeywords)
+		siteTitle       = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+		siteDescription = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+		siteKeywords    = cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords)
 	)
 
 	return simple.JsonData(iris.Map{
