@@ -82,7 +82,7 @@ func GetGithubRepo(path string) (*Repo, error) {
 
 func getGithubRepoByApi(path string) (string, error) {
 
-	time.Sleep(time.Second * 30) // 睡一下，否则会限制api访问
+	time.Sleep(time.Minute * 3) // 睡一下，否则会限制api访问
 
 	url := "https://api.github.com/repos" + path
 	rsp, err := resty.R().Get(url)
