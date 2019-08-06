@@ -7,12 +7,6 @@ var (
 	SysConfigSiteKeywords    = "site.keywords"
 	SysConfigRecommendTags   = "recommend.tags"
 
-	// 模版全局变量
-	TplCurrentUser     = "CurrentUser"
-	TplSiteTitle       = "SiteTitle"
-	TplSiteDescription = "SiteDescription"
-	TplSiteKeywords    = "SiteKeywords"
-
 	// 错误码
 	ErrorCodeUserNameExists = 10 // 用户名已存在
 	ErrorCodeEmailExists    = 11 // 邮箱已经存在

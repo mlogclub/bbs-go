@@ -58,6 +58,7 @@ func InitIris() {
 		m.Party("/category").Handle(new(api.CategoryController))
 		m.Party("/comment").Handle(new(api.CommentController))
 		m.Party("/favorite").Handle(new(api.FavoriteController))
+		m.Party("/config").Handle(new(api.ConfigController))
 		m.Party("/upload").Handle(new(api.UploadController))
 	})
 
