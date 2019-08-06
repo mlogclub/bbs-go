@@ -6,7 +6,6 @@ import (
 
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
@@ -248,7 +247,6 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 		return simple.JsonErrorMsg("ReadToken error: " + err.Error())
 	}
 	token2 := strings.TrimSpace(string(data))
-	logrus.Info("token: " + token + ", token2: " + token2)
 	if token != token2 {
 		return simple.JsonErrorMsg("Token invalidate")
 	}

@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{},
+	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{}, &Project{},
 }
 
 type Model struct {
@@ -198,4 +198,16 @@ type SysConfig struct {
 	Description string `gorm:"size:128" json:"description" form:"description"` // 配置描述
 	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
 	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`   // 更新时间
+}
+
+// 开源项目
+type Project struct {
+	Model
+	Name        string `gorm:"type:varchar(128)" json:"name" form:"name"`
+	FullName    string `gorm:"type:varchar(256);unique" json:"fullName" form:"fullName"`
+	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
+	Description string `gorm:"type:text" json:"description" form:"description"`
+	Readme      string `gorm:"type:longtext" json:"readme" form:"readme"`
+	TopicId     int64  `json:"topicId" form:"topicId"`
+	CreateTime  int64  `json:"createTime" form:"createTime"`
 }

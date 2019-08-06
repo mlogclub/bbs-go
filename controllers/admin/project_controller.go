@@ -1,51 +1,52 @@
-
 package admin
 
 import (
+	"strconv"
+
+	"github.com/kataras/iris"
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/simple"
-	"github.com/kataras/iris"
-	"strconv"
 )
 
-type UserTokenController struct {
-	Ctx             iris.Context
+type ProjectController struct {
+	Ctx iris.Context
 }
 
-func (this *UserTokenController) GetBy(id int64) *simple.JsonResult {
-	t := services.UserTokenService.Get(id)
+func (this *ProjectController) GetBy(id int64) *simple.JsonResult {
+	t := services.ProjectService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
 
-func (this *UserTokenController) AnyList() *simple.JsonResult {
-	list, paging := services.UserTokenService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+func (this *ProjectController) AnyList() *simple.JsonResult {
+	list, paging := services.ProjectService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *UserTokenController) PostCreate() *simple.JsonResult {
-	t := &model.UserToken{}
+func (this *ProjectController) PostCreate() *simple.JsonResult {
+	t := &model.Project{}
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.UserTokenService.Create(t)
+	err = services.ProjectService.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
 
-func (this *UserTokenController) PostUpdate() *simple.JsonResult {
+func (this *ProjectController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.UserTokenService.Get(id)
+	t := services.ProjectService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("entity not found")
 	}
@@ -55,10 +56,9 @@ func (this *UserTokenController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.UserTokenService.Update(t)
+	err = services.ProjectService.Update(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
-

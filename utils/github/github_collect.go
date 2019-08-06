@@ -1,8 +1,10 @@
-package collect
+package github
 
 import (
 	"bytes"
+	"errors"
 	"strconv"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/sirupsen/logrus"
@@ -10,22 +12,22 @@ import (
 	"gopkg.in/resty.v1"
 )
 
-type GithubCollectCallback func(repo *GithubRepo)
+type CollectCallback func(repo *Repo)
 
-func CollectGithub(callback GithubCollectCallback) {
+func CollectGithub(callback CollectCallback) {
 	for i := 1; i <= 100; i++ {
 		paths, err := GetGithubRepos(i)
 		if err != nil {
 			logrus.Error(err)
-			continue
-		}
-		for _, path := range paths {
-			repo, err := GetGithubRepo(path)
-			if err != nil {
-				logrus.Error(err)
-				continue
+		} else {
+			for _, path := range paths {
+				repo, err := GetGithubRepo(path)
+				if err != nil {
+					logrus.Error(err)
+				} else {
+					callback(repo)
+				}
 			}
-			callback(repo)
 		}
 	}
 }
@@ -55,17 +57,21 @@ func GetGithubRepos(page int) ([]string, error) {
 	return ret, nil
 }
 
-func GetGithubRepo(path string) (*GithubRepo, error) {
+func GetGithubRepo(path string) (*Repo, error) {
 	repoJson, err := getGithubRepoByApi(path)
 	if err != nil {
 		return nil, err
+	}
+	messageRet := gjson.Get(repoJson, "message")
+	if messageRet.Exists() {
+		return nil, errors.New(messageRet.String())
 	}
 	branch := gjson.Get(repoJson, "default_branch").String()
 	readme, err := getGithubRepoReadme(path, branch)
 	if err != nil {
 		return nil, err
 	}
-	return &GithubRepo{
+	return &Repo{
 		Url:         gjson.Get(repoJson, "html_url").String(),
 		Name:        gjson.Get(repoJson, "name").String(),
 		FullName:    gjson.Get(repoJson, "full_name").String(),
@@ -75,6 +81,9 @@ func GetGithubRepo(path string) (*GithubRepo, error) {
 }
 
 func getGithubRepoByApi(path string) (string, error) {
+
+	time.Sleep(time.Second * 30) // 睡一下，否则会限制api访问
+
 	url := "https://api.github.com/repos" + path
 	rsp, err := resty.R().Get(url)
 	if err != nil {
@@ -93,7 +102,7 @@ func getGithubRepoReadme(path, branch string) (string, error) {
 	return string(rsp.Body()), nil
 }
 
-type GithubRepo struct {
+type Repo struct {
 	Url         string
 	Name        string
 	FullName    string

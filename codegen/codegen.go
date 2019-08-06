@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.UserToken{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.Project{}))
 }
