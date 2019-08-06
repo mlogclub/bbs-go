@@ -204,7 +204,7 @@ type SysConfig struct {
 type Project struct {
 	Model
 	Name        string `gorm:"type:varchar(128)" json:"name" form:"name"`
-	FullName    string `gorm:"type:varchar(256);unique" json:"fullName" form:"fullName"`
+	FullName    string `gorm:"type:varchar(128);unique" json:"fullName" form:"fullName"`
 	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
 	Description string `gorm:"type:text" json:"description" form:"description"`
 	Readme      string `gorm:"type:longtext" json:"readme" form:"readme"`
