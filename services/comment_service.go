@@ -50,8 +50,8 @@ func (this *commentService) UpdateColumn(id int64, name string, value interface{
 	return repositories.CommentRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *commentService) Delete(id int64) {
-	repositories.CommentRepository.Delete(simple.GetDB(), id)
+func (this *commentService) Delete(id int64) error {
+	return repositories.CommentRepository.UpdateColumn(simple.GetDB(), id, "status", model.CommentStatusDeleted)
 }
 
 func (this *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {

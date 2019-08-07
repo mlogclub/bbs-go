@@ -1,13 +1,13 @@
 package admin
 
 import (
-	"github.com/mlogclub/mlog/controllers/render"
 	"strconv"
+
+	"github.com/mlogclub/mlog/controllers/render"
 
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 )
 
@@ -24,7 +24,7 @@ func (this *CommentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CommentController) AnyList() *simple.JsonResult {
-	list, paging := services.CommentService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.CommentService.Query(simple.NewParamQueries(this.Ctx).EqAuto("status").PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, comment := range list {
@@ -43,32 +43,11 @@ func (this *CommentController) AnyList() *simple.JsonResult {
 	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
 }
 
-func (this *CommentController) PostCreate() *simple.JsonResult {
-	t := &model.Comment{}
-	this.Ctx.ReadForm(t)
-
-	err := services.CommentService.Create(t)
+func (this *CommentController) PostDeleteBy(id int64) *simple.JsonResult {
+	err := services.CommentService.Delete(id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
+	} else {
+		return simple.JsonSuccess()
 	}
-	return simple.JsonData(t)
-}
-
-func (this *CommentController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	t := services.CommentService.Get(id)
-	if t == nil {
-		return simple.JsonErrorMsg("entity not found")
-	}
-
-	this.Ctx.ReadForm(t)
-
-	err = services.CommentService.Update(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
 }

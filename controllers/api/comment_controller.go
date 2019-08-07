@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
@@ -30,13 +32,13 @@ func (this *CommentController) GetList() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	nextCursor := cursor
-	var itemList []model.CommentResponse
+	next := cursor
+	var results []model.CommentResponse
 	for _, comment := range list {
-		itemList = append(itemList, *render.BuildComment(comment))
-		nextCursor = comment.Id
+		results = append(results, *render.BuildComment(comment))
+		next = comment.Id
 	}
-	return simple.NewEmptyRspBuilder().Put("itemList", itemList).Put("cursor", nextCursor).JsonResult()
+	return simple.JsonCursorData(results, strconv.FormatInt(next, 10))
 }
 
 func (this *CommentController) PostCreate() *simple.JsonResult {
