@@ -25,5 +25,4 @@ func (this *ConfigController) GetConfigs() *simple.JsonResult {
 		"siteDescription": siteDescription,
 		"siteKeywords":    siteKeywords,
 	})
-
 }

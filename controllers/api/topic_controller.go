@@ -22,7 +22,6 @@ func (this *TopicController) GetGithub() *simple.JsonResult {
 	}
 	go func() {
 		services.ProjectService.StartCollect()
-		services.ProjectService.SyncToTopic(user.Id)
 	}()
 	return simple.JsonSuccess()
 }
