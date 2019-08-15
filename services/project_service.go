@@ -121,6 +121,7 @@ func (this *projectService) StartCollect() {
 		repo, err := github.GetGithubRepo(path)
 		if err != nil {
 			logrus.Error(err)
+			return
 		}
 		logrus.Info("采集项目：" + repo.Url)
 		project = this.updateOrCreate(repo)
