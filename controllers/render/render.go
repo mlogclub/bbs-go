@@ -411,6 +411,11 @@ func BuildHtmlContent(htmlContent string) string {
 			selection.SetAttr("target", "_blank")
 		}
 
+		// 如果是锚链接
+		if strings.Index(href, "#") == 0 {
+			selection.ReplaceWithHtml(selection.Text())
+		}
+
 		// 如果a标签没有title，那么设置title
 		title := selection.AttrOr("title", "")
 		if len(title) == 0 {

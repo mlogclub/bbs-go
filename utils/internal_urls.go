@@ -16,6 +16,9 @@ func IsInternalUrl(rawUrl string) bool {
 		logrus.Error(err)
 		return false
 	}
+	if strings.Index(rawUrl, "#") == 0 { // 如果是“#”开头，说明是锚链接
+		return true
+	}
 	return strings.Contains(rawUrl, u.Host)
 }
 
