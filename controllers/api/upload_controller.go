@@ -9,7 +9,6 @@ import (
 
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/oss"
 )
 
 const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M
