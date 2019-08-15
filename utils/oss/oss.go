@@ -2,19 +2,24 @@ package oss
 
 import (
 	"bytes"
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/mlogclub/mlog/utils/config"
-	"github.com/mlogclub/simple"
-	"gopkg.in/resty.v1"
 	"time"
+
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
+	"gopkg.in/resty.v1"
+
+	"github.com/mlogclub/mlog/utils/config"
 )
 
+// 上传图片
 func UploadImage(data []byte) (string, error) {
 	md5 := simple.MD5Bytes(data)
 	key := "images/" + simple.TimeFormat(time.Now(), "2006/01/02/") + md5 + ".jpg"
 	return Upload(key, data)
 }
 
+// 将图片copy到oss
 func CopyImage(inputUrl string) (string, error) {
 	data, err := download(inputUrl)
 	if err != nil {
@@ -23,6 +28,7 @@ func CopyImage(inputUrl string) (string, error) {
 	return UploadImage(data)
 }
 
+// 上传
 func Upload(key string, data []byte) (string, error) {
 	// 创建OSSClient实例。
 	client, err := oss.New(config.Conf.AliyunOss.Endpoint, config.Conf.AliyunOss.AccessId, config.Conf.AliyunOss.AccessSecret)
@@ -44,10 +50,27 @@ func Upload(key string, data []byte) (string, error) {
 	return config.Conf.AliyunOss.Host + key, nil
 }
 
+// 下载
 func download(url string) ([]byte, error) {
 	rsp, err := resty.R().Get(url)
 	if err != nil {
 		return nil, err
 	}
 	return rsp.Body(), nil
+}
+
+// 图片url签名
+func SignUrl(objectKey string) string {
+	client, err := oss.New(config.Conf.AliyunOss.Endpoint, config.Conf.AliyunOss.AccessId, config.Conf.AliyunOss.AccessSecret)
+	if err != nil {
+		logrus.Error(err)
+		return objectKey
+	}
+	bucket := oss.Bucket{*client, "mlogclub"}
+	ret, err := bucket.SignURL(objectKey, oss.HTTPGet, 3600)
+	if err != nil {
+		logrus.Error(err)
+		return objectKey
+	}
+	return ret
 }
