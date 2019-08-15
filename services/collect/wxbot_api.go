@@ -28,8 +28,12 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 	userId, _ := this.initUser(wxArticle)
 	categoryId := this.initCategory(simple.GetDB(), wxArticle)
 	tags := this.initTags(simple.GetDB(), wxArticle)
+	summary := wxArticle.Summary
+	if simple.RuneLen(summary) == 0 {
+		summary = simple.GetSummary(wxArticle.TextContent, 256)
+	}
 
-	return services.ArticleService.Publish(userId, wxArticle.Title, simple.GetSummary(wxArticle.TextContent, 256),
+	return services.ArticleService.Publish(userId, wxArticle.Title, summary,
 		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tags, wxArticle.Url, true)
 }
 
@@ -114,6 +118,7 @@ type WxArticle struct {
 	HtmlContent string `json:"htmlContent"` // 公众号文章html内容
 	MdContent   string `json:"mdContent"`   // 公众号文章md内容
 	TextContent string `json:"textContent"` // 文本内容
+	Summary     string `json:"summary"`     // 摘要
 	PubAt       string `json:"pubAt"`       // 发布时间
 	UrlMd5      string `json:"urlMd5"`      // 链接地址的md5
 	RoundHead   string `json:"roundHead"`   // 圆头像
