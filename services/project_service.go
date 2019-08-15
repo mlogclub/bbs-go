@@ -2,6 +2,7 @@ package services
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -104,10 +105,28 @@ func (this *projectService) updateOrCreate(repo *github.Repo) *model.Project {
 
 // 开始采集
 func (this *projectService) StartCollect() {
-	github.CollectGithub(func(repo *github.Repo) {
+	// github.CollectRepo(func(repo *github.Repo) {
+	// 	logrus.Info("采集项目：" + repo.Url)
+	// 	project := this.updateOrCreate(repo)
+	// 	this.syncToTopic(project)
+	// })
+
+	github.Collect(func(path string) {
+		fullName := github.GetFullnameByPath(path)
+		project := this.GetByFullName(fullName)
+		if project != nil {
+			logrus.Info("已采集仓库：" + path)
+			return
+		}
+		repo, err := github.GetGithubRepo(path)
+		if err != nil {
+			logrus.Error(err)
+		}
 		logrus.Info("采集项目：" + repo.Url)
-		project := this.updateOrCreate(repo)
+		project = this.updateOrCreate(repo)
 		this.syncToTopic(project)
+
+		time.Sleep(time.Minute * 3) // 睡一下，否则会限制api访问
 	})
 }
 

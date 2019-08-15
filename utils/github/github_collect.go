@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"strconv"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/sirupsen/logrus"
@@ -13,23 +12,30 @@ import (
 )
 
 type CollectCallback func(repo *Repo)
+type CollectPathCallback func(path string)
 
-func CollectGithub(callback CollectCallback) {
+func Collect(callback CollectPathCallback) {
 	for i := 1; i <= 100; i++ {
 		paths, err := GetGithubRepos(i)
 		if err != nil {
 			logrus.Error(err)
 		} else {
 			for _, path := range paths {
-				repo, err := GetGithubRepo(path)
-				if err != nil {
-					logrus.Error(err)
-				} else {
-					callback(repo)
-				}
+				callback(path)
 			}
 		}
 	}
+}
+
+func CollectRepo(callback CollectCallback) {
+	Collect(func(path string) {
+		repo, err := GetGithubRepo(path)
+		if err != nil {
+			logrus.Error(err)
+		} else {
+			callback(repo)
+		}
+	})
 }
 
 func GetGithubRepos(page int) ([]string, error) {
@@ -81,15 +87,17 @@ func GetGithubRepo(path string) (*Repo, error) {
 }
 
 func getGithubRepoByApi(path string) (string, error) {
-
-	time.Sleep(time.Minute * 3) // 睡一下，否则会限制api访问
-
 	url := "https://api.github.com/repos" + path
 	rsp, err := resty.R().Get(url)
 	if err != nil {
 		return "", err
 	}
 	return string(rsp.Body()), nil
+}
+
+// 根据Path获取fullName
+func GetFullnameByPath(path string) string {
+	return path[0:]
 }
 
 // README
