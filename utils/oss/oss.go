@@ -66,7 +66,7 @@ func SignUrl(objectKey string) string {
 		logrus.Error(err)
 		return objectKey
 	}
-	bucket := oss.Bucket{*client, "mlogclub"}
+	bucket := oss.Bucket{Client: *client, BucketName: config.Conf.AliyunOss.Bucket}
 	ret, err := bucket.SignURL(objectKey, oss.HTTPGet, 3600)
 	if err != nil {
 		logrus.Error(err)
