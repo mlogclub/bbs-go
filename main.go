@@ -21,6 +21,7 @@ func init() {
 	config.InitConfig(*configFile) // 初始化配置
 	initLogrus()                   // 初始化日志
 	utils.InitEmail()              // 初始化邮件
+	utils.InitAliyunOss()          // 初始化阿里云Oss
 	initDB()                       // 初始化数据库
 }
 

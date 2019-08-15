@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/utils"
 	"github.com/mlogclub/mlog/utils/oss"
 )
 
@@ -40,7 +41,7 @@ func (this *UploadController) Post() *simple.JsonResult {
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
-	url, err := oss.UploadImage(fileBytes)
+	url, err := utils.AliyunOss.UploadImage(fileBytes)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

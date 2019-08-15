@@ -1,9 +1,10 @@
 package collect
 
 import (
-	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils/oss"
 	"strings"
+
+	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/utils"
 
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/core/errors"
@@ -40,7 +41,7 @@ func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
 		_ = services.UserService.Update(user)
 		return user.Id, nil
 	} else {
-		avatar, err := oss.CopyImage(article.OriHead)
+		avatar, err := utils.AliyunOss.CopyImage(article.OriHead)
 		if err != nil {
 			return 0, err
 		}

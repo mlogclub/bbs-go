@@ -3,12 +3,14 @@ package collect
 import (
 	"bytes"
 	"errors"
-	"github.com/mattn/godown"
-	"github.com/mlogclub/mlog/utils/oss"
-	"github.com/mlogclub/simple"
-	"github.com/sundy-li/html2article"
 	"strconv"
 	"strings"
+
+	"github.com/mattn/godown"
+	"github.com/mlogclub/simple"
+	"github.com/sundy-li/html2article"
+
+	"github.com/mlogclub/mlog/utils"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/sirupsen/logrus"
@@ -95,7 +97,7 @@ func handleImageSrc(html string, srcAttr string, urlFunc GetImageAbsoluteUrlFunc
 		}
 		src = urlFunc(src)
 		if len(src) > 0 {
-			output, err := oss.CopyImage(src)
+			output, err := utils.AliyunOss.CopyImage(src)
 			if err == nil {
 				selection.SetAttr("src", output)
 			} else {
