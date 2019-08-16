@@ -2,6 +2,7 @@ package api
 
 import (
 	"io/ioutil"
+	"math/rand"
 	"strings"
 
 	"github.com/kataras/iris/context"
@@ -10,6 +11,7 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/services/collect"
 	"github.com/mlogclub/mlog/utils"
 )
@@ -237,6 +239,26 @@ func (this *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult 
 func (this *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
 	relatedArticles := services.ArticleService.GetRelatedArticles(articleId)
 	return simple.JsonData(render.BuildSimpleArticles(relatedArticles))
+}
+
+// 推荐
+func (this *ArticleController) GetRecommend() *simple.JsonResult {
+	articles := cache.ArticleCache.GetRecommendArticles()
+	if articles == nil || len(articles) == 0 {
+		return simple.JsonSuccess()
+	} else {
+		dest := make([]model.Article, len(articles))
+		perm := rand.Perm(len(articles))
+		for i, v := range perm {
+			dest[v] = articles[i]
+		}
+		end := 10
+		if end > len(articles) {
+			end = len(articles)
+		}
+		ret := articles[0:end]
+		return simple.JsonData(render.BuildSimpleArticles(ret))
+	}
 }
 
 // 微信采集发布接口
