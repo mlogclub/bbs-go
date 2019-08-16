@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math/rand"
 	"strings"
 
 	"github.com/kataras/iris"
@@ -9,6 +10,7 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/mlog/services/cache"
 )
 
 type TopicController struct {
@@ -200,6 +202,26 @@ func (this *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
+}
+
+// 推荐
+func (this *TopicController) GetRecommend() *simple.JsonResult {
+	topics := cache.TopicCache.GetRecommendTopics()
+	if topics == nil || len(topics) == 0 {
+		return simple.JsonSuccess()
+	} else {
+		dest := make([]model.Topic, len(topics))
+		perm := rand.Perm(len(topics))
+		for i, v := range perm {
+			dest[v] = topics[i]
+		}
+		end := 10
+		if end > len(topics) {
+			end = len(topics)
+		}
+		ret := topics[0:end]
+		return simple.JsonData(render.BuildSimpleTopics(ret))
+	}
 }
 
 // // 采集发布
