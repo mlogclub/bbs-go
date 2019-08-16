@@ -204,11 +204,11 @@ type SysConfig struct {
 type Project struct {
 	Model
 	UserId      int64  `gorm:"not null" json:"userId" form:"userId"`
-	Name        string `gorm:"type:varchar(128)" json:"name" form:"name"`
-	FullName    string `gorm:"type:varchar(128);unique" json:"fullName" form:"fullName"`
+	Name        string `gorm:"type:varchar(1024)" json:"name" form:"name"`
 	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
+	DocUrl      string `gorm:"type:varchar(1024)" json:"docUrl" form:"docUrl"`
+	DownloadUrl string `gorm:"type:varchar(1024)" json:"downloadUrl" form:"downloadUrl"`
 	Description string `gorm:"type:text" json:"description" form:"description"`
-	Readme      string `gorm:"type:longtext" json:"readme" form:"readme"`
-	TopicId     int64  `json:"topicId" form:"topicId"`
+	Content     string `gorm:"type:longtext" json:"content" form:"content"`
 	CreateTime  int64  `json:"createTime" form:"createTime"`
 }

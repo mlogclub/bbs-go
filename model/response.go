@@ -80,8 +80,9 @@ type ProjectSimpleResponse struct {
 	ProjectId   int64     `json:"projectId"`
 	User        *UserInfo `json:"user"`
 	Name        string    `json:"name"`
-	FullName    string    `json:"fullName"`
 	Url         string    `json:"url"`
+	DocUrl      string    `json:"docUrl"`
+	DownloadUrl string    `json:"downloadUrl"`
 	Description string    `json:"description"`
 	CreateTime  int64     `json:"createTime"`
 }
@@ -89,7 +90,7 @@ type ProjectSimpleResponse struct {
 // 项目详情
 type ProjectResponse struct {
 	ProjectSimpleResponse
-	Readme template.HTML `json:"readme"`
+	Content template.HTML `json:"content"`
 }
 
 type CommentResponse struct {

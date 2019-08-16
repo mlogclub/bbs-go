@@ -254,13 +254,14 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	rsp.ProjectId = project.Id
 	rsp.User = BuildUserDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
-	rsp.FullName = project.FullName
 	rsp.Url = project.Url
+	rsp.Url = project.Url
+	rsp.DocUrl = project.DocUrl
 	rsp.Description = project.Description
 	rsp.CreateTime = project.CreateTime
 
-	mr := simple.NewMd().Run(project.Readme)
-	rsp.Readme = template.HTML(BuildHtmlContent(mr.ContentHtml))
+	mr := simple.NewMd().Run(project.Content)
+	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 
 	return rsp
 }
@@ -284,8 +285,9 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	rsp.ProjectId = project.Id
 	rsp.User = BuildUserDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
-	rsp.FullName = project.FullName
 	rsp.Url = project.Url
+	rsp.DocUrl = project.DocUrl
+	rsp.DownloadUrl = project.DownloadUrl
 	rsp.Description = project.Description
 	rsp.CreateTime = project.CreateTime
 	return rsp

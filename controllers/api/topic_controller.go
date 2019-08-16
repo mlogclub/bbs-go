@@ -17,17 +17,6 @@ type TopicController struct {
 	Ctx iris.Context
 }
 
-func (this *TopicController) GetGithub() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	if user == nil || user.Id != 1 {
-		return simple.JsonErrorMsg("无权限")
-	}
-	go func() {
-		services.ProjectService.StartCollect()
-	}()
-	return simple.JsonSuccess()
-}
-
 // 发表帖子
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)

@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/mlog/services/collect"
+)
 
 func main() {
-	arr := []int{1, 2, 3, 4, 5}
-	for _, v := range arr[0:len(arr)] {
-		fmt.Println(v)
-	}
+	p := collect.CollectProject("https://studygolang.com/p/gomybatis")
+	fmt.Println(simple.FormatJson(p))
 }
