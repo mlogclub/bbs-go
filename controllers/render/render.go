@@ -246,6 +246,51 @@ func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
 	return responses
 }
 
+func BuildProject(project *model.Project) *model.ProjectResponse {
+	if project == nil {
+		return nil
+	}
+	rsp := &model.ProjectResponse{}
+	rsp.ProjectId = project.Id
+	rsp.User = BuildUserDefaultIfNull(project.UserId)
+	rsp.Name = project.Name
+	rsp.FullName = project.FullName
+	rsp.Url = project.Url
+	rsp.Description = project.Description
+	rsp.CreateTime = project.CreateTime
+
+	mr := simple.NewMd().Run(project.Readme)
+	rsp.Readme = template.HTML(BuildHtmlContent(mr.ContentHtml))
+
+	return rsp
+}
+
+func BuildSimpleProjects(projects []model.Project) [] model.ProjectSimpleResponse {
+	if projects == nil || len(projects) == 0 {
+		return nil
+	}
+	var responses []model.ProjectSimpleResponse
+	for _, project := range projects {
+		responses = append(responses, *BuildSimpleProject(&project))
+	}
+	return responses
+}
+
+func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
+	if project == nil {
+		return nil
+	}
+	rsp := &model.ProjectSimpleResponse{}
+	rsp.ProjectId = project.Id
+	rsp.User = BuildUserDefaultIfNull(project.UserId)
+	rsp.Name = project.Name
+	rsp.FullName = project.FullName
+	rsp.Url = project.Url
+	rsp.Description = project.Description
+	rsp.CreateTime = project.CreateTime
+	return rsp
+}
+
 func BuildComment(comment model.Comment) *model.CommentResponse {
 	return _buildComment(&comment, true)
 }

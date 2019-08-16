@@ -75,6 +75,23 @@ type TopicResponse struct {
 	Toc     template.HTML `json:"toc"`
 }
 
+// 项目简单返回
+type ProjectSimpleResponse struct {
+	ProjectId   int64     `json:"projectId"`
+	User        *UserInfo `json:"user"`
+	Name        string    `json:"name"`
+	FullName    string    `json:"fullName"`
+	Url         string    `json:"url"`
+	Description string    `json:"description"`
+	CreateTime  int64     `json:"createTime"`
+}
+
+// 项目详情
+type ProjectResponse struct {
+	ProjectSimpleResponse
+	Readme template.HTML `json:"readme"`
+}
+
 type CommentResponse struct {
 	CommentId    int64            `json:"commentId"`
 	User         *UserInfo        `json:"user"`

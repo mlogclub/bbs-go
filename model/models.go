@@ -203,6 +203,7 @@ type SysConfig struct {
 // 开源项目
 type Project struct {
 	Model
+	UserId      int64  `gorm:"not null" json:"userId" form:"userId"`
 	Name        string `gorm:"type:varchar(128)" json:"name" form:"name"`
 	FullName    string `gorm:"type:varchar(128);unique" json:"fullName" form:"fullName"`
 	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
