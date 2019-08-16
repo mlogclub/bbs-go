@@ -256,7 +256,7 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 		if end > len(articles) {
 			end = len(articles)
 		}
-		ret := articles[0:end]
+		ret := dest[0:end]
 		return simple.JsonData(render.BuildSimpleArticles(ret))
 	}
 }

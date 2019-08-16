@@ -219,7 +219,7 @@ func (this *TopicController) GetRecommend() *simple.JsonResult {
 		if end > len(topics) {
 			end = len(topics)
 		}
-		ret := topics[0:end]
+		ret := dest[0:end]
 		return simple.JsonData(render.BuildSimpleTopics(ret))
 	}
 }
