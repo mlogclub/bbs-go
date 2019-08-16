@@ -24,7 +24,7 @@ type Project struct {
 }
 
 func Page(page int, pageFunc PageFunc) {
-	resp, err := resty.R().Get("https://studygolang.com/projects?p=" + strconv.Itoa(page))
+	resp, err := resty.SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get("https://studygolang.com/projects?p=" + strconv.Itoa(page))
 	if err != nil {
 		logrus.Error(err)
 		return
@@ -45,7 +45,7 @@ func Page(page int, pageFunc PageFunc) {
 }
 
 func CollectProject(url string) *Project {
-	resp, err := resty.R().Get(url)
+	resp, err := resty.SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get(url)
 	if err != nil {
 		logrus.Error(err)
 		return nil
