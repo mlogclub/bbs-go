@@ -7,8 +7,10 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/go-resty/resty/v2"
+
+	"github.com/mlogclub/mlog/common/config"
 	"github.com/mlogclub/mlog/controllers/api"
-	"github.com/mlogclub/mlog/utils/config"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
@@ -61,6 +63,8 @@ func InitIris() {
 		m.Party("/favorite").Handle(new(api.FavoriteController))
 		m.Party("/config").Handle(new(api.ConfigController))
 		m.Party("/upload").Handle(new(api.UploadController))
+		m.Party("/subject").Handle(new(api.SubjectController))
+		m.Party("/link").Handle(new(api.LinkController))
 	})
 
 	// admin
@@ -76,6 +80,22 @@ func InitIris() {
 		m.Party("/article-tag").Handle(new(admin.ArticleTagController))
 		m.Party("/topic").Handle(new(admin.TopicController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
+		m.Party("/subject").Handle(new(admin.SubjectController))
+		m.Party("/subject-content").Handle(new(admin.SubjectContentController))
+		m.Party("/link").Handle(new(admin.LinkController))
+		m.Party("/collect-rule").Handle(new(admin.CollectRuleController))
+		m.Party("/collect-article").Handle(new(admin.CollectArticleController))
+	})
+
+	app.Get("/api/img/proxy", func(i context.Context) {
+		url := i.FormValue("url")
+		resp, err := resty.New().R().Get(url)
+		i.Header("Content-Type", "image/jpg")
+		if err == nil {
+			_, _ = i.Write(resp.Body())
+		} else {
+			logrus.Error(err)
+		}
 	})
 
 	server := &http.Server{Addr: ":" + config.Conf.Port}

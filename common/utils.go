@@ -1,10 +1,13 @@
-package utils
+package common
 
 import (
-	"github.com/mlogclub/mlog/utils/config"
-	"github.com/mlogclub/simple"
 	"regexp"
 	"strings"
+
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/mlog/common/config"
 )
 
 // 是否是正式环境
@@ -25,6 +28,16 @@ func IndexOf(userIds []int64, userId int64) int {
 	return -1
 }
 
+func GetSummary(contentType string, content string) (summary string) {
+	if contentType == model.ContentTypeMarkdown {
+		mr := simple.NewMd().Run(content)
+		summary = mr.SummaryText
+	} else {
+		summary = simple.GetSummary(simple.GetHtmlText(content), 256)
+	}
+	return
+}
+
 // 截取markdown摘要
 func GetMarkdownSummary(markdown string) string {
 	if len(markdown) == 0 {
@@ -32,6 +45,15 @@ func GetMarkdownSummary(markdown string) string {
 	}
 	mdResult := simple.NewMd().Run(markdown)
 	return mdResult.SummaryText
+}
+
+// 获取html内容摘要
+func GetHtmlSummary(html string) string {
+	if len(html) == 0 {
+		return ""
+	}
+	text := simple.GetHtmlText(html)
+	return simple.GetSummary(text, 256)
 }
 
 // 获取用户角色

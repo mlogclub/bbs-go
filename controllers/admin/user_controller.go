@@ -2,7 +2,7 @@ package admin
 
 import (
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/common"
 	"strconv"
 	"strings"
 
@@ -89,5 +89,5 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 }
 
 func (this *UserController) buildUserItem(user *model.User) map[string]interface{} {
-	return simple.NewRspBuilder(user).Put("roles", utils.GetUserRoles(user.Roles)).Build()
+	return simple.NewRspBuilder(user).Put("roles", common.GetUserRoles(user.Roles)).Build()
 }

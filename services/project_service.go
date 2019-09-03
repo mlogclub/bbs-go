@@ -1,19 +1,26 @@
 package services
 
 import (
+	"math"
+	"path"
 	"time"
 
+	"github.com/gorilla/feeds"
+	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/mlog/utils/github"
+	"github.com/mlogclub/mlog/services/cache"
 )
 
 var ProjectService = newProjectService()
 
-type ProjectScanCallback func(project model.Project)
+type ProjectScanCallback func(projects []model.Project) bool
 
 func newProjectService() *projectService {
 	return &projectService{}
@@ -58,15 +65,34 @@ func (this *projectService) Delete(id int64) {
 	repositories.ProjectRepository.Delete(simple.GetDB(), id)
 }
 
-func (this *projectService) GetByFullName(fullname string) *model.Project {
-	return this.Take("full_name = ?", fullname)
+// 发布
+func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl, downloadUrl, contentType,
+	content string) (*model.Project, error) {
+	project := &model.Project{
+		UserId:      userId,
+		Name:        name,
+		Title:       title,
+		Logo:        logo,
+		Url:         url,
+		DocUrl:      docUrl,
+		DownloadUrl: downloadUrl,
+		ContentType: contentType,
+		Content:     content,
+		CreateTime:  simple.NowTimestamp(),
+	}
+	err := repositories.ProjectRepository.Create(simple.GetDB(), project)
+	if err != nil {
+		return nil, err
+	}
+	common.BaiduUrlPush([]string{urls.ProjectUrl(project.Id)})
+	return project, nil
 }
 
 func (this *projectService) Scan(callback ProjectScanCallback) {
 	var cursor int64
 	for {
 		list, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
-			cursor).Order("id asc").Size(300))
+			cursor).Order("id asc").Size(100))
 		if err != nil {
 			break
 		}
@@ -74,49 +100,108 @@ func (this *projectService) Scan(callback ProjectScanCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		for _, project := range list {
-			callback(project)
+		if !callback(list) {
+			break
 		}
 	}
 }
 
-func (this *projectService) updateOrCreate(repo *github.Repo) *model.Project {
-	project := this.GetByFullName(repo.FullName)
-	if project == nil {
-		project = &model.Project{}
-		project.CreateTime = simple.NowTimestamp()
-	}
-
-	project.Name = repo.Name
-	project.Url = repo.Url
-	project.Description = repo.Description
-	project.Content = repo.Readme
-
-	if project.Id > 0 {
-		_ = this.Update(project)
-	} else {
-		_ = this.Create(project)
-	}
-	return project
-}
-
-// 开始采集
-func (this *projectService) StartCollect() {
-	github.Collect(func(path string) {
-		fullName := github.GetFullnameByPath(path)
-		project := this.GetByFullName(fullName)
-		if project != nil {
-			logrus.Info("已采集仓库：" + path)
-			return
-		}
-		repo, err := github.GetGithubRepo(path)
+func (this *projectService) ScanDesc(callback ProjectScanCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ?",
+			cursor).Order("id desc").Size(100))
 		if err != nil {
-			logrus.Error(err)
-			return
+			break
 		}
-		logrus.Info("采集项目：" + repo.Url)
-		project = this.updateOrCreate(repo)
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !callback(list) {
+			break
+		}
+	}
+}
 
-		time.Sleep(time.Minute * 3) // 睡一下，否则会限制api访问
+func (this *projectService) GenerateSitemap() {
+	sm := stm.NewSitemap(0)
+	sm.SetDefaultHost(config.Conf.BaseUrl)
+	sm.Create()
+
+	count := 0
+	this.ScanDesc(func(projects []model.Project) bool {
+		for _, project := range projects {
+			projectUrl := urls.ProjectUrl(project.Id)
+			sm.Add(stm.URL{{"loc", projectUrl}, {"lastmod", simple.TimeFromTimestamp(project.CreateTime)}})
+			count++
+			if count >= 50000 {
+				return false
+			}
+		}
+		return true
 	})
+
+	data := sm.XMLContent()
+	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "project_sitemap.xml"), string(data), false)
+
+	// Ping
+	sm.PingSearchEngines(urls.AbsUrl("/project_sitemap.xml"))
+}
+
+// rss
+func (this *projectService) GenerateRss() {
+	projects, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(),
+		simple.NewQueryCnd("1 = 1").Order("id desc").Size(2000))
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+
+	var items []*feeds.Item
+
+	for _, project := range projects {
+		projectUrl := urls.ProjectUrl(project.Id)
+		user := cache.UserCache.Get(project.UserId)
+		if user == nil {
+			continue
+		}
+		description := ""
+		if project.ContentType == model.ContentTypeMarkdown {
+			description = common.GetMarkdownSummary(project.Content)
+		} else {
+			description = common.GetHtmlSummary(project.Content)
+		}
+		item := &feeds.Item{
+			Title:       project.Name + " - " + project.Title,
+			Link:        &feeds.Link{Href: projectUrl},
+			Description: description,
+			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
+			Created:     simple.TimeFromTimestamp(project.CreateTime),
+		}
+		items = append(items, item)
+	}
+	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+	feed := &feeds.Feed{
+		Title:       siteTitle,
+		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
+		Description: siteDescription,
+		Author:      &feeds.Author{Name: siteTitle},
+		Created:     time.Now(),
+		Items:       items,
+	}
+	atom, err := feed.ToAtom()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "project_atom.xml"), atom, false)
+	}
+
+	rss, err := feed.ToRss()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "project_rss.xml"), rss, false)
+	}
 }

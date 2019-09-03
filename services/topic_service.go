@@ -1,6 +1,7 @@
 package services
 
 import (
+	"math"
 	"path"
 	"time"
 
@@ -10,14 +11,15 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/config"
 )
 
-type ScanTopicCallback func(topics []model.Topic)
+type ScanTopicCallback func(topics []model.Topic) bool
 
 var TopicService = newTopicService()
 
@@ -60,7 +62,13 @@ func (this *topicService) UpdateColumn(id int64, name string, value interface{})
 }
 
 func (this *topicService) Delete(id int64) error {
-	return repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, "status", model.TopicStatusDeleted)
+	err := repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, "status", model.TopicStatusDeleted)
+	if err == nil {
+		// 删掉专栏文章
+		SubjectContentService.DeleteByEntity(model.EntityTypeTopic, id)
+		// TODO gaoyoubo @ 2019-08-18 删掉标签文章
+	}
+	return err
 }
 
 // 扫描
@@ -68,7 +76,7 @@ func (this *topicService) Scan(cb ScanTopicCallback) {
 	var cursor int64
 	for {
 		list, err := repositories.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
-			cursor).Order("id asc").Size(300))
+			cursor).Order("id asc").Size(100))
 		if err != nil {
 			break
 		}
@@ -76,7 +84,28 @@ func (this *topicService) Scan(cb ScanTopicCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		if !cb(list) {
+			break
+		}
+	}
+}
+
+// 倒序扫描
+func (this *topicService) ScanDesc(cb ScanTopicCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list, err := repositories.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ?",
+			cursor).Order("id desc").Size(100))
+		if err != nil {
+			break
+		}
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !cb(list) {
+			break
+		}
 	}
 }
 
@@ -114,7 +143,7 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		return nil
 	})
 	if err == nil {
-		utils.BaiduUrlPush([]string{utils.BuildTopicUrl(topic.Id)})
+		common.BaiduUrlPush([]string{urls.TopicUrl(topic.Id)})
 	}
 	return topic, simple.FromError(err)
 }
@@ -198,24 +227,30 @@ func (this *topicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 
 // sitemap
 func (this *topicService) GenerateSitemap() {
-	topics, err := repositories.TopicRepository.QueryCnd(simple.GetDB(),
-		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-
 	sm := stm.NewSitemap(0)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
 	sm.Create()
 
-	for _, topic := range topics {
-		topicUrl := utils.BuildTopicUrl(topic.Id)
-		sm.Add(stm.URL{{"loc", topicUrl}, {"lastmod", simple.TimeFromTimestamp(topic.CreateTime)}})
-	}
+	count := 0
+	this.ScanDesc(func(topics []model.Topic) bool {
+		for _, topic := range topics {
+			if topic.Status == model.TopicStatusOk {
+				topicUrl := urls.TopicUrl(topic.Id)
+				sm.Add(stm.URL{{"loc", topicUrl}, {"lastmod", simple.TimeFromTimestamp(topic.CreateTime)}})
+				count++
+				if count >= 50000 {
+					return false
+				}
+			}
+		}
+		return true
+	})
 
 	data := sm.XMLContent()
 	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_sitemap.xml"), string(data), false)
+
+	// Ping
+	sm.PingSearchEngines(urls.AbsUrl("/topic_sitemap.xml"))
 }
 
 // rss
@@ -230,7 +265,7 @@ func (this *topicService) GenerateRss() {
 	var items []*feeds.Item
 
 	for _, topic := range topics {
-		topicUrl := utils.BuildTopicUrl(topic.Id)
+		topicUrl := urls.TopicUrl(topic.Id)
 		user := cache.UserCache.Get(topic.UserId)
 		if user == nil {
 			continue
@@ -238,17 +273,18 @@ func (this *topicService) GenerateRss() {
 		item := &feeds.Item{
 			Title:       topic.Title,
 			Link:        &feeds.Link{Href: topicUrl},
-			Description: utils.GetMarkdownSummary(topic.Content),
+			Description: common.GetMarkdownSummary(topic.Content),
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
 			Created:     simple.TimeFromTimestamp(topic.CreateTime),
 		}
 		items = append(items, item)
 	}
 	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
-		Description: "分享生活",
+		Description: siteDescription,
 		Author:      &feeds.Author{Name: siteTitle},
 		Created:     time.Now(),
 		Items:       items,

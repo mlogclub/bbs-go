@@ -3,11 +3,13 @@ package api
 import (
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/services/collect"
+	"github.com/mlogclub/mlog/services/collect/oschina"
+	"github.com/mlogclub/mlog/services/collect/studygolang"
 )
 
 type ProjectController struct {
@@ -20,7 +22,23 @@ func (this *ProjectController) GetCollect1() *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 	go func() {
-		services.ProjectService.StartCollect()
+		for i := 48; i >= 1; i-- {
+			studygolang.GetStudyGoLangPage(i, func(url string) {
+				p := studygolang.GetStudyGolangProject(url)
+				if p != nil {
+					temp := services.ProjectService.Take("name = ?", p.Name)
+					if temp == nil {
+						logrus.Info("采集项目：" + p.Name + ", " + url)
+						_, _ = services.ProjectService.Publish(2, p.Name, p.Title, p.Logo, p.Url, p.DocUrl, p.DownloadUrl,
+							model.ContentTypeMarkdown, p.Content)
+					} else {
+						logrus.Warn("项目已经存在：" + temp.Name)
+					}
+				} else {
+					logrus.Warn("项目采集失败：" + url)
+				}
+			})
+		}
 	}()
 	return simple.JsonSuccess()
 }
@@ -31,25 +49,25 @@ func (this *ProjectController) GetCollect2() *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 	go func() {
-		for i := 48; i >= 1; i-- {
-			collect.Page(i, func(url string) {
-				p := collect.CollectProject(url)
-				if p != nil {
-					temp := services.ProjectService.Take("name = ?", p.Name)
-					if temp == nil {
-						_ = services.ProjectService.Create(&model.Project{
-							UserId:      user.Id,
-							Name:        p.Name,
-							Url:         p.Url,
-							DocUrl:      p.DocUrl,
-							DownloadUrl: p.DownloadUrl,
-							Description: p.Description,
-							Content:     p.Content,
-							CreateTime:  simple.NowTimestamp(),
-						})
-					}
+		for i := 76; i >= 1; i-- {
+			urls := oschina.GetPage(i)
+			if len(urls) == 0 {
+				continue
+			}
+			for _, url := range urls {
+				p := oschina.GetProject(url)
+				if p == nil {
+					continue
 				}
-			})
+				temp := services.ProjectService.Take("name = ?", p.Name)
+				if temp != nil {
+					logrus.Warn("项目已经存在：" + temp.Name)
+					continue
+				}
+				logrus.Info("采集项目：" + p.Name + ", " + url)
+				_, _ = services.ProjectService.Publish(2, p.Name, p.Title, p.Logo, p.Url, p.DocUrl, p.DownloadUrl,
+					model.ContentTypeHtml, p.Content)
+			}
 		}
 	}()
 	return simple.JsonSuccess()

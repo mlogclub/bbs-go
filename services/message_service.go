@@ -1,11 +1,14 @@
 package services
 
 import (
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/email"
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/simple"
 )
 
 var MessageService = newMessageService()
@@ -101,20 +104,19 @@ func (this *messageService) sendEmailNotice(message *model.Message) {
 	if user == nil || len(user.Email) == 0 {
 		return
 	}
-	url := utils.BuildUserUrl(message.UserId) + "/messages"
-	_ = utils.SendTemplateEmail(user.Email, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
-		message.QuoteContent, url)
+	email.SendTemplateEmail(user.Email, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
+		message.QuoteContent, urls.AbsUrl("/user/messages"))
 }
 
 func (this *messageService) SendCommentMsg(comment *model.Comment) {
 	commentUser := repositories.UserRepository.Get(simple.GetDB(), comment.UserId)
-	commentSummary := utils.GetMarkdownSummary(comment.Content)
+	commentSummary := common.GetMarkdownSummary(comment.Content)
 	// 引用消息
 	if comment.QuoteId > 0 {
 		quote := repositories.CommentRepository.Get(simple.GetDB(), comment.QuoteId)
 		if quote != nil && quote.UserId != comment.UserId {
 			msgContent := commentUser.Nickname + " 回复了你的评论：" + commentSummary
-			quoteContent := utils.GetMarkdownSummary(quote.Content)
+			quoteContent := common.GetMarkdownSummary(quote.Content)
 			this.Send(comment.UserId, quote.UserId, msgContent, quoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,

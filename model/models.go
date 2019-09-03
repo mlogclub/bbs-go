@@ -2,7 +2,8 @@ package model
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{}, &Project{},
+	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
+	&CollectRule{}, &CollectArticle{},
 }
 
 type Model struct {
@@ -32,8 +33,8 @@ const (
 	TopicStatusOk      = 0
 	TopicStatusDeleted = 1
 
-	ArticleContentTypeHtml     = "html"
-	ArticleContentTypeMarkdown = "markdown"
+	ContentTypeHtml     = "html"
+	ContentTypeMarkdown = "markdown"
 
 	CommentStatusOk      = 0
 	CommentStatusDeleted = 1
@@ -45,6 +46,18 @@ const (
 	MsgStatusReaded = 1 // 消息已读
 
 	MsgTypeComment = 0 // 回复消息
+
+	LinkStatusOk      = 0 // 正常
+	LinkStatusDeleted = 1 // 删除
+	LinkStatusPending = 2 // 待审核
+
+	CollectRuleStatusOk       = 0 // 启用
+	CollectRuleStatusDisabled = 1 // 禁用
+
+	CollectArticleStatusPending   = 0 // 待审核
+	CollectArticleStatusAuditPass = 1 // 审核通过
+	CollectArticleStatusAuditFail = 2 // 审核失败
+	CollectArticleStatusPublished = 3 // 已发布
 )
 
 type User struct {
@@ -205,10 +218,77 @@ type Project struct {
 	Model
 	UserId      int64  `gorm:"not null" json:"userId" form:"userId"`
 	Name        string `gorm:"type:varchar(1024)" json:"name" form:"name"`
+	Title       string `gorm:"type:text" json:"title" form:"title"`
+	Logo        string `gorm:"type:varchar(1024)" json:"logo" form:"logo"`
 	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
 	DocUrl      string `gorm:"type:varchar(1024)" json:"docUrl" form:"docUrl"`
 	DownloadUrl string `gorm:"type:varchar(1024)" json:"downloadUrl" form:"downloadUrl"`
-	Description string `gorm:"type:text" json:"description" form:"description"`
+	ContentType string `gorm:"type:varchar(32);" json:"contentType" form:"contentType"`
 	Content     string `gorm:"type:longtext" json:"content" form:"content"`
 	CreateTime  int64  `json:"createTime" form:"createTime"`
+}
+
+// 专栏
+type Subject struct {
+	Model
+	Title       string `gorm:"not null" json:"title" form:"title"`             // 标题
+	Description string `gorm:"not null" json:"description" form:"description"` // 描述
+	Logo        string `json:"logo" form:"logo"`                               // LOGO
+	Status      int    `gorm:"not null" json:"status" form:"status"`           // 状态，0：正常，1：删除
+	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
+}
+
+// 专栏内容
+type SubjectContent struct {
+	Model
+	SubjectId  int64  `gorm:"not null" json:"subjectId" form:"subjectId"`           // 专栏编号
+	EntityType string `gorm:"not null;size:32" json:"entityType" form:"entityType"` // 实体类型
+	EntityId   int64  `gorm:"not null" json:"entityId" form:"entityId"`             // 实体编号
+	Title      string `gorm:"not null" json:"title" form:"title"`                   // 标题
+	Summary    string `gorm:"not null;size:1024" json:"summary" form:"summary"`     // 描述
+	Deleted    bool   `gorm:"not null" json:"deleted" form:"deleted"`               // 是否删除
+	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`         // 创建时间
+}
+
+type Link struct {
+	Model
+	Url        string `gorm:"not null;type:text" json:"url" form:"url"`     // 链接
+	Title      string `gorm:"not null;size:128" json:"title" form:"title"`  // 标题
+	Summary    string `gorm:"size:1024" json:"summary" form:"summary"`      // 站点描述
+	Logo       string `gorm:"type:text" json:"logo" form:"logo"`            // LOGO
+	Category   string `gorm:"type:text" json:"category" form:"category"`    // 分类
+	Status     int    `gorm:"not null" json:"status" form:"status"`         // 状态
+	Score      int    `gorm:"not null" json:"score" form:"score"`           // 评分，0-100分，分数越高越优质
+	Remark     string `gorm:"size:1024" json:"remark" form:"remark"`        // 备注，后台填写的
+	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
+}
+
+// 采集规则
+type CollectRule struct {
+	Model
+	Title       string `gorm:"not null;size:128" json:"title" form:"title"`     // 标题
+	Rule        string `gorm:"type:text;not null" json:"rule" form:"rule"`      // 规则详情，JSON文件
+	Status      int    `gorm:"not null" json:"status" form:"status"`            // 状态
+	Description string `gorm:"size:1024" json:"description" form:"description"` // 规则描述
+	CreateTime  int64  `json:"createTime" form:"createTime"`                    // 创建时间
+	UpdateTime  int64  `json:"updateTime" form:"updateTime"`                    // 更新时间
+}
+
+// 采集文章
+type CollectArticle struct {
+	Model
+	UserId         int64  `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`          // 用户编号
+	RuleId         int64  `gorm:"index:idx_rule_id;not null" json:"ruleId" form:"ruleId"`          // 采集规则编号
+	LinkId         int64  `gorm:"not null;index:idx_link_id" json:"linkId" form:"linkId"`          // CollectLink外键
+	Title          string `gorm:"size:128;not null;" json:"title" form:"title"`                    // 标题
+	Summary        string `gorm:"type:text" json:"summary" form:"summary"`                         // 摘要
+	Content        string `gorm:"type:longtext;not null;" json:"content" form:"content"`           // 内容
+	ContentType    string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"` // 内容类型：markdown、html
+	SourceUrl      string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                     // 原文链接
+	SourceId       string `gorm:"size:1024" json:"sourceId" form:"sourceId"`                       // 原id
+	SourceUrlMd5   string `gorm:"index:idx_url_md5" json:"sourceUrlMd5" form:"sourceUrlMd5"`       // url md5
+	SourceTitleMd5 string `gorm:"index:idx_title_md5" json:"sourceTitleMd5" form:"sourceTitleMd5"` // 标题 md5
+	Status         int    `gorm:"int" json:"status" form:"status"`                                 // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
+	ArticleId      int64  `gorm:"index:idx_article_id;not null" json:"articleId" form:"articleId"` // 发布之后的文章id
+	CreateTime     int64  `json:"createTime" form:"createTime"`                                    // 创建时间
 }

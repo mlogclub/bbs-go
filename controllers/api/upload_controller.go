@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/common/oss"
 )
 
 const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M
@@ -40,7 +40,7 @@ func (this *UploadController) Post() *simple.JsonResult {
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
-	url, err := utils.AliyunOss.UploadImage(fileBytes)
+	url, err := oss.PutImage(fileBytes)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

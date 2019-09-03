@@ -1,13 +1,13 @@
 package github
 
 import (
+	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
-	"gopkg.in/resty.v1"
 
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/config"
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/config"
 )
 
 var oauthConfig *oauth2.Config
@@ -33,7 +33,7 @@ func GetOauthConfig(params map[string]string) *oauth2.Config {
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
 	redirectUrl := config.Conf.BaseUrl + "/user/github/callback"
-	if !utils.IsProd() {
+	if !common.IsProd() {
 		redirectUrl = "http://localhost:3000/user/github/callback"
 	}
 	if len(params) > 0 {
@@ -62,7 +62,7 @@ type UserInfo struct {
 }
 
 func GetUserInfo(accessToken string) (*UserInfo, error) {
-	response, err := resty.R().SetQueryParam("access_token", accessToken).Get("https://api.github.com/user")
+	response, err := resty.New().R().SetQueryParam("access_token", accessToken).Get("https://api.github.com/user")
 	if err != nil {
 		logrus.Errorf("Get user info error %s", err)
 		return nil, err

@@ -4,7 +4,7 @@ import (
 	context2 "context"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/mlog/utils/github"
+	"github.com/mlogclub/mlog/common/github"
 	"github.com/mlogclub/simple"
 )
 

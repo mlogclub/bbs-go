@@ -5,6 +5,7 @@ LogFile: /data/logs/mlog.log # 日志文件
 ShowSql: false # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
+# 数据库配置
 MySqlUrl: username:password@tcp(localhost:3306)/mlog_db?charset=utf8mb4&parseTime=True&loc=Local  # 数据库链接
 
 # github登录配置
@@ -26,3 +27,8 @@ Smtp:
   Port: '25'
   Username: xxx
   Password: xxx
+
+# 百度ai配置
+BaiduAi:
+  ApiKey:
+  SecretKey:

@@ -8,16 +8,24 @@ import (
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/services/collect"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/services/task"
 )
 
 type ArticleController struct {
 	Ctx context.Context
+}
+
+func (this *ArticleController) GetBaiduping() *simple.JsonResult {
+	go func() {
+		task.BaiduPing()
+	}()
+	return simple.JsonSuccess()
 }
 
 // 文章详情
@@ -43,7 +51,7 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	)
 
 	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
-		model.ArticleContentTypeMarkdown, 0, tags, "", false)
+		model.ContentTypeMarkdown, 0, tags, "", false)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -155,7 +163,7 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 	if article.Share && len(article.SourceUrl) > 0 {
 		return simple.NewEmptyRspBuilder().Put("url", article.SourceUrl).JsonResult()
 	} else {
-		return simple.NewEmptyRspBuilder().Put("url", utils.BuildArticleUrl(articleId)).JsonResult()
+		return simple.NewEmptyRspBuilder().Put("url", urls.ArticleUrl(articleId)).JsonResult()
 	}
 }
 
@@ -200,10 +208,8 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 // 文章列表
 func (this *ArticleController) GetArticles() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-
 	articles, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
 		Eq("status", model.ArticleStatusPublished).
-		NotEq("category_id", 4).
 		Page(page, 20).Desc("id"))
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
 }
@@ -220,12 +226,10 @@ func (this *ArticleController) GetTagArticles() *simple.JsonResult {
 func (this *ArticleController) GetCategoryArticles() *simple.JsonResult {
 	categoryId := simple.FormValueInt64Default(this.Ctx, "categoryId", 0)
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-
 	articles, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
 		Eq("category_id", categoryId).
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))
-
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
 }
 

@@ -30,7 +30,7 @@ func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
 
 func (this *ArticleController) AnyList() *simple.JsonResult {
 	list, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
-		EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
+		EqAuto("id").EqAuto("user_id").EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, article := range list {
@@ -40,7 +40,7 @@ func (this *ArticleController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(article.UserId))
 
 		// 简介
-		if article.ContentType == model.ArticleContentTypeMarkdown {
+		if article.ContentType == model.ContentTypeMarkdown {
 			mr := simple.NewMd().Run(article.Content)
 			if len(article.Summary) == 0 {
 				builder.Put("summary", mr.SummaryText)

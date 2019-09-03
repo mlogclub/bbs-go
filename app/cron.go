@@ -1,23 +1,18 @@
 package app
 
 import (
-	"github.com/mlogclub/mlog/services"
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
+
+	"github.com/mlogclub/mlog/services/task"
 )
 
 func startSchedule() {
 	c := cron.New()
-
-	// 自动生成sitemap和rss
-	addCronFunc(c, "@every 10m", func() {
-		services.ArticleService.GenerateSitemap()
-		services.ArticleService.GenerateRss()
-
-		services.TopicService.GenerateSitemap()
-		services.TopicService.GenerateRss()
-	})
-
+	addCronFunc(c, "@every 10m", task.SitemapTask)
+	addCronFunc(c, "@every 1h", task.CollectStudyGoLangProjectTask)
+	addCronFunc(c, "@every 1h", task.CollectOschinaProjectTask)
+	addCronFunc(c, "@every 6h", task.BaiduPing)
 	c.Start()
 }
 

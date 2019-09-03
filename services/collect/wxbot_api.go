@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils"
+	"github.com/mlogclub/mlog/common/oss"
 
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/core/errors"
@@ -34,7 +34,7 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 	}
 
 	return services.ArticleService.Publish(userId, wxArticle.Title, summary,
-		wxArticle.HtmlContent, model.ArticleContentTypeHtml, categoryId, tags, wxArticle.Url, true)
+		wxArticle.HtmlContent, model.ContentTypeHtml, categoryId, tags, wxArticle.Url, true)
 }
 
 func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
@@ -45,7 +45,7 @@ func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
 		_ = services.UserService.Update(user)
 		return user.Id, nil
 	} else {
-		avatar, err := utils.AliyunOss.CopyImage(article.OriHead)
+		avatar, err := oss.CopyImage(article.OriHead)
 		if err != nil {
 			return 0, err
 		}

@@ -10,11 +10,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/avatar"
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/avatar"
 )
 
 func BuildUserDefaultIfNull(id int64) *model.UserInfo {
@@ -104,7 +105,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	tags := cache.TagCache.GetList(tagIds)
 	rsp.Tags = BuildTags(tags)
 
-	if article.ContentType == model.ArticleContentTypeMarkdown {
+	if article.ContentType == model.ContentTypeMarkdown {
 		mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
 		rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 		rsp.Toc = template.HTML(mr.TocHtml)
@@ -156,7 +157,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	tags := cache.TagCache.GetList(tagIds)
 	rsp.Tags = BuildTags(tags)
 
-	if article.ContentType == model.ArticleContentTypeMarkdown {
+	if article.ContentType == model.ContentTypeMarkdown {
 		if len(rsp.Summary) == 0 {
 			mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
 			rsp.Summary = mr.SummaryText
@@ -254,14 +255,21 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	rsp.ProjectId = project.Id
 	rsp.User = BuildUserDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
+	rsp.Title = project.Title
+	rsp.Logo = project.Logo
 	rsp.Url = project.Url
 	rsp.Url = project.Url
 	rsp.DocUrl = project.DocUrl
-	rsp.Description = project.Description
 	rsp.CreateTime = project.CreateTime
 
-	mr := simple.NewMd().Run(project.Content)
-	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
+	if project.ContentType == model.ContentTypeHtml {
+		rsp.Content = template.HTML(BuildHtmlContent(project.Content))
+		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
+	} else {
+		mr := simple.NewMd().Run(project.Content)
+		rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
+		rsp.Summary = mr.SummaryText
+	}
 
 	return rsp
 }
@@ -285,11 +293,19 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	rsp.ProjectId = project.Id
 	rsp.User = BuildUserDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
+	rsp.Title = project.Title
+	rsp.Logo = project.Logo
 	rsp.Url = project.Url
 	rsp.DocUrl = project.DocUrl
 	rsp.DownloadUrl = project.DownloadUrl
-	rsp.Description = project.Description
 	rsp.CreateTime = project.CreateTime
+
+	if project.ContentType == model.ContentTypeHtml {
+		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
+	} else {
+		rsp.Summary = common.GetMarkdownSummary(project.Content)
+	}
+
 	return rsp
 }
 
@@ -354,11 +370,11 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if article == nil || article.Status != model.ArticleStatusPublished {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = utils.BuildArticleUrl(article.Id)
+			rsp.Url = urls.ArticleUrl(article.Id)
 			rsp.User = BuildUserById(article.UserId)
 			rsp.Title = article.Title
-			if article.ContentType == model.ArticleContentTypeMarkdown {
-				rsp.Content = utils.GetMarkdownSummary(article.Content)
+			if article.ContentType == model.ContentTypeMarkdown {
+				rsp.Content = common.GetMarkdownSummary(article.Content)
 			} else {
 				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
 				if err == nil {
@@ -372,10 +388,10 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if topic == nil || topic.Status != model.TopicStatusOk {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = utils.BuildTopicUrl(topic.Id)
+			rsp.Url = urls.TopicUrl(topic.Id)
 			rsp.User = BuildUserById(topic.UserId)
 			rsp.Title = topic.Title
-			rsp.Content = utils.GetMarkdownSummary(topic.Content)
+			rsp.Content = common.GetMarkdownSummary(topic.Content)
 		}
 	}
 	return rsp
@@ -402,9 +418,9 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 		entityType := gjson.Get(message.ExtraData, "entityType")
 		entityId := gjson.Get(message.ExtraData, "entityId")
 		if entityType.String() == model.EntityTypeArticle {
-			detailUrl = utils.BuildArticleUrl(entityId.Int())
+			detailUrl = urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == model.EntityTypeTopic {
-			detailUrl = utils.BuildTopicUrl(entityId.Int())
+			detailUrl = urls.TopicUrl(entityId.Int())
 		}
 	}
 	from := BuildUserDefaultIfNull(message.FromId)
@@ -452,8 +468,8 @@ func BuildHtmlContent(htmlContent string) string {
 		// }
 
 		// 内部跳转
-		if len(href) > 0 && !utils.IsInternalUrl(href) {
-			newHref := simple.ParseUrl(utils.BuildAbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+		if len(href) > 0 && !urls.IsInternalUrl(href) {
+			newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 			selection.SetAttr("href", newHref)
 			selection.SetAttr("target", "_blank")
 		}
@@ -469,6 +485,16 @@ func BuildHtmlContent(htmlContent string) string {
 			selection.SetAttr("title", selection.Text())
 		}
 	})
+
+	// 处理图片
+	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
+		src := selection.AttrOr("src", "")
+		if strings.Contains(src, "qpic.cn") {
+			newSrc := simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
+			selection.SetAttr("src", newSrc)
+		}
+	})
+
 	html, err := doc.Html()
 	if err != nil {
 		return htmlContent

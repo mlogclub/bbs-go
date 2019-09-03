@@ -8,9 +8,8 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/app"
+	"github.com/mlogclub/mlog/common/config"
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/config"
 )
 
 var configFile = flag.String("config", "./mlog.yaml", "配置文件路径")
@@ -20,8 +19,6 @@ func init() {
 
 	config.InitConfig(*configFile) // 初始化配置
 	initLogrus()                   // 初始化日志
-	utils.InitEmail()              // 初始化邮件
-	utils.InitAliyunOss()          // 初始化阿里云Oss
 	initDB()                       // 初始化数据库
 }
 

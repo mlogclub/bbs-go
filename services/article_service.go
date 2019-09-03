@@ -2,15 +2,17 @@ package services
 
 import (
 	"errors"
+	"math"
 	"path"
 	"strings"
 	"time"
 
 	"github.com/emirpasic/gods/sets/hashset"
 
+	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/repositories"
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils/config"
 
 	"github.com/gorilla/feeds"
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -18,8 +20,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"github.com/mlogclub/mlog/common"
 	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/utils"
 )
 
 type ScanArticleCallback func(articles []model.Article) bool
@@ -53,32 +55,25 @@ func (this *articleService) Query(queries *simple.ParamQueries) (list []model.Ar
 
 func (this *articleService) Update(t *model.Article) error {
 	err := repositories.ArticleRepository.Update(simple.GetDB(), t)
-	if err == nil {
-		cache.ArticleCache.InvalidateIndexList()
-	}
 	return err
 }
 
 func (this *articleService) Updates(id int64, columns map[string]interface{}) error {
 	err := repositories.ArticleRepository.Updates(simple.GetDB(), id, columns)
-	if err == nil {
-		cache.ArticleCache.InvalidateIndexList()
-	}
 	return err
 }
 
 func (this *articleService) UpdateColumn(id int64, name string, value interface{}) error {
 	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
-	if err == nil {
-		cache.ArticleCache.InvalidateIndexList()
-	}
 	return err
 }
 
 func (this *articleService) Delete(id int64) error {
 	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
 	if err == nil {
-		cache.ArticleCache.InvalidateIndexList()
+		// 删掉专栏文章
+		SubjectContentService.DeleteByEntity(model.EntityTypeArticle, id)
+		// TODO gaoyoubo @ 2019-08-18 删掉标签文章
 	}
 	return err
 }
@@ -169,9 +164,8 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	})
 
 	if err == nil {
-		// 清理首页文章列表缓存
-		cache.ArticleCache.InvalidateIndexList()
-		utils.BaiduUrlPush([]string{utils.BuildArticleUrl(article.Id)})
+		common.BaiduUrlPush([]string{urls.ArticleUrl(article.Id)})
+		SubjectContentService.AnalyzeArticle(article)
 	}
 	return
 }
@@ -242,8 +236,8 @@ func (this *articleService) GetUserNewestArticles(userId int64) []model.Article 
 func (this *articleService) Scan(cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? ",
-			cursor, model.ArticleStatusPublished).Order("id asc").Size(300))
+		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? ",
+			cursor).Order("id asc").Size(100))
 		if err != nil {
 			break
 		}
@@ -251,8 +245,26 @@ func (this *articleService) Scan(cb ScanArticleCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		_continue := cb(list)
-		if !_continue {
+		if !cb(list) {
+			break
+		}
+	}
+}
+
+// 从新往旧扫描
+func (this *articleService) ScanDesc(cb ScanArticleCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ? ",
+			cursor).Order("id desc").Size(100))
+		if err != nil {
+			break
+		}
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !cb(list) {
 			break
 		}
 	}
@@ -277,24 +289,30 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 
 // sitemap
 func (this *articleService) GenerateSitemap() {
-	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(),
-		simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(1000))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-
 	sm := stm.NewSitemap(0)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
 	sm.Create()
 
-	for _, article := range articles {
-		articleUrl := utils.BuildArticleUrl(article.Id)
-		sm.Add(stm.URL{{"loc", articleUrl}, {"lastmod", simple.TimeFromTimestamp(article.UpdateTime)}})
-	}
+	count := 0
+	this.ScanDesc(func(articles []model.Article) bool {
+		for _, article := range articles {
+			if article.Status == model.ArticleStatusPublished {
+				articleUrl := urls.ArticleUrl(article.Id)
+				sm.Add(stm.URL{{"loc", articleUrl}, {"lastmod", simple.TimeFromTimestamp(article.UpdateTime)}})
+				count++
+				if count >= 50000 {
+					return false
+				}
+			}
+		}
+		return true
+	})
 
 	data := sm.XMLContent()
 	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "sitemap.xml"), string(data), false)
+
+	// Ping
+	sm.PingSearchEngines(urls.AbsUrl("/sitemap.xml"))
 }
 
 // rss
@@ -309,15 +327,21 @@ func (this *articleService) GenerateRss() {
 	var items []*feeds.Item
 
 	for _, article := range articles {
-		articleUrl := utils.BuildArticleUrl(article.Id)
+		articleUrl := urls.ArticleUrl(article.Id)
 		user := cache.UserCache.Get(article.UserId)
 		if user == nil {
 			continue
 		}
+		description := ""
+		if article.ContentType == model.ContentTypeMarkdown {
+			description = common.GetMarkdownSummary(article.Content)
+		} else {
+			description = common.GetHtmlSummary(article.Content)
+		}
 		item := &feeds.Item{
 			Title:       article.Title,
 			Link:        &feeds.Link{Href: articleUrl},
-			Description: article.Summary,
+			Description: description,
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
 			Created:     simple.TimeFromTimestamp(article.CreateTime),
 		}
@@ -325,10 +349,11 @@ func (this *articleService) GenerateRss() {
 	}
 
 	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
-		Description: "分享生活",
+		Description: siteDescription,
 		Author:      &feeds.Author{Name: siteTitle},
 		Created:     time.Now(),
 		Items:       items,
@@ -363,12 +388,12 @@ func (this *articleService) GetDailyContent(userIds []int64) string {
 
 	this.ScanWithDate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo), func(articles []model.Article) bool {
 		for _, article := range articles {
-			if utils.IndexOf(userIds, article.UserId) != -1 {
+			if common.IndexOf(userIds, article.UserId) != -1 {
 				content += "## " + article.Title + "\n\n"
 				if len(strings.TrimSpace(article.Summary)) > 0 {
 					content += strings.TrimSpace(article.Summary) + "\n\n"
 				}
-				content += "[点击查看原文>>](" + utils.BuildArticleUrl(article.Id) + ")\n\n"
+				content += "[点击查看原文>>](" + urls.ArticleUrl(article.Id) + ")\n\n"
 			}
 		}
 		return true

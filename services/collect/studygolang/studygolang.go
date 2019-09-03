@@ -1,4 +1,4 @@
-package collect
+package studygolang
 
 import (
 	"bytes"
@@ -6,16 +6,18 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/resty.v1"
+
+	"github.com/mlogclub/mlog/common/oss"
 )
 
 type PageFunc func(url string)
 type ProjectFunc func()
 
 type Project struct {
-	Name        string
-	Description string // 描述
+	Name        string // 名称
+	Title       string // 标题
 	Content     string // 内容
 	Logo        string
 	Url         string // 项目主页
@@ -23,8 +25,9 @@ type Project struct {
 	DownloadUrl string // 下载地址
 }
 
-func Page(page int, pageFunc PageFunc) {
-	resp, err := resty.SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get("https://studygolang.com/projects?p=" + strconv.Itoa(page))
+// 采集项目分页
+func GetStudyGoLangPage(page int, pageFunc PageFunc) {
+	resp, err := resty.New().SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get("https://studygolang.com/projects?p=" + strconv.Itoa(page))
 	if err != nil {
 		logrus.Error(err)
 		return
@@ -44,8 +47,9 @@ func Page(page int, pageFunc PageFunc) {
 	})
 }
 
-func CollectProject(url string) *Project {
-	resp, err := resty.SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get(url)
+// 采集项目
+func GetStudyGolangProject(url string) *Project {
+	resp, err := resty.New().SetRedirectPolicy(resty.FlexibleRedirectPolicy(10)).R().Get(url)
 	if err != nil {
 		logrus.Error(err)
 		return nil
@@ -60,8 +64,11 @@ func CollectProject(url string) *Project {
 
 	p.Name = strings.TrimSpace(document.Find(".page .title h1 u").Remove().Text()) // name
 	p.Content = document.Find(".project .desc").Text()                             // content
-	p.Description = strings.TrimSpace(document.Find(".page .title h1").Text())     // description
-	p.Logo = document.Find(".page .title h1 img").AttrOr("src", "")                // LOGO
+	p.Title = strings.TrimSpace(document.Find(".page .title h1").Text())           // title
+	logo := document.Find(".page .title h1 img").AttrOr("src", "")                 // LOGO
+	if logo != "" {
+		p.Logo, _ = oss.CopyImage(logo)
+	}
 	document.Find("ul.urls li a").Each(func(i int, selection *goquery.Selection) {
 		txt := selection.Text()
 		if "项目首页" == txt {

@@ -7,7 +7,7 @@ import (
 	"github.com/mlogclub/mlog/controllers/render"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/utils/github"
+	"github.com/mlogclub/mlog/common/github"
 )
 
 type LoginController struct {

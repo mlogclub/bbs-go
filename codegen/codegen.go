@@ -7,5 +7,7 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.Project{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectRule{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectLink{}))
+	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectArticle{}))
 }

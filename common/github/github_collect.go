@@ -6,9 +6,9 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-	"gopkg.in/resty.v1"
 )
 
 type CollectCallback func(repo *Repo)
@@ -39,7 +39,7 @@ func CollectRepo(callback CollectCallback) {
 }
 
 func GetGithubRepos(page int) ([]string, error) {
-	rsp, err := resty.R().SetQueryParams(map[string]string{
+	rsp, err := resty.New().R().SetQueryParams(map[string]string{
 		"p":    strconv.Itoa(page),
 		"q":    "stars:>200 language:Go",
 		"ref":  "advsearch",
@@ -88,7 +88,7 @@ func GetGithubRepo(path string) (*Repo, error) {
 
 func getGithubRepoByApi(path string) (string, error) {
 	url := "https://api.github.com/repos" + path
-	rsp, err := resty.R().Get(url)
+	rsp, err := resty.New().R().Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -103,7 +103,7 @@ func GetFullnameByPath(path string) string {
 // README
 func getGithubRepoReadme(path, branch string) (string, error) {
 	url := "https://raw.githubusercontent.com" + path + "/" + branch + "/README.md"
-	rsp, err := resty.R().Get(url)
+	rsp, err := resty.New().R().Get(url)
 	if err != nil {
 		return "", err
 	}

@@ -8,9 +8,9 @@ import (
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/utils"
-	"github.com/mlogclub/mlog/utils/avatar"
-	"github.com/mlogclub/mlog/utils/validate"
+	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/avatar"
+	"github.com/mlogclub/mlog/common/validate"
 
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
@@ -108,7 +108,7 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 
-	if !utils.IsValidateUsername(username) {
+	if !common.IsValidateUsername(username) {
 		return nil, errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
 	}
 	if !validate.IsEmail(email) {
@@ -177,7 +177,7 @@ func (this *userService) Bind(githubId int64, bindType, username, email, passwor
 			_ = this.UpdateColumn(user.Id, "avatar", githubUser.AvatarUrl)
 		}
 	} else { // 注册绑定
-		if !utils.IsValidateUsername(username) {
+		if !common.IsValidateUsername(username) {
 			err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
 			return
 		}
