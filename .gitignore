@@ -19,3 +19,6 @@ mlog.prod.yaml
 
 .idea/*
 build/*
+
+cscope.files
+tags
