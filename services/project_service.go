@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gorilla/feeds"
-	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -122,31 +121,6 @@ func (this *projectService) ScanDesc(callback ProjectScanCallback) {
 			break
 		}
 	}
-}
-
-func (this *projectService) GenerateSitemap() {
-	sm := stm.NewSitemap(0)
-	sm.SetDefaultHost(config.Conf.BaseUrl)
-	sm.Create()
-
-	count := 0
-	this.ScanDesc(func(projects []model.Project) bool {
-		for _, project := range projects {
-			projectUrl := urls.ProjectUrl(project.Id)
-			sm.Add(stm.URL{{"loc", projectUrl}, {"lastmod", simple.TimeFromTimestamp(project.CreateTime)}})
-			count++
-			if count >= 50000 {
-				return false
-			}
-		}
-		return true
-	})
-
-	data := sm.XMLContent()
-	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "project_sitemap.xml"), string(data), false)
-
-	// Ping
-	sm.PingSearchEngines(urls.AbsUrl("/project_sitemap.xml"))
 }
 
 // rss

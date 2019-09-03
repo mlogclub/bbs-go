@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gorilla/feeds"
-	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -223,34 +222,6 @@ func (this *topicService) SetLastCommentTime(topicId, lastCommentTime int64) {
 	if err != nil {
 		logrus.Error(err)
 	}
-}
-
-// sitemap
-func (this *topicService) GenerateSitemap() {
-	sm := stm.NewSitemap(0)
-	sm.SetDefaultHost(config.Conf.BaseUrl)
-	sm.Create()
-
-	count := 0
-	this.ScanDesc(func(topics []model.Topic) bool {
-		for _, topic := range topics {
-			if topic.Status == model.TopicStatusOk {
-				topicUrl := urls.TopicUrl(topic.Id)
-				sm.Add(stm.URL{{"loc", topicUrl}, {"lastmod", simple.TimeFromTimestamp(topic.CreateTime)}})
-				count++
-				if count >= 50000 {
-					return false
-				}
-			}
-		}
-		return true
-	})
-
-	data := sm.XMLContent()
-	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_sitemap.xml"), string(data), false)
-
-	// Ping
-	sm.PingSearchEngines(urls.AbsUrl("/topic_sitemap.xml"))
 }
 
 // rss

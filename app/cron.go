@@ -10,6 +10,7 @@ import (
 func startSchedule() {
 	c := cron.New()
 	addCronFunc(c, "@every 10m", task.SitemapTask)
+	addCronFunc(c, "@every 10m", task.RssTask)
 	addCronFunc(c, "@every 1h", task.CollectStudyGoLangProjectTask)
 	addCronFunc(c, "@every 1h", task.CollectOschinaProjectTask)
 	addCronFunc(c, "@every 6h", task.BaiduPing)

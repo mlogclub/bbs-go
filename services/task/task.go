@@ -3,9 +3,12 @@
 package task
 
 import (
+	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
+	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/mlog/common/config"
 	"github.com/mlogclub/mlog/common/urls"
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/services"
@@ -57,13 +60,52 @@ func CollectOschinaProjectTask() {
 
 // 生成sitemap
 func SitemapTask() {
-	services.ArticleService.GenerateSitemap()
+	sm := stm.NewSitemap(1)
+	sm.SetDefaultHost(config.Conf.BaseUrl)
+	sm.SetPublicPath(config.Conf.StaticPath)
+	sm.SetSitemapsPath("")
+	sm.SetVerbose(false)
+	sm.SetCompress(false)
+	sm.SetPretty(false)
+	sm.Create()
+
+	services.ArticleService.ScanDesc(func(articles []model.Article) bool {
+		for _, article := range articles {
+			if article.Status == model.ArticleStatusPublished {
+				articleUrl := urls.ArticleUrl(article.Id)
+				sm.Add(stm.URL{{"loc", articleUrl}, {"lastmod", simple.TimeFromTimestamp(article.UpdateTime)}})
+			}
+		}
+		return true
+	})
+
+	services.TopicService.ScanDesc(func(topics []model.Topic) bool {
+		for _, topic := range topics {
+			if topic.Status == model.TopicStatusOk {
+				topicUrl := urls.TopicUrl(topic.Id)
+				sm.Add(stm.URL{{"loc", topicUrl}, {"lastmod", simple.TimeFromTimestamp(topic.CreateTime)}})
+			}
+		}
+		return true
+	})
+
+	services.ProjectService.ScanDesc(func(projects []model.Project) bool {
+		for _, project := range projects {
+			projectUrl := urls.ProjectUrl(project.Id)
+			sm.Add(stm.URL{{"loc", projectUrl}, {"lastmod", simple.TimeFromTimestamp(project.CreateTime)}})
+		}
+		return true
+	})
+
+	sm.Finalize().PingSearchEngines()
+}
+
+// 生成rss
+func RssTask() {
 	services.ArticleService.GenerateRss()
 
-	services.TopicService.GenerateSitemap()
 	services.TopicService.GenerateRss()
 
-	services.ProjectService.GenerateSitemap()
 	services.ProjectService.GenerateRss()
 }
 

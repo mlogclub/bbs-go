@@ -14,18 +14,10 @@ import (
 	"github.com/mlogclub/mlog/services"
 	"github.com/mlogclub/mlog/services/cache"
 	"github.com/mlogclub/mlog/services/collect"
-	"github.com/mlogclub/mlog/services/task"
 )
 
 type ArticleController struct {
 	Ctx context.Context
-}
-
-func (this *ArticleController) GetBaiduping() *simple.JsonResult {
-	go func() {
-		task.BaiduPing()
-	}()
-	return simple.JsonSuccess()
 }
 
 // 文章详情

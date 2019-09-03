@@ -15,7 +15,6 @@ import (
 	"github.com/mlogclub/mlog/services/cache"
 
 	"github.com/gorilla/feeds"
-	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -285,34 +284,6 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 		cursor = list[len(list)-1].Id
 		cb(list)
 	}
-}
-
-// sitemap
-func (this *articleService) GenerateSitemap() {
-	sm := stm.NewSitemap(0)
-	sm.SetDefaultHost(config.Conf.BaseUrl)
-	sm.Create()
-
-	count := 0
-	this.ScanDesc(func(articles []model.Article) bool {
-		for _, article := range articles {
-			if article.Status == model.ArticleStatusPublished {
-				articleUrl := urls.ArticleUrl(article.Id)
-				sm.Add(stm.URL{{"loc", articleUrl}, {"lastmod", simple.TimeFromTimestamp(article.UpdateTime)}})
-				count++
-				if count >= 50000 {
-					return false
-				}
-			}
-		}
-		return true
-	})
-
-	data := sm.XMLContent()
-	_ = simple.WriteString(path.Join(config.Conf.StaticPath, "sitemap.xml"), string(data), false)
-
-	// Ping
-	sm.PingSearchEngines(urls.AbsUrl("/sitemap.xml"))
 }
 
 // rss
