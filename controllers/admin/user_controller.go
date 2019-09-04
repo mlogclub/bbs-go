@@ -25,7 +25,7 @@ func (this *UserController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *UserController) AnyList() *simple.JsonResult {
-	list, paging := services.UserService.Query(simple.NewParamQueries(this.Ctx).EqAuto("id").EqAuto("username").PageAuto().Desc("id"))
+	list, paging := services.UserService.Query(simple.NewParamQueries(this.Ctx).EqAuto("id").LikeAuto("nickname").EqAuto("username").PageAuto().Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
 		itemList = append(itemList, this.buildUserItem(&user))
