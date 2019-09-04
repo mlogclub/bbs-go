@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"io/ioutil"
 	"math/rand"
 	"strings"
@@ -259,14 +260,9 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 
 // 微信采集发布接口
 func (this *ArticleController) PostWxpublish() *simple.JsonResult {
-	token := this.Ctx.FormValue("token")
-	data, err := ioutil.ReadFile("/data/publish_token")
+	err := this.checkToken()
 	if err != nil {
-		return simple.JsonErrorMsg("ReadToken error: " + err.Error())
-	}
-	token2 := strings.TrimSpace(string(data))
-	if token != token2 {
-		return simple.JsonErrorMsg("Token invalidate")
+		return simple.JsonErrorMsg(err.Error())
 	}
 	article := &collect.WxArticle{}
 	err = this.Ctx.ReadJSON(article)
@@ -278,4 +274,37 @@ func (this *ArticleController) PostWxpublish() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.NewEmptyRspBuilder().Put("id", t.Id).JsonResult()
+}
+
+// 采集发布
+func (this *ArticleController) PostSpiderPublish() *simple.JsonResult {
+	err := this.checkToken()
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	article := &collect.SpiderArticle{}
+	err = this.Ctx.ReadJSON(article)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	articleId, err := collect.NewSpiderApi().Publish(article)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().Put("id", articleId).JsonResult()
+}
+
+func (this *ArticleController) checkToken() error {
+	token := this.Ctx.FormValue("token")
+	data, err := ioutil.ReadFile("/data/publish_token")
+	if err != nil {
+		return err
+	}
+	token2 := strings.TrimSpace(string(data))
+	if token != token2 {
+		return errors.New("token invalidate")
+	}
+	return nil
 }
