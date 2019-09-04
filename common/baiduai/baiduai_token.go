@@ -75,9 +75,9 @@ func (client *Client) SetAuther(auth Authorizer) {
 	client.Authorizer = auth
 }
 
-func NewClient(ApiKey, secretKey string) *Client {
+func NewClient(apiKey, secretKey string) *Client {
 	return &Client{
-		ClientID:     ApiKey,
+		ClientID:     apiKey,
 		ClientSecret: secretKey,
 		Authorizer:   DefaultAuthorizer{},
 	}
