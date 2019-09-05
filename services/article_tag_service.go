@@ -1,9 +1,10 @@
 package services
 
 import (
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/mlog/model"
 	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var ArticleTagService = newArticleTagService()
@@ -47,6 +48,6 @@ func (this *articleTagService) UpdateColumn(id int64, name string, value interfa
 	return repositories.ArticleTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *articleTagService) Delete(id int64) {
-	repositories.ArticleTagRepository.Delete(simple.GetDB(), id)
+func (this *articleTagService) DeleteByArticleId(topicId int64) {
+	simple.GetDB().Model(model.ArticleTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.ArticleTagStatusDeleted)
 }

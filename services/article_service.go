@@ -72,7 +72,8 @@ func (this *articleService) Delete(id int64) error {
 	if err == nil {
 		// 删掉专栏文章
 		SubjectContentService.DeleteByEntity(model.EntityTypeArticle, id)
-		// TODO gaoyoubo @ 2019-08-18 删掉标签文章
+		// 删掉标签文章
+		ArticleTagService.DeleteByArticleId(id)
 	}
 	return err
 }
@@ -104,6 +105,7 @@ func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
 func (this *articleService) GetTagArticles(tagId int64, page int) (articles []model.Article, paging *simple.Paging) {
 	articleTags, paging := repositories.ArticleTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
 		Eq("tag_id", tagId).
+		Eq("status", model.ArticleTagStatusOk).
 		Page(page, 20).Desc("id"))
 	if len(articleTags) > 0 {
 		var articleIds []int64

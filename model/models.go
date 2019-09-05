@@ -30,8 +30,14 @@ const (
 	ArticleStatusDeleted   = 1 // 已删除
 	ArticleStatusDraft     = 2 // 草稿
 
+	ArticleTagStatusOk      = 0
+	ArticleTagStatusDeleted = 1
+
 	TopicStatusOk      = 0
 	TopicStatusDeleted = 1
+
+	TopicTagStatusOk      = 0
+	TopicTagStatusDeleted = 1
 
 	ContentTypeHtml     = "html"
 	ContentTypeMarkdown = "markdown"
@@ -144,6 +150,7 @@ type ArticleTag struct {
 	Model
 	ArticleId  int64 `gorm:"not null" json:"articleId" form:"articleId"` // 文章编号
 	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`         // 标签编号
+	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"`       // 状态：正常、删除
 	CreateTime int64 `json:"createTime" form:"createTime"`               // 创建时间
 }
 
@@ -186,6 +193,7 @@ type TopicTag struct {
 	Model
 	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"` // 主题编号
 	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`     // 标签编号
+	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"`   // 状态：正常、删除
 	CreateTime int64 `json:"createTime" form:"createTime"`           // 创建时间
 }
 
