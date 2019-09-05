@@ -31,7 +31,7 @@ func newTopicCache() *topicCache {
 				return
 			},
 			cache.WithMaximumSize(10),
-			cache.WithExpireAfterAccess(10*time.Minute),
+			cache.WithRefreshAfterWrite(30*time.Minute),
 		),
 	}
 }

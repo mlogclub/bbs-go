@@ -35,7 +35,7 @@ func newArticleCache() *articleCache {
 				return
 			},
 			cache.WithMaximumSize(1),
-			cache.WithExpireAfterAccess(10*time.Minute),
+			cache.WithRefreshAfterWrite(30*time.Minute),
 		),
 	}
 }
