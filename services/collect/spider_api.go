@@ -1,10 +1,10 @@
 package collect
 
 import (
-	"github.com/mlogclub/mlog/common"
-	"github.com/mlogclub/mlog/common/baiduai"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/baiduai"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
 )
 
 type SpiderApi struct {

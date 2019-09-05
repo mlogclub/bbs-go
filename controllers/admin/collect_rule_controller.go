@@ -6,9 +6,9 @@ import (
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/services/collect"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
+	"github.com/mlogclub/bbs-go/services/collect"
 )
 
 type CollectRuleController struct {

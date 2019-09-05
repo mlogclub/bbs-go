@@ -4,10 +4,10 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common"
-	"github.com/mlogclub/mlog/common/subject"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/subject"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
 )
 
 var SubjectContentService = newSubjectContentService()

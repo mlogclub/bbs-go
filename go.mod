@@ -1,4 +1,4 @@
-module github.com/mlogclub/mlog
+module github.com/mlogclub/bbs-go
 
 go 1.12
 

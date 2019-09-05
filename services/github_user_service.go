@@ -2,9 +2,9 @@ package services
 
 import (
 	context2 "context"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/mlog/common/github"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
+	"github.com/mlogclub/bbs-go/common/github"
 	"github.com/mlogclub/simple"
 )
 

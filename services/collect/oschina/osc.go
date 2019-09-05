@@ -9,8 +9,8 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common/oss"
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/common/oss"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 func GetPage(page int) (urls []string) {

@@ -3,11 +3,11 @@ package main
 import (
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 func main() {
-	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectRule{}))
-	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectLink{}))
-	simple.Generate("./", "github.com/mlogclub/mlog", simple.GetGenerateStruct(&model.CollectArticle{}))
+	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectRule{}))
+	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectLink{}))
+	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectArticle{}))
 }

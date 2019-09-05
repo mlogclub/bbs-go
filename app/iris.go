@@ -9,8 +9,8 @@ import (
 
 	"github.com/go-resty/resty/v2"
 
-	"github.com/mlogclub/mlog/common/config"
-	"github.com/mlogclub/mlog/controllers/api"
+	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/controllers/api"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
@@ -21,8 +21,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/controllers/admin"
-	"github.com/mlogclub/mlog/middleware"
+	"github.com/mlogclub/bbs-go/controllers/admin"
+	"github.com/mlogclub/bbs-go/middleware"
 )
 
 func InitIris() {

@@ -1,15 +1,15 @@
 package admin
 
 import (
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/common"
 	"strconv"
 	"strings"
 
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/services"
 )
 
 type UserController struct {

@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var UserRepository = newUserRepository()

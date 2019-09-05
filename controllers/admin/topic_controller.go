@@ -2,9 +2,9 @@ package admin
 
 import (
 	"github.com/kataras/iris"
-	"github.com/mlogclub/mlog/controllers/render"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/controllers/render"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/simple"
 	"strconv"
 )

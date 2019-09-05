@@ -6,8 +6,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 
-	"github.com/mlogclub/mlog/common"
-	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/config"
 )
 
 var oauthConfig *oauth2.Config

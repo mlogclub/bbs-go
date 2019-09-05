@@ -4,9 +4,9 @@ import (
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/controllers/render"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/bbs-go/controllers/render"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services/cache"
 )
 
 // 接口权限

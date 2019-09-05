@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/mlogclub/mlog/common"
+	"github.com/mlogclub/bbs-go/common"
 )
 
 func StartOn() {

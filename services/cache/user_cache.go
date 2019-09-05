@@ -3,8 +3,8 @@ package cache
 import (
 	"time"
 
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple"

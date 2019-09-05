@@ -3,14 +3,14 @@ package collect
 import (
 	"strings"
 
-	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/common/oss"
+	"github.com/mlogclub/bbs-go/services"
+	"github.com/mlogclub/bbs-go/common/oss"
 
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 type WxbotApi struct {

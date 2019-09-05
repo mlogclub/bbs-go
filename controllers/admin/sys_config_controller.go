@@ -3,7 +3,7 @@ package admin
 import (
 	"encoding/json"
 	"github.com/kataras/iris"
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/simple"
 	"strconv"
 )

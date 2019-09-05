@@ -9,7 +9,7 @@ import (
 	"github.com/jordan-wright/email"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/bbs-go/common/config"
 )
 
 var emailTemplate = `

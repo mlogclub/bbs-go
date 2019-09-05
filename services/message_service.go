@@ -3,12 +3,12 @@ package services
 import (
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/common"
-	"github.com/mlogclub/mlog/common/email"
-	"github.com/mlogclub/mlog/common/urls"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/repositories"
-	"github.com/mlogclub/mlog/services/cache"
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/email"
+	"github.com/mlogclub/bbs-go/common/urls"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
+	"github.com/mlogclub/bbs-go/services/cache"
 )
 
 var MessageService = newMessageService()

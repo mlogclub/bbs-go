@@ -9,8 +9,8 @@ import (
 	"github.com/gocolly/colly/extensions"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
 )
 
 func NewDefaultCollector(ruleId int64) (MyCollector, error) {

@@ -9,11 +9,11 @@ import (
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/controllers/render"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/services/cache"
-	"github.com/mlogclub/mlog/services/collect"
+	"github.com/mlogclub/bbs-go/controllers/render"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
+	"github.com/mlogclub/bbs-go/services/cache"
+	"github.com/mlogclub/bbs-go/services/collect"
 )
 
 type ArticleController struct {

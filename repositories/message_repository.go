@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/simple"
 )
 

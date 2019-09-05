@@ -2,7 +2,7 @@ package cache
 
 import (
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/mlog/repositories"
+	"github.com/mlogclub/bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"time"

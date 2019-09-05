@@ -7,7 +7,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common/config"
+	"github.com/mlogclub/bbs-go/common/config"
 )
 
 func IsInternalUrl(rawUrl string) bool {

@@ -6,7 +6,7 @@ import (
 	"github.com/mlogclub/simple"
 	"strings"
 
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var TagRepository = newTagRepository()

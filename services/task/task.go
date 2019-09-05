@@ -7,13 +7,13 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common"
-	"github.com/mlogclub/mlog/common/config"
-	"github.com/mlogclub/mlog/common/urls"
-	"github.com/mlogclub/mlog/model"
-	"github.com/mlogclub/mlog/services"
-	"github.com/mlogclub/mlog/services/collect/oschina"
-	"github.com/mlogclub/mlog/services/collect/studygolang"
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/common/urls"
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/services"
+	"github.com/mlogclub/bbs-go/services/collect/oschina"
+	"github.com/mlogclub/bbs-go/services/collect/studygolang"
 )
 
 const (

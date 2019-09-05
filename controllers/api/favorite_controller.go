@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/mlog/services"
+	"github.com/mlogclub/bbs-go/services"
 )
 
 type FavoriteController struct {

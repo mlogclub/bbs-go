@@ -9,7 +9,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/common/oss"
+	"github.com/mlogclub/bbs-go/common/oss"
 )
 
 type PageFunc func(url string)

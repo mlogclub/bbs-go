@@ -7,9 +7,9 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/mlog/app"
-	"github.com/mlogclub/mlog/common/config"
-	"github.com/mlogclub/mlog/model"
+	"github.com/mlogclub/bbs-go/app"
+	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var configFile = flag.String("config", "./mlog.yaml", "配置文件路径")
