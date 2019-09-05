@@ -12,10 +12,10 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-mlog
+bbs-go
 
-mlog.yaml
-mlog.prod.yaml
+bbs-go.yaml
+bbs-go.prod.yaml
 
 .idea/*
 build/*
