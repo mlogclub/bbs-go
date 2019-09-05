@@ -25,7 +25,7 @@
 项目地址：https://github.com/mlogclub/bbs-go-admin
 
 ## 功能预览
-![WX20190903-120302.png](https://i.loli.net/2019/09/03/gdAWlkaK6N5HbU7.png)
+![WX20190905-185841.png](https://i.loli.net/2019/09/05/jXpoIDciyfE8n9t.png)
 ![WX20190903-120158.png](https://i.loli.net/2019/09/03/AsETB2OJpXD6gUV.png)
 
 ## 使用帮助
