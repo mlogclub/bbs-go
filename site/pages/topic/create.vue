@@ -37,6 +37,12 @@
 
               <div class="field">
                 <div class="control">
+                  <vditor />
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
                   <editor v-model="postForm.content" />
                 </div>
               </div>

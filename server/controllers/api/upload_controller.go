@@ -46,3 +46,106 @@ func (this *UploadController) Post() *simple.JsonResult {
 	}
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
+
+
+// vditor上传
+func (this *UploadController) PostEditor() {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		_, _ = this.Ctx.JSON(iris.Map{
+			"msg":  "请先登录",
+			"code": 1,
+		})
+		return
+	}
+
+	maxSize := this.Ctx.Application().ConfigurationReadOnly().GetPostMaxMemory()
+	err := this.Ctx.Request().ParseMultipartForm(maxSize)
+	if err != nil {
+		this.Ctx.StatusCode(iris.StatusInternalServerError)
+		_, _ = this.Ctx.WriteString(err.Error())
+		return
+	}
+
+	var errFiles []string
+	var succMap map[string]string
+
+	errFiles = make([]string, 0)
+	succMap = make(map[string]string)
+
+	form := this.Ctx.Request().MultipartForm
+	files := form.File["file[]"]
+	for _, file := range files {
+		f, err := file.Open()
+		if err != nil {
+			logrus.Error(err)
+			errFiles = append(errFiles, file.Filename)
+			continue
+		}
+		fileBytes, err := ioutil.ReadAll(f)
+		if err != nil {
+			logrus.Error(err)
+			errFiles = append(errFiles, file.Filename)
+			continue
+		}
+		url, err := oss.PutImage(fileBytes)
+		if err != nil {
+			logrus.Error(err)
+			errFiles = append(errFiles, file.Filename)
+			continue
+		}
+
+		succMap[file.Filename] = url
+	}
+
+	_, _ = this.Ctx.JSON(iris.Map{
+		"msg":  "",
+		"code": 0,
+		"data": iris.Map{
+			"errFiles": errFiles,
+			"succMap":  succMap,
+		},
+	})
+	return
+
+}
+
+// vditor 拷贝第三方图片
+func (this *UploadController) PostFetch() {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		_, _ = this.Ctx.JSON(iris.Map{
+			"msg":  "请先登录",
+			"code": 1,
+		})
+		return
+	}
+
+	var data map[string]string
+	data = make(map[string]string)
+
+	err := this.Ctx.ReadJSON(&data)
+	if err != nil {
+		_, _ = this.Ctx.JSON(iris.Map{
+			"msg":  err.Error(),
+			"code": 0,
+		})
+		return
+	}
+
+	url := data["url"]
+	output, err := oss.CopyImage(url)
+	if err != nil {
+		_, _ = this.Ctx.JSON(iris.Map{
+			"msg":  err.Error(),
+			"code": 0,
+		})
+	}
+	_, _ = this.Ctx.JSON(iris.Map{
+		"msg":  "",
+		"code": 0,
+		"data": iris.Map{
+			"url": output,
+		},
+	})
+}

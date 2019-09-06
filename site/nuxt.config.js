@@ -44,7 +44,8 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/mlog',
-    '~/plugins/highlight'
+    '~/plugins/highlight',
+    { src: '~/plugins/vditor', ssr: false }
   ],
   /*
    ** Nuxt.js modules

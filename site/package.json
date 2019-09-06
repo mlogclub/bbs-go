@@ -21,7 +21,8 @@
     "highlight.js": "^9.15.10",
     "mavon-editor": "^2.7.5",
     "nuxt": "^2.9.2",
-    "qs": "^6.8.0"
+    "qs": "^6.8.0",
+    "vditor": "^1.8.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
