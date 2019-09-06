@@ -1,0 +1,91 @@
+<template>
+  <section class="main">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <div class="main-body">
+            <div class="link">
+              <div class="logo" />
+              <div class="title">
+                <img v-if="link.logo" :src="link.logo">
+                <img v-if="!link.logo" src="https://file.mlog.club/mlog.club/link.png">
+                {{ link.title }}
+              </div>
+              <div class="summary">
+                {{ link.summary }}
+              </div>
+              <div class="link">
+                博客地址：<a :href="link.url" rel="external nofollow">{{ link.url }}</a>
+              </div>
+            </div>
+            <div style="margin-top: 20px;">
+              <ins
+                class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-5683711753850351"
+                data-ad-slot="1742173616"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              />
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  head() {
+    const title = this.link.title + ' - 好博客'
+    return {
+      title: this.$siteTitle(title),
+      meta: [
+        { hid: 'description', name: 'description', content: this.$siteDescription() },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
+      ]
+    }
+  },
+  async asyncData({ $axios, params }) {
+    const link = await $axios.get('/api/link/' + params.id)
+    return {
+      link: link
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.link {
+  margin-top: 20px;
+
+  .title {
+    display: flex;
+    line-height: 100px;
+    img {
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
+    }
+  }
+
+  .summary {
+    font-size: 16px;
+    padding: 10px 15px;
+    border: 1px dotted #eeeeee;
+    border-left: 3px solid #eeeeee;
+    background-color: #fbfbfb;
+  }
+  .link {
+    font-size: 16px;
+
+    a {
+      color: #3273dc;
+    }
+  }
+}
+</style>

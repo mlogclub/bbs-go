@@ -1,0 +1,283 @@
+html,
+body {
+  // background: #e1e1e1;
+  // background: #f4f5f6;
+  // background: #fdfdfd;
+  background: #fff;
+  font-family: "system-ui", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, sans-serif !important;
+}
+
+.column {
+  padding: 3px !important;
+}
+
+.main {
+  padding: 1rem 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .main {
+    padding: 1rem 0.5rem 0 !important;
+  }
+}
+
+.main-body {
+  background: #ffffff;
+  padding: 10px;
+}
+
+.main-aside {
+  background: #ffffff;
+}
+
+.widget {
+  background: #ffffff;
+  font-size: 13px;
+  margin-top: 20px;
+  padding-left: 8px;
+
+  &>.header {
+    padding-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px dashed #f4f4f5;
+
+    .slot {
+      float: right;
+    }
+  }
+
+  &>.content {
+    background-color: #fff;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+}
+
+img.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+div.avatar {
+  min-width: 50px;
+  min-height: 50px;
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+
+  &.small-avatar {
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &.avatar-size-45 {
+    min-width: 45px;
+    min-height: 45px;
+    width: 45px;
+    height: 45px;
+  }
+
+  &.is-rounded {
+    border-radius: 50%;
+  }
+
+  &.radius8 {
+    border-radius: 8px;
+  }
+
+  &.has-border {
+    border: 1px solid #f5f5f5;
+  }
+}
+
+.footer {
+  background: #ffffff;
+  padding: 20px 0 20px 0;
+
+  .hide {
+    a {
+      color: #efeaea;
+
+      &:hover {
+        color: #746f6f;
+      }
+    }
+  }
+}
+
+.categories {
+  background: #ffffff;
+  margin-bottom: 10px;
+
+  .tag {
+    a {
+      color: #4a4a4a;
+    }
+  }
+}
+
+.navbar .msgcount {
+  text-align: center;
+  vertical-align: middle;
+  height: 25px;
+  width: 25px;
+  margin: 0px;
+  padding: 1px;
+  background: #e50000;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+  animation: msgnotice 1s 3; // infinite 可以指定循环
+
+  @keyframes msgnotice {
+    50% {
+      background: transparent;
+      color: transparent;
+    }
+  }
+}
+
+
+.toc {
+  position: relative;
+
+  ul,
+  ul ul {
+    margin: 0px;
+    list-style: square;
+    padding-left: 15px;
+
+    li {
+      a {
+        font-size: 13px;
+        display: block;
+        padding: 3px 0;
+        color: #000;
+        background: transparent;
+      }
+
+      a.active {
+        color: #009a61;
+        font-weight: bold;
+        font-size: 15px;
+      }
+    }
+  }
+
+  &>ul:not(li a) {
+    list-style: none;
+  }
+
+  .content {
+    overflow: auto;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  // 屏幕宽度小于768的时候隐藏toc目录
+  .toc {
+    display: none;
+  }
+}
+
+.button.post {
+  width: 100%;
+}
+
+// 左侧小，右侧大
+.right-main-container {
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    .m-left {
+      display: none;
+    }
+  }
+
+  .m-left {
+    min-width: 190px;
+    max-width: 190px;
+    margin-right: 30px;
+  }
+
+  .m-right {
+    width: 100%;
+  }
+}
+
+// 左侧大，右侧小
+.left-main-container {
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    .m-right {
+      display: none;
+    }
+  }
+
+
+  .m-left {
+    width: 100%;
+  }
+
+  .m-right {
+      min-width: 190px;
+      max-width: 190px;
+      margin-left: 30px;
+  }
+}
+
+.m-nav {
+  margin-top: 10px;
+
+  li {
+    a {
+      display: block;
+      width: 100%;
+      padding: 8px 0;
+      color: #667d99;
+      font-weight: 500;
+      font-size: 15px;
+
+      i {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        color: #f36322;
+        text-decoration: none;
+      }
+
+      &.active {
+        color: rgb(75, 147, 209);
+        font-weight: 900;
+      }
+    }
+  }
+}
