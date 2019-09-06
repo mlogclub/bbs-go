@@ -72,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    this.initEditorHeight()
+    this.initEditorSize()
   },
   methods: {
     /**
@@ -100,7 +100,7 @@ export default {
       }
     },
 
-    initEditorHeight() {
+    initEditorSize() {
       if (!process.client) {
         return
       }

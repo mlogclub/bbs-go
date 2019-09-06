@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="editor" :style="{width: width}">
     <div id="vditor" class="vditor" />
   </div>
 </template>
@@ -17,12 +17,14 @@ export default {
   },
   data() {
     return {
+      width: 'auto',
       isLoading: true,
       vditor: null
     }
   },
   mounted() {
     this.initVditor()
+    this.initSize()
     this.$nextTick(async () => {
       await this.vditor.getHTML(true)
       this.isLoading = false
@@ -37,7 +39,7 @@ export default {
         toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'list', 'ordered-list', 'check', 'code',
           'inline-code', 'undo', 'redo', 'upload', 'link', 'table', 'preview', 'fullscreen'],
         // placeholder: '请输入...',
-        width: '100%',
+        // width: '100%',
         height: 400,
         counter: '999999',
         preview: {
@@ -60,6 +62,22 @@ export default {
       if (this.value) {
         this.vditor.setValue(this.value)
       }
+    },
+    initSize() {
+      if (!process.client) {
+        return
+      }
+      const wrapper = this.$refs.editor
+      debugger
+      const parentElement = wrapper.parentElement
+      if (!parentElement) {
+        return
+      }
+      const me = this
+      me.width = parentElement.clientWidth + 'px'
+      window.addEventListener('resize', function () {
+        me.width = parentElement.clientWidth + 'px'
+      })
     }
   }
 }
