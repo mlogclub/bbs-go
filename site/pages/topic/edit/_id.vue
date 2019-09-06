@@ -37,7 +37,7 @@
 
               <div class="field">
                 <div class="control">
-                  <editor v-model="postForm.content" />
+                  <vditor v-model="postForm.content" />
                 </div>
               </div>
 
@@ -76,12 +76,11 @@
 
 <script>
 import utils from '~/common/utils'
-import Editor from '~/components/Editor'
 import TagInput from '~/components/TagInput'
 export default {
   middleware: 'authenticated',
   components: {
-    Editor, TagInput
+    TagInput
   },
   data() {
     return {

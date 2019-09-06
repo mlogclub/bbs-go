@@ -7,8 +7,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/bbs-go/common/oss"
+	"github.com/mlogclub/bbs-go/services"
 )
 
 const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M
@@ -47,14 +47,20 @@ func (this *UploadController) Post() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
-
 // vditor上传
 func (this *UploadController) PostEditor() {
+	errFiles := make([]string, 0)
+	succMap := make(map[string]string)
+
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		_, _ = this.Ctx.JSON(iris.Map{
 			"msg":  "请先登录",
 			"code": 1,
+			"data": iris.Map{
+				"errFiles": errFiles,
+				"succMap":  succMap,
+			},
 		})
 		return
 	}
@@ -66,12 +72,6 @@ func (this *UploadController) PostEditor() {
 		_, _ = this.Ctx.WriteString(err.Error())
 		return
 	}
-
-	var errFiles []string
-	var succMap map[string]string
-
-	errFiles = make([]string, 0)
-	succMap = make(map[string]string)
 
 	form := this.Ctx.Request().MultipartForm
 	files := form.File["file[]"]
@@ -117,6 +117,9 @@ func (this *UploadController) PostFetch() {
 		_, _ = this.Ctx.JSON(iris.Map{
 			"msg":  "请先登录",
 			"code": 1,
+			"data": iris.Map{
+
+			},
 		})
 		return
 	}
@@ -129,6 +132,9 @@ func (this *UploadController) PostFetch() {
 		_, _ = this.Ctx.JSON(iris.Map{
 			"msg":  err.Error(),
 			"code": 0,
+			"data": iris.Map{
+
+			},
 		})
 		return
 	}
@@ -145,7 +151,8 @@ func (this *UploadController) PostFetch() {
 		"msg":  "",
 		"code": 0,
 		"data": iris.Map{
-			"url": output,
+			"originalURL": url,
+			"url":         output,
 		},
 	})
 }

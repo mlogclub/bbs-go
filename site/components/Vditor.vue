@@ -6,7 +6,7 @@
 
 <script>
 import Vditor from 'vditor'
-import 'vditor/src/assets/scss/dark.scss'
+import 'vditor/src/assets/scss/classic.scss'
 
 export default {
   props: {
@@ -31,6 +31,7 @@ export default {
   methods: {
     initVditor() {
       const me = this
+      const userToken = this.$cookies.get('userToken')
       const options = {
         cache: false,
         toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'list', 'ordered-list', 'check', 'code',
@@ -38,24 +39,21 @@ export default {
         // placeholder: '请输入...',
         width: '100%',
         height: 400,
-        tab: '\t',
         counter: '999999',
+        preview: {
+          mode: 'both'
+        },
         input: function (val) {
           me.$emit('input', val)
         },
         upload: {
           accept: 'image/*',
-          token: 'test',
-          url: '{{baseUrl}}/upload/editor',
-          linkToImgUrl: '{{baseUrl}}/upload/fetch',
+          url: '/api/upload/editor?userToken=' + userToken,
+          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
           filename(name) {
             return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
           }
         }
-        // preview: {
-        //   delay: 100,
-        //   show: true
-        // }
       }
       this.vditor = new Vditor('vditor', options)
       // this.vditor.focus()
@@ -69,6 +67,6 @@ export default {
 
 <style lang="scss" scoped>
 .vditor {
-  border: 1px solid #eee;
+  border: 1px solid #d1d5da;
 }
 </style>
