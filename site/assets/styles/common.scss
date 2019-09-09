@@ -211,6 +211,7 @@ div.avatar {
 }
 
 $sidebar-width: 190px;
+// $displaySidebar: true;
 
 // 左侧小，右侧大
 .right-main-container {
@@ -220,6 +221,9 @@ $sidebar-width: 190px;
   @media screen and (max-width: 768px) {
     .m-left {
       display: none;
+    }
+    .m-right {
+      width: 100% !important;
     }
   }
 
@@ -231,6 +235,7 @@ $sidebar-width: 190px;
 
   .m-right {
     width: calc(100% - #{$sidebar-width});
+    transition: width .2s;
   }
 }
 
@@ -242,17 +247,21 @@ $sidebar-width: 190px;
     .m-right {
       display: none;
     }
+    .m-left {
+      width: 100% !important;
+    }
   }
 
 
   .m-left {
     width: calc(100% - #{$sidebar-width});
+    transition: width .2s;
   }
 
   .m-right {
-      min-width: $sidebar-width;
-      max-width: $sidebar-width;
-      margin-left: 30px;
+    min-width: $sidebar-width;
+    max-width: $sidebar-width;
+    margin-left: 30px;
   }
 }
 
