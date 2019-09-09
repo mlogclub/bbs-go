@@ -210,9 +210,12 @@ div.avatar {
   width: 100%;
 }
 
+$sidebar-width: 190px;
+
 // 左侧小，右侧大
 .right-main-container {
   display: flex;
+
 
   @media screen and (max-width: 768px) {
     .m-left {
@@ -221,13 +224,13 @@ div.avatar {
   }
 
   .m-left {
-    min-width: 190px;
-    max-width: 190px;
+    min-width: $sidebar-width;
+    max-width: $sidebar-width;
     margin-right: 30px;
   }
 
   .m-right {
-    width: 100%;
+    width: calc(100% - #{$sidebar-width});
   }
 }
 
@@ -243,12 +246,12 @@ div.avatar {
 
 
   .m-left {
-    width: 100%;
+    width: calc(100% - #{$sidebar-width});
   }
 
   .m-right {
-      min-width: 190px;
-      max-width: 190px;
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
       margin-left: 30px;
   }
 }

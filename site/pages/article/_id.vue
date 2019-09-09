@@ -109,6 +109,7 @@
               <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
               </script>
+
               <p v-highlight v-html="article.content" />
             </div>
 
