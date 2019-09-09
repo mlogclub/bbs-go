@@ -12,6 +12,12 @@
         </a>
       </li>
       <li>
+        <a :class="{'active': currentTagId == 16310}" href="/topics/tag/16310">
+          <i class="iconfont icon-topic" />
+          <span class="Button-label">分享</span>
+        </a>
+      </li>
+      <li>
         <a :class="{'active': currentTagId == 15533}" href="/topics/tag/15533">
           <i class="iconfont icon-topic" />
           <span class="Button-label">提问</span>
@@ -48,6 +54,17 @@
         </a>
       </li>
     </ul>
+
+    <!-- 展示广告190x90 -->
+    <ins
+      class="adsbygoogle"
+      style="display:inline-block;width:190px;height:90px"
+      data-ad-client="ca-pub-5683711753850351"
+      data-ad-slot="9345305153"
+    />
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 
     <!-- 展示广告190x480 -->
     <ins
