@@ -4,7 +4,7 @@
       <div class="right-main-container">
         <bbs-left />
         <div class="m-right">
-          <topic-list :topics="topicsPage.results" :show-ad="true" />
+          <topic-list :topics="topicsPage.results" :show-ad="false" />
           <pagination :page="topicsPage.page" url-prefix="/topics/" />
         </div>
       </div>
