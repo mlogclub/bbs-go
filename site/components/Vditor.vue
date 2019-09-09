@@ -36,10 +36,30 @@ export default {
       const userToken = this.$cookies.get('userToken')
       const options = {
         cache: false,
-        toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'list', 'ordered-list', 'check', 'code',
-          'inline-code', 'undo', 'redo', 'upload', 'link', 'table', 'preview', 'fullscreen'],
+        toolbar: [
+          'emoji',
+          'headings',
+          'bold',
+          'italic',
+          'strike',
+          '|',
+          'line',
+          'quote',
+          'list',
+          'ordered-list',
+          'check',
+          'code',
+          'inline-code',
+          'undo',
+          'redo',
+          'upload',
+          'link',
+          'table',
+          'preview',
+          'fullscreen'
+        ],
         // placeholder: '请输入...',
-        // width: '100%',
+        width: '100%',
         height: 400,
         counter: '999999',
         preview: {
@@ -47,6 +67,7 @@ export default {
         },
         input: function (val) {
           me.$emit('input', val)
+          me.initSize()
         },
         upload: {
           accept: 'image/*',
@@ -67,15 +88,17 @@ export default {
       if (!process.client) {
         return
       }
+      const me = this
       const wrapper = this.$refs.editor
       const parentElement = wrapper.parentElement
       if (!parentElement) {
         return
       }
-      const me = this
       me.width = parentElement.clientWidth + 'px'
+      parentElement.parentElement.style.width = me.width
       window.addEventListener('resize', function () {
         me.width = parentElement.clientWidth + 'px'
+        parentElement.parentElement.style.width = me.width
       })
     }
   }
