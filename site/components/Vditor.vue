@@ -68,7 +68,6 @@ export default {
         return
       }
       const wrapper = this.$refs.editor
-      debugger
       const parentElement = wrapper.parentElement
       if (!parentElement) {
         return
