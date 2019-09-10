@@ -8,7 +8,7 @@
           <a href="https://file.mlog.club/mlog.club/qrcode.jpg" target="_blank">公众号</a>
         </div>
         <div>
-          © 2019 Powered by <a href="http://bbs-go.com" target="_blank">bbs-go</a>
+          © 2019 Powered by <a href="http://docs.bbs-go.com" target="_blank">bbs-go</a>
         </div>
       </div>
     </footer>
