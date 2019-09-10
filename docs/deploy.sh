@@ -14,10 +14,8 @@ echo 'bbs-go.com' > CNAME
 
 git init
 git add -A
+git config user.name 'mlogclub'
+git config user.email 'mlog1@qq.com'
 git commit -m 'deploy docs'
 
-# 如果发布到 https://<USERNAME>.github.io
-git push -f git@github_mlog.com:<USERNAME>/<USERNAME>.github.io.git master
-
-# 如果发布到 https://<USERNAME>.github.io/<REPO>
-# git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
+git push -f git@github_mlog.com:mlogclub/bbs-go-home-page.git master
