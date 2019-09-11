@@ -1,5 +1,10 @@
 <template>
-  <nav ref="nav" class="navbar is-white is-fixed-top" role="navigation" aria-label="main navigation">
+  <nav
+    ref="nav"
+    class="navbar is-white is-fixed-top"
+    role="navigation"
+    aria-label="main navigation"
+  >
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
@@ -150,9 +155,18 @@ export default {
 <style lang="scss" scoped>
 #searchForm {
   .input {
-    border-radius: 0px;
     // box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
     box-shadow: none;
+    border-radius: 2px;
+    background-color: #fff;
+    transition: all 0.4s;
+    float: right;
+    position: relative;
+    &:focus {
+      background-color: #fff;
+      border-color: #e7672e;
+      outline: none;
+    }
   }
 }
 .navbar {
