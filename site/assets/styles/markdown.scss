@@ -1,13 +1,19 @@
 pre {
-  background: #23241f;
   margin: 10px 0;
-  padding: 5px 10px !important;
-  // padding: 0!important;
+  padding: 0!important;
   overflow: auto;
   font-size: 13px;
-  // color: #4d4d4c;
-  color: #fff;
   line-height: 1.5;
+  background: #272822;
+  color: #ddd;
+
+  code {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #272822;
+    color: #ddd;
+  }
 }
 
 // .hljs {

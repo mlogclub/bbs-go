@@ -4,43 +4,60 @@
       <div class="container">
         <div class="left-main-container">
           <div class="m-left">
-            <div class="topic-detail">
+            <div class="topic-detail topic-wrap">
               <div class="header">
                 <div class="left">
-                  <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
-                    <div class="avatar radius8" :style="{backgroundImage:'url(' + topic.user.avatar + ')'}" />
-                  </a>
+                  <div
+                    class="avatar avatar-size-45 is-rounded"
+                    :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
+                  />
                 </div>
-                <div class="right">
-                  <div class="topic-title">
-                    {{ topic.title }}
-                  </div>
+                <div class="center">
+                  <a :href="'/topic/' + topic.topicId" :title="topic.title">
+                    <div class="topic-title">{{ topic.title }}</div>
+                  </a>
+
                   <div class="topic-meta">
-                    <span><a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a></span>
-                    <span>{{ topic.lastCommentTime | prettyDate }}</span>
-                    <span>跟帖：{{ topic.commentCount }}</span>
-                    <span>点击：{{ topic.viewCount }}</span>
-                    <span v-for="tag in topic.tags" :key="tag.tagId" class="tag"><a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a></span>
-                    <span v-if="isOwner" class="act">
-                      <a @click="deleteTopic(topic.topicId)">
-                        <i class="iconfont icon-delete" />&nbsp;删除
-                      </a>
-                    </span>
-                    <span v-if="isOwner" class="act">
-                      <a :href="'/topic/edit/' + topic.topicId">
-                        <i class="iconfont icon-edit" />&nbsp;修改
-                      </a>
-                    </span>
-                    <span class="act">
+                    <div class="meta-item">
+                      <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+                    </div>
+                    <div class="meta-item">
+                      {{ topic.lastCommentTime | prettyDate }}
+                    </div>
+                    <div class="meta-item">
+                      <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
+                        <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
+                      </span>
+                    </div>
+                    <div class="meta-item act">
                       <a @click="addFavorite(topic.topicId)">
                         <i class="iconfont icon-favorite" />&nbsp;{{ favorited ? '已收藏' : '收藏' }}
                       </a>
-                    </span>
+                    </div>
+                    <div v-if="isOwner" class="meta-item act">
+                      <a @click="deleteTopic(topic.topicId)">
+                        <i class="iconfont icon-delete" />&nbsp;删除
+                      </a>
+                    </div>
+                    <div v-if="isOwner" class="meta-item act">
+                      <a :href="'/topic/edit/' + topic.topicId">
+                        <i class="iconfont icon-edit" />&nbsp;修改
+                      </a>
+                    </div>
                   </div>
+                </div>
+                <div class="right">
+                  <div class="like">
+                    <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
+                      <i class="iconfont icon-like" />
+                    </span>
+                    <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
+                  </div>
+                  <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
                 </div>
               </div>
 
-              <div v-highlight class="content" v-html="topic.content" />
+              <div class="content" v-html="topic.content" />
 
               <ins
                 class="adsbygoogle"
@@ -103,7 +120,11 @@ export default {
   },
   computed: {
     isOwner: function () {
-      return this.currentUser && this.topic && this.currentUser.id === this.topic.user.id
+      return (
+        this.currentUser &&
+        this.topic &&
+        this.currentUser.id === this.topic.user.id
+      )
     }
   },
   async asyncData({ $axios, params, error }) {
@@ -181,61 +202,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .aside-avatar {
-    width: 150px;
-    height: 150px;
-  }
-  .topic-detail {
+.aside-avatar {
+  width: 150px;
+  height: 150px;
+}
+.topic-detail {
   margin-bottom: 20px;
-
-  .header {
-    display: flex;
-    border-bottom: 1px dashed #f4f4f5;
-    padding-bottom: 5px;
-
-    .left {
-      margin-right: 10px;
-    }
-
-    .right {
-      .topic-title {
-        color: #555;
-        font-size: 16px;
-      }
-
-      .topic-meta {
-        span {
-          font-size: 12px;
-          color: #778087;
-          &:not(:last-child) {
-            margin-right: 8px;
-          }
-
-          &.act {
-            a {
-              font-size: 12px;
-              color: #3273dc;
-              margin-left: 10px;
-
-              i {
-                font-size: 12px;
-                color: #000;
-              }
-            }
-          }
-
-          a {
-            font-size: 12px;
-            color: #778087;
-          }
-
-          &.tag {
-            height: auto !important;
-          }
-        }
-      }
-    }
-  }
 
   .content {
     padding-top: 10px;
