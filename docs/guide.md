@@ -53,7 +53,7 @@ go mod tidy
 ### 配置
 
 ###配置简介
-启动前需要先了解 mlog-club 的配置项，mlog-club 的示例配置文件为`mlog.example.yaml`，文件在项目根目录中，请详细看下该文件：
+启动前需要先了解 mlog-club 的配置项，mlog-club 的示例配置文件为`bbs-go.example.yaml`，文件在server目录中，请详细看下该文件：
 ```yaml
 
 Env: prod # 环境，线上环境：prod、测试环境：dev
