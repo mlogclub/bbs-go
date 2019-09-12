@@ -18,32 +18,32 @@
                   </a>
 
                   <div class="topic-meta">
-                    <div class="meta-item">
+                    <span class="meta-item">
                       <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
-                    </div>
-                    <div class="meta-item">
+                    </span>
+                    <span class="meta-item">
                       {{ topic.lastCommentTime | prettyDate }}
-                    </div>
-                    <div class="meta-item">
+                    </span>
+                    <span class="meta-item">
                       <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
                         <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
                       </span>
-                    </div>
-                    <div class="meta-item act">
+                    </span>
+                    <span class="meta-item act">
                       <a @click="addFavorite(topic.topicId)">
                         <i class="iconfont icon-favorite" />&nbsp;{{ favorited ? '已收藏' : '收藏' }}
                       </a>
-                    </div>
-                    <div v-if="isOwner" class="meta-item act">
+                    </span>
+                    <span v-if="isOwner" class="meta-item act">
                       <a @click="deleteTopic(topic.topicId)">
                         <i class="iconfont icon-delete" />&nbsp;删除
                       </a>
-                    </div>
-                    <div v-if="isOwner" class="meta-item act">
+                    </span>
+                    <span v-if="isOwner" class="meta-item act">
                       <a :href="'/topic/edit/' + topic.topicId">
                         <i class="iconfont icon-edit" />&nbsp;修改
                       </a>
-                    </div>
+                    </span>
                   </div>
                 </div>
                 <div class="right">
@@ -195,6 +195,26 @@ export default {
       } catch (e) {
         console.error(e)
         this.$toast.error('删除失败：' + (e.message || e))
+      }
+    },
+    async like(topic) {
+      try {
+        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        topic.liked = true
+        topic.likeCount++
+      } catch (e) {
+        if (e.errorCode === 1) {
+          this.$toast.info('请登录后点赞！！！', {
+            action: {
+              text: '去登录',
+              onClick: (e, toastObject) => {
+                utils.toSignin()
+              }
+            }
+          })
+        } else {
+          this.$toast.error(e.message || e)
+        }
       }
     }
   }

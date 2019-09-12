@@ -37,9 +37,9 @@
                 line-height: 24px;
                 color: #bbb;
                 margin-top: 3px;
-                display: flex;
+                // display: flex;
 
-                .meta-item {
+                span.meta-item {
                     font-size: 12px;
 
                     &:not(:last-child) {

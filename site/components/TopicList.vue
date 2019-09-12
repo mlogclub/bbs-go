@@ -30,17 +30,17 @@
             </a>
 
             <div class="topic-meta">
-              <div class="meta-item">
+              <span class="meta-item">
                 <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
-              </div>
-              <div class="meta-item">
+              </span>
+              <span class="meta-item">
                 {{ topic.lastCommentTime | prettyDate }}
-              </div>
-              <div class="meta-item">
+              </span>
+              <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
                   <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
           <div class="right">
