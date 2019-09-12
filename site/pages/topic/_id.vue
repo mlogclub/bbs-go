@@ -18,7 +18,8 @@
                   <div class="topic-meta">
                     <span><a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a></span>
                     <span>{{ topic.lastCommentTime | prettyDate }}</span>
-                    <span>点击:{{ topic.viewCount }}</span>
+                    <span>跟帖：{{ topic.commentCount }}</span>
+                    <span>点击：{{ topic.viewCount }}</span>
                     <span v-for="tag in topic.tags" :key="tag.tagId" class="tag"><a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a></span>
                     <span v-if="isOwner" class="act">
                       <a @click="deleteTopic(topic.topicId)">
@@ -206,6 +207,9 @@ export default {
         span {
           font-size: 12px;
           color: #778087;
+          &:not(:last-child) {
+            margin-right: 8px;
+          }
 
           &.act {
             a {
@@ -223,10 +227,6 @@ export default {
           a {
             font-size: 12px;
             color: #778087;
-          }
-
-          &:not(:last-child) {
-            margin-right: 3px;
           }
 
           &.tag {

@@ -17,6 +17,21 @@ type TopicController struct {
 	Ctx iris.Context
 }
 
+// 同步帖子相关计数
+func (this *TopicController) GetSynccount() *simple.JsonResult {
+	go func() {
+		services.TopicService.Scan(func(topics []model.Topic) bool {
+			for _, topic := range topics {
+				commentCount := services.CommentService.Count(model.EntityTypeTopic, topic.Id)
+				topic.CommentCount = commentCount
+				_ = services.TopicService.Update(&topic)
+			}
+			return true
+		})
+	}()
+	return simple.JsonSuccess()
+}
+
 // 发表帖子
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
