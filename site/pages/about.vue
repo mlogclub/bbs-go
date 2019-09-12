@@ -6,12 +6,14 @@
           关于
         </div>
         <div class="content">
-          <blockquote>
-            <a href="https://mlog.club">https://mlog.club</a> 是一个基于Go语言开发的开源项目，旨在学习交流，欢迎各路大神提供意见和建议。<br>
-            项目地址：<a href="https://github.com/mlogclub/mlog" target="_blank">https://github.com/mlogclub/mlog</a><br>
-            <span style="font-size: 15px; font-weight: blod; color: red;">扫码关注：</span><br>
+          <h3>简介</h3>
+          <p>本站是基于 <a href="http://docs.bbs-go.com" target="_blank">bbs-go</a> 搭建，旨在学习交流，欢迎各路大神提供意见和建议。</p>
+          <p>交流群：<br><img style="max-width: 200px;" src="https://file.mlog.club/mlog.club/bbs-go-qq.jpg"></p>
+
+          <h3>公众号</h3>
+          <p>
             <img style="height: 150px; width: 150px;" src="https://file.mlog.club/mlog.club/qrcode.jpg">
-          </blockquote>
+          </p>
 
           <h3>版权申明</h3>
           <p>
@@ -31,9 +33,7 @@
 
           <h3>与我联系</h3>
           <p>
-            如有任何想法、意见、问题可邮件联系 mlog1#qq.com ( @替换# )<br>
-            微信：damaomao2333 <br>
-            <img style="height: 150px; width: 150px;" src="https://file.mlog.club/doc/my_qrcode.jpg">
+            如有任何想法、意见、问题可邮件联系 mlog1#qq.com ( @替换# )
           </p>
 
           <ins
