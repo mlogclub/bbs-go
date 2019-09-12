@@ -2,7 +2,7 @@ package model
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicTag{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
+	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
 	&CollectRule{}, &CollectArticle{},
 }
 
@@ -183,6 +183,7 @@ type Topic struct {
 	Content         string `gorm:"type:longtext" json:"content" form:"content"`      // 内容
 	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`       // 查看数量
 	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"` // 跟帖数量
+	LikeCount       int64  `gorm:"not null" json:"likeCount" form:"likeCount"`       // 点赞数量
 	Status          int    `gorm:"int" json:"status" form:"status"`                  // 状态：0：正常、1：删除
 	LastCommentTime int64  `json:"lastCommentTime" form:"lastCommentTime"`           // 最后回复时间
 	CreateTime      int64  `json:"createTime" form:"createTime"`                     // 创建时间
@@ -196,6 +197,14 @@ type TopicTag struct {
 	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`                    // 标签编号
 	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"` // 状态：正常、删除
 	CreateTime int64 `json:"createTime" form:"createTime"`                          // 创建时间
+}
+
+// 话题点赞
+type TopicLike struct {
+	Model
+	UserId     int64 `gorm:"not null" json:"userId" form:"userId"`   // 用户
+	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"` // 主题编号
+	CreateTime int64 `json:"createTime" form:"createTime"`           // 创建时间
 }
 
 // 消息

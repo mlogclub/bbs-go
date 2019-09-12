@@ -19,7 +19,10 @@
       <li :key="topic.topicId">
         <div class="topic-item">
           <div class="left">
-            <div class="avatar avatar-size-45 is-rounded" :style="{backgroundImage:'url('+ topic.user.avatar +')'}" />
+            <div
+              class="avatar avatar-size-45 is-rounded"
+              :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
+            />
           </div>
           <div class="center">
             <a :href="'/topic/' + topic.topicId" :title="topic.title">
@@ -27,14 +30,27 @@
             </a>
 
             <div class="topic-meta">
-              <span><a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a></span>
-              <span>{{ topic.lastCommentTime | prettyDate }}</span>
-              <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a></span>
+              <div class="meta-item">
+                <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+              </div>
+              <div class="meta-item">
+                {{ topic.lastCommentTime | prettyDate }}
+              </div>
+              <div class="meta-item">
+                <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
+                  <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
+                </span>
+              </div>
             </div>
           </div>
           <div class="right">
-            <span class="view-count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
+            <div class="like">
+              <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
+                <i class="iconfont icon-like" />
+              </span>
+              <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
+            </div>
+            <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
           </div>
         </div>
       </li>
@@ -43,6 +59,7 @@
 </template>
 
 <script>
+import utils from '~/common/utils'
 export default {
   props: {
     topics: {
@@ -55,6 +72,28 @@ export default {
     showAd: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    async like(topic) {
+      try {
+        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        topic.liked = true
+        topic.likeCount++
+      } catch (e) {
+        if (e.errorCode === 1) {
+          this.$toast.info('请登录后点赞！！！', {
+            action: {
+              text: '去登录',
+              onClick: (e, toastObject) => {
+                utils.toSignin()
+              }
+            }
+          })
+        } else {
+          this.$toast.error(e.message || e)
+        }
+      }
     }
   }
 }
@@ -69,10 +108,11 @@ export default {
     position: relative;
     overflow: hidden;
     border-radius: 4px;
-    transition: background .2s;
+    transition: background 0.5s;
 
     &:hover {
       background: #f3f6f9;
+      border-bottom: none;
     }
 
     // &:not(:last-child) {
@@ -83,13 +123,20 @@ export default {
       display: flex;
 
       .left {
-        min-width: 45px;
-        min-height: 45px;
+        min-width: 48px;
+        min-height: 48px;
+
+        .avatar {
+          min-width: 48px;
+          min-height: 48px;
+          width: 48px;
+          height: 48px;
+        }
       }
 
       .center {
         width: 100%;
-        margin-left: 5px;
+        margin-left: 8px;
 
         .topic-title {
           color: #555;
@@ -107,22 +154,24 @@ export default {
         .topic-meta {
           position: relative;
           font-size: 12px;
+          line-height: 24px;
           color: #bbb;
-          margin-top: 6px;
+          margin-top: 3px;
+          display: flex;
 
-          span {
+          .meta-item {
             font-size: 12px;
 
             &:not(:last-child) {
-              margin-right: 3px;
+              margin-right: 8px;
             }
 
-            &.tag {
+            .tag {
               height: auto !important;
-            }
 
-            &.btn a {
-              color: #3273dc;
+              &:not(:last-child) {
+                margin-right: 3px;
+              }
             }
           }
 
@@ -133,12 +182,47 @@ export default {
       }
 
       .right {
-        min-width: 165px;
-        max-width: 165px;
+        min-width: 100px;
+        max-width: 100px;
         text-align: right;
         padding-right: 8px;
 
-        span.view-count {
+        .like {
+          font-size: 12px;
+
+          .like-btn {
+            transition: all 0.5s;
+            cursor: pointer;
+
+            background-color: rgba(126, 107, 1, 0.08);
+            color: #e7672e;
+            // padding: 0;
+            // display: inline-block;
+            // height: 20px;
+            // width: 20px;
+            // line-height: 20px;
+            // border-radius: 10px;
+            // text-align: center;
+            padding: 4px;
+            border-radius: 50%;
+
+            &:hover, &.liked  {
+              color: #fff;
+              background-color: #e7672e;
+            }
+          }
+
+          .like-count {
+            font-weight: bold;
+            color: #e7672e;
+
+            &::before {
+              content: " x ";
+            }
+          }
+        }
+
+        .count {
           font-size: 12px;
           color: #fff;
 
@@ -148,7 +232,6 @@ export default {
           font-weight: 700;
         }
       }
-
     }
   }
 }

@@ -196,6 +196,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.CreateTime = topic.CreateTime
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
+	rsp.LikeCount = topic.LikeCount
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
@@ -232,6 +233,7 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.CreateTime = topic.CreateTime
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
+	rsp.LikeCount = topic.LikeCount
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)

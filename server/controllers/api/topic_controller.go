@@ -23,8 +23,11 @@ func (this *TopicController) GetSynccount() *simple.JsonResult {
 		services.TopicService.Scan(func(topics []model.Topic) bool {
 			for _, topic := range topics {
 				commentCount := services.CommentService.Count(model.EntityTypeTopic, topic.Id)
-				topic.CommentCount = commentCount
-				_ = services.TopicService.Update(&topic)
+				likeCount := services.TopicLikeService.Count(topic.Id)
+				_ = services.TopicService.Updates(topic.Id, map[string]interface{}{
+					"comment_count": commentCount,
+					"like_count":    likeCount,
+				})
 			}
 			return true
 		})
@@ -133,6 +136,19 @@ func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	}
 	services.TopicService.IncrViewCount(topicId) // 增加浏览量
 	return simple.JsonData(render.BuildTopic(topic))
+}
+
+// 点赞
+func (this *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	err := services.TopicLikeService.Like(user.Id, topicId)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
 }
 
 // 最新帖子

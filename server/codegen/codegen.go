@@ -7,7 +7,5 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectRule{}))
-	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectLink{}))
-	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.CollectArticle{}))
+	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.TopicLike{}))
 }

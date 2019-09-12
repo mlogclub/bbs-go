@@ -95,7 +95,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 // 统计数量
 func (this *commentService) Count(entityType string, entityId int64) int64 {
 	var count int64 = 0
-	simple.GetDB().Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
+	simple.GetDB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
 	return count
 }
 
