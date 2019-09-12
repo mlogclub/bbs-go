@@ -9,11 +9,6 @@
 
 ![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
 
-
-## 功能预览
-![WX20190903-120302.png](https://i.loli.net/2019/09/03/gdAWlkaK6N5HbU7.png)
-![WX20190903-120158.png](https://i.loli.net/2019/09/03/AsETB2OJpXD6gUV.png)
-
 ## Project setup
 ```
 npm install
