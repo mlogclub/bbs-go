@@ -20,3 +20,9 @@ footer: Copyright © 2019
 
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - 码云：[https://gitee.com/mlog/bbs-go](https://gitee.com/mlog/bbs-go)
+
+## 交流群
+- QQ群号：653248175
+- 扫码进群：
+
+![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)

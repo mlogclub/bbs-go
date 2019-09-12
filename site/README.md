@@ -4,9 +4,10 @@
 
 ## 交流群
 
-扫码加好友进群交流，加好友请备注：`mlog`
+- QQ群号：653248175
+- 扫码进群：
 
-![](https://i.loli.net/2019/06/25/5d11effb3458934717.png)
+![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
 
 
 ## Build Setup

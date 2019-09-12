@@ -4,6 +4,12 @@ sidebar: auto
 
 # 使用帮助
 
+## 交流群
+- QQ群号：653248175
+- 扫码进群：
+
+![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
+
 ## 简介
 bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技术，Go语言提供api进行数据支撑，用户界面使用Nuxt.js进行渲染，后台界面基于element-ui。主要功能如下：
 
@@ -126,9 +132,3 @@ go run main.go
 ## 问题反馈
 - 欢迎交流：[https://mlog.club/topics](https://mlog.club/topics)
 - 提交建议：[https://mlog.club/topic/609](https://mlog.club/topic/609)
-
-
-## 交流群
-扫码加好友进群交流，加好友请备注：mlog
-
-![微信二维码](https://i.loli.net/2019/06/25/5d11effb3458934717.png)
