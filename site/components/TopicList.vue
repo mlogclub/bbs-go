@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="right">
-            <span class="view-count">{{ topic.viewCount }}</span>
+            <span class="view-count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
           </div>
         </div>
       </li>
@@ -133,8 +133,8 @@ export default {
       }
 
       .right {
-        min-width: 65px;
-        max-width: 65px;
+        min-width: 165px;
+        max-width: 165px;
         text-align: right;
         padding-right: 8px;
 

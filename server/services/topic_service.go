@@ -218,12 +218,10 @@ func (this *topicService) IncrViewCount(topicId int64) {
 	simple.GetDB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
 }
 
-// 更新最后回复时间
-func (this *topicService) SetLastCommentTime(topicId, lastCommentTime int64) {
-	err := this.UpdateColumn(topicId, "last_comment_time", lastCommentTime)
-	if err != nil {
-		logrus.Error(err)
-	}
+// 当帖子被评论的时候，更新最后回复时间、回复数量+1
+func (this *topicService) OnComment(topicId, lastCommentTime int64) {
+	simple.GetDB().Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?",
+		lastCommentTime, topicId)
 }
 
 // rss

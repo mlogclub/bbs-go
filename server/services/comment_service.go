@@ -2,8 +2,9 @@ package services
 
 import (
 	"errors"
-	"github.com/mlogclub/simple"
 	"strings"
+
+	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -54,6 +55,7 @@ func (this *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(simple.GetDB(), id, "status", model.CommentStatusDeleted)
 }
 
+// 发表评论
 func (this *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
 
@@ -81,7 +83,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 
 	// 更新帖子最后回复时间
 	if form.EntityType == model.EntityTypeTopic {
-		TopicService.SetLastCommentTime(form.EntityId, simple.NowTimestamp())
+		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
 	}
 
 	// 发送消息
@@ -90,6 +92,14 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 	return comment, nil
 }
 
+// 统计数量
+func (this *commentService) Count(entityType string, entityId int64) int64 {
+	var count int64 = 0
+	simple.GetDB().Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
+	return count
+}
+
+// 列表
 func (this *commentService) List(entityType string, entityId int64, cursor int64) (list []model.Comment, err error) {
 	if cursor > 0 {
 		err = simple.GetDB().Where("entity_type = ? and entity_id = ? and status = ? and id < ?", entityType,

@@ -65,6 +65,7 @@ type TopicSimpleResponse struct {
 	Title           string         `json:"title"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
+	CommentCount    int64          `json:"commentCount"`
 	CreateTime      int64          `json:"createTime"`
 }
 
