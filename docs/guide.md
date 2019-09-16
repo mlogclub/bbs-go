@@ -55,7 +55,7 @@ admin模块是bbs-go的管理后台，他基于element-ui搭建，element-ui相�
 
 ## 启动：server
 ### 安装依赖
-mlog-club 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：https://mlog.club/topic/9
+bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：https://mlog.club/topic/9
 ```shell
 # 第一步 clone 代码
 git clone https://github.com/mlogclub/mlog.git
@@ -67,8 +67,8 @@ go mod tidy
 
 ### 配置
 
-###配置简介
-启动前需要先了解 mlog-club 的配置项，mlog-club 的示例配置文件为`bbs-go.example.yaml`，文件在server目录中，请详细看下该文件：
+### 配置简介
+启动前需要先了解 bbs-go 的配置项，bbs-go 的示例配置文件为`bbs-go.example.yaml`，文件在server目录中，请详细看下该文件：
 ```yaml
 
 Env: prod # 环境，线上环境：prod、测试环境：dev
@@ -116,7 +116,7 @@ Smtp:
 ```
 
 #### 数据库配置
-mlog-club使用的`gorm`打开了`AutoMigrate`功能系统会在启动的时候自动根据我们定义的实体类来初始化表结构，所以我们要做的就是正确创建和配置数据库，建表、建索引功能交个`gorm`即可。
+bbs-go使用的`gorm`打开了`AutoMigrate`功能系统会在启动的时候自动根据我们定义的实体类来初始化表结构，所以我们要做的就是正确创建和配置数据库，建表、建索引功能交个`gorm`即可。
 
 建表后数据初始化：
 
@@ -133,7 +133,7 @@ INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`
 然后复制Oauth Application的 ClientID 和 ClientSecret 到我们的配置文件中的 Github 对应的配置中。
 
 #### 阿里云 Oss 配置
-mlog-club 目前使用阿里云的 oss 来处理图片上传，所以这里需要配置一下阿里云的 oss，阿里云的 oss 目前需要付费开通，后期考虑支持更多的图片上传服务商。
+bbs-go 目前使用阿里云的 oss 来处理图片上传，所以这里需要配置一下阿里云的 oss，阿里云的 oss 目前需要付费开通，后期考虑支持更多的图片上传服务商。
 
 #### Smtp 邮件服务器配置
 TODO 因为目前没有应用场景，所以先不用配置，后面会加上邮箱验证等功能，到时候就需要改配置了。
