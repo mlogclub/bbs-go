@@ -58,11 +58,11 @@ site模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页�
 
 admin模块是bbs-go的管理后台，他基于element-ui搭建，element-ui相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
 
-## 启动：server
+## 本地快速安装
+
+> 说明：适用于本地开发和体验，各端运行后需要保持前台窗口进程。
 
 ### 安装依赖
-
-bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：[https://mlog.club/topic/9](https://mlog.club/topic/9)
 
 ```shell
 # 第一步 clone 代码
@@ -72,64 +72,21 @@ git clone https://github.com/mlogclub/mlog.git
 cd mlog
 go mod tidy
 ```
+> 说明  :bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：[https://mlog.club/topic/9](https://mlog.club/topic/9)
 
-### 配置
+### 配置文件
 
-### 配置简介
+在server目录中新建bbs-go.yaml配置文件（或者将bbs-go.example.yaml重命名)，配置内容请参考bbs-go.example.yaml中的说明。
 
-启动前需要先了解 bbs-go 的配置项，bbs-go 的示例配置文件为`bbs-go.example.yaml`，文件在server目录中，请详细看下该文件：
+> **注意：运行项目前先配置好数据库，否则程序无法运行。**
 
-```yaml
-
-Env: prod # 环境，线上环境：prod、测试环境：dev
-BaseUrl: https://mlog.club # 网站域名
-SiteTitle: M-LOG # 网站标题
-Port: '8082' # 端口
-ShowSql: false # 是否打印sql
-ViewsPath: "./web/views" # views模版文件目录，可配置绝对路径
-StaticPath: "./web/static" # 静态文件目录，可配置绝对路径
-
-MySqlUrl: username:password@tcp(localhost:3306)/mlog_db?charset=utf8&parseTime=True&loc=Local  # 数据库链接
-RedisAddr: 127.0.0.1:6379 # redis链接
-
-# oauth服务端配置
-OauthServer:
-  AuthUrl: https://mlog.club/oauth/authorize
-  TokenUrl: https://mlog.club/oauth/token
-
-# oauth客户端配置
-OauthClient:
-  ClientId: xxx
-  ClientSecret: xxx
-  ClientRedirectUrl: https://mlog.club/oauth/client/callback
-  ClientSuccessUrl: https://admin.mlog.club/mlog/login_success.html
-
-# github登录配置
-Github:
-  ClientID:
-  ClientSecret:
-
-# 阿里云oss配置
-AliyunOss:
-  Host: oss-cn.aliyuncs.com
-  Bucket: bucket-name
-  Endpoint: xx
-  AccessId: xx
-  AccessSecret: xx
-
-# 邮件服务器配置
-Smtp:
-  Addr: smtp.qq.com
-  Port: '25'
-  Username: xxx
-  Password: xxx
+### 启动服务
+在server目录中运行命令：
+```shell
+go run main.go
 ```
 
-#### 数据库配置
-
-bbs-go使用的`gorm`打开了`AutoMigrate`功能系统会在启动的时候自动根据我们定义的实体类来初始化表结构，所以我们要做的就是正确创建和配置数据库，建表、建索引功能交个`gorm`即可。
-
-建表后数据初始化：
+### 数据初始化
 
 ```sql
 -- 初始化用户（用户名：admin、密码：123456）
@@ -143,33 +100,29 @@ insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `
     ('recommend.tags', '', '推荐标签', '推荐标签，多个标签之间用英文逗号分隔', 1555419028975, 1555419028975);
 ```
 
+### 启动网站前端
+在site目录中运行命令：
+```shell
+npm install
+npm run dev
+```
+正常启动后，打开 http://127.0.0.1:3000 访问网站。
 
-
-#### Github 登录配置
-
-首先前往 Github 新建一个`Oauth Application`，填写`Application Name`、`Homepage URL`和`Authorization callback URL`；
-
-`Authorization callback URL`为：https://yourhost.com//user/github/callback， 例如 https://mlog.club 的配置 callback url 为：https://mlog.club/user/github/callback
-
-然后复制Oauth Application的 ClientID 和 ClientSecret 到我们的配置文件中的 Github 对应的配置中。
-
-#### 阿里云 Oss 配置
-bbs-go 目前使用阿里云的 oss 来处理图片上传，所以这里需要配置一下阿里云的 oss，阿里云的 oss 目前需要付费开通，后期考虑支持更多的图片上传服务商。
-
-#### Smtp 邮件服务器配置
-TODO 因为目前没有应用场景，所以先不用配置，后面会加上邮箱验证等功能，到时候就需要改配置了。
-
-### 启动项目
+### 启动管理后台
 
 ```shell
-go run main.go
+npm install
+npm run serve
 ```
+正常启动后，打开 http://127.0.0.1:8080 访问管理后台。
 
-## 启动：site
+## 生产环境编译部署
+
+编译安装
 
 > TODO
 
-## 启动：admin
+Docker安装
 
 > TODO
 
