@@ -5,12 +5,14 @@ sidebar: auto
 # 使用帮助
 
 ## 交流群
+
 - QQ群号：653248175
 - 扫码进群：
 
 ![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
 
 ## 简介
+
 bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技术，Go语言提供api进行数据支撑，用户界面使用Nuxt.js进行渲染，后台界面基于element-ui。主要功能如下：
 
 - 用户中心（用户注册、登录、个人资料管理）
@@ -21,24 +23,27 @@ bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技�
 - 站内消息
 
 ## 演示
+
 [https://mlog.club](https://mlog.club)
 
 ## 源码
+
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - 码云：[https://gitee.com/mlog/bbs-go](https://gitee.com/mlog/bbs-go)
 
-
 ## 技术栈
-- iris (https://github.com/kataras/iris) Go语言 mvc 框架
-- gorm (http://gorm.io/) Go语言 orm 框架
-- resty (https://github.com/go-resty/resty) Go语言好用的 http-client
-- cron (https://github.com/robfig/cron) 定时任务
-- goquery（https://github.com/PuerkitoBio/goquery）html dom 元素解析
-- nuxt.js (https://nuxtjs.org) 基于Vue的服务端渲染框架
-- element-UI (https://element.eleme.cn) 饿了么开源的基于 vue.js 的前端库
-- vditor (https://github.com/b3log/vditor) Markdown 编辑器
+
+- iris ([https://github.com/kataras/iris](https://github.com/kataras/iris)) Go语言 mvc 框架
+- gorm ([http://gorm.io/](http://gorm.io/)) Go语言 orm 框架
+- resty ([https://github.com/go-resty/resty](https://github.com/go-resty/resty)) Go语言好用的 http-client
+- cron ([https://github.com/robfig/cron](https://github.com/robfig/cron)) 定时任务
+- goquery ([https://github.com/PuerkitoBio/goquery](https://github.com/PuerkitoBio/goquery)) html dom 元素解析
+- nuxt.js ([https://nuxtjs.org](https://nuxtjs.org)) 基于Vue的服务端渲染框架
+- element-UI ([https://element.eleme.cn](https://element.eleme.cn)) 饿了么开源的基于 vue.js 的前端库
+- vditor ([https://github.com/b3log/vditor](https://github.com/b3log/vditor)) Markdown 编辑器
 
 ## 项目结构
+
 bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。所以bbs-go包含三个模块：server、site、admin。
 
 ### server模块
@@ -54,8 +59,11 @@ site模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页�
 admin模块是bbs-go的管理后台，他基于element-ui搭建，element-ui相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
 
 ## 启动：server
+
 ### 安装依赖
-bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：https://mlog.club/topic/9
+
+bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：[https://mlog.club/topic/9](https://mlog.club/topic/9)
+
 ```shell
 # 第一步 clone 代码
 git clone https://github.com/mlogclub/mlog.git
@@ -68,7 +76,9 @@ go mod tidy
 ### 配置
 
 ### 配置简介
+
 启动前需要先了解 bbs-go 的配置项，bbs-go 的示例配置文件为`bbs-go.example.yaml`，文件在server目录中，请详细看下该文件：
+
 ```yaml
 
 Env: prod # 环境，线上环境：prod、测试环境：dev
@@ -116,6 +126,7 @@ Smtp:
 ```
 
 #### 数据库配置
+
 bbs-go使用的`gorm`打开了`AutoMigrate`功能系统会在启动的时候自动根据我们定义的实体类来初始化表结构，所以我们要做的就是正确创建和配置数据库，建表、建索引功能交个`gorm`即可。
 
 建表后数据初始化：
@@ -126,6 +137,7 @@ INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`
 ```
 
 #### Github 登录配置
+
 首先前往 Github 新建一个`Oauth Application`，填写`Application Name`、`Homepage URL`和`Authorization callback URL`；
 
 `Authorization callback URL`为：https://yourhost.com//user/github/callback， 例如 https://mlog.club 的配置 callback url 为：https://mlog.club/user/github/callback
@@ -153,5 +165,6 @@ go run main.go
 > TODO
 
 ## 问题反馈
+
 - 欢迎交流：[https://mlog.club/topics](https://mlog.club/topics)
 - 提交建议：[https://mlog.club/topic/609](https://mlog.club/topic/609)
