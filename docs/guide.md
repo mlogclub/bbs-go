@@ -34,11 +34,26 @@ bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技�
 - resty (https://github.com/go-resty/resty) Go语言好用的 http-client
 - cron (https://github.com/robfig/cron) 定时任务
 - goquery（https://github.com/PuerkitoBio/goquery）html dom 元素解析
-- Nuxt.js (https://nuxtjs.org) 基于Vue的服务端渲染框架
-- Element-UI (https://element.eleme.cn) 饿了么开源的基于 vue.js 的前端库
-- Vditor (https://github.com/b3log/vditor) Markdown 编辑器
+- nuxt.js (https://nuxtjs.org) 基于Vue的服务端渲染框架
+- element-UI (https://element.eleme.cn) 饿了么开源的基于 vue.js 的前端库
+- vditor (https://github.com/b3log/vditor) Markdown 编辑器
 
-## Startup
+## 项目结构
+bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。所以bbs-go包含三个模块：server、site、admin。
+
+### server模块
+
+server模块是基于Go语言搭建的，为bbs-go提供数据接口支撑的服务。
+
+### site模块
+
+site模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页。nuxt.js相关知识可以去它的官网查看：[https://nuxtjs.org](https://nuxtjs.org)
+
+### admin模块
+
+admin模块是bbs-go的管理后台，他基于element-ui搭建，element-ui相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
+
+## 启动：server
 ### 安装依赖
 mlog-club 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：https://mlog.club/topic/9
 ```shell
@@ -128,6 +143,14 @@ TODO 因为目前没有应用场景，所以先不用配置，后面会加上邮
 ```shell
 go run main.go
 ```
+
+## 启动：site
+
+> TODO
+
+## 启动：admin
+
+> TODO
 
 ## 问题反馈
 - 欢迎交流：[https://mlog.club/topics](https://mlog.club/topics)
