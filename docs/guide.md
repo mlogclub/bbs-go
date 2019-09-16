@@ -134,7 +134,16 @@ bbs-go使用的`gorm`打开了`AutoMigrate`功能系统会在启动的时候自�
 ```sql
 -- 初始化用户（用户名：admin、密码：123456）
 INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`, `status`, `create_time`, `update_time`, `roles`, `type`, `description`) VALUES (1, 'admin', '管理员', '', '', '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS', 0, 1555419028975, 1555419028975, '管理员', 0, '轻轻地我走了，正如我轻轻的来。');
+
+-- 初始化系统配置
+insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `update_time`) values
+    ('site.title', 'M-LOG', '站点标题', '站点标题', 1555419028975, 1555419028975),
+    ('site.description', 'M-LOG社区，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
+    ('site.keywords', 'M-LOG,Go语言', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
+    ('recommend.tags', '', '推荐标签', '推荐标签，多个标签之间用英文逗号分隔', 1555419028975, 1555419028975);
 ```
+
+
 
 #### Github 登录配置
 
