@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: https://file.mlog.club/mlog.club/logo_364x200.png
+# heroImage: https://file.mlog.club/mlog.club/logo_364x200.png
 actionText: 快速上手 →
 actionLink: /guide/
 # features:
