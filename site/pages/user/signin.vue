@@ -45,11 +45,13 @@
                     >
                       登录
                     </button>
-                    <github-login :ref-url="ref" title="推荐使用Github一键登录" />
+                    <github-login :ref-url="ref" title="Github一键登录" />
+                    <!--
                     <a
                       class="button is-text"
                       href="/user/signup"
                     >没有账号？点击这里去注册！</a>
+                    -->
                   </div>
                 </div>
               </div>
