@@ -4,10 +4,11 @@ import (
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/bbs-go/common/github"
+	"github.com/mlogclub/bbs-go/common/qq"
 	"github.com/mlogclub/bbs-go/controllers/render"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/bbs-go/common/github"
 )
 
 type LoginController struct {
@@ -108,4 +109,10 @@ func (this *LoginController) generateTokenResult(user *model.User, ref string) *
 		Put("user", render.BuildUser(user)).
 		Put("ref", ref).
 		JsonResult()
+}
+
+func (this *LoginController) GetQq() *simple.JsonResult {
+	ref := this.Ctx.FormValue("ref")
+	url := qq.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
+	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }

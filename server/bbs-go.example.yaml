@@ -13,6 +13,11 @@ Github:
   ClientID:
   ClientSecret:
 
+# qq登录配置
+QQConnect:
+  AppId:
+  AppKey:
+
 # 阿里云oss配置
 AliyunOss:
   Host: https://file.mlog.club/

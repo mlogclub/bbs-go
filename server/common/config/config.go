@@ -25,6 +25,12 @@ type Config struct {
 		ClientSecret string `yaml:"ClientSecret"`
 	} `yaml:"Github"`
 
+	// QQ登录
+	QQConnect struct {
+		AppId  string `yaml:"AppId"`
+		AppKey string `yaml:"AppKey"`
+	} `yaml:"QQConnect"`
+
 	// 阿里云oss配置
 	AliyunOss struct {
 		Host         string `yaml:"Host"`
