@@ -49,7 +49,12 @@ export const actions = {
   },
 
   async signout(context) {
-    await this.$axios.get('/api/login/signout')
+    const userToken = this.$cookies.get('userToken')
+    await this.$axios.get('/api/login/signout', {
+      params: {
+        userToken: userToken
+      }
+    })
     this.$cookies.remove('user')
     this.$cookies.remove('userToken')
     context.commit('setUserToken', null)
