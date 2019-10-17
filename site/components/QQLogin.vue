@@ -1,13 +1,13 @@
 <template>
-  <a class="is-dark" :class="{'button': isButton}" @click="githubLogin">
+  <a class="is-dark" :class="{'button': isButton}" @click="qqLogin">
     <i class="iconfont icon-github" />&nbsp;
-    <strong>{{ title }}</strong>
+    <strong>QQ{{ title }}</strong>
   </a>
 </template>
 
 <script>
 export default {
-  name: 'GithubLogin',
+  name: 'QQLogin',
   props: {
     title: {
       type: String,
@@ -23,12 +23,12 @@ export default {
     }
   },
   methods: {
-    async githubLogin() {
+    async qqLogin() {
       try {
         if (!this.refUrl && process.client) { // 如果没配置refUrl，那么取当前地址
           this.refUrl = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/login/github', {
+        const ret = await this.$axios.get('/api/login/qq', {
           params: {
             ref: this.refUrl
           }

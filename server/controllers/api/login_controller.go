@@ -116,3 +116,22 @@ func (this *LoginController) GetQq() *simple.JsonResult {
 	url := qq.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
+
+// 获取Github回调信息获取
+func (this *LoginController) GetQqCallback() *simple.JsonResult {
+	code := this.Ctx.FormValue("code")
+
+	// TODO gaoyoubo @ 2019/10/17 qqUserService
+	githubUser, err := services.GithubUserService.GetGithubUser(code)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	// TODO gaoyoubo @ 2019/10/17 SigninByQQ
+	user, codeErr := services.UserService.SignInByGithub(githubUser)
+	if codeErr != nil { // 出现错误，需要进行处理
+		return simple.JsonError(codeErr)
+	} else { // 直接登录
+		return this.generateTokenResult(user, "")
+	}
+}
