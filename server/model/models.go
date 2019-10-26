@@ -1,7 +1,7 @@
 package model
 
 var Models = []interface{}{
-	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
+	&User{}, &UserToken{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
 	&CollectRule{}, &CollectArticle{}, &ThirdAccount{},
 }
@@ -103,25 +103,6 @@ type ThirdAccount struct {
 	ExtraData  string `gorm:"type:longtext" json:"extraData" form:"extraData"`    // 扩展数据
 	CreateTime int64  `json:"createTime" form:"createTime"`                       // 创建时间
 	UpdateTime int64  `json:"updateTime" form:"updateTime"`                       // 更新时间
-}
-
-type GithubUser struct {
-	Model
-	UserId     int64  `json:"userId" form:"userId"`
-	GithubId   int64  `gorm:"unique" json:"githubId" form:"githubId"`
-	Login      string `gorm:"size:512" json:"login" form:"login"`
-	NodeId     string `gorm:"size:512" json:"nodeId" form:"nodeId"`
-	AvatarUrl  string `gorm:"size:1024" json:"avatarUrl" form:"avatarUrl"`
-	Url        string `gorm:"size:1024" json:"url" form:"url"`
-	HtmlUrl    string `gorm:"size:1024" json:"htmlUrl" form:"htmlUrl"`
-	Email      string `gorm:"size:512" json:"email" form:"email"`
-	Name       string `gorm:"size:32" json:"name" form:"name"`
-	Bio        string `gorm:"type:text" json:"bio" form:"bio"`
-	Company    string `gorm:"size:128" json:"company" form:"company"`
-	Blog       string `gorm:"type:text" json:"blog" form:"blog"`
-	Location   string `gorm:"size:128" json:"location" form:"location"`
-	CreateTime int64  `json:"createTime" form:"createTime"`
-	UpdateTime int64  `json:"updateTime" form:"updateTime"`
 }
 
 // 分类
