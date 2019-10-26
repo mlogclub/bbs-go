@@ -1,11 +1,10 @@
 package services
 
 import (
-	context2 "context"
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/bbs-go/common/github"
-	"github.com/mlogclub/simple"
 )
 
 var GithubUserService = newGithubUserService()
@@ -55,44 +54,4 @@ func (this *githubUserService) Delete(id int64) {
 
 func (this *githubUserService) GetByGithubId(githubId int64) *model.GithubUser {
 	return repositories.GithubUserRepository.GetByGithubId(simple.GetDB(), githubId)
-}
-
-func (this *githubUserService) GetGithubUser(code string) (*model.GithubUser, error) {
-	token, err := github.GetOauthConfig(nil).Exchange(context2.TODO(), code)
-	if err != nil {
-		return nil, err
-	}
-
-	third, err := github.GetUserInfo(token.AccessToken)
-	if err != nil {
-		return nil, err
-	}
-
-	githubUser := this.GetByGithubId(third.Id)
-
-	if githubUser != nil {
-		return githubUser, nil
-	}
-	githubUser = &model.GithubUser{
-		GithubId:   third.Id,
-		Login:      third.Login,
-		NodeId:     third.NodeId,
-		AvatarUrl:  third.AvatarUrl,
-		Url:        third.Url,
-		HtmlUrl:    third.HtmlUrl,
-		Email:      third.Email,
-		Name:       third.Name,
-		Bio:        third.Bio,
-		Company:    third.Company,
-		Blog:       third.Blog,
-		Location:   third.Location,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
-	}
-
-	err = this.Create(githubUser)
-	if err != nil {
-		return nil, err
-	}
-	return githubUser, nil
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/avatar"
 	"github.com/mlogclub/bbs-go/common/validate"
 	"github.com/mlogclub/bbs-go/services/cache"
 
@@ -155,48 +154,6 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil
-}
-
-// 绑定账号
-func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
-	githubUser := repositories.GithubUserRepository.Get(simple.GetDB(), githubId)
-	if githubUser == nil {
-		err = errors.New("Github账号未找到")
-		return
-	}
-	if githubUser.UserId > 0 {
-		err = errors.New("Github账号已绑定了用户")
-		return
-	}
-
-	if bindType == "login" { // 登录绑定
-		user, err = this.SignIn(username, password)
-		if err != nil {
-			return
-		} else if avatar.IsDefaultAvatar(user.Avatar) { // 如果是默认头像，那么更新一下头像
-			_ = this.UpdateColumn(user.Id, "avatar", githubUser.AvatarUrl)
-		}
-	} else { // 注册绑定
-		if !common.IsValidateUsername(username) {
-			err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
-			return
-		}
-		user, err = this.SignUp(username, email, password, rePassword, nickname, githubUser.AvatarUrl)
-		if err != nil {
-			return
-		}
-	}
-
-	if user == nil {
-		err = errors.New("未知异常")
-		return
-	}
-
-	// 执行绑定
-	githubUser.UserId = user.Id
-	githubUser.UpdateTime = simple.NowTimestamp()
-	err = repositories.GithubUserRepository.Update(simple.GetDB(), githubUser)
-	return
 }
 
 // Github账号登录

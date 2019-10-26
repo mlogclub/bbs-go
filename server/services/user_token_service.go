@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/bbs-go/controllers/render"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
 	"github.com/mlogclub/bbs-go/services/cache"
@@ -52,6 +53,18 @@ func (this *userTokenService) GetUserToken(ctx context.Context) string {
 		return userToken
 	}
 	return ctx.GetHeader("X-User-Token")
+}
+
+// user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
+func (this *userTokenService) GenerateResult(user *model.User, ref string) *simple.JsonResult {
+	token, err := this.Generate(user.Id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().
+		Put("token", token).
+		Put("user", render.BuildUser(user)).
+		Put("ref", ref).JsonResult()
 }
 
 // 生成
