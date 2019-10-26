@@ -71,7 +71,7 @@ func InitIris() {
 	mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 		m.Router.Use(middleware.AdminAuth)
 		m.Party("/user").Handle(new(admin.UserController))
-		m.Party("/github-user").Handle(new(admin.GithubUserController))
+		m.Party("/third-account").Handle(new(admin.ThirdAccountController))
 		m.Party("/category").Handle(new(admin.CategoryController))
 		m.Party("/tag").Handle(new(admin.TagController))
 		m.Party("/article").Handle(new(admin.ArticleController))

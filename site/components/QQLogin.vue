@@ -25,12 +25,13 @@ export default {
   methods: {
     async qqLogin() {
       try {
-        if (!this.refUrl && process.client) { // 如果没配置refUrl，那么取当前地址
-          this.refUrl = window.location.pathname
+        if (!this.refUrlValue && process.client) {
+          // 如果没配置refUrl，那么取当前地址
+          this.refUrlValue = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/login/qq', {
+        const ret = await this.$axios.get('/api/login/qq/authorize', {
           params: {
-            ref: this.refUrl
+            ref: this.refUrlValue
           }
         })
         window.location = ret.url

@@ -7,6 +7,7 @@ import (
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common/github"
+	"github.com/mlogclub/bbs-go/common/qq"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
 )
@@ -78,12 +79,42 @@ func (this *thirdAccountService) GetOrCreateByGithub(code string) (*model.ThirdA
 
 	userInfoJson, _ := simple.FormatJson(userInfo)
 	account = &model.ThirdAccount{
-		Model:      model.Model{},
-		UserId:     0,
 		Avatar:     userInfo.AvatarUrl,
 		Nickname:   nickname,
 		ThirdType:  model.ThirdAccountTypeGithub,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
+		ExtraData:  userInfoJson,
+		CreateTime: simple.NowTimestamp(),
+		UpdateTime: simple.NowTimestamp(),
+	}
+	err = this.Create(account)
+	if err != nil {
+		return nil, err
+	}
+	return account, nil
+}
+
+func (this *thirdAccountService) GetOrCreateByQQ(code string) (*model.ThirdAccount, error) {
+	userInfo, err := qq.GetUserInfoByCode(code)
+	if err != nil {
+		return nil, err
+	}
+
+	thirdId := userInfo.UnionId
+	if len(thirdId) == 0 {
+		thirdId = userInfo.OpenId
+	}
+	account := this.GetThirdAccount(model.ThirdAccountTypeQQ, thirdId)
+	if account != nil {
+		return account, nil
+	}
+
+	userInfoJson, _ := simple.FormatJson(userInfo)
+	account = &model.ThirdAccount{
+		Avatar:     userInfo.FigureurlQQ1,
+		Nickname:   strings.TrimSpace(userInfo.Nickname),
+		ThirdType:  model.ThirdAccountTypeQQ,
+		ThirdId:    thirdId,
 		ExtraData:  userInfoJson,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),

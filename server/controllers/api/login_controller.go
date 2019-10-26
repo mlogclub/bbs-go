@@ -62,6 +62,30 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	}
 }
 
+// 获取QQ登录授权地址
+func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
+	ref := this.Ctx.FormValue("ref")
+	url := qq.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
+	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
+}
+
+// 获取QQ回调信息获取
+func (this *LoginController) GetQqCallback() *simple.JsonResult {
+	code := this.Ctx.FormValue("code")
+
+	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	user, codeErr := services.UserService.SignInByThirdAccount(thirdAccount)
+	if codeErr != nil {
+		return simple.JsonError(codeErr)
+	} else {
+		return this.GenerateResult(user, "")
+	}
+}
+
 // user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
 func (this *LoginController) GenerateResult(user *model.User, ref string) *simple.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
@@ -72,11 +96,4 @@ func (this *LoginController) GenerateResult(user *model.User, ref string) *simpl
 		Put("token", token).
 		Put("user", render.BuildUser(user)).
 		Put("ref", ref).JsonResult()
-}
-
-// 获取QQ登录授权地址
-func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
-	ref := this.Ctx.FormValue("ref")
-	url := qq.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
-	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
