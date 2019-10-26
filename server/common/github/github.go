@@ -1,6 +1,8 @@
 package github
 
 import (
+	"context"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -61,6 +63,17 @@ type UserInfo struct {
 	Location  string `json:"location"`
 }
 
+// 根据code获取用户信息
+// 流程为先使用code换取accessToken，然后根据accessToken获取用户信息
+func GetUserInfoByCode(code string) (*UserInfo, error) {
+	token, err := oauthConfig.Exchange(context.TODO(), code)
+	if err != nil {
+		return nil, err
+	}
+	return GetUserInfo(token.AccessToken)
+}
+
+// 根据accessToken获取用户信息
 func GetUserInfo(accessToken string) (*UserInfo, error) {
 	response, err := resty.New().R().SetQueryParam("access_token", accessToken).Get("https://api.github.com/user")
 	if err != nil {

@@ -37,7 +37,6 @@ export default {
   methods: {
     async callback() {
       this.loading = true
-      const me = this
       try {
         const user = await this.$store.dispatch('user/signinByGithub', {
           code: this.code,
@@ -50,25 +49,12 @@ export default {
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
-        if (e.errorCode === 10 || e.errorCode === 11) {
-          this.$toast.info('请绑定账号：' + e.message, {
-            duration: 1000,
-            onComplete: function () {
-              if (me.ref) {
-                utils.linkTo('/user/github/bind?githubId=' + e.data.id + '&ref=' + encodeURIComponent(me.ref))
-              } else {
-                utils.linkTo('/user/github/bind?githubId=' + e.data.id)
-              }
-            }
-          })
-        } else {
-          console.error(e)
-          this.$toast.error('登录失败：' + (e.message || e), {
-            onComplete: function () {
-              utils.linkTo('/user/signin')
-            }
-          })
-        }
+        console.log(e)
+        this.$toast.error('登录失败：' + (e.message || e), {
+          onComplete: function () {
+            utils.linkTo('/user/signin')
+          }
+        })
       } finally {
         this.loading = false
       }

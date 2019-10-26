@@ -7,10 +7,9 @@ import (
 	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/services/cache"
 	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/avatar"
 	"github.com/mlogclub/bbs-go/common/validate"
+	"github.com/mlogclub/bbs-go/services/cache"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -157,72 +156,16 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 	return user, nil
 }
 
-// 绑定账号
-func (this *userService) Bind(githubId int64, bindType, username, email, password, rePassword, nickname string) (user *model.User, err error) {
-	githubUser := repositories.GithubUserRepository.Get(simple.GetDB(), githubId)
-	if githubUser == nil {
-		err = errors.New("Github账号未找到")
-		return
-	}
-	if githubUser.UserId > 0 {
-		err = errors.New("Github账号已绑定了用户")
-		return
-	}
-
-	if bindType == "login" { // 登录绑定
-		user, err = this.SignIn(username, password)
-		if err != nil {
-			return
-		} else if avatar.IsDefaultAvatar(user.Avatar) { // 如果是默认头像，那么更新一下头像
-			_ = this.UpdateColumn(user.Id, "avatar", githubUser.AvatarUrl)
-		}
-	} else { // 注册绑定
-		if !common.IsValidateUsername(username) {
-			err = errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
-			return
-		}
-		user, err = this.SignUp(username, email, password, rePassword, nickname, githubUser.AvatarUrl)
-		if err != nil {
-			return
-		}
-	}
-
-	if user == nil {
-		err = errors.New("未知异常")
-		return
-	}
-
-	// 执行绑定
-	githubUser.UserId = user.Id
-	githubUser.UpdateTime = simple.NowTimestamp()
-	err = repositories.GithubUserRepository.Update(simple.GetDB(), githubUser)
-	return
-}
-
 // Github账号登录
-func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.User, *simple.CodeError) {
-	user := this.Get(githubUser.UserId)
+func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
+	user := this.Get(thirdAccount.UserId)
 	if user != nil {
 		return user, nil
 	}
 
-	if this.isUsernameExists(githubUser.Login) {
-		return nil, simple.NewErrorData(model.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在", githubUser)
-	}
-
-	if this.isEmailExists(githubUser.Email) {
-		return nil, simple.NewErrorData(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在", githubUser)
-	}
-
-	nickname := strings.TrimSpace(githubUser.Name)
-	if len(nickname) == 0 {
-		nickname = githubUser.Login
-	}
 	user = &model.User{
-		Username:   githubUser.Login,
-		Email:      githubUser.Email,
-		Nickname:   nickname,
-		Avatar:     githubUser.AvatarUrl,
+		Nickname:   thirdAccount.Nickname,
+		Avatar:     thirdAccount.Avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
@@ -232,7 +175,7 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		if err != nil {
 			return err
 		}
-		err = repositories.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
+		err = repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id)
 		if err != nil {
 			return err
 		}

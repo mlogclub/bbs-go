@@ -48,6 +48,17 @@ export const actions = {
     return ret.user
   },
 
+  async signinByQQ(context, { code, state }) {
+    const ret = await this.$axios.get('/api/login/qq/callback', {
+      params: {
+        code: code,
+        state: state
+      }
+    })
+    context.dispatch('loginSuccess', ret)
+    return ret.user
+  },
+
   async signout(context) {
     const userToken = this.$cookies.get('userToken')
     await this.$axios.get('/api/login/signout', {

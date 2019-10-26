@@ -1,19 +1,20 @@
 <template>
-  <a class="is-dark" :class="{'button': isButton}" @click="qqLogin">
+  <a class="is-dark" :class="{'button': isButton}" @click="githubLogin">
     <i class="iconfont icon-github" />&nbsp;
-    <strong>QQ{{ title }}</strong>
+    <strong>{{ title }}</strong>
   </a>
 </template>
 
 <script>
 export default {
-  name: 'QQLogin',
+  name: 'GithubLogin',
   props: {
     title: {
       type: String,
       default: '登录'
     },
-    refUrl: { // 登录来源地址，控制登录成功之后要跳到该地址
+    refUrl: {
+      // 登录来源地址，控制登录成功之后要跳到该地址
       type: String,
       default: ''
     },
@@ -22,15 +23,21 @@ export default {
       default: true
     }
   },
+  data() {
+    return {
+      refUrlValue: this.refUrl
+    }
+  },
   methods: {
-    async qqLogin() {
+    async githubLogin() {
       try {
-        if (!this.refUrl && process.client) { // 如果没配置refUrl，那么取当前地址
-          this.refUrl = window.location.pathname
+        if (!this.refUrlValue && process.client) {
+          // 如果没配置refUrl，那么取当前地址
+          this.refUrlValue = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/login/qq', {
+        const ret = await this.$axios.get('/api/login/github/authorize', {
           params: {
-            ref: this.refUrl
+            ref: this.refUrlValue
           }
         })
         window.location = ret.url
