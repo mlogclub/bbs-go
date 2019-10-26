@@ -5,7 +5,6 @@ import (
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/app"
 	"github.com/mlogclub/bbs-go/common/config"
@@ -23,13 +22,13 @@ func init() {
 }
 
 func initLogrus() {
-	output, err := simple.NewLogWriter(config.Conf.LogFile)
-	if err == nil {
-		logrus.SetLevel(logrus.InfoLevel)
-		logrus.SetOutput(output)
-	} else {
-		logrus.Error(err)
-	}
+	// output, err := simple.NewLogWriter(config.Conf.LogFile)
+	// if err == nil {
+	// 	logrus.SetLevel(logrus.InfoLevel)
+	// 	logrus.SetOutput(output)
+	// } else {
+	// 	logrus.Error(err)
+	// }
 }
 
 func initDB() {

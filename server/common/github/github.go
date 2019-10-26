@@ -66,7 +66,7 @@ type UserInfo struct {
 // 根据code获取用户信息
 // 流程为先使用code换取accessToken，然后根据accessToken获取用户信息
 func GetUserInfoByCode(code string) (*UserInfo, error) {
-	token, err := oauthConfig.Exchange(context.TODO(), code)
+	token, err := GetOauthConfig(nil).Exchange(context.TODO(), code)
 	if err != nil {
 		return nil, err
 	}

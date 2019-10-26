@@ -67,16 +67,7 @@ type UserInfo struct {
 // 根据code获取用户信息
 // 流程为先使用code换取accessToken，然后根据accessToken获取用户信息
 func GetUserInfoByCode(code string) (*UserInfo, error) {
-	oauthConfig = &oauth2.Config{
-		ClientID:     "101809474",
-		ClientSecret: "34d4a8fa266e73c14ca8c7e857bdb71f",
-		Scopes:       []string{"public_repo", "user"},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://graph.qq.com/oauth2.0/authorize",
-			TokenURL: "https://graph.qq.com/oauth2.0/token",
-		},
-	}
-	token, err := oauthConfig.Exchange(context.TODO(), code)
+	token, err := GetOauthConfig(nil).Exchange(context.TODO(), code)
 	if err != nil {
 		return nil, err
 	}
