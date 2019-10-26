@@ -6,6 +6,8 @@ import (
 
 	"github.com/mlogclub/bbs-go/common/github"
 	"github.com/mlogclub/bbs-go/common/qq"
+	"github.com/mlogclub/bbs-go/controllers/render"
+	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 )
 
@@ -24,7 +26,7 @@ func (this *LoginController) PostSignin() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return services.UserTokenService.GenerateResult(user, ref)
+	return this.GenerateResult(user, ref)
 }
 
 // 退出登录
@@ -56,8 +58,20 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return services.UserTokenService.GenerateResult(user, "")
+		return this.GenerateResult(user, "")
 	}
+}
+
+// user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
+func (this *LoginController) GenerateResult(user *model.User, ref string) *simple.JsonResult {
+	token, err := services.UserTokenService.Generate(user.Id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().
+		Put("token", token).
+		Put("user", render.BuildUser(user)).
+		Put("ref", ref).JsonResult()
 }
 
 // 获取QQ登录授权地址

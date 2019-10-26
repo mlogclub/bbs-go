@@ -35,7 +35,7 @@ export default {
           // 如果没配置refUrl，那么取当前地址
           this.refUrlValue = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/login/github', {
+        const ret = await this.$axios.get('/api/login/github/authorize', {
           params: {
             ref: this.refUrlValue
           }
