@@ -3,7 +3,7 @@ package model
 var Models = []interface{}{
 	&User{}, &UserToken{}, &GithubUser{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
-	&CollectRule{}, &CollectArticle{},
+	&CollectRule{}, &CollectArticle{}, &ThirdAccount{},
 }
 
 type Model struct {
@@ -64,11 +64,14 @@ const (
 	CollectArticleStatusAuditPass = 1 // 审核通过
 	CollectArticleStatusAuditFail = 2 // 审核失败
 	CollectArticleStatusPublished = 3 // 已发布
+
+	ThirdAccountTypeGithub = "github"
+	ThirdAccountTypeQQ     = "qq"
 )
 
 type User struct {
 	Model
-	Username    string `gorm:"size:32;unique" json:"username" form:"username"`
+	Username    string `gorm:"size:32" json:"username" form:"username"`
 	Nickname    string `gorm:"size:16" json:"nickname" form:"nickname"`
 	Avatar      string `gorm:"type:text" json:"avatar" form:"avatar"`
 	Email       string `gorm:"size:512;" json:"email" form:"email"`
@@ -88,6 +91,18 @@ type UserToken struct {
 	ExpiredAt  int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
 	Status     int    `gorm:"not null" json:"status" form:"status"`
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`
+}
+
+type ThirdAccount struct {
+	Model
+	UserId     int64  `json:"userId" form:"userId"`                               // 用户编号
+	Avatar     string `gorm:"size:1024" json:"avatar" form:"avatar"`              // 头像
+	Nickname   string `gorm:"size:32" json:"nickname" form:"nickname"`            // 昵称
+	ThirdType  string `gorm:"size:32;not null" json:"thirdType" form:"thirdType"` // 第三方类型
+	ThirdId    string `gorm:"size:32;not null" json:"thirdId" form:"thirdId"`     // 第三方唯一标识，例如：openId,unionId
+	ExtraData  string `gorm:"type:longtext" json:"extraData" form:"extraData"`    // 扩展数据
+	CreateTime int64  `json:"createTime" form:"createTime"`                       // 创建时间
+	UpdateTime int64  `json:"updateTime" form:"updateTime"`                       // 更新时间
 }
 
 type GithubUser struct {

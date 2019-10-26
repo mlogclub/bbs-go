@@ -7,10 +7,10 @@ import (
 	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/services/cache"
 	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/common/avatar"
 	"github.com/mlogclub/bbs-go/common/validate"
+	"github.com/mlogclub/bbs-go/services/cache"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -200,29 +200,15 @@ func (this *userService) Bind(githubId int64, bindType, username, email, passwor
 }
 
 // Github账号登录
-func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.User, *simple.CodeError) {
-	user := this.Get(githubUser.UserId)
+func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
+	user := this.Get(thirdAccount.UserId)
 	if user != nil {
 		return user, nil
 	}
 
-	if this.isUsernameExists(githubUser.Login) {
-		return nil, simple.NewErrorData(model.ErrorCodeUserNameExists, "用户名["+githubUser.Login+"]已存在", githubUser)
-	}
-
-	if this.isEmailExists(githubUser.Email) {
-		return nil, simple.NewErrorData(model.ErrorCodeEmailExists, "邮箱["+githubUser.Email+"]已经存在", githubUser)
-	}
-
-	nickname := strings.TrimSpace(githubUser.Name)
-	if len(nickname) == 0 {
-		nickname = githubUser.Login
-	}
 	user = &model.User{
-		Username:   githubUser.Login,
-		Email:      githubUser.Email,
-		Nickname:   nickname,
-		Avatar:     githubUser.AvatarUrl,
+		Nickname:   thirdAccount.Nickname,
+		Avatar:     thirdAccount.Avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
@@ -232,7 +218,7 @@ func (this *userService) SignInByGithub(githubUser *model.GithubUser) (*model.Us
 		if err != nil {
 			return err
 		}
-		err = repositories.GithubUserRepository.UpdateColumn(tx, githubUser.Id, "user_id", user.Id)
+		err = repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id)
 		if err != nil {
 			return err
 		}

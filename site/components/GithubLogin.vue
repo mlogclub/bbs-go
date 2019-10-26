@@ -13,7 +13,8 @@ export default {
       type: String,
       default: '登录'
     },
-    refUrl: { // 登录来源地址，控制登录成功之后要跳到该地址
+    refUrl: {
+      // 登录来源地址，控制登录成功之后要跳到该地址
       type: String,
       default: ''
     },
@@ -22,15 +23,21 @@ export default {
       default: true
     }
   },
+  data() {
+    return {
+      refUrlValue: this.refUrl
+    }
+  },
   methods: {
     async githubLogin() {
       try {
-        if (!this.refUrl && process.client) { // 如果没配置refUrl，那么取当前地址
-          this.refUrl = window.location.pathname
+        if (!this.refUrlValue && process.client) {
+          // 如果没配置refUrl，那么取当前地址
+          this.refUrlValue = window.location.pathname
         }
         const ret = await this.$axios.get('/api/login/github', {
           params: {
-            ref: this.refUrl
+            ref: this.refUrlValue
           }
         })
         window.location = ret.url
