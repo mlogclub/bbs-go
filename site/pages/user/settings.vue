@@ -21,55 +21,101 @@
                 </nav>
               </div>
               <div class="content">
-                <div class="field">
-                  <label class="label">
-                    <span style="color:red;">*&nbsp;</span>昵称
-                  </label>
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="user.nickname"
-                      name="nickname"
-                      class="input is-success"
-                      type="text"
-                      placeholder="请输入昵称"
-                    >
-                    <span class="icon is-small is-left">
-                      <i class="iconfont icon-username" />
-                    </span>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">用户名</label>
                   </div>
-                </div>
-
-                <div class="field">
-                  <label class="label">
-                    <span style="color:red;">*&nbsp;</span>头像
-                  </label>
-                  <div class="control">
-                    <img :src="user.avatar" style="width: 150px;height:150px;">
-                    <div class="file">
-                      <label class="file-label">
-                        <input class="file-input" type="file" @change="uploadAvatar">
-                        <span class="file-cta">
-                          <span class="file-icon">
-                            <i class="iconfont icon-upload" />
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control has-icons-left">
+                        <template v-if="user.username">
+                          <input
+                            v-model="user.username"
+                            name="username"
+                            class="input is-success"
+                            type="text"
+                            placeholder="请输入昵称"
+                            disabled
+                          >
+                          <span class="icon is-small is-left">
+                            <i class="iconfont icon-username" />
                           </span>
-                          <span class="file-label">选择头像</span>
-                        </span>
-                      </label>
+                        </template>
+                        <template v-else>
+                          <a>未设置</a>
+                        </template>
+                      </div>
                     </div>
-                    <span style="font-weight: bold; color:red;">*图像必须为正方形，大小不要超过1M。</span>
                   </div>
                 </div>
 
-                <div class="field">
-                  <label class="label">简介</label>
-                  <div class="control">
-                    <textarea
-                      v-model="user.description"
-                      name="description"
-                      class="textarea"
-                      rows="2"
-                      placeholder="一句话介绍你自己"
-                    />
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">
+                      <span style="color:red;">*&nbsp;</span>昵称
+                    </label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control has-icons-left">
+                        <input
+                          v-model="user.nickname"
+                          name="nickname"
+                          class="input is-success"
+                          type="text"
+                          placeholder="请输入昵称"
+                        >
+                        <span class="icon is-small is-left">
+                          <i class="iconfont icon-username" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">
+                      <span style="color:red;">*&nbsp;</span>头像
+                    </label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <img :src="user.avatar" style="width: 150px;height:150px;">
+                        <div class="file">
+                          <label class="file-label">
+                            <input class="file-input" type="file" @change="uploadAvatar">
+                            <span class="file-cta">
+                              <span class="file-icon">
+                                <i class="iconfont icon-upload" />
+                              </span>
+                              <span class="file-label">选择头像</span>
+                            </span>
+                          </label>
+                        </div>
+                        <span style="font-weight: bold; color:red;">*图像必须为正方形，大小不要超过1M。</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">简介</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <textarea
+                          v-model="user.description"
+                          name="description"
+                          class="textarea"
+                          rows="2"
+                          placeholder="一句话介绍你自己"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 

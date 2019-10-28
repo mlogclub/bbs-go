@@ -65,9 +65,9 @@ export default {
     topics: {
       type: Array,
       default: function () {
-        return null
+        return []
       },
-      required: true
+      required: false
     },
     showAd: {
       type: Boolean,
