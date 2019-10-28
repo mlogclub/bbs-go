@@ -44,8 +44,8 @@ type UserInfo struct {
 	FigureurlQQ1 string `json:"figureurl_qq_1"` // 大小为40×40像素的QQ头像URL。
 	FigureurlQQ2 string `json:"figureurl_qq_2"` // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
 	Gender       string `json:"gender"`         // 性别。 如果获取不到则默认返回"男"
-	OpenId       string `json:"openId"`
-	UnionId      string `json:"unionId"`
+	OpenId       string `json:"open_id"`
+	UnionId      string `json:"union_id"`
 }
 
 type AccessToken struct {
@@ -156,6 +156,16 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	}
 }
 
+// 根据code获取用户信息
+// 流程为先使用code换取accessToken，然后根据accessToken获取用户信息
+func GetUserInfoByCode(code, state string) (*UserInfo, error) {
+	token, err := AuthorizationCode(code, state)
+	if err != nil {
+		return nil, err
+	}
+	return GetUserInfo(token.AccessToken)
+}
+
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
 	redirectUrl := config.Conf.BaseUrl + "/user/qq/callback"
@@ -183,14 +193,4 @@ func removeCallback(content string) string {
 		content = strings.TrimSpace(content)
 	}
 	return content
-}
-
-// 根据code获取用户信息
-// 流程为先使用code换取accessToken，然后根据accessToken获取用户信息
-func GetUserInfoByCode(code, state string) (*UserInfo, error) {
-	token, err := AuthorizationCode(code, state)
-	if err != nil {
-		return nil, err
-	}
-	return GetUserInfo(token.AccessToken)
 }
