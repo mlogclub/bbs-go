@@ -15,14 +15,13 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.6.0",
+    "@nuxtjs/axios": "^5.8.0",
     "@nuxtjs/toast": "^3.2.1",
-    "cookie-universal-nuxt": "^2.0.17",
+    "cookie-universal-nuxt": "^2.0.18",
     "highlight.js": "^9.15.10",
-    "mavon-editor": "^2.7.5",
-    "nuxt": "^2.9.2",
-    "qs": "^6.8.0",
-    "vditor": "^1.8.2"
+    "nuxt": "^2.10.2",
+    "qs": "^6.9.0",
+    "vditor": "^1.9.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
