@@ -100,11 +100,7 @@ func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.Thi
 		return nil, err
 	}
 
-	thirdId := userInfo.UnionId
-	if len(thirdId) == 0 {
-		thirdId = userInfo.OpenId
-	}
-	account := this.GetThirdAccount(model.ThirdAccountTypeQQ, thirdId)
+	account := this.GetThirdAccount(model.ThirdAccountTypeQQ, userInfo.Unionid)
 	if account != nil {
 		return account, nil
 	}
@@ -114,7 +110,7 @@ func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.Thi
 		Avatar:     userInfo.FigureurlQQ1,
 		Nickname:   strings.TrimSpace(userInfo.Nickname),
 		ThirdType:  model.ThirdAccountTypeQQ,
-		ThirdId:    thirdId,
+		ThirdId:    userInfo.Unionid,
 		ExtraData:  userInfoJson,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),

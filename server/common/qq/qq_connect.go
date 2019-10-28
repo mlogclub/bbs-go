@@ -44,8 +44,8 @@ type UserInfo struct {
 	FigureurlQQ1 string `json:"figureurl_qq_1"` // 大小为40×40像素的QQ头像URL。
 	FigureurlQQ2 string `json:"figureurl_qq_2"` // 大小为100×100像素的QQ头像URL。需要注意，不是所有的用户都拥有QQ的100x100的头像，但40x40像素则是一定会有。
 	Gender       string `json:"gender"`         // 性别。 如果获取不到则默认返回"男"
-	OpenId       string `json:"open_id"`
-	UnionId      string `json:"union_id"`
+	Openid       string `json:"openid"`
+	Unionid      string `json:"unionid"`
 }
 
 type AccessToken struct {
@@ -150,8 +150,8 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	if err != nil {
 		return nil, err
 	} else {
-		userInfo.OpenId = openid
-		userInfo.UnionId = unionid
+		userInfo.Openid = openid
+		userInfo.Unionid = unionid
 		return userInfo, nil
 	}
 }

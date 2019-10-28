@@ -1,7 +1,7 @@
 <template>
-  <a class="is-dark" :class="{'button': isButton}" @click="qqLogin">
-    <i class="iconfont icon-github" />&nbsp;
-    <strong>QQ{{ title }}</strong>
+  <a class="is-info" :class="{'button': isButton}" @click="qqLogin">
+    <i class="iconfont icon-qq" />&nbsp;
+    <strong>{{ title }}</strong>
   </a>
 </template>
 
