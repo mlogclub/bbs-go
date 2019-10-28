@@ -5,34 +5,17 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-	"golang.org/x/oauth2"
 	"gopkg.in/resty.v1"
 
+	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/common/config"
 )
-
-var oauthConfig *oauth2.Config
-
-func GetOauthConfig(params map[string]string) *oauth2.Config {
-	if oauthConfig == nil {
-		oauthConfig = &oauth2.Config{
-			ClientID:     config.Conf.QQConnect.AppId,
-			ClientSecret: config.Conf.QQConnect.AppKey,
-			RedirectURL:  getRedirectUrl(nil),
-			Scopes:       []string{"get_user_info"},
-			Endpoint: oauth2.Endpoint{
-				AuthURL:  "https://graph.qq.com/oauth2.0/authorize",
-				TokenURL: "https://graph.qq.com/oauth2.0/token",
-			},
-		}
-	}
-	oauthConfig.RedirectURL = getRedirectUrl(params)
-	return oauthConfig
-}
 
 type UserInfo struct {
 	Ret          int    `json:"ret"`            // 返回码
@@ -54,15 +37,22 @@ type AccessToken struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+var ctxCache = cache.New(cache.WithMaximumSize(1000), cache.WithExpireAfterAccess(10*time.Minute))
+
 // 获取authorize url
 // 文档：https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
 // 接口：https://graph.qq.com/oauth2.0/authorize
-func AuthorizeUrl() string {
+func AuthorizeUrl(params map[string]string) string {
+	// 将跳转地址写入上线文
+	state := simple.Uuid()
+	redirectUrl := getRedirectUrl(params)
+	ctxCache.Put(state, redirectUrl)
+
 	return simple.ParseUrl("https://graph.qq.com/oauth2.0/authorize").
 		AddQuery("response_type", "code").
 		AddQuery("client_id", config.Conf.QQConnect.AppId).
-		AddQuery("redirect_uri", getRedirectUrl(nil)).
-		AddQuery("state", simple.Uuid()).
+		AddQuery("redirect_uri", redirectUrl).
+		AddQuery("state", state).
 		AddQuery("scope", "get_user_info").
 		BuildStr()
 }
@@ -71,12 +61,19 @@ func AuthorizeUrl() string {
 // 文档：https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
 // 接口：https://graph.qq.com/oauth2.0/token
 func AuthorizationCode(code, state string) (*AccessToken, error) {
+	// 从上下文中获取跳转地址
+	val, found := ctxCache.GetIfPresent(state)
+	var redirectUrl string
+	if found {
+		redirectUrl = val.(string)
+	}
+
 	resp, err := resty.New().R().
 		SetQueryParam("grant_type", "authorization_code").
 		SetQueryParam("client_id", config.Conf.QQConnect.AppId).
 		SetQueryParam("client_secret", config.Conf.QQConnect.AppKey).
 		SetQueryParam("code", code).
-		SetQueryParam("redirect_uri", getRedirectUrl(nil)). // TODO gaoyoubo @ 2019/10/28
+		SetQueryParam("redirect_uri", redirectUrl).
 		Get("https://graph.qq.com/oauth2.0/token")
 	if err != nil {
 		return nil, err
@@ -169,9 +166,9 @@ func GetUserInfoByCode(code, state string) (*UserInfo, error) {
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
 	redirectUrl := config.Conf.BaseUrl + "/user/qq/callback"
-	// if !common.IsProd() {
-	// 	redirectUrl = "http://localhost:3000/user/qq/callback"
-	// }
+	if !common.IsProd() {
+		redirectUrl = "http://localhost:3000/user/qq/callback"
+	}
 	if len(params) > 0 {
 		ub := simple.ParseUrl(redirectUrl)
 		for k, v := range params {

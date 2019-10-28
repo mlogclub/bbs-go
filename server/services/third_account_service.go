@@ -61,8 +61,8 @@ func (this *thirdAccountService) GetThirdAccount(thirdType string, thirdId strin
 	return repositories.ThirdAccountRepository.Take(simple.GetDB(), "third_type = ? and third_id = ?", thirdType, thirdId)
 }
 
-func (this *thirdAccountService) GetOrCreateByGithub(code string) (*model.ThirdAccount, error) {
-	userInfo, err := github.GetUserInfoByCode(code)
+func (this *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {
+	userInfo, err := github.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}
