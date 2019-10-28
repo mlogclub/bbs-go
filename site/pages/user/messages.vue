@@ -4,54 +4,60 @@
       <div class="columns">
         <div class="column is-9">
           <div class="main-body">
-            <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
-              <ul>
-                <li>
-                  <a href="/">首页</a>
-                </li>
-                <li>
-                  <a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">消息</a>
-                </li>
-              </ul>
-            </nav>
+            <div class="widget">
+              <div class="header">
+                <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
+                  <ul>
+                    <li>
+                      <a href="/">首页</a>
+                    </li>
+                    <li>
+                      <a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a>
+                    </li>
+                    <li class="is-active">
+                      <a href="#" aria-current="page">消息</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
 
-            <ul class="message-list">
-              <li v-for="message in messages" :key="message.messageId" class="message-item">
-                <div class="message-item-left">
-                  <div
-                    class="avatar is-rounded has-border"
-                    :style="{backgroundImage:'url(' + message.from.avatar + ')'}"
-                  />
-                </div>
-                <div class="message-item-right">
-                  <div class="message-item-meta">
-                    <span v-if="message.from.id > 0" class="nickname">
-                      <a
-                        :href="'/user/' + message.from.id"
-                        target="_blank"
-                      >{{ message.from.nickname }}</a>
-                    </span>
-                    <span v-else class="nickname">
-                      <a href="javascript:void(0)" target="_blank">{{ message.from.nickname }}</a>
-                    </span>
-                    <span class="time">{{ message.createTime | prettyDate }}</span>
-                  </div>
-                  <div class="content">
-                    {{ message.content }}
-                    <span v-if="message.detailUrl" class="show-more">
-                      <a :href="message.detailUrl" target="_blank">点击查看详情&gt;&gt;</a>
-                    </span>
-                    <blockquote>{{ message.quoteContent }}</blockquote>
-                  </div>
-                </div>
-              </li>
-              <li v-if="hasMore" class="more">
-                <a @click="list">查看更多&gt;&gt;</a>
-              </li>
-            </ul>
+              <div class="content">
+                <ul class="message-list">
+                  <li v-for="message in messages" :key="message.messageId" class="message-item">
+                    <div class="message-item-left">
+                      <div
+                        class="avatar is-rounded has-border"
+                        :style="{backgroundImage:'url(' + message.from.avatar + ')'}"
+                      />
+                    </div>
+                    <div class="message-item-right">
+                      <div class="message-item-meta">
+                        <span v-if="message.from.id > 0" class="nickname">
+                          <a
+                            :href="'/user/' + message.from.id"
+                            target="_blank"
+                          >{{ message.from.nickname }}</a>
+                        </span>
+                        <span v-else class="nickname">
+                          <a href="javascript:void(0)" target="_blank">{{ message.from.nickname }}</a>
+                        </span>
+                        <span class="time">{{ message.createTime | prettyDate }}</span>
+                      </div>
+                      <div class="content">
+                        {{ message.content }}
+                        <span v-if="message.detailUrl" class="show-more">
+                          <a :href="message.detailUrl" target="_blank">点击查看详情&gt;&gt;</a>
+                        </span>
+                        <blockquote>{{ message.quoteContent }}</blockquote>
+                      </div>
+                    </div>
+                  </li>
+                  <li v-if="hasMore" class="more">
+                    <a @click="list">查看更多&gt;&gt;</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
         <div class="column is-3">

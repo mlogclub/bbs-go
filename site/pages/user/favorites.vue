@@ -4,52 +4,58 @@
       <div class="columns">
         <div class="column is-9">
           <div class="main-body">
-            <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
-              <ul>
-                <li><a href="/">首页</a></li>
-                <li><a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a></li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">收藏列表</a>
-                </li>
-              </ul>
-            </nav>
+            <div class="widget">
+              <div class="header">
+                <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
+                  <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a></li>
+                    <li class="is-active">
+                      <a href="#" aria-current="page">收藏列表</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
 
-            <ul v-if="favorites && favorites.length" class="article-list">
-              <li v-for="favorite in favorites" :key="favorite.favoriteId">
-                <article v-if="favorite.deleted" class="article-item">
-                  <div class="article-summary">
-                    收藏内容失效!!!
-                  </div>
-                </article>
-                <article v-else class="article-item">
-                  <div class="article-item-left">
-                    <a :href="'/user/' + favorite.user.id" target="_blank">
-                      <img class="avatar" :src="favorite.user.avatar">
-                    </a>
-                  </div>
+              <div class="content">
+                <ul v-if="favorites && favorites.length" class="article-list">
+                  <li v-for="favorite in favorites" :key="favorite.favoriteId">
+                    <article v-if="favorite.deleted" class="article-item">
+                      <div class="article-summary">
+                        收藏内容失效!!!
+                      </div>
+                    </article>
+                    <article v-else class="article-item">
+                      <div class="article-item-left">
+                        <a :href="'/user/' + favorite.user.id" target="_blank">
+                          <img class="avatar" :src="favorite.user.avatar">
+                        </a>
+                      </div>
 
-                  <div class="article-item-right">
-                    <div class="article-title">
-                      <a :href="favorite.url">{{ favorite.title }}</a>
-                    </div>
+                      <div class="article-item-right">
+                        <div class="article-title">
+                          <a :href="favorite.url">{{ favorite.title }}</a>
+                        </div>
 
-                    <div class="article-summary">
-                      {{ favorite.content }}
-                    </div>
+                        <div class="article-summary">
+                          {{ favorite.content }}
+                        </div>
 
-                    <div class="article-meta">
-                      <span class="article-meta-item"><a
-                        :href="'/user/' + favorite.user.id"
-                      >{{ favorite.user.nickname }}</a></span>
-                      <span class="article-meta-item"><time>{{ favorite.createTime | prettyDate }}</time></span>
-                    </div>
-                  </div>
-                </article>
-              </li>
-              <li v-if="hasMore" class="more">
-                <a @click="list">查看更多&gt;&gt;</a>
-              </li>
-            </ul>
+                        <div class="article-meta">
+                          <span class="article-meta-item"><a
+                            :href="'/user/' + favorite.user.id"
+                          >{{ favorite.user.nickname }}</a></span>
+                          <span class="article-meta-item"><time>{{ favorite.createTime | prettyDate }}</time></span>
+                        </div>
+                      </div>
+                    </article>
+                  </li>
+                  <li v-if="hasMore" class="more">
+                    <a @click="list">查看更多&gt;&gt;</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
         <div class="column is-3">
