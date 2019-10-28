@@ -200,3 +200,60 @@ func (this *userService) isEmailExists(email string) bool {
 func (this *userService) isUsernameExists(username string) bool {
 	return this.GetByUsername(username) != nil
 }
+
+// 设置用户名
+func (this *userService) SetUsername(userId int64, username string) error {
+	username = strings.TrimSpace(username)
+	if len(username) == 0 {
+		return errors.New("请输入用户名。")
+	}
+	if !common.IsValidateUsername(username) {
+		return errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
+	}
+
+	user := this.Get(userId)
+	if len(user.Username) > 0 {
+		return errors.New("你已设置了用户名，无法重复设置。")
+	}
+	if this.isUsernameExists(username) {
+		return errors.New("该用户名已存在")
+	}
+	return this.UpdateColumn(userId, "username", username)
+}
+
+// 设置密码
+func (this *userService) SetPassword(userId int64, password, rePassword string) error {
+	if len(password) == 0 {
+		return errors.New("请输入密码")
+	}
+	if rePassword != password {
+		return errors.New("两次输入密码不一致")
+	}
+	user := this.Get(userId)
+	if len(user.Password) > 0 {
+		return errors.New("你已设置了密码，如需修改请前往修改页面。")
+	}
+	password = simple.EncodePassword(password)
+	return this.UpdateColumn(userId, "password", password)
+}
+
+// 修改密码
+func (this *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
+	if len(password) == 0 {
+		return errors.New("请输入密码")
+	}
+	if rePassword != password {
+		return errors.New("两次输入密码不一致")
+	}
+	user := this.Get(userId)
+	if len(user.Password) == 0 {
+		return errors.New("你没设置密码，请先设置密码")
+	}
+
+	if !simple.ValidatePassword(user.Password, oldPassword) {
+		return errors.New("旧密码验证失败")
+	}
+
+	password = simple.EncodePassword(password)
+	return this.UpdateColumn(userId, "password", password)
+}

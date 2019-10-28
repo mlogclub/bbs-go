@@ -64,5 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.widget {
+  font-size: 13px;
+}
 </style>

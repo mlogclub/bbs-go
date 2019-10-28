@@ -66,6 +66,53 @@ func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// 设置用户名
+func (this *UserController) PostSetUsername() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
+	err := services.UserService.SetUsername(user.Id, nickname)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+// 设置密码
+func (this *UserController) PostSetPassword() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	password := simple.FormValue(this.Ctx, "password")
+	rePassword := simple.FormValue(this.Ctx, "rePassword")
+	err := services.UserService.SetPassword(user.Id, password, rePassword)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+// 修改密码
+func (this *UserController) PostUpdatePassword() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	var (
+		oldPassword = simple.FormValue(this.Ctx, "oldPassword")
+		password    = simple.FormValue(this.Ctx, "password")
+		rePassword  = simple.FormValue(this.Ctx, "rePassword")
+	)
+	err := services.UserService.UpdatePassword(user.Id, oldPassword, password, rePassword)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
 // 未读消息数量
 func (this *UserController) GetMsgcount() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)

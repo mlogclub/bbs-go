@@ -28,26 +28,36 @@
                   <div class="field-body">
                     <div class="field">
                       <div class="control has-icons-left">
-                        <template v-if="user.username">
-                          <input
-                            v-model="user.username"
-                            name="username"
-                            class="input is-success"
-                            type="text"
-                            placeholder="请输入昵称"
-                            disabled
-                          >
-                          <span class="icon is-small is-left">
-                            <i class="iconfont icon-username" />
-                          </span>
-                        </template>
-                        <template v-else>
-                          <a>未设置</a>
-                        </template>
+                        <span v-if="user.username">
+                          ${user.username}
+                        </span>
+                        <span v-else>
+                          <a>点击设置</a>
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                <!--
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">邮箱</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control has-icons-left">
+                        <label v-if="user.username">
+                          ${user.email}
+                        </label>
+                        <label v-else>
+                          <a>点击设置</a>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                -->
 
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
@@ -119,9 +129,14 @@
                   </div>
                 </div>
 
-                <div class="field">
-                  <div class="control">
-                    <a class="button is-success" @click="submitForm">提交修改</a>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal" />
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <a class="button is-success" @click="submitForm">提交修改</a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -192,4 +207,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.control {
+  a {
+    font-size: 14px;
+    line-height: 32px;
+  }
+}
 </style>
