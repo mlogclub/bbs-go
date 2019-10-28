@@ -72,8 +72,9 @@ func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
 // 获取QQ回调信息获取
 func (this *LoginController) GetQqCallback() *simple.JsonResult {
 	code := this.Ctx.FormValue("code")
+	state := this.Ctx.FormValue("state")
 
-	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code)
+	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

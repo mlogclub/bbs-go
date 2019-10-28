@@ -94,8 +94,8 @@ func (this *thirdAccountService) GetOrCreateByGithub(code string) (*model.ThirdA
 	return account, nil
 }
 
-func (this *thirdAccountService) GetOrCreateByQQ(code string) (*model.ThirdAccount, error) {
-	userInfo, err := qq.GetUserInfoByCode(code)
+func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdAccount, error) {
+	userInfo, err := qq.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}
