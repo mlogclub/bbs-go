@@ -41,15 +41,41 @@ func (this *LoginController) GetSignout() *simple.JsonResult {
 // 获取Github登录授权地址
 func (this *LoginController) GetGithubAuthorize() *simple.JsonResult {
 	ref := this.Ctx.FormValue("ref")
-	url := github.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
+	url := github.AuthCodeURL(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
 // 获取Github回调信息获取
 func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	code := this.Ctx.FormValue("code")
+	state := this.Ctx.FormValue("state")
 
-	thirdAccount, err := services.ThirdAccountService.GetOrCreateByGithub(code)
+	thirdAccount, err := services.ThirdAccountService.GetOrCreateByGithub(code, state)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	user, codeErr := services.UserService.SignInByThirdAccount(thirdAccount)
+	if codeErr != nil {
+		return simple.JsonError(codeErr)
+	} else {
+		return this.GenerateResult(user, "")
+	}
+}
+
+// 获取QQ登录授权地址
+func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
+	ref := this.Ctx.FormValue("ref")
+	url := qq.AuthorizeUrl(map[string]string{"ref": ref})
+	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
+}
+
+// 获取QQ回调信息获取
+func (this *LoginController) GetQqCallback() *simple.JsonResult {
+	code := this.Ctx.FormValue("code")
+	state := this.Ctx.FormValue("state")
+
+	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -72,11 +98,4 @@ func (this *LoginController) GenerateResult(user *model.User, ref string) *simpl
 		Put("token", token).
 		Put("user", render.BuildUser(user)).
 		Put("ref", ref).JsonResult()
-}
-
-// 获取QQ登录授权地址
-func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
-	ref := this.Ctx.FormValue("ref")
-	url := qq.GetOauthConfig(map[string]string{"ref": ref}).AuthCodeURL(simple.Uuid())
-	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
