@@ -79,55 +79,54 @@ func (this *userService) GetByUsername(username string) *model.User {
 }
 
 // 注册
-func (this *userService) SignUp(username, email, password, rePassword, nickname, avatar string) (*model.User, error) {
+func (this *userService) SignUp(username, email, nickname, avatar, password, rePassword string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
+	nickname = strings.TrimSpace(nickname)
 
-	if !common.IsValidateUsername(username) {
-		return nil, errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
-	}
-	if !common.IsValidateEmail(email) {
-		return nil, errors.New("请输入合法的邮箱")
-	}
-	if len(password) == 0 {
-		return nil, errors.New("请输入密码")
-	}
-	if simple.RuneLen(password) < 6 {
-		return nil, errors.New("密码过于简单")
-	}
 	if len(nickname) == 0 {
 		return nil, errors.New("昵称不能为空")
 	}
-	if password != rePassword {
-		return nil, errors.New("两次输入密码不匹配")
+
+	if err := common.IsValidateUsername(username); err != nil {
+		return nil, err
 	}
 
-	if this.GetByUsername(username) != nil {
+	// 验证密码
+	err := common.IsValidatePassword(password, rePassword)
+	if err != nil {
+		return nil, err
+	}
+
+	// 如果设置了邮箱，那么需要验证邮箱
+	if len(email) > 0 {
+		if err := common.IsValidateEmail(email); err != nil {
+			return nil, err
+		}
+		if this.GetByEmail(email) != nil {
+			return nil, errors.New("邮箱：" + email + " 已被占用")
+		}
+	}
+
+	// 验证用户名是否存在
+	if this.isUsernameExists(username) {
 		return nil, errors.New("用户名：" + username + " 已被占用")
 	}
-
-	if this.GetByEmail(email) != nil {
-		return nil, errors.New("邮箱：" + email + " 已被占用")
-	}
-
-	password = simple.EncodePassword(password)
 
 	user := &model.User{
 		Username:   username,
 		Email:      email,
 		Nickname:   nickname,
-		Password:   password,
+		Password:   simple.EncodePassword(password),
 		Avatar:     avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
 
-	err := this.Create(user)
-	if err != nil {
+	if err := this.Create(user); err != nil {
 		return nil, err
 	}
-
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil
 }
@@ -141,7 +140,7 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 		return nil, errors.New("密码不能为空")
 	}
 	var user *model.User = nil
-	if common.IsValidateEmail(username) { // 如果用户输入的是邮箱
+	if err := common.IsValidateEmail(username); err == nil { // 如果用户输入的是邮箱
 		user = this.GetByEmail(username)
 	} else {
 		user = this.GetByUsername(username)
@@ -203,11 +202,8 @@ func (this *userService) isUsernameExists(username string) bool {
 // 设置用户名
 func (this *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
-	if len(username) == 0 {
-		return errors.New("请输入用户名。")
-	}
-	if !common.IsValidateUsername(username) {
-		return errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
+	if err := common.IsValidateUsername(username); err != nil {
+		return err
 	}
 
 	user := this.Get(userId)
@@ -215,18 +211,15 @@ func (this *userService) SetUsername(userId int64, username string) error {
 		return errors.New("你已设置了用户名，无法重复设置。")
 	}
 	if this.isUsernameExists(username) {
-		return errors.New("该用户名已存在")
+		return errors.New("用户名：" + username + " 已被占用")
 	}
 	return this.UpdateColumn(userId, "username", username)
 }
 
 // 设置密码
 func (this *userService) SetPassword(userId int64, password, rePassword string) error {
-	if len(password) == 0 {
-		return errors.New("请输入密码")
-	}
-	if rePassword != password {
-		return errors.New("两次输入密码不一致")
+	if err := common.IsValidatePassword(password, rePassword); err != nil {
+		return err
 	}
 	user := this.Get(userId)
 	if len(user.Password) > 0 {

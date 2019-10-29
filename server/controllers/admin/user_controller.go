@@ -1,10 +1,11 @@
 package admin
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/common"
 	"strconv"
 	"strings"
+
+	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/model"
 
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
@@ -36,10 +37,10 @@ func (this *UserController) AnyList() *simple.JsonResult {
 func (this *UserController) PostCreate() *simple.JsonResult {
 	username := simple.FormValue(this.Ctx, "username")
 	email := simple.FormValue(this.Ctx, "email")
-	password := simple.FormValue(this.Ctx, "password")
 	nickname := simple.FormValue(this.Ctx, "nickname")
+	password := simple.FormValue(this.Ctx, "password")
 
-	user, err := services.UserService.SignUp(username, email, password, password, nickname, "")
+	user, err := services.UserService.SignUp(username, email, nickname, "", password, password)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
