@@ -8,7 +8,14 @@
         <side-menu />
       </el-aside>
       <el-main class="sec-main-view">
-        <router-tab />
+        <router-tab>
+          <template v-slot="{ tab: { id, title, icon, closable }, tabs, index}">
+            <i v-if="icon" class="tab-icon" :class="icon" />
+            <span class="tab-title">{{ $routerTab.i18nText(title) || '未命名页签' }}</span>
+            <i v-if="closable !== false && tabs.length > 1"
+              @click.prevent="$routerTab.closeTab(id)" class="tabclose iconfont icon-close" />
+          </template>
+        </router-tab>
       </el-main>
     </el-container>
   </el-container>

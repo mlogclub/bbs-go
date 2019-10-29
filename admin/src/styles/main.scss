@@ -21,3 +21,62 @@
 .el-icon-arrow-down {
   font-size: 12px;
 }
+
+.router-tab {
+  height: 40px;
+
+  .router-tab-header {
+    height: 40px;
+    line-height: 40px;
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    border: none;
+
+    ul.router-tab-nav {
+      li.router-tab-item {
+        font-size: 14px;
+        color: #000;
+        line-height: 39px;
+        max-width: 160px;
+        text-overflow: ellipsis;
+        background-color: #fff;
+        border-right: 1px solid #f6f6f6;
+        border-left: none;
+        border-top: none;
+        border-bottom: none;
+
+        &:not(.actived):hover {
+          background-color: #f6f6f6;
+          box-shadow: none;
+        }
+
+        &.actived {
+          background-color: #f6f6f6;
+          border: none;
+          font-weight: 700;
+
+          .tab-icon {
+            color: #c2c2c2;
+          }
+        }
+
+        .tab-icon {
+          line-height: 39px;
+        }
+
+        .tabclose {
+          border-radius: 50%;
+          margin-left: 10px;
+          font-size: 12px;
+          padding: 3px;
+
+          &:hover {
+            background-color: #FF5722;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
