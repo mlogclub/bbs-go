@@ -37,6 +37,7 @@ export const actions = {
     return ret.user
   },
 
+  // github登录
   async signinByGithub(context, { code, state }) {
     const ret = await this.$axios.get('/api/login/github/callback', {
       params: {
@@ -48,6 +49,7 @@ export const actions = {
     return ret.user
   },
 
+  // qq登录
   async signinByQQ(context, { code, state }) {
     const ret = await this.$axios.get('/api/login/qq/callback', {
       params: {
@@ -59,6 +61,18 @@ export const actions = {
     return ret.user
   },
 
+  async signup(context, { nickname, username, password, rePassword }) {
+    const ret = await this.$axios.post('/api/login/signup', {
+      nickname: nickname,
+      username: username,
+      password: password,
+      rePassword: rePassword
+    })
+    context.dispatch('loginSuccess', ret)
+    return ret.user
+  },
+
+  // 退出登录
   async signout(context) {
     const userToken = this.$cookies.get('userToken')
     await this.$axios.get('/api/login/signout', {

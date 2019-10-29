@@ -17,16 +17,18 @@ type LoginController struct {
 
 // 注册
 func (this *LoginController) PostSignup() *simple.JsonResult {
-	// var (
-	// 	username   = this.Ctx.PostValueTrim("username")
-	// 	password   = this.Ctx.PostValueTrim("password")
-	// 	rePassword = this.Ctx.PostValueTrim("rePassword")
-	// 	nickname   = this.Ctx.PostValueTrim("nickname")
-	// 	ref        = this.Ctx.FormValue("ref")
-	// )
-	//
-	// TODO gaoyoubo @ 2019/10/29 
-	return simple.JsonSuccess()
+	var (
+		username   = this.Ctx.PostValueTrim("username")
+		password   = this.Ctx.PostValueTrim("password")
+		rePassword = this.Ctx.PostValueTrim("rePassword")
+		nickname   = this.Ctx.PostValueTrim("nickname")
+		ref        = this.Ctx.FormValue("ref")
+	)
+	user, err := services.UserService.SignUp(username, "", nickname, "", password, rePassword)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return this.GenerateLoginResult(user, ref)
 }
 
 // 用户名密码登录
@@ -40,7 +42,7 @@ func (this *LoginController) PostSignin() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return this.GenerateResult(user, ref)
+	return this.GenerateLoginResult(user, ref)
 }
 
 // 退出登录
@@ -73,7 +75,7 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return this.GenerateResult(user, "")
+		return this.GenerateLoginResult(user, "")
 	}
 }
 
@@ -98,12 +100,12 @@ func (this *LoginController) GetQqCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return this.GenerateResult(user, "")
+		return this.GenerateLoginResult(user, "")
 	}
 }
 
 // user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
-func (this *LoginController) GenerateResult(user *model.User, ref string) *simple.JsonResult {
+func (this *LoginController) GenerateLoginResult(user *model.User, ref string) *simple.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

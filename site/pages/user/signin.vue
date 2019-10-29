@@ -1,67 +1,65 @@
 <template>
-  <div>
-    <section class="main">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-12">
-            <div class="widget">
-              <div class="header">
-                登录
+  <section class="main">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-12">
+          <div class="widget">
+            <div class="header">
+              登录
+            </div>
+            <div class="content">
+              <div class="field">
+                <label class="label">用户名/邮箱</label>
+                <div class="control has-icons-left">
+                  <input
+                    v-model="username"
+                    class="input is-success"
+                    type="text"
+                    placeholder="请输入用户名或邮箱"
+                    @keyup.enter="submitLogin"
+                  >
+                  <span class="icon is-small is-left"><i class="iconfont icon-username" /></span>
+                </div>
               </div>
-              <div class="content">
-                <div class="field">
-                  <label class="label">用户名/邮箱</label>
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="username"
-                      class="input is-success"
-                      type="text"
-                      placeholder="请输入用户名或邮箱"
-                      @keyup.enter="submitLogin"
-                    >
-                    <span class="icon is-small is-left"><i class="iconfont icon-username" /></span>
-                  </div>
-                </div>
 
-                <div class="field">
-                  <label class="label">密码</label>
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="password"
-                      class="input"
-                      type="password"
-                      placeholder="请输入密码"
-                      @keyup.enter="submitLogin"
-                    >
-                    <span class="icon is-small is-left"><i class="iconfont icon-password" /></span>
-                  </div>
+              <div class="field">
+                <label class="label">密码</label>
+                <div class="control has-icons-left">
+                  <input
+                    v-model="password"
+                    class="input"
+                    type="password"
+                    placeholder="请输入密码"
+                    @keyup.enter="submitLogin"
+                  >
+                  <span class="icon is-small is-left"><i class="iconfont icon-password" /></span>
                 </div>
+              </div>
 
-                <div class="field">
-                  <div class="control">
-                    <button
-                      class="button is-success"
-                      @click="submitLogin"
-                    >
-                      登录
-                    </button>
-                    <github-login :ref-url="ref" />
-                    <qq-login :ref-url="ref" />
-                    <!--
+              <div class="field">
+                <div class="control">
+                  <button
+                    class="button is-success"
+                    @click="submitLogin"
+                  >
+                    登录
+                  </button>
+                  <github-login :ref-url="ref" />
+                  <qq-login :ref-url="ref" />
+                  <!--
                     <a
                       class="button is-text"
                       href="/user/signup"
                     >没有账号？点击这里去注册！</a>
                     -->
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -93,7 +91,8 @@ export default {
       try {
         const user = await this.$store.dispatch('user/signin', {
           username: this.username,
-          password: this.password
+          password: this.password,
+          ref: this.ref
         })
         if (this.ref) { // 跳到登录前
           utils.linkTo(this.ref)
