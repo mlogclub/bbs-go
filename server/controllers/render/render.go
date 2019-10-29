@@ -1,6 +1,7 @@
 package render
 
 import (
+	"database/sql"
 	"html/template"
 	"strconv"
 	"strings"
@@ -23,7 +24,9 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 	if user == nil {
 		user = &model.User{}
 		user.Id = id
-		user.Username = strconv.FormatInt(id, 10)
+		user.Username = sql.NullString{
+			String: strconv.FormatInt(id, 10),
+		}
 		user.Avatar = avatar.GetDefaultAvatar(id)
 		user.CreateTime = simple.NowTimestamp()
 	}
@@ -49,10 +52,10 @@ func BuildUser(user *model.User) *model.UserInfo {
 	roles := strings.Split(user.Roles, ",")
 	return &model.UserInfo{
 		Id:          user.Id,
-		Username:    user.Username,
+		Username:    user.Username.String,
 		Nickname:    user.Nickname,
 		Avatar:      a,
-		Email:       user.Email,
+		Email:       user.Email.String,
 		Type:        user.Type,
 		Roles:       roles,
 		Description: user.Description,

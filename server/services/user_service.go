@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -114,8 +115,12 @@ func (this *userService) SignUp(username, email, nickname, avatar, password, reP
 	}
 
 	user := &model.User{
-		Username:   username,
-		Email:      email,
+		Username: sql.NullString{
+			String: username,
+		},
+		Email: sql.NullString{
+			String: email,
+		},
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
 		Avatar:     avatar,
@@ -162,6 +167,7 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 	}
 
 	user = &model.User{
+		Username:   sql.NullString{},
 		Nickname:   thirdAccount.Nickname,
 		Avatar:     thirdAccount.Avatar,
 		Status:     model.UserStatusOk,
@@ -207,7 +213,7 @@ func (this *userService) SetUsername(userId int64, username string) error {
 	}
 
 	user := this.Get(userId)
-	if len(user.Username) > 0 {
+	if len(user.Username.String) > 0 {
 		return errors.New("你已设置了用户名，无法重复设置。")
 	}
 	if this.isUsernameExists(username) {

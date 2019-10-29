@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"database/sql"
 	"strconv"
 	"strings"
 
@@ -65,7 +66,9 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 	status := simple.FormValueIntDefault(this.Ctx, "status", -1)
 
 	if len(username) > 0 {
-		t.Username = username
+		t.Username = sql.NullString{
+			String: username,
+		}
 	}
 	if len(password) > 0 {
 		t.Password = simple.EncodePassword(t.Password)
@@ -74,7 +77,9 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 		t.Nickname = nickname
 	}
 	if len(email) > 0 {
-		t.Email = email
+		t.Email = sql.NullString{
+			String: email,
+		}
 	}
 	if status != -1 {
 		t.Status = status

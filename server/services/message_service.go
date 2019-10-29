@@ -101,10 +101,10 @@ func (this *messageService) Send(fromId, toId int64, content, quoteContent strin
 
 func (this *messageService) sendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
-	if user == nil || len(user.Email) == 0 {
+	if user == nil || len(user.Email.String) == 0 {
 		return
 	}
-	email.SendTemplateEmail(user.Email, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
+	email.SendTemplateEmail(user.Email.String, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
 		message.QuoteContent, urls.AbsUrl("/user/messages"))
 }
 

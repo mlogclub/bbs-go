@@ -1,10 +1,11 @@
 package collect
 
 import (
+	"database/sql"
 	"strings"
 
-	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/bbs-go/common/oss"
+	"github.com/mlogclub/bbs-go/services"
 
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/core/errors"
@@ -50,7 +51,9 @@ func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
 			return 0, err
 		}
 		user := &model.User{
-			Username:    article.AppID,
+			Username: sql.NullString{
+				String: article.AppID,
+			},
 			Nickname:    article.AppName,
 			Description: article.WxIntro,
 			Avatar:      avatar,

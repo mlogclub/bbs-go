@@ -245,7 +245,7 @@ func (this *topicService) GenerateRss() {
 			Title:       topic.Title,
 			Link:        &feeds.Link{Href: topicUrl},
 			Description: common.GetMarkdownSummary(topic.Content),
-			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
+			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
 			Created:     simple.TimeFromTimestamp(topic.CreateTime),
 		}
 		items = append(items, item)

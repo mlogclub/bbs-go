@@ -1,5 +1,7 @@
 package model
 
+import "database/sql"
+
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
@@ -71,17 +73,17 @@ const (
 
 type User struct {
 	Model
-	Username    string `gorm:"size:32;index:idx_username" json:"username" form:"username"`
-	Nickname    string `gorm:"size:16;" json:"nickname" form:"nickname"`
-	Avatar      string `gorm:"type:text" json:"avatar" form:"avatar"`
-	Email       string `gorm:"size:512;index:idx_email" json:"email" form:"email"`
-	Password    string `gorm:"size:512" json:"password" form:"password"`
-	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`
-	Roles       string `gorm:"type:text" json:"roles" form:"roles"`
-	Type        int    `gorm:"not null" json:"type" form:"type"`
-	Description string `gorm:"type:text" json:"description" form:"description"`
-	CreateTime  int64  `json:"createTime" form:"createTime"`
-	UpdateTime  int64  `json:"updateTime" form:"updateTime"`
+	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`
+	Nickname    string         `gorm:"size:16;" json:"nickname" form:"nickname"`
+	Avatar      string         `gorm:"type:text" json:"avatar" form:"avatar"`
+	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
+	Password    string         `gorm:"size:512" json:"password" form:"password"`
+	Status      int            `gorm:"index:idx_status;not null" json:"status" form:"status"`
+	Roles       string         `gorm:"type:text" json:"roles" form:"roles"`
+	Type        int            `gorm:"not null" json:"type" form:"type"`
+	Description string         `gorm:"type:text" json:"description" form:"description"`
+	CreateTime  int64          `json:"createTime" form:"createTime"`
+	UpdateTime  int64          `json:"updateTime" form:"updateTime"`
 }
 
 type UserToken struct {

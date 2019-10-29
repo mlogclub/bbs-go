@@ -315,7 +315,7 @@ func (this *articleService) GenerateRss() {
 			Title:       article.Title,
 			Link:        &feeds.Link{Href: articleUrl},
 			Description: description,
-			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
+			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
 			Created:     simple.TimeFromTimestamp(article.CreateTime),
 		}
 		items = append(items, item)

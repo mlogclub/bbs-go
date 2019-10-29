@@ -150,7 +150,7 @@ func (this *projectService) GenerateRss() {
 			Title:       project.Name + " - " + project.Title,
 			Link:        &feeds.Link{Href: projectUrl},
 			Description: description,
-			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email},
+			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
 			Created:     simple.TimeFromTimestamp(project.CreateTime),
 		}
 		items = append(items, item)
