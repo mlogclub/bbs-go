@@ -56,7 +56,11 @@
                   <div class="field-body">
                     <div class="field">
                       <div class="control has-icons-left">
-                        <label v-if="user.passwordSet">已设置密码</label>
+                        <template v-if="user.passwordSet">
+                          <label>已设置密码&nbsp;</label>
+                          <a @click="showUpdatePassword = true">点击修改</a>
+                        </template>
+                        <!-- <label v-if="user.passwordSet">已设置密码&nbsp;<a @click=" hangePassword = true">点击修改</a></label> -->
                         <a v-else @click="showSetPassword = true">点击设置</a>
                       </div>
                     </div>
@@ -267,6 +271,67 @@
         </div>
       </div>
     </div>
+
+    <!-- 修改密码 -->
+    <div class="modal" :class="{'is-active': showUpdatePassword}">
+      <div class="modal-background" />
+      <div class="modal-card">
+        <div class="widget">
+          <div class="header">
+            修改密码
+            <button class="delete" aria-label="close" @click="showUpdatePassword = false" />
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="oldPassword"
+                  class="input is-success"
+                  type="password"
+                  placeholder="请输入当前密码"
+                  @keydown.enter="updatePassword"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-password" />
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="password"
+                  class="input is-success"
+                  type="password"
+                  placeholder="请输入密码"
+                  @keydown.enter="updatePassword"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-password" />
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="rePassword"
+                  class="input is-success"
+                  type="password"
+                  placeholder="请再次确认密码"
+                  @keydown.enter="updatePassword"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-password" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="footer is-right">
+            <a class="button is-success" @click="updatePassword">确定</a>
+            <a class="button" @click="showUpdatePassword = false">取消</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -283,9 +348,11 @@ export default {
       username: '',
       showSetEmail: false,
       email: '',
-      showSetPassword: false,
+      showSetPassword: false, // 显示设置密码
+      showUpdatePassword: false, // 显示修改密码
       password: '',
-      rePassword: ''
+      rePassword: '',
+      oldPassword: ''
     }
   },
   head() {
@@ -337,10 +404,11 @@ export default {
           username: me.username
         })
         this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('修改成功')
+        this.$toast.success('设置成功')
+        this.username = ''
         this.showSetUsername = false
       } catch (err) {
-        this.$toast.error('修改失败：' + (err.message || err))
+        this.$toast.error('设置失败：' + (err.message || err))
       }
     },
     async setEmail() {
@@ -350,10 +418,11 @@ export default {
           email: me.email
         })
         this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('修改成功')
+        this.$toast.success('设置成功')
+        this.email = ''
         this.showSetEmail = false
       } catch (err) {
-        this.$toast.error('修改失败：' + (err.message || err))
+        this.$toast.error('设置失败：' + (err.message || err))
       }
     },
     async setPassword() {
@@ -364,8 +433,28 @@ export default {
           rePassword: me.rePassword
         })
         this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('修改成功')
+        this.$toast.success('设置成功')
+        this.password = ''
+        this.rePassword = ''
         this.showSetPassword = false
+      } catch (err) {
+        this.$toast.error('设置失败：' + (err.message || err))
+      }
+    },
+    async updatePassword() {
+      try {
+        const me = this
+        await this.$axios.post('/api/user/update/password', {
+          oldPassword: me.oldPassword,
+          password: me.password,
+          rePassword: me.rePassword
+        })
+        this.user = await this.$axios.get('/api/user/current')
+        this.$toast.success('修改成功')
+        this.password = ''
+        this.rePassword = ''
+        this.oldPassword = ''
+        this.showUpdatePassword = false
       } catch (err) {
         this.$toast.error('修改失败：' + (err.message || err))
       }
