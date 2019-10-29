@@ -39,7 +39,7 @@
     </div>
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
-        请<github-login :is-button="false" />后发表观点
+        请<a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
       </div>
     </div>
 
@@ -93,11 +93,9 @@
 
 <script>
 import utils from '~/common/utils'
-import GithubLogin from '~/components/GithubLogin'
 export default {
   name: 'Comment',
   components: {
-    GithubLogin
   },
   props: {
     entityType: {
@@ -213,6 +211,9 @@ export default {
       elem.style.height = 'auto'
       elem.scrollTop = 0 // 防抖动
       elem.style.height = elem.scrollHeight + 'px'
+    },
+    toLogin() {
+      utils.toSignin()
     }
   }
 }

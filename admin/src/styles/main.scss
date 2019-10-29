@@ -1,3 +1,5 @@
+@import "vars.scss";
+
 .show-more-dialog {
   width: auto;
   max-width: 1000px;
@@ -13,7 +15,7 @@
 
 .el-dropdown-link {
   cursor: pointer;
-  color: #409EFF;
+  color: $color-primary;
 }
 
 .el-icon-arrow-down {

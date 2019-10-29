@@ -1,10 +1,6 @@
 <template>
   <el-col :span="24" class="header">
-    <el-col
-      :span="10"
-      class="logo"
-      :class="collapsed?'logo-collapse-width':'logo-width'"
-    >{{collapsed?'':sysName}}</el-col>
+    <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">{{collapsed?'':sysName}}</el-col>
     <el-col :span="10">
       <div class="tools" @click.prevent="collapse">
         <i class="iconfont" :class="collapsed ? 'icon-right' : 'icon-left'"></i>
@@ -76,8 +72,8 @@ export default {
 @import "../styles/vars.scss";
 
 .header {
-  height: $header-height;
-  line-height: $header-height;
+  height: 50px;
+  line-height: 50px;
   background: $color-primary;
   color: #fff;
   border-bottom: 2px solid #fff;
@@ -102,10 +98,12 @@ export default {
   }
 
   .logo {
-    height: 60px;
+    height: 48px;
+    line-height: 48px;
     font-size: 22px;
     padding-left: 20px;
-    padding-right: 20px;
+    background: #0085e8 !important;
+
     // border-color: rgba(238, 241, 146, 0.3);
     // border-color: #e6e6e6;
     // border-right-width: 1px;
