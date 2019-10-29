@@ -45,7 +45,8 @@
                     >
                       登录
                     </button>
-                    <github-login :ref-url="ref" title="Github一键登录" />
+                    <github-login :ref-url="ref" />
+                    <qq-login :ref-url="ref" />
                     <!--
                     <a
                       class="button is-text"
@@ -66,9 +67,10 @@
 <script>
 import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
+import QqLogin from '~/components/QqLogin'
 export default {
   components: {
-    GithubLogin
+    GithubLogin, QqLogin
   },
   data() {
     return {
