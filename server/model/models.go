@@ -74,9 +74,9 @@ const (
 type User struct {
 	Model
 	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`
+	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
 	Nickname    string         `gorm:"size:16;" json:"nickname" form:"nickname"`
 	Avatar      string         `gorm:"type:text" json:"avatar" form:"avatar"`
-	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
 	Password    string         `gorm:"size:512" json:"password" form:"password"`
 	Status      int            `gorm:"index:idx_status;not null" json:"status" form:"status"`
 	Roles       string         `gorm:"type:text" json:"roles" form:"roles"`
