@@ -43,7 +43,7 @@
                     <div class="field">
                       <div class="control has-icons-left">
                         <label v-if="user.email">{{ user.email }}</label>
-                        <a v-else>点击设置</a>
+                        <a v-else @click="showSetEmail = true">点击设置</a>
                       </div>
                     </div>
                   </div>
@@ -57,7 +57,7 @@
                     <div class="field">
                       <div class="control has-icons-left">
                         <label v-if="user.passwordSet">已设置密码</label>
-                        <a v-else>点击设置</a>
+                        <a v-else @click="showSetPassword = true">点击设置</a>
                       </div>
                     </div>
                   </div>
@@ -172,6 +172,7 @@
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名"
+                  @keydown.enter="setUsername"
                 >
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
@@ -182,6 +183,86 @@
           <div class="footer is-right">
             <a class="button is-success" @click="setUsername">确定</a>
             <a class="button" @click="showSetUsername = false">取消</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 设置邮箱 -->
+    <div class="modal" :class="{'is-active': showSetEmail}">
+      <div class="modal-background" />
+      <div class="modal-card">
+        <div class="widget">
+          <div class="header">
+            设置邮箱
+            <button class="delete" aria-label="close" @click="showSetEmail = false" />
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="email"
+                  class="input is-success"
+                  type="text"
+                  placeholder="请输入邮箱"
+                  @keydown.enter="setEmail"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-email" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="footer is-right">
+            <a class="button is-success" @click="setEmail">确定</a>
+            <a class="button" @click="showSetEmail = false">取消</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 设置密码 -->
+    <div class="modal" :class="{'is-active': showSetPassword}">
+      <div class="modal-background" />
+      <div class="modal-card">
+        <div class="widget">
+          <div class="header">
+            设置密码
+            <button class="delete" aria-label="close" @click="showSetPassword = false" />
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="password"
+                  class="input is-success"
+                  type="password"
+                  placeholder="请输入密码"
+                  @keydown.enter="setPassword"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-password" />
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="rePassword"
+                  class="input is-success"
+                  type="password"
+                  placeholder="请再次确认密码"
+                  @keydown.enter="setPassword"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-password" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="footer is-right">
+            <a class="button is-success" @click="setPassword">确定</a>
+            <a class="button" @click="showSetPassword = false">取消</a>
           </div>
         </div>
       </div>
@@ -199,7 +280,12 @@ export default {
   data() {
     return {
       showSetUsername: false,
-      username: ''
+      username: '',
+      showSetEmail: false,
+      email: '',
+      showSetPassword: false,
+      password: '',
+      rePassword: ''
     }
   },
   head() {
@@ -248,13 +334,38 @@ export default {
       try {
         const me = this
         await this.$axios.post('/api/user/set/username', {
-          nickname: me.username
+          username: me.username
         })
-        this.user = await this.$axios.post('/api/user/current', {
-          nickname: me.username
-        })
+        this.user = await this.$axios.get('/api/user/current')
         this.$toast.success('修改成功')
         this.showSetUsername = false
+      } catch (err) {
+        this.$toast.error('修改失败：' + (err.message || err))
+      }
+    },
+    async setEmail() {
+      try {
+        const me = this
+        await this.$axios.post('/api/user/set/email', {
+          email: me.email
+        })
+        this.user = await this.$axios.get('/api/user/current')
+        this.$toast.success('修改成功')
+        this.showSetEmail = false
+      } catch (err) {
+        this.$toast.error('修改失败：' + (err.message || err))
+      }
+    },
+    async setPassword() {
+      try {
+        const me = this
+        await this.$axios.post('/api/user/set/password', {
+          password: me.password,
+          rePassword: me.rePassword
+        })
+        this.user = await this.$axios.get('/api/user/current')
+        this.$toast.success('修改成功')
+        this.showSetPassword = false
       } catch (err) {
         this.$toast.error('修改失败：' + (err.message || err))
       }

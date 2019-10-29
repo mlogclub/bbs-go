@@ -80,6 +80,20 @@ func (this *UserController) PostSetUsername() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// 设置邮箱
+func (this *UserController) PostSetEmail() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	email := strings.TrimSpace(simple.FormValue(this.Ctx, "email"))
+	err := services.UserService.SetEmail(user.Id, email)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
 // 设置密码
 func (this *UserController) PostSetPassword() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)

@@ -223,6 +223,18 @@ func (this *userService) SetUsername(userId int64, username string) error {
 }
 
 // 设置密码
+func (this *userService) SetEmail(userId int64, email string) error {
+    email = strings.TrimSpace(email)
+	if err := common.IsValidateEmail(email); err != nil {
+		return err
+	}
+	if this.isEmailExists(email) {
+		return errors.New("邮箱：" + email + " 已被占用")
+	}
+	return this.UpdateColumn(userId, "email", email)
+}
+
+// 设置密码
 func (this *userService) SetPassword(userId int64, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err

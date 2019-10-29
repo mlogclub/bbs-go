@@ -94,6 +94,10 @@ func IsValidateUsername(username string) error {
 
 // 验证是否是合法的邮箱
 func IsValidateEmail(email string) (err error) {
+	if len(email) == 0 {
+		err = errors.New("邮箱格式不符合规范")
+		return
+	}
 	pattern := `^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$`
 	matched, _ := regexp.MatchString(pattern, email)
 	if !matched {
