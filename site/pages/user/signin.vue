@@ -46,12 +46,9 @@
                   </button>
                   <github-login :ref-url="ref" />
                   <qq-login :ref-url="ref" />
-                  <!--
-                    <a
-                      class="button is-text"
-                      href="/user/signup"
-                    >没有账号？点击这里去注册！</a>
-                    -->
+                  <nuxt-link class="button is-text" to="/user/signup">
+                    没有账号？点击这里去注册&gt;&gt;
+                  </nuxt-link>
                 </div>
               </div>
             </div>
