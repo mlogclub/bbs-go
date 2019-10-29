@@ -231,13 +231,11 @@ func (this *userService) SetPassword(userId int64, password, rePassword string) 
 
 // 修改密码
 func (this *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
-	if len(password) == 0 {
-		return errors.New("请输入密码")
-	}
-	if rePassword != password {
-		return errors.New("两次输入密码不一致")
+	if err := common.IsValidatePassword(password, rePassword); err != nil {
+		return err
 	}
 	user := this.Get(userId)
+
 	if len(user.Password) == 0 {
 		return errors.New("你没设置密码，请先设置密码")
 	}
@@ -246,6 +244,5 @@ func (this *userService) UpdatePassword(userId int64, oldPassword, password, reP
 		return errors.New("旧密码验证失败")
 	}
 
-	password = simple.EncodePassword(password)
-	return this.UpdateColumn(userId, "password", password)
+	return this.UpdateColumn(userId, "password", simple.EncodePassword(password))
 }
