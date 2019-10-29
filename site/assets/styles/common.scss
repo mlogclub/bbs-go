@@ -45,12 +45,25 @@ body {
     .slot {
       float: right;
     }
+
+    .delete {
+      float: right;
+    }
   }
 
   &>.content {
     background-color: #fff;
     // font-size: 12px;
     margin-top: 8px;
+  }
+
+  &>.footer {
+    border-top: 1px dashed #f4f4f5;
+    padding: 10px 0 10px 0;
+
+    &.is-right {
+      text-align: right;
+    }
   }
 }
 

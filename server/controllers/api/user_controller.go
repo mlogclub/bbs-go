@@ -72,8 +72,8 @@ func (this *UserController) PostSetUsername() *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
-	err := services.UserService.SetUsername(user.Id, nickname)
+	username := strings.TrimSpace(simple.FormValue(this.Ctx, "username"))
+	err := services.UserService.SetUsername(user.Id, username)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

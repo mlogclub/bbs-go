@@ -23,17 +23,13 @@
               <div class="content">
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
-                    <label class="label">用户名</label>
+                    <label class="label">用户名：</label>
                   </div>
                   <div class="field-body">
                     <div class="field">
                       <div class="control has-icons-left">
-                        <span v-if="user.username">
-                          ${user.username}
-                        </span>
-                        <span v-else>
-                          <a>点击设置</a>
-                        </span>
+                        <label v-if="user.username">{{ user.username }}</label>
+                        <a v-else @click="showSetUsername = true">点击设置</a>
                       </div>
                     </div>
                   </div>
@@ -41,17 +37,13 @@
 
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
-                    <label class="label">邮箱</label>
+                    <label class="label">邮箱：</label>
                   </div>
                   <div class="field-body">
                     <div class="field">
                       <div class="control has-icons-left">
-                        <label v-if="user.username">
-                          ${user.email}
-                        </label>
-                        <label v-else>
-                          <a>点击设置</a>
-                        </label>
+                        <label v-if="user.email">{{ user.email }}</label>
+                        <a v-else>点击设置</a>
                       </div>
                     </div>
                   </div>
@@ -59,17 +51,13 @@
 
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
-                    <label class="label">密码</label>
+                    <label class="label">密码：</label>
                   </div>
                   <div class="field-body">
                     <div class="field">
                       <div class="control has-icons-left">
-                        <label v-if="user.username">
-                          ${user.email}
-                        </label>
-                        <label v-else>
-                          <a>点击设置</a>
-                        </label>
+                        <label v-if="user.passwordSet">已设置密码</label>
+                        <a v-else>点击设置</a>
                       </div>
                     </div>
                   </div>
@@ -78,7 +66,7 @@
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
                     <label class="label">
-                      <span style="color:red;">*&nbsp;</span>昵称
+                      <span style="color:red;">*&nbsp;</span>昵称：
                     </label>
                   </div>
                   <div class="field-body">
@@ -102,7 +90,7 @@
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
                     <label class="label">
-                      <span style="color:red;">*&nbsp;</span>头像
+                      <span style="color:red;">*&nbsp;</span>头像：
                     </label>
                   </div>
                   <div class="field-body">
@@ -128,7 +116,7 @@
 
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
-                    <label class="label">简介</label>
+                    <label class="label">简介：</label>
                   </div>
                   <div class="field-body">
                     <div class="field">
@@ -166,6 +154,38 @@
         </div>
       </div>
     </div>
+
+    <!-- 设置用户名 -->
+    <div class="modal" :class="{'is-active': showSetUsername}">
+      <div class="modal-background" />
+      <div class="modal-card">
+        <div class="widget">
+          <div class="header">
+            设置用户名
+            <button class="delete" aria-label="close" @click="showSetUsername = false" />
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="username"
+                  class="input is-success"
+                  type="text"
+                  placeholder="请输入用户名"
+                >
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-username" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="footer is-right">
+            <a class="button is-success" @click="setUsername">确定</a>
+            <a class="button" @click="showSetUsername = false">取消</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -175,6 +195,12 @@ export default {
   middleware: 'authenticated',
   components: {
     UserCenterSidebar
+  },
+  data() {
+    return {
+      showSetUsername: false,
+      username: ''
+    }
   },
   head() {
     return {
@@ -217,6 +243,21 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+    async setUsername() {
+      try {
+        const me = this
+        await this.$axios.post('/api/user/set/username', {
+          nickname: me.username
+        })
+        this.user = await this.$axios.post('/api/user/current', {
+          nickname: me.username
+        })
+        this.$toast.success('修改成功')
+        this.showSetUsername = false
+      } catch (err) {
+        this.$toast.error('修改失败：' + (err.message || err))
+      }
     }
   }
 }
@@ -224,9 +265,19 @@ export default {
 
 <style lang="scss" scoped>
 .control {
-  a {
-    font-size: 14px;
+  a,
+  label {
+    // padding-top: .375em;
+    // font-size: 14px;
     line-height: 32px;
+  }
+}
+
+.modal {
+  .widget {
+    background: #ffffff;
+    margin: 0px;
+    padding: 10px;
   }
 }
 </style>
