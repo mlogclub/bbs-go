@@ -41,7 +41,7 @@ func (this *userService) Query(queries *simple.ParamQueries) (list []model.User,
 }
 
 func (this *userService) Create(t *model.User) error {
-	err := repositories.UserRepository.Create(simple.GetDB(), t);
+	err := repositories.UserRepository.Create(simple.GetDB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
 	}
@@ -115,12 +115,8 @@ func (this *userService) SignUp(username, email, nickname, avatar, password, reP
 	}
 
 	user := &model.User{
-		Username: sql.NullString{
-			String: username,
-		},
-		Email: sql.NullString{
-			String: email,
-		},
+		Username:   simple.SqlNullString(username),
+		Email:      simple.SqlNullString(email),
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
 		Avatar:     avatar,
@@ -224,7 +220,7 @@ func (this *userService) SetUsername(userId int64, username string) error {
 
 // 设置密码
 func (this *userService) SetEmail(userId int64, email string) error {
-    email = strings.TrimSpace(email)
+	email = strings.TrimSpace(email)
 	if err := common.IsValidateEmail(email); err != nil {
 		return err
 	}

@@ -33,7 +33,7 @@ func initLogrus() {
 
 func initDB() {
 	// 连接数据库
-	simple.OpenDB(&simple.DBConfiguration{
+	_, _ = simple.OpenDB(&simple.DBConfiguration{
 		Dialect:        "mysql",
 		Url:            config.Conf.MySqlUrl,
 		MaxIdle:        5,

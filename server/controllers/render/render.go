@@ -1,7 +1,6 @@
 package render
 
 import (
-	"database/sql"
 	"html/template"
 	"strconv"
 	"strings"
@@ -24,9 +23,7 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 	if user == nil {
 		user = &model.User{}
 		user.Id = id
-		user.Username = sql.NullString{
-			String: strconv.FormatInt(id, 10),
-		}
+		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
 		user.Avatar = avatar.GetDefaultAvatar(id)
 		user.CreateTime = simple.NowTimestamp()
 	}
