@@ -7,12 +7,13 @@ import (
 type UserInfo struct {
 	Id          int64    `json:"id"`
 	Username    string   `json:"username"`
+	Email       string   `json:"email"`
 	Nickname    string   `json:"nickname"`
 	Avatar      string   `json:"avatar"`
-	Email       string   `json:"email"`
 	Type        int      `json:"type"`
 	Roles       []string `json:"roles"`
 	Description string   `json:"description"`
+	PasswordSet bool     `json:"passwordSet"` // 密码已设置
 	CreateTime  int64    `json:"createTime"`
 }
 

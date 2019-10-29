@@ -59,6 +59,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Type:        user.Type,
 		Roles:       roles,
 		Description: user.Description,
+		PasswordSet: len(user.Password) > 0,
 		CreateTime:  user.CreateTime,
 	}
 }

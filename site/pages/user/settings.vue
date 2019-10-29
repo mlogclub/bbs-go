@@ -39,7 +39,6 @@
                   </div>
                 </div>
 
-                <!--
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
                     <label class="label">邮箱</label>
@@ -57,7 +56,24 @@
                     </div>
                   </div>
                 </div>
-                -->
+
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">密码</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control has-icons-left">
+                        <label v-if="user.username">
+                          ${user.email}
+                        </label>
+                        <label v-else>
+                          <a>点击设置</a>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
