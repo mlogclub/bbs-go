@@ -57,10 +57,9 @@
                     <div class="field">
                       <div class="control has-icons-left">
                         <template v-if="user.passwordSet">
-                          <label>已设置密码&nbsp;</label>
+                          <label>密码已设置&nbsp;</label>
                           <a @click="showUpdatePassword = true">点击修改</a>
                         </template>
-                        <!-- <label v-if="user.passwordSet">已设置密码&nbsp;<a @click=" hangePassword = true">点击修改</a></label> -->
                         <a v-else @click="showSetPassword = true">点击设置</a>
                       </div>
                     </div>
