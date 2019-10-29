@@ -56,7 +56,7 @@ export default {
 
   .sec-header {
     padding: 0px;
-    height: 50px !important;
+    height: 48px !important;
   }
 
   .sec-main {

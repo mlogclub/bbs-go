@@ -7,6 +7,9 @@
     @select="handleSelect"
     :collapse="collapsed"
     class="side-menu"
+    background-color="#545c64"
+    text-color="#fff"
+    active-text-color="#ffd04b"
   >
     <template v-for="(item, index) in $router.options.routes">
       <el-submenu
