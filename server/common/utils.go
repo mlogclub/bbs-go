@@ -6,8 +6,8 @@ import (
 
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/model"
 )
 
 // 是否是正式环境
@@ -86,4 +86,11 @@ func IsValidateUsername(username string) bool {
 		return false
 	}
 	return true
+}
+
+// 验证是否是合法的邮箱
+func IsValidateEmail(email string) bool {
+	pattern := `^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$`
+	matched, _ := regexp.MatchString(pattern, email)
+	return matched
 }

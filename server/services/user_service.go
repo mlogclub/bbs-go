@@ -8,7 +8,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/validate"
 	"github.com/mlogclub/bbs-go/services/cache"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -79,29 +78,6 @@ func (this *userService) GetByUsername(username string) *model.User {
 	return repositories.UserRepository.GetByUsername(simple.GetDB(), username)
 }
 
-// 登录
-func (this *userService) SignIn(username, password string) (*model.User, error) {
-	if len(username) == 0 {
-		return nil, errors.New("用户名/邮箱不能为空")
-	}
-	if len(password) == 0 {
-		return nil, errors.New("密码不能为空")
-	}
-	var user *model.User = nil
-	if validate.IsEmail(username) { // 如果用户输入的是邮箱
-		user = this.GetByEmail(username)
-	} else {
-		user = this.GetByUsername(username)
-	}
-	if user == nil {
-		return nil, errors.New("用户不存在")
-	}
-	if !simple.ValidatePassword(user.Password, password) {
-		return nil, errors.New("密码错误")
-	}
-	return user, nil
-}
-
 // 注册
 func (this *userService) SignUp(username, email, password, rePassword, nickname, avatar string) (*model.User, error) {
 	username = strings.TrimSpace(username)
@@ -110,7 +86,7 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 	if !common.IsValidateUsername(username) {
 		return nil, errors.New("用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。")
 	}
-	if !validate.IsEmail(email) {
+	if !common.IsValidateEmail(email) {
 		return nil, errors.New("请输入合法的邮箱")
 	}
 	if len(password) == 0 {
@@ -153,6 +129,29 @@ func (this *userService) SignUp(username, email, password, rePassword, nickname,
 	}
 
 	cache.UserCache.Invalidate(user.Id)
+	return user, nil
+}
+
+// 登录
+func (this *userService) SignIn(username, password string) (*model.User, error) {
+	if len(username) == 0 {
+		return nil, errors.New("用户名/邮箱不能为空")
+	}
+	if len(password) == 0 {
+		return nil, errors.New("密码不能为空")
+	}
+	var user *model.User = nil
+	if common.IsValidateEmail(username) { // 如果用户输入的是邮箱
+		user = this.GetByEmail(username)
+	} else {
+		user = this.GetByUsername(username)
+	}
+	if user == nil {
+		return nil, errors.New("用户不存在")
+	}
+	if !simple.ValidatePassword(user.Password, password) {
+		return nil, errors.New("密码错误")
+	}
 	return user, nil
 }
 

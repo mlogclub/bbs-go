@@ -15,6 +15,20 @@ type LoginController struct {
 	Ctx iris.Context
 }
 
+// 注册
+func (this *LoginController) PostSignup() *simple.JsonResult {
+	// var (
+	// 	username   = this.Ctx.PostValueTrim("username")
+	// 	password   = this.Ctx.PostValueTrim("password")
+	// 	rePassword = this.Ctx.PostValueTrim("rePassword")
+	// 	nickname   = this.Ctx.PostValueTrim("nickname")
+	// 	ref        = this.Ctx.FormValue("ref")
+	// )
+	//
+	// TODO gaoyoubo @ 2019/10/29 
+	return simple.JsonSuccess()
+}
+
 // 用户名密码登录
 func (this *LoginController) PostSignin() *simple.JsonResult {
 	var (

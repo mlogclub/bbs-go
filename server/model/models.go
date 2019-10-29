@@ -71,10 +71,10 @@ const (
 
 type User struct {
 	Model
-	Username    string `gorm:"size:32" json:"username" form:"username"`
-	Nickname    string `gorm:"size:16" json:"nickname" form:"nickname"`
+	Username    string `gorm:"size:32;index:idx_username" json:"username" form:"username"`
+	Nickname    string `gorm:"size:16;" json:"nickname" form:"nickname"`
 	Avatar      string `gorm:"type:text" json:"avatar" form:"avatar"`
-	Email       string `gorm:"size:512;" json:"email" form:"email"`
+	Email       string `gorm:"size:512;index:idx_email" json:"email" form:"email"`
 	Password    string `gorm:"size:512" json:"password" form:"password"`
 	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`
 	Roles       string `gorm:"type:text" json:"roles" form:"roles"`
@@ -87,22 +87,22 @@ type User struct {
 type UserToken struct {
 	Model
 	Token      string `gorm:"size:32;unique;not null" json:"token" form:"token"`
-	UserId     int64  `gorm:"not null" json:"userId" form:"userId"`
+	UserId     int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`
 	ExpiredAt  int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
-	Status     int    `gorm:"not null" json:"status" form:"status"`
+	Status     int    `gorm:"not null;index:idx_status" json:"status" form:"status"`
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`
 }
 
 type ThirdAccount struct {
 	Model
-	UserId     int64  `json:"userId" form:"userId"`                               // 用户编号
-	Avatar     string `gorm:"size:1024" json:"avatar" form:"avatar"`              // 头像
-	Nickname   string `gorm:"size:32" json:"nickname" form:"nickname"`            // 昵称
-	ThirdType  string `gorm:"size:32;not null" json:"thirdType" form:"thirdType"` // 第三方类型
-	ThirdId    string `gorm:"size:64;not null" json:"thirdId" form:"thirdId"`     // 第三方唯一标识，例如：openId,unionId
-	ExtraData  string `gorm:"type:longtext" json:"extraData" form:"extraData"`    // 扩展数据
-	CreateTime int64  `json:"createTime" form:"createTime"`                       // 创建时间
-	UpdateTime int64  `json:"updateTime" form:"updateTime"`                       // 更新时间
+	UserId     int64  `gorm:"unique_index:idx_user_id_third_type;" json:"userId" form:"userId"`                                  // 用户编号
+	Avatar     string `gorm:"size:1024" json:"avatar" form:"avatar"`                                                             // 头像
+	Nickname   string `gorm:"size:32" json:"nickname" form:"nickname"`                                                           // 昵称
+	ThirdType  string `gorm:"size:32;not null;unique_index:idx_user_id_third_type,idx_third;" json:"thirdType" form:"thirdType"` // 第三方类型
+	ThirdId    string `gorm:"size:64;not null;unique_index:idx_third;" json:"thirdId" form:"thirdId"`                            // 第三方唯一标识，例如：openId,unionId
+	ExtraData  string `gorm:"type:longtext" json:"extraData" form:"extraData"`                                                   // 扩展数据
+	CreateTime int64  `json:"createTime" form:"createTime"`                                                                      // 创建时间
+	UpdateTime int64  `json:"updateTime" form:"updateTime"`                                                                      // 更新时间
 }
 
 // 分类
@@ -144,10 +144,10 @@ type Article struct {
 // 文章标签
 type ArticleTag struct {
 	Model
-	ArticleId  int64 `gorm:"not null" json:"articleId" form:"articleId"`            // 文章编号
-	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`                    // 标签编号
-	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"` // 状态：正常、删除
-	CreateTime int64 `json:"createTime" form:"createTime"`                          // 创建时间
+	ArticleId  int64 `gorm:"not null;index:idx_article_id;" json:"articleId" form:"articleId"` // 文章编号
+	TagId      int64 `gorm:"not null;index:idx_tag_id;" json:"tagId" form:"tagId"`             // 标签编号
+	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"`            // 状态：正常、删除
+	CreateTime int64 `json:"createTime" form:"createTime"`                                     // 创建时间
 }
 
 // 评论
@@ -174,46 +174,46 @@ type Favorite struct {
 // 主题
 type Topic struct {
 	Model
-	UserId          int64  `gorm:"not null" json:"userId" form:"userId"`             // 用户
-	Title           string `gorm:"size:128" json:"title" form:"title"`               // 标题
-	Content         string `gorm:"type:longtext" json:"content" form:"content"`      // 内容
-	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`       // 查看数量
-	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"` // 跟帖数量
-	LikeCount       int64  `gorm:"not null" json:"likeCount" form:"likeCount"`       // 点赞数量
-	Status          int    `gorm:"int" json:"status" form:"status"`                  // 状态：0：正常、1：删除
-	LastCommentTime int64  `json:"lastCommentTime" form:"lastCommentTime"`           // 最后回复时间
-	CreateTime      int64  `json:"createTime" form:"createTime"`                     // 创建时间
-	ExtraData       string `gorm:"type:text" json:"extraData" form:"extraData"`      // 扩展数据
+	UserId          int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"` // 用户
+	Title           string `gorm:"size:128" json:"title" form:"title"`                      // 标题
+	Content         string `gorm:"type:longtext" json:"content" form:"content"`             // 内容
+	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`              // 查看数量
+	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"`        // 跟帖数量
+	LikeCount       int64  `gorm:"not null" json:"likeCount" form:"likeCount"`              // 点赞数量
+	Status          int    `gorm:"index:idx_status;" json:"status" form:"status"`           // 状态：0：正常、1：删除
+	LastCommentTime int64  `json:"lastCommentTime" form:"lastCommentTime"`                  // 最后回复时间
+	CreateTime      int64  `json:"createTime" form:"createTime"`                            // 创建时间
+	ExtraData       string `gorm:"type:text" json:"extraData" form:"extraData"`             // 扩展数据
 }
 
 // 主题标签
 type TopicTag struct {
 	Model
-	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"`                // 主题编号
-	TagId      int64 `gorm:"not null" json:"tagId" form:"tagId"`                    // 标签编号
-	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"` // 状态：正常、删除
-	CreateTime int64 `json:"createTime" form:"createTime"`                          // 创建时间
+	TopicId    int64 `gorm:"not null;index:idx_topic_id;" json:"topicId" form:"topicId"` // 主题编号
+	TagId      int64 `gorm:"not null;index:idx_tag_id;" json:"tagId" form:"tagId"`       // 标签编号
+	Status     int64 `gorm:"not null;index:idx_status" json:"status" form:"status"`      // 状态：正常、删除
+	CreateTime int64 `json:"createTime" form:"createTime"`                               // 创建时间
 }
 
 // 话题点赞
 type TopicLike struct {
 	Model
-	UserId     int64 `gorm:"not null" json:"userId" form:"userId"`   // 用户
-	TopicId    int64 `gorm:"not null" json:"topicId" form:"topicId"` // 主题编号
-	CreateTime int64 `json:"createTime" form:"createTime"`           // 创建时间
+	UserId     int64 `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`    // 用户
+	TopicId    int64 `gorm:"not null;index:idx_topic_id;" json:"topicId" form:"topicId"` // 主题编号
+	CreateTime int64 `json:"createTime" form:"createTime"`                               // 创建时间
 }
 
 // 消息
 type Message struct {
 	Model
-	FromId       int64  `gorm:"not null" json:"fromId" form:"fromId"`              // 消息发送人
-	UserId       int64  `gorm:"not null" json:"userId" form:"userId"`              // 用户编号(消息接收人)
-	Content      string `gorm:"type:text;not null" json:"content" form:"content"`  // 消息内容
-	QuoteContent string `gorm:"type:text" json:"quoteContent" form:"quoteContent"` // 引用内容
-	Type         int    `gorm:"not null" json:"type" form:"type"`                  // 消息类型
-	ExtraData    string `gorm:"type:text" json:"extraData" form:"extraData"`       // 扩展数据
-	Status       int    `gorm:"not null" json:"status" form:"status"`              // 状态：0：未读、1：已读
-	CreateTime   int64  `json:"createTime" form:"createTime"`                      // 创建时间
+	FromId       int64  `gorm:"not null" json:"fromId" form:"fromId"`                    // 消息发送人
+	UserId       int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"` // 用户编号(消息接收人)
+	Content      string `gorm:"type:text;not null" json:"content" form:"content"`        // 消息内容
+	QuoteContent string `gorm:"type:text" json:"quoteContent" form:"quoteContent"`       // 引用内容
+	Type         int    `gorm:"not null" json:"type" form:"type"`                        // 消息类型
+	ExtraData    string `gorm:"type:text" json:"extraData" form:"extraData"`             // 扩展数据
+	Status       int    `gorm:"not null" json:"status" form:"status"`                    // 状态：0：未读、1：已读
+	CreateTime   int64  `json:"createTime" form:"createTime"`                            // 创建时间
 }
 
 // 系统配置
