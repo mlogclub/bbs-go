@@ -1,7 +1,7 @@
 
 <template>
-  <section>
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+  <section class="page-container">
+    <el-col :span="24" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.title" placeholder="标题"></el-input>

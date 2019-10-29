@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="page-container">
 
     <div class="config">
 
@@ -69,6 +69,6 @@ export default {
 
 <style scoped lang="scss">
   .config {
-    margin-top: 20px;
+    padding: 10px 0;
   }
 </style>

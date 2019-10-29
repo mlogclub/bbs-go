@@ -53,17 +53,6 @@ a {
   margin-right: 10px;
 }
 
-.toolbar {
-  background: #f2f2f2;
-  padding: 10px;
-  border-bottom: 1px solid #dfe6ec;
-  margin: 0 0 5px 0;
-
-  .el-form-item {
-    margin-bottom: 10px;
-  }
-}
-
 .main-content {
   padding: 0 10px;
 }

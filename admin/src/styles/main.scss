@@ -46,6 +46,10 @@
         border-top: none;
         border-bottom: none;
 
+        &:not(.tabclose) {
+          line-height: 40px;
+        }
+
         &:not(.actived):hover {
           background-color: #f6f6f6;
           box-shadow: none;
@@ -77,6 +81,25 @@
           }
         }
       }
+    }
+  }
+}
+
+.router-tab-container {
+  background: #f2f2f2;
+}
+
+.page-container {
+  margin: 10px;
+  background: #fff;
+  .toolbar {
+    // background: #f2f2f2;
+    border-bottom: 1px solid #e9ecf0;
+    margin: 0 0 5px 0;
+    padding: 10px 10px 0 10px;
+
+    .el-form-item {
+      margin-bottom: 10px;
     }
   }
 }
