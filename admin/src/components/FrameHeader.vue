@@ -2,11 +2,12 @@
   <el-col :span="24" class="header">
     <el-col :span="10" class="logo" :class="{'collapsed': collapsed}">
       <template v-if="collapsed">
-        <div class="logo-img"/>
+        <div class="logo-img" />
       </template>
       <template v-else>
         <div class="logo-name">
-          <img src="../assets/logo.png" /><span>{{sysName}}</span>
+          <img src="../assets/logo.png" />
+          <span>{{sysName}}</span>
         </div>
       </template>
     </el-col>
@@ -87,6 +88,57 @@ export default {
   color: #fff;
   border-bottom: 2px solid #fff;
 
+  .logo {
+    height: 48px;
+    line-height: 48px;
+    font-size: 22px;
+    background: #0085e8 !important;
+    width: $aside-width;
+    cursor: pointer;
+
+    // text-align: center;
+    // border-color: rgba(238, 241, 146, 0.3);
+    // border-color: #e6e6e6;
+    // border-right-width: 1px;
+    // border-right-style: solid;
+
+    &.collapsed {
+      width: 64px;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      background: url(../assets/logo.png);
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
+
+    .logo-name {
+      margin-left: 20px;
+      img {
+        width: 48px;
+        height: 48px;
+        margin: 0px;
+      }
+
+      span {
+        margin-left: 10px;
+      }
+    }
+
+    img {
+      width: 40px;
+      float: left;
+      margin: 10px 10px 10px 18px;
+    }
+
+    .txt {
+      color: #fff;
+    }
+  }
+
   .userinfo {
     text-align: right;
     padding-right: 35px;
@@ -103,56 +155,6 @@ export default {
         margin: 5px 0px 5px 10px;
         float: right;
       }
-    }
-  }
-
-  .logo {
-    height: 48px;
-    line-height: 48px;
-    font-size: 22px;
-    background: #0085e8 !important;
-    // text-align: center;
-    width: $aside-width;
-
-    &.collapsed {
-      width: 64px;
-    }
-
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      background: url(../assets/logo.png);
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center;
-    }
-
-    .logo-name{
-      margin-left: 20px;
-      img {
-        width: 48px;
-        height: 48px;
-        margin: 0px;
-      }
-
-      span {
-        margin-left: 10px;
-      }
-    }
-
-    // border-color: rgba(238, 241, 146, 0.3);
-    // border-color: #e6e6e6;
-    // border-right-width: 1px;
-    // border-right-style: solid;
-
-    img {
-      width: 40px;
-      float: left;
-      margin: 10px 10px 10px 18px;
-    }
-
-    .txt {
-      color: #fff;
     }
   }
 
