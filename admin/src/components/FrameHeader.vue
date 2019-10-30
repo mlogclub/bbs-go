@@ -1,6 +1,15 @@
 <template>
   <el-col :span="24" class="header">
-    <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">{{collapsed?'':sysName}}</el-col>
+    <el-col :span="10" class="logo" :class="{'collapsed': collapsed}">
+      <template v-if="collapsed">
+        <div class="logo-img"/>
+      </template>
+      <template v-else>
+        <div class="logo-name">
+          <img src="../assets/logo.png" /><span>{{sysName}}</span>
+        </div>
+      </template>
+    </el-col>
     <el-col :span="10">
       <div class="tools" @click.prevent="collapse">
         <i class="iconfont" :class="collapsed ? 'icon-right' : 'icon-left'"></i>
@@ -101,8 +110,35 @@ export default {
     height: 48px;
     line-height: 48px;
     font-size: 22px;
-    padding-left: 20px;
     background: #0085e8 !important;
+    // text-align: center;
+    width: $aside-width;
+
+    &.collapsed {
+      width: 64px;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      background: url(../assets/logo.png);
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
+
+    .logo-name{
+      margin-left: 20px;
+      img {
+        width: 48px;
+        height: 48px;
+        margin: 0px;
+      }
+
+      span {
+        margin-left: 10px;
+      }
+    }
 
     // border-color: rgba(238, 241, 146, 0.3);
     // border-color: #e6e6e6;
@@ -118,14 +154,6 @@ export default {
     .txt {
       color: #fff;
     }
-  }
-
-  .logo-width {
-    width: $aside-width;
-  }
-
-  .logo-collapse-width {
-    width: 65px;
   }
 
   .tools {

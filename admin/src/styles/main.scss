@@ -36,7 +36,8 @@
     ul.router-tab-nav {
       li.router-tab-item {
         font-size: 14px;
-        color: #000;
+        // color: #000;
+        color: rgb(102, 102, 102);
         line-height: 39px;
         max-width: 160px;
         text-overflow: ellipsis;
@@ -57,6 +58,7 @@
 
         &.actived {
           background-color: #f6f6f6;
+          color: #000;
           border: none;
           font-weight: 700;
 
