@@ -11,10 +11,10 @@
       label-width="100px"
     >
       <el-form-item label="用户名" prop="username">
-        <el-input type="text" v-model="username" autocomplete="off"></el-input>
+        <el-input type="text" v-model="username" autocomplete="off" @keyup.enter="submitForm"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="password" autocomplete="off"></el-input>
+        <el-input type="password" v-model="password" autocomplete="off" @keyup.enter="submitForm"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm()">登录</el-button>
