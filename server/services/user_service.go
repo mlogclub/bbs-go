@@ -157,7 +157,7 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 
 // Github账号登录
 func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
-	user := this.Get(thirdAccount.UserId)
+	user := this.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		return user, nil
 	}
@@ -175,9 +175,11 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 		if err != nil {
 			return err
 		}
-		err = repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id)
-		if err != nil {
-			return err
+		if user.Id > 0 {
+			err = repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})

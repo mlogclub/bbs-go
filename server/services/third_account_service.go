@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"strconv"
 	"strings"
 
@@ -79,6 +80,7 @@ func (this *thirdAccountService) GetOrCreateByGithub(code, state string) (*model
 
 	userInfoJson, _ := simple.FormatJson(userInfo)
 	account = &model.ThirdAccount{
+		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.AvatarUrl,
 		Nickname:   nickname,
 		ThirdType:  model.ThirdAccountTypeGithub,
@@ -107,6 +109,7 @@ func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.Thi
 
 	userInfoJson, _ := simple.FormatJson(userInfo)
 	account = &model.ThirdAccount{
+		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.FigureurlQQ1,
 		Nickname:   strings.TrimSpace(userInfo.Nickname),
 		ThirdType:  model.ThirdAccountTypeQQ,
