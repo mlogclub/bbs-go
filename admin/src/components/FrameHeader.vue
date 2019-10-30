@@ -96,12 +96,6 @@ export default {
     width: $aside-width;
     cursor: pointer;
 
-    // text-align: center;
-    // border-color: rgba(238, 241, 146, 0.3);
-    // border-color: #e6e6e6;
-    // border-right-width: 1px;
-    // border-right-style: solid;
-
     &.collapsed {
       width: 64px;
     }
