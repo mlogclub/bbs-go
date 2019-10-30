@@ -1,12 +1,14 @@
 package cache
 
 import (
+	"time"
+
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
-	"time"
+
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
 )
 
 type tagCache struct {
@@ -32,9 +34,6 @@ func newTagCache() *tagCache {
 				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
 				rows, e := simple.GetDB().Raw("select tag_id, count(*) c from t_article_tag where create_time > ?"+
 					" group by tag_id order by c desc limit 50", dateFrom).Rows()
-
-				// rows, e := simple.GetDB().Raw("select tag_id, count(*) c from t_article_tag" +
-				// 	" group by tag_id order by c desc limit 20").Rows()
 
 				if e != nil {
 					return
