@@ -2,6 +2,8 @@ module github.com/mlogclub/bbs-go
 
 go 1.13
 
+replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
+
 require (
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/aliyun/aliyun-oss-go-sdk v1.9.8
