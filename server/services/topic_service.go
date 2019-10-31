@@ -75,44 +75,6 @@ func (this *topicService) Delete(id int64) error {
 	return err
 }
 
-// 扫描
-func (this *topicService) Scan(cb ScanTopicCallback) {
-	var cursor int64
-	for {
-		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
-			cursor).Asc("id").Limit(100))
-		if err != nil {
-			break
-		}
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
-	}
-}
-
-// 倒序扫描
-func (this *topicService) ScanDesc(cb ScanTopicCallback) {
-	var cursor int64 = math.MaxInt64
-	for {
-		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
-			cursor).Desc("id").Limit(100))
-		if err != nil {
-			break
-		}
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
-	}
-}
-
 // 发表
 func (this *topicService) Publish(userId int64, tags []string, title, content string, extra map[string]interface{}) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
@@ -163,7 +125,6 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 	}
 
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.TopicRepository.Updates(simple.DB(), topicId, map[string]interface{}{
 			"title":   title,
 			"content": content,
@@ -171,7 +132,9 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 		if err != nil {
 			return err
 		}
-		repositories.TopicTagRepository.RemoveTopicTags(tx, topicId)      // 先删掉所有的标签
+
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)       // 创建帖子对应标签
+		repositories.TopicTagRepository.DeleteTopicTags(tx, topicId)      // 先删掉所有的标签
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
@@ -276,5 +239,43 @@ func (this *topicService) GenerateRss() {
 		logrus.Error(err)
 	} else {
 		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_rss.xml"), rss, false)
+	}
+}
+
+// 扫描
+func (this *topicService) Scan(cb ScanTopicCallback) {
+	var cursor int64
+	for {
+		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
+			cursor).Asc("id").Limit(100))
+		if err != nil {
+			break
+		}
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !cb(list) {
+			break
+		}
+	}
+}
+
+// 倒序扫描
+func (this *topicService) ScanDesc(cb ScanTopicCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
+			cursor).Desc("id").Limit(100))
+		if err != nil {
+			break
+		}
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !cb(list) {
+			break
+		}
 	}
 }

@@ -185,7 +185,6 @@ func (this *articleService) Edit(articleId int64, tags []string, title, content 
 	}
 
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.ArticleRepository.Updates(simple.DB(), articleId, map[string]interface{}{
 			"title":   title,
 			"content": content,
@@ -193,7 +192,8 @@ func (this *articleService) Edit(articleId int64, tags []string, title, content 
 		if err != nil {
 			return err
 		}
-		repositories.ArticleTagRepository.RemoveArticleTags(tx, articleId)      // 先删掉所有的标签
+		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)             // 创建文章对应标签
+		repositories.ArticleTagRepository.DeleteArticleTags(tx, articleId)      // 先删掉所有的标签
 		repositories.ArticleTagRepository.AddArticleTags(tx, articleId, tagIds) // 然后重新添加标签
 		return nil
 	})

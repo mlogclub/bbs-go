@@ -1,11 +1,13 @@
 package admin
 
 import (
+	"strconv"
+
 	"github.com/kataras/iris"
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/simple"
-	"strconv"
 )
 
 type TagController struct {
@@ -81,54 +83,4 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
-}
-
-func (this *TagController) AnyListAll() *simple.JsonResult {
-	categoryId, err := strconv.ParseInt(this.Ctx.FormValue("categoryId"), 10, 64)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	if categoryId < 0 {
-		return simple.JsonErrorMsg("请指定categoryId")
-	}
-	list, err := services.TagService.ListAll(categoryId)
-	if err != nil {
-		return simple.JsonData([]interface{}{})
-	}
-	return simple.JsonData(list)
-}
-
-// 标签数据级联选择器
-func (this *TagController) GetCascader() *simple.JsonResult {
-	categories, err := services.CategoryService.GetCategories()
-	if err != nil {
-		return simple.JsonErrorMsg("数据加载失败")
-	}
-
-	var results []map[string]interface{}
-
-	for _, cat := range categories {
-		tags, err := services.TagService.ListAll(cat.Id)
-		if err != nil || len(tags) == 0 {
-			continue
-		}
-
-		var tagOptions []map[string]interface{}
-		for _, tag := range tags {
-			tagOption := make(map[string]interface{})
-			tagOption["value"] = tag.Id
-			tagOption["label"] = tag.Name
-			tagOptions = append(tagOptions, tagOption)
-		}
-
-		option := make(map[string]interface{})
-		option["value"] = cat.Id
-		option["label"] = cat.Name
-		option["children"] = tagOptions
-
-		results = append(results, option)
-	}
-
-	return simple.JsonData(results)
-
 }

@@ -77,10 +77,6 @@ func (this *tagService) GetByName(name string) *model.Tag {
 	return repositories.TagRepository.FindByName(name)
 }
 
-func (this *tagService) ListAll(categoryId int64) ([]model.Tag, error) {
-	return repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("category_id = ? and status = ?", categoryId, model.TagStatusOk))
-}
-
 func (this *tagService) GetTags() []model.TagResponse {
 	list, err := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
 	if err != nil {

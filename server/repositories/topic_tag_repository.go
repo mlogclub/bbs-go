@@ -87,7 +87,6 @@ func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds 
 	if topicId <= 0 || len(tagIds) == 0 {
 		return
 	}
-
 	for _, tagId := range tagIds {
 		_ = this.Create(db, &model.TopicTag{
 			TopicId:    topicId,
@@ -97,10 +96,9 @@ func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds 
 	}
 }
 
-func (this *topicTagRepository) RemoveTopicTags(db *gorm.DB, topicId int64) {
+func (this *topicTagRepository) DeleteTopicTags(db *gorm.DB, topicId int64) {
 	if topicId <= 0 {
 		return
 	}
-
 	db.Where("topic_id = ?", topicId).Delete(model.TopicTag{})
 }
