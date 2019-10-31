@@ -24,11 +24,11 @@ func (this *subjectService) Take(where ...interface{}) *model.Subject {
 	return repositories.SubjectRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *subjectService) QueryCnd(cnd *simple.QueryCnd) (list []model.Subject, err error) {
+func (this *subjectService) QueryCnd(cnd *simple.SqlCnd) (list []model.Subject, err error) {
 	return repositories.SubjectRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *subjectService) Query(params *simple.ParamQueries) (list []model.Subject, paging *simple.Paging) {
+func (this *subjectService) Query(params *simple.QueryParams) (list []model.Subject, paging *simple.Paging) {
 	return repositories.SubjectRepository.Query(simple.GetDB(), queries)
 }
 

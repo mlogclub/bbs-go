@@ -27,11 +27,11 @@ func (this *favoriteService) Take(where ...interface{}) *model.Favorite {
 	return repositories.FavoriteRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *favoriteService) QueryCnd(cnd *simple.QueryCnd) (list []model.Favorite, err error) {
+func (this *favoriteService) QueryCnd(cnd *simple.SqlCnd) (list []model.Favorite, err error) {
 	return repositories.FavoriteRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *favoriteService) Query(params *simple.ParamQueries) (list []model.Favorite, paging *simple.Paging) {
+func (this *favoriteService) Query(params *simple.QueryParams) (list []model.Favorite, paging *simple.Paging) {
 	return repositories.FavoriteRepository.Query(simple.GetDB(), queries)
 }
 

@@ -24,11 +24,11 @@ func (this *collectRuleService) Take(where ...interface{}) *model.CollectRule {
 	return repositories.CollectRuleRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *collectRuleService) QueryCnd(cnd *simple.QueryCnd) (list []model.CollectRule, err error) {
+func (this *collectRuleService) QueryCnd(cnd *simple.SqlCnd) (list []model.CollectRule, err error) {
 	return repositories.CollectRuleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *collectRuleService) Query(params *simple.ParamQueries) (list []model.CollectRule, paging *simple.Paging) {
+func (this *collectRuleService) Query(params *simple.QueryParams) (list []model.CollectRule, paging *simple.Paging) {
 	return repositories.CollectRuleRepository.Query(simple.GetDB(), queries)
 }
 

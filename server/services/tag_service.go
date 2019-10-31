@@ -25,11 +25,11 @@ func (this *tagService) Take(where ...interface{}) *model.Tag {
 	return repositories.TagRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *tagService) QueryCnd(cnd *simple.QueryCnd) (list []model.Tag, err error) {
+func (this *tagService) QueryCnd(cnd *simple.SqlCnd) (list []model.Tag, err error) {
 	return repositories.TagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *tagService) Query(params *simple.ParamQueries) (list []model.Tag, paging *simple.Paging) {
+func (this *tagService) Query(params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
 	return repositories.TagRepository.Query(simple.GetDB(), queries)
 }
 

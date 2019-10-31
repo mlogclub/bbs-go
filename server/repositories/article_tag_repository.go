@@ -31,12 +31,12 @@ func (this *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model
 	return ret
 }
 
-func (this *articleTagRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.ArticleTag, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *articleTagRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *articleTagRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.ArticleTag, paging *simple.Paging) {
+func (this *articleTagRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.ArticleTag{}).Count(&params.Paging.Total)
 	paging = params.Paging

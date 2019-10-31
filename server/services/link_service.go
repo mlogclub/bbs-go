@@ -24,11 +24,11 @@ func (this *linkService) Take(where ...interface{}) *model.Link {
 	return repositories.LinkRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *linkService) QueryCnd(cnd *simple.QueryCnd) (list []model.Link, err error) {
+func (this *linkService) QueryCnd(cnd *simple.SqlCnd) (list []model.Link, err error) {
 	return repositories.LinkRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *linkService) Query(params *simple.ParamQueries) (list []model.Link, paging *simple.Paging) {
+func (this *linkService) Query(params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
 	return repositories.LinkRepository.Query(simple.GetDB(), queries)
 }
 

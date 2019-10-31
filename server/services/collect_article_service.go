@@ -30,11 +30,11 @@ func (this *collectArticleService) Take(where ...interface{}) *model.CollectArti
 	return repositories.CollectArticleRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *collectArticleService) QueryCnd(cnd *simple.QueryCnd) (list []model.CollectArticle, err error) {
+func (this *collectArticleService) QueryCnd(cnd *simple.SqlCnd) (list []model.CollectArticle, err error) {
 	return repositories.CollectArticleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *collectArticleService) Query(params *simple.ParamQueries) (list []model.CollectArticle, paging *simple.Paging) {
+func (this *collectArticleService) Query(params *simple.QueryParams) (list []model.CollectArticle, paging *simple.Paging) {
 	return repositories.CollectArticleRepository.Query(simple.GetDB(), queries)
 }
 

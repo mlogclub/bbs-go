@@ -31,12 +31,12 @@ func (this *sysConfigRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *sysConfigRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.SysConfig, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *sysConfigRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *sysConfigRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
+func (this *sysConfigRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.SysConfig{}).Count(&params.Paging.Total)
 	paging = params.Paging

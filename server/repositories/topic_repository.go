@@ -31,12 +31,12 @@ func (this *topicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topi
 	return ret
 }
 
-func (this *topicRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Topic, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *topicRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Topic, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *topicRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
+func (this *topicRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.Topic{}).Count(&params.Paging.Total)
 	paging = params.Paging

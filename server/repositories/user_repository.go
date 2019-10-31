@@ -32,12 +32,12 @@ func (this *userRepository) Take(db *gorm.DB, where ...interface{}) *model.User 
 	return ret
 }
 
-func (this *userRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.User, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *userRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.User, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *userRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
+func (this *userRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.User{}).Count(&params.Paging.Total)
 	paging = params.Paging

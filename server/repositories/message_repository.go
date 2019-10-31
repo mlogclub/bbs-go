@@ -31,12 +31,12 @@ func (this *messageRepository) Take(db *gorm.DB, where ...interface{}) *model.Me
 	return ret
 }
 
-func (this *messageRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Message, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *messageRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Message, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *messageRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
+func (this *messageRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.Message{}).Count(&params.Paging.Total)
 	paging = params.Paging

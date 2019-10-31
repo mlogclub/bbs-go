@@ -32,12 +32,12 @@ func (this *thirdAccountRepository) Take(db *gorm.DB, where ...interface{}) *mod
 	return ret
 }
 
-func (this *thirdAccountRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.ThirdAccount, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *thirdAccountRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *thirdAccountRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
+func (this *thirdAccountRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
     params.StartCount(db).Model(&model.ThirdAccount{}).Count(&params.Paging.Total)
 	paging = params.Paging

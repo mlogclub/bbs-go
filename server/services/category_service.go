@@ -25,11 +25,11 @@ func (this *categoryService) Take(where ...interface{}) *model.Category {
 	return repositories.CategoryRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *categoryService) QueryCnd(cnd *simple.QueryCnd) (list []model.Category, err error) {
+func (this *categoryService) QueryCnd(cnd *simple.SqlCnd) (list []model.Category, err error) {
 	return repositories.CategoryRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *categoryService) Query(params *simple.ParamQueries) (list []model.Category, paging *simple.Paging) {
+func (this *categoryService) Query(params *simple.QueryParams) (list []model.Category, paging *simple.Paging) {
 	return repositories.CategoryRepository.Query(simple.GetDB(), queries)
 }
 

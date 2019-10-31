@@ -36,11 +36,11 @@ func (this *projectService) Take(where ...interface{}) *model.Project {
 	return repositories.ProjectRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *projectService) QueryCnd(cnd *simple.QueryCnd) (list []model.Project, err error) {
+func (this *projectService) QueryCnd(cnd *simple.SqlCnd) (list []model.Project, err error) {
 	return repositories.ProjectRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *projectService) Query(params *simple.ParamQueries) (list []model.Project, paging *simple.Paging) {
+func (this *projectService) Query(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
 	return repositories.ProjectRepository.Query(simple.GetDB(), queries)
 }
 

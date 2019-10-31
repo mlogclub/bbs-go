@@ -24,11 +24,11 @@ func (this *topicTagService) Take(where ...interface{}) *model.TopicTag {
 	return repositories.TopicTagRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *topicTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.TopicTag, err error) {
+func (this *topicTagService) QueryCnd(cnd *simple.SqlCnd) (list []model.TopicTag, err error) {
 	return repositories.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *topicTagService) Query(params *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
+func (this *topicTagService) Query(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
 	return repositories.TopicTagRepository.Query(simple.GetDB(), queries)
 }
 

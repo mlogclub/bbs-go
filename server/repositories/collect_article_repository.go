@@ -32,12 +32,12 @@ func (this *collectArticleRepository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *collectArticleRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.CollectArticle, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *collectArticleRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectArticle, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *collectArticleRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.CollectArticle, paging *simple.Paging) {
+func (this *collectArticleRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.CollectArticle, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
     params.StartCount(db).Model(&model.CollectArticle{}).Count(&params.Paging.Total)
 	paging = params.Paging

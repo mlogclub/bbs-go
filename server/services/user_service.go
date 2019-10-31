@@ -32,11 +32,11 @@ func (this *userService) Take(where ...interface{}) *model.User {
 	return repositories.UserRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *userService) QueryCnd(cnd *simple.QueryCnd) (list []model.User, err error) {
+func (this *userService) QueryCnd(cnd *simple.SqlCnd) (list []model.User, err error) {
 	return repositories.UserRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *userService) Query(params *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
+func (this *userService) Query(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
 	return repositories.UserRepository.Query(simple.GetDB(), queries)
 }
 

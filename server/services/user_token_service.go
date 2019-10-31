@@ -93,10 +93,10 @@ func (this *userTokenService) Take(where ...interface{}) *model.UserToken {
 	return repositories.UserTokenRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *userTokenService) QueryCnd(cnd *simple.QueryCnd) (list []model.UserToken, err error) {
+func (this *userTokenService) QueryCnd(cnd *simple.SqlCnd) (list []model.UserToken, err error) {
 	return repositories.UserTokenRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *userTokenService) Query(params *simple.ParamQueries) (list []model.UserToken, paging *simple.Paging) {
+func (this *userTokenService) Query(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
 	return repositories.UserTokenRepository.Query(simple.GetDB(), queries)
 }

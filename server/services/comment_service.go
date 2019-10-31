@@ -27,11 +27,11 @@ func (this *commentService) Take(where ...interface{}) *model.Comment {
 	return repositories.CommentRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *commentService) QueryCnd(cnd *simple.QueryCnd) (list []model.Comment, err error) {
+func (this *commentService) QueryCnd(cnd *simple.SqlCnd) (list []model.Comment, err error) {
 	return repositories.CommentRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *commentService) Query(params *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
+func (this *commentService) Query(params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {
 	return repositories.CommentRepository.Query(simple.GetDB(), queries)
 }
 

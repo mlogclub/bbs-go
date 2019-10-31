@@ -30,11 +30,11 @@ func (this *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount 
 	return repositories.ThirdAccountRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *thirdAccountService) QueryCnd(cnd *simple.QueryCnd) (list []model.ThirdAccount, err error) {
+func (this *thirdAccountService) QueryCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
 	return repositories.ThirdAccountRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *thirdAccountService) Query(params *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
+func (this *thirdAccountService) Query(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
 	return repositories.ThirdAccountRepository.Query(simple.GetDB(), queries)
 }
 

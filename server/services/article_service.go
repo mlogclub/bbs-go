@@ -44,11 +44,11 @@ func (this *articleService) Take(where ...interface{}) *model.Article {
 	return repositories.ArticleRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *articleService) QueryCnd(cnd *simple.QueryCnd) (list []model.Article, err error) {
+func (this *articleService) QueryCnd(cnd *simple.SqlCnd) (list []model.Article, err error) {
 	return repositories.ArticleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *articleService) Query(params *simple.ParamQueries) (list []model.Article, paging *simple.Paging) {
+func (this *articleService) Query(params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
 	return repositories.ArticleRepository.Query(simple.GetDB(), queries)
 }
 

@@ -10,7 +10,6 @@ require (
 	github.com/antchfx/xpath v1.0.0 // indirect
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/emirpasic/gods v1.12.0
-	github.com/flosch/pongo2 v0.0.0-20190505152737-8914e1cf9164 // indirect
 	github.com/go-resty/resty/v2 v2.0.0
 	github.com/goburrow/cache v0.1.0
 	github.com/gobwas/glob v0.2.3 // indirect
@@ -19,14 +18,13 @@ require (
 	github.com/gorilla/feeds v1.1.0
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware v0.0.0-20181021162728-8bd5d51b3c2e
-	github.com/jinzhu/gorm v1.9.10
+	github.com/jinzhu/gorm v1.9.11
 	github.com/jordan-wright/email v0.0.0-20190218024454-3ea4d25e7cf8
-	github.com/kataras/golog v0.0.0-20190624001437-99c81de45f40 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
-	github.com/mlogclub/simple v1.0.27
+	github.com/mlogclub/simple v1.0.32
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
@@ -37,5 +35,5 @@ require (
 	github.com/tidwall/match v1.0.1 // indirect
 	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a
 	gopkg.in/resty.v1 v1.12.0
-	gopkg.in/yaml.v2 v2.2.2
+	gopkg.in/yaml.v2 v2.2.4
 )

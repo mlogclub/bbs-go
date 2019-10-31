@@ -26,11 +26,11 @@ func (this *sysConfigService) Take(where ...interface{}) *model.SysConfig {
 	return repositories.SysConfigRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *sysConfigService) QueryCnd(cnd *simple.QueryCnd) (list []model.SysConfig, err error) {
+func (this *sysConfigService) QueryCnd(cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
 	return repositories.SysConfigRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *sysConfigService) Query(params *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
+func (this *sysConfigService) Query(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
 	return repositories.SysConfigRepository.Query(simple.GetDB(), queries)
 }
 

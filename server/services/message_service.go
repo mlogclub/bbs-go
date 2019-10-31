@@ -28,11 +28,11 @@ func (this *messageService) Take(where ...interface{}) *model.Message {
 	return repositories.MessageRepository.Take(simple.GetDB(), where...)
 }
 
-func (this *messageService) QueryCnd(cnd *simple.QueryCnd) (list []model.Message, err error) {
+func (this *messageService) QueryCnd(cnd *simple.SqlCnd) (list []model.Message, err error) {
 	return repositories.MessageRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *messageService) Query(params *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
+func (this *messageService) Query(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
 	return repositories.MessageRepository.Query(simple.GetDB(), queries)
 }
 

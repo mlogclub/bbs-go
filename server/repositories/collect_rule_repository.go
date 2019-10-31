@@ -32,12 +32,12 @@ func (this *collectRuleRepository) Take(db *gorm.DB, where ...interface{}) *mode
 	return ret
 }
 
-func (this *collectRuleRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.CollectRule, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *collectRuleRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectRule, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *collectRuleRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.CollectRule, paging *simple.Paging) {
+func (this *collectRuleRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.CollectRule, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
     params.StartCount(db).Model(&model.CollectRule{}).Count(&params.Paging.Total)
 	paging = params.Paging

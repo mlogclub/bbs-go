@@ -32,12 +32,12 @@ func (this *commentRepository) Take(db *gorm.DB, where ...interface{}) *model.Co
 	return ret
 }
 
-func (this *commentRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.Comment, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *commentRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Comment, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
-func (this *commentRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
+func (this *commentRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {
 	params.StartQuery(db).Find(&list)
 	params.StartCount(db).Model(&model.Comment{}).Count(&params.Paging.Total)
 	paging = params.Paging
