@@ -97,6 +97,6 @@ func (this *userTokenService) QueryCnd(cnd *simple.QueryCnd) (list []model.UserT
 	return repositories.UserTokenRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *userTokenService) Query(queries *simple.ParamQueries) (list []model.UserToken, paging *simple.Paging) {
+func (this *userTokenService) Query(params *simple.ParamQueries) (list []model.UserToken, paging *simple.Paging) {
 	return repositories.UserTokenRepository.Query(simple.GetDB(), queries)
 }

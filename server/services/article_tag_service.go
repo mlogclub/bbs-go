@@ -28,7 +28,7 @@ func (this *articleTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.Arti
 	return repositories.ArticleTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *articleTagService) Query(queries *simple.ParamQueries) (list []model.ArticleTag, paging *simple.Paging) {
+func (this *articleTagService) Query(params *simple.ParamQueries) (list []model.ArticleTag, paging *simple.Paging) {
 	return repositories.ArticleTagRepository.Query(simple.GetDB(), queries)
 }
 

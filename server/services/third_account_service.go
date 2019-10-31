@@ -34,7 +34,7 @@ func (this *thirdAccountService) QueryCnd(cnd *simple.QueryCnd) (list []model.Th
 	return repositories.ThirdAccountRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *thirdAccountService) Query(queries *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
+func (this *thirdAccountService) Query(params *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
 	return repositories.ThirdAccountRepository.Query(simple.GetDB(), queries)
 }
 

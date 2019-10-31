@@ -44,10 +44,10 @@ func (this *userTokenRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (li
 	return
 }
 
-func (this *userTokenRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.UserToken, paging *simple.Paging) {
-	queries.StartQuery(db).Find(&list)
-	queries.StartCount(db).Model(&model.UserToken{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *userTokenRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.UserToken, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+	params.StartCount(db).Model(&model.UserToken{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 

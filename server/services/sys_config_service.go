@@ -30,7 +30,7 @@ func (this *sysConfigService) QueryCnd(cnd *simple.QueryCnd) (list []model.SysCo
 	return repositories.SysConfigRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *sysConfigService) Query(queries *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
+func (this *sysConfigService) Query(params *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
 	return repositories.SysConfigRepository.Query(simple.GetDB(), queries)
 }
 

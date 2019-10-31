@@ -48,7 +48,7 @@ func (this *articleService) QueryCnd(cnd *simple.QueryCnd) (list []model.Article
 	return repositories.ArticleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *articleService) Query(queries *simple.ParamQueries) (list []model.Article, paging *simple.Paging) {
+func (this *articleService) Query(params *simple.ParamQueries) (list []model.Article, paging *simple.Paging) {
 	return repositories.ArticleRepository.Query(simple.GetDB(), queries)
 }
 

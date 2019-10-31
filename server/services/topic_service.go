@@ -40,7 +40,7 @@ func (this *topicService) QueryCnd(cnd *simple.QueryCnd) (list []model.Topic, er
 	return repositories.TopicRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *topicService) Query(queries *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
+func (this *topicService) Query(params *simple.ParamQueries) (list []model.Topic, paging *simple.Paging) {
 	return repositories.TopicRepository.Query(simple.GetDB(), queries)
 }
 

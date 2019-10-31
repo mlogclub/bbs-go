@@ -28,7 +28,7 @@ func (this *collectRuleService) QueryCnd(cnd *simple.QueryCnd) (list []model.Col
 	return repositories.CollectRuleRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *collectRuleService) Query(queries *simple.ParamQueries) (list []model.CollectRule, paging *simple.Paging) {
+func (this *collectRuleService) Query(params *simple.ParamQueries) (list []model.CollectRule, paging *simple.Paging) {
 	return repositories.CollectRuleRepository.Query(simple.GetDB(), queries)
 }
 

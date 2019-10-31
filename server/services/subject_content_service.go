@@ -31,7 +31,7 @@ func (this *subjectContentService) QueryCnd(cnd *simple.QueryCnd) (list []model.
 	return repositories.SubjectContentRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *subjectContentService) Query(queries *simple.ParamQueries) (list []model.SubjectContent, paging *simple.Paging) {
+func (this *subjectContentService) Query(params *simple.ParamQueries) (list []model.SubjectContent, paging *simple.Paging) {
 	return repositories.SubjectContentRepository.Query(simple.GetDB(), queries)
 }
 

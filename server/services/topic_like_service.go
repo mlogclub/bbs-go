@@ -31,7 +31,7 @@ func (this *topicLikeService) QueryCnd(cnd *simple.QueryCnd) (list []model.Topic
 	return repositories.TopicLikeRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *topicLikeService) Query(queries *simple.ParamQueries) (list []model.TopicLike, paging *simple.Paging) {
+func (this *topicLikeService) Query(params *simple.ParamQueries) (list []model.TopicLike, paging *simple.Paging) {
 	return repositories.TopicLikeRepository.Query(simple.GetDB(), queries)
 }
 

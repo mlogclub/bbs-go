@@ -31,7 +31,7 @@ func (this *commentService) QueryCnd(cnd *simple.QueryCnd) (list []model.Comment
 	return repositories.CommentRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *commentService) Query(queries *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
+func (this *commentService) Query(params *simple.ParamQueries) (list []model.Comment, paging *simple.Paging) {
 	return repositories.CommentRepository.Query(simple.GetDB(), queries)
 }
 

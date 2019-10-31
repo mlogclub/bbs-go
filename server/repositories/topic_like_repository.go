@@ -37,10 +37,10 @@ func (this *topicLikeRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (li
 	return
 }
 
-func (this *topicLikeRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.TopicLike, paging *simple.Paging) {
-	queries.StartQuery(db).Find(&list)
-    queries.StartCount(db).Model(&model.TopicLike{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *topicLikeRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.TopicLike, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+    params.StartCount(db).Model(&model.TopicLike{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 

@@ -32,7 +32,7 @@ func (this *messageService) QueryCnd(cnd *simple.QueryCnd) (list []model.Message
 	return repositories.MessageRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *messageService) Query(queries *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
+func (this *messageService) Query(params *simple.ParamQueries) (list []model.Message, paging *simple.Paging) {
 	return repositories.MessageRepository.Query(simple.GetDB(), queries)
 }
 

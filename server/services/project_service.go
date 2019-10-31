@@ -40,7 +40,7 @@ func (this *projectService) QueryCnd(cnd *simple.QueryCnd) (list []model.Project
 	return repositories.ProjectRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *projectService) Query(queries *simple.ParamQueries) (list []model.Project, paging *simple.Paging) {
+func (this *projectService) Query(params *simple.ParamQueries) (list []model.Project, paging *simple.Paging) {
 	return repositories.ProjectRepository.Query(simple.GetDB(), queries)
 }
 

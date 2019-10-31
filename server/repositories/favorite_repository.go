@@ -37,10 +37,10 @@ func (this *favoriteRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (lis
 	return
 }
 
-func (this *favoriteRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.Favorite, paging *simple.Paging) {
-	queries.StartQuery(db).Find(&list)
-	queries.StartCount(db).Model(&model.Favorite{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *favoriteRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.Favorite, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+	params.StartCount(db).Model(&model.Favorite{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 

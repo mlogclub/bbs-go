@@ -28,7 +28,7 @@ func (this *subjectService) QueryCnd(cnd *simple.QueryCnd) (list []model.Subject
 	return repositories.SubjectRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *subjectService) Query(queries *simple.ParamQueries) (list []model.Subject, paging *simple.Paging) {
+func (this *subjectService) Query(params *simple.ParamQueries) (list []model.Subject, paging *simple.Paging) {
 	return repositories.SubjectRepository.Query(simple.GetDB(), queries)
 }
 

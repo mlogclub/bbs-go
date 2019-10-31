@@ -29,7 +29,7 @@ func (this *categoryService) QueryCnd(cnd *simple.QueryCnd) (list []model.Catego
 	return repositories.CategoryRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *categoryService) Query(queries *simple.ParamQueries) (list []model.Category, paging *simple.Paging) {
+func (this *categoryService) Query(params *simple.ParamQueries) (list []model.Category, paging *simple.Paging) {
 	return repositories.CategoryRepository.Query(simple.GetDB(), queries)
 }
 

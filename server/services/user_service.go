@@ -36,7 +36,7 @@ func (this *userService) QueryCnd(cnd *simple.QueryCnd) (list []model.User, err 
 	return repositories.UserRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *userService) Query(queries *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
+func (this *userService) Query(params *simple.ParamQueries) (list []model.User, paging *simple.Paging) {
 	return repositories.UserRepository.Query(simple.GetDB(), queries)
 }
 

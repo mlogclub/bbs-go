@@ -29,7 +29,7 @@ func (this *tagService) QueryCnd(cnd *simple.QueryCnd) (list []model.Tag, err er
 	return repositories.TagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *tagService) Query(queries *simple.ParamQueries) (list []model.Tag, paging *simple.Paging) {
+func (this *tagService) Query(params *simple.ParamQueries) (list []model.Tag, paging *simple.Paging) {
 	return repositories.TagRepository.Query(simple.GetDB(), queries)
 }
 

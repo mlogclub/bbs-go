@@ -31,7 +31,7 @@ func (this *favoriteService) QueryCnd(cnd *simple.QueryCnd) (list []model.Favori
 	return repositories.FavoriteRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *favoriteService) Query(queries *simple.ParamQueries) (list []model.Favorite, paging *simple.Paging) {
+func (this *favoriteService) Query(params *simple.ParamQueries) (list []model.Favorite, paging *simple.Paging) {
 	return repositories.FavoriteRepository.Query(simple.GetDB(), queries)
 }
 

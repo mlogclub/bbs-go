@@ -28,7 +28,7 @@ func (this *linkService) QueryCnd(cnd *simple.QueryCnd) (list []model.Link, err 
 	return repositories.LinkRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *linkService) Query(queries *simple.ParamQueries) (list []model.Link, paging *simple.Paging) {
+func (this *linkService) Query(params *simple.ParamQueries) (list []model.Link, paging *simple.Paging) {
 	return repositories.LinkRepository.Query(simple.GetDB(), queries)
 }
 

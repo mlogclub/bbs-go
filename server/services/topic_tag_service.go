@@ -28,7 +28,7 @@ func (this *topicTagService) QueryCnd(cnd *simple.QueryCnd) (list []model.TopicT
 	return repositories.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *topicTagService) Query(queries *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
+func (this *topicTagService) Query(params *simple.ParamQueries) (list []model.TopicTag, paging *simple.Paging) {
 	return repositories.TopicTagRepository.Query(simple.GetDB(), queries)
 }
 

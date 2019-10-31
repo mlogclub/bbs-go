@@ -36,10 +36,10 @@ func (this *sysConfigRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (li
 	return
 }
 
-func (this *sysConfigRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
-	queries.StartQuery(db).Find(&list)
-	queries.StartCount(db).Model(&model.SysConfig{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *sysConfigRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.SysConfig, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+	params.StartCount(db).Model(&model.SysConfig{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 

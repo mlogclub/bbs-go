@@ -37,10 +37,10 @@ func (this *thirdAccountRepository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) 
 	return
 }
 
-func (this *thirdAccountRepository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
-	queries.StartQuery(db).Find(&list)
-    queries.StartCount(db).Model(&model.ThirdAccount{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *thirdAccountRepository) Query(db *gorm.DB, params *simple.ParamQueries) (list []model.ThirdAccount, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+    params.StartCount(db).Model(&model.ThirdAccount{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 
