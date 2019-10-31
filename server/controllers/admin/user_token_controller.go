@@ -22,6 +22,6 @@ func (this *UserTokenController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *UserTokenController) AnyList() *simple.JsonResult {
-	list, paging := services.UserTokenService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.UserTokenService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }

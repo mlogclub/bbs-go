@@ -18,7 +18,7 @@ func newArticleTagCache() *articleTagCache {
 	return &articleTagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articleTags, err := repositories.ArticleTagRepository.GetByArticleId(simple.GetDB(), Key2Int64(key))
+				articleTags, err := repositories.ArticleTagRepository.GetByArticleId(simple.DB(), Key2Int64(key))
 				if err != nil {
 					logrus.Error(err)
 					return

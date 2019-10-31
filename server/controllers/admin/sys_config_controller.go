@@ -21,7 +21,7 @@ func (this *SysConfigController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *SysConfigController) AnyList() *simple.JsonResult {
-	list, paging := services.SysConfigService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.SysConfigService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

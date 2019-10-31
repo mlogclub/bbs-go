@@ -162,7 +162,7 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 
 // 最近文章
 func (this *ArticleController) GetRecent() *simple.JsonResult {
-	articles, err := services.ArticleService.QueryCnd(simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(10))
+	articles, err := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -175,7 +175,8 @@ func (this *ArticleController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	articles, err := services.ArticleService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.ArticleStatusPublished).Order("id desc").Size(10))
+	articles, err := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
+		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -190,7 +191,7 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 	}
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
-	articles, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
+	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))
@@ -201,7 +202,7 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 // 文章列表
 func (this *ArticleController) GetArticles() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-	articles, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
+	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
@@ -219,7 +220,7 @@ func (this *ArticleController) GetTagArticles() *simple.JsonResult {
 func (this *ArticleController) GetCategoryArticles() *simple.JsonResult {
 	categoryId := simple.FormValueInt64Default(this.Ctx, "categoryId", 0)
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-	articles, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
+	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("category_id", categoryId).
 		Eq("status", model.ArticleStatusPublished).
 		Page(page, 20).Desc("id"))

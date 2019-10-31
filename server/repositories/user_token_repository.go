@@ -39,15 +39,30 @@ func (this *userTokenRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *userTokenRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *userTokenRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *userTokenRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-	params.StartCount(db).Model(&model.UserToken{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *userTokenRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *userTokenRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.UserToken{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 

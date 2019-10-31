@@ -29,39 +29,43 @@ func newTopicService() *topicService {
 type topicService struct{}
 
 func (this *topicService) Get(id int64) *model.Topic {
-	return repositories.TopicRepository.Get(simple.GetDB(), id)
+	return repositories.TopicRepository.Get(simple.DB(), id)
 }
 
 func (this *topicService) Take(where ...interface{}) *model.Topic {
-	return repositories.TopicRepository.Take(simple.GetDB(), where...)
+	return repositories.TopicRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicService) QueryCnd(cnd *simple.SqlCnd) (list []model.Topic, err error) {
-	return repositories.TopicRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *topicService) Find(cnd *simple.SqlCnd) (list []model.Topic, err error) {
+	return repositories.TopicRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicService) Query(params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
-	return repositories.TopicRepository.Query(simple.GetDB(), queries)
+func (this *topicService) FindPageByParams(params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
+	return repositories.TopicRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, paging *simple.Paging) {
+	return repositories.TopicRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *topicService) Create(t *model.Topic) error {
-	return repositories.TopicRepository.Create(simple.GetDB(), t)
+	return repositories.TopicRepository.Create(simple.DB(), t)
 }
 
 func (this *topicService) Update(t *model.Topic) error {
-	return repositories.TopicRepository.Update(simple.GetDB(), t)
+	return repositories.TopicRepository.Update(simple.DB(), t)
 }
 
 func (this *topicService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TopicRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.TopicRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *topicService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *topicService) Delete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.GetDB(), id, "status", model.TopicStatusDeleted)
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.TopicStatusDeleted)
 	if err == nil {
 		// 删掉专栏文章
 		SubjectContentService.DeleteByEntity(model.EntityTypeTopic, id)
@@ -75,8 +79,8 @@ func (this *topicService) Delete(id int64) error {
 func (this *topicService) Scan(cb ScanTopicCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
-			cursor).Order("id asc").Size(100))
+		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
+			cursor).Asc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -94,8 +98,8 @@ func (this *topicService) Scan(cb ScanTopicCallback) {
 func (this *topicService) ScanDesc(cb ScanTopicCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.TopicRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ?",
-			cursor).Order("id desc").Size(100))
+		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
+			cursor).Desc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -132,9 +136,9 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		topic.ExtraData, _ = simple.FormatJson(extra)
 	}
 
-	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
-		err := repositories.TopicRepository.Create(simple.GetDB(), topic)
+		err := repositories.TopicRepository.Create(simple.DB(), topic)
 		if err != nil {
 			return err
 		}
@@ -158,9 +162,9 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 		return simple.NewErrorMsg("标题长度不能超过128")
 	}
 
-	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
-		err := repositories.TopicRepository.Updates(simple.GetDB(), topicId, map[string]interface{}{
+		err := repositories.TopicRepository.Updates(simple.DB(), topicId, map[string]interface{}{
 			"title":   title,
 			"content": content,
 		})
@@ -176,7 +180,7 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 
 // 主题标签
 func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
-	topicTags, err := repositories.TopicTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("topic_id = ?", topicId))
+	topicTags, err := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
 	if err != nil {
 		return nil
 	}
@@ -189,7 +193,7 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 
 // 指定标签下的主题列表
 func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
-	topicTags, paging := repositories.TopicTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
+	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", model.ArticleTagStatusOk).
 		Page(page, 20).Desc("id"))
@@ -209,25 +213,25 @@ func (this *topicService) GetTopicInIds(topicIds []int64) []model.Topic {
 		return nil
 	}
 	var topics []model.Topic
-	simple.GetDB().Where("id in (?)", topicIds).Find(&topics)
+	simple.DB().Where("id in (?)", topicIds).Find(&topics)
 	return topics
 }
 
 // 浏览数+1
 func (this *topicService) IncrViewCount(topicId int64) {
-	simple.GetDB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
+	simple.DB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
 }
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
 func (this *topicService) OnComment(topicId, lastCommentTime int64) {
-	simple.GetDB().Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?",
+	simple.DB().Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?",
 		lastCommentTime, topicId)
 }
 
 // rss
 func (this *topicService) GenerateRss() {
-	topics, err := repositories.TopicRepository.QueryCnd(simple.GetDB(),
-		simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(1000))
+	topics, err := repositories.TopicRepository.Find(simple.DB(),
+		simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(1000))
 	if err != nil {
 		logrus.Error(err)
 		return

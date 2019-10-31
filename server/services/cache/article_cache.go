@@ -18,15 +18,15 @@ var (
 var ArticleCache = newArticleCache()
 
 type articleCache struct {
-	recommendCache     cache.LoadingCache
+	recommendCache cache.LoadingCache
 }
 
 func newArticleCache() *articleCache {
 	return &articleCache{
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(),
-					simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(50))
+				articles, err := repositories.ArticleRepository.Find(simple.DB(),
+					simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(50))
 				if err != nil {
 					logrus.Error(err)
 				} else {

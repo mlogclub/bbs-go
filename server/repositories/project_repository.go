@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var ProjectRepository = newProjectRepository()
@@ -32,15 +32,30 @@ func (this *projectRepository) Take(db *gorm.DB, where ...interface{}) *model.Pr
 	return ret
 }
 
-func (this *projectRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Project, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *projectRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Project, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *projectRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.Project{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *projectRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *projectRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Project, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.Project{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *projectRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (this *projectRepository) Delete(db *gorm.DB, id int64) {
 	db.Model(&model.Project{}).Delete("id", id)
 }
-

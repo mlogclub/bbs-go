@@ -17,37 +17,41 @@ type topicTagService struct {
 }
 
 func (this *topicTagService) Get(id int64) *model.TopicTag {
-	return repositories.TopicTagRepository.Get(simple.GetDB(), id)
+	return repositories.TopicTagRepository.Get(simple.DB(), id)
 }
 
 func (this *topicTagService) Take(where ...interface{}) *model.TopicTag {
-	return repositories.TopicTagRepository.Take(simple.GetDB(), where...)
+	return repositories.TopicTagRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicTagService) QueryCnd(cnd *simple.SqlCnd) (list []model.TopicTag, err error) {
-	return repositories.TopicTagRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *topicTagService) Find(cnd *simple.SqlCnd) (list []model.TopicTag, err error) {
+	return repositories.TopicTagRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicTagService) Query(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
-	return repositories.TopicTagRepository.Query(simple.GetDB(), queries)
+func (this *topicTagService) FindPageByParams(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
+	return repositories.TopicTagRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *topicTagService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
+	return repositories.TopicTagRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *topicTagService) Create(t *model.TopicTag) error {
-	return repositories.TopicTagRepository.Create(simple.GetDB(), t)
+	return repositories.TopicTagRepository.Create(simple.DB(), t)
 }
 
 func (this *topicTagService) Update(t *model.TopicTag) error {
-	return repositories.TopicTagRepository.Update(simple.GetDB(), t)
+	return repositories.TopicTagRepository.Update(simple.DB(), t)
 }
 
 func (this *topicTagService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TopicTagRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.TopicTagRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *topicTagService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TopicTagRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.TopicTagRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *topicTagService) DeleteByTopicId(topicId int64) {
-	simple.GetDB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.TopicTagStatusDeleted)
+	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.TopicTagStatusDeleted)
 }

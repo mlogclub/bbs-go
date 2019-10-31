@@ -23,43 +23,47 @@ type thirdAccountService struct {
 }
 
 func (this *thirdAccountService) Get(id int64) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Get(simple.GetDB(), id)
+	return repositories.ThirdAccountRepository.Get(simple.DB(), id)
 }
 
 func (this *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Take(simple.GetDB(), where...)
+	return repositories.ThirdAccountRepository.Take(simple.DB(), where...)
 }
 
-func (this *thirdAccountService) QueryCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
-	return repositories.ThirdAccountRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *thirdAccountService) Find(cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
+	return repositories.ThirdAccountRepository.Find(simple.DB(), cnd)
 }
 
-func (this *thirdAccountService) Query(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
-	return repositories.ThirdAccountRepository.Query(simple.GetDB(), queries)
+func (this *thirdAccountService) FindPageByParams(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
+	return repositories.ThirdAccountRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *thirdAccountService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
+	return repositories.ThirdAccountRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *thirdAccountService) Create(t *model.ThirdAccount) error {
-	return repositories.ThirdAccountRepository.Create(simple.GetDB(), t)
+	return repositories.ThirdAccountRepository.Create(simple.DB(), t)
 }
 
 func (this *thirdAccountService) Update(t *model.ThirdAccount) error {
-	return repositories.ThirdAccountRepository.Update(simple.GetDB(), t)
+	return repositories.ThirdAccountRepository.Update(simple.DB(), t)
 }
 
 func (this *thirdAccountService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ThirdAccountRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.ThirdAccountRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *thirdAccountService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.ThirdAccountRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.ThirdAccountRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *thirdAccountService) Delete(id int64) {
-	repositories.ThirdAccountRepository.Delete(simple.GetDB(), id)
+	repositories.ThirdAccountRepository.Delete(simple.DB(), id)
 }
 
 func (this *thirdAccountService) GetThirdAccount(thirdType string, thirdId string) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Take(simple.GetDB(), "third_type = ? and third_id = ?", thirdType, thirdId)
+	return repositories.ThirdAccountRepository.Take(simple.DB(), "third_type = ? and third_id = ?", thirdType, thirdId)
 }
 
 func (this *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {

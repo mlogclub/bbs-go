@@ -24,7 +24,7 @@ func (this *CollectRuleController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CollectRuleController) AnyList() *simple.JsonResult {
-	list, paging := services.CollectRuleService.Query(simple.NewParamQueries(this.Ctx).LikeAuto("title").EqAuto("status").PageAuto().Desc("id"))
+	list, paging := services.CollectRuleService.FindPageByParams(simple.NewQueryParams(this.Ctx).LikeByReq("title").EqByReq("status").PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

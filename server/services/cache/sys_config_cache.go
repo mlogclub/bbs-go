@@ -18,7 +18,7 @@ func newSysConfigCache() *sysConfigCache {
 	return &sysConfigCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.SysConfigRepository.GetByKey(simple.GetDB(), key.(string))
+				value = repositories.SysConfigRepository.GetByKey(simple.DB(), key.(string))
 				return
 			},
 			cache.WithMaximumSize(1000),

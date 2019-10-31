@@ -21,7 +21,7 @@ func newUserCache() *userCache {
 	return &userCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.UserRepository.Get(simple.GetDB(), Key2Int64(key))
+				value = repositories.UserRepository.Get(simple.DB(), Key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),
@@ -30,9 +30,9 @@ func newUserCache() *userCache {
 		activeUserCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
-				rows, e := simple.GetDB().Raw("select user_id, count(*) c from t_article where create_time > ?"+
+				rows, e := simple.DB().Raw("select user_id, count(*) c from t_article where create_time > ?"+
 					" group by user_id order by c desc limit 20", dateFrom).Rows()
-				// rows, e := simple.GetDB().Raw("select user_id, count(*) c from t_article " +
+				// rows, e := simple.DB().Raw("select user_id, count(*) c from t_article " +
 				// 	" group by user_id order by c desc limit 10").Rows()
 				if e != nil {
 					return

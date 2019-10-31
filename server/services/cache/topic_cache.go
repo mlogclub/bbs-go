@@ -21,8 +21,8 @@ func newTopicCache() *topicCache {
 	return &topicCache{
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				topics, err := repositories.TopicRepository.QueryCnd(simple.GetDB(),
-					simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(50))
+				topics, err := repositories.TopicRepository.Find(simple.DB(),
+					simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(50))
 				if err != nil {
 					logrus.Error(err)
 				} else {

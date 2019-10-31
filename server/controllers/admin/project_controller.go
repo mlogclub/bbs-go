@@ -23,7 +23,7 @@ func (this *ProjectController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *ProjectController) AnyList() *simple.JsonResult {
-	list, paging := services.ProjectService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

@@ -37,38 +37,42 @@ type articleService struct {
 }
 
 func (this *articleService) Get(id int64) *model.Article {
-	return repositories.ArticleRepository.Get(simple.GetDB(), id)
+	return repositories.ArticleRepository.Get(simple.DB(), id)
 }
 
 func (this *articleService) Take(where ...interface{}) *model.Article {
-	return repositories.ArticleRepository.Take(simple.GetDB(), where...)
+	return repositories.ArticleRepository.Take(simple.DB(), where...)
 }
 
-func (this *articleService) QueryCnd(cnd *simple.SqlCnd) (list []model.Article, err error) {
-	return repositories.ArticleRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *articleService) Find(cnd *simple.SqlCnd) (list []model.Article, err error) {
+	return repositories.ArticleRepository.Find(simple.DB(), cnd)
 }
 
-func (this *articleService) Query(params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
-	return repositories.ArticleRepository.Query(simple.GetDB(), queries)
+func (this *articleService) FindPageByParams(params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
+	return repositories.ArticleRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *articleService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Article, paging *simple.Paging) {
+	return repositories.ArticleRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *articleService) Update(t *model.Article) error {
-	err := repositories.ArticleRepository.Update(simple.GetDB(), t)
+	err := repositories.ArticleRepository.Update(simple.DB(), t)
 	return err
 }
 
 func (this *articleService) Updates(id int64, columns map[string]interface{}) error {
-	err := repositories.ArticleRepository.Updates(simple.GetDB(), id, columns)
+	err := repositories.ArticleRepository.Updates(simple.DB(), id, columns)
 	return err
 }
 
 func (this *articleService) UpdateColumn(id int64, name string, value interface{}) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, name, value)
 	return err
 }
 
 func (this *articleService) Delete(id int64) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.GetDB(), id, "status", model.ArticleStatusDeleted)
+	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", model.ArticleStatusDeleted)
 	if err == nil {
 		// 删掉专栏文章
 		SubjectContentService.DeleteByEntity(model.EntityTypeArticle, id)
@@ -84,13 +88,13 @@ func (this *articleService) GetArticleInIds(articleIds []int64) []model.Article 
 		return nil
 	}
 	var articles []model.Article
-	simple.GetDB().Where("id in (?)", articleIds).Find(&articles)
+	simple.DB().Where("id in (?)", articleIds).Find(&articles)
 	return articles
 }
 
 // 获取文章对应的标签
 func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
-	articleTags, err := repositories.ArticleTagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("article_id = ?", articleId))
+	articleTags, err := repositories.ArticleTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("article_id = ?", articleId))
 	if err != nil {
 		return nil
 	}
@@ -103,7 +107,7 @@ func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
 
 // 标签文章列表
 func (this *articleService) GetTagArticles(tagId int64, page int) (articles []model.Article, paging *simple.Paging) {
-	articleTags, paging := repositories.ArticleTagRepository.Query(simple.GetDB(), simple.NewParamQueries(nil).
+	articleTags, paging := repositories.ArticleTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", model.ArticleTagStatusOk).
 		Page(page, 20).Desc("id"))
@@ -154,7 +158,7 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 		UpdateTime:  simple.NowTimestamp(),
 	}
 
-	err = simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+	err = simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
@@ -180,9 +184,9 @@ func (this *articleService) Edit(articleId int64, tags []string, title, content 
 		return simple.NewErrorMsg("请填写文章内容")
 	}
 
-	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
-		err := repositories.ArticleRepository.Updates(simple.GetDB(), articleId, map[string]interface{}{
+		err := repositories.ArticleRepository.Updates(simple.DB(), articleId, map[string]interface{}{
 			"title":   title,
 			"content": content,
 		})
@@ -204,7 +208,7 @@ func (this *articleService) GetRelatedArticles(articleId int64) []model.Article 
 		return nil
 	}
 	var articleTags []model.ArticleTag
-	simple.GetDB().Where("tag_id in (?)", tagIds).Limit(30).Find(&articleTags)
+	simple.DB().Where("tag_id in (?)", tagIds).Limit(30).Find(&articleTags)
 
 	set := hashset.New()
 	if len(articleTags) > 0 {
@@ -225,8 +229,8 @@ func (this *articleService) GetRelatedArticles(articleId int64) []model.Article 
 
 // 最新文章
 func (this *articleService) GetUserNewestArticles(userId int64) []model.Article {
-	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("user_id = ? and status = ?",
-		userId, model.ArticleStatusPublished).Order("id desc").Size(10))
+	articles, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
+		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
 	if err != nil {
 		return nil
 	}
@@ -237,8 +241,8 @@ func (this *articleService) GetUserNewestArticles(userId int64) []model.Article 
 func (this *articleService) Scan(cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? ",
-			cursor).Order("id asc").Size(100))
+		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? ",
+			cursor).Asc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -256,8 +260,8 @@ func (this *articleService) Scan(cb ScanArticleCallback) {
 func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ? ",
-			cursor).Order("id desc").Size(100))
+		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ? ",
+			cursor).Desc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -275,8 +279,8 @@ func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ? and status = ? and create_time >= ? and create_time < ?",
-			cursor, model.ArticleStatusPublished, dateFrom, dateTo).Order("id asc").Size(300))
+		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? and status = ? and create_time >= ? and create_time < ?",
+			cursor, model.ArticleStatusPublished, dateFrom, dateTo).Asc("id").Limit(300))
 		if err != nil {
 			break
 		}
@@ -290,8 +294,8 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 
 // rss
 func (this *articleService) GenerateRss() {
-	articles, err := repositories.ArticleRepository.QueryCnd(simple.GetDB(),
-		simple.NewQueryCnd("status = ?", model.ArticleStatusPublished).Order("id desc").Size(1000))
+	articles, err := repositories.ArticleRepository.Find(simple.DB(),
+		simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(1000))
 	if err != nil {
 		logrus.Error(err)
 		return

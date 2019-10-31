@@ -25,23 +25,27 @@ type userService struct {
 }
 
 func (this *userService) Get(id int64) *model.User {
-	return repositories.UserRepository.Get(simple.GetDB(), id)
+	return repositories.UserRepository.Get(simple.DB(), id)
 }
 
 func (this *userService) Take(where ...interface{}) *model.User {
-	return repositories.UserRepository.Take(simple.GetDB(), where...)
+	return repositories.UserRepository.Take(simple.DB(), where...)
 }
 
-func (this *userService) QueryCnd(cnd *simple.SqlCnd) (list []model.User, err error) {
-	return repositories.UserRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *userService) Find(cnd *simple.SqlCnd) (list []model.User, err error) {
+	return repositories.UserRepository.Find(simple.DB(), cnd)
 }
 
-func (this *userService) Query(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
-	return repositories.UserRepository.Query(simple.GetDB(), queries)
+func (this *userService) FindPageByParams(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
+	return repositories.UserRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *userService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.User, paging *simple.Paging) {
+	return repositories.UserRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *userService) Create(t *model.User) error {
-	err := repositories.UserRepository.Create(simple.GetDB(), t)
+	err := repositories.UserRepository.Create(simple.DB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
 	}
@@ -49,34 +53,34 @@ func (this *userService) Create(t *model.User) error {
 }
 
 func (this *userService) Update(t *model.User) error {
-	err := repositories.UserRepository.Update(simple.GetDB(), t)
+	err := repositories.UserRepository.Update(simple.DB(), t)
 	cache.UserCache.Invalidate(t.Id)
 	return err
 }
 
 func (this *userService) Updates(id int64, columns map[string]interface{}) error {
-	err := repositories.UserRepository.Updates(simple.GetDB(), id, columns)
+	err := repositories.UserRepository.Updates(simple.DB(), id, columns)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (this *userService) UpdateColumn(id int64, name string, value interface{}) error {
-	err := repositories.UserRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	err := repositories.UserRepository.UpdateColumn(simple.DB(), id, name, value)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (this *userService) Delete(id int64) {
-	repositories.UserRepository.Delete(simple.GetDB(), id)
+	repositories.UserRepository.Delete(simple.DB(), id)
 	cache.UserCache.Invalidate(id)
 }
 
 func (this *userService) GetByEmail(email string) *model.User {
-	return repositories.UserRepository.GetByEmail(simple.GetDB(), email)
+	return repositories.UserRepository.GetByEmail(simple.DB(), email)
 }
 
 func (this *userService) GetByUsername(username string) *model.User {
-	return repositories.UserRepository.GetByUsername(simple.GetDB(), username)
+	return repositories.UserRepository.GetByUsername(simple.DB(), username)
 }
 
 // 注册
@@ -170,7 +174,7 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
-	err := simple.Tx(simple.GetDB(), func(tx *gorm.DB) error {
+	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		err := repositories.UserRepository.Create(tx, user)
 		if err != nil {
 			return err

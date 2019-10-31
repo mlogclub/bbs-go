@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var CollectArticleRepository = newCollectArticleRepository()
@@ -32,15 +32,30 @@ func (this *collectArticleRepository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *collectArticleRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectArticle, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *collectArticleRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectArticle, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *collectArticleRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.CollectArticle, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.CollectArticle{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *collectArticleRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.CollectArticle, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *collectArticleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectArticle, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.CollectArticle{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *collectArticleRepository) UpdateColumn(db *gorm.DB, id int64, name s
 func (this *collectArticleRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.CollectArticle{}, "id = ?", id)
 }
-

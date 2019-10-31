@@ -20,6 +20,26 @@ func newUserTokenService() *userTokenService {
 type userTokenService struct {
 }
 
+func (this *userTokenService) Get(id int64) *model.UserToken {
+	return repositories.UserTokenRepository.Get(simple.DB(), id)
+}
+
+func (this *userTokenService) Take(where ...interface{}) *model.UserToken {
+	return repositories.UserTokenRepository.Take(simple.DB(), where...)
+}
+
+func (this *userTokenService) Find(cnd *simple.SqlCnd) (list []model.UserToken, err error) {
+	return repositories.UserTokenRepository.Find(simple.DB(), cnd)
+}
+
+func (this *userTokenService) FindPageByParams(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
+	return repositories.UserTokenRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *userTokenService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.UserToken, paging *simple.Paging) {
+	return repositories.UserTokenRepository.FindPageByCnd(simple.DB(), cnd)
+}
+
 // 获取当前登录用户
 func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
 	token := this.GetUserToken(ctx)
@@ -38,11 +58,11 @@ func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
 // 退出登录
 func (this *userTokenService) Signout(ctx context.Context) error {
 	token := this.GetUserToken(ctx)
-	userToken := repositories.UserTokenRepository.GetByToken(simple.GetDB(), token)
+	userToken := repositories.UserTokenRepository.GetByToken(simple.DB(), token)
 	if userToken == nil {
 		return nil
 	}
-	return repositories.UserTokenRepository.UpdateColumn(simple.GetDB(), userToken.Id, "status", model.UserTokenStatusDisabled)
+	return repositories.UserTokenRepository.UpdateColumn(simple.DB(), userToken.Id, "status", model.UserTokenStatusDisabled)
 }
 
 // 从请求体中获取UserToken
@@ -65,7 +85,7 @@ func (this *userTokenService) Generate(userId int64) (string, error) {
 		Status:     model.UserTokenStatusOk,
 		CreateTime: simple.NowTimestamp(),
 	}
-	err := repositories.UserTokenRepository.Create(simple.GetDB(), userToken)
+	err := repositories.UserTokenRepository.Create(simple.DB(), userToken)
 	if err != nil {
 		return "", err
 	}
@@ -74,29 +94,13 @@ func (this *userTokenService) Generate(userId int64) (string, error) {
 
 // 禁用
 func (this *userTokenService) Disable(token string) error {
-	t := repositories.UserTokenRepository.GetByToken(simple.GetDB(), token)
+	t := repositories.UserTokenRepository.GetByToken(simple.DB(), token)
 	if t == nil {
 		return nil
 	}
-	err := repositories.UserTokenRepository.UpdateColumn(simple.GetDB(), t.Id, "status", model.UserTokenStatusDisabled)
+	err := repositories.UserTokenRepository.UpdateColumn(simple.DB(), t.Id, "status", model.UserTokenStatusDisabled)
 	if err != nil {
 		cache.UserTokenCache.Invalidate(token)
 	}
 	return err
-}
-
-func (this *userTokenService) Get(id int64) *model.UserToken {
-	return repositories.UserTokenRepository.Get(simple.GetDB(), id)
-}
-
-func (this *userTokenService) Take(where ...interface{}) *model.UserToken {
-	return repositories.UserTokenRepository.Take(simple.GetDB(), where...)
-}
-
-func (this *userTokenService) QueryCnd(cnd *simple.SqlCnd) (list []model.UserToken, err error) {
-	return repositories.UserTokenRepository.QueryCnd(simple.GetDB(), cnd)
-}
-
-func (this *userTokenService) Query(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
-	return repositories.UserTokenRepository.Query(simple.GetDB(), queries)
 }

@@ -23,7 +23,7 @@ func newTagCache() *tagCache {
 	return &tagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.TagRepository.Get(simple.GetDB(), Key2Int64(key))
+				value = repositories.TagRepository.Get(simple.DB(), Key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),
@@ -32,7 +32,7 @@ func newTagCache() *tagCache {
 		activeTagsCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
-				rows, e := simple.GetDB().Raw("select tag_id, count(*) c from t_article_tag where create_time > ?"+
+				rows, e := simple.DB().Raw("select tag_id, count(*) c from t_article_tag where create_time > ?"+
 					" group by tag_id order by c desc limit 50", dateFrom).Rows()
 
 				if e != nil {
@@ -56,7 +56,7 @@ func newTagCache() *tagCache {
 		),
 		allTagsCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				tags, e := repositories.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("status = ?", model.TagStatusOk))
+				tags, e := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
 				if e != nil {
 					return
 				}

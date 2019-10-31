@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var SysConfigRepository = newSysConfigRepository()
@@ -31,15 +32,30 @@ func (this *sysConfigRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *sysConfigRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *sysConfigRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *sysConfigRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-	params.StartCount(db).Model(&model.SysConfig{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *sysConfigRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *sysConfigRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.SysConfig{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 

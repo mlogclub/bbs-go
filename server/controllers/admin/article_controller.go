@@ -29,8 +29,8 @@ func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *ArticleController) AnyList() *simple.JsonResult {
-	list, paging := services.ArticleService.Query(simple.NewParamQueries(this.Ctx).
-		EqAuto("id").EqAuto("user_id").EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
+	list, paging := services.ArticleService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+		EqByReq("id").EqByReq("user_id").EqByReq("status").LikeByReq("title").PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, article := range list {

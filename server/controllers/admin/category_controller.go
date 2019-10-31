@@ -23,10 +23,10 @@ func (this *CategoryController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CategoryController) AnyList() *simple.JsonResult {
-	list, paging := services.CategoryService.Query(simple.NewParamQueries(this.Ctx).
-		LikeAuto("name").
-		EqAuto("status").
-		PageAuto().Desc("id"))
+	list, paging := services.CategoryService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+		LikeByReq("name").
+		EqByReq("status").
+		PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

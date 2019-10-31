@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var SubjectContentRepository = newSubjectContentRepository()
@@ -32,15 +32,30 @@ func (this *subjectContentRepository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *subjectContentRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SubjectContent, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *subjectContentRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SubjectContent, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *subjectContentRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.SubjectContent, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.SubjectContent{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *subjectContentRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.SubjectContent, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *subjectContentRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SubjectContent, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.SubjectContent{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *subjectContentRepository) UpdateColumn(db *gorm.DB, id int64, name s
 func (this *subjectContentRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.SubjectContent{}, "id = ?", id)
 }
-

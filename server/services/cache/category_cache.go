@@ -20,7 +20,7 @@ func newCategoryCache() *categoryCache {
 	return &categoryCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.CategoryRepository.Get(simple.GetDB(), Key2Int64(key))
+				value = repositories.CategoryRepository.Get(simple.DB(), Key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),

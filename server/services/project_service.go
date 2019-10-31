@@ -29,39 +29,43 @@ type projectService struct {
 }
 
 func (this *projectService) Get(id int64) *model.Project {
-	return repositories.ProjectRepository.Get(simple.GetDB(), id)
+	return repositories.ProjectRepository.Get(simple.DB(), id)
 }
 
 func (this *projectService) Take(where ...interface{}) *model.Project {
-	return repositories.ProjectRepository.Take(simple.GetDB(), where...)
+	return repositories.ProjectRepository.Take(simple.DB(), where...)
 }
 
-func (this *projectService) QueryCnd(cnd *simple.SqlCnd) (list []model.Project, err error) {
-	return repositories.ProjectRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *projectService) Find(cnd *simple.SqlCnd) (list []model.Project, err error) {
+	return repositories.ProjectRepository.Find(simple.DB(), cnd)
 }
 
-func (this *projectService) Query(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
-	return repositories.ProjectRepository.Query(simple.GetDB(), queries)
+func (this *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
+	return repositories.ProjectRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *projectService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Project, paging *simple.Paging) {
+	return repositories.ProjectRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *projectService) Create(t *model.Project) error {
-	return repositories.ProjectRepository.Create(simple.GetDB(), t)
+	return repositories.ProjectRepository.Create(simple.DB(), t)
 }
 
 func (this *projectService) Update(t *model.Project) error {
-	return repositories.ProjectRepository.Update(simple.GetDB(), t)
+	return repositories.ProjectRepository.Update(simple.DB(), t)
 }
 
 func (this *projectService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ProjectRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.ProjectRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *projectService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.ProjectRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.ProjectRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *projectService) Delete(id int64) {
-	repositories.ProjectRepository.Delete(simple.GetDB(), id)
+	repositories.ProjectRepository.Delete(simple.DB(), id)
 }
 
 // 发布
@@ -79,7 +83,7 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 		Content:     content,
 		CreateTime:  simple.NowTimestamp(),
 	}
-	err := repositories.ProjectRepository.Create(simple.GetDB(), project)
+	err := repositories.ProjectRepository.Create(simple.DB(), project)
 	if err != nil {
 		return nil, err
 	}
@@ -90,8 +94,8 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 func (this *projectService) Scan(callback ProjectScanCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id > ?",
-			cursor).Order("id asc").Size(100))
+		list, err := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
+			cursor).Asc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -108,8 +112,8 @@ func (this *projectService) Scan(callback ProjectScanCallback) {
 func (this *projectService) ScanDesc(callback ProjectScanCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("id < ?",
-			cursor).Order("id desc").Size(100))
+		list, err := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
+			cursor).Desc("id").Limit(100))
 		if err != nil {
 			break
 		}
@@ -125,8 +129,8 @@ func (this *projectService) ScanDesc(callback ProjectScanCallback) {
 
 // rss
 func (this *projectService) GenerateRss() {
-	projects, err := repositories.ProjectRepository.QueryCnd(simple.GetDB(),
-		simple.NewQueryCnd("1 = 1").Order("id desc").Size(2000))
+	projects, err := repositories.ProjectRepository.Find(simple.DB(),
+		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(2000))
 	if err != nil {
 		logrus.Error(err)
 		return

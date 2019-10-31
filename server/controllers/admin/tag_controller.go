@@ -21,10 +21,10 @@ func (this *TagController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TagController) AnyList() *simple.JsonResult {
-	list, paging := services.TagService.Query(simple.NewParamQueries(this.Ctx).
-		LikeAuto("name").
-		EqAuto("status").
-		PageAuto().Desc("id"))
+	list, paging := services.TagService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+		LikeByReq("name").
+		EqByReq("status").
+		PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

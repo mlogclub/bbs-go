@@ -21,7 +21,7 @@ func (this *ArticleTagController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *ArticleTagController) AnyList() *simple.JsonResult {
-	list, paging := services.ArticleTagService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.ArticleTagService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

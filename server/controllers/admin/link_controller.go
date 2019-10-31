@@ -27,7 +27,7 @@ func (this *LinkController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *LinkController) AnyList() *simple.JsonResult {
-	list, paging := services.LinkService.Query(simple.NewParamQueries(this.Ctx).EqAuto("status").LikeAuto("title").LikeAuto("url").PageAuto().Desc("id"))
+	list, paging := services.LinkService.FindPageByParams(simple.NewQueryParams(this.Ctx).EqByReq("status").LikeByReq("title").LikeByReq("url").PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

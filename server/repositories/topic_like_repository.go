@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var TopicLikeRepository = newTopicLikeRepository()
@@ -32,15 +32,30 @@ func (this *topicLikeRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *topicLikeRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *topicLikeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *topicLikeRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.TopicLike, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.TopicLike{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *topicLikeRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.TopicLike, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *topicLikeRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.TopicLike{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *topicLikeRepository) UpdateColumn(db *gorm.DB, id int64, name string
 func (this *topicLikeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.TopicLike{}, "id = ?", id)
 }
-

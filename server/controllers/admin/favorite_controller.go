@@ -23,7 +23,7 @@ func (this *FavoriteController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *FavoriteController) AnyList() *simple.JsonResult {
-	list, paging := services.FavoriteService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.FavoriteService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

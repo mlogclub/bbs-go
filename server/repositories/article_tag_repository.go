@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var ArticleTagRepository = newArticleTagRepository()
@@ -31,15 +32,30 @@ func (this *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model
 	return ret
 }
 
-func (this *articleTagRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *articleTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *articleTagRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-	params.StartCount(db).Model(&model.ArticleTag{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *articleTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.ArticleTag{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -98,5 +114,5 @@ func (this *articleTagRepository) GetUnique(db *gorm.DB, articleId, tagId int64)
 }
 
 func (this *articleTagRepository) GetByArticleId(db *gorm.DB, articleId int64) ([]model.ArticleTag, error) {
-	return this.QueryCnd(db, simple.NewQueryCnd("article_id = ?", articleId))
+	return this.Find(db, simple.NewSqlCnd().Where("article_id = ?", articleId))
 }

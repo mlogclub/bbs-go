@@ -156,11 +156,10 @@ func (this *UserController) GetFavorites() *simple.JsonResult {
 	// 查询列表
 	var favorites []model.Favorite
 	if cursor > 0 {
-		favorites, _ = services.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ? and id < ?",
-			user.Id, cursor).Order("id desc").Size(20))
+		favorites, _ = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
+			user.Id, cursor).Desc("id").Limit(20))
 	} else {
-		favorites, _ = services.FavoriteService.QueryCnd(simple.NewQueryCnd("user_id = ?",
-			user.Id).Order("id desc").Size(20))
+		favorites, _ = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(20))
 	}
 
 	if len(favorites) > 0 {
@@ -183,11 +182,11 @@ func (this *UserController) GetMessages() *simple.JsonResult {
 	// 查询列表
 	var messages []model.Message
 	if cursor > 0 {
-		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ? and id < ?",
-			user.Id, cursor).Order("id desc").Size(20))
+		messages, _ = services.MessageService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
+			user.Id, cursor).Desc("id").Limit(20))
 	} else {
-		messages, _ = services.MessageService.QueryCnd(simple.NewQueryCnd("user_id = ?",
-			user.Id).Order("id desc").Size(20))
+		messages, _ = services.MessageService.Find(simple.NewSqlCnd().Where("user_id = ?",
+			user.Id).Desc("id").Limit(20))
 	}
 
 	if len(messages) > 0 {

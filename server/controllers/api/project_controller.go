@@ -84,7 +84,7 @@ func (this *ProjectController) GetBy(projectId int64) *simple.JsonResult {
 func (this *ProjectController) GetProjects() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
-	projects, paging := services.ProjectService.Query(simple.NewParamQueries(this.Ctx).
+	projects, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(this.Ctx).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleProjects(projects), paging)

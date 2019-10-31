@@ -28,7 +28,7 @@ func (this *LinkController) GetBy(id int64) *simple.JsonResult {
 func (this *LinkController) GetLinks() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
-	links, paging := services.LinkService.Query(simple.NewParamQueries(this.Ctx).
+	links, paging := services.LinkService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("status", model.LinkStatusOk).Page(page, 20).Desc("id"))
 
 	var itemList []map[string]interface{}

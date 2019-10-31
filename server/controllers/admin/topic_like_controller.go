@@ -22,7 +22,7 @@ func (this *TopicLikeController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TopicLikeController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicLikeService.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.TopicLikeService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

@@ -153,7 +153,7 @@ func (this *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (this *TopicController) GetRecent() *simple.JsonResult {
-	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("status = ?", model.TopicStatusOk).Order("id desc").Size(10))
+	topics, err := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -166,7 +166,8 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	topics, err := services.TopicService.QueryCnd(simple.NewQueryCnd("user_id = ? and status = ?", userId, model.TopicStatusOk).Order("id desc").Size(10))
+	topics, err := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
+		userId, model.TopicStatusOk).Desc("id").Limit(10))
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -181,7 +182,7 @@ func (this *TopicController) GetUserTopics() *simple.JsonResult {
 	}
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
-	topics, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).
+	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
 		Eq("status", model.TopicStatusOk).
 		Page(page, 20).Desc("id"))
@@ -193,7 +194,7 @@ func (this *TopicController) GetUserTopics() *simple.JsonResult {
 func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
-	topics, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).
+	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("status", model.TopicStatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 

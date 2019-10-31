@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var SubjectRepository = newSubjectRepository()
@@ -32,15 +32,30 @@ func (this *subjectRepository) Take(db *gorm.DB, where ...interface{}) *model.Su
 	return ret
 }
 
-func (this *subjectRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *subjectRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *subjectRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Subject, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.Subject{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *subjectRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Subject, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *subjectRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.Subject{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *subjectRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (this *subjectRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Subject{}, "id = ?", id)
 }
-

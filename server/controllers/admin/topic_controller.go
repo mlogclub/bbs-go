@@ -22,8 +22,8 @@ func (this *TopicController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *TopicController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicService.Query(simple.NewParamQueries(this.Ctx).
-		EqAuto("id").EqAuto("user_id").EqAuto("status").LikeAuto("title").PageAuto().Desc("id"))
+	list, paging := services.TopicService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+		EqByReq("id").EqByReq("user_id").EqByReq("status").LikeByReq("title").PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, topic := range list {

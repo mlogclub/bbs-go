@@ -21,43 +21,47 @@ type messageService struct {
 }
 
 func (this *messageService) Get(id int64) *model.Message {
-	return repositories.MessageRepository.Get(simple.GetDB(), id)
+	return repositories.MessageRepository.Get(simple.DB(), id)
 }
 
 func (this *messageService) Take(where ...interface{}) *model.Message {
-	return repositories.MessageRepository.Take(simple.GetDB(), where...)
+	return repositories.MessageRepository.Take(simple.DB(), where...)
 }
 
-func (this *messageService) QueryCnd(cnd *simple.SqlCnd) (list []model.Message, err error) {
-	return repositories.MessageRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *messageService) Find(cnd *simple.SqlCnd) (list []model.Message, err error) {
+	return repositories.MessageRepository.Find(simple.DB(), cnd)
 }
 
-func (this *messageService) Query(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
-	return repositories.MessageRepository.Query(simple.GetDB(), queries)
+func (this *messageService) FindPageByParams(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
+	return repositories.MessageRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *messageService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Message, paging *simple.Paging) {
+	return repositories.MessageRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *messageService) Create(t *model.Message) error {
-	return repositories.MessageRepository.Create(simple.GetDB(), t)
+	return repositories.MessageRepository.Create(simple.DB(), t)
 }
 
 func (this *messageService) Update(t *model.Message) error {
-	return repositories.MessageRepository.Update(simple.GetDB(), t)
+	return repositories.MessageRepository.Update(simple.DB(), t)
 }
 
 func (this *messageService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.MessageRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.MessageRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *messageService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.MessageRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.MessageRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *messageService) Delete(id int64) {
-	repositories.MessageRepository.Delete(simple.GetDB(), id)
+	repositories.MessageRepository.Delete(simple.DB(), id)
 }
 
 func (this *messageService) GetUnReadCount(userId int64) (count int64) {
-	simple.GetDB().Where("user_id = ? and status = ?", userId, model.MsgStatusUnread).Model(&model.Message{}).Count(&count)
+	simple.DB().Where("user_id = ? and status = ?", userId, model.MsgStatusUnread).Model(&model.Message{}).Count(&count)
 	return
 }
 
@@ -72,7 +76,7 @@ func (this *messageService) Read(id int64) *model.Message {
 
 // 将所有消息标记为已读
 func (this *messageService) MarkReadAll(userId int64) {
-	simple.GetDB().Exec("update t_message set status = ? where user_id = ? and status = ?", model.MsgStatusReaded,
+	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", model.MsgStatusReaded,
 		userId, model.MsgStatusUnread)
 }
 
@@ -109,11 +113,11 @@ func (this *messageService) sendEmailNotice(message *model.Message) {
 }
 
 func (this *messageService) SendCommentMsg(comment *model.Comment) {
-	commentUser := repositories.UserRepository.Get(simple.GetDB(), comment.UserId)
+	commentUser := repositories.UserRepository.Get(simple.DB(), comment.UserId)
 	commentSummary := common.GetMarkdownSummary(comment.Content)
 	// 引用消息
 	if comment.QuoteId > 0 {
-		quote := repositories.CommentRepository.Get(simple.GetDB(), comment.QuoteId)
+		quote := repositories.CommentRepository.Get(simple.DB(), comment.QuoteId)
 		if quote != nil && quote.UserId != comment.UserId {
 			msgContent := commentUser.Nickname + " 回复了你的评论：" + commentSummary
 			quoteContent := common.GetMarkdownSummary(quote.Content)
@@ -132,14 +136,14 @@ func (this *messageService) SendCommentMsg(comment *model.Comment) {
 		var msgContent = ""
 		var msgQuoteContent = ""
 		if comment.EntityType == model.EntityTypeArticle {
-			article := repositories.ArticleRepository.Get(simple.GetDB(), comment.EntityId)
+			article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 			if article != nil && article.UserId != comment.UserId {
 				userId = article.UserId
 				msgContent = commentUser.Nickname + " 回复了你的文章：" + commentSummary
 				msgQuoteContent = "《" + article.Title + "》"
 			}
 		} else if comment.EntityType == model.EntityTypeTopic {
-			topic := repositories.TopicRepository.Get(simple.GetDB(), comment.EntityId)
+			topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 			if topic != nil && topic.UserId != comment.UserId {
 				userId = topic.UserId
 				msgContent = commentUser.Nickname + " 回复了你的主题：" + commentSummary

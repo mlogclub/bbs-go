@@ -23,12 +23,12 @@ func (this *CollectArticleController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *CollectArticleController) AnyList() *simple.JsonResult {
-	list, paging := services.CollectArticleService.Query(simple.NewParamQueries(this.Ctx).
-		EqAuto("rule_id").
-		EqAuto("link_id").
-		EqAuto("article_id").
-		EqAuto("status").
-		PageAuto().Desc("id"))
+	list, paging := services.CollectArticleService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+		EqByReq("rule_id").
+		EqByReq("link_id").
+		EqByReq("article_id").
+		EqByReq("status").
+		PageByReq().Desc("id"))
 	var results []map[string]interface{}
 	for _, article := range list {
 		item := simple.NewRspBuilderExcludes(article, "content").Build()

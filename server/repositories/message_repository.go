@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var MessageRepository = newMessageRepository()
@@ -31,15 +32,30 @@ func (this *messageRepository) Take(db *gorm.DB, where ...interface{}) *model.Me
 	return ret
 }
 
-func (this *messageRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Message, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *messageRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Message, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *messageRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-	params.StartCount(db).Model(&model.Message{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *messageRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *messageRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Message, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.Message{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 

@@ -22,8 +22,8 @@ func (this *SubjectContentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *SubjectContentController) AnyList() *simple.JsonResult {
-	list, paging := services.SubjectContentService.Query(simple.NewParamQueries(this.Ctx).EqAuto("subject_id").
-		EqAuto("entity_type").EqAuto("entity_id").EqAuto("deleted").PageAuto().Desc("id"))
+	list, paging := services.SubjectContentService.FindPageByParams(simple.NewQueryParams(this.Ctx).EqByReq("subject_id").
+		EqByReq("entity_type").EqByReq("entity_id").EqByReq("deleted").PageByReq().Desc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range list {

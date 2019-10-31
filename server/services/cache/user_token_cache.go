@@ -20,7 +20,7 @@ func newUserTokenCache() *userTokenCache {
 	return &userTokenCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.UserTokenRepository.GetByToken(simple.GetDB(), key.(string))
+				value = repositories.UserTokenRepository.GetByToken(simple.DB(), key.(string))
 				return
 			},
 			cache.WithMaximumSize(1000),

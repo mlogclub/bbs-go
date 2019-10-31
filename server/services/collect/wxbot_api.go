@@ -26,8 +26,8 @@ func (this *WxbotApi) Publish(wxArticle *WxArticle) (*model.Article, error) {
 	}
 
 	userId, _ := this.initUser(wxArticle)
-	categoryId := this.initCategory(simple.GetDB(), wxArticle)
-	tags := this.initTags(simple.GetDB(), wxArticle)
+	categoryId := this.initCategory(simple.DB(), wxArticle)
+	tags := this.initTags(simple.DB(), wxArticle)
 	summary := wxArticle.Summary
 	if simple.RuneLen(summary) == 0 {
 		summary = simple.GetSummary(wxArticle.TextContent, 256)

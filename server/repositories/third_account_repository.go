@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var ThirdAccountRepository = newThirdAccountRepository()
@@ -32,15 +32,30 @@ func (this *thirdAccountRepository) Take(db *gorm.DB, where ...interface{}) *mod
 	return ret
 }
 
-func (this *thirdAccountRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *thirdAccountRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.ThirdAccount{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.ThirdAccount{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *thirdAccountRepository) UpdateColumn(db *gorm.DB, id int64, name str
 func (this *thirdAccountRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.ThirdAccount{}, "id = ?", id)
 }
-

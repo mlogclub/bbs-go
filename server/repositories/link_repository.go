@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var LinkRepository = newLinkRepository()
@@ -32,15 +32,30 @@ func (this *linkRepository) Take(db *gorm.DB, where ...interface{}) *model.Link 
 	return ret
 }
 
-func (this *linkRepository) QueryCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link, err error) {
-	err = cnd.Exec(db).Find(&list).Error
+func (this *linkRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *linkRepository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
-    params.StartCount(db).Model(&model.Link{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *linkRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *linkRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.Link{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -67,4 +82,3 @@ func (this *linkRepository) UpdateColumn(db *gorm.DB, id int64, name string, val
 func (this *linkRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Link{}, "id = ?", id)
 }
-

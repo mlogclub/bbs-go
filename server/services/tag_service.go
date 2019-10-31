@@ -1,8 +1,9 @@
 package services
 
 import (
-	"github.com/mlogclub/simple"
 	"strings"
+
+	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -18,39 +19,43 @@ type tagService struct {
 }
 
 func (this *tagService) Get(id int64) *model.Tag {
-	return repositories.TagRepository.Get(simple.GetDB(), id)
+	return repositories.TagRepository.Get(simple.DB(), id)
 }
 
 func (this *tagService) Take(where ...interface{}) *model.Tag {
-	return repositories.TagRepository.Take(simple.GetDB(), where...)
+	return repositories.TagRepository.Take(simple.DB(), where...)
 }
 
-func (this *tagService) QueryCnd(cnd *simple.SqlCnd) (list []model.Tag, err error) {
-	return repositories.TagRepository.QueryCnd(simple.GetDB(), cnd)
+func (this *tagService) Find(cnd *simple.SqlCnd) (list []model.Tag, err error) {
+	return repositories.TagRepository.Find(simple.DB(), cnd)
 }
 
-func (this *tagService) Query(params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
-	return repositories.TagRepository.Query(simple.GetDB(), queries)
+func (this *tagService) FindPageByParams(params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
+	return repositories.TagRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *tagService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Tag, paging *simple.Paging) {
+	return repositories.TagRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *tagService) Create(t *model.Tag) error {
-	return repositories.TagRepository.Create(simple.GetDB(), t)
+	return repositories.TagRepository.Create(simple.DB(), t)
 }
 
 func (this *tagService) Update(t *model.Tag) error {
-	return repositories.TagRepository.Update(simple.GetDB(), t)
+	return repositories.TagRepository.Update(simple.DB(), t)
 }
 
 func (this *tagService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TagRepository.Updates(simple.GetDB(), id, columns)
+	return repositories.TagRepository.Updates(simple.DB(), id, columns)
 }
 
 func (this *tagService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TagRepository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.TagRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *tagService) Delete(id int64) {
-	repositories.TagRepository.Delete(simple.GetDB(), id)
+	repositories.TagRepository.Delete(simple.DB(), id)
 }
 
 // 自动完成
@@ -59,13 +64,13 @@ func (this *tagService) Autocomplete(input string) []model.Tag {
 	if len(input) == 0 {
 		return nil
 	}
-	list, _ := repositories.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("status = ? and name like ?",
-		model.TagStatusOk, "%"+input+"%").Size(6))
+	list, _ := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ? and name like ?",
+		model.TagStatusOk, "%"+input+"%").Limit(6))
 	return list
 }
 
 func (this *tagService) GetOrCreate(name string) (*model.Tag, error) {
-	return repositories.TagRepository.GetOrCreate(simple.GetDB(), name)
+	return repositories.TagRepository.GetOrCreate(simple.DB(), name)
 }
 
 func (this *tagService) GetByName(name string) *model.Tag {
@@ -73,11 +78,11 @@ func (this *tagService) GetByName(name string) *model.Tag {
 }
 
 func (this *tagService) ListAll(categoryId int64) ([]model.Tag, error) {
-	return repositories.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("category_id = ? and status = ?", categoryId, model.TagStatusOk))
+	return repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("category_id = ? and status = ?", categoryId, model.TagStatusOk))
 }
 
 func (this *tagService) GetTags() []model.TagResponse {
-	list, err := repositories.TagRepository.QueryCnd(simple.GetDB(), simple.NewQueryCnd("status = ?", model.TagStatusOk))
+	list, err := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
 	if err != nil {
 		return nil
 	}

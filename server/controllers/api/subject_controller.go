@@ -40,12 +40,12 @@ func (this *SubjectController) GetContents() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 	subjectId := simple.FormValueInt64Default(this.Ctx, "subjectId", 0)
 
-	params := simple.NewParamQueries(this.Ctx).Eq("deleted", false).Page(page, 20).Desc("id")
+	cnd := simple.NewSqlCnd().Eq("deleted", false).Page(page, 20).Desc("id")
 	if subjectId > 0 {
-		params = params.Eq("subject_id", subjectId)
+		cnd.Eq("subject_id", subjectId)
 	}
 
-	contents, paging := services.SubjectContentService.Query(params)
+	contents, paging := services.SubjectContentService.FindPageByCnd(cnd)
 
 	var results []map[string]interface{}
 	for _, c := range contents {
