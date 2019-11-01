@@ -460,6 +460,7 @@ article {
 
 .article-related {
   margin-top: 20px;
+  font-size: 12px;
 
   .widget > .header {
     color: #000;
