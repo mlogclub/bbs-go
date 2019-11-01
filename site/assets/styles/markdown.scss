@@ -1,6 +1,6 @@
 pre {
   margin: 10px 0;
-  padding: 0!important;
+  padding: 0 !important;
   overflow: auto;
   font-size: 13px;
   line-height: 1.5;
@@ -136,3 +136,89 @@ pre {
 //   padding-left: 0;
 //   margin-left: 20px;
 // }
+
+pre .deletion {
+  background: #800000;
+}
+
+pre .addition {
+  background: #008000;
+}
+
+pre .meta {
+  color: #c9c;
+}
+
+pre .comment {
+  color: #999;
+}
+
+pre .variable,
+pre .attribute,
+pre .tag,
+pre .name,
+pre .regexp,
+pre .ruby .constant,
+pre .xml .tag .title,
+pre .xml .pi,
+pre .xml .doctype,
+pre .html .doctype,
+pre .css .id,
+pre .css .class,
+pre .css .pseudo {
+  color: #f2777a;
+}
+
+pre .number,
+pre .preprocessor,
+pre .built_in,
+pre .builtin-name,
+pre .literal,
+pre .params,
+pre .constant,
+pre .command {
+  color: #f99157;
+  background-color: unset;
+  border-radius: unset;
+  font-size: unset;
+  padding: unset;
+  margin: unset;
+  height: unset;
+  min-width: unset;
+}
+
+pre .ruby .class .title,
+pre .css .rules .attribute,
+pre .string,
+pre .symbol,
+pre .value,
+pre .inheritance,
+pre .header,
+pre .ruby .symbol,
+pre .xml .cdata,
+pre .special,
+pre .formula {
+  color: #9c9;
+}
+
+pre .title,
+pre .css .hexcolor {
+  color: #6cc;
+  font-size: unset;
+}
+
+pre .function,
+pre .python .decorator,
+pre .python .title,
+pre .ruby .function .title,
+pre .ruby .title .keyword,
+pre .perl .sub,
+pre .javascript .title,
+pre .coffeescript .title {
+  color: #69c;
+}
+
+pre .keyword,
+pre .javascript .function {
+  color: #c9c;
+}
