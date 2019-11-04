@@ -120,10 +120,9 @@ export default {
     async getMsgcount() {
       this.msgcount = await this.$axios.get('/api/user/msgcount')
     },
-    signout() {
+    async signout() {
       try {
-        this.$store.dispatch('user/signout')
-        this.user = null
+        await this.$store.dispatch('user/signout')
         this.msgcount = 0
         utils.linkTo('/')
       } catch (e) {

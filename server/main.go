@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"os"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/mlogclub/simple"
@@ -26,13 +27,12 @@ func init() {
 }
 
 func initLogrus() {
-	// output, err := simple.NewLogWriter(config.Conf.LogFile)
-	// if err == nil {
-	// 	logrus.SetLevel(logrus.InfoLevel)
-	// 	logrus.SetOutput(output)
-	// } else {
-	// 	logrus.Error(err)
-	// }
+	file, err := os.OpenFile(config.Conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		logrus.SetOutput(file)
+	} else {
+		logrus.Error(err)
+	}
 }
 
 func main() {

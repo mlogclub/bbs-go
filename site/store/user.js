@@ -16,14 +16,12 @@ export const actions = {
   // 登录成功
   loginSuccess(context, { token, user }) {
     this.$cookies.set('userToken', token, { maxAge: 86400 * 7, path: '/' })
-    this.$cookies.set('user', user, { maxAge: 86400 * 7, path: '/' })
     context.commit('setUserToken', token)
     context.commit('setCurrent', user)
   },
 
   // 设置当前登录用户
   setCurrentUser(context, user) {
-    this.$cookies.set('user', user, { maxAge: 86400 * 7, path: '/' })
     context.commit('setCurrent', user)
   },
 
@@ -80,9 +78,8 @@ export const actions = {
         userToken: userToken
       }
     })
-    this.$cookies.remove('user')
-    this.$cookies.remove('userToken')
     context.commit('setUserToken', null)
     context.commit('setCurrent', null)
+    this.$cookies.remove('userToken')
   }
 }
