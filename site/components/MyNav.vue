@@ -28,7 +28,7 @@
           <a class="navbar-item" href="/articles">文章</a>
           <a class="navbar-item" href="/projects">项目</a>
           <a class="navbar-item" href="/topic/40">书籍</a>
-          <a class="navbar-item" href="/links">好博客</a>
+          <!-- <a class="navbar-item" href="/links">好博客</a> -->
         </div>
 
         <div class="navbar-end">

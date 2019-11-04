@@ -6,7 +6,6 @@ import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/common/config"
 	"github.com/mlogclub/bbs-go/common/urls"
 	"github.com/mlogclub/bbs-go/model"
@@ -60,38 +59,4 @@ func RssTask() {
 	services.ArticleService.GenerateRss()
 	services.TopicService.GenerateRss()
 	services.ProjectService.GenerateRss()
-}
-
-// Ping百度
-func BaiduPing() {
-	services.ArticleService.Scan(func(articles []model.Article) bool {
-		var pushUrls []string
-		for _, article := range articles {
-			if article.Status == model.ArticleStatusPublished {
-				pushUrls = append(pushUrls, urls.ArticleUrl(article.Id))
-			}
-		}
-		common.BaiduUrlPush(pushUrls)
-		return true
-	})
-
-	services.TopicService.Scan(func(topics []model.Topic) bool {
-		var pushUrls []string
-		for _, topic := range topics {
-			if topic.Status == model.TopicStatusOk {
-				pushUrls = append(pushUrls, urls.TopicUrl(topic.Id))
-			}
-		}
-		common.BaiduUrlPush(pushUrls)
-		return true
-	})
-
-	services.ProjectService.Scan(func(projects []model.Project) bool {
-		var pushUrls []string
-		for _, project := range projects {
-			pushUrls = append(pushUrls, urls.ProjectUrl(project.Id))
-		}
-		common.BaiduUrlPush(pushUrls)
-		return true
-	})
 }
