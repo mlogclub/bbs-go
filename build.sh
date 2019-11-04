@@ -72,3 +72,5 @@ funcBuildServer
 funcBuildSite
 funcBuildAdmin
 funcCleanBuild
+
+echo 'done!!!'
