@@ -1,14 +1,12 @@
 dist: trusty
-sudo: required
 
-language: 
-  - go
+language: go
 
 node_js:
   - "node"
 
 go:
-  - master
+  - 1.13
 
 matrix:
   include:
@@ -22,7 +20,8 @@ install:
 script:
   - go version
   - go env
-  - cd server
+  - ls
+  - cd ./server
   - go run build
 
 branches:
