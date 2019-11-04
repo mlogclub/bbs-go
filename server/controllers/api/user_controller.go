@@ -172,29 +172,19 @@ func (this *UserController) GetFavorites() *simple.JsonResult {
 // 用户消息
 func (this *UserController) GetMessages() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
 	// 用户必须登录
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
-	// 查询列表
-	var messages []model.Message
-	if cursor > 0 {
-		messages, _ = services.MessageService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
-			user.Id, cursor).Desc("id").Limit(20))
-	} else {
-		messages, _ = services.MessageService.Find(simple.NewSqlCnd().Where("user_id = ?",
-			user.Id).Desc("id").Limit(20))
-	}
-
-	if len(messages) > 0 {
-		cursor = messages[len(messages)-1].Id
-	}
+	messages, paging := services.MessageService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("user_id", user.Id).
+		Page(page, 20).Desc("id"))
 
 	// 全部标记为已读
 	services.MessageService.MarkReadAll(user.Id)
 
-	return simple.JsonCursorData(render.BuildMessages(messages), strconv.FormatInt(cursor, 10))
+	return simple.JsonPageData(render.BuildMessages(messages), paging)
 }

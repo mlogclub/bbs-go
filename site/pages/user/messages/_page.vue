@@ -23,7 +23,7 @@
 
               <div class="content">
                 <ul class="message-list">
-                  <li v-for="message in messages" :key="message.messageId" class="message-item">
+                  <li v-for="message in messagesPage.results" :key="message.messageId" class="message-item">
                     <div class="message-item-left">
                       <div
                         class="avatar is-rounded has-border"
@@ -52,10 +52,14 @@
                       </div>
                     </div>
                   </li>
+                  <!--
                   <li v-if="hasMore" class="more">
                     <a @click="list">查看更多&gt;&gt;</a>
                   </li>
+                  -->
                 </ul>
+                xxx
+                <pagination :page="messagesPage.page" url-prefix="/user/messages/" />
               </div>
             </div>
           </div>
@@ -85,15 +89,17 @@ export default {
     }
   },
   async asyncData({ $axios, params }) {
-    const [currentUser] = await Promise.all([
-      $axios.get('/api/user/current')
+    const [currentUser, messagesPage] = await Promise.all([
+      $axios.get('/api/user/current'),
+      $axios.get('/api/user/messages?page=' + (params.page || 1))
     ])
     return {
-      currentUser: currentUser
+      currentUser: currentUser,
+      messagesPage: messagesPage
     }
   },
   mounted() {
-    this.list()
+    // this.list()
   },
   methods: {
     async list() {
