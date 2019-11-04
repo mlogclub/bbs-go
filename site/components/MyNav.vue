@@ -86,7 +86,7 @@
             </div>
           </div>
 
-          <div v-if="user && msgcount > 0" class="navbar-item">
+          <div v-if="user && msgcount" class="navbar-item">
             <a :href="'/user/messages'" class="msgcount">{{ msgcount }}</a>
           </div>
         </div>
@@ -104,13 +104,13 @@ export default {
   data() {
     return {
       user: null,
-      msgcount: 0,
+      msgcount: '',
       navbarActive: false
     }
   },
   mounted() {
     this.getCurrentUser()
-    this.getMsgcount()
+    // this.getMsgcount()
 
     window.addEventListener('scroll', this.handleScroll)
   },
@@ -128,7 +128,7 @@ export default {
     },
     async getMsgcount() {
       const ret = await this.$axios.get('/api/user/msgcount')
-      this.msgcount = ret.count
+      this.msgcount = ret.count > 9 ? '9+' : ret.count + ''
     },
     signout() {
       try {
