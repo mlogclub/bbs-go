@@ -113,9 +113,8 @@ export default {
     }
   },
   mounted() {
-    // this.getMsgcount()
-
     window.addEventListener('scroll', this.handleScroll)
+    this.getMsgcount()
   },
   methods: {
     async getMsgcount() {

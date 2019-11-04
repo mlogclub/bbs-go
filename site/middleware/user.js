@@ -1,8 +1,9 @@
 export default async function ({ app, store, $axios }) {
   const userToken = app.$cookies.get('userToken')
-  if (userToken) { // 用户登录
+  if (userToken) {
     const user = await $axios.get('/api/user/current')
-    console.log(user)
-    store.dispatch('user/setCurrentUser', user)
+    if (user) {
+      store.dispatch('user/setCurrentUser', user)
+    }
   }
 }
