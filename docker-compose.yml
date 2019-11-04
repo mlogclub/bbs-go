@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  bbs-go-server:
+    build:
+      target: application
+      context: server
+    image: mlogclub/bbs-go-server
+    depends_on:
+      - start_dependencies
+    environment:
+      - APP_ENV
+    restart: on-failure
+    volumes:
+      - './data:/data/'
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - db
+    command: db:3306
+
+  bbs-go-admin:
+    build:
+      target: application
+      context: admin
+    image: mlogclub/bbs-go-admin
+    depends_on:
+      - bbs-go-server
+    environment:
+      - APP_ENV
+    restart: on-failure
+
+  bbs-go-site:
+    build:
+      target: application
+      context: site
+    image: mlogclub/bbs-go-site
+    depends_on:
+      - bbs-go-server
+    environment:
+      - APP_ENV
+    restart: on-failure
+
+  db:
+    image: 'mysql:5.7'
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - '.docker-compose/mysql/db/conf.d:/etc/mysql/conf.d'
+      - '.docker-compose/mysql/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+
+volumes:
+  bbs-go-server: {}
+  db: {}

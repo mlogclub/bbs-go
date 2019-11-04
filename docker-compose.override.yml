@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  db:
+    ports:
+      - '3309:3306'
+  bbs-go-server:
+    ports:
+      - '8082:8082'
+  bbs-go-admin:
+    build:
+      args:
+        NPM_PRUNE_FLAGS: '--production'
+    environment:
+      APP_BASE_URL: 'http://localhost:8082'
+    ports:
+      - '8080:8080'
+  bbs-go-site:
+    build:
+      args:
+        NPM_PRUNE_FLAGS: '--production'
+    ports:
+      - '3000:3000'
