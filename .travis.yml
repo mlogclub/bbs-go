@@ -1,0 +1,32 @@
+dist: trusty
+sudo: required
+
+language: 
+  - node_js
+  - go
+
+node_js:
+  - "node"
+
+go:
+  - 1.13
+
+matrix:
+  include:
+    - os: osx
+    - os: linux
+    - os: windows
+
+cache:
+  directories:
+    - admin/node_modules
+    - site/node_modules
+
+install:
+
+script:
+  - go run build
+
+branches:
+  only:
+    - master
