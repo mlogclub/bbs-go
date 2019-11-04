@@ -22,7 +22,7 @@
               </div>
 
               <div class="content">
-                <ul class="message-list">
+                <ul v-if="messagesPage && messagesPage.results" class="message-list">
                   <li v-for="message in messagesPage.results" :key="message.messageId" class="message-item">
                     <div class="message-item-left">
                       <div
@@ -52,13 +52,10 @@
                       </div>
                     </div>
                   </li>
-                  <!--
-                  <li v-if="hasMore" class="more">
-                    <a @click="list">查看更多&gt;&gt;</a>
-                  </li>
-                  -->
                 </ul>
-                xxx
+                <div v-else class="notification is-primary" style="margin-top: 10px;">
+                  暂无消息
+                </div>
                 <pagination :page="messagesPage.page" url-prefix="/user/messages/" />
               </div>
             </div>
@@ -177,12 +174,6 @@ export default {
         }
       }
     }
-  }
-
-  li.more {
-    text-align: center;
-    font-size: 15px;
-    margin-top: 10px;
   }
 }
 </style>
