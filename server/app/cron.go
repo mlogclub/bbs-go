@@ -11,8 +11,6 @@ func startSchedule() {
 	c := cron.New()
 	addCronFunc(c, "@every 30m", task.RssTask)
 	addCronFunc(c, "@every 1h", task.SitemapTask)
-	addCronFunc(c, "@every 1h", task.CollectStudyGoLangProjectTask)
-	addCronFunc(c, "@every 1h", task.CollectOschinaProjectTask)
 	addCronFunc(c, "@every 12h", task.BaiduPing)
 	c.Start()
 }

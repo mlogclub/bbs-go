@@ -5,58 +5,13 @@ package task
 import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/common/config"
 	"github.com/mlogclub/bbs-go/common/urls"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/bbs-go/services/collect/oschina"
-	"github.com/mlogclub/bbs-go/services/collect/studygolang"
 )
-
-const (
-	collectUserId int64 = 2 // 采集用户
-)
-
-// 采集studygolang项目
-func CollectStudyGoLangProjectTask() {
-	// 只采集第一页
-	studygolang.GetStudyGoLangPage(1, func(url string) {
-		p := studygolang.GetStudyGolangProject(url)
-		if p == nil {
-			logrus.Warn("项目采集失败：" + url)
-			return
-		}
-		temp := services.ProjectService.Take("name = ?", p.Name)
-		if temp != nil {
-			logrus.Warn("项目已经存在：" + temp.Name)
-			return
-		}
-		logrus.Info("采集项目：" + p.Name + ", " + url)
-		_, _ = services.ProjectService.Publish(collectUserId, p.Name, p.Title, p.Logo, p.Url, p.DocUrl, p.DownloadUrl,
-			model.ContentTypeMarkdown, p.Content)
-	})
-}
-
-// 采集开源中国项目
-func CollectOschinaProjectTask() {
-	urls := oschina.GetPage(1)
-	if len(urls) > 0 {
-		for _, url := range urls {
-			p := oschina.GetProject(url)
-			temp := services.ProjectService.Take("name = ?", p.Name)
-			if temp != nil {
-				logrus.Warn("项目已经存在：" + temp.Name)
-				continue
-			}
-			logrus.Info("采集项目：" + p.Name + ", " + url)
-			_, _ = services.ProjectService.Publish(2, p.Name, p.Title, p.Logo, p.Url, p.DocUrl, p.DownloadUrl,
-				model.ContentTypeHtml, p.Content)
-		}
-	}
-}
 
 // 生成sitemap
 func SitemapTask() {
