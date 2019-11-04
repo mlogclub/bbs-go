@@ -25,6 +25,7 @@ cache:
 install:
 
 script:
+  - cd server
   - go run build
 
 branches:
