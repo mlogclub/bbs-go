@@ -14,7 +14,6 @@ import (
 type tagCache struct {
 	cache           cache.LoadingCache
 	activeTagsCache cache.LoadingCache // 热门标签
-	allTagsCache    cache.LoadingCache // 所有标签
 }
 
 var TagCache = newTagCache()
@@ -53,14 +52,6 @@ func newTagCache() *tagCache {
 			},
 			cache.WithMaximumSize(1),
 			cache.WithRefreshAfterWrite(30*time.Minute),
-		),
-		allTagsCache: cache.NewLoadingCache(
-			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
-				return
-			},
-			cache.WithMaximumSize(1),
-			cache.WithRefreshAfterWrite(1*time.Hour),
 		),
 	}
 }
@@ -111,12 +102,4 @@ func (this *tagCache) GetActiveTags() []model.Tag {
 		}
 	}
 	return tags
-}
-
-func (this *tagCache) GetAllTags() []model.Tag {
-	val, err := this.allTagsCache.Get("data")
-	if err != nil {
-		return nil
-	}
-	return val.([]model.Tag)
 }

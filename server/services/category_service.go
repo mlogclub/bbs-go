@@ -46,7 +46,6 @@ func (this *categoryService) Create(t *model.Category) error {
 	err := repositories.CategoryRepository.Create(simple.DB(), t)
 	if err == nil {
 		cache.CategoryCache.Invalidate(t.Id)
-		cache.CategoryCache.InvalidateAll()
 	}
 	return err
 }
@@ -55,7 +54,6 @@ func (this *categoryService) Update(t *model.Category) error {
 	err := repositories.CategoryRepository.Update(simple.DB(), t)
 	if err == nil {
 		cache.CategoryCache.Invalidate(t.Id)
-		cache.CategoryCache.InvalidateAll()
 	}
 	return err
 }
@@ -64,7 +62,6 @@ func (this *categoryService) Updates(id int64, columns map[string]interface{}) e
 	err := repositories.CategoryRepository.Updates(simple.DB(), id, columns)
 	if err == nil {
 		cache.CategoryCache.Invalidate(id)
-		cache.CategoryCache.InvalidateAll()
 	}
 	return err
 }
@@ -73,7 +70,6 @@ func (this *categoryService) UpdateColumn(id int64, name string, value interface
 	err := repositories.CategoryRepository.UpdateColumn(simple.DB(), id, name, value)
 	if err == nil {
 		cache.CategoryCache.Invalidate(id)
-		cache.CategoryCache.InvalidateAll()
 	}
 	return err
 }
@@ -81,7 +77,6 @@ func (this *categoryService) UpdateColumn(id int64, name string, value interface
 func (this *categoryService) Delete(id int64) {
 	repositories.CategoryRepository.Delete(simple.DB(), id)
 	cache.CategoryCache.Invalidate(id)
-	cache.CategoryCache.InvalidateAll()
 }
 
 func (this *categoryService) GetOrCreate(name string) (*model.Category, error) {

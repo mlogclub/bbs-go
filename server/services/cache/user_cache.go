@@ -32,8 +32,6 @@ func newUserCache() *userCache {
 				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
 				rows, e := simple.DB().Raw("select user_id, count(*) c from t_article where create_time > ?"+
 					" group by user_id order by c desc limit 20", dateFrom).Rows()
-				// rows, e := simple.DB().Raw("select user_id, count(*) c from t_article " +
-				// 	" group by user_id order by c desc limit 10").Rows()
 				if e != nil {
 					return
 				}

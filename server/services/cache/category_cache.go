@@ -12,8 +12,7 @@ import (
 )
 
 type categoryCache struct {
-	cache              cache.LoadingCache
-	allCategoriesCache cache.LoadingCache
+	cache cache.LoadingCache
 }
 
 var CategoryCache = newCategoryCache()
@@ -27,23 +26,6 @@ func newCategoryCache() *categoryCache {
 			},
 			cache.WithMaximumSize(1000),
 			cache.WithExpireAfterAccess(30*time.Minute),
-		),
-		allCategoriesCache: cache.NewLoadingCache(
-			func(key cache.Key) (value cache.Value, e error) {
-				list := repositories.CategoryRepository.GetCategories()
-
-				var categories []model.CategoryResponse
-				for _, cat := range list {
-					categories = append(categories, model.CategoryResponse{
-						CategoryId:   cat.Id,
-						CategoryName: cat.Name,
-					})
-				}
-				value = categories
-				return
-			},
-			cache.WithMaximumSize(1),
-			cache.WithRefreshAfterWrite(30*time.Minute),
 		),
 	}
 }
@@ -62,16 +44,4 @@ func (this *categoryCache) Get(categoryId int64) *model.Category {
 
 func (this *categoryCache) Invalidate(categoryId int64) {
 	this.cache.Invalidate(categoryId)
-}
-
-func (this *categoryCache) GetAllCategories() []model.CategoryResponse {
-	val, err := this.allCategoriesCache.Get("data")
-	if err != nil {
-		return nil
-	}
-	return val.([]model.CategoryResponse)
-}
-
-func (this *categoryCache) InvalidateAll() {
-	this.allCategoriesCache.InvalidateAll()
 }
