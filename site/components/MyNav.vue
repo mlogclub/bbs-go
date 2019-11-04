@@ -103,29 +103,21 @@ export default {
   components: { GithubLogin, QqLogin },
   data() {
     return {
-      user: null,
       msgcount: '',
       navbarActive: false
     }
   },
+  computed: {
+    user() {
+      return this.$store.state.user.current
+    }
+  },
   mounted() {
-    this.getCurrentUser()
     // this.getMsgcount()
 
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
-    async getCurrentUser() {
-      // const user = this.$cookies.get('user')
-      // if (user && user.id) {
-      //   this.user = user
-      // } else {
-      //   this.user = await this.$axios.get('/api/user/current')
-      //   this.$store.dispatch('user/setCurrentUser', user)
-      // }
-      this.user = await this.$axios.get('/api/user/current')
-      this.$store.dispatch('user/setCurrentUser', this.user)
-    },
     async getMsgcount() {
       const ret = await this.$axios.get('/api/user/msgcount')
       this.msgcount = ret.count > 9 ? '9+' : ret.count + ''

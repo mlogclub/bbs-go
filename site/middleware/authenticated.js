@@ -1,29 +1,9 @@
-export default async function (context) {
-  const signInUrl = getSignInUrl(context)
-  const userToken = getUserToken(context)
-  if (!userToken) {
+export default function (context) {
+  const user = context.store.state.user.current
+  if (!user) {
+    const signInUrl = getSignInUrl(context)
     context.redirect(signInUrl)
-  } else {
-    const user = await checkLogin(context)
-    if (!user) {
-      context.redirect(signInUrl)
-    }
   }
-}
-
-// 检查登录
-async function checkLogin(context) {
-  try {
-    return await context.$axios.get('/api/user/current')
-  } catch (e) {
-    console.error(e)
-    return null
-  }
-}
-
-// 获取UserToken
-function getUserToken(context) {
-  return context.app.$cookies.get('userToken')
 }
 
 // 获取登录跳转地址
