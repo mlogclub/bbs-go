@@ -30,8 +30,13 @@ func (this *collectArticleService) Take(where ...interface{}) *model.CollectArti
 	return repositories.CollectArticleRepository.Take(simple.DB(), where...)
 }
 
-func (this *collectArticleService) Find(cnd *simple.SqlCnd) (list []model.CollectArticle, err error) {
+func (this *collectArticleService) Find(cnd *simple.SqlCnd) []model.CollectArticle {
 	return repositories.CollectArticleRepository.Find(simple.DB(), cnd)
+}
+
+func (this *collectArticleService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.CollectArticle) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *collectArticleService) FindPageByParams(params *simple.QueryParams) (list []model.CollectArticle, paging *simple.Paging) {
@@ -147,10 +152,7 @@ type CollectArticleScanCallback func(*model.CollectArticle)
 func (this *collectArticleService) Scan(callback CollectArticleScanCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.CollectArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
-		if err != nil {
-			break
-		}
+		list := repositories.CollectArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}

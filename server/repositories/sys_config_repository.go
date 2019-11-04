@@ -32,8 +32,13 @@ func (this *sysConfigRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *sysConfigRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
-	err = cnd.Find(db, &list)
+func (this *sysConfigRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *sysConfigRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.SysConfig) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *sysConfigRepository) FindPageByParams(db *gorm.DB, params *simple.Qu
 }
 
 func (this *sysConfigRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.SysConfig{})
 
-	count, err := cnd.Count(db, &model.SysConfig{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

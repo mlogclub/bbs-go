@@ -32,8 +32,13 @@ func (this *userService) Take(where ...interface{}) *model.User {
 	return repositories.UserRepository.Take(simple.DB(), where...)
 }
 
-func (this *userService) Find(cnd *simple.SqlCnd) (list []model.User, err error) {
+func (this *userService) Find(cnd *simple.SqlCnd) []model.User {
 	return repositories.UserRepository.Find(simple.DB(), cnd)
+}
+
+func (this *userService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.User) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *userService) FindPageByParams(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {

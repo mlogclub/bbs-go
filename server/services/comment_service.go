@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -27,8 +28,13 @@ func (this *commentService) Take(where ...interface{}) *model.Comment {
 	return repositories.CommentRepository.Take(simple.DB(), where...)
 }
 
-func (this *commentService) Find(cnd *simple.SqlCnd) (list []model.Comment, err error) {
+func (this *commentService) Find(cnd *simple.SqlCnd) []model.Comment {
 	return repositories.CommentRepository.Find(simple.DB(), cnd)
+}
+
+func (this *commentService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Comment) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *commentService) FindPageByParams(params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {

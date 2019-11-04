@@ -39,8 +39,13 @@ func (this *userTokenRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *userTokenRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken, err error) {
-	err = cnd.Find(db, &list)
+func (this *userTokenRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *userTokenRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.UserToken) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -49,15 +54,9 @@ func (this *userTokenRepository) FindPageByParams(db *gorm.DB, params *simple.Qu
 }
 
 func (this *userTokenRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserToken, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.UserToken{})
 
-	count, err := cnd.Count(db, &model.UserToken{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

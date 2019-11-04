@@ -1,8 +1,9 @@
 package services
 
 import (
-	"github.com/mlogclub/bbs-go/services/cache"
 	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/services/cache"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -25,8 +26,12 @@ func (this *categoryService) Take(where ...interface{}) *model.Category {
 	return repositories.CategoryRepository.Take(simple.DB(), where...)
 }
 
-func (this *categoryService) Find(cnd *simple.SqlCnd) (list []model.Category, err error) {
+func (this *categoryService) Find(cnd *simple.SqlCnd) []model.Category {
 	return repositories.CategoryRepository.Find(simple.DB(), cnd)
+}
+
+func (this *categoryService) FindOne(cnd *simple.SqlCnd) *model.Category {
+	return repositories.CategoryRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *categoryService) FindPageByParams(params *simple.QueryParams) (list []model.Category, paging *simple.Paging) {
@@ -105,6 +110,6 @@ func (this *categoryService) FindByName(name string) *model.Category {
 	return this.Take("name = ?", name)
 }
 
-func (this *categoryService) GetCategories() ([]model.Category, error) {
+func (this *categoryService) GetCategories() []model.Category {
 	return repositories.CategoryRepository.GetCategories()
 }

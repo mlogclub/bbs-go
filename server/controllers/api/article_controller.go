@@ -162,10 +162,7 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 
 // 最近文章
 func (this *ArticleController) GetRecent() *simple.JsonResult {
-	articles, err := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(10))
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
@@ -175,11 +172,8 @@ func (this *ArticleController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	articles, err := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
 		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 

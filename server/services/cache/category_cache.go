@@ -1,12 +1,14 @@
 package cache
 
 import (
+	"time"
+
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
-	"time"
+
+	"github.com/mlogclub/bbs-go/model"
+	"github.com/mlogclub/bbs-go/repositories"
 )
 
 type categoryCache struct {
@@ -28,10 +30,7 @@ func newCategoryCache() *categoryCache {
 		),
 		allCategoriesCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				list, e := repositories.CategoryRepository.GetCategories()
-				if e != nil {
-					return
-				}
+				list := repositories.CategoryRepository.GetCategories()
 
 				var categories []model.CategoryResponse
 				for _, cat := range list {

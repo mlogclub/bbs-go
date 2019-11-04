@@ -28,8 +28,13 @@ func (this *sysConfigService) Take(where ...interface{}) *model.SysConfig {
 	return repositories.SysConfigRepository.Take(simple.DB(), where...)
 }
 
-func (this *sysConfigService) Find(cnd *simple.SqlCnd) (list []model.SysConfig, err error) {
+func (this *sysConfigService) Find(cnd *simple.SqlCnd) []model.SysConfig {
 	return repositories.SysConfigRepository.Find(simple.DB(), cnd)
+}
+
+func (this *sysConfigService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.SysConfig) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *sysConfigService) FindPageByParams(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {

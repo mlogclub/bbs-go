@@ -32,8 +32,13 @@ func (this *categoryRepository) Take(db *gorm.DB, where ...interface{}) *model.C
 	return ret
 }
 
-func (this *categoryRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Category, err error) {
-	err = cnd.Find(db, &list)
+func (this *categoryRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Category) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *categoryRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Category) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *categoryRepository) FindPageByParams(db *gorm.DB, params *simple.Que
 }
 
 func (this *categoryRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Category, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.Category{})
 
-	count, err := cnd.Count(db, &model.Category{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
@@ -83,6 +82,6 @@ func (this *categoryRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Category{}, "id = ?", id)
 }
 
-func (this *categoryRepository) GetCategories() ([]model.Category, error) {
+func (this *categoryRepository) GetCategories() []model.Category {
 	return this.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.CategoryStatusOk))
 }

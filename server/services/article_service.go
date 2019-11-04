@@ -44,8 +44,12 @@ func (this *articleService) Take(where ...interface{}) *model.Article {
 	return repositories.ArticleRepository.Take(simple.DB(), where...)
 }
 
-func (this *articleService) Find(cnd *simple.SqlCnd) (list []model.Article, err error) {
+func (this *articleService) Find(cnd *simple.SqlCnd) []model.Article {
 	return repositories.ArticleRepository.Find(simple.DB(), cnd)
+}
+
+func (this *articleService) FindOne(cnd *simple.SqlCnd) *model.Article {
+	return repositories.ArticleRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *articleService) FindPageByParams(params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
@@ -94,10 +98,7 @@ func (this *articleService) GetArticleInIds(articleIds []int64) []model.Article 
 
 // 获取文章对应的标签
 func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
-	articleTags, err := repositories.ArticleTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("article_id = ?", articleId))
-	if err != nil {
-		return nil
-	}
+	articleTags := repositories.ArticleTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("article_id = ?", articleId))
 	var tagIds []int64
 	for _, articleTag := range articleTags {
 		tagIds = append(tagIds, articleTag.TagId)
@@ -229,23 +230,16 @@ func (this *articleService) GetRelatedArticles(articleId int64) []model.Article 
 
 // 最新文章
 func (this *articleService) GetUserNewestArticles(userId int64) []model.Article {
-	articles, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
+	return repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
 		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
-	if err != nil {
-		return nil
-	}
-	return articles
 }
 
 // 扫描
 func (this *articleService) Scan(cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? ",
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? ",
 			cursor).Asc("id").Limit(100))
-		if err != nil {
-			break
-		}
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -260,11 +254,8 @@ func (this *articleService) Scan(cb ScanArticleCallback) {
 func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ? ",
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ? ",
 			cursor).Desc("id").Limit(100))
-		if err != nil {
-			break
-		}
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -279,11 +270,8 @@ func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? and status = ? and create_time >= ? and create_time < ?",
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? and status = ? and create_time >= ? and create_time < ?",
 			cursor, model.ArticleStatusPublished, dateFrom, dateTo).Asc("id").Limit(300))
-		if err != nil {
-			break
-		}
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -294,15 +282,10 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 
 // rss
 func (this *articleService) GenerateRss() {
-	articles, err := repositories.ArticleRepository.Find(simple.DB(),
+	articles := repositories.ArticleRepository.Find(simple.DB(),
 		simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(1000))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
 
 	var items []*feeds.Item
-
 	for _, article := range articles {
 		articleUrl := urls.ArticleUrl(article.Id)
 		user := cache.UserCache.Get(article.UserId)

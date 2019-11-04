@@ -32,8 +32,13 @@ func (this *collectRuleRepository) Take(db *gorm.DB, where ...interface{}) *mode
 	return ret
 }
 
-func (this *collectRuleRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectRule, err error) {
-	err = cnd.Find(db, &list)
+func (this *collectRuleRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectRule) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *collectRuleRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.CollectRule) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *collectRuleRepository) FindPageByParams(db *gorm.DB, params *simple.
 }
 
 func (this *collectRuleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CollectRule, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.CollectRule{})
 
-	count, err := cnd.Count(db, &model.CollectRule{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

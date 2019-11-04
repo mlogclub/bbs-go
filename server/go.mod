@@ -26,7 +26,7 @@ require (
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
-	github.com/mlogclub/simple v1.0.37
+	github.com/mlogclub/simple v1.0.41
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect

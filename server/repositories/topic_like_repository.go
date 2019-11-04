@@ -32,8 +32,13 @@ func (this *topicLikeRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (this *topicLikeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike, err error) {
-	err = cnd.Find(db, &list)
+func (this *topicLikeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *topicLikeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.TopicLike) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *topicLikeRepository) FindPageByParams(db *gorm.DB, params *simple.Qu
 }
 
 func (this *topicLikeRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicLike, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.TopicLike{})
 
-	count, err := cnd.Count(db, &model.TopicLike{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

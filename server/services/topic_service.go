@@ -36,8 +36,13 @@ func (this *topicService) Take(where ...interface{}) *model.Topic {
 	return repositories.TopicRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicService) Find(cnd *simple.SqlCnd) (list []model.Topic, err error) {
+func (this *topicService) Find(cnd *simple.SqlCnd) []model.Topic {
 	return repositories.TopicRepository.Find(simple.DB(), cnd)
+}
+
+func (this *topicService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Topic) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *topicService) FindPageByParams(params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
@@ -143,10 +148,8 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 
 // 主题标签
 func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
-	topicTags, err := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
-	if err != nil {
-		return nil
-	}
+	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
+
 	var tagIds []int64
 	for _, topicTag := range topicTags {
 		tagIds = append(tagIds, topicTag.TagId)
@@ -193,15 +196,10 @@ func (this *topicService) OnComment(topicId, lastCommentTime int64) {
 
 // rss
 func (this *topicService) GenerateRss() {
-	topics, err := repositories.TopicRepository.Find(simple.DB(),
+	topics := repositories.TopicRepository.Find(simple.DB(),
 		simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(1000))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
 
 	var items []*feeds.Item
-
 	for _, topic := range topics {
 		topicUrl := urls.TopicUrl(topic.Id)
 		user := cache.UserCache.Get(topic.UserId)
@@ -246,11 +244,7 @@ func (this *topicService) GenerateRss() {
 func (this *topicService) Scan(cb ScanTopicCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
-			cursor).Asc("id").Limit(100))
-		if err != nil {
-			break
-		}
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -265,11 +259,7 @@ func (this *topicService) Scan(cb ScanTopicCallback) {
 func (this *topicService) ScanDesc(cb ScanTopicCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
-			cursor).Desc("id").Limit(100))
-		if err != nil {
-			break
-		}
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", cursor).Desc("id").Limit(100))
 		if list == nil || len(list) == 0 {
 			break
 		}

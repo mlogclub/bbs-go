@@ -153,10 +153,7 @@ func (this *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (this *TopicController) GetRecent() *simple.JsonResult {
-	topics, err := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(10))
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
+	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
@@ -166,11 +163,8 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	topics, err := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
+	topics := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
 		userId, model.TopicStatusOk).Desc("id").Limit(10))
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 

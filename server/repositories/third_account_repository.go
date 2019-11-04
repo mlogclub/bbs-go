@@ -32,8 +32,13 @@ func (this *thirdAccountRepository) Take(db *gorm.DB, where ...interface{}) *mod
 	return ret
 }
 
-func (this *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, err error) {
-	err = cnd.Find(db, &list)
+func (this *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.ThirdAccount) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *simple
 }
 
 func (this *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.ThirdAccount{})
 
-	count, err := cnd.Count(db, &model.ThirdAccount{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

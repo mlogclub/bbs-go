@@ -32,8 +32,13 @@ func (this *subjectRepository) Take(db *gorm.DB, where ...interface{}) *model.Su
 	return ret
 }
 
-func (this *subjectRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject, err error) {
-	err = cnd.Find(db, &list)
+func (this *subjectRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *subjectRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Subject) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *subjectRepository) FindPageByParams(db *gorm.DB, params *simple.Quer
 }
 
 func (this *subjectRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Subject, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.Subject{})
 
-	count, err := cnd.Count(db, &model.Subject{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

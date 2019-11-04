@@ -32,8 +32,13 @@ func (this *commentRepository) Take(db *gorm.DB, where ...interface{}) *model.Co
 	return ret
 }
 
-func (this *commentRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Comment, err error) {
-	err = cnd.Find(db, &list)
+func (this *commentRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Comment) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *commentRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Comment) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *commentRepository) FindPageByParams(db *gorm.DB, params *simple.Quer
 }
 
 func (this *commentRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Comment, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.Comment{})
 
-	count, err := cnd.Count(db, &model.Comment{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

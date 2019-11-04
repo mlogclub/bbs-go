@@ -1,11 +1,12 @@
 package cache
 
 import (
-	"github.com/goburrow/cache"
-	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/goburrow/cache"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/repositories"
 )
 
 type articleTagCache struct {
@@ -18,11 +19,7 @@ func newArticleTagCache() *articleTagCache {
 	return &articleTagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articleTags, err := repositories.ArticleTagRepository.FindByArticleId(simple.DB(), Key2Int64(key))
-				if err != nil {
-					logrus.Error(err)
-					return
-				}
+				articleTags := repositories.ArticleTagRepository.FindByArticleId(simple.DB(), Key2Int64(key))
 				if len(articleTags) > 0 {
 					var tagIds []int64
 					for _, articleTag := range articleTags {

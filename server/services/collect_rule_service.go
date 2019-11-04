@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -24,8 +25,13 @@ func (this *collectRuleService) Take(where ...interface{}) *model.CollectRule {
 	return repositories.CollectRuleRepository.Take(simple.DB(), where...)
 }
 
-func (this *collectRuleService) Find(cnd *simple.SqlCnd) (list []model.CollectRule, err error) {
+func (this *collectRuleService) Find(cnd *simple.SqlCnd) []model.CollectRule {
 	return repositories.CollectRuleRepository.Find(simple.DB(), cnd)
+}
+
+func (this *collectRuleService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.CollectRule) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *collectRuleService) FindPageByParams(params *simple.QueryParams) (list []model.CollectRule, paging *simple.Paging) {

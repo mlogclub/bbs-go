@@ -5,7 +5,6 @@ import (
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -25,13 +24,8 @@ func newArticleCache() *articleCache {
 	return &articleCache{
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articles, err := repositories.ArticleRepository.Find(simple.DB(),
+				value = repositories.ArticleRepository.Find(simple.DB(),
 					simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(50))
-				if err != nil {
-					logrus.Error(err)
-				} else {
-					value = articles
-				}
 				return
 			},
 			cache.WithMaximumSize(1),

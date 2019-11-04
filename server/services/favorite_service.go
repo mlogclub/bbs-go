@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -27,8 +28,13 @@ func (this *favoriteService) Take(where ...interface{}) *model.Favorite {
 	return repositories.FavoriteRepository.Take(simple.DB(), where...)
 }
 
-func (this *favoriteService) Find(cnd *simple.SqlCnd) (list []model.Favorite, err error) {
+func (this *favoriteService) Find(cnd *simple.SqlCnd) []model.Favorite {
 	return repositories.FavoriteRepository.Find(simple.DB(), cnd)
+}
+
+func (this *favoriteService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Favorite) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *favoriteService) FindPageByParams(params *simple.QueryParams) (list []model.Favorite, paging *simple.Paging) {

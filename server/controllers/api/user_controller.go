@@ -156,10 +156,10 @@ func (this *UserController) GetFavorites() *simple.JsonResult {
 	// 查询列表
 	var favorites []model.Favorite
 	if cursor > 0 {
-		favorites, _ = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
+		favorites = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
 			user.Id, cursor).Desc("id").Limit(20))
 	} else {
-		favorites, _ = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(20))
+		favorites = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(20))
 	}
 
 	if len(favorites) > 0 {

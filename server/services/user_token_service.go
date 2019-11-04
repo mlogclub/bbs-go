@@ -3,6 +3,7 @@ package services
 import (
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
@@ -28,8 +29,13 @@ func (this *userTokenService) Take(where ...interface{}) *model.UserToken {
 	return repositories.UserTokenRepository.Take(simple.DB(), where...)
 }
 
-func (this *userTokenService) Find(cnd *simple.SqlCnd) (list []model.UserToken, err error) {
+func (this *userTokenService) Find(cnd *simple.SqlCnd) []model.UserToken {
 	return repositories.UserTokenRepository.Find(simple.DB(), cnd)
+}
+
+func (this *userTokenService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Category) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *userTokenService) FindPageByParams(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {

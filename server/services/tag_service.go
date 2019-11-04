@@ -3,6 +3,7 @@ package services
 import (
 	"strings"
 
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -26,8 +27,13 @@ func (this *tagService) Take(where ...interface{}) *model.Tag {
 	return repositories.TagRepository.Take(simple.DB(), where...)
 }
 
-func (this *tagService) Find(cnd *simple.SqlCnd) (list []model.Tag, err error) {
+func (this *tagService) Find(cnd *simple.SqlCnd) []model.Tag {
 	return repositories.TagRepository.Find(simple.DB(), cnd)
+}
+
+func (this *tagService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Tag) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *tagService) FindPageByParams(params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
@@ -64,9 +70,8 @@ func (this *tagService) Autocomplete(input string) []model.Tag {
 	if len(input) == 0 {
 		return nil
 	}
-	list, _ := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ? and name like ?",
+	return repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ? and name like ?",
 		model.TagStatusOk, "%"+input+"%").Limit(6))
-	return list
 }
 
 func (this *tagService) GetOrCreate(name string) (*model.Tag, error) {
@@ -78,10 +83,7 @@ func (this *tagService) GetByName(name string) *model.Tag {
 }
 
 func (this *tagService) GetTags() []model.TagResponse {
-	list, err := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
-	if err != nil {
-		return nil
-	}
+	list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.TagStatusOk))
 
 	var tags []model.TagResponse
 	for _, tag := range list {

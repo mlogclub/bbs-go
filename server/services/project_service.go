@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/feeds"
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -36,8 +37,13 @@ func (this *projectService) Take(where ...interface{}) *model.Project {
 	return repositories.ProjectRepository.Take(simple.DB(), where...)
 }
 
-func (this *projectService) Find(cnd *simple.SqlCnd) (list []model.Project, err error) {
+func (this *projectService) Find(cnd *simple.SqlCnd) []model.Project {
 	return repositories.ProjectRepository.Find(simple.DB(), cnd)
+}
+
+func (this *projectService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Project) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
@@ -94,11 +100,8 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 func (this *projectService) Scan(callback ProjectScanCallback) {
 	var cursor int64
 	for {
-		list, err := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
+		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
 			cursor).Asc("id").Limit(100))
-		if err != nil {
-			break
-		}
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -112,11 +115,8 @@ func (this *projectService) Scan(callback ProjectScanCallback) {
 func (this *projectService) ScanDesc(callback ProjectScanCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list, err := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
+		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
 			cursor).Desc("id").Limit(100))
-		if err != nil {
-			break
-		}
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -129,15 +129,10 @@ func (this *projectService) ScanDesc(callback ProjectScanCallback) {
 
 // rss
 func (this *projectService) GenerateRss() {
-	projects, err := repositories.ProjectRepository.Find(simple.DB(),
+	projects := repositories.ProjectRepository.Find(simple.DB(),
 		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(2000))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
 
 	var items []*feeds.Item
-
 	for _, project := range projects {
 		projectUrl := urls.ProjectUrl(project.Id)
 		user := cache.UserCache.Get(project.UserId)

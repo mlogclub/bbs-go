@@ -35,8 +35,13 @@ func (this *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
 	return ret
 }
 
-func (this *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag, err error) {
-	err = cnd.Find(db, &list)
+func (this *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Tag) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -45,15 +50,9 @@ func (this *tagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryPar
 }
 
 func (this *tagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.Tag{})
 
-	count, err := cnd.Count(db, &model.Tag{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,

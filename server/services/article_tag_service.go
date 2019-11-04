@@ -24,7 +24,7 @@ func (this *articleTagService) Take(where ...interface{}) *model.ArticleTag {
 	return repositories.ArticleTagRepository.Take(simple.DB(), where...)
 }
 
-func (this *articleTagService) Find(cnd *simple.SqlCnd) (list []model.ArticleTag, err error) {
+func (this *articleTagService) Find(cnd *simple.SqlCnd) []model.ArticleTag {
 	return repositories.ArticleTagRepository.Find(simple.DB(), cnd)
 }
 

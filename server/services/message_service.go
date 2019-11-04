@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common"
@@ -28,8 +29,13 @@ func (this *messageService) Take(where ...interface{}) *model.Message {
 	return repositories.MessageRepository.Take(simple.DB(), where...)
 }
 
-func (this *messageService) Find(cnd *simple.SqlCnd) (list []model.Message, err error) {
+func (this *messageService) Find(cnd *simple.SqlCnd) []model.Message {
 	return repositories.MessageRepository.Find(simple.DB(), cnd)
+}
+
+func (this *messageService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Message) {
+	cnd.FindOne(db, &ret)
+	return
 }
 
 func (this *messageService) FindPageByParams(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {

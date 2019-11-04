@@ -90,10 +90,7 @@ func (this *CategoryController) PostUpdate() *simple.JsonResult {
 
 // options选项
 func (this *CategoryController) AnyOptions() *simple.JsonResult {
-	categories, err := services.CategoryService.GetCategories()
-	if err != nil {
-		return simple.JsonData([]interface{}{})
-	}
+	categories := services.CategoryService.GetCategories()
 
 	var results []map[string]interface{}
 	for _, cat := range categories {

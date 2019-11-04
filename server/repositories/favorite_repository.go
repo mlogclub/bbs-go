@@ -32,8 +32,13 @@ func (this *favoriteRepository) Take(db *gorm.DB, where ...interface{}) *model.F
 	return ret
 }
 
-func (this *favoriteRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Favorite, err error) {
-	err = cnd.Find(db, &list)
+func (this *favoriteRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Favorite) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Favorite) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -42,15 +47,9 @@ func (this *favoriteRepository) FindPageByParams(db *gorm.DB, params *simple.Que
 }
 
 func (this *favoriteRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Favorite, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.Favorite{})
 
-	count, err := cnd.Count(db, &model.Favorite{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
