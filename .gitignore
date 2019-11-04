@@ -1,3 +1,4 @@
 .idea
 dist
 package-lock.json
+*.log
