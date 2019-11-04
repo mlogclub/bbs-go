@@ -20,9 +20,10 @@ install:
 script:
   - go version
   - go env
-  - ls
-  - cd ./server
-  - go run build
+  - echo $PWD
+  - cd server
+  - echo $PWD
+  - go build
 
 branches:
   only:
