@@ -86,8 +86,8 @@
             </div>
           </div>
 
-          <div v-if="user && msgcount" class="navbar-item">
-            <a :href="'/user/messages'" class="msgcount">{{ msgcount }}</a>
+          <div v-if="user && msgcount > 0" class="navbar-item">
+            <a :href="'/user/messages'" class="msgcount">{{ msgcount > 9 ? '9+' : msgcount }}</a>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default {
   components: { GithubLogin, QqLogin },
   data() {
     return {
-      msgcount: '',
+      msgcount: 0,
       navbarActive: false
     }
   },
@@ -118,8 +118,7 @@ export default {
   },
   methods: {
     async getMsgcount() {
-      const ret = await this.$axios.get('/api/user/msgcount')
-      this.msgcount = ret.count > 9 ? '9+' : ret.count + ''
+      this.msgcount = await this.$axios.get('/api/user/msgcount')
     },
     signout() {
       try {
