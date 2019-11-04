@@ -20,6 +20,9 @@ install:
   - go mod download
 
 script:
+  - go version
+  - go env
+  - cd server
   - go run build
 
 branches:
