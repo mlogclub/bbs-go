@@ -90,5 +90,9 @@ func (this *UserController) PostUpdate() *simple.JsonResult {
 }
 
 func (this *UserController) buildUserItem(user *model.User) map[string]interface{} {
-	return simple.NewRspBuilder(user).Put("roles", common.GetUserRoles(user.Roles)).Build()
+	return simple.NewRspBuilder(user).
+		Put("roles", common.GetUserRoles(user.Roles)).
+		Put("username", user.Username.String).
+		Put("email", user.Email.String).
+		Build()
 }
