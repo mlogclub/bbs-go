@@ -2,14 +2,13 @@ dist: trusty
 sudo: required
 
 language: 
-  - node_js
   - go
 
 node_js:
   - "node"
 
 go:
-  - 1.13
+  - master
 
 matrix:
   include:
@@ -17,15 +16,10 @@ matrix:
     - os: linux
     - os: windows
 
-cache:
-  directories:
-    - admin/node_modules
-    - site/node_modules
-
 install:
+  - go mod download
 
 script:
-  - cd server
   - go run build
 
 branches:
