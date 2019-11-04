@@ -10,14 +10,14 @@
 
 ## 模块
 ### server
-> 为 https://mlog.club 提供数据支撑，基于`Golang`搭建。
+> 基于`Golang`搭建，提供接口数据支撑。
 
 ### site
-> https://mlog.club 的前端页面服务，基于`nuxt.js`搭建。
+> 前端页面服务，基于`nuxt.js`搭建。
 
 
 ### admin
-> https://mlog.club 的后台管理系统，基于`Vue` + `Element-UI`搭建。
+> 后台管理系统，基于`Vue` + `Element-UI`搭建。
 
 ## 功能预览
 ![前台页面.png](https://i.loli.net/2019/09/12/EfPJDwKpgjrM1CW.png)
