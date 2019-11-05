@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"encoding/json"
 	"strconv"
 
 	"github.com/kataras/iris"
@@ -34,13 +33,7 @@ func (this *SysConfigController) GetAll() *simple.JsonResult {
 
 func (this *SysConfigController) PostSave() *simple.JsonResult {
 	config := this.Ctx.FormValue("config")
-	data := make(map[string]interface{})
-	err := json.Unmarshal([]byte(config), &data)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	err = services.SysConfigService.SetAll(data)
-	if err != nil {
+	if err := services.SysConfigService.SetAll(config); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()

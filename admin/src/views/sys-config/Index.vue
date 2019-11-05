@@ -3,21 +3,16 @@
     <div class="config">
       <el-form v-model="config" label-width="100px">
         <el-form-item label="网站名称">
-          <el-input v-model="config['site.title']" type="text" placeholder="网站名称"></el-input>
+          <el-input v-model="config.siteTitle" type="text" placeholder="网站名称"></el-input>
         </el-form-item>
 
         <el-form-item label="网站描述">
-          <el-input
-            v-model="config['site.description']"
-            type="textarea"
-            autosize
-            placeholder="网站描述"
-          ></el-input>
+          <el-input v-model="config.siteDescription" type="textarea" autosize placeholder="网站描述"></el-input>
         </el-form-item>
 
         <el-form-item label="网站关键字">
           <el-select
-            v-model="config['site.keywords']"
+            v-model="config.siteKeywords"
             style="width:100%"
             multiple
             filterable
@@ -29,7 +24,7 @@
 
         <el-form-item label="推荐标签">
           <el-select
-            v-model="config['recommend.tags']"
+            v-model="config.recommendTags"
             style="width:100%"
             multiple
             filterable
@@ -41,7 +36,7 @@
 
         <el-form-item label="论坛导航">
           <el-select
-            v-model="config['bbs.nav.tags']"
+            v-model="config.bbsNavTags"
             style="width:100%"
             multiple
             filterable
@@ -67,11 +62,11 @@ export default {
   data() {
     return {
       config: {
-        "site.title": "",
-        "site.description": "",
-        "site.keywords": [],
-        "recommend.tags": [],
-        "bbs.nav.tags": []
+        siteTitle: "",
+        siteDescription: "",
+        siteKeywords: [],
+        recommendTags: [],
+        bbsNavTags: []
       },
       loading: false,
       complateTags: [],
@@ -92,10 +87,14 @@ export default {
               continue;
             }
             switch (item.key) {
-              case "site.keywords":
-              case "recommend.tags":
-              case "bbs.nav.tags":
-                this.config[item.key] = me.splitBy(item.value, ',');
+              case "siteKeywords":
+              case "recommendTags":
+              case "bbsNavTags":
+                try {
+                  this.config[item.key] = JSON.parse(item.value);
+                } catch (err) {
+                  console.error(err);
+                }
                 break;
               default:
                 this.config[item.key] = item.value;
@@ -121,13 +120,11 @@ export default {
         .catch(rsp => {
           me.loading = false;
           me.$notify.error({ title: "错误", message: rsp.message });
+        })
+        .finally(() => {
+          me.load();
+          console.log("1111111");
         });
-    },
-    splitBy(str, separator){
-      if (!str || !separator) {
-        return []
-      }
-      return str.split(separator)
     }
   }
 };

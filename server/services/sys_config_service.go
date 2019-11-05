@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/tidwall/gjson"
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -49,12 +50,15 @@ func (this *sysConfigService) GetAll() []model.SysConfig {
 	return repositories.SysConfigRepository.Find(simple.DB(), simple.NewSqlCnd().Asc("id"))
 }
 
-func (this *sysConfigService) SetAll(configs map[string]string) error {
-	if len(configs) == 0 {
-		return nil
+func (this *sysConfigService) SetAll(configStr string) error {
+	json := gjson.Parse(configStr)
+	configs, ok := json.Value().(map[string]interface{})
+	if !ok {
+		return errors.New("配置数据格式错误")
 	}
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		for k, v := range configs {
+		for k, _ := range configs {
+			v := json.Get(k).String()
 			if err := this.setSingle(tx, k, v, "", ""); err != nil {
 				return err
 			}
