@@ -7,6 +7,7 @@ class HttpClient {
     this.http = axios.create({
       // baseURL: 'https://mlog.club'
       baseURL: 'http://localhost:8082'
+      // baseURL: process.env.APP_BASE_URL
     });
     this.http.defaults.headers.common['X-Client'] = 'bbs-go-admin';
     this.http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

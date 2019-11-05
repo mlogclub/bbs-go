@@ -22,3 +22,5 @@ build/*
 
 cscope.files
 tags
+
+logs/*.log

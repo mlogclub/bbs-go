@@ -98,7 +98,7 @@
 <script>
 import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
-import QqLogin from '~/components/QqLogin'
+import QqLogin from '~/components/QQLogin'
 export default {
   components: { GithubLogin, QqLogin },
   data() {

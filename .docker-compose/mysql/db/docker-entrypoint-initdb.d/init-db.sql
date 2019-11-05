@@ -1,0 +1,212 @@
+CREATE DATABASE IF NOT EXISTS `mlog_db`;
+
+
+USE mlog_db;
+SET NAMES UTF8;
+
+-- 初始化用户表
+CREATE TABLE IF NOT EXISTS `t_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nickname` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `avatar` text COLLATE utf8_unicode_ci,
+  `password` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `roles` text COLLATE utf8_unicode_ci,
+  `type` int(11) NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `create_time` bigint(20) DEFAULT NULL,
+  `update_time` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 初始化用户数据（用户名：admin、密码：123456）
+INSERT INTO t_user (
+    `id`,
+    `username`,
+    `nickname`,
+    `avatar`,
+    `email`,
+    `password`,
+    `status`,
+    `create_time`,
+    `update_time`,
+    `roles`,
+    `type`,
+    `description`
+) SELECT
+    1,
+    'admin',
+    '管理员',
+    '',
+    'a@example.com',
+    '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS',
+    0,
+    1555419028975,
+    1555419028975,
+    '管理员',
+    0,
+    '轻轻地我走了，正如我轻轻的来。'
+FROM
+    DUAL
+WHERE
+    NOT EXISTS (
+        SELECT
+            `id`,
+            `username`,
+            `nickname`,
+            `avatar`,
+            `email`,
+            `password`,
+            `status`,
+            `create_time`,
+            `update_time`,
+            `roles`,
+            `type`,
+            `description`
+        FROM t_user
+        WHERE id = 1
+    );
+
+-- 初始化系统配置表
+CREATE TABLE IF NOT EXISTS `t_sys_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `key` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `value` text COLLATE utf8_unicode_ci,
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` bigint(20) NOT NULL,
+  `update_time` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 初始化系统配置数据
+INSERT INTO t_sys_config(
+    `key`,
+    `value`,
+    `name`,
+    `description`,
+    `create_time`,
+    `update_time`
+) SELECT
+    'site.title',
+    'M-LOG',
+    '站点标题',
+    '站点标题',
+    1555419028975,
+    1555419028975
+FROM
+    DUAL
+WHERE
+    NOT EXISTS (
+        SELECT
+            `key`,
+            `value`,
+            `name`,
+            `description`,
+            `create_time`,
+            `update_time`
+        FROM
+            t_sys_config
+        WHERE
+            `key` = 'site.title'
+    );
+
+INSERT INTO t_sys_config (
+    `key`,
+    `value`,
+    `name`,
+    `description`,
+    `create_time`,
+    `update_time`
+) SELECT
+    'site.description',
+    'M-LOG社区，基于Go语言的开源社区系统',
+    '站点描述',
+    '站点描述',
+    1555419028975,
+    1555419028975
+FROM
+    DUAL
+WHERE
+    NOT EXISTS (
+        SELECT
+            `key`,
+            `value`,
+            `name`,
+            `description`,
+            `create_time`,
+            `update_time`
+        FROM
+            t_sys_config
+        WHERE
+            `key` = 'site.description'
+    );
+
+INSERT INTO t_sys_config (
+    `key`,
+    `value`,
+    `name`,
+    `description`,
+    `create_time`,
+    `update_time`
+) SELECT
+    'site.keywords',
+    'M-LOG,Go语言',
+    '站点关键字',
+    '站点关键字',
+    1555419028975,
+    1555419028975
+FROM
+    DUAL
+WHERE
+    NOT EXISTS (
+        SELECT
+            `key`,
+            `value`,
+            `name`,
+            `description`,
+            `create_time`,
+            `update_time`
+        FROM
+            t_sys_config
+        WHERE
+            `key` = 'site.keywords'
+    );
+
+
+INSERT INTO t_sys_config (
+    `key`,
+    `value`,
+    `name`,
+    `description`,
+    `create_time`,
+    `update_time`
+) SELECT
+    'recommend.tags',
+    '',
+    '推荐标签',
+    '推荐标签，多个标签之间用英文逗号分隔',
+    1555419028975,
+    1555419028975
+FROM
+    DUAL
+WHERE
+    NOT EXISTS (
+        SELECT
+            `key`,
+            `value`,
+            `name`,
+            `description`,
+            `create_time`,
+            `update_time`
+        FROM
+            t_sys_config
+        WHERE
+            `key` = 'recommend.tags'
+    );
