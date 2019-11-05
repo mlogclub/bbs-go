@@ -18,11 +18,13 @@ func (this *ConfigController) GetConfigs() *simple.JsonResult {
 		siteTitle       = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
 		siteDescription = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
 		siteKeywords    = cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords)
+		recommendTags   = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
 	)
 
 	return simple.JsonData(iris.Map{
 		"siteTitle":       siteTitle,
 		"siteDescription": siteDescription,
 		"siteKeywords":    siteKeywords,
+		"recommendTags":   recommendTags,
 	})
 }
