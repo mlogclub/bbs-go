@@ -45,9 +45,8 @@ func (this *sysConfigService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Sy
 	return repositories.SysConfigRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *sysConfigService) GetAll() (list []model.SysConfig) {
-	simple.DB().Order("id asc").Find(&list)
-	return
+func (this *sysConfigService) GetAll() []model.SysConfig {
+	return repositories.SysConfigRepository.Find(simple.DB(), simple.NewSqlCnd().Asc("id"))
 }
 
 func (this *sysConfigService) SetAll(configs map[string]string) error {
@@ -56,7 +55,7 @@ func (this *sysConfigService) SetAll(configs map[string]string) error {
 	}
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		for k, v := range configs {
-			if _, err := this.setSingle(tx, k, v, "", ""); err != nil {
+			if err := this.setSingle(tx, k, v, "", ""); err != nil {
 				return err
 			}
 		}
@@ -67,15 +66,16 @@ func (this *sysConfigService) SetAll(configs map[string]string) error {
 // 设置配置，如果配置不存在，那么创建
 func (this *sysConfigService) Set(key, value, name, description string) error {
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		if _, err := this.setSingle(tx, key, value, name, description); err != nil {
+		if err := this.setSingle(tx, key, value, name, description); err != nil {
 			return err
 		}
 		return nil
 	})
 }
-func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) (*model.SysConfig, error) {
+
+func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) error {
 	if len(key) == 0 {
-		return nil, errors.New("sys config key is null")
+		return errors.New("sys config key is null")
 	}
 	sysConfig := repositories.SysConfigRepository.GetByKey(simple.DB(), key)
 	if sysConfig == nil {
@@ -101,8 +101,9 @@ func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, descripti
 		err = repositories.SysConfigRepository.Create(simple.DB(), sysConfig)
 	}
 	if err != nil {
-		return nil, err
+		return err
+	} else {
+		cache.SysConfigCache.Invalidate(key)
+		return nil
 	}
-	cache.SysConfigCache.Invalidate(key)
-	return sysConfig, nil
 }
