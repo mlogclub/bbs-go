@@ -94,7 +94,7 @@ func (this *tagRepository) GetTagInIds(tagIds []int64) []model.Tag {
 	return tags
 }
 
-func (this *tagRepository) FindByName(name string) *model.Tag {
+func (this *tagRepository) GetByName(name string) *model.Tag {
 	if len(name) == 0 {
 		return nil
 	}
@@ -105,7 +105,7 @@ func (this *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, er
 	if len(name) == 0 {
 		return nil, errors.New("标签为空")
 	}
-	tag := this.FindByName(name)
+	tag := this.GetByName(name)
 	if tag != nil {
 		return tag, nil
 	} else {

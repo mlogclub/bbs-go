@@ -12,7 +12,7 @@ import (
 )
 
 type tagCache struct {
-	cache           cache.LoadingCache
+	cache           cache.LoadingCache // 标签缓存
 	activeTagsCache cache.LoadingCache // 热门标签
 }
 

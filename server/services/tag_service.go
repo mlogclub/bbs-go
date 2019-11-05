@@ -79,7 +79,7 @@ func (this *tagService) GetOrCreate(name string) (*model.Tag, error) {
 }
 
 func (this *tagService) GetByName(name string) *model.Tag {
-	return repositories.TagRepository.FindByName(name)
+	return repositories.TagRepository.GetByName(name)
 }
 
 func (this *tagService) GetTags() []model.TagResponse {
