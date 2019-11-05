@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `mlog_db`;
+CREATE DATABASE IF NOT EXISTS `bbsgo_db`;
 
-USE mlog_db;
+USE bbsgo_db;
 SET NAMES UTF8;
 
 -- 初始化用户表
