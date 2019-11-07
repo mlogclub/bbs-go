@@ -23,7 +23,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json* ./
-RUN npm i
+RUN npm i --registry=https://registry.npm.taobao.org
 
 FROM builder AS assets
 
@@ -67,7 +67,7 @@ HEALTHCHECK --start-period=10s \
 WORKDIR /app
 
 # Install serve
-RUN npm i -g serve
+RUN npm i -g serve --registry=https://registry.npm.taobao.org
 
 # node_modules from former assets stage
 COPY --from=assets /app/dist /app/dist

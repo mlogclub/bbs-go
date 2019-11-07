@@ -5,9 +5,8 @@ import cookies from 'js-cookie'
 class HttpClient {
   constructor() {
     this.http = axios.create({
-      // baseURL: 'https://mlog.club'
-      // baseURL: 'http://localhost:8082'
-      baseURL: process.env.APP_BASE_URL
+      // 请替换为你自己的接口地址
+      baseURL: 'https://mlog.club'
     });
     this.http.defaults.headers.common['X-Client'] = 'bbs-go-admin';
     this.http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

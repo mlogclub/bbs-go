@@ -23,7 +23,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json* ./
-RUN npm i
+RUN npm i --registry=https://registry.npm.taobao.org
 
 FROM builder AS application
 

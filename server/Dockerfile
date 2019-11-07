@@ -19,8 +19,7 @@ ENV ROOT_DIR=/app
 
 # download and cache go dependencies
 COPY go.* ./
-RUN export GOPROXY=https://goproxy.cn
-RUN go mod download
+RUN GOPROXY="https://goproxy.cn" go mod download
 
 COPY . .
 
