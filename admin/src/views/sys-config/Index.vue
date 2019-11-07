@@ -65,7 +65,7 @@
               <el-col :span="10">
                 <el-input v-model="nav.title" type="text" size="small" placeholder="标题"></el-input>
               </el-col>
-              <el-col :span="10">
+              <el-col :span="11">
                 <el-input v-model="nav.url" type="text" size="small" placeholder="链接"></el-input>
               </el-col>
               <el-col :span="2">
