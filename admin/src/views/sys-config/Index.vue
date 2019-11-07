@@ -55,7 +55,37 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="导航配置" name="second">
+      <el-tab-pane label="导航配置" name="second" class="nav-panel">
+        <draggable v-model="config.siteNavs" draggable=".nav" handle=".nav-sort-btn" class="navs">
+          <div v-for="(nav, index) in config.siteNavs" :key="index" class="nav">
+            <el-row :gutter="20">
+              <el-col :span="1">
+                <i class="iconfont icon-sort nav-sort-btn" />
+              </el-col>
+              <el-col :span="10">
+                <el-input v-model="nav.title" type="text" size="small" placeholder="标题"></el-input>
+              </el-col>
+              <el-col :span="10">
+                <el-input v-model="nav.url" type="text" size="small" placeholder="链接"></el-input>
+              </el-col>
+              <el-col :span="2">
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  circle
+                  size="small"
+                  @click="delNav(index)"
+                ></el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </draggable>
+        <div class="add-nav">
+          <el-tooltip class="item" effect="dark" content="点击按钮添加导航" placement="top">
+            <el-button type="primary" icon="el-icon-plus" circle @click="addNav"></el-button>
+          </el-tooltip>
+        </div>
+        <!--
         <div class="navs">
           <div class="nav" v-for="(nav, index) in config.siteNavs" :key="index">
             <el-row :gutter="20">
@@ -76,6 +106,7 @@
             </el-tooltip>
           </div>
         </div>
+        -->
       </el-tab-pane>
     </el-tabs>
 
@@ -87,9 +118,13 @@
 
 <script>
 import HttpClient from "@/apis/HttpClient";
+import draggable from "vuedraggable";
 
 export default {
   name: "List",
+  components: {
+    draggable
+  },
   data() {
     return {
       config: {
@@ -182,9 +217,25 @@ export default {
 .config {
   padding: 10px 0;
 }
-.navs {
-  .nav {
-    margin: 10px 0;
+.nav-panel {
+  .navs {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    .nav {
+      padding: 5px 5px;
+      margin: 0;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #ddd;
+      }
+
+      .nav-sort-btn {
+        font-size: 21px;
+        font-weight: 700;
+        cursor: pointer;
+        float: right;
+      }
+    }
   }
 
   .add-nav {
