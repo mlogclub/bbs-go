@@ -1,4 +1,5 @@
-export default async function ({ store }) {
+export default async function ({ store, app }) {
   await store.dispatch('user/getCurrentUser')
-  await store.dispatch('config/loadConfig')
+  const config = await store.dispatch('config/loadConfig')
+  app.head.title = config.siteTitle
 }

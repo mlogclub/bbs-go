@@ -85,28 +85,6 @@
             <el-button type="primary" icon="el-icon-plus" circle @click="addNav"></el-button>
           </el-tooltip>
         </div>
-        <!--
-        <div class="navs">
-          <div class="nav" v-for="(nav, index) in config.siteNavs" :key="index">
-            <el-row :gutter="20">
-              <el-col :span="11">
-                <el-input v-model="nav.title" type="text" placeholder="标题"></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input v-model="nav.url" type="text" placeholder="链接"></el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-button type="danger" icon="el-icon-delete" circle @click="delNav(index)"></el-button>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="add-nav">
-            <el-tooltip class="item" effect="dark" content="点击按钮添加导航" placement="top">
-              <el-button type="primary" icon="el-icon-plus" circle @click="addNav"></el-button>
-            </el-tooltip>
-          </div>
-        </div>
-        -->
       </el-tab-pane>
     </el-tabs>
 

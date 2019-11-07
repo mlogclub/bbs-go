@@ -1,4 +1,6 @@
 export default {
+  host: '0.0.0.0',
+  port: 3000,
   mode: 'universal',
   /*
    ** Headers of the page
@@ -66,10 +68,6 @@ export default {
   axios: {
     proxy: true,
     credentials: true
-  },
-
-  router: {
-    middleware: ['config']
   },
 
   proxy: {

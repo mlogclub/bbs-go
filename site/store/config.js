@@ -12,7 +12,7 @@ export const actions = {
   // 加载配置
   async loadConfig(context) {
     const ret = await this.$axios.get('/api/config/configs')
-    context.dispatch('setConfig', ret)
+    context.commit('setConfig', ret)
     return ret
   }
 }
