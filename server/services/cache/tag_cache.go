@@ -12,8 +12,7 @@ import (
 )
 
 type tagCache struct {
-	cache           cache.LoadingCache // 标签缓存
-	activeTagsCache cache.LoadingCache // 热门标签
+	cache cache.LoadingCache // 标签缓存
 }
 
 var TagCache = newTagCache()
@@ -27,31 +26,6 @@ func newTagCache() *tagCache {
 			},
 			cache.WithMaximumSize(1000),
 			cache.WithExpireAfterAccess(30*time.Minute),
-		),
-		activeTagsCache: cache.NewLoadingCache(
-			func(key cache.Key) (value cache.Value, e error) {
-				dateFrom := simple.Timestamp(simple.WithTimeAsStartOfDay(time.Now()))
-				rows, e := simple.DB().Raw("select tag_id, count(*) c from t_article_tag where create_time > ?"+
-					" group by tag_id order by c desc limit 50", dateFrom).Rows()
-
-				if e != nil {
-					return
-				}
-				var tagIds []int64
-				for rows.Next() {
-					var tagId int64
-					var c int
-					err := rows.Scan(&tagId, &c)
-					if err != nil {
-						continue
-					}
-					tagIds = append(tagIds, tagId)
-				}
-				value = tagIds
-				return
-			},
-			cache.WithMaximumSize(1),
-			cache.WithRefreshAfterWrite(30*time.Minute),
 		),
 	}
 }
@@ -83,23 +57,4 @@ func (this *tagCache) GetList(tagIds []int64) (tags []model.Tag) {
 
 func (this *tagCache) Invalidate(tagId int64) {
 	this.cache.Invalidate(tagId)
-}
-
-func (this *tagCache) GetActiveTags() []model.Tag {
-	val, err := this.activeTagsCache.Get("data")
-	if err != nil {
-		return nil
-	}
-	tagIds := val.([]int64)
-	if len(tagIds) == 0 {
-		return nil
-	}
-	var tags []model.Tag
-	for _, tagId := range tagIds {
-		tag := this.Get(tagId)
-		if tag != nil {
-			tags = append(tags, *tag)
-		}
-	}
-	return tags
 }

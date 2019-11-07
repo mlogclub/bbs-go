@@ -39,9 +39,3 @@ func (this *TagController) PostAutocomplete() *simple.JsonResult {
 	tags := services.TagService.Autocomplete(input)
 	return simple.JsonData(tags)
 }
-
-// 活跃标签
-func (this *TagController) GetActive() *simple.JsonResult {
-	tags := cache.TagCache.GetActiveTags()
-	return simple.JsonData(render.BuildTags(tags))
-}

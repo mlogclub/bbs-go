@@ -137,12 +137,6 @@ func (this *UserController) GetMsgcount() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("count", count).JsonResult()
 }
 
-// 活跃用户
-func (this *UserController) GetActive() *simple.JsonResult {
-	users := cache.UserCache.GetActiveUsers()
-	return simple.JsonData(render.BuildUsers(users))
-}
-
 // 用户收藏
 func (this *UserController) GetFavorites() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
