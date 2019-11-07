@@ -92,8 +92,10 @@
 }
 
 .page-container {
-  margin: 10px;
+  margin: 10px !important;
+  padding: 10px !important;
   background: #fff;
+
   .toolbar {
     // background: #f2f2f2;
     border-bottom: 1px solid #e9ecf0;

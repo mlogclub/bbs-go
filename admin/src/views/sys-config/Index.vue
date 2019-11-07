@@ -1,55 +1,86 @@
 <template>
   <section class="page-container">
-    <div class="config">
-      <el-form v-model="config" label-width="100px">
-        <el-form-item label="网站名称">
-          <el-input v-model="config.siteTitle" type="text" placeholder="网站名称"></el-input>
-        </el-form-item>
+    <el-tabs value="second">
+      <el-tab-pane label="通用配置" name="first">
+        <div class="config">
+          <el-form label-width="100px">
+            <el-form-item label="网站名称">
+              <el-input v-model="config.siteTitle" type="text" placeholder="网站名称"></el-input>
+            </el-form-item>
 
-        <el-form-item label="网站描述">
-          <el-input v-model="config.siteDescription" type="textarea" autosize placeholder="网站描述"></el-input>
-        </el-form-item>
+            <el-form-item label="网站描述">
+              <el-input
+                v-model="config.siteDescription"
+                type="textarea"
+                autosize
+                placeholder="网站描述"
+              ></el-input>
+            </el-form-item>
 
-        <el-form-item label="网站关键字">
-          <el-select
-            v-model="config.siteKeywords"
-            style="width:100%"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="网站关键字"
-          ></el-select>
-        </el-form-item>
+            <el-form-item label="网站关键字">
+              <el-select
+                v-model="config.siteKeywords"
+                style="width:100%"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="网站关键字"
+              ></el-select>
+            </el-form-item>
 
-        <el-form-item label="推荐标签">
-          <el-select
-            v-model="config.recommendTags"
-            style="width:100%"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="推荐标签"
-          ></el-select>
-        </el-form-item>
+            <el-form-item label="推荐标签">
+              <el-select
+                v-model="config.recommendTags"
+                style="width:100%"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="推荐标签"
+              ></el-select>
+            </el-form-item>
 
-        <el-form-item label="论坛导航">
-          <el-select
-            v-model="config.bbsNavTags"
-            style="width:100%"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="论坛导航标签，用于显示在讨论区侧边栏"
-          ></el-select>
-        </el-form-item>
+            <el-form-item label="论坛导航">
+              <el-select
+                v-model="config.bbsNavTags"
+                style="width:100%"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="论坛导航标签，用于显示在讨论区侧边栏"
+              ></el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="导航配置" name="second">
+        <div class="navs">
+          <div class="nav" v-for="(nav, index) in config.siteNavs" :key="index">
+            <el-row :gutter="20">
+              <el-col :span="11">
+                <el-input v-model="nav.title" type="text" placeholder="标题"></el-input>
+              </el-col>
+              <el-col :span="11">
+                <el-input v-model="nav.url" type="text" placeholder="链接"></el-input>
+              </el-col>
+              <el-col :span="2">
+                <el-button type="danger" icon="el-icon-delete" circle @click="delNav(index)"></el-button>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="add-nav">
+            <el-tooltip class="item" effect="dark" content="点击按钮添加导航" placement="top">
+              <el-button type="primary" icon="el-icon-plus" circle @click="addNav"></el-button>
+            </el-tooltip>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
 
-        <el-form-item>
-          <el-button type="primary" :loading="loading" @click="save">保存</el-button>
-        </el-form-item>
-      </el-form>
+    <div style="margin-top: 20px;">
+      <el-button type="primary" :loading="loading" @click="save">保存</el-button>
     </div>
   </section>
 </template>
@@ -65,12 +96,16 @@ export default {
         siteTitle: "",
         siteDescription: "",
         siteKeywords: [],
+        siteNavs: [
+          // {
+          //   title: "xxx",
+          //   url: "/topics"
+          // }
+        ],
         recommendTags: [],
         bbsNavTags: []
       },
-      loading: false,
-      complateTags: [],
-      complateLoading: false
+      loading: false
     };
   },
   mounted() {
@@ -88,6 +123,7 @@ export default {
             }
             switch (item.key) {
               case "siteKeywords":
+              case "siteNavs":
               case "recommendTags":
               case "bbsNavTags":
                 try {
@@ -116,15 +152,27 @@ export default {
         .then(() => {
           me.loading = false;
           me.$message({ message: "提交成功", type: "success" });
+          me.load();
         })
         .catch(rsp => {
           me.loading = false;
           me.$notify.error({ title: "错误", message: rsp.message });
-        })
-        .finally(() => {
-          me.load();
-          console.log("1111111");
         });
+    },
+    addNav() {
+      if (!this.config.siteNavs) {
+        this.config.siteNavs = [];
+      }
+      this.config.siteNavs.push({
+        title: "",
+        url: ""
+      });
+    },
+    delNav(index) {
+      if (!this.config.siteNavs) {
+        return;
+      }
+      this.config.siteNavs.splice(index, 1);
     }
   }
 };
@@ -133,5 +181,15 @@ export default {
 <style scoped lang="scss">
 .config {
   padding: 10px 0;
+}
+.navs {
+  .nav {
+    margin: 10px 0;
+  }
+
+  .add-nav {
+    margin-top: 20px;
+    text-align: center;
+  }
 }
 </style>
