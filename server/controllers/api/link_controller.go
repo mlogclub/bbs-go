@@ -5,7 +5,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-resty/resty/v2"
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -14,7 +14,7 @@ import (
 )
 
 type LinkController struct {
-	Ctx context.Context
+	Ctx iris.Context
 }
 
 func (this *LinkController) GetBy(id int64) *simple.JsonResult {

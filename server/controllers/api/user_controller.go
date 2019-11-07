@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
@@ -14,7 +14,7 @@ import (
 )
 
 type UserController struct {
-	Ctx context.Context
+	Ctx iris.Context
 }
 
 // 获取当前登录用户

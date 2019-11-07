@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"strings"
 
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common/urls"
@@ -18,7 +18,7 @@ import (
 )
 
 type ArticleController struct {
-	Ctx context.Context
+	Ctx iris.Context
 }
 
 // 文章详情

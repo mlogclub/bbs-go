@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
@@ -10,7 +10,7 @@ import (
 )
 
 // 接口权限
-func ApiAuth(ctx context.Context) {
+func ApiAuth(ctx iris.Context) {
 	token := getUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 
@@ -29,7 +29,7 @@ func ApiAuth(ctx context.Context) {
 }
 
 // 后台权限
-func AdminAuth(ctx context.Context) {
+func AdminAuth(ctx iris.Context) {
 	token := getUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 
@@ -56,7 +56,7 @@ func AdminAuth(ctx context.Context) {
 }
 
 // 从请求体中获取UserToken
-func getUserToken(ctx context.Context) string {
+func getUserToken(ctx iris.Context) string {
 	userToken := ctx.FormValue("userToken")
 	if len(userToken) > 0 {
 		return userToken
@@ -64,7 +64,7 @@ func getUserToken(ctx context.Context) string {
 	return ctx.GetHeader("X-User-Token")
 }
 
-func notLogin(ctx context.Context) {
+func notLogin(ctx iris.Context) {
 	_, _ = ctx.JSON(simple.JsonError(simple.ErrorNotLogin))
 	ctx.StopExecution()
 }

@@ -3,9 +3,9 @@ package services
 import (
 	"database/sql"
 	"strings"
+	"errors"
 
 	"github.com/jinzhu/gorm"
-	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common"

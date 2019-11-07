@@ -3,7 +3,7 @@ package api
 import (
 	"io/ioutil"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 

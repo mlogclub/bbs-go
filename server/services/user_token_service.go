@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -47,7 +47,7 @@ func (this *userTokenService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Us
 }
 
 // 获取当前登录用户
-func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
+func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	token := this.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
@@ -62,7 +62,7 @@ func (this *userTokenService) GetCurrent(ctx context.Context) *model.User {
 }
 
 // 退出登录
-func (this *userTokenService) Signout(ctx context.Context) error {
+func (this *userTokenService) Signout(ctx iris.Context) error {
 	token := this.GetUserToken(ctx)
 	userToken := repositories.UserTokenRepository.GetByToken(simple.DB(), token)
 	if userToken == nil {
@@ -72,7 +72,7 @@ func (this *userTokenService) Signout(ctx context.Context) error {
 }
 
 // 从请求体中获取UserToken
-func (this *userTokenService) GetUserToken(ctx context.Context) string {
+func (this *userTokenService) GetUserToken(ctx iris.Context) string {
 	userToken := ctx.FormValue("userToken")
 	if len(userToken) > 0 {
 		return userToken

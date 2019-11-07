@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/simple"
