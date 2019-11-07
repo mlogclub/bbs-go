@@ -133,7 +133,8 @@ CREATE TABLE IF NOT EXISTS `t_sys_config` (
 insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `update_time`) values
     ('siteTitle', 'bbs-go', '站点标题', '站点标题', 1555419028975, 1555419028975),
     ('siteDescription', 'bbs-go，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
-    ('siteKeywords', 'bbs-go', '站点关键字', '站点关键字', 1555419028975, 1555419028975);
+    ('siteKeywords', 'bbs-go', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
+    ('siteNavs', '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]', '站点导航', '站点导航', 1555419028975, 1555419028975);
 ```
 
 ### 启动网站前端

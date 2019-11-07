@@ -177,3 +177,34 @@ WHERE
         WHERE
             `key` = 'siteKeywords'
     );
+
+
+INSERT INTO t_sys_config (
+    `key`,
+    `value`,
+    `name`,
+    `description`,
+    `create_time`,
+    `update_time`
+  )
+SELECT
+  'siteNavs',
+  '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
+  '站点导航',
+  '站点导航',
+  1555419028975,
+  1555419028975
+FROM DUAL
+WHERE
+  NOT EXISTS (
+    SELECT
+      `key`,
+      `value`,
+      `name`,
+      `description`,
+      `create_time`,
+      `update_time`
+    FROM t_sys_config
+    WHERE
+      `key` = 'siteNavs'
+  );
