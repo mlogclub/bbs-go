@@ -2,10 +2,12 @@ package admin
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/kataras/iris"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/bbs-go/controllers/render"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 )
@@ -83,4 +85,16 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
+}
+
+// 自动完成
+func (this *TagController) GetAutocomplete() *simple.JsonResult {
+	keyword := strings.TrimSpace(this.Ctx.URLParam("keyword"))
+	var tags []model.Tag
+	if len(keyword) > 0 {
+		tags = services.TagService.Find(simple.NewSqlCnd().Like("name", keyword).Desc("id").Limit(10))
+	} else {
+		tags = services.TagService.Find(simple.NewSqlCnd().Desc("id").Limit(10))
+	}
+	return simple.JsonData(render.BuildTags(tags))
 }

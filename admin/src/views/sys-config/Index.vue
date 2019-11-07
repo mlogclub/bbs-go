@@ -43,14 +43,35 @@
 
             <el-form-item label="论坛导航">
               <el-select
-                v-model="config.bbsNavTags"
+                v-model="config.bbsNavTagIds"
                 style="width:100%"
                 multiple
                 filterable
-                allow-create
-                default-first-option
+                remote
                 placeholder="论坛导航标签，用于显示在讨论区侧边栏"
-              ></el-select>
+                :remote-method="loadAutocompleteTags"
+                :loading="autocompleteTagLoading"
+              >
+                <!-- 已经选择的 -->
+                <template v-if="config.bbsNavTags && config.bbsNavTags.length">
+                  <el-option
+                    v-for="tag in config.bbsNavTags"
+                    :key="tag.id"
+                    :value="tag.tagId"
+                    :label="tag.tagName"
+                  ></el-option>
+                </template>
+
+                <!-- 远程搜索的 -->
+                <template v-if="autocompleteTags && autocompleteTags.length">
+                  <el-option
+                    v-for="tag in autocompleteTags"
+                    :key="tag.id"
+                    :value="tag.tagId"
+                    :label="tag.tagName"
+                  ></el-option>
+                </template>
+              </el-select>
             </el-form-item>
           </el-form>
         </div>
@@ -105,72 +126,43 @@ export default {
   },
   data() {
     return {
-      config: {
-        siteTitle: "",
-        siteDescription: "",
-        siteKeywords: [],
-        siteNavs: [
-          // {
-          //   title: "xxx",
-          //   url: "/topics"
-          // }
-        ],
-        recommendTags: [],
-        bbsNavTags: []
-      },
-      loading: false
+      config: {},
+      loading: false,
+      autocompleteTags: [],
+      autocompleteTagLoading: false
     };
   },
   mounted() {
     this.load();
   },
   methods: {
-    load() {
-      const me = this;
-      HttpClient.get("/api/admin/sys-config/all")
-        .then(data => {
-          for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            if (!me.config.hasOwnProperty(item.key)) {
-              continue;
-            }
-            switch (item.key) {
-              case "siteKeywords":
-              case "siteNavs":
-              case "recommendTags":
-              case "bbsNavTags":
-                try {
-                  this.config[item.key] = JSON.parse(item.value);
-                } catch (err) {
-                  console.error(err);
-                }
-                break;
-              default:
-                this.config[item.key] = item.value;
-                break;
-            }
-          }
-        })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+    async load() {
+      try {
+        this.config = await HttpClient.get("/api/admin/sys-config/all");
+      } catch (err) {
+        this.$notify.error({ title: "错误", message: err.message });
+      }
     },
-    save() {
-      console.log(this.config);
-      const me = this;
-      me.loading = true;
-      HttpClient.post("/api/admin/sys-config/save", {
-        config: JSON.stringify(this.config)
-      })
-        .then(() => {
-          me.loading = false;
-          me.$message({ message: "提交成功", type: "success" });
-          me.load();
-        })
-        .catch(rsp => {
-          me.loading = false;
-          me.$notify.error({ title: "错误", message: rsp.message });
+    async save() {
+      this.loading = true;
+      try {
+        await HttpClient.post("/api/admin/sys-config/save", {
+          config: JSON.stringify({
+            siteTitle: this.config.siteTitle,
+            siteDescription: this.config.siteDescription,
+            siteKeywords: this.config.siteKeywords,
+            siteNavs: this.config.siteNavs,
+            recommendTags: this.config.recommendTags,
+            bbsNavTags: this.config.bbsNavTagIds
+          })
         });
+        this.$message({ message: "提交成功", type: "success" });
+        this.load();
+      } catch (err) {
+        this.$notify.error({ title: "错误", message: err.message });
+      } finally {
+        this.loading = false;
+      }
     },
     addNav() {
       if (!this.config.siteNavs) {
@@ -186,6 +178,29 @@ export default {
         return;
       }
       this.config.siteNavs.splice(index, 1);
+    },
+    async loadAutocompleteTags(query) {
+      this.autocompleteTagLoading = true;
+      this.autocompleteTags = [];
+      try {
+        const list = await HttpClient.get("/api/admin/tag/autocomplete", {
+          keyword: query
+        });
+
+        if (list && list.length) {
+          const me = this;
+          this.autocompleteTags = list.filter(item => {
+            if (me.config.bbsNavTagIds.length === 0) {
+              return true;
+            }
+            return me.config.bbsNavTagIds.indexOf(item.tagId) === -1;
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.autocompleteTagLoading = false;
+      }
     }
   }
 };

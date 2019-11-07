@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -109,5 +110,59 @@ func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, descripti
 	} else {
 		cache.SysConfigCache.Invalidate(key)
 		return nil
+	}
+}
+
+func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
+	var (
+		siteTitle       = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+		siteDescription = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+		siteKeywords    = cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords)
+		siteNavs        = cache.SysConfigCache.GetValue(model.SysConfigSiteNavs)
+		recommendTags   = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
+		bbsNavTags      = cache.SysConfigCache.GetValue(model.SysConfigBbsNavTags)
+	)
+
+	var siteKeywordsArr []string
+	if err := simple.ParseJson(siteKeywords, &siteKeywordsArr); err != nil {
+		logrus.Error("站点关键词数据错误", err)
+	}
+
+	var siteNavsArr []model.SiteNav
+	if err := simple.ParseJson(siteNavs, &siteNavsArr); err != nil {
+		logrus.Error("站点导航数据错误", err)
+	}
+
+	var recommendTagsArr []string
+	if err := simple.ParseJson(recommendTags, &recommendTagsArr); err != nil {
+		logrus.Error("推荐标签数据错误", err)
+	}
+
+	var bbsNavTagsArr []model.TagResponse
+	var bbsNavTagIds []int64
+	var bbsNavTagIdsTemp []int64
+	if err := simple.ParseJson(bbsNavTags, &bbsNavTagIdsTemp); err != nil {
+		logrus.Error("论坛导航标签数据错误", err)
+	} else {
+		for _, tagId := range bbsNavTagIdsTemp {
+			t := cache.TagCache.Get(tagId)
+			if t != nil && t.Status == model.TagStatusOk {
+				bbsNavTagIds = append(bbsNavTagIds, t.Id)
+				bbsNavTagsArr = append(bbsNavTagsArr, model.TagResponse{
+					TagId:   t.Id,
+					TagName: t.Name,
+				})
+			}
+		}
+	}
+
+	return &model.ConfigResponse{
+		SiteTitle:       siteTitle,
+		SiteDescription: siteDescription,
+		SiteKeywords:    siteKeywordsArr,
+		SiteNavs:        siteNavsArr,
+		RecommendTags:   recommendTagsArr,
+		BbsNavTags:      bbsNavTagsArr,
+		BbsNavTagIds:    bbsNavTagIds,
 	}
 }

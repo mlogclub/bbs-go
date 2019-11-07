@@ -27,8 +27,8 @@ func (this *SysConfigController) AnyList() *simple.JsonResult {
 }
 
 func (this *SysConfigController) GetAll() *simple.JsonResult {
-	list := services.SysConfigService.GetAll()
-	return simple.JsonData(list)
+	config := services.SysConfigService.GetConfigResponse()
+	return simple.JsonData(config)
 }
 
 func (this *SysConfigController) PostSave() *simple.JsonResult {
