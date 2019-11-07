@@ -70,14 +70,16 @@ export default {
       maxTagCount: 5, // 最多可以选择的标签数量
       maxWordCount: 15, // 每个标签最大字数
       showRecommendTags: false, // 是否显示推荐
-      recommendTags: [], // 推荐标签
       inputTag: '',
       autocompleteTags: [],
       selectIndex: -1
     }
   },
-  mounted() {
-    this.getRecommendTags()
+  computed: {
+    // 推荐标签
+    recommendTags() {
+      return this.$store.state.config.config.recommendTags
+    }
   },
   methods: {
     removeTag(event, tag) {
@@ -217,14 +219,6 @@ export default {
     // 开启推荐
     closeRecommendTags() {
       this.showRecommendTags = false
-    },
-
-    // 加载推荐标签
-    async getRecommendTags() {
-      const data = await this.$axios.get('/api/tag/recommendtags')
-      if (data && data.length) {
-        this.recommendTags = data
-      }
     },
 
     // 关闭自动补全
