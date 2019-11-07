@@ -15,7 +15,7 @@ sidebar: auto
 
 bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技术，Go语言提供api进行数据支撑，用户界面使用Nuxt.js进行渲染，后台界面基于element-ui。主要功能如下：
 
-- 用户中心（用户注册、登录、个人资料管理）
+- 用户中心
 - 论坛功能
 - 多人博客
 - 站内消息
@@ -72,6 +72,7 @@ git clone https://github.com/mlogclub/mlog.git
 cd mlog
 go mod tidy
 ```
+
 > 说明  :bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：[https://mlog.club/topic/9](https://mlog.club/topic/9)
 
 ### 配置文件
@@ -81,7 +82,9 @@ go mod tidy
 > **注意：运行项目前先配置好数据库，否则程序无法运行。**
 
 ### 启动服务
+
 在server目录中运行命令：
+
 ```shell
 go run main.go
 ```
@@ -89,25 +92,61 @@ go run main.go
 ### 数据初始化
 
 ```sql
--- 初始化用户（用户名：admin、密码：123456）
+-- 初始化用户表
+CREATE TABLE IF NOT EXISTS `t_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nickname` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `avatar` text COLLATE utf8_unicode_ci,
+  `password` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `roles` text COLLATE utf8_unicode_ci,
+  `type` int(11) NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `create_time` bigint(20) DEFAULT NULL,
+  `update_time` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 初始化用户数据（用户名：admin、密码：123456）
 INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`, `status`, `create_time`, `update_time`, `roles`, `type`, `description`) VALUES (1, 'admin', '管理员', '', '', '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS', 0, 1555419028975, 1555419028975, '管理员', 0, '轻轻地我走了，正如我轻轻的来。');
 
--- 初始化系统配置
+
+-- 初始化系统配置表
+CREATE TABLE IF NOT EXISTS `t_sys_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `key` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `value` text COLLATE utf8_unicode_ci,
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` bigint(20) NOT NULL,
+  `update_time` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 初始化系统配置数据
 insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `update_time`) values
-    ('site.title', 'M-LOG', '站点标题', '站点标题', 1555419028975, 1555419028975),
-    ('site.description', 'M-LOG社区，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
-    ('site.keywords', 'M-LOG,Go语言', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
-    ('recommend.tags', '', '推荐标签', '推荐标签，多个标签之间用英文逗号分隔', 1555419028975, 1555419028975),
-    ('bbs.nav.tags', '', '论坛导航标签', '论坛导航标签，多个请使用分隔', 1555419028975, 1555419028975);
+    ('siteTitle', 'bbs-go', '站点标题', '站点标题', 1555419028975, 1555419028975),
+    ('siteDescription', 'bbs-go，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
+    ('siteKeywords', 'bbs-go', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
+    ('siteNavs', '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]', '站点导航', '站点导航', 1555419028975, 1555419028975);
 ```
 
 ### 启动网站前端
+
 在site目录中运行命令：
+
 ```shell
 npm install
 npm run dev
 ```
-正常启动后，打开 http://127.0.0.1:3000 访问网站。
+
+正常启动后，打开 [http://127.0.0.1:8080](http://127.0.0.1:8080) 访问网站。
 
 ### 启动管理后台
 
@@ -115,7 +154,8 @@ npm run dev
 npm install
 npm run serve
 ```
-正常启动后，打开 http://127.0.0.1:8080 访问管理后台。
+
+正常启动后，打开 [http://127.0.0.1:8080](http://127.0.0.1:8080) 访问管理后台。
 
 ## 生产环境编译部署
 

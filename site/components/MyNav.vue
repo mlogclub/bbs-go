@@ -23,12 +23,15 @@
       </div>
       <div class="navbar-menu" :class="{'is-active': navbarActive}">
         <div class="navbar-start">
+          <!--
           <a class="navbar-item" href="/topics">话题</a>
           <a class="navbar-item" href="/subject">专栏</a>
           <a class="navbar-item" href="/articles">文章</a>
           <a class="navbar-item" href="/projects">项目</a>
           <a class="navbar-item" href="/topic/40">书籍</a>
-          <!-- <a class="navbar-item" href="/links">好博客</a> -->
+          <a class="navbar-item" href="/links">好博客</a>
+          -->
+          <a v-for="(nav, index) in config.siteNavs" :key="index" :href="nav.url" class="navbar-item">{{ nav.title }}</a>
         </div>
 
         <div class="navbar-end">
@@ -110,6 +113,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    config() {
+      return this.$store.state.config.config
     }
   },
   mounted() {

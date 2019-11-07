@@ -70,13 +70,8 @@ export default {
     credentials: true
   },
 
-  router: {
-    middleware: ['config']
-  },
-
   proxy: {
-    // '/api/': 'http://localhost:8082'
-    '/api/': 'http://bbs-go-server:8082'
+    '/api/': 'http://localhost:8082'
     // '/api/': 'https://mlog.club/'
   },
 

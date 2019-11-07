@@ -8,49 +8,13 @@
       <li>
         <a :class="{'active': currentTagId == 0}" href="/topics">
           <i class="iconfont icon-topic" />
-          <span class="Button-label">全部话题</span>
+          <span>全部话题</span>
         </a>
       </li>
-      <li>
-        <a :class="{'active': currentTagId == 16310}" href="/topics/tag/16310">
+      <li v-for="tag in bbsNavTags" :key="tag.tagId">
+        <a :class="{'active': currentTagId == tag.tagId}" :href="'/topics/tag/' + tag.tagId">
           <i class="iconfont icon-topic" />
-          <span class="Button-label">分享</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 15533}" href="/topics/tag/15533">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">提问</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 15542}" href="/topics/tag/15542">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">开源</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 37}" href="/topics/tag/37">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">Go语言</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 2}" href="/topics/tag/2">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">Java</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 4035}" href="/topics/tag/4035">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">JavaScript</span>
-        </a>
-      </li>
-      <li>
-        <a :class="{'active': currentTagId == 191}" href="/topics/tag/191">
-          <i class="iconfont icon-topic" />
-          <span class="Button-label">Python</span>
+          <span>{{ tag.tagName }}</span>
         </a>
       </li>
     </ul>
@@ -94,6 +58,9 @@ export default {
         url += '?tagId=' + this.currentTagId
       }
       return url
+    },
+    bbsNavTags: function () {
+      return this.$store.state.config.config.bbsNavTags
     }
   }
 }

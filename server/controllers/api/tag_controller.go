@@ -1,8 +1,6 @@
 package api
 
 import (
-	"strings"
-
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
 
@@ -40,27 +38,4 @@ func (this *TagController) PostAutocomplete() *simple.JsonResult {
 	input := this.Ctx.FormValue("input")
 	tags := services.TagService.Autocomplete(input)
 	return simple.JsonData(tags)
-}
-
-// 推荐标签
-func (this *TagController) GetRecommendtags() *simple.JsonResult {
-	var ret []string
-	value := cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
-	value = strings.TrimSpace(value)
-	if len(value) > 0 {
-		ss := strings.Split(value, ",")
-		if len(ss) == 0 {
-			return nil
-		}
-		for _, v := range ss {
-			ret = append(ret, strings.TrimSpace(v))
-		}
-	}
-	return simple.JsonData(ret)
-}
-
-// 活跃标签
-func (this *TagController) GetActive() *simple.JsonResult {
-	tags := cache.TagCache.GetActiveTags()
-	return simple.JsonData(render.BuildTags(tags))
 }

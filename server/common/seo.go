@@ -17,7 +17,7 @@ func BaiduUrlPush(urls []string) {
 	response, err := resty.R().SetBody(body).Post(api)
 	if err != nil {
 		logrus.Error(err)
+	} else {
+		logrus.Info("百度链接提交完成：", string(response.Body()))
 	}
-	s := string(response.Body())
-	logrus.Info("百度链接提交完成：" + s)
 }

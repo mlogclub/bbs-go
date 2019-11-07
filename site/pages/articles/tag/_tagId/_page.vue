@@ -22,8 +22,7 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
               </script>
             </div>
-            <active-users :active-users="activeUsers" />
-            <active-tags :active-tags="activeTags" />
+            <!-- todo -->
           </div>
         </div>
       </div>
@@ -34,15 +33,11 @@
 <script>
 import ArticleList from '~/components/ArticleList'
 import Pagination from '~/components/Pagination'
-import ActiveUsers from '~/components/ActiveUsers'
-import ActiveTags from '~/components/ActiveTags'
 
 export default {
   components: {
     ArticleList,
-    Pagination,
-    ActiveUsers,
-    ActiveTags
+    Pagination
   },
   head() {
     return {
@@ -55,22 +50,18 @@ export default {
   },
   async asyncData({ $axios, params }) {
     try {
-      const [tag, articlesPage, activeUsers, activeTags] = await Promise.all([
+      const [tag, articlesPage] = await Promise.all([
         $axios.get('/api/tag/' + params.tagId),
         $axios.get('/api/article/tag/articles', {
           params: {
             page: (params.page || 1),
             tagId: params.tagId
           }
-        }),
-        $axios.get('/api/user/active'), // 活跃用户
-        $axios.get('/api/tag/active') // 活跃标签
+        })
       ])
       return {
         tag: tag,
-        articlesPage: articlesPage,
-        activeUsers: activeUsers,
-        activeTags: activeTags
+        articlesPage: articlesPage
       }
     } catch (e) {
       console.error(e)

@@ -1,11 +1,12 @@
 package admin
 
 import (
-	"encoding/json"
-	"github.com/kataras/iris"
-	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/simple"
 	"strconv"
+
+	"github.com/kataras/iris"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/services"
 )
 
 type SysConfigController struct {
@@ -26,19 +27,13 @@ func (this *SysConfigController) AnyList() *simple.JsonResult {
 }
 
 func (this *SysConfigController) GetAll() *simple.JsonResult {
-	list := services.SysConfigService.GetAll()
-	return simple.JsonData(list)
+	config := services.SysConfigService.GetConfigResponse()
+	return simple.JsonData(config)
 }
 
 func (this *SysConfigController) PostSave() *simple.JsonResult {
 	config := this.Ctx.FormValue("config")
-	data := make(map[string]string)
-	err := json.Unmarshal([]byte(config), &data)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	err = services.SysConfigService.SetAll(data)
-	if err != nil {
+	if err := services.SysConfigService.SetAll(config); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()

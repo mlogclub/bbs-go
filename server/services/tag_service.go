@@ -8,6 +8,7 @@ import (
 
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
+	"github.com/mlogclub/bbs-go/services/cache"
 )
 
 var TagService = newTagService()
@@ -49,20 +50,24 @@ func (this *tagService) Create(t *model.Tag) error {
 }
 
 func (this *tagService) Update(t *model.Tag) error {
-	return repositories.TagRepository.Update(simple.DB(), t)
+	if err := repositories.TagRepository.Update(simple.DB(), t); err != nil {
+		return err
+	}
+	cache.TagCache.Invalidate(t.Id)
+	return nil
 }
 
-func (this *tagService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TagRepository.Updates(simple.DB(), id, columns)
-}
-
-func (this *tagService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TagRepository.UpdateColumn(simple.DB(), id, name, value)
-}
-
-func (this *tagService) Delete(id int64) {
-	repositories.TagRepository.Delete(simple.DB(), id)
-}
+// func (this *tagService) Updates(id int64, columns map[string]interface{}) error {
+// 	return repositories.TagRepository.Updates(simple.DB(), id, columns)
+// }
+//
+// func (this *tagService) UpdateColumn(id int64, name string, value interface{}) error {
+// 	return repositories.TagRepository.UpdateColumn(simple.DB(), id, name, value)
+// }
+//
+// func (this *tagService) Delete(id int64) {
+// 	repositories.TagRepository.Delete(simple.DB(), id)
+// }
 
 // 自动完成
 func (this *tagService) Autocomplete(input string) []model.Tag {

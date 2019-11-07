@@ -1,7 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `mlog_db`;
+CREATE DATABASE IF NOT EXISTS `bbsgo_db`;
 
-
-USE mlog_db;
+USE bbsgo_db;
 SET NAMES UTF8;
 
 -- 初始化用户表
@@ -94,8 +93,8 @@ INSERT INTO t_sys_config(
     `create_time`,
     `update_time`
 ) SELECT
-    'site.title',
-    'M-LOG',
+    'siteTitle',
+    'bbs-go',
     '站点标题',
     '站点标题',
     1555419028975,
@@ -114,7 +113,7 @@ WHERE
         FROM
             t_sys_config
         WHERE
-            `key` = 'site.title'
+            `key` = 'siteTitle'
     );
 
 INSERT INTO t_sys_config (
@@ -125,8 +124,8 @@ INSERT INTO t_sys_config (
     `create_time`,
     `update_time`
 ) SELECT
-    'site.description',
-    'M-LOG社区，基于Go语言的开源社区系统',
+    'siteDescription',
+    'bbs-go，基于Go语言的开源社区系统',
     '站点描述',
     '站点描述',
     1555419028975,
@@ -145,7 +144,7 @@ WHERE
         FROM
             t_sys_config
         WHERE
-            `key` = 'site.description'
+            `key` = 'siteDescription'
     );
 
 INSERT INTO t_sys_config (
@@ -156,8 +155,8 @@ INSERT INTO t_sys_config (
     `create_time`,
     `update_time`
 ) SELECT
-    'site.keywords',
-    'M-LOG,Go语言',
+    'siteKeywords',
+    'bbs-go',
     '站点关键字',
     '站点关键字',
     1555419028975,
@@ -176,7 +175,7 @@ WHERE
         FROM
             t_sys_config
         WHERE
-            `key` = 'site.keywords'
+            `key` = 'siteKeywords'
     );
 
 
@@ -187,26 +186,25 @@ INSERT INTO t_sys_config (
     `description`,
     `create_time`,
     `update_time`
-) SELECT
-    'recommend.tags',
-    '',
-    '推荐标签',
-    '推荐标签，多个标签之间用英文逗号分隔',
-    1555419028975,
-    1555419028975
-FROM
-    DUAL
+  )
+SELECT
+  'siteNavs',
+  '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
+  '站点导航',
+  '站点导航',
+  1555419028975,
+  1555419028975
+FROM DUAL
 WHERE
-    NOT EXISTS (
-        SELECT
-            `key`,
-            `value`,
-            `name`,
-            `description`,
-            `create_time`,
-            `update_time`
-        FROM
-            t_sys_config
-        WHERE
-            `key` = 'recommend.tags'
-    );
+  NOT EXISTS (
+    SELECT
+      `key`,
+      `value`,
+      `name`,
+      `description`,
+      `create_time`,
+      `update_time`
+    FROM t_sys_config
+    WHERE
+      `key` = 'siteNavs'
+  );
