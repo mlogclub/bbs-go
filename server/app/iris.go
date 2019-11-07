@@ -50,6 +50,10 @@ func InitIris() {
 		}
 	})
 
+	app.Any("/", func(i context.Context) {
+		_, _ = i.HTML("<h1>bbs-go</h1>")
+	})
+
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
 		m.Party("/topic").Handle(new(api.TopicController))

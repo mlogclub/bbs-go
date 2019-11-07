@@ -1,10 +1,9 @@
 package api
 
 import (
-	"strings"
-
 	"github.com/kataras/iris/context"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
 	"github.com/mlogclub/bbs-go/model"
@@ -44,19 +43,13 @@ func (this *TagController) PostAutocomplete() *simple.JsonResult {
 
 // 推荐标签
 func (this *TagController) GetRecommendtags() *simple.JsonResult {
-	var ret []string
 	value := cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
-	value = strings.TrimSpace(value)
-	if len(value) > 0 {
-		ss := strings.Split(value, ",")
-		if len(ss) == 0 {
-			return nil
-		}
-		for _, v := range ss {
-			ret = append(ret, strings.TrimSpace(v))
-		}
+
+	var recommendTagsArr []model.SiteNav
+	if err := simple.ParseJson(value, &recommendTagsArr); err != nil {
+		logrus.Error("推荐标签数据错误", err)
 	}
-	return simple.JsonData(ret)
+	return simple.JsonData(recommendTagsArr)
 }
 
 // 活跃标签

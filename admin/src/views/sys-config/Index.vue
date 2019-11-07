@@ -1,6 +1,6 @@
 <template>
   <section class="page-container">
-    <el-tabs value="second">
+    <el-tabs value="first">
       <el-tab-pane label="通用配置" name="first">
         <div class="config">
           <el-form label-width="100px">

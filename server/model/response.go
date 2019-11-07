@@ -137,3 +137,9 @@ type MessageResponse struct {
 	Status       int       `json:"status"`
 	CreateTime   int64     `json:"createTime"`
 }
+
+// 站点导航
+type SiteNav struct {
+	Title string `json:"title"`
+	Url   string `json:"url"`
+}

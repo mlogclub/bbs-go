@@ -75,8 +75,7 @@ export default {
   },
 
   proxy: {
-    // '/api/': 'http://localhost:8082'
-    '/api/': 'http://bbs-go-server:8082'
+    '/api/': 'http://localhost:8082'
     // '/api/': 'https://mlog.club/'
   },
 
