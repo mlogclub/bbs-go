@@ -250,7 +250,9 @@ npm run serve
 
 ## Docker启动
 
-> TODO
+感谢 [athom](https://github.com/athom) ，Docker启动功能由 [athom](https://github.com/athom) 提供支持，详见：[https://github.com/mlogclub/bbs-go/pull/25](https://github.com/mlogclub/bbs-go/pull/25)
+
+使用Docker快速启动项目，首先参照[配置详解](#配置详解)，配置好你的项目，然后执行项目根目录下的：up.sh 启动服务。
 
 ## 问题反馈
 
