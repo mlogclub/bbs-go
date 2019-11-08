@@ -1,6 +1,6 @@
 <template>
   <div class="m-left">
-    <a class="button is-primary post" :href="createTopicUrl">
+    <a class="button is-success post" :href="createTopicUrl">
       <i class="iconfont icon-topic" />&nbsp;
       <strong>发表主题</strong>
     </a>

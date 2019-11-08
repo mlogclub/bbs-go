@@ -10,6 +10,8 @@
         </div>
         <div class="column is-3">
           <div class="main-aside">
+            <weixin-gzh />
+
             <div style="text-align: center;">
               <!-- 展示广告288x288 -->
               <ins
@@ -22,7 +24,6 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
               </script>
             </div>
-            <!-- todo -->
           </div>
         </div>
       </div>
@@ -33,11 +34,13 @@
 <script>
 import ArticleList from '~/components/ArticleList'
 import Pagination from '~/components/Pagination'
+import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: {
     ArticleList,
-    Pagination
+    Pagination,
+    WeixinGzh
   },
   head() {
     return {

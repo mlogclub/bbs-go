@@ -179,6 +179,7 @@
           </div>
         </div>
         <div class="m-right">
+          <weixin-gzh />
           <!-- 展示广告190x190 -->
           <ins
             class="adsbygoogle"
@@ -227,9 +228,11 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
   components: {
-    Comment
+    Comment, WeixinGzh
   },
   computed: {
     isOwner: function () {
