@@ -129,54 +129,31 @@ BaiduAi:
 
 ## 快速启动
 
-首先我们执行以下命令将代码从`Github`上clone到本地：
-
-```bash
-git clone https://github.com/mlogclub/mlog.git
-```
-
 `bbs-go`总用有三个模块：server、site、admin，接下来我们一步步的启动这三个模块。
 
 ### server模块启动
 
-> TODO
+#### 安装依赖
 
-### site模块启动
+server模块使用`go mod`管理依赖，如果你不清楚如何使用`go mod`，请先认真读一下下面两篇文章：
 
-> TODO
+- [go mod使用帮助](https://mlog.club/topic/617)
+- [配置go mod代理](https://mlog.club/topic/618)
 
-### admin模块启动
+在项目的`server`目录下执行下面命令来下载`server`模块依赖：
 
-> TODO
-
-
-
-### 安装依赖
-
-```shell
-cd mlog
-go mod tidy
+```bash
+go mod download
 ```
 
-> 说明  :bbs-go 的依赖是使用go mod来进行管理的，go mod使用帮助看这里：[https://mlog.club/topic/9](https://mlog.club/topic/9)
+#### 初始化数据库
 
-### 配置文件
+新建数据库`bbsgo_db`(或者其他名字，你高兴就好)。并按照要求配置好你的数据库链接（请参见：[ server模块配置](#server模块配置)）。
 
-在server目录中新建bbs-go.yaml配置文件（或者将bbs-go.example.yaml重命名)，配置内容请参考bbs-go.example.yaml中的说明。
-
-> **注意：运行项目前先配置好数据库，否则程序无法运行。**
-
-### 启动服务
-
-在server目录中运行命令：
-
-```shell
-go run main.go
-```
-
-### 数据初始化
+配置好数据库链接后，`bbs-go`在启动的时候会自动建表，所以我们无需手动建表，但是有些数据是需要提前初始化的，例如：管理员用户，基本配置，所以我们需要执行下面sql脚本进行数据初始化：
 
 ```sql
+​```sql
 -- 初始化用户表
 CREATE TABLE IF NOT EXISTS `t_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -220,23 +197,52 @@ insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `
     ('siteDescription', 'bbs-go，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
     ('siteKeywords', 'bbs-go', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
     ('siteNavs', '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]', '站点导航', '站点导航', 1555419028975, 1555419028975);
+​```
 ```
 
-### 启动网站前端
+#### 配置server模块
 
-在site目录中运行命令：
+参见：[ server模块配置](#server模块配置)
 
-```shell
+#### 启动server模块
+
+再配置好数据库链接并初始化数据库之后，在server模块目录下执行下面脚本启动server模块：
+
+```bash
+go run main.go
+```
+
+### site模块启动
+
+第一步：进入site模块目录，执行下面命令安装依赖：
+
+```bash
 npm install
+```
+
+第二步：打开`site/nuxt.config.js`进行相关配置，请参见：[site模块配置](#site模块配置)。
+
+第三步：执行下面命令启动site模块服务：
+
+```bash
 npm run dev
 ```
 
 正常启动后，打开 [http://127.0.0.1:8080](http://127.0.0.1:8080) 访问网站。
 
-### 启动管理后台
+### admin模块启动
 
-```shell
+第一步：进入admin模块模块，执行下面命令安装依赖：
+
+```bash
 npm install
+```
+
+第二步：配置接口链接地址，请参见：[admin模块配置](#admin模块配置)。
+
+第三步：执行下面命令启动admin模块服务：
+
+```bash
 npm run serve
 ```
 
