@@ -51,12 +51,13 @@
                 placeholder="论坛导航标签，用于显示在讨论区侧边栏"
                 :remote-method="loadAutocompleteTags"
                 :loading="autocompleteTagLoading"
+                @change="changeBbsNavTags"
               >
                 <!-- 已经选择的 -->
                 <template v-if="config.bbsNavTags && config.bbsNavTags.length">
                   <el-option
                     v-for="tag in config.bbsNavTags"
-                    :key="tag.id"
+                    :key="'selected-tag-' + tag.tagId"
                     :value="tag.tagId"
                     :label="tag.tagName"
                   ></el-option>
@@ -66,7 +67,7 @@
                 <template v-if="autocompleteTags && autocompleteTags.length">
                   <el-option
                     v-for="tag in autocompleteTags"
-                    :key="tag.id"
+                    :key="'autocomplete-tag-' + tag.tagId"
                     :value="tag.tagId"
                     :label="tag.tagName"
                   ></el-option>
@@ -186,11 +187,14 @@ export default {
         const list = await HttpClient.get("/api/admin/tag/autocomplete", {
           keyword: query
         });
-        
+
         if (list && list.length) {
           const me = this;
           this.autocompleteTags = list.filter(item => {
-            if (!me.config.bbsNavTagIds || me.config.bbsNavTagIds.length === 0) {
+            if (
+              !me.config.bbsNavTagIds ||
+              me.config.bbsNavTagIds.length === 0
+            ) {
               return true;
             }
             return me.config.bbsNavTagIds.indexOf(item.tagId) === -1;
@@ -200,6 +204,16 @@ export default {
         console.log(err);
       } finally {
         this.autocompleteTagLoading = false;
+      }
+    },
+    async changeBbsNavTags() {
+      try {
+        const tags = await HttpClient.get("/api/admin/tag/tags", {
+          tagIds: this.config.bbsNavTagIds.join(",")
+        });
+        this.config.bbsNavTags = tags || [];
+      } catch (err) {
+        console.log(err);
       }
     }
   }

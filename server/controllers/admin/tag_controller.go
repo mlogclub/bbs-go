@@ -92,9 +92,22 @@ func (this *TagController) GetAutocomplete() *simple.JsonResult {
 	keyword := strings.TrimSpace(this.Ctx.URLParam("keyword"))
 	var tags []model.Tag
 	if len(keyword) > 0 {
-		tags = services.TagService.Find(simple.NewSqlCnd().Like("name", keyword).Desc("id").Limit(10))
+		tags = services.TagService.Find(simple.NewSqlCnd().Starting("name", keyword).Desc("id"))
 	} else {
 		tags = services.TagService.Find(simple.NewSqlCnd().Desc("id").Limit(10))
 	}
 	return simple.JsonData(render.BuildTags(tags))
+}
+
+// 根据标签编号批量获取
+func (this *TagController) GetTags() *simple.JsonResult {
+	tagIds := simple.FormValueInt64Array(this.Ctx, "tagIds")
+	var tags *[]model.TagResponse
+	if len(tagIds) > 0 {
+		tagArr := services.TagService.Find(simple.NewSqlCnd().In("id", tagIds))
+		if len(tagArr) > 0 {
+			tags = render.BuildTags(tagArr)
+		}
+	}
+	return simple.JsonData(tags)
 }
