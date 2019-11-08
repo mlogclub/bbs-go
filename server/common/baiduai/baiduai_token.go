@@ -5,9 +5,6 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
-
-	"github.com/mlogclub/bbs-go/common/config"
 )
 
 const (
@@ -81,19 +78,4 @@ func NewClient(apiKey, secretKey string) *Client {
 		ClientSecret: secretKey,
 		Authorizer:   DefaultAuthorizer{},
 	}
-}
-
-var accessToken = ``
-
-// GetToken 获取baidu api token 临时用
-func GetToken() string {
-	if accessToken == `` {
-		c := NewClient(config.Conf.BaiduAi.ApiKey, config.Conf.BaiduAi.SecretKey)
-		err := c.Auth()
-		if err != nil {
-			logrus.Error(err)
-		}
-		accessToken = c.AccessToken
-	}
-	return accessToken
 }

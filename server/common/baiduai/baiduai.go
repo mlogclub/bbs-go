@@ -9,6 +9,7 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
@@ -52,7 +53,30 @@ type AiAnalyzeRet struct {
 	Summary string
 }
 
-func GetTags(title, content string) *AiTags {
+type Ai struct {
+	ApiKey    string
+	SecretKey string
+}
+
+var accessToken = ""                // accessToken
+var accessTokenCreateTime int64 = 0 // accessToken创建时间
+
+// 获取baidu api token 临时用
+func (a *Ai) GetToken() string {
+	durationMillis := simple.NowTimestamp() - accessTokenCreateTime
+	if len(accessToken) == 0 || durationMillis > (86400*1000) { // accessToken为空或者生成时间超过一天
+		c := NewClient(a.ApiKey, a.SecretKey)
+		err := c.Auth()
+		if err != nil {
+			logrus.Error(err)
+		}
+		accessToken = c.AccessToken
+		accessTokenCreateTime = simple.NowTimestamp()
+	}
+	return accessToken
+}
+
+func (a *Ai) GetTags(title, content string) *AiTags {
 	if title == "" || content == "" {
 		return nil
 	}
@@ -65,7 +89,7 @@ func GetTags(title, content string) *AiTags {
 		return nil
 	}
 
-	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/keyword?charset=UTF-8&access_token=" + GetToken()
+	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/keyword?charset=UTF-8&access_token=" + a.GetToken()
 	response, err := resty.New().R().SetBody(string(bytesData)).Post(url)
 	if err != nil {
 		return nil
@@ -79,7 +103,7 @@ func GetTags(title, content string) *AiTags {
 	return tags
 }
 
-func GetCategories(title, content string) *AiCategories {
+func (a *Ai) GetCategories(title, content string) *AiCategories {
 	if title == "" || content == "" {
 		return nil
 	}
@@ -93,7 +117,7 @@ func GetCategories(title, content string) *AiCategories {
 		return nil
 	}
 
-	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/topic?charset=UTF-8&access_token=" + GetToken()
+	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/topic?charset=UTF-8&access_token=" + a.GetToken()
 	response, err := resty.New().R().SetBody(string(bytesData)).Post(url)
 	if err != nil {
 		return nil
@@ -107,7 +131,7 @@ func GetCategories(title, content string) *AiCategories {
 	return categories
 }
 
-func GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
+func (a *Ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
 	if title == "" || content == "" {
 		return "", errors.New("标题或内容为空")
 	}
@@ -125,7 +149,7 @@ func GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
 		return "", err
 	}
 
-	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/news_summary?charset=UTF-8&access_token=" + GetToken()
+	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/news_summary?charset=UTF-8&access_token=" + a.GetToken()
 	response, err := resty.New().R().SetBody(string(bytesData)).Post(url)
 	if err != nil {
 		return "", err
@@ -134,12 +158,12 @@ func GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
 	return ret.String(), nil
 }
 
-func AnalyzeMarkdown(title, markdown string) (*AiAnalyzeRet, error) {
+func (a *Ai) AnalyzeMarkdown(title, markdown string) (*AiAnalyzeRet, error) {
 	mdResult := simple.NewMd().Run(markdown)
-	return AnalyzeHtml(title, mdResult.ContentHtml)
+	return a.AnalyzeHtml(title, mdResult.ContentHtml)
 }
 
-func AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
+func (a *Ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
 	if title == "" || html == "" {
 		return nil, errors.New("内容为空")
 	}
@@ -148,16 +172,16 @@ func AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
 		return nil, err
 	}
 	text := doc.Text()
-	return AnalyzeText(title, text)
+	return a.AnalyzeText(title, text)
 }
 
-func AnalyzeText(title, text string) (*AiAnalyzeRet, error) {
+func (a *Ai) AnalyzeText(title, text string) (*AiAnalyzeRet, error) {
 	if title == "" || text == "" {
 		return nil, errors.New("内容为空")
 	}
-	aiCategories := GetCategories(title, text)
-	aiTags := GetTags(title, text)
-	summary, _ := GetNewsSummary(title, text, 256)
+	aiCategories := a.GetCategories(title, text)
+	aiTags := a.GetTags(title, text)
+	summary, _ := a.GetNewsSummary(title, text, 256)
 
 	set := hashset.New()
 	if aiCategories != nil {
