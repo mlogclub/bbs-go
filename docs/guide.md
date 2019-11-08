@@ -22,14 +22,14 @@ bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技�
 - 收藏功能
 - 站内消息
 
-## 演示
-
-[https://mlog.club](https://mlog.club)
-
-## 源码
+## 项目地址
 
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - 码云：[https://gitee.com/mlog/bbs-go](https://gitee.com/mlog/bbs-go)
+
+## 演示
+
+[https://mlog.club](https://mlog.club)
 
 ## 技术栈
 
@@ -42,35 +42,90 @@ bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技�
 - element-UI ([https://element.eleme.cn](https://element.eleme.cn)) 饿了么开源的基于 vue.js 的前端库
 - vditor ([https://github.com/b3log/vditor](https://github.com/b3log/vditor)) Markdown 编辑器
 
+## 获取源码
+
+`bbs-go`的源码托管在Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)，通过以下命令将源代码克隆到本地：
+
+```bash
+git clone https://github.com/mlogclub/mlog.git
+```
+
 ## 项目结构
 
-bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。所以bbs-go包含三个模块：server、site、admin。
+bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。bbs-go包含三个模块：server、site、admin，三个模块的介绍如下：
 
 ### server模块
 
-server模块是基于Go语言搭建的，为bbs-go提供数据接口支撑的服务。
+`server`模块基于Go语言开发，他为整个项目提供接口数据支撑。`site`和`admin`模块的数据都是从该模块获取的。
 
 ### site模块
 
-site模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页。nuxt.js相关知识可以去它的官网查看：[https://nuxtjs.org](https://nuxtjs.org)
+`site`模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页。`nuxt.js`相关知识可以去它的官网查看：[https://nuxtjs.org](https://nuxtjs.org)
 
 ### admin模块
 
-admin模块是bbs-go的管理后台，他基于element-ui搭建，element-ui相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
+`admin`模块是`bbs-go`的管理后台，他基于`element-ui`搭建，`element-ui`相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
 
 ## 配置详解
 
 ### server模块配置
 
-TODO
+`server`模块的示例配置文件为`server/bbs-go.example.yaml`，内容如下：
+
+```yaml
+Env: prod # 环境，线上环境：prod、测试环境：dev
+BaseUrl: https://mlog.club # 网站域名
+Port: '8082' # 端口
+LogFile: /data/logs/bbs-go.log # 日志文件
+ShowSql: false # 是否打印sql
+StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
+
+# 数据库连接
+MySqlUrl: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+
+# github登录配置
+Github:
+  ClientID:
+  ClientSecret:
+
+# qq登录配置
+QQConnect:
+  AppId:
+  AppKey:
+
+# 阿里云oss配置
+AliyunOss:
+  Host: 请配置成你自己的
+  Bucket: 请配置成你自己的
+  Endpoint: 请配置成你自己的
+  AccessId: 请配置成你自己的
+  AccessSecret: 请配置成你自己的
+
+# 邮件服务器配置，用于邮件通知
+Smtp:
+  Addr: smtp.qq.com
+  Port: '25'
+  Username: 请配置成你自己的
+  Password: 请配置成你自己的
+
+# 百度ai配置，用于自动分析文章摘要、标签
+BaiduAi:
+  ApiKey:
+  SecretKey:
+```
+
+请复制该文件到：`server/bbs-go.yaml`，并根据配置文件中的注释将配置修改成你自己的。
 
 ### site模块配置
 
-TODO
+`site`模块是基于`nuxt.js`开发的，他的配置文件为：`site/nuxt.config.js`，我们主要关注一下两项配置即可：
+
+1. port：site模块启动端口，默认为3000
+2. proxy：`server`模块的连接地址，通过该地址可以请求`server`模块数据
 
 ### admin模块配置
 
-TODO
+`admin`模块基于`vue`+`element-ui`开发，它是`bbs-go`的管理后台。 `server`模块为`admin`模块提供接口， `admin`模块提供UI界面，所以`admin`模块只需要配置`server`模块的接口地址即可，配置文件在：`admin/src/apis/HttpClient.js`，请将该文件中的`baseURL`配置为你自己的。
 
 ## 快速启动
 
