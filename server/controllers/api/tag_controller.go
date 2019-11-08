@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
@@ -11,7 +11,7 @@ import (
 )
 
 type TagController struct {
-	Ctx context.Context
+	Ctx iris.Context
 }
 
 // 标签详情

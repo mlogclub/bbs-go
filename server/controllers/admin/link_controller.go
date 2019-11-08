@@ -6,7 +6,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-resty/resty/v2"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 

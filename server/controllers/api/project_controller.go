@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
@@ -9,7 +9,7 @@ import (
 )
 
 type ProjectController struct {
-	Ctx context.Context
+	Ctx iris.Context
 }
 
 func (this *ProjectController) GetBy(projectId int64) *simple.JsonResult {

@@ -1,13 +1,13 @@
 package collect
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/mlogclub/bbs-go/common/oss"
 	"github.com/mlogclub/bbs-go/services"
 
 	"github.com/jinzhu/gorm"
-	"github.com/kataras/iris/core/errors"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"

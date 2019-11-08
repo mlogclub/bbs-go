@@ -13,11 +13,10 @@ import (
 	"github.com/mlogclub/bbs-go/controllers/api"
 
 	"github.com/iris-contrib/middleware/cors"
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/context"
-	"github.com/kataras/iris/middleware/logger"
-	"github.com/kataras/iris/middleware/recover"
-	"github.com/kataras/iris/mvc"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/logger"
+	"github.com/kataras/iris/v12/middleware/recover"
+	"github.com/kataras/iris/v12/mvc"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -39,7 +38,7 @@ func InitIris() {
 	}))
 	app.AllowMethods(iris.MethodOptions)
 
-	app.OnAnyErrorCode(func(ctx context.Context) {
+	app.OnAnyErrorCode(func(ctx iris.Context) {
 		path := ctx.Path()
 		var err error
 		if strings.Contains(path, "/api/admin/") {
@@ -50,7 +49,7 @@ func InitIris() {
 		}
 	})
 
-	app.Any("/", func(i context.Context) {
+	app.Any("/", func(i iris.Context) {
 		_, _ = i.HTML("<h1>bbs-go</h1>")
 	})
 
@@ -91,7 +90,7 @@ func InitIris() {
 		m.Party("/collect-article").Handle(new(admin.CollectArticleController))
 	})
 
-	app.Get("/api/img/proxy", func(i context.Context) {
+	app.Get("/api/img/proxy", func(i iris.Context) {
 		url := i.FormValue("url")
 		resp, err := resty.New().R().Get(url)
 		i.Header("Content-Type", "image/jpg")

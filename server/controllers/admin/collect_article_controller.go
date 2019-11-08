@@ -3,7 +3,7 @@ package admin
 import (
 	"strconv"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/controllers/render"
