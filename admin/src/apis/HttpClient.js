@@ -2,11 +2,14 @@ import axios from 'axios';
 import qs from 'qs';
 import cookies from 'js-cookie'
 
+
+// 接口地址，请替换为你自己的
+const baseURL = 'https://mlog.club'
+
 class HttpClient {
   constructor() {
     this.http = axios.create({
-      // 请替换为你自己的接口地址
-      baseURL: 'https://mlog.club'
+      baseURL: baseURL
     });
     this.http.defaults.headers.common['X-Client'] = 'bbs-go-admin';
     this.http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

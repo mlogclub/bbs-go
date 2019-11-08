@@ -5,8 +5,8 @@ LogFile: /data/logs/bbs-go.log # 日志文件
 ShowSql: false # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
-# 数据库配置
-MySqlUrl: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local  # 数据库链接
+# 数据库连接
+MySqlUrl: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
 
 # github登录配置
 Github:
@@ -20,20 +20,20 @@ QQConnect:
 
 # 阿里云oss配置
 AliyunOss:
-  Host: https://file.mlog.club/
-  Bucket: bucket-name
-  Endpoint: oss-cn-hongkong-internal.aliyuncs.com
-  AccessId: accessId
-  AccessSecret: accessSecret
+  Host: 请配置成你自己的
+  Bucket: 请配置成你自己的
+  Endpoint: 请配置成你自己的
+  AccessId: 请配置成你自己的
+  AccessSecret: 请配置成你自己的
 
-# 邮件服务器配置
+# 邮件服务器配置，用于邮件通知
 Smtp:
   Addr: smtp.qq.com
   Port: '25'
-  Username: xxx
-  Password: xxx
+  Username: 请配置成你自己的
+  Password: 请配置成你自己的
 
-# 百度ai配置
+# 百度ai配置，用于自动分析文章摘要、标签
 BaiduAi:
   ApiKey:
   SecretKey:
