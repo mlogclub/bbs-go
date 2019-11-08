@@ -186,11 +186,11 @@ export default {
         const list = await HttpClient.get("/api/admin/tag/autocomplete", {
           keyword: query
         });
-
+        
         if (list && list.length) {
           const me = this;
           this.autocompleteTags = list.filter(item => {
-            if (me.config.bbsNavTagIds.length === 0) {
+            if (!me.config.bbsNavTagIds || me.config.bbsNavTagIds.length === 0) {
               return true;
             }
             return me.config.bbsNavTagIds.indexOf(item.tagId) === -1;
