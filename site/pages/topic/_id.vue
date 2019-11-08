@@ -87,16 +87,7 @@
               (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
 
-            <!-- 展示广告190x190 -->
-            <ins
-              class="adsbygoogle"
-              style="display:inline-block;width:190px;height:190px"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="5685455263"
-            />
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <weixin-gzh />
 
             <div v-if="topic.toc" ref="toc" class="toc widget">
               <div class="header">
@@ -114,9 +105,10 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import WeixinGzh from '~/components/WeixinGzh'
 export default {
   components: {
-    Comment
+    Comment, WeixinGzh
   },
   computed: {
     isOwner: function () {

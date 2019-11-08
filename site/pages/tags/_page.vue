@@ -25,7 +25,7 @@
         </div>
         <div class="column is-3">
           <div class="main-aside">
-            <!-- todo -->
+            <weixin-gzh />
           </div>
         </div>
       </div>
@@ -35,9 +35,11 @@
 
 <script>
 import Pagination from '~/components/Pagination'
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
   components: {
-    Pagination
+    Pagination, WeixinGzh
   },
   head() {
     return {

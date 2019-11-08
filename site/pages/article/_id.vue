@@ -61,42 +61,6 @@
               </div>
             </div>
 
-            <!--
-              <div v-if="article.share" class="article-content content">
-                <a
-                  class="article-share-summary"
-                  :href="'/article/redirect/' + article.articleId"
-                  target="_blank"
-                  v-html="article.summary"
-                />
-                <a :href="'/article/redirect/' + article.articleId" target="_blank">点击阅读原文>></a>
-                <ins
-                  class="adsbygoogle"
-                  style="display:block"
-                  data-ad-format="fluid"
-                  data-ad-layout-key="-ig-s+1x-t-q"
-                  data-ad-client="ca-pub-5683711753850351"
-                  data-ad-slot="4728140043"
-                />
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-              </div>
-              <div v-else class="article-content content">
-                <p v-highlight v-html="article.content" />
-                <ins
-                  class="adsbygoogle"
-                  style="display:block"
-                  data-ad-format="fluid"
-                  data-ad-layout-key="-ig-s+1x-t-q"
-                  data-ad-client="ca-pub-5683711753850351"
-                  data-ad-slot="4728140043"
-                />
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-              </div>
-              -->
             <div class="article-content content">
               <ins
                 class="adsbygoogle"
@@ -119,10 +83,6 @@
                   <li v-if="article.user.type == 1">
                     <strong>转载自公众号：</strong>
                     <a href="javascript:void(0)">{{ article.user.nickname }}</a>
-                  </li>
-                  <li v-if="article.user.type != 1 && article.sourceUrl">
-                    <strong>原文地址：</strong>
-                    <a href="javascript:void(0)">{{ article.sourceUrl }}</a>
                   </li>
                   <li>
                     <strong>免责声明：</strong>
@@ -158,8 +118,8 @@
                 </div>
               </div>
             </div>
-            <div v-if="relatedArticles && relatedArticles.length" class="column">
-              <div class="widget">
+            <div class="column">
+              <div v-if="relatedArticles && relatedArticles.length" class="widget">
                 <div class="header">
                   相关文章
                 </div>
@@ -179,6 +139,7 @@
           </div>
         </div>
         <div class="m-right">
+          <weixin-gzh />
           <!-- 展示广告190x190 -->
           <ins
             class="adsbygoogle"
@@ -227,9 +188,11 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
   components: {
-    Comment
+    Comment, WeixinGzh
   },
   computed: {
     isOwner: function () {

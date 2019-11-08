@@ -7,8 +7,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/oss"
 	"github.com/mlogclub/bbs-go/services/cache"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -164,17 +166,22 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 	return user, nil
 }
 
-// Github账号登录
+// 第三方账号登录
 func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
 	user := this.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		return user, nil
 	}
 
+	avatar, copyAvatarErr := oss.CopyImage(thirdAccount.Avatar)
+	if copyAvatarErr != nil {
+		logrus.Error("复制第三方头像异常", thirdAccount.Avatar, copyAvatarErr)
+		avatar = thirdAccount.Avatar
+	}
 	user = &model.User{
 		Username:   sql.NullString{},
 		Nickname:   thirdAccount.Nickname,
-		Avatar:     thirdAccount.Avatar,
+		Avatar:     avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),

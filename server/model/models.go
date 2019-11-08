@@ -257,13 +257,13 @@ type Subject struct {
 // 专栏内容
 type SubjectContent struct {
 	Model
-	SubjectId  int64  `gorm:"not null" json:"subjectId" form:"subjectId"`           // 专栏编号
-	EntityType string `gorm:"not null;size:32" json:"entityType" form:"entityType"` // 实体类型
-	EntityId   int64  `gorm:"not null" json:"entityId" form:"entityId"`             // 实体编号
-	Title      string `gorm:"not null" json:"title" form:"title"`                   // 标题
-	Summary    string `gorm:"not null;size:1024" json:"summary" form:"summary"`     // 描述
-	Deleted    bool   `gorm:"not null" json:"deleted" form:"deleted"`               // 是否删除
-	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`         // 创建时间
+	SubjectId  int64  `gorm:"not null" json:"subjectId" form:"subjectId"`                             // 专栏编号
+	EntityType string `gorm:"not null;size:32;index:idx_entity;" json:"entityType" form:"entityType"` // 实体类型
+	EntityId   int64  `gorm:"not null;index:idx_entity;" json:"entityId" form:"entityId"`             // 实体编号
+	Title      string `gorm:"not null" json:"title" form:"title"`                                     // 标题
+	Summary    string `gorm:"not null;size:1024" json:"summary" form:"summary"`                       // 描述
+	Deleted    bool   `gorm:"not null;index:idx_deleted" json:"deleted" form:"deleted"`               // 是否删除
+	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`                           // 创建时间
 }
 
 type Link struct {
