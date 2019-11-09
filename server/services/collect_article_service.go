@@ -122,9 +122,9 @@ func (this *collectArticleService) Publish(collectArticleId int64) error {
 
 		var analyzeRet *baiduai.AiAnalyzeRet
 		if ca.ContentType == model.ContentTypeHtml {
-			analyzeRet, _ = baiduai.AnalyzeHtml(ca.Title, ca.Content)
+			analyzeRet, _ = baiduai.GetAi().AnalyzeHtml(ca.Title, ca.Content)
 		} else if ca.ContentType == model.ContentTypeMarkdown {
-			analyzeRet, _ = baiduai.AnalyzeMarkdown(ca.Title, ca.Content)
+			analyzeRet, _ = baiduai.GetAi().AnalyzeMarkdown(ca.Title, ca.Content)
 		}
 
 		var tags []string

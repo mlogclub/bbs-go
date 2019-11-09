@@ -40,11 +40,11 @@ type Config struct {
 		AccessSecret string `yaml:"AccessSecret"`
 	} `yaml:"AliyunOss"`
 
-	// // 百度ai
-	// BaiduAi struct {
-	// 	ApiKey    string `yaml:"ApiKey"`
-	// 	SecretKey string `yaml:"SecretKey"`
-	// }
+	// 百度ai
+	BaiduAi struct {
+		ApiKey    string `yaml:"ApiKey"`
+		SecretKey string `yaml:"SecretKey"`
+	}
 
 	// smtp
 	Smtp struct {

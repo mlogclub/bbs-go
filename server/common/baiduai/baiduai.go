@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/emirpasic/gods/sets/hashset"
@@ -11,72 +12,47 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+
+	"github.com/mlogclub/bbs-go/common/config"
 )
 
-// AiData 要获取描述的数据
-type AiData struct {
-	Title string
-	Desc  string
-}
-
-type AiTags struct {
-	LogID     int64   `json:"log_id"`
-	Items     []AiTag `json:"items"`
-	ErrorMSG  string  `json:"error_msg"`
-	ErrorCode int     `json:"error_code"`
-}
-
-type AiTag struct {
-	Score float64 `json:"score"`
-	Tag   string  `json:"tag"`
-}
-
-type AiTagParam struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-}
-
-type AiCategories struct {
-	LogID     int64          `json:"log_id"`
-	Item      AiCategoryItem `json:"item"`
-	ErrorMSG  string         `json:"error_msg"`
-	ErrorCode int            `json:"error_code"`
-}
-
-type AiCategoryItem struct {
-	TopCategory    []AiTag `json:"lv1_tag_list"`
-	SecondCatrgory []AiTag `json:"lv2_tag_list"`
-}
-
-type AiAnalyzeRet struct {
-	Tags    []string
-	Summary string
-}
-
-type Ai struct {
+type ai struct {
 	ApiKey    string
 	SecretKey string
+
+	accessToken           string // accessToken
+	accessTokenCreateTime int64  // accessToken创建时间
 }
 
-var accessToken = ""                // accessToken
-var accessTokenCreateTime int64 = 0 // accessToken创建时间
+var once sync.Once
+var instance *ai
+
+func GetAi() *ai {
+	once.Do(func() {
+		instance = &ai{
+			ApiKey:    config.Conf.BaiduAi.ApiKey,
+			SecretKey: config.Conf.BaiduAi.SecretKey,
+		}
+	})
+	return instance
+}
 
 // 获取baidu api token 临时用
-func (a *Ai) GetToken() string {
-	durationMillis := simple.NowTimestamp() - accessTokenCreateTime
-	if len(accessToken) == 0 || durationMillis > (86400*1000) { // accessToken为空或者生成时间超过一天
+func (a *ai) GetToken() string {
+	durationMillis := simple.NowTimestamp() - a.accessTokenCreateTime
+	if len(a.accessToken) == 0 || durationMillis > (86400*1000) { // accessToken为空或者生成时间超过一天
 		c := NewClient(a.ApiKey, a.SecretKey)
 		err := c.Auth()
 		if err != nil {
 			logrus.Error(err)
 		}
-		accessToken = c.AccessToken
-		accessTokenCreateTime = simple.NowTimestamp()
+		a.accessToken = c.AccessToken
+		a.accessTokenCreateTime = simple.NowTimestamp()
 	}
-	return accessToken
+	return a.accessToken
 }
 
-func (a *Ai) GetTags(title, content string) *AiTags {
+func (a *ai) GetTags(title, content string) *AiTags {
 	if title == "" || content == "" {
 		return nil
 	}
@@ -103,7 +79,7 @@ func (a *Ai) GetTags(title, content string) *AiTags {
 	return tags
 }
 
-func (a *Ai) GetCategories(title, content string) *AiCategories {
+func (a *ai) GetCategories(title, content string) *AiCategories {
 	if title == "" || content == "" {
 		return nil
 	}
@@ -131,7 +107,7 @@ func (a *Ai) GetCategories(title, content string) *AiCategories {
 	return categories
 }
 
-func (a *Ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
+func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, error) {
 	if title == "" || content == "" {
 		return "", errors.New("标题或内容为空")
 	}
@@ -158,12 +134,12 @@ func (a *Ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 	return ret.String(), nil
 }
 
-func (a *Ai) AnalyzeMarkdown(title, markdown string) (*AiAnalyzeRet, error) {
+func (a *ai) AnalyzeMarkdown(title, markdown string) (*AiAnalyzeRet, error) {
 	mdResult := simple.NewMd().Run(markdown)
 	return a.AnalyzeHtml(title, mdResult.ContentHtml)
 }
 
-func (a *Ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
+func (a *ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
 	if title == "" || html == "" {
 		return nil, errors.New("内容为空")
 	}
@@ -175,7 +151,7 @@ func (a *Ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
 	return a.AnalyzeText(title, text)
 }
 
-func (a *Ai) AnalyzeText(title, text string) (*AiAnalyzeRet, error) {
+func (a *ai) AnalyzeText(title, text string) (*AiAnalyzeRet, error) {
 	if title == "" || text == "" {
 		return nil, errors.New("内容为空")
 	}
