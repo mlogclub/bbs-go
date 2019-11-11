@@ -5,9 +5,7 @@
         <div>
           <a href="/about">关于</a>
           <a href="/tags">标签</a>
-          <a href="https://file.mlog.club/mlog.club/qrcode.jpg" target="_blank">公众号</a>
-        </div>
-        <div>
+          <!-- <a href="https://file.mlog.club/mlog.club/qrcode.jpg" target="_blank">公众号</a> -->
           © 2019 Powered by <a href="http://docs.bbs-go.com" target="_blank">bbs-go</a>
           <a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow">鄂ICP备19023811号-3</a>
         </div>
