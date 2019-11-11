@@ -19,6 +19,8 @@
       </li>
     </ul>
 
+    <weixin-gzh />
+
     <!-- 展示广告190x90 -->
     <ins
       class="adsbygoogle"
@@ -44,7 +46,10 @@
 </template>
 
 <script>
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
+  components: { WeixinGzh },
   props: {
     currentTagId: {
       type: Number,
