@@ -1,29 +1,31 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <article-list :articles="articlesPage.results" :show-ad="true" />
-            <pagination :page="articlesPage.page" :url-prefix="'/articles/cat/' + category.categoryId + '/'" />
-          </div>
+      <div class="left-main-container">
+        <div class="m-left">
+          <load-more
+            v-slot="{results}"
+            :init-data="articlesPage"
+            :params="{categoryId:category.categoryId}"
+            url="/api/article/category/articles"
+          >
+            <article-list :articles="results" :show-ad="true" />
+          </load-more>
         </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <weixin-gzh />
+        <div class="m-right">
+          <weixin-gzh />
 
-            <div style="text-align: center;">
-              <!-- 展示广告288x288 -->
-              <ins
-                class="adsbygoogle"
-                style="display:inline-block;width:288px;height:288px"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="4922900917"
-              />
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-            </div>
+          <div style="text-align: center;">
+            <!-- 展示广告288x288 -->
+            <ins
+              class="adsbygoogle"
+              style="display:inline-block;width:288px;height:288px"
+              data-ad-client="ca-pub-5683711753850351"
+              data-ad-slot="4922900917"
+            />
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
           </div>
         </div>
       </div>
@@ -33,15 +35,11 @@
 
 <script>
 import ArticleList from '~/components/ArticleList'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
-  components: {
-    ArticleList,
-    Pagination,
-    WeixinGzh
-  },
+  components: { ArticleList, LoadMore, WeixinGzh },
   head() {
     return {
       title: this.$siteTitle(this.category.categoryName + ' - 文章'),
@@ -57,7 +55,6 @@ export default {
         $axios.get('/api/category/' + params.categoryId),
         $axios.get('/api/article/category/articles', {
           params: {
-            page: (params.page || 1),
             categoryId: params.categoryId
           }
         })
