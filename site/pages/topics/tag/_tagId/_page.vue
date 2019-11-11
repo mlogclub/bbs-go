@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container main-container">
       <div class="right-main-container">
         <bbs-left :current-tag-id="tag.tagId" />
         <div class="m-right">

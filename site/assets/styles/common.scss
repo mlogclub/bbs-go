@@ -1,6 +1,6 @@
 html,
 body {
-  background: #fff;
+  background: #f7f7f7;
   font-family: "system-ui", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, sans-serif !important;
 }
 
@@ -24,20 +24,115 @@ body {
 }
 
 .main-aside {
-  background: #f7f7f7;
+  background: #fff;
+}
+
+
+// main-container
+$sidebar-width: 190px;
+.main-container {
+  .left-main-container, .right-main-container {
+    display: flex;
+
+    .m-left,
+    .m-right {
+      background: #fff;
+      padding: 10px;
+    }
+  }
+
+  // 左侧小，右侧大
+  .right-main-container {
+    @media screen and (max-width: 768px) {
+      .m-left {
+        display: none;
+      }
+
+      .m-right {
+        width: 100% !important;
+      }
+    }
+
+    .m-left {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+      margin-right: 10px;
+    }
+
+    .m-right {
+      width: calc(100% - #{$sidebar-width});
+      transition: width .2s;
+    }
+  }
+
+  // 左侧大，右侧小
+  .left-main-container {
+    display: flex;
+
+    @media screen and (max-width: 768px) {
+      .m-right {
+        display: none;
+      }
+
+      .m-left {
+        width: 100% !important;
+      }
+    }
+
+    .m-left {
+      width: calc(100% - #{$sidebar-width});
+      transition: width .2s;
+    }
+
+    .m-right {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+      margin-left: 10px;
+    }
+  }
+
+}
+
+.m-nav {
+  margin-top: 10px;
+
+  li {
+    a {
+      display: block;
+      width: 100%;
+      padding: 8px 0;
+      color: #667d99;
+      font-weight: 500;
+      font-size: 15px;
+
+      i {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        color: #f36322;
+        text-decoration: none;
+      }
+
+      &.active {
+        color: rgb(75, 147, 209);
+        font-weight: 900;
+      }
+    }
+  }
 }
 
 .widget {
   background: #fff;
   // font-size: 13px;
   margin-top: 20px;
-  padding-left: 8px;
+  // padding-left: 8px;
 
   &>.header {
     padding-bottom: 8px;
     font-size: 16px;
     font-weight: bold;
-    border-bottom: 1px dashed #f4f4f5;
+    border-bottom: 1px dashed #ddd;
 
     .slot {
       float: right;
@@ -55,7 +150,7 @@ body {
   }
 
   &>.footer {
-    border-top: 1px dashed #f4f4f5;
+    border-top: 1px dashed #ddd;
     padding: 10px 0 10px 0;
 
     &.is-right {
@@ -219,92 +314,6 @@ div.avatar {
 .button.post {
   width: 100%;
 }
-
-$sidebar-width: 190px;
-
-// 左侧小，右侧大
-.right-main-container {
-  display: flex;
-
-
-  @media screen and (max-width: 768px) {
-    .m-left {
-      display: none;
-    }
-
-    .m-right {
-      width: 100% !important;
-    }
-  }
-
-  .m-left {
-    min-width: $sidebar-width;
-    max-width: $sidebar-width;
-    margin-right: 30px;
-  }
-
-  .m-right {
-    width: calc(100% - #{$sidebar-width});
-    transition: width .2s;
-  }
-}
-
-// 左侧大，右侧小
-.left-main-container {
-  display: flex;
-
-  @media screen and (max-width: 768px) {
-    .m-right {
-      display: none;
-    }
-
-    .m-left {
-      width: 100% !important;
-    }
-  }
-
-
-  .m-left {
-    width: calc(100% - #{$sidebar-width});
-    transition: width .2s;
-  }
-
-  .m-right {
-    min-width: $sidebar-width;
-    max-width: $sidebar-width;
-    margin-left: 30px;
-  }
-}
-
-.m-nav {
-  margin-top: 10px;
-
-  li {
-    a {
-      display: block;
-      width: 100%;
-      padding: 8px 0;
-      color: #667d99;
-      font-weight: 500;
-      font-size: 15px;
-
-      i {
-        margin-right: 8px;
-      }
-
-      &:hover {
-        color: #f36322;
-        text-decoration: none;
-      }
-
-      &.active {
-        color: rgb(75, 147, 209);
-        font-weight: 900;
-      }
-    }
-  }
-}
-
 
 .loading-animation {
   width: 20px;

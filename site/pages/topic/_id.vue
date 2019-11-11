@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="main">
-      <div class="container">
+      <div class="container main-container">
         <div class="left-main-container">
           <div class="m-left">
             <div class="topic-detail topic-wrap">

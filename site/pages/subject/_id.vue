@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container main-container">
       <div class="right-main-container">
         <subject-bar :subject="subject" />
         <div class="m-right">

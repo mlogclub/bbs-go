@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container main-container">
       <div class="left-main-container">
         <div class="m-left">
           <load-more v-slot="{results}" :init-data="articlesPage" url="/api/article/articles">
