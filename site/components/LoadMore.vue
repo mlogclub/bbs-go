@@ -6,6 +6,10 @@
     infinite-scroll-distance="10"
   >
     <slot :results="results" />
+    <div class="load-more-loading">
+      <div class="loading-animation" />
+      <span class="load-more-text">加载中...</span>
+    </div>
   </div>
 </template>
 
@@ -41,18 +45,18 @@ export default {
       results: this.initData.results, // 列表数据
       laoding: true, // 是否加载中
       hasMore: true, // 是否有更多数据
-      busy: false // 是否还有数据
+      loading: false // 是否正在加载中
     }
   },
   computed: {
     // 是否禁言自动加载
     disabled() {
-      return this.busy || !this.hasMore
+      return this.loading || !this.hasMore
     }
   },
   methods: {
     async loadMore() {
-      this.busy = true
+      this.loading = true
       try {
         const _params = Object.assign(this.params || {}, {
           cursor: this.cursor
@@ -69,9 +73,10 @@ export default {
           this.hasMore = false
         }
       } catch (err) {
-        console.log(err)
+        this.hasMore = false
+        console.error(err)
       } finally {
-        this.busy = false
+        this.loading = false
       }
     }
   }
@@ -79,4 +84,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.load-more {
+  .load-more-loading {
+    text-align: center;
+    font-size: 12px;
+
+    .loading-animation {
+      height: 12px;
+      width: 12px;
+    }
+
+    .load-more-text {
+      color: #000;
+      margin-left: 5px;
+    }
+  }
+}
 </style>

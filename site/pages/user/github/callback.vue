@@ -43,9 +43,11 @@ export default {
           state: this.state
         })
 
-        if (this.ref) { // 跳到登录前
+        if (this.ref) {
+          // 跳到登录前
           utils.linkTo(this.ref)
-        } else { // 跳到个人主页
+        } else {
+          // 跳到个人主页
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
@@ -77,56 +79,6 @@ export default {
 
   .loading-text {
     margin-left: 10px;
-  }
-
-  .loading-animation {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    color: red;
-    vertical-align: middle;
-    pointer-events: none;
-    position: relative;
-  }
-  .loading-animation:before,
-  .loading-animation:after {
-    content: "";
-    width: inherit;
-    height: inherit;
-    border-radius: 50%;
-    background-color: currentcolor;
-    opacity: 0.6;
-    position: absolute;
-    top: 0;
-    left: 0;
-    -webkit-animation: loading-animation 2s infinite ease-in-out;
-    animation: loading-animation 2s infinite ease-in-out;
-  }
-  .loading-animation:after {
-    -webkit-animation-delay: -1s;
-    animation-delay: -1s;
-  }
-  @-webkit-keyframes loading-animation {
-    0%,
-    100% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-    }
-    50% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-    }
-  }
-  @keyframes loading-animation {
-    0%,
-    100% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-    }
-    50% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-    }
   }
 }
 </style>

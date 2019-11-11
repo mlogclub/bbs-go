@@ -19,16 +19,16 @@ body {
 }
 
 .main-body {
-  background: #ffffff;
+  background: #f7f7f7;
   padding: 10px;
 }
 
 .main-aside {
-  background: #ffffff;
+  background: #f7f7f7;
 }
 
 .widget {
-  background: #ffffff;
+  background: #fff;
   // font-size: 13px;
   margin-top: 20px;
   padding-left: 8px;
@@ -107,7 +107,7 @@ div.avatar {
 }
 
 .footer {
-  background: #ffffff;
+  background: #fff;
   padding: 20px 0 20px 0;
 
   .hide {
@@ -122,7 +122,7 @@ div.avatar {
 }
 
 .categories {
-  background: #ffffff;
+  background: #fff;
   margin-bottom: 10px;
 
   .tag {
@@ -195,12 +195,12 @@ div.avatar {
 
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
       background: rgba(0, 0, 0, 0.2);
     }
 
     &::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
       border-radius: 0;
       background: rgba(0, 0, 0, 0.1);
     }
@@ -221,7 +221,6 @@ div.avatar {
 }
 
 $sidebar-width: 190px;
-// $displaySidebar: true;
 
 // 左侧小，右侧大
 .right-main-container {
@@ -232,6 +231,7 @@ $sidebar-width: 190px;
     .m-left {
       display: none;
     }
+
     .m-right {
       width: 100% !important;
     }
@@ -257,6 +257,7 @@ $sidebar-width: 190px;
     .m-right {
       display: none;
     }
+
     .m-left {
       width: 100% !important;
     }
@@ -300,6 +301,65 @@ $sidebar-width: 190px;
         color: rgb(75, 147, 209);
         font-weight: 900;
       }
+    }
+  }
+}
+
+
+.loading-animation {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  color: red;
+  vertical-align: middle;
+  pointer-events: none;
+  position: relative;
+
+  &:before,
+  &:after {
+    content: "";
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    background-color: currentcolor;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: loading-animation 2s infinite ease-in-out;
+    animation: loading-animation 2s infinite ease-in-out;
+  }
+
+  .loading-animation:after {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+  }
+
+  @-webkit-keyframes loading-animation {
+
+    0%,
+    100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    50% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+
+  @keyframes loading-animation {
+
+    0%,
+    100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    50% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
     }
   }
 }

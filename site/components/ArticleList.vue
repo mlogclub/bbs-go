@@ -1,7 +1,9 @@
 <template>
   <ul class="article-list">
     <li v-for="(article, index) in articles" :key="article.articleId">
-      <div v-if="showAd && ((articles.length < 3 && index === 1) || (index !== 0 && index % 5 === 0))">
+      <div
+        v-if="showAd && ((articles.length < 3 && index === 1) || (index !== 0 && index % 5 === 0))"
+      >
         <ins
           class="adsbygoogle"
           style="display:block"
@@ -100,7 +102,8 @@ export default {
 
     .article-summary {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.7);
+      // color: rgba(0, 0, 0, 0.7);
+      color: #17181a;
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -129,6 +132,5 @@ export default {
       }
     }
   }
-
 }
 </style>
