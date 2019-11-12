@@ -2,7 +2,7 @@
   <div>
     <section class="main">
       <div class="container main-container left-main">
-        <div class="m-left">
+        <div class="left-container">
           <div class="topic-detail topic-wrap">
             <div class="header">
               <div class="left">
@@ -73,7 +73,7 @@
           <!-- 评论 -->
           <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="true" />
         </div>
-        <div class="m-right">
+        <div class="right-container">
           <!-- 展示广告190x90 -->
           <ins
             class="adsbygoogle"

@@ -1,7 +1,7 @@
 <template>
   <section class="main">
     <div class="container main-container left-main">
-      <div class="m-left">
+      <div class="left-container">
         <load-more
           v-slot="{results}"
           :init-data="articlesPage"
@@ -11,7 +11,7 @@
           <article-list :articles="results" :show-ad="true" />
         </load-more>
       </div>
-      <div class="m-right">
+      <div class="right-container">
         <weixin-gzh />
 
         <div style="text-align: center;">

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-left">
+  <div class="left-container">
     <ul class="m-nav">
       <li>
         <a :class="{ 'active' : subject && subject.id === 1 }" href="/subject/1">

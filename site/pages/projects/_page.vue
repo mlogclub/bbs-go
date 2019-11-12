@@ -1,11 +1,11 @@
 <template>
   <section class="main">
     <div class="container main-container left-main">
-      <div class="m-left">
+      <div class="left-container">
         <project-list :projects="projectPage.results" />
         <pagination :page="projectPage.page" url-prefix="/projects/" />
       </div>
-      <div class="m-right">
+      <div class="right-container">
         <!-- 展示广告190x90 -->
         <ins
           class="adsbygoogle"

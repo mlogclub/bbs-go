@@ -1,5 +1,5 @@
 <template>
-  <div class="m-left">
+  <div class="left-container">
     <a class="button is-success post" :href="createTopicUrl">
       <i class="iconfont icon-topic" />&nbsp;
       <strong>发表主题</strong>

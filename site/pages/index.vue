@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container right-main">
       <bbs-left />
-      <div class="m-right">
+      <div class="right-container">
         <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination :page="topicsPage.page" url-prefix="/topics/" />
       </div>

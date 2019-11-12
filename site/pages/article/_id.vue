@@ -1,7 +1,7 @@
 <template>
   <section class="main">
     <div class="container main-container left-main">
-      <div class="m-left">
+      <div class="left-container">
         <article class="article-item">
           <div class="article-item-left">
             <a
@@ -137,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="m-right">
+      <div class="right-container">
         <weixin-gzh />
         <!-- 展示广告190x190 -->
         <ins
@@ -442,7 +442,7 @@ article {
 }
 
 .article-related {
-  margin-top: 20px;
+  margin: 20px 0 0 0;
   font-size: 12px;
 
   .widget > .header {

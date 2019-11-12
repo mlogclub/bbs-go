@@ -34,8 +34,8 @@ $sidebar-width: 190px;
 .main-container {
   display: flex;
 
-  .m-left,
-  .m-right {
+  .left-container,
+  .right-container {
     background: #fff;
     padding: 10px;
   }
@@ -47,21 +47,21 @@ $sidebar-width: 190px;
     display: flex;
 
     @media screen and (max-width: 768px) {
-      .m-right {
+      .right-container {
         display: none;
       }
 
-      .m-left {
+      .left-container {
         width: 100% !important;
       }
     }
 
-    .m-left {
+    .left-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
     }
 
-    .m-right {
+    .right-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       margin-left: 10px;
@@ -71,22 +71,22 @@ $sidebar-width: 190px;
   // 左侧小，右侧大
   &.right-main {
     @media screen and (max-width: 768px) {
-      .m-left {
+      .left-container {
         display: none;
       }
 
-      .m-right {
+      .right-container {
         width: 100% !important;
       }
     }
 
-    .m-left {
+    .left-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       margin-right: 10px;
     }
 
-    .m-right {
+    .right-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
     }

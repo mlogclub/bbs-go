@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container right-main">
       <subject-bar :subject="subject" />
-      <div class="m-right">
+      <div class="right-container">
         <subject-content-list :subject-contents="subjectContentPage.results" />
         <pagination :url-prefix="'/subject/' + subject.id + '?page='" :page="subjectContentPage.page" />
       </div>

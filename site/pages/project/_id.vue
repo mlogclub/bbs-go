@@ -1,7 +1,7 @@
 <template>
   <section class="main">
     <div class="container main-container left-main">
-      <div class="m-left">
+      <div class="left-container">
         <div v-if="project" class="project">
           <div class="project-header">
             <span class="project-name">{{ project.name }}</span>
@@ -52,7 +52,7 @@
         <!-- 评论 -->
         <comment entity-type="project" :entity-id="project.projectId" :show-ad="true" />
       </div>
-      <div class="m-right">
+      <div class="right-container">
         <div style="max-height:60px;">
           <!-- 展示广告190x90 -->
           <ins
