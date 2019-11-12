@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isOwner" class="widget">
+    <div v-if="isOwner" class="widget no-margin">
       <div class="content">
         <a class="button is-primary" href="/topic/create">
           <i class="iconfont icon-topic" />&nbsp;

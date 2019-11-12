@@ -3,54 +3,58 @@
     <div class="container">
       <div class="columns">
         <div class="column is-21">
-          <div class="widget">
-            <div class="header">
-              <nav class="breadcrumb" aria-label="breadcrumbs">
-                <ul>
-                  <li> <a href="/">首页</a> </li>
-                  <li>
-                    <a :href="'/user/' + currentUser.id + '?tab=topics'">{{ currentUser.nickname }}</a>
-                  </li>
-                  <li class="is-active">
-                    <a href="#" aria-current="page">文章</a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div class="content">
-              <div class="field">
-                <div class="control">
-                  <input
-                    v-model="postForm.title"
-                    class="input"
-                    type="text"
-                    placeholder="标题"
-                  >
-                </div>
+          <div class="main-body">
+            <div class="widget no-margin">
+              <div class="header">
+                <nav class="breadcrumb" aria-label="breadcrumbs">
+                  <ul>
+                    <li> <a href="/">首页</a> </li>
+                    <li>
+                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{ currentUser.nickname }}</a>
+                    </li>
+                    <li class="is-active">
+                      <a href="#" aria-current="page">文章</a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-
-              <div class="field">
-                <div class="control">
-                  <tag-input v-model="postForm.tags" />
+              <div class="content">
+                <div class="field">
+                  <div class="control">
+                    <input
+                      v-model="postForm.title"
+                      class="input"
+                      type="text"
+                      placeholder="标题"
+                    >
+                  </div>
                 </div>
-              </div>
 
-              <div class="field">
-                <div class="control">
-                  <vditor v-model="postForm.content" />
+                <div class="field">
+                  <div class="control">
+                    <tag-input v-model="postForm.tags" />
+                  </div>
                 </div>
-              </div>
 
-              <div class="field is-grouped">
-                <div class="control">
-                  <a class="button is-success" :class="{'is-loading': publishing}" :disabled="publishing" @click="submitCreate">提交更改</a>
+                <div class="field">
+                  <div class="control">
+                    <vditor v-model="postForm.content" />
+                  </div>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="control">
+                    <a class="button is-success" :class="{'is-loading': publishing}" :disabled="publishing" @click="submitCreate">提交更改</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="column is-3">
-          <markdown-help />
+          <div class="main-aside">
+            <markdown-help />
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
       <div class="columns">
         <div class="column is-9">
           <div class="main-body">
-            <div class="widget">
+            <div class="widget no-margin">
               <div class="header">
                 <span>标签</span>
               </div>

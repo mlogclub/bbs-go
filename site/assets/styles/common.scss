@@ -18,16 +18,11 @@ body {
   }
 }
 
-.main-body {
-  background: #fff;
-  padding: 10px;
-}
-
+.main-body,
 .main-aside {
   background: #fff;
   padding: 10px;
 }
-
 
 // main-container
 $sidebar-width: 190px;
@@ -40,8 +35,6 @@ $sidebar-width: 190px;
     padding: 10px;
   }
 
-  // right-main-container
-  // left-main-container
   // 左侧大，右侧小
   &.left-main {
     display: flex;
@@ -126,8 +119,13 @@ $sidebar-width: 190px;
 .widget {
   background: #fff;
   // font-size: 13px;
-  margin-top: 20px;
   // padding-left: 8px;
+
+  margin-top: 20px;
+
+  &.no-margin {
+    margin: 0px;
+  }
 
   &>.header {
     padding-bottom: 8px;
