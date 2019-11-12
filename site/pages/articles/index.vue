@@ -31,7 +31,11 @@ import WeixinGzh from '~/components/WeixinGzh'
 import LoadMore from '~/components/LoadMore'
 
 export default {
-  components: { ArticleList, LoadMore, WeixinGzh },
+  components: {
+    ArticleList,
+    LoadMore,
+    WeixinGzh
+  },
   head() {
     return {
       title: this.$siteTitle('文章'),

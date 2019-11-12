@@ -11,7 +11,7 @@
     "dev": "nuxt",
     "debug": "node --inspect node_modules/.bin/nuxt",
     "build": "nuxt build",
-    "start": "nuxt start --max_old_space_size=3072 --optimize_for_size",
+    "start": "nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {
