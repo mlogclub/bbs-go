@@ -253,12 +253,14 @@ div.avatar {
 
 .toc {
   position: relative;
+  width: 170px;
 
   ul,
-  ul ul {
+  ul ul,
+  ul ul ul {
     margin: 0px;
-    list-style: square;
-    padding-left: 15px;
+    list-style: circle;
+    padding-left: 10px;
 
     li {
       a {
