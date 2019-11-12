@@ -1,100 +1,98 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container">
-        <div class="left-main-container">
-          <div class="m-left">
-            <div class="topic-detail topic-wrap">
-              <div class="header">
-                <div class="left">
-                  <div
-                    class="avatar avatar-size-45 is-rounded"
-                    :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
-                  />
-                </div>
-                <div class="center">
-                  <a :href="'/topic/' + topic.topicId" :title="topic.title">
-                    <div class="topic-title">{{ topic.title }}</div>
-                  </a>
+      <div class="container main-container left-main">
+        <div class="m-left">
+          <div class="topic-detail topic-wrap">
+            <div class="header">
+              <div class="left">
+                <div
+                  class="avatar avatar-size-45 is-rounded"
+                  :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
+                />
+              </div>
+              <div class="center">
+                <a :href="'/topic/' + topic.topicId" :title="topic.title">
+                  <div class="topic-title">{{ topic.title }}</div>
+                </a>
 
-                  <div class="topic-meta">
-                    <span class="meta-item">
-                      <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+                <div class="topic-meta">
+                  <span class="meta-item">
+                    <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+                  </span>
+                  <span class="meta-item">
+                    {{ topic.lastCommentTime | prettyDate }}
+                  </span>
+                  <span class="meta-item">
+                    <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
+                      <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
                     </span>
-                    <span class="meta-item">
-                      {{ topic.lastCommentTime | prettyDate }}
-                    </span>
-                    <span class="meta-item">
-                      <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                        <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
-                      </span>
-                    </span>
-                    <span class="meta-item act">
-                      <a @click="addFavorite(topic.topicId)">
-                        <i class="iconfont icon-favorite" />&nbsp;{{ favorited ? '已收藏' : '收藏' }}
-                      </a>
-                    </span>
-                    <span v-if="isOwner" class="meta-item act">
-                      <a @click="deleteTopic(topic.topicId)">
-                        <i class="iconfont icon-delete" />&nbsp;删除
-                      </a>
-                    </span>
-                    <span v-if="isOwner" class="meta-item act">
-                      <a :href="'/topic/edit/' + topic.topicId">
-                        <i class="iconfont icon-edit" />&nbsp;修改
-                      </a>
-                    </span>
-                  </div>
-                </div>
-                <div class="right">
-                  <div class="like">
-                    <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
-                      <i class="iconfont icon-like" />
-                    </span>
-                    <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
-                  </div>
-                  <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
+                  </span>
+                  <span class="meta-item act">
+                    <a @click="addFavorite(topic.topicId)">
+                      <i class="iconfont icon-favorite" />&nbsp;{{ favorited ? '已收藏' : '收藏' }}
+                    </a>
+                  </span>
+                  <span v-if="isOwner" class="meta-item act">
+                    <a @click="deleteTopic(topic.topicId)">
+                      <i class="iconfont icon-delete" />&nbsp;删除
+                    </a>
+                  </span>
+                  <span v-if="isOwner" class="meta-item act">
+                    <a :href="'/topic/edit/' + topic.topicId">
+                      <i class="iconfont icon-edit" />&nbsp;修改
+                    </a>
+                  </span>
                 </div>
               </div>
-
-              <div class="content" v-html="topic.content" />
-
-              <ins
-                class="adsbygoogle"
-                style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-ig-s+1x-t-q"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="4728140043"
-              />
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
+              <div class="right">
+                <div class="like">
+                  <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
+                    <i class="iconfont icon-like" />
+                  </span>
+                  <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
+                </div>
+                <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
+              </div>
             </div>
 
-            <!-- 评论 -->
-            <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="true" />
-          </div>
-          <div class="m-right">
-            <!-- 展示广告190x90 -->
+            <div class="content" v-html="topic.content" />
+
             <ins
               class="adsbygoogle"
-              style="display:inline-block;width:190px;height:90px"
+              style="display:block"
+              data-ad-format="fluid"
+              data-ad-layout-key="-ig-s+1x-t-q"
               data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="9345305153"
+              data-ad-slot="4728140043"
             />
             <script>
               (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
+          </div>
 
-            <weixin-gzh />
+          <!-- 评论 -->
+          <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="true" />
+        </div>
+        <div class="m-right">
+          <!-- 展示广告190x90 -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:190px;height:90px"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="9345305153"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
 
-            <div v-if="topic.toc" ref="toc" class="toc widget">
-              <div class="header">
-                目录
-              </div>
-              <div class="content" v-html="topic.toc" />
+          <weixin-gzh />
+
+          <div v-if="topic.toc" ref="toc" class="toc widget">
+            <div class="header">
+              目录
             </div>
+            <div class="content" v-html="topic.toc" />
           </div>
         </div>
       </div>

@@ -32,42 +32,18 @@ body {
 // main-container
 $sidebar-width: 190px;
 .main-container {
-  .left-main-container, .right-main-container {
-    display: flex;
+  display: flex;
 
-    .m-left,
-    .m-right {
-      background: #fff;
-      padding: 10px;
-    }
+  .m-left,
+  .m-right {
+    background: #fff;
+    padding: 10px;
   }
 
-  // 左侧小，右侧大
-  .right-main-container {
-    @media screen and (max-width: 768px) {
-      .m-left {
-        display: none;
-      }
-
-      .m-right {
-        width: 100% !important;
-      }
-    }
-
-    .m-left {
-      min-width: $sidebar-width;
-      max-width: $sidebar-width;
-      margin-right: 10px;
-    }
-
-    .m-right {
-      width: calc(100% - #{$sidebar-width});
-      transition: width .2s;
-    }
-  }
-
+  // right-main-container
+  // left-main-container
   // 左侧大，右侧小
-  .left-main-container {
+  &.left-main {
     display: flex;
 
     @media screen and (max-width: 768px) {
@@ -89,6 +65,30 @@ $sidebar-width: 190px;
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       margin-left: 10px;
+    }
+  }
+
+  // 左侧小，右侧大
+  &.right-main {
+    @media screen and (max-width: 768px) {
+      .m-left {
+        display: none;
+      }
+
+      .m-right {
+        width: 100% !important;
+      }
+    }
+
+    .m-left {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+      margin-right: 10px;
+    }
+
+    .m-right {
+      width: calc(100% - #{$sidebar-width});
+      transition: width .2s;
     }
   }
 

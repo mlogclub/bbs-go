@@ -1,12 +1,10 @@
 <template>
   <section class="main">
-    <div class="container main-container">
-      <div class="right-main-container">
-        <subject-bar :subject="subject" />
-        <div class="m-right">
-          <subject-content-list :subject-contents="subjectContentPage.results" />
-          <pagination :url-prefix="'/subject/' + subject.id + '?page='" :page="subjectContentPage.page" />
-        </div>
+    <div class="container main-container right-main">
+      <subject-bar :subject="subject" />
+      <div class="m-right">
+        <subject-content-list :subject-contents="subjectContentPage.results" />
+        <pagination :url-prefix="'/subject/' + subject.id + '?page='" :page="subjectContentPage.page" />
       </div>
     </div>
   </section>

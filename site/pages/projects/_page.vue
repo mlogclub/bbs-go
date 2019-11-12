@@ -1,45 +1,43 @@
 <template>
   <section class="main">
-    <div class="container main-container">
-      <div class="left-main-container">
-        <div class="m-left">
-          <project-list :projects="projectPage.results" />
-          <pagination :page="projectPage.page" url-prefix="/projects/" />
-        </div>
-        <div class="m-right">
-          <!-- 展示广告190x90 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:90px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="9345305153"
-          />
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
+    <div class="container main-container left-main">
+      <div class="m-left">
+        <project-list :projects="projectPage.results" />
+        <pagination :page="projectPage.page" url-prefix="/projects/" />
+      </div>
+      <div class="m-right">
+        <!-- 展示广告190x90 -->
+        <ins
+          class="adsbygoogle"
+          style="display:inline-block;width:190px;height:90px"
+          data-ad-client="ca-pub-5683711753850351"
+          data-ad-slot="9345305153"
+        />
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
-          <!-- 展示广告190x190 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:190px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="5685455263"
-          />
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
+        <!-- 展示广告190x190 -->
+        <ins
+          class="adsbygoogle"
+          style="display:inline-block;width:190px;height:190px"
+          data-ad-client="ca-pub-5683711753850351"
+          data-ad-slot="5685455263"
+        />
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
-          <!-- 展示广告190x480 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:480px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="3438372357"
-          />
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
+        <!-- 展示广告190x480 -->
+        <ins
+          class="adsbygoogle"
+          style="display:inline-block;width:190px;height:480px"
+          data-ad-client="ca-pub-5683711753850351"
+          data-ad-slot="3438372357"
+        />
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
       </div>
     </div>
   </section>

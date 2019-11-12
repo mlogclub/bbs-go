@@ -1,32 +1,30 @@
 <template>
   <section class="main">
-    <div class="container main-container">
-      <div class="left-main-container">
-        <div class="m-left">
-          <load-more
-            v-slot="{results}"
-            :init-data="articlesPage"
-            :params="{tagId:tag.tagId}"
-            url="/api/article/tag/articles"
-          >
-            <article-list :articles="results" :show-ad="true" />
-          </load-more>
-        </div>
-        <div class="m-right">
-          <weixin-gzh />
+    <div class="container main-container left-main">
+      <div class="m-left">
+        <load-more
+          v-slot="{results}"
+          :init-data="articlesPage"
+          :params="{tagId:tag.tagId}"
+          url="/api/article/tag/articles"
+        >
+          <article-list :articles="results" :show-ad="true" />
+        </load-more>
+      </div>
+      <div class="m-right">
+        <weixin-gzh />
 
-          <div style="text-align: center;">
-            <!-- 展示广告288x288 -->
-            <ins
-              class="adsbygoogle"
-              style="display:inline-block;width:288px;height:288px"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="4922900917"
-            />
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-          </div>
+        <div style="text-align: center;">
+          <!-- 展示广告288x288 -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:288px;height:288px"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="4922900917"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
     </div>
