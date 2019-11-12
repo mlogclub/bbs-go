@@ -20,9 +20,7 @@
                   <span class="meta-item">
                     <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
                   </span>
-                  <span class="meta-item">
-                    {{ topic.lastCommentTime | prettyDate }}
-                  </span>
+                  <span class="meta-item">{{ topic.lastCommentTime | prettyDate }}</span>
                   <span class="meta-item">
                     <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
                       <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
@@ -30,7 +28,8 @@
                   </span>
                   <span class="meta-item act">
                     <a @click="addFavorite(topic.topicId)">
-                      <i class="iconfont icon-favorite" />&nbsp;{{ favorited ? '已收藏' : '收藏' }}
+                      <i class="iconfont icon-favorite" />
+                      &nbsp;{{ favorited ? '已收藏' : '收藏' }}
                     </a>
                   </span>
                   <span v-if="isOwner" class="meta-item act">
@@ -106,7 +105,8 @@ import Comment from '~/components/Comment'
 import WeixinGzh from '~/components/WeixinGzh'
 export default {
   components: {
-    Comment, WeixinGzh
+    Comment,
+    WeixinGzh
   },
   computed: {
     isOwner: function () {
@@ -223,6 +223,9 @@ export default {
     padding-top: 10px;
     font-size: 15px;
     color: #000;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
   }
 }
 </style>
