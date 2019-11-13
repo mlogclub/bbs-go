@@ -42,18 +42,19 @@
             <a href="/user/favorites">&nbsp;收藏</a>
           </li>
         </ul>
+        <!-- 展示广告288x288
         <div style="text-align: center;">
-          <!-- 展示广告288x288 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:288px;height:288px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="4922900917"
-          />
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
+        <ins
+          class="adsbygoogle"
+          style="display:inline-block;width:288px;height:288px"
+          data-ad-client="ca-pub-5683711753850351"
+          data-ad-slot="4922900917"
+        />
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      -->
       </div>
     </div>
   </div>

@@ -26,6 +26,7 @@ body {
 
 // main-container
 $sidebar-width: 190px;
+
 .main-container {
   display: flex;
 
@@ -33,6 +34,9 @@ $sidebar-width: 190px;
   .right-container {
     background: #fff;
     padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    display: block;
   }
 
   // 左侧大，右侧小
