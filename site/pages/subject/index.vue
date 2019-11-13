@@ -3,8 +3,9 @@
     <div class="container main-container right-main">
       <subject-bar />
       <div class="right-container">
-        <subject-content-list :subject-contents="subjectContentPage.results" />
-        <pagination url-prefix="/subject?page=" :page="subjectContentPage.page" />
+        <load-more v-slot="{results}" :init-data="subjectContentPage" url="/api/subject/contents">
+          <subject-content-list :subject-contents="results" />
+        </load-more>
       </div>
     </div>
   </section>
@@ -13,10 +14,10 @@
 <script>
 import SubjectBar from '~/components/SubjectBar'
 import SubjectContentList from '~/components/SubjectContentList'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 export default {
   components: {
-    SubjectBar, SubjectContentList, Pagination
+    SubjectBar, SubjectContentList, LoadMore
   },
   head() {
     return {
@@ -25,11 +26,7 @@ export default {
   },
   async asyncData({ $axios, params, query }) {
     const [subjectContentPage] = await Promise.all([
-      $axios.get('/api/subject/contents', {
-        params: {
-          page: query.page || 1
-        }
-      })
+      $axios.get('/api/subject/contents')
     ])
     return {
       subjectContentPage: subjectContentPage

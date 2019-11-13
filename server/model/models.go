@@ -257,7 +257,7 @@ type Subject struct {
 // 专栏内容
 type SubjectContent struct {
 	Model
-	SubjectId  int64  `gorm:"not null" json:"subjectId" form:"subjectId"`                             // 专栏编号
+	SubjectId  int64  `gorm:"not null;index:idx_subject_id" json:"subjectId" form:"subjectId"`                             // 专栏编号
 	EntityType string `gorm:"not null;size:32;index:idx_entity;" json:"entityType" form:"entityType"` // 实体类型
 	EntityId   int64  `gorm:"not null;index:idx_entity;" json:"entityId" form:"entityId"`             // 实体编号
 	Title      string `gorm:"not null" json:"title" form:"title"`                                     // 标题

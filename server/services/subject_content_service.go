@@ -63,6 +63,23 @@ func (this *subjectContentService) GetByEntity(entityType string, entityId int64
 	return repositories.SubjectContentRepository.Take(simple.DB(), "entity_type = ? and entity_id = ?", entityType, entityId)
 }
 
+func (this *subjectContentService) GetSubjectContents(subjectId, cursor int64) (contents []model.SubjectContent, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Desc("id").Limit(20)
+	if subjectId > 0 {
+		cnd.Eq("subject_id", subjectId)
+	}
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	contents = repositories.SubjectContentRepository.Find(simple.DB(), cnd)
+	if len(contents) > 0 {
+		nextCursor = contents[len(contents)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
 // 分析文章
 func (this *subjectContentService) AnalyzeArticle(article *model.Article) {
 	subjectIds := subject.AnalyzeSubjects(article.UserId, article.Title, article.Content)

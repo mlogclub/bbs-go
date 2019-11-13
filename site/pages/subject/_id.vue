@@ -3,8 +3,14 @@
     <div class="container main-container right-main">
       <subject-bar :subject="subject" />
       <div class="right-container">
-        <subject-content-list :subject-contents="subjectContentPage.results" />
-        <pagination :url-prefix="'/subject/' + subject.id + '?page='" :page="subjectContentPage.page" />
+        <load-more
+          v-slot="{results}"
+          :init-data="subjectContentPage"
+          :params="{subjectId:subject.id}"
+          url="/api/subject/contents"
+        >
+          <subject-content-list :subject-contents="results" />
+        </load-more>
       </div>
     </div>
   </section>
@@ -13,10 +19,10 @@
 <script>
 import SubjectBar from '~/components/SubjectBar'
 import SubjectContentList from '~/components/SubjectContentList'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 export default {
   components: {
-    SubjectBar, SubjectContentList, Pagination
+    SubjectBar, SubjectContentList, LoadMore
   },
   head() {
     const title = this.subject.title + ' 专栏'
@@ -33,8 +39,7 @@ export default {
       $axios.get('/api/subject/' + params.id),
       $axios.get('/api/subject/contents', {
         params: {
-          subjectId: params.id,
-          page: query.page || 1
+          subjectId: params.id
         }
       })
     ])
