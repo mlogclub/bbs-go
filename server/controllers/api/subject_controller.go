@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
@@ -66,5 +68,5 @@ func (this *SubjectController) GetContents() *simple.JsonResult {
 		results = append(results, item)
 	}
 
-	return simple.JsonCursorData(results, cursor)
+	return simple.JsonCursorData(results, strconv.FormatInt(cursor, 10))
 }
