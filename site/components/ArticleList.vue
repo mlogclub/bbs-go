@@ -102,8 +102,7 @@ export default {
 
     .article-summary {
       font-size: 14px;
-      // color: rgba(0, 0, 0, 0.7);
-      color: #17181a;
+      color: rgba(0, 0, 0, 0.7);
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
