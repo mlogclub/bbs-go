@@ -314,6 +314,14 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	return rsp
 }
 
+func BuildComments(comments []model.Comment) []model.CommentResponse {
+	var ret []model.CommentResponse
+	for _, comment := range comments {
+		ret = append(ret, *BuildComment(comment))
+	}
+	return ret
+}
+
 func BuildComment(comment model.Comment) *model.CommentResponse {
 	return _buildComment(&comment, true)
 }

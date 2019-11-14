@@ -16,29 +16,23 @@ type CommentController struct {
 }
 
 func (this *CommentController) GetList() *simple.JsonResult {
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+	var (
+		err        error
+		cursor     int64
+		entityType string
+		entityId   int64
+	)
+	cursor = simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 
-	entityType, err := simple.FormValueRequired(this.Ctx, "entityType")
-	if err != nil {
+	if entityType, err = simple.FormValueRequired(this.Ctx, "entityType"); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	entityId, err := simple.FormValueInt64(this.Ctx, "entityId")
-	if err != nil {
+	if entityId, err = simple.FormValueInt64(this.Ctx, "entityId"); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	list, err := services.CommentService.List(entityType, entityId, cursor)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	next := cursor
-	var results []model.CommentResponse
-	for _, comment := range list {
-		results = append(results, *render.BuildComment(comment))
-		next = comment.Id
-	}
-	return simple.JsonCursorData(results, strconv.FormatInt(next, 10))
+	comments, cursor := services.CommentService.GetComments(entityType, entityId, cursor)
+	return simple.JsonCursorData(render.BuildComments(comments), strconv.FormatInt(cursor, 10))
 }
 
 func (this *CommentController) PostCreate() *simple.JsonResult {
