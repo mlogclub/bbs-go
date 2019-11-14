@@ -113,7 +113,6 @@ export default {
       filters: {},
 
       addForm: {
-        categoryId: 0,
         name: "",
         description: ""
       },
@@ -123,7 +122,6 @@ export default {
 
       editForm: {
         id: "",
-        categoryId: 0,
         name: "",
         description: "",
         status: 0
@@ -165,7 +163,6 @@ export default {
     },
     handleAdd() {
       this.addForm = {
-        categoryId: "",
         name: "",
         description: ""
       };

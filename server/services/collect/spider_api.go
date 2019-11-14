@@ -34,9 +34,9 @@ func (this *SpiderApi) Publish(article *SpiderArticle) (articleId int64, err err
 func (this *SpiderApi) AnalyzeTags(article *SpiderArticle) []string {
 	var analyzeRet *baiduai.AiAnalyzeRet
 	if article.ContentType == model.ContentTypeMarkdown {
-		analyzeRet, _ = baiduai.AnalyzeMarkdown(article.Title, article.Content)
+		analyzeRet, _ = baiduai.GetAi().AnalyzeMarkdown(article.Title, article.Content)
 	} else {
-		analyzeRet, _ = baiduai.AnalyzeHtml(article.Title, article.Content)
+		analyzeRet, _ = baiduai.GetAi().AnalyzeHtml(article.Title, article.Content)
 	}
 	var tags []string
 	if analyzeRet != nil {
