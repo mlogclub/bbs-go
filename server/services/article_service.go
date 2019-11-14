@@ -203,7 +203,6 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	})
 
 	if err == nil {
-		common.BaiduUrlPush([]string{urls.ArticleUrl(article.Id)})
 		SubjectContentService.AnalyzeArticle(article)
 	}
 	return
