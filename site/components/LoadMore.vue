@@ -6,7 +6,7 @@
     infinite-scroll-distance="10"
   >
     <slot :results="results" />
-    <div class="load-more-loading">
+    <div v-if="loading" class="load-more-loading">
       <div class="loading-animation" />
       <span class="load-more-text">加载中...</span>
     </div>
@@ -43,7 +43,6 @@ export default {
     return {
       cursor: this.initData.cursor, // 分页标识
       results: this.initData.results, // 列表数据
-      laoding: true, // 是否加载中
       hasMore: true, // 是否有更多数据
       loading: false // 是否正在加载中
     }

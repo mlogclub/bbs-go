@@ -1,5 +1,3 @@
 User-agent: *
 Disallow:
 Sitemap: https://mlog.club/sitemap.xml
-Sitemap: https://mlog.club/topic_sitemap.xml
-Sitemap: https://mlog.club/project_sitemap.xml

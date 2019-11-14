@@ -57,45 +57,51 @@
       </script>
     </div>
 
-    <div v-for="comment in results" :key="comment.commentId">
-      <div class="comment">
-        <div class="comment-avatar">
-          <div
-            class="avatar has-border is-rounded"
-            :style="{backgroundImage:'url(' + comment.user.avatar + ')'}"
-          />
-        </div>
-        <div class="comment-meta">
-          <div>
-            <span class="comment-nickname"><a :href="'/user/' + comment.user.id">{{ comment.user.nickname }}</a></span>
-            <span class="comment-reply"><a @click="reply(comment)">回复</a></span>
+    <load-more
+      v-if="commentsPage"
+      v-slot="{ results }"
+      :init-data="commentsPage"
+      :params="{ entityType:entityType, entityId: entityId }"
+      url="/api/comment/list"
+    >
+      <div v-for="comment in results" :key="comment.commentId">
+        <div class="comment">
+          <div class="comment-avatar">
+            <div
+              class="avatar has-border is-rounded"
+              :style="{backgroundImage:'url(' + comment.user.avatar + ')'}"
+            />
           </div>
-          <div>
-            <small class="comment-time">{{ comment.createTime | prettyDate }}</small>
+          <div class="comment-meta">
+            <div>
+              <span class="comment-nickname"><a :href="'/user/' + comment.user.id">{{ comment.user.nickname }}</a></span>
+              <span class="comment-reply"><a @click="reply(comment)">回复</a></span>
+            </div>
+            <div>
+              <small class="comment-time">{{ comment.createTime | prettyDate }}</small>
+            </div>
           </div>
-        </div>
-
-        <div v-highlight class="content comment-content">
-          <p v-html="comment.content" />
-          <blockquote
-            v-if="comment.quoteContent"
-            class="comment-quote"
-            v-html="comment.quoteContent"
-          />
+          <div v-highlight class="content comment-content">
+            <p v-html="comment.content" />
+            <blockquote
+              v-if="comment.quoteContent"
+              class="comment-quote"
+              v-html="comment.quoteContent"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-if="hasMore" class="comment-show-more">
-      <a class="button is-text" @click="list()">查看更多...</a>
-    </div>
+    </load-more>
   </div>
 </template>
 
 <script>
 import utils from '~/common/utils'
+import LoadMore from '~/components/LoadMore'
 export default {
   name: 'Comment',
   components: {
+    LoadMore
   },
   props: {
     entityType: {
@@ -115,10 +121,8 @@ export default {
   },
   data() {
     return {
-      cursor: 0, // 分页标识
-      results: [], // 数据
+      commentsPage: null, // 数据
       content: '', // 内容
-      hasMore: true, // 是否有更多
       currentUser: true, // 当前登录用户
       sending: false, // 发送中
       quote: null // 引用的对象
@@ -132,7 +136,7 @@ export default {
       return this.currentUser != null
     }
   },
-  mounted() {
+  created() {
     this.list()
     this.getCurrentUser()
   },
@@ -146,23 +150,12 @@ export default {
       }
     },
     async list() {
-      const ret = await this.$axios.get('/api/comment/list', {
+      this.commentsPage = await this.$axios.get('/api/comment/list', {
         params: {
           entityType: this.entityType,
-          entityId: this.entityId,
-          cursor: this.cursor
+          entityId: this.entityId
         }
       })
-      this.cursor = ret.cursor
-
-      this.results = this.results || []
-      if (ret.results && ret.results.length > 0) {
-        for (let i = 0; i < ret.results.length; i++) {
-          this.results.push(ret.results[i])
-        }
-      } else {
-        this.hasMore = false
-      }
     },
     ctrlEnterCreate(event) {
       event.stopPropagation()
