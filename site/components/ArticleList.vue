@@ -27,21 +27,24 @@
 
         <div class="article-meta">
           <span class="article-meta-item">
-            <a :href="'/user/' + article.user.id">{{ article.user.nickname }}</a>
+            由
+            <a
+              :href="'/user/' + article.user.id"
+              class="article-author"
+            >&nbsp;{{ article.user.nickname }}&nbsp;</a>发布于
+            <time itemprop="datePublished">{{ article.createTime | prettyDate }}</time>
           </span>
 
           <span v-if="article.category" class="article-meta-item">
-            <a
-              :href="'/articles/cat/' + article.category.categoryId"
-            >{{ article.category.categoryName }}</a>
+            <span class="article-tag tag">
+              <a :href="'/articles/cat/' + article.category.categoryId">{{ article.category.categoryName }}</a>
+            </span>
           </span>
 
-          <span v-for="tag in article.tags" :key="tag.tagId" class="article-meta-item">
-            <a :href="'/articles/tag/' + tag.tagId">{{ tag.tagName }}</a>
-          </span>
-
-          <span class="article-meta-item">
-            <time itemprop="datePublished">{{ article.createTime | prettyDate }}</time>
+          <span v-if="article.tags && article.tags.length > 0" class="article-meta-item">
+            <span v-for="tag in article.tags" :key="tag.tagId" class="article-tag tag">
+              <a :href="'/articles/tag/' + tag.tagId" class>{{ tag.tagName }}</a>
+            </span>
           </span>
         </div>
       </article>
@@ -120,15 +123,29 @@ export default {
 
       .article-meta-item {
         padding: 0 6px 0 0;
+        color: #8a93a0;
+        a {
+          color: #3273dc;
+
+          &.article-author {
+            font-weight: bold;
+          }
+        }
+
+        .article-tag {
+          a {
+            color: #4a4a4a;
+          }
+          &:not(:last-child) {
+            margin-right: 3px;
+          }
+        }
       }
 
-      a {
-        color: #3273dc;
-      }
-
-      span {
-        color: #999;
-      }
+      // span {
+      //   // color: #999;
+      //   color: #8a93a0;
+      // }
     }
   }
 }
