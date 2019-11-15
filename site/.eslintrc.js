@@ -7,15 +7,16 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  extends: ["@nuxtjs", "plugin:nuxt/recommended"],
-  // 'extends': [
-  //   'eslint:recommended',
-  //   'plugin:vue/recommended'
-  // ],
-  // 'extends': [
-  //   'plugin:vue/essential',
-  //   'eslint:recommended'
-  // ],
+  extends: [
+    '@nuxtjs',
+    'prettier',
+    'prettier/vue',
+    'plugin:prettier/recommended',
+    'plugin:nuxt/recommended'
+  ],
+  plugins: [
+    'prettier'
+  ],
   // add your custom rules here
   rules: {
     'no-unused-vars': [
