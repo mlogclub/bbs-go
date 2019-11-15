@@ -47,7 +47,8 @@ export default {
     '~/plugins/axios',
     '~/plugins/mlog',
     '~/plugins/highlight',
-    { src: '~/plugins/vditor', ssr: false }
+    { src: '~/plugins/vditor', ssr: false },
+    { src: '~plugins/infinite-scroll', ssr: false }
   ],
   /*
    ** Nuxt.js modules
@@ -97,6 +98,6 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) { }
   }
 }

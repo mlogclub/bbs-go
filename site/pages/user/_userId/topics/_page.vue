@@ -20,9 +20,7 @@
         </div>
         <div class="column is-3">
           <div class="main-aside">
-            <div class="main-aside">
-              <user-center-sidebar :user="user" :current-user="currentUser" />
-            </div>
+            <user-center-sidebar :user="user" :current-user="currentUser" />
           </div>
         </div>
       </div>

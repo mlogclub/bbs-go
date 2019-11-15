@@ -1,37 +1,33 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="columns">
-        <div class="column">
-          <div class="main-body">
-            <div class="link">
-              <div class="logo" />
-              <div class="title">
-                <img v-if="link.logo" :src="link.logo">
-                <img v-if="!link.logo" src="https://file.mlog.club/mlog.club/link.png">
-                {{ link.title }}
-              </div>
-              <div class="summary">
-                {{ link.summary }}
-              </div>
-              <div class="link">
-                博客地址：<a :href="link.url" rel="external nofollow">{{ link.url }}</a>
-              </div>
-            </div>
-            <div style="margin-top: 20px;">
-              <ins
-                class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="1742173616"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              />
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-            </div>
+      <div class="main-body">
+        <div class="link">
+          <div class="logo" />
+          <div class="title">
+            <img v-if="link.logo" :src="link.logo">
+            <img v-if="!link.logo" src="https://file.mlog.club/mlog.club/link.png">
+            {{ link.title }}
           </div>
+          <div class="summary">
+            {{ link.summary }}
+          </div>
+          <div class="link">
+            博客地址：<a :href="link.url" rel="external nofollow">{{ link.url }}</a>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <ins
+            class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="1742173616"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
     </div>

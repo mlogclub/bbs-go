@@ -1,12 +1,10 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="right-main-container">
-        <bbs-left :current-tag-id="tag.tagId" />
-        <div class="m-right">
-          <topic-list :topics="topicsPage.results" :show-ad="false" />
-          <pagination :page="topicsPage.page" :url-prefix="'/topics/tag/' + tag.tagId + '/'" />
-        </div>
+    <div class="container main-container right-main">
+      <bbs-left :current-tag-id="tag.tagId" />
+      <div class="right-container">
+        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <pagination :page="topicsPage.page" :url-prefix="'/topics/tag/' + tag.tagId + '/'" />
       </div>
     </div>
   </section>

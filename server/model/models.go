@@ -160,7 +160,7 @@ type Comment struct {
 	EntityId   int64  `gorm:"index:idx_entity_id;not null" json:"entityId" form:"entityId"`       // 被评论实体编号
 	Content    string `gorm:"type:text;not null" json:"content" form:"content"`                   // 内容
 	QuoteId    int64  `gorm:"not null"  json:"quoteId" form:"quoteId"`                            // 引用的评论编号
-	Status     int    `gorm:"int" json:"status" form:"status"`                                    // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
+	Status     int    `gorm:"int;index:idx_status" json:"status" form:"status"`                   // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
 	CreateTime int64  `json:"createTime" form:"createTime"`                                       // 创建时间
 }
 
@@ -257,7 +257,7 @@ type Subject struct {
 // 专栏内容
 type SubjectContent struct {
 	Model
-	SubjectId  int64  `gorm:"not null" json:"subjectId" form:"subjectId"`                             // 专栏编号
+	SubjectId  int64  `gorm:"not null;index:idx_subject_id" json:"subjectId" form:"subjectId"`        // 专栏编号
 	EntityType string `gorm:"not null;size:32;index:idx_entity;" json:"entityType" form:"entityType"` // 实体类型
 	EntityId   int64  `gorm:"not null;index:idx_entity;" json:"entityId" form:"entityId"`             // 实体编号
 	Title      string `gorm:"not null" json:"title" form:"title"`                                     // 标题

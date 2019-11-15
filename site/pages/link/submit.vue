@@ -1,90 +1,86 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="columns">
-        <div class="column">
-          <div class="main-body">
-            <div class="notice">
-              <h1>收录规则：</h1>
-              <ul>
-                <li>只收录编程相关的技术博客</li>
-                <li>拒绝SEO类型博客</li>
-                <li>拒绝大量转载文章的博客</li>
-                <li>独立博客优先</li>
-                <li>提交后我们会进行审核，审核通过后即可显示</li>
-              </ul>
+      <div class="main-body">
+        <div class="notice">
+          <h1>收录规则：</h1>
+          <ul>
+            <li>只收录编程相关的技术博客</li>
+            <li>拒绝SEO类型博客</li>
+            <li>拒绝大量转载文章的博客</li>
+            <li>独立博客优先</li>
+            <li>提交后我们会进行审核，审核通过后即可显示</li>
+          </ul>
+        </div>
+
+        <div class="widget">
+          <div class="header">
+            提交博客地址
+          </div>
+          <div class="content">
+            <div class="field">
+              <label class="label">博客链接</label>
+              <div class="control">
+                <input
+                  v-model="url"
+                  class="input is-success"
+                  type="text"
+                  placeholder="博客链接（必填）"
+                  @blur="detect"
+                  @keyup.enter="submitLink"
+                >
+              </div>
             </div>
 
-            <div class="widget">
-              <div class="header">
-                提交博客地址
+            <div class="field">
+              <label class="label">博客标题</label>
+              <div class="control">
+                <input
+                  v-model="title"
+                  class="input is-success"
+                  type="text"
+                  placeholder="博客标题（必填）"
+                  @keyup.enter="submitLink"
+                >
               </div>
-              <div class="content">
-                <div class="field">
-                  <label class="label">博客链接</label>
-                  <div class="control">
-                    <input
-                      v-model="url"
-                      class="input is-success"
-                      type="text"
-                      placeholder="博客链接（必填）"
-                      @blur="detect"
-                      @keyup.enter="submitLink"
-                    >
-                  </div>
-                </div>
+            </div>
 
-                <div class="field">
-                  <label class="label">博客标题</label>
-                  <div class="control">
-                    <input
-                      v-model="title"
-                      class="input is-success"
-                      type="text"
-                      placeholder="博客标题（必填）"
-                      @keyup.enter="submitLink"
-                    >
-                  </div>
-                </div>
+            <div class="field">
+              <label class="label">博客简介</label>
+              <div class="control">
+                <input
+                  v-model="summary"
+                  class="input is-success"
+                  type="text"
+                  placeholder="博客简介（必填）"
+                  @keyup.enter="submitLink"
+                >
+              </div>
+            </div>
 
-                <div class="field">
-                  <label class="label">博客简介</label>
-                  <div class="control">
-                    <input
-                      v-model="summary"
-                      class="input is-success"
-                      type="text"
-                      placeholder="博客简介（必填）"
-                      @keyup.enter="submitLink"
-                    >
-                  </div>
-                </div>
+            <div class="field">
+              <label class="label">博客Logo</label>
+              <div class="control">
+                <input
+                  v-model="logo"
+                  class="input is-success"
+                  type="text"
+                  placeholder="博客Logo（非必填请填写Logo链接）"
+                  @keyup.enter="submitLink"
+                >
+              </div>
+            </div>
 
-                <div class="field">
-                  <label class="label">博客Logo</label>
-                  <div class="control">
-                    <input
-                      v-model="logo"
-                      class="input is-success"
-                      type="text"
-                      placeholder="博客Logo（非必填请填写Logo链接）"
-                      @keyup.enter="submitLink"
-                    >
-                  </div>
-                </div>
-
-                <div class="field">
-                  <div class="control">
-                    <button
-                      class="button is-success"
-                      :class="{'is-loading': publishing}"
-                      :disabled="publishing"
-                      @click="submitLink"
-                    >
-                      提交
-                    </button>
-                  </div>
-                </div>
+            <div class="field">
+              <div class="control">
+                <button
+                  class="button is-success"
+                  :class="{'is-loading': publishing}"
+                  :disabled="publishing"
+                  @click="submitLink"
+                >
+                  提交
+                </button>
               </div>
             </div>
           </div>

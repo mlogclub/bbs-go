@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"math/rand"
+	"strconv"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -195,30 +196,25 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 
 // 文章列表
 func (this *ArticleController) GetArticles() *simple.JsonResult {
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.ArticleStatusPublished).
-		Page(page, 20).Desc("id"))
-	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+	articles, cursor := services.ArticleService.GetArticles(cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 标签文章列表
 func (this *ArticleController) GetTagArticles() *simple.JsonResult {
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 	tagId := simple.FormValueInt64Default(this.Ctx, "tagId", 0)
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-	articles, paging := services.ArticleService.GetTagArticles(tagId, page)
-	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
+	articles, cursor := services.ArticleService.GetTagArticles(tagId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 分类文章列表
 func (this *ArticleController) GetCategoryArticles() *simple.JsonResult {
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 	categoryId := simple.FormValueInt64Default(this.Ctx, "categoryId", 0)
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
-	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("category_id", categoryId).
-		Eq("status", model.ArticleStatusPublished).
-		Page(page, 20).Desc("id"))
-	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
+	articles, cursor := services.ArticleService.GetCategoryArticles(categoryId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 用户最新的文章

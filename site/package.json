@@ -11,7 +11,7 @@
     "dev": "nuxt",
     "debug": "node --inspect node_modules/.bin/nuxt",
     "build": "nuxt build",
-    "start": "nuxt start --max_old_space_size=3072 --optimize_for_size",
+    "start": "nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {
@@ -21,7 +21,8 @@
     "highlight.js": "^9.15.10",
     "nuxt": "^2.10.2",
     "qs": "^6.9.0",
-    "vditor": "^1.9.0"
+    "vditor": "^1.9.0",
+    "vue-infinite-scroll": "^2.0.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",

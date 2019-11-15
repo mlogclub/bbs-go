@@ -1,12 +1,10 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="right-main-container">
-        <bbs-left />
-        <div class="m-right">
-          <topic-list :topics="topicsPage.results" :show-ad="false" />
-          <pagination :page="topicsPage.page" url-prefix="/topics/" />
-        </div>
+    <div class="container main-container right-main">
+      <bbs-left />
+      <div class="right-container">
+        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <pagination :page="topicsPage.page" url-prefix="/topics/" />
       </div>
     </div>
   </section>

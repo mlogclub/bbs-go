@@ -93,7 +93,6 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 	if err != nil {
 		return nil, err
 	}
-	common.BaiduUrlPush([]string{urls.ProjectUrl(project.Id)})
 	return project, nil
 }
 

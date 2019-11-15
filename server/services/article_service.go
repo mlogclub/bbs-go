@@ -106,18 +106,51 @@ func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
 	return cache.TagCache.GetList(tagIds)
 }
 
+// 文章列表
+func (this *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(20)
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
+	if len(articles) > 0 {
+		nextCursor = articles[len(articles)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
 // 标签文章列表
-func (this *articleService) GetTagArticles(tagId int64, page int) (articles []model.Article, paging *simple.Paging) {
-	articleTags, paging := repositories.ArticleTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
-		Eq("tag_id", tagId).
-		Eq("status", model.ArticleTagStatusOk).
-		Page(page, 20).Desc("id"))
+func (this *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", model.ArticleTagStatusOk).Desc("id").Limit(20)
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	nextCursor = cursor
+	articleTags := repositories.ArticleTagRepository.Find(simple.DB(), cnd)
 	if len(articleTags) > 0 {
 		var articleIds []int64
 		for _, articleTag := range articleTags {
 			articleIds = append(articleIds, articleTag.ArticleId)
+			nextCursor = articleTag.Id
 		}
 		articles = this.GetArticleInIds(articleIds)
+	}
+	return
+}
+
+// 分类文章列表
+func (this *articleService) GetCategoryArticles(categoryId int64, cursor int64) (articles []model.Article, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Eq("category_id", categoryId).Eq("status", model.ArticleStatusPublished).Limit(20).Desc("id")
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
+	if len(articles) > 0 {
+		nextCursor = articles[len(articles)-1].Id
+	} else {
+		nextCursor = cursor
 	}
 	return
 }
@@ -170,7 +203,6 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	})
 
 	if err == nil {
-		common.BaiduUrlPush([]string{urls.ArticleUrl(article.Id)})
 		SubjectContentService.AnalyzeArticle(article)
 	}
 	return

@@ -43,11 +43,6 @@ class Utils {
       })
     })
 
-    changeSize()
-    window.addEventListener('resize', (event) => {
-      changeSize()
-    })
-
     // 滚动的时候控制toc位置
     window.addEventListener('scroll', (event) => {
       tocList.forEach((toc, index) => {
@@ -64,21 +59,6 @@ class Utils {
         obj.style.position = 'fixed'
         obj.style.top = '5px'
       }
-    }
-
-    // 设置toc width
-    function changeSize() {
-      tocList.forEach((toc) => {
-        toc.style.width = toc.parentNode.clientWidth + 'px'
-        const height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 55 // 容器高度
-        const contentHeight = toc.querySelectorAll('.content > ul')[0].clientHeight
-        if (contentHeight >= height) {
-          toc.querySelectorAll('.content').forEach((content) => {
-            content.style.height = height + 'px'
-            content.style.overflow = 'auto'
-          })
-        }
-      })
     }
   }
 

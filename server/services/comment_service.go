@@ -110,13 +110,16 @@ func (this *commentService) Count(entityType string, entityId int64) int64 {
 }
 
 // 列表
-func (this *commentService) List(entityType string, entityId int64, cursor int64) (list []model.Comment, err error) {
+func (this *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", model.CommentStatusOk).Desc("id").Limit(50)
 	if cursor > 0 {
-		err = simple.DB().Where("entity_type = ? and entity_id = ? and status = ? and id < ?", entityType,
-			entityId, model.CommentStatusOk, cursor).Order("id desc").Limit(20).Find(&list).Error
+		cnd.Lt("id", cursor)
+	}
+	comments = repositories.CommentRepository.Find(simple.DB(), cnd)
+	if len(comments) > 0 {
+		nextCursor = comments[len(comments)-1].Id
 	} else {
-		err = simple.DB().Where("entity_type = ? and entity_id = ? and status = ?", entityType, entityId,
-			model.CommentStatusOk).Order("id desc").Limit(20).Find(&list).Error
+		nextCursor = cursor
 	}
 	return
 }

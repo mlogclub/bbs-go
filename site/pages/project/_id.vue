@@ -1,93 +1,91 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="left-main-container">
-        <div class="m-left">
-          <div v-if="project" class="project">
-            <div class="project-header">
-              <span class="project-name">{{ project.name }}</span>
-              <span v-if="project.title" class="project-title">&nbsp;-&nbsp;{{ project.title }}</span>
-            </div>
-            <div class="meta">
-              <span>
-                <a :href="'/user/' + project.user.id">{{ project.user.nickname }}</a>
-              </span>
-              <span>{{ project.createTime | prettyDate }}</span>
-            </div>
-            <div class="content">
-              <ins
-                class="adsbygoogle"
-                style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-ig-s+1x-t-q"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="4728140043"
-              />
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-              <p v-highlight v-html="project.content" />
-            </div>
-            <div class="footer">
-              <a
-                v-if="projectUrl"
-                class="homepage"
-                :href="projectUrl"
-                target="_blank"
-              >项目主页</a>
-              <a
-                v-if="docUrl"
-                class="homepage"
-                :href="docUrl"
-                target="_blank"
-              >文档地址</a>
-              <a
-                v-if="downloadUrl"
-                class="homepage"
-                :href="downloadUrl"
-                target="_blank"
-              >下载地址</a>
-            </div>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <div v-if="project" class="project">
+          <div class="project-header">
+            <span class="project-name">{{ project.name }}</span>
+            <span v-if="project.title" class="project-title">&nbsp;-&nbsp;{{ project.title }}</span>
           </div>
-
-          <!-- 评论 -->
-          <comment entity-type="project" :entity-id="project.projectId" :show-ad="true" />
+          <div class="meta">
+            <span>
+              <a :href="'/user/' + project.user.id">{{ project.user.nickname }}</a>
+            </span>
+            <span>{{ project.createTime | prettyDate }}</span>
+          </div>
+          <div class="content">
+            <ins
+              class="adsbygoogle"
+              style="display:block"
+              data-ad-format="fluid"
+              data-ad-layout-key="-ig-s+1x-t-q"
+              data-ad-client="ca-pub-5683711753850351"
+              data-ad-slot="4728140043"
+            />
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            <p v-highlight v-html="project.content" />
+          </div>
+          <div class="footer">
+            <a
+              v-if="projectUrl"
+              class="homepage"
+              :href="projectUrl"
+              target="_blank"
+            >项目主页</a>
+            <a
+              v-if="docUrl"
+              class="homepage"
+              :href="docUrl"
+              target="_blank"
+            >文档地址</a>
+            <a
+              v-if="downloadUrl"
+              class="homepage"
+              :href="downloadUrl"
+              target="_blank"
+            >下载地址</a>
+          </div>
         </div>
-        <div class="m-right">
-          <div style="max-height:60px;">
-            <!-- 展示广告190x90 -->
-            <ins
-              class="adsbygoogle"
-              style="display:inline-block;width:190px;height:90px"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="9345305153"
-            />
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
 
-            <!-- 展示广告190x190 -->
-            <ins
-              class="adsbygoogle"
-              style="display:inline-block;width:190px;height:190px"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="5685455263"
-            />
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+        <!-- 评论 -->
+        <comment entity-type="project" :entity-id="project.projectId" :show-ad="true" />
+      </div>
+      <div class="right-container">
+        <div style="max-height:60px;">
+          <!-- 展示广告190x90 -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:190px;height:90px"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="9345305153"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
 
-            <!-- 展示广告190x480 -->
-            <ins
-              class="adsbygoogle"
-              style="display:inline-block;width:190px;height:480px"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="3438372357"
-            />
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-          </div>
+          <!-- 展示广告190x190 -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:190px;height:190px"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="5685455263"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+
+          <!-- 展示广告190x480 -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:190px;height:480px"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="3438372357"
+          />
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
     </div>

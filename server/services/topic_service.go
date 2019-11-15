@@ -113,9 +113,6 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
-	if err == nil {
-		common.BaiduUrlPush([]string{urls.TopicUrl(topic.Id)})
-	}
 	return topic, simple.FromError(err)
 }
 

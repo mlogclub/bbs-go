@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
@@ -37,15 +39,9 @@ func (this *SubjectController) GetBy(subjectId int64) *simple.JsonResult {
 }
 
 func (this *SubjectController) GetContents() *simple.JsonResult {
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 	subjectId := simple.FormValueInt64Default(this.Ctx, "subjectId", 0)
-
-	cnd := simple.NewSqlCnd().Eq("deleted", false).Page(page, 20).Desc("id")
-	if subjectId > 0 {
-		cnd.Eq("subject_id", subjectId)
-	}
-
-	contents, paging := services.SubjectContentService.FindPageByCnd(cnd)
+	contents, cursor := services.SubjectContentService.GetSubjectContents(subjectId, cursor)
 
 	var results []map[string]interface{}
 	for _, c := range contents {
@@ -72,5 +68,5 @@ func (this *SubjectController) GetContents() *simple.JsonResult {
 		results = append(results, item)
 	}
 
-	return simple.JsonPageData(results, paging)
+	return simple.JsonCursorData(results, strconv.FormatInt(cursor, 10))
 }

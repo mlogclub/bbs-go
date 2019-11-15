@@ -1,5 +1,5 @@
 <template>
-  <div class="m-left">
+  <div class="left-container">
     <a class="button is-success post" :href="createTopicUrl">
       <i class="iconfont icon-topic" />&nbsp;
       <strong>发表主题</strong>
@@ -18,6 +18,8 @@
         </a>
       </li>
     </ul>
+
+    <weixin-gzh />
 
     <!-- 展示广告190x90 -->
     <ins
@@ -44,7 +46,10 @@
 </template>
 
 <script>
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
+  components: { WeixinGzh },
   props: {
     currentTagId: {
       type: Number,
