@@ -81,7 +81,7 @@
                           class="input is-success"
                           type="text"
                           placeholder="请输入昵称"
-                        >
+                        />
                         <span class="icon is-small is-left">
                           <i class="iconfont icon-username" />
                         </span>
@@ -99,10 +99,10 @@
                   <div class="field-body">
                     <div class="field">
                       <div class="control">
-                        <img :src="user.avatar" style="width: 150px;height:150px;">
+                        <img :src="user.avatar" style="width: 150px;height:150px;" />
                         <div class="file">
                           <label class="file-label">
-                            <input class="file-input" type="file" @change="uploadAvatar">
+                            <input class="file-input" type="file" @change="uploadAvatar" />
                             <span class="file-cta">
                               <span class="file-icon">
                                 <i class="iconfont icon-upload" />
@@ -176,7 +176,7 @@
                   type="text"
                   placeholder="请输入用户名"
                   @keydown.enter="setUsername"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
                 </span>
@@ -209,7 +209,7 @@
                   type="text"
                   placeholder="请输入邮箱"
                   @keydown.enter="setEmail"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-email" />
                 </span>
@@ -242,7 +242,7 @@
                   type="password"
                   placeholder="请输入密码"
                   @keydown.enter="setPassword"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -256,7 +256,7 @@
                   type="password"
                   placeholder="请再次确认密码"
                   @keydown.enter="setPassword"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -289,7 +289,7 @@
                   type="password"
                   placeholder="请输入当前密码"
                   @keydown.enter="updatePassword"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -303,7 +303,7 @@
                   type="password"
                   placeholder="请输入密码"
                   @keydown.enter="updatePassword"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -317,7 +317,7 @@
                   type="password"
                   placeholder="请再次确认密码"
                   @keydown.enter="updatePassword"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
