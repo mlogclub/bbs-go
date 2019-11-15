@@ -8,9 +8,11 @@
               <div class="header">
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                   <ul>
-                    <li> <a href="/">首页</a> </li>
+                    <li><a href="/">首页</a></li>
                     <li>
-                      <a :href="'/user/' + currentUser.id + '?tab=articles'">{{ currentUser.nickname }}</a>
+                      <a :href="'/user/' + currentUser.id + '?tab=articles'">{{
+                        currentUser.nickname
+                      }}</a>
                     </li>
                     <li class="is-active">
                       <a href="#" aria-current="page">文章</a>
@@ -26,7 +28,7 @@
                       class="input"
                       type="text"
                       placeholder="标题"
-                    >
+                    />
                   </div>
                 </div>
 
@@ -44,7 +46,13 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <a class="button is-success" :class="{'is-loading': publishing}" :disabled="publishing" @click="submitCreate">发表</a>
+                    <a
+                      :class="{ 'is-loading': publishing }"
+                      :disabled="publishing"
+                      @click="submitCreate"
+                      class="button is-success"
+                      >发表</a
+                    >
                   </div>
                 </div>
               </div>
@@ -68,7 +76,14 @@ import MarkdownHelp from '~/components/MarkdownHelp'
 export default {
   middleware: 'authenticated',
   components: {
-    TagInput, MarkdownHelp
+    TagInput,
+    MarkdownHelp
+  },
+  async asyncData({ $axios }) {
+    const [currentUser] = await Promise.all([$axios.get('/api/user/current')])
+    return {
+      currentUser
+    }
   },
   data() {
     return {
@@ -80,21 +95,7 @@ export default {
       }
     }
   },
-  head() {
-    return {
-      title: this.$siteTitle('发表话题')
-    }
-  },
-  async asyncData({ $axios }) {
-    const [currentUser] = await Promise.all([
-      $axios.get('/api/user/current')
-    ])
-    return {
-      currentUser: currentUser
-    }
-  },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     async submitCreate() {
       const me = this
@@ -111,7 +112,7 @@ export default {
         })
         this.$toast.success('提交成功', {
           duration: 1000,
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/article/' + article.articleId)
           }
         })
@@ -120,9 +121,13 @@ export default {
         this.$toast.error('提交失败：' + (e.message || e))
       }
     }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('发表话题')
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

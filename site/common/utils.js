@@ -6,7 +6,8 @@ class Utils {
   }
 
   toSignin(ref) {
-    if (!ref && process.client) { // 如果没配置refUrl，那么取当前地址
+    if (!ref && process.client) {
+      // 如果没配置refUrl，那么取当前地址
       ref = window.location.pathname
     }
     this.linkTo('/user/signin?ref=' + encodeURIComponent(ref))
@@ -22,10 +23,14 @@ class Utils {
       const fromTop = window.scrollY
       const mainNavLinks = document.querySelectorAll(tocSelector + ' a')
       mainNavLinks.forEach((link, index) => {
-        const section = document.getElementById(decodeURI(link.hash).substring(1))
+        const section = document.getElementById(
+          decodeURI(link.hash).substring(1)
+        )
         let nextSection = null
         if (mainNavLinks[index + 1]) {
-          nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1))
+          nextSection = document.getElementById(
+            decodeURI(mainNavLinks[index + 1].hash).substring(1)
+          )
         }
         if (section.offsetTop <= fromTop) {
           if (nextSection) {
@@ -52,8 +57,10 @@ class Utils {
 
     // 更改toc位置
     function changePos(obj, height) {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop < height + 100) { // 这里+100，控制还没滚动到顶部的时候就固定toc
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop < height + 100) {
+        // 这里+100，控制还没滚动到顶部的时候就固定toc
         obj.style.position = 'relative'
       } else {
         obj.style.position = 'fixed'
@@ -67,7 +74,11 @@ class Utils {
   }
 
   isDate(sources) {
-    return {}.toString.call(sources) === '[object Date]' && sources.toString() !== 'Invalid Date' && !isNaN(sources)
+    return (
+      {}.toString.call(sources) === '[object Date]' &&
+      sources.toString() !== 'Invalid Date' &&
+      !isNaN(sources)
+    )
   }
 
   isElement(sources) {
@@ -79,7 +90,10 @@ class Utils {
   }
 
   isNumber(sources) {
-    return Object.prototype.toString.call(sources) === '[object Number]' && isFinite(sources)
+    return (
+      Object.prototype.toString.call(sources) === '[object Number]' &&
+      isFinite(sources)
+    )
   }
 
   isObject(sources) {

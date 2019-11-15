@@ -1,5 +1,5 @@
 <template>
-  <a class="is-dark" :class="{'button': isButton}" @click="githubLogin">
+  <a :class="{ button: isButton }" @click="githubLogin" class="is-dark">
     <i class="iconfont icon-github" />&nbsp;
     <strong>{{ title }}</strong>
   </a>
@@ -50,5 +50,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

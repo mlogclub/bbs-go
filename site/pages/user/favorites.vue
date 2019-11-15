@@ -6,10 +6,18 @@
           <div class="main-body">
             <div class="widget no-margin">
               <div class="header">
-                <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
+                <nav
+                  class="breadcrumb"
+                  aria-label="breadcrumbs"
+                  style="margin-bottom: 0px;"
+                >
                   <ul>
                     <li><a href="/">首页</a></li>
-                    <li><a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a></li>
+                    <li>
+                      <a :href="'/user/' + currentUser.id">{{
+                        currentUser.nickname
+                      }}</a>
+                    </li>
                     <li class="is-active">
                       <a href="#" aria-current="page">收藏列表</a>
                     </li>
@@ -28,7 +36,7 @@
                     <article v-else class="article-item">
                       <div class="article-item-left">
                         <a :href="'/user/' + favorite.user.id" target="_blank">
-                          <img class="avatar" :src="favorite.user.avatar">
+                          <img :src="favorite.user.avatar" class="avatar" />
                         </a>
                       </div>
 
@@ -42,10 +50,16 @@
                         </div>
 
                         <div class="article-meta">
-                          <span class="article-meta-item"><a
-                            :href="'/user/' + favorite.user.id"
-                          >{{ favorite.user.nickname }}</a></span>
-                          <span class="article-meta-item"><time>{{ favorite.createTime | prettyDate }}</time></span>
+                          <span class="article-meta-item"
+                            ><a :href="'/user/' + favorite.user.id">{{
+                              favorite.user.nickname
+                            }}</a></span
+                          >
+                          <span class="article-meta-item"
+                            ><time>{{
+                              favorite.createTime | prettyDate
+                            }}</time></span
+                          >
                         </div>
                       </div>
                     </article>
@@ -60,7 +74,10 @@
         </div>
         <div class="column is-3">
           <div class="main-aside">
-            <user-center-sidebar :user="currentUser" :current-user="currentUser" />
+            <user-center-sidebar
+              :user="currentUser"
+              :current-user="currentUser"
+            />
           </div>
         </div>
       </div>
@@ -75,19 +92,17 @@ export default {
   components: {
     UserCenterSidebar
   },
+  async asyncData({ $axios, params }) {
+    const [currentUser] = await Promise.all([$axios.get('/api/user/current')])
+    return {
+      currentUser
+    }
+  },
   data() {
     return {
       favorites: [],
       cursor: 0,
       hasMore: true
-    }
-  },
-  async asyncData({ $axios, params }) {
-    const [currentUser] = await Promise.all([
-      $axios.get('/api/user/current')
-    ])
-    return {
-      currentUser: currentUser
     }
   },
   mounted() {

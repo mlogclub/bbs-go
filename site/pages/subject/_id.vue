@@ -4,9 +4,9 @@
       <subject-bar :subject="subject" />
       <div class="right-container">
         <load-more
-          v-slot="{results}"
+          v-slot="{ results }"
           :init-data="subjectContentPage"
-          :params="{subjectId:subject.id}"
+          :params="{ subjectId: subject.id }"
           url="/api/subject/contents"
         >
           <subject-content-list :subject-contents="results" />
@@ -22,17 +22,9 @@ import SubjectContentList from '~/components/SubjectContentList'
 import LoadMore from '~/components/LoadMore'
 export default {
   components: {
-    SubjectBar, SubjectContentList, LoadMore
-  },
-  head() {
-    const title = this.subject.title + ' 专栏'
-    const description = this.subject.description || ''
-    return {
-      title: this.$siteTitle(title),
-      meta: [
-        { hid: 'description', name: 'description', content: description }
-      ]
-    }
+    SubjectBar,
+    SubjectContentList,
+    LoadMore
   },
   async asyncData({ $axios, params, query }) {
     const [subject, subjectContentPage] = await Promise.all([
@@ -44,13 +36,19 @@ export default {
       })
     ])
     return {
-      subject: subject,
-      subjectContentPage: subjectContentPage
+      subject,
+      subjectContentPage
+    }
+  },
+  head() {
+    const title = this.subject.title + ' 专栏'
+    const description = this.subject.description || ''
+    return {
+      title: this.$siteTitle(title),
+      meta: [{ hid: 'description', name: 'description', content: description }]
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

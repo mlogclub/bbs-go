@@ -14,7 +14,7 @@
           data-ad-slot="9345305153"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
         <!-- 展示广告190x190 -->
@@ -25,7 +25,7 @@
           data-ad-slot="5685455263"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
         <!-- 展示广告190x480 -->
@@ -36,7 +36,7 @@
           data-ad-slot="3438372357"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
       </div>
     </div>
@@ -48,16 +48,8 @@ import ProjectList from '~/components/ProjectList'
 import Pagination from '~/components/Pagination'
 export default {
   components: {
-    ProjectList, Pagination
-  },
-  head() {
-    return {
-      title: this.$siteTitle('开源项目'),
-      meta: [
-        { hid: 'description', name: 'description', content: this.$siteDescription() },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
-    }
+    ProjectList,
+    Pagination
   },
   async asyncData({ $axios, params }) {
     const [projectPage] = await Promise.all([
@@ -68,12 +60,23 @@ export default {
       })
     ])
     return {
-      projectPage: projectPage
+      projectPage
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('开源项目'),
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription()
+        },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
+      ]
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

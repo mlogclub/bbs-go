@@ -14,21 +14,16 @@
 import utils from '~/common/utils'
 export default {
   layout: 'no-footer',
-  data() {
-    return {
-      loading: false
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle('登录处理中...')
-    }
-  },
   asyncData({ params, query }) {
     return {
       code: query.code,
       state: query.state,
       ref: query.ref
+    }
+  },
+  data() {
+    return {
+      loading: false
     }
   },
   mounted() {
@@ -43,21 +38,28 @@ export default {
           state: this.state
         })
 
-        if (this.ref) { // 跳到登录前
+        if (this.ref) {
+          // 跳到登录前
           utils.linkTo(this.ref)
-        } else { // 跳到个人主页
+        } else {
+          // 跳到个人主页
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
         console.log(e)
         this.$toast.error('登录失败：' + (e.message || e), {
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/user/signin')
           }
         })
       } finally {
         this.loading = false
       }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('登录处理中...')
     }
   }
 }
@@ -90,7 +92,7 @@ export default {
   }
   .loading-animation:before,
   .loading-animation:after {
-    content: "";
+    content: '';
     width: inherit;
     height: inherit;
     border-radius: 50%;

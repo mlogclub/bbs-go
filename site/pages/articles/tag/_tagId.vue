@@ -3,9 +3,9 @@
     <div class="container main-container left-main">
       <div class="left-container">
         <load-more
-          v-slot="{results}"
+          v-slot="{ results }"
           :init-data="articlesPage"
-          :params="{tagId:tag.tagId}"
+          :params="{ tagId: tag.tagId }"
           url="/api/article/tag/articles"
         >
           <article-list :articles="results" :show-ad="true" />
@@ -23,7 +23,7 @@
             data-ad-slot="4922900917"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </div>
@@ -38,6 +38,24 @@ import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: { ArticleList, LoadMore, WeixinGzh },
+  async asyncData({ $axios, params }) {
+    try {
+      const [tag, articlesPage] = await Promise.all([
+        $axios.get('/api/tag/' + params.tagId),
+        $axios.get('/api/article/tag/articles', {
+          params: {
+            tagId: params.tagId
+          }
+        })
+      ])
+      return {
+        tag,
+        articlesPage
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  },
   head() {
     return {
       title: this.$siteTitle(this.tag.tagName + ' - 文章'),
@@ -50,27 +68,8 @@ export default {
         { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
       ]
     }
-  },
-  async asyncData({ $axios, params }) {
-    try {
-      const [tag, articlesPage] = await Promise.all([
-        $axios.get('/api/tag/' + params.tagId),
-        $axios.get('/api/article/tag/articles', {
-          params: {
-            tagId: params.tagId
-          }
-        })
-      ])
-      return {
-        tag: tag,
-        articlesPage: articlesPage
-      }
-    } catch (e) {
-      console.error(e)
-    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

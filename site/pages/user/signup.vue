@@ -12,11 +12,11 @@
               <div class="control has-icons-left">
                 <input
                   v-model="nickname"
+                  @keyup.enter="signup"
                   class="input is-success"
                   type="text"
                   placeholder="请输入昵称"
-                  @keyup.enter="signup"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
                 </span>
@@ -28,11 +28,11 @@
               <div class="control has-icons-left">
                 <input
                   v-model="username"
+                  @keyup.enter="signup"
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名"
-                  @keyup.enter="signup"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
                 </span>
@@ -44,11 +44,11 @@
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keyup.enter="signup"
                   class="input"
                   type="password"
                   placeholder="请输入密码"
-                  @keyup.enter="signup"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -60,11 +60,11 @@
               <div class="control has-icons-left">
                 <input
                   v-model="rePassword"
+                  @keyup.enter="signup"
                   class="input"
                   type="password"
                   placeholder="请再次输入密码"
-                  @keyup.enter="signup"
-                >
+                />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
                 </span>
@@ -73,7 +73,7 @@
 
             <div class="field">
               <div class="control">
-                <button class="button is-success" @click="signup">
+                <button @click="signup" class="button is-success">
                   注册
                 </button>
                 <github-login :ref-url="ref" />
@@ -93,9 +93,9 @@
 <script>
 import utils from '~/common/utils'
 export default {
-  head() {
+  asyncData({ params, query }) {
     return {
-      title: this.$siteTitle('注册')
+      ref: query.ref
     }
   },
   data() {
@@ -104,11 +104,6 @@ export default {
       username: '',
       password: '',
       rePassword: ''
-    }
-  },
-  asyncData({ params, query }) {
-    return {
-      ref: query.ref
     }
   },
   methods: {
@@ -121,18 +116,24 @@ export default {
           rePassword: this.rePassword,
           ref: this.ref
         })
-        if (this.ref) { // 跳到登录前
+        if (this.ref) {
+          // 跳到登录前
           utils.linkTo(this.ref)
-        } else { // 跳到个人主页
+        } else {
+          // 跳到个人主页
           utils.linkTo('/user/settings')
         }
       } catch (err) {
         this.$toast.error(err.message || err)
       }
     }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('注册')
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

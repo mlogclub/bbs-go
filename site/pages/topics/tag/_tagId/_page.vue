@@ -4,7 +4,10 @@
       <bbs-left :current-tag-id="tag.tagId" />
       <div class="right-container">
         <topic-list :topics="topicsPage.results" :show-ad="false" />
-        <pagination :page="topicsPage.page" :url-prefix="'/topics/tag/' + tag.tagId + '/'" />
+        <pagination
+          :page="topicsPage.page"
+          :url-prefix="'/topics/tag/' + tag.tagId + '/'"
+        />
       </div>
     </div>
   </section>
@@ -17,16 +20,9 @@ import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    BbsLeft, TopicList, Pagination
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.tag.tagName + ' - 话题'),
-      meta: [
-        { hid: 'description', name: 'description', content: this.$siteDescription() },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
-    }
+    BbsLeft,
+    TopicList,
+    Pagination
   },
   async asyncData({ $axios, params }) {
     const [tag, user, topicsPage] = await Promise.all([
@@ -35,19 +31,30 @@ export default {
       $axios.get('/api/topic/tag/topics', {
         params: {
           tagId: params.tagId,
-          page: (params.page || 1)
+          page: params.page || 1
         }
       })
     ])
     return {
-      tag: tag,
-      user: user,
-      topicsPage: topicsPage
+      tag,
+      user,
+      topicsPage
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.tag.tagName + ' - 话题'),
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription()
+        },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
+      ]
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

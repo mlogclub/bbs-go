@@ -18,9 +18,24 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '最新文章', href: '/atom.xml' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '最新话题', href: '/topic_atom.xml' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '最新开源项目', href: '/project_atom.xml' },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '最新文章',
+        href: '/atom.xml'
+      },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '最新话题',
+        href: '/topic_atom.xml'
+      },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '最新开源项目',
+        href: '/project_atom.xml'
+      },
       {
         rel: 'stylesheet',
         href: '//cdn.staticfile.org/bulma/0.7.5/css/bulma.min.css'

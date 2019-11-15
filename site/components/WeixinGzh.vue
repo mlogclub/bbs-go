@@ -4,17 +4,13 @@
       公众号
     </div>
     <div>
-      <img src="https://open.weixin.qq.com/qr/code?username=gh_950827012b8d">
+      <img src="https://open.weixin.qq.com/qr/code?username=gh_950827012b8d" />
     </div>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

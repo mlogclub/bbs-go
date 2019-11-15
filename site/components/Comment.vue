@@ -4,16 +4,16 @@
       <div class="comment-input-wrapper">
         <div v-if="quote" class="comment-quote-info">
           回复：<label v-text="quote.user.nickname" />
-          <i class="iconfont icon-close" @click="cancelReply" />
+          <i @click="cancelReply" class="iconfont icon-close" />
         </div>
         <textarea
           ref="commentEditor"
           v-model="content"
-          class="comment-input"
-          placeholder="发表你的观点..."
           @keydown.ctrl.enter="ctrlEnterCreate"
           @keydown.meta.enter="ctrlEnterCreate"
           @input="autoHeight"
+          class="comment-input"
+          placeholder="发表你的观点..."
         />
       </div>
       <div class="comment-button-wrapper">
@@ -34,12 +34,12 @@
             </svg>
           </a>
         </div>
-        <button class="button is-light" @click="create" v-text="btnName" />
+        <button @click="create" v-text="btnName" class="button is-light" />
       </div>
     </div>
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
-        请<a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
+        请<a @click="toLogin" style="font-weight: 700;">登录</a>后发表观点
       </div>
     </div>
 
@@ -53,7 +53,7 @@
         data-full-width-responsive="true"
       />
       <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        ;(adsbygoogle = window.adsbygoogle || []).push({})
       </script>
     </div>
 
@@ -61,31 +61,43 @@
       v-if="commentsPage"
       v-slot="{ results }"
       :init-data="commentsPage"
-      :params="{ entityType:entityType, entityId: entityId }"
+      :params="{ entityType: entityType, entityId: entityId }"
       url="/api/comment/list"
     >
       <div v-for="comment in results" :key="comment.commentId">
         <div class="comment">
           <div class="comment-avatar">
             <div
+              :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
               class="avatar has-border is-rounded"
-              :style="{backgroundImage:'url(' + comment.user.avatar + ')'}"
             />
           </div>
           <div class="comment-meta">
-            <span class="comment-nickname"><a :href="'/user/' + comment.user.id">{{ comment.user.nickname }}</a></span>
-            <span class="comment-time">{{ comment.createTime | prettyDate }}</span>
-            <span class="comment-reply"><a @click="reply(comment)">回复</a></span>
+            <span class="comment-nickname"
+              ><a :href="'/user/' + comment.user.id">{{
+                comment.user.nickname
+              }}</a></span
+            >
+            <span class="comment-time">{{
+              comment.createTime | prettyDate
+            }}</span>
+            <span class="comment-reply"
+              ><a @click="reply(comment)">回复</a></span
+            >
           </div>
           <div v-highlight class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
                 <div
+                  :style="{
+                    backgroundImage: 'url(' + comment.quote.user.avatar + ')'
+                  }"
                   class="quote-avatar avatar has-border is-rounded"
-                  :style="{backgroundImage:'url(' + comment.quote.user.avatar + ')'}"
                 />
                 <a class="quote-nickname">{{ comment.quote.user.nickname }}</a>
-                <span class="quote-time">{{ comment.quote.createTime | prettyDate }}</span>
+                <span class="quote-time">{{
+                  comment.quote.createTime | prettyDate
+                }}</span>
               </div>
               <div v-html="comment.quote.content" />
             </blockquote>
@@ -131,10 +143,10 @@ export default {
     }
   },
   computed: {
-    btnName: function () {
+    btnName() {
       return this.sending ? '正在发表...' : '发表 (ctrl+enter)'
     },
-    isLogin: function () {
+    isLogin() {
       return this.currentUser != null
     }
   },
@@ -280,11 +292,11 @@ export default {
     .comment-quote {
       font-size: 12px;
       padding: 10px 10px;
-      border-left: 2px solid #5978F3;
+      border-left: 2px solid #5978f3;
       // quotes:"\201C""\201D""\2018""\2019";
 
       &::after {
-        content: "\201D";
+        content: '\201D';
         font-family: Georgia, serif;
         font-size: 60px;
         font-weight: bold;
@@ -295,7 +307,7 @@ export default {
       }
 
       .comment-quote-user {
-        display:flex;
+        display: flex;
         .quote-avatar {
           min-width: 20px;
           min-height: 20px;
@@ -345,11 +357,11 @@ export default {
     .comment-input {
       width: 100%;
       min-height: 8.75rem;
-      font-size: .875rem;
+      font-size: 0.875rem;
       background: transparent;
       resize: vertical;
-      -webkit-transition: all .25s ease;
-      transition: all .25s ease;
+      -webkit-transition: all 0.25s ease;
+      transition: all 0.25s ease;
       border: none;
       outline: none;
       padding: 10px 5px;

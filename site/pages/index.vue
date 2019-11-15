@@ -17,15 +17,9 @@ import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    BbsLeft, TopicList, Pagination
-  },
-  head() {
-    return {
-      meta: [
-        { hid: 'description', name: 'description', content: this.$siteDescription() },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
-    }
+    BbsLeft,
+    TopicList,
+    Pagination
   },
   async asyncData({ $axios, params }) {
     try {
@@ -33,13 +27,24 @@ export default {
         $axios.get('/api/user/current'),
         $axios.get('/api/topic/topics')
       ])
-      return { user: user, topicsPage: topicsPage }
+      return { user, topicsPage }
     } catch (e) {
       console.error(e)
+    }
+  },
+  head() {
+    return {
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription()
+        },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
+      ]
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

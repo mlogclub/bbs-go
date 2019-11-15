@@ -6,7 +6,7 @@
           <div class="main-body">
             <div class="tabs">
               <ul>
-                <li :class="{'is-active': activeTab === 'articles'}">
+                <li :class="{ 'is-active': activeTab === 'articles' }">
                   <a :href="'/user/' + user.id + '?tab=articles'">
                     <span class="icon is-small">
                       <i class="iconfont icon-article" aria-hidden="true" />
@@ -14,7 +14,7 @@
                     <span>文章</span>
                   </a>
                 </li>
-                <li :class="{'is-active': activeTab === 'topics'}">
+                <li :class="{ 'is-active': activeTab === 'topics' }">
                   <a :href="'/user/' + user.id + '?tab=topics'">
                     <span class="icon is-small">
                       <i class="iconfont icon-topic" aria-hidden="true" />
@@ -29,10 +29,16 @@
               <div v-if="recentArticles && recentArticles.length">
                 <article-list :articles="recentArticles" />
                 <div class="more">
-                  <a :href="'/user/' + user.id + '/articles'">查看更多&gt;&gt;</a>
+                  <a :href="'/user/' + user.id + '/articles'"
+                    >查看更多&gt;&gt;</a
+                  >
                 </div>
               </div>
-              <div v-else class="notification is-primary" style="margin-top: 10px;">
+              <div
+                v-else
+                class="notification is-primary"
+                style="margin-top: 10px;"
+              >
                 暂无文章
               </div>
             </div>
@@ -44,7 +50,11 @@
                   <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
                 </div>
               </div>
-              <div v-else class="notification is-primary" style="margin-top: 10px;">
+              <div
+                v-else
+                class="notification is-primary"
+                style="margin-top: 10px;"
+              >
                 暂无话题
               </div>
             </div>
@@ -67,23 +77,9 @@ import UserCenterSidebar from '~/components/UserCenterSidebar'
 const defaultTab = 'articles'
 export default {
   components: {
-    TopicList, ArticleList, UserCenterSidebar
-  },
-  data() {
-    return {}
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.user.nickname)
-    }
-  },
-  computed: {
-    // 是否是主人态
-    isOwner: function () {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
-    }
+    TopicList,
+    ArticleList,
+    UserCenterSidebar
   },
   async asyncData({ $axios, params, query }) {
     const activeTab = query.tab || defaultTab
@@ -103,11 +99,27 @@ export default {
       })
     }
     return {
-      activeTab: activeTab,
-      currentUser: currentUser,
-      user: user,
-      recentTopics: recentTopics,
-      recentArticles: recentArticles
+      activeTab,
+      currentUser,
+      user,
+      recentTopics,
+      recentArticles
+    }
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    // 是否是主人态
+    isOwner() {
+      return (
+        this.user && this.currentUser && this.user.id === this.currentUser.id
+      )
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.user.nickname)
     }
   }
 }

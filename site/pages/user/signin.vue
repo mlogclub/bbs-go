@@ -12,12 +12,14 @@
               <div class="control has-icons-left">
                 <input
                   v-model="username"
+                  @keyup.enter="submitLogin"
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名或邮箱"
-                  @keyup.enter="submitLogin"
-                >
-                <span class="icon is-small is-left"><i class="iconfont icon-username" /></span>
+                />
+                <span class="icon is-small is-left"
+                  ><i class="iconfont icon-username"
+                /></span>
               </div>
             </div>
 
@@ -26,21 +28,20 @@
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keyup.enter="submitLogin"
                   class="input"
                   type="password"
                   placeholder="请输入密码"
-                  @keyup.enter="submitLogin"
-                >
-                <span class="icon is-small is-left"><i class="iconfont icon-password" /></span>
+                />
+                <span class="icon is-small is-left"
+                  ><i class="iconfont icon-password"
+                /></span>
               </div>
             </div>
 
             <div class="field">
               <div class="control">
-                <button
-                  class="button is-success"
-                  @click="submitLogin"
-                >
+                <button @click="submitLogin" class="button is-success">
                   登录
                 </button>
                 <github-login :ref-url="ref" />
@@ -63,22 +64,18 @@ import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
 export default {
   components: {
-    GithubLogin, QqLogin
+    GithubLogin,
+    QqLogin
+  },
+  asyncData({ params, query }) {
+    return {
+      ref: query.ref
+    }
   },
   data() {
     return {
       username: '',
       password: ''
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle('登录')
-    }
-  },
-  asyncData({ params, query }) {
-    return {
-      ref: query.ref
     }
   },
   methods: {
@@ -89,14 +86,21 @@ export default {
           password: this.password,
           ref: this.ref
         })
-        if (this.ref) { // 跳到登录前
+        if (this.ref) {
+          // 跳到登录前
           utils.linkTo(this.ref)
-        } else { // 跳到个人主页
+        } else {
+          // 跳到个人主页
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
         this.$toast.error(e.message || e)
       }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('登录')
     }
   }
 }

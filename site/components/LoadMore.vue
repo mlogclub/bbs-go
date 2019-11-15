@@ -24,14 +24,14 @@ export default {
     // 请求参数
     params: {
       type: Object,
-      default: function () {
+      default() {
         return {}
       }
     },
     // 初始化数据
     initData: {
       type: Object,
-      default: function () {
+      default() {
         return {
           results: [],
           cursor: ''

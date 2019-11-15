@@ -1,5 +1,5 @@
 <template>
-  <div ref="editor" :style="{width: width}">
+  <div ref="editor" :style="{ width: width }">
     <div id="vditor" class="vditor" />
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
         preview: {
           mode: 'both'
         },
-        input: function (val) {
+        input(val) {
           me.$emit('input', val)
           me.initSize()
         },
@@ -96,7 +96,7 @@ export default {
       }
       me.width = parentElement.clientWidth + 'px'
       parentElement.parentElement.style.width = me.width
-      window.addEventListener('resize', function () {
+      window.addEventListener('resize', function() {
         me.width = parentElement.clientWidth + 'px'
         parentElement.parentElement.style.width = me.width
       })

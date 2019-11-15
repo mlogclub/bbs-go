@@ -37,8 +37,8 @@ export const actions = {
   // 登录
   async signin(context, { username, password }) {
     const ret = await this.$axios.post('/api/login/signin', {
-      username: username,
-      password: password
+      username,
+      password
     })
     context.dispatch('loginSuccess', ret)
     return ret.user
@@ -48,8 +48,8 @@ export const actions = {
   async signinByGithub(context, { code, state }) {
     const ret = await this.$axios.get('/api/login/github/callback', {
       params: {
-        code: code,
-        state: state
+        code,
+        state
       }
     })
     context.dispatch('loginSuccess', ret)
@@ -60,8 +60,8 @@ export const actions = {
   async signinByQQ(context, { code, state }) {
     const ret = await this.$axios.get('/api/login/qq/callback', {
       params: {
-        code: code,
-        state: state
+        code,
+        state
       }
     })
     context.dispatch('loginSuccess', ret)
@@ -70,10 +70,10 @@ export const actions = {
 
   async signup(context, { nickname, username, password, rePassword }) {
     const ret = await this.$axios.post('/api/login/signup', {
-      nickname: nickname,
-      username: username,
-      password: password,
-      rePassword: rePassword
+      nickname,
+      username,
+      password,
+      rePassword
     })
     context.dispatch('loginSuccess', ret)
     return ret.user
@@ -84,7 +84,7 @@ export const actions = {
     const userToken = this.$cookies.get('userToken')
     await this.$axios.get('/api/login/signout', {
       params: {
-        userToken: userToken
+        userToken
       }
     })
     context.commit('setUserToken', null)

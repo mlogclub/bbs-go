@@ -6,7 +6,11 @@
           <div class="main-body">
             <div class="widget no-margin">
               <div class="header">
-                <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
+                <nav
+                  class="breadcrumb"
+                  aria-label="breadcrumbs"
+                  style="margin-bottom: 0px;"
+                >
                   <ul>
                     <li>
                       <a href="/">首页</a>
@@ -99,10 +103,17 @@
                   <div class="field-body">
                     <div class="field">
                       <div class="control">
-                        <img :src="user.avatar" style="width: 150px;height:150px;" />
+                        <img
+                          :src="user.avatar"
+                          style="width: 150px;height:150px;"
+                        />
                         <div class="file">
                           <label class="file-label">
-                            <input class="file-input" type="file" @change="uploadAvatar" />
+                            <input
+                              @change="uploadAvatar"
+                              class="file-input"
+                              type="file"
+                            />
                             <span class="file-cta">
                               <span class="file-icon">
                                 <i class="iconfont icon-upload" />
@@ -111,7 +122,9 @@
                             </span>
                           </label>
                         </div>
-                        <span style="font-weight: bold; color:red;">*图像必须为正方形，大小不要超过1M。</span>
+                        <span style="font-weight: bold; color:red;"
+                          >*图像必须为正方形，大小不要超过1M。</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -141,7 +154,9 @@
                   <div class="field-body">
                     <div class="field">
                       <div class="control">
-                        <a class="button is-success" @click="submitForm">提交修改</a>
+                        <a @click="submitForm" class="button is-success"
+                          >提交修改</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -159,23 +174,27 @@
     </div>
 
     <!-- 设置用户名 -->
-    <div class="modal" :class="{'is-active': showSetUsername}">
+    <div :class="{ 'is-active': showSetUsername }" class="modal">
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
           <div class="header">
             设置用户名
-            <button class="delete" aria-label="close" @click="showSetUsername = false" />
+            <button
+              @click="showSetUsername = false"
+              class="delete"
+              aria-label="close"
+            />
           </div>
           <div class="content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
                   v-model="username"
+                  @keydown.enter="setUsername"
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名"
-                  @keydown.enter="setUsername"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
@@ -184,31 +203,35 @@
             </div>
           </div>
           <div class="footer is-right">
-            <a class="button is-success" @click="setUsername">确定</a>
-            <a class="button" @click="showSetUsername = false">取消</a>
+            <a @click="setUsername" class="button is-success">确定</a>
+            <a @click="showSetUsername = false" class="button">取消</a>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 设置邮箱 -->
-    <div class="modal" :class="{'is-active': showSetEmail}">
+    <div :class="{ 'is-active': showSetEmail }" class="modal">
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
           <div class="header">
             设置邮箱
-            <button class="delete" aria-label="close" @click="showSetEmail = false" />
+            <button
+              @click="showSetEmail = false"
+              class="delete"
+              aria-label="close"
+            />
           </div>
           <div class="content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
                   v-model="email"
+                  @keydown.enter="setEmail"
                   class="input is-success"
                   type="text"
                   placeholder="请输入邮箱"
-                  @keydown.enter="setEmail"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-email" />
@@ -217,31 +240,35 @@
             </div>
           </div>
           <div class="footer is-right">
-            <a class="button is-success" @click="setEmail">确定</a>
-            <a class="button" @click="showSetEmail = false">取消</a>
+            <a @click="setEmail" class="button is-success">确定</a>
+            <a @click="showSetEmail = false" class="button">取消</a>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 设置密码 -->
-    <div class="modal" :class="{'is-active': showSetPassword}">
+    <div :class="{ 'is-active': showSetPassword }" class="modal">
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
           <div class="header">
             设置密码
-            <button class="delete" aria-label="close" @click="showSetPassword = false" />
+            <button
+              @click="showSetPassword = false"
+              class="delete"
+              aria-label="close"
+            />
           </div>
           <div class="content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入密码"
-                  @keydown.enter="setPassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -252,10 +279,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="rePassword"
+                  @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
                   placeholder="请再次确认密码"
-                  @keydown.enter="setPassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -264,31 +291,35 @@
             </div>
           </div>
           <div class="footer is-right">
-            <a class="button is-success" @click="setPassword">确定</a>
-            <a class="button" @click="showSetPassword = false">取消</a>
+            <a @click="setPassword" class="button is-success">确定</a>
+            <a @click="showSetPassword = false" class="button">取消</a>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 修改密码 -->
-    <div class="modal" :class="{'is-active': showUpdatePassword}">
+    <div :class="{ 'is-active': showUpdatePassword }" class="modal">
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
           <div class="header">
             修改密码
-            <button class="delete" aria-label="close" @click="showUpdatePassword = false" />
+            <button
+              @click="showUpdatePassword = false"
+              class="delete"
+              aria-label="close"
+            />
           </div>
           <div class="content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
                   v-model="oldPassword"
+                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入当前密码"
-                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -299,10 +330,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入密码"
-                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -313,10 +344,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="rePassword"
+                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请再次确认密码"
-                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -325,8 +356,8 @@
             </div>
           </div>
           <div class="footer is-right">
-            <a class="button is-success" @click="updatePassword">确定</a>
-            <a class="button" @click="showUpdatePassword = false">取消</a>
+            <a @click="updatePassword" class="button is-success">确定</a>
+            <a @click="showUpdatePassword = false" class="button">取消</a>
           </div>
         </div>
       </div>
@@ -341,6 +372,12 @@ export default {
   components: {
     UserCenterSidebar
   },
+  async asyncData({ $axios, params }) {
+    const [user] = await Promise.all([$axios.get('/api/user/current')])
+    return {
+      user
+    }
+  },
   data() {
     return {
       showSetUsername: false,
@@ -352,17 +389,6 @@ export default {
       password: '',
       rePassword: '',
       oldPassword: ''
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.user.nickname + ' - 编辑资料')
-    }
-  },
-  async asyncData({ $axios, params }) {
-    const [user] = await Promise.all([$axios.get('/api/user/current')])
-    return {
-      user: user
     }
   },
   methods: {
@@ -457,6 +483,11 @@ export default {
       } catch (err) {
         this.$toast.error('修改失败：' + (err.message || err))
       }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.user.nickname + ' - 编辑资料')
     }
   }
 }

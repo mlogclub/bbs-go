@@ -3,9 +3,9 @@
     <div class="container main-container left-main">
       <div class="left-container">
         <load-more
-          v-slot="{results}"
+          v-slot="{ results }"
           :init-data="articlesPage"
-          :params="{categoryId:category.categoryId}"
+          :params="{ categoryId: category.categoryId }"
           url="/api/article/category/articles"
         >
           <article-list :articles="results" :show-ad="true" />
@@ -23,7 +23,7 @@
             data-ad-slot="4922900917"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </div>
@@ -38,15 +38,6 @@ import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: { ArticleList, LoadMore, WeixinGzh },
-  head() {
-    return {
-      title: this.$siteTitle(this.category.categoryName + ' - 文章'),
-      meta: [
-        { hid: 'description', name: 'description', content: this.$siteDescription() },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
-    }
-  },
   async asyncData({ $axios, params }) {
     try {
       const [category, articlesPage] = await Promise.all([
@@ -58,15 +49,27 @@ export default {
         })
       ])
       return {
-        category: category,
-        articlesPage: articlesPage
+        category,
+        articlesPage
       }
     } catch (e) {
       console.error(e)
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.category.categoryName + ' - 文章'),
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription()
+        },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
+      ]
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -2,7 +2,11 @@
   <ul class="article-list">
     <li v-for="(article, index) in articles" :key="article.articleId">
       <div
-        v-if="showAd && ((articles.length < 3 && index === 1) || (index !== 0 && index % 5 === 0))"
+        v-if="
+          showAd &&
+            ((articles.length < 3 && index === 1) ||
+              (index !== 0 && index % 5 === 0))
+        "
       >
         <ins
           class="adsbygoogle"
@@ -13,7 +17,7 @@
           data-ad-slot="4728140043"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
       </div>
       <article class="article-item">
@@ -28,22 +32,34 @@
         <div class="article-meta">
           <span class="article-meta-item">
             由
-            <a
-              :href="'/user/' + article.user.id"
-              class="article-author"
-            >&nbsp;{{ article.user.nickname }}&nbsp;</a>发布于
-            <time itemprop="datePublished">{{ article.createTime | prettyDate }}</time>
+            <a :href="'/user/' + article.user.id" class="article-author"
+              >&nbsp;{{ article.user.nickname }}&nbsp;</a
+            >发布于
+            <time itemprop="datePublished">{{
+              article.createTime | prettyDate
+            }}</time>
           </span>
 
           <span v-if="article.category" class="article-meta-item">
             <span class="article-tag tag">
-              <a :href="'/articles/cat/' + article.category.categoryId">{{ article.category.categoryName }}</a>
+              <a :href="'/articles/cat/' + article.category.categoryId">{{
+                article.category.categoryName
+              }}</a>
             </span>
           </span>
 
-          <span v-if="article.tags && article.tags.length > 0" class="article-meta-item">
-            <span v-for="tag in article.tags" :key="tag.tagId" class="article-tag tag">
-              <a :href="'/articles/tag/' + tag.tagId" class>{{ tag.tagName }}</a>
+          <span
+            v-if="article.tags && article.tags.length > 0"
+            class="article-meta-item"
+          >
+            <span
+              v-for="tag in article.tags"
+              :key="tag.tagId"
+              class="article-tag tag"
+            >
+              <a :href="'/articles/tag/' + tag.tagId" class>{{
+                tag.tagName
+              }}</a>
             </span>
           </span>
         </div>
@@ -57,7 +73,7 @@ export default {
   props: {
     articles: {
       type: Array,
-      default: function () {
+      default() {
         return []
       },
       required: false

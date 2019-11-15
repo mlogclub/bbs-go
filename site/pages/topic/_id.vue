@@ -7,8 +7,8 @@
             <div class="header">
               <div class="left">
                 <div
+                  :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
                   class="avatar avatar-size-45 is-rounded"
-                  :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
                 />
               </div>
               <div class="center">
@@ -18,12 +18,22 @@
 
                 <div class="topic-meta">
                   <span class="meta-item">
-                    <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+                    <a :href="'/user/' + topic.user.id">{{
+                      topic.user.nickname
+                    }}</a>
                   </span>
-                  <span class="meta-item">{{ topic.lastCommentTime | prettyDate }}</span>
+                  <span class="meta-item">{{
+                    topic.lastCommentTime | prettyDate
+                  }}</span>
                   <span class="meta-item">
-                    <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                      <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
+                    <span
+                      v-for="tag in topic.tags"
+                      :key="tag.tagId"
+                      class="tag"
+                    >
+                      <a :href="'/topics/tag/' + tag.tagId + '/1'">{{
+                        tag.tagName
+                      }}</a>
                     </span>
                   </span>
                   <span class="meta-item act">
@@ -46,16 +56,26 @@
               </div>
               <div class="right">
                 <div class="like">
-                  <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
+                  <span
+                    :class="{ liked: topic.liked }"
+                    @click="like(topic)"
+                    class="like-btn"
+                  >
                     <i class="iconfont icon-like" />
                   </span>
-                  <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
+                  <span v-if="topic.likeCount" class="like-count">{{
+                    topic.likeCount
+                  }}</span>
                 </div>
-                <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
+                <span class="count"
+                  >{{ topic.commentCount }}&nbsp;/&nbsp;{{
+                    topic.viewCount
+                  }}</span
+                >
               </div>
             </div>
 
-            <div class="content" v-html="topic.content" />
+            <div v-html="topic.content" class="content" />
 
             <ins
               class="adsbygoogle"
@@ -66,12 +86,16 @@
               data-ad-slot="4728140043"
             />
             <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
+              ;(adsbygoogle = window.adsbygoogle || []).push({})
             </script>
           </div>
 
           <!-- 评论 -->
-          <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="false" />
+          <comment
+            :entity-id="topic.topicId"
+            :show-ad="false"
+            entity-type="topic"
+          />
         </div>
         <div class="right-container">
           <!-- 展示广告190x90 -->
@@ -82,16 +106,16 @@
             data-ad-slot="9345305153"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
 
           <weixin-gzh />
 
-          <div v-if="topic.toc" ref="toc" class="toc widget">
+          <div ref="toc" v-if="topic.toc" class="toc widget">
             <div class="header">
               目录
             </div>
-            <div class="content" v-html="topic.toc" />
+            <div v-html="topic.toc" class="content" />
           </div>
         </div>
       </div>
@@ -107,15 +131,6 @@ export default {
   components: {
     Comment,
     WeixinGzh
-  },
-  computed: {
-    isOwner: function () {
-      return (
-        this.currentUser &&
-        this.topic &&
-        this.currentUser.id === this.topic.user.id
-      )
-    }
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -138,18 +153,22 @@ export default {
     })
 
     return {
-      currentUser: currentUser,
-      topic: topic,
+      currentUser,
+      topic,
       favorited: favorited.favorited
+    }
+  },
+  computed: {
+    isOwner() {
+      return (
+        this.currentUser &&
+        this.topic &&
+        this.currentUser.id === this.topic.user.id
+      )
     }
   },
   mounted() {
     utils.handleToc()
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.topic.title)
-    }
   },
   methods: {
     async addFavorite(topicId) {
@@ -178,7 +197,7 @@ export default {
         await this.$axios.post('/api/topic/delete/' + topicId)
         this.$toast.success('删除成功', {
           duration: 2000,
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/topics')
           }
         })
@@ -206,6 +225,11 @@ export default {
           this.$toast.error(e.message || e)
         }
       }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.topic.title)
     }
   }
 }

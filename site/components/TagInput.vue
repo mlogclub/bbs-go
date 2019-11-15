@@ -1,21 +1,25 @@
 <template>
   <div class="select-tags">
-    <input id="tags" v-model="tags" name="tags" type="hidden">
+    <input id="tags" v-model="tags" name="tags" type="hidden" />
     <div class="tags-selected">
       <span v-for="tag in tags" :key="tag" class="tag-item">
-        <span class="text">{{ tag }}<i
-          class="iconfont icon-close"
-          :data-name="tag"
-          @click="clickRemoveTag"
+        <span class="text"
+          >{{ tag
+          }}<i
+            :data-name="tag"
+            @click="clickRemoveTag"
+            class="iconfont icon-close"
         /></span>
       </span>
     </div>
     <input
       ref="tagInput"
       v-model="inputTag"
-      class="input"
-      type="text"
-      :placeholder="'标签（请用逗号分隔每个标签，最多' + maxTagCount + '个，每个最长15字符）'"
+      :placeholder="
+        '标签（请用逗号分隔每个标签，最多' +
+          maxTagCount +
+          '个，每个最长15字符）'
+      "
       @input="autocomplete"
       @keydown.delete="removeTag"
       @keydown.enter="addTag"
@@ -27,17 +31,19 @@
       @keydown.esc="close"
       @focus="openRecommendTags"
       @click="openRecommendTags"
-    >
+      class="input"
+      type="text"
+    />
     <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
       <div class="tags-container">
         <section class="tag-section">
           <div
             v-for="(item, index) in autocompleteTags"
             :key="item"
-            class="tag-item"
-            :class="{active: index === selectIndex}"
+            :class="{ active: index === selectIndex }"
             @click="selectTag(index)"
             v-text="item"
+            class="tag-item"
           />
         </section>
       </div>
@@ -46,9 +52,17 @@
       <div class="tags-container">
         <div class="header">
           <span>推荐标签</span>
-          <span class="close-recommend"><i class="iconfont icon-close" @click="closeRecommendTags" /></span>
+          <span class="close-recommend"
+            ><i @click="closeRecommendTags" class="iconfont icon-close"
+          /></span>
         </div>
-        <a v-for="tag in recommendTags" :key="tag" class="tag-item" @click="addRecommendTag(tag)" v-text="tag" />
+        <a
+          v-for="tag in recommendTags"
+          :key="tag"
+          @click="addRecommendTag(tag)"
+          v-text="tag"
+          class="tag-item"
+        />
       </div>
     </div>
   </div>
@@ -59,7 +73,7 @@ export default {
   props: {
     value: {
       type: Array,
-      default: function () {
+      default() {
         return []
       }
     }
@@ -84,7 +98,8 @@ export default {
   methods: {
     removeTag(event, tag) {
       const selectionStart = this.$refs.tagInput.selectionStart
-      if (!this.inputTag || selectionStart === 0) { // input框没内容，或者光标在首位的时候就删除最后一个标签
+      if (!this.inputTag || selectionStart === 0) {
+        // input框没内容，或者光标在首位的时候就删除最后一个标签
         this.tags.splice(this.tags.length - 1, 1)
         this.$emit('input', this.tags)
       }
@@ -102,25 +117,28 @@ export default {
     },
 
     /**
-       * 手动点击选择标签
-       * @param index
-       */
+     * 手动点击选择标签
+     * @param index
+     */
     selectTag(index) {
       this.selectIndex = index
       this.addTag()
     },
 
     /**
-       * 添加标签
-       * @param event
-       */
+     * 添加标签
+     * @param event
+     */
     addTag(event) {
       if (event) {
         event.stopPropagation()
         event.preventDefault()
       }
 
-      if (this.selectIndex >= 0 && this.autocompleteTags.length > this.selectIndex) {
+      if (
+        this.selectIndex >= 0 &&
+        this.autocompleteTags.length > this.selectIndex
+      ) {
         this.addTagName(this.autocompleteTags[this.selectIndex])
       } else {
         this.addTagName(this.inputTag)
@@ -130,19 +148,19 @@ export default {
     },
 
     /**
-       * 添加推荐标签
-       * @param tagName
-       */
+     * 添加推荐标签
+     * @param tagName
+     */
     addRecommendTag(tagName) {
       this.addTagName(tagName)
       this.closeRecommendTags()
     },
 
     /**
-       * 添加标签
-       * @param tagName 标签名称
-       * @returns {boolean} 是否成功
-       */
+     * 添加标签
+     * @param tagName 标签名称
+     * @returns {boolean} 是否成功
+     */
     addTagName(tagName) {
       if (!tagName) {
         return false
@@ -159,7 +177,7 @@ export default {
       }
 
       // 标签已经存在
-      if (this.tags && this.tags.indexOf(tagName) !== -1) {
+      if (this.tags && this.tags.includes(tagName)) {
         return false
       }
 
@@ -231,7 +249,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -264,7 +281,7 @@ export default {
         text-align: center;
         vertical-align: middle;
         font-size: 12px;
-        color: rgba(0, 0, 0, .38);
+        color: rgba(0, 0, 0, 0.38);
         white-space: nowrap;
         display: inline-block;
 
@@ -305,7 +322,8 @@ export default {
           padding: 8px 15px;
           cursor: pointer;
 
-          &.active, &:hover {
+          &.active,
+          &:hover {
             color: #fff;
             background: #006bde;
           }
@@ -334,7 +352,7 @@ export default {
       .header {
         font-weight: bold;
         font-size: 15px;
-        color: #017E66;
+        color: #017e66;
         border-bottom: 1px solid #dbdbdb;
         margin-bottom: 5px;
         padding-top: 5px;
@@ -353,7 +371,7 @@ export default {
         padding: 0 11px;
         border-radius: 11px;
         display: inline-block;
-        color: #017E66;
+        color: #017e66;
         background-color: rgba(1, 126, 102, 0.08);
         height: 22px;
         line-height: 22px;

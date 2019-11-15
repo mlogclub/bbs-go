@@ -7,15 +7,20 @@
         class="subject-content"
       >
         <div class="content-title">
-          <a :href="subjectContent.url" target="_blank">{{ subjectContent.title }}</a>
+          <a :href="subjectContent.url" target="_blank">{{
+            subjectContent.title
+          }}</a>
         </div>
         <div class="content-summary">
           {{ subjectContent.summary }}
         </div>
-        <div
-          class="content-meta"
-        >
-          于 {{ subjectContent.createTime | prettyDate }} 收录入专栏 <a class="subject-name" :href="'/subject/' + subjectContent.subjectId">{{ subjectContent.subjectTitle }}</a>
+        <div class="content-meta">
+          于 {{ subjectContent.createTime | prettyDate }} 收录入专栏
+          <a
+            :href="'/subject/' + subjectContent.subjectId"
+            class="subject-name"
+            >{{ subjectContent.subjectTitle }}</a
+          >
         </div>
 
         <div v-if="index === 1">
@@ -28,7 +33,7 @@
             data-ad-slot="4728140043"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </li>
@@ -42,7 +47,7 @@ export default {
     subjectContents: {
       type: Array,
       required: true,
-      default: function () {
+      default() {
         return []
       }
     }
@@ -82,7 +87,7 @@ export default {
 
     .content-meta {
       font-size: 13px;
-      color:#8a93a0;
+      color: #8a93a0;
       margin-top: 10px;
       a {
         font-weight: bold;

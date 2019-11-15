@@ -18,7 +18,7 @@
         个人资料
       </div>
       <div class="content">
-        <img class="img-avatar" :src="user.avatar">
+        <img :src="user.avatar" class="img-avatar" />
         <div class="nickname">
           <a :href="'/user/' + user.id">{{ user.nickname }}</a>
         </div>
@@ -26,7 +26,11 @@
           <p>{{ user.description }}</p>
         </div>
         <div v-if="user.type === 1">
-          <img :src="'https://open.weixin.qq.com/qr/code?username=' + user.username">
+          <img
+            :src="
+              'https://open.weixin.qq.com/qr/code?username=' + user.username
+            "
+          />
         </div>
         <ul v-if="isOwner" class="operations">
           <li>
@@ -54,8 +58,7 @@
           (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
       </div>
-      -->
-      </div>
+      --></div>
     </div>
   </div>
 </template>
@@ -73,7 +76,7 @@ export default {
     }
   },
   computed: {
-    isOwner: function () {
+    isOwner() {
       return (
         this.user && this.currentUser && this.user.id === this.currentUser.id
       )
@@ -87,7 +90,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   a {
-      color: #3273dc;
+    color: #3273dc;
   }
 }
 .img-avatar {

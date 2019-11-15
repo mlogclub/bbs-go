@@ -1,5 +1,5 @@
 <template>
-  <a class="is-info" :class="{'button': isButton}" @click="qqLogin">
+  <a :class="{ button: isButton }" @click="qqLogin" class="is-info">
     <i class="iconfont icon-qq" />&nbsp;
     <strong>{{ title }}</strong>
   </a>
@@ -13,7 +13,8 @@ export default {
       type: String,
       default: '登录'
     },
-    refUrl: { // 登录来源地址，控制登录成功之后要跳到该地址
+    refUrl: {
+      // 登录来源地址，控制登录成功之后要跳到该地址
       type: String,
       default: ''
     },
@@ -44,5 +45,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -10,8 +10,8 @@
               target="_blank"
             >
               <div
+                :style="{ backgroundImage: 'url(' + article.user.avatar + ')' }"
                 class="avatar is-rounded"
-                :style="{'backgroundImage':'url(' + article.user.avatar + ')'}"
               />
             </a>
           </div>
@@ -23,21 +23,29 @@
 
             <div class="article-meta">
               <span class="article-meta-item">
-                <a :href="'/user/' + article.user.id">{{ article.user.nickname }}</a>
+                <a :href="'/user/' + article.user.id">{{
+                  article.user.nickname
+                }}</a>
               </span>
 
               <span v-if="article.category" class="article-meta-item">
-                <a
-                  :href="'/articles/cat/' + article.category.categoryId"
-                >{{ article.category.categoryName }}</a>
+                <a :href="'/articles/cat/' + article.category.categoryId">{{
+                  article.category.categoryName
+                }}</a>
               </span>
 
-              <span v-for="tag in article.tags" :key="tag.tagId" class="article-meta-item">
+              <span
+                v-for="tag in article.tags"
+                :key="tag.tagId"
+                class="article-meta-item"
+              >
                 <a :href="'/articles/tag/' + tag.tagId">{{ tag.tagName }}</a>
               </span>
 
               <span class="article-meta-item">
-                <time itemprop="datePublished">{{ article.createTime | prettyDate }}</time>
+                <time itemprop="datePublished">{{
+                  article.createTime | prettyDate
+                }}</time>
               </span>
             </div>
 
@@ -54,7 +62,9 @@
               </span>
               <span>
                 <a @click="addFavorite(article.articleId)">
-                  <i class="iconfont icon-favorite" />{{ favorited ? '已收藏' : '收藏' }}
+                  <i class="iconfont icon-favorite" />{{
+                    favorited ? '已收藏' : '收藏'
+                  }}
                 </a>
               </span>
             </div>
@@ -70,7 +80,7 @@
               data-ad-slot="4728140043"
             />
             <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
+              ;(adsbygoogle = window.adsbygoogle || []).push({})
             </script>
 
             <p v-highlight v-html="article.content" />
@@ -86,9 +96,8 @@
                 <li>
                   <strong>免责声明：</strong>
                   我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
-                  <a
-                    href="mailto:mlog1@qq.com"
-                  >mlog1@qq.com</a>），我们将在24小时之内删除。
+                  <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
+                  >），我们将在24小时之内删除。
                 </li>
               </ul>
             </blockquote>
@@ -96,7 +105,11 @@
         </article>
 
         <!-- 评论 -->
-        <comment entity-type="article" :entity-id="article.articleId" :show-ad="true" />
+        <comment
+          :entity-id="article.articleId"
+          :show-ad="true"
+          entity-type="article"
+        />
 
         <div class="columns article-related">
           <div class="column">
@@ -111,14 +124,18 @@
                       :href="'/article/' + a.articleId"
                       :title="a.title"
                       target="_blank"
-                    >{{ a.title }}</a>
+                      >{{ a.title }}</a
+                    >
                   </li>
                 </ul>
               </div>
             </div>
           </div>
           <div class="column">
-            <div v-if="relatedArticles && relatedArticles.length" class="widget">
+            <div
+              v-if="relatedArticles && relatedArticles.length"
+              class="widget"
+            >
               <div class="header">
                 相关文章
               </div>
@@ -129,7 +146,8 @@
                       :href="'/article/' + a.articleId"
                       :title="a.title"
                       target="_blank"
-                    >{{ a.title }}</a>
+                      >{{ a.title }}</a
+                    >
                   </li>
                 </ul>
               </div>
@@ -147,14 +165,14 @@
           data-ad-slot="5685455263"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
         <div v-if="article.toc" class="toc widget">
           <div class="header">
             目录
           </div>
-          <div class="content" v-html="article.toc" />
+          <div v-html="article.toc" class="content" />
         </div>
 
         <!-- 展示广告190x90 -->
@@ -165,7 +183,7 @@
           data-ad-slot="9345305153"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
         <!-- 展示广告190x480 -->
@@ -176,7 +194,7 @@
           data-ad-slot="3438372357"
         />
         <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
       </div>
     </div>
@@ -190,21 +208,8 @@ import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: {
-    Comment, WeixinGzh
-  },
-  computed: {
-    isOwner: function () {
-      return this.currentUser && this.article && this.currentUser.id === this.article.user.id
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.article.title),
-      meta: [
-        { hid: 'description', name: 'description', content: this.description },
-        { hid: 'keywords', name: 'keywords', content: this.keywords }
-      ]
-    }
+    Comment,
+    WeixinGzh
   },
   async asyncData({ $axios, params, error }) {
     let article
@@ -251,13 +256,22 @@ export default {
     }
 
     return {
-      currentUser: currentUser,
-      article: article,
+      currentUser,
+      article,
       favorited: favorited.favorited,
-      newestArticles: newestArticles,
-      relatedArticles: relatedArticles,
-      keywords: keywords,
-      description: description
+      newestArticles,
+      relatedArticles,
+      keywords,
+      description
+    }
+  },
+  computed: {
+    isOwner() {
+      return (
+        this.currentUser &&
+        this.article &&
+        this.currentUser.id === this.article.user.id
+      )
     }
   },
   mounted() {
@@ -269,7 +283,7 @@ export default {
         await this.$axios.post('/api/article/delete/' + articleId)
         this.$toast.success('删除成功！', {
           duration: 1000,
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/articles')
           }
         })
@@ -297,6 +311,15 @@ export default {
         console.error(e)
         this.$toast.error('收藏失败：' + (e.message || e))
       }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.article.title),
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'keywords', name: 'keywords', content: this.keywords }
+      ]
     }
   }
 }
@@ -364,7 +387,7 @@ article {
     display: inline-block;
     font-size: 13px;
 
-    &>span{
+    & > span {
       margin-left: 10px;
     }
 
@@ -372,7 +395,7 @@ article {
       font-size: 12px;
       i {
         font-size: 12px;
-        color: #000
+        color: #000;
       }
     }
   }
@@ -438,7 +461,6 @@ article {
   blockquote.pull-right .small:after {
     content: '\00A0 \2014';
   }
-
 }
 
 .article-related {

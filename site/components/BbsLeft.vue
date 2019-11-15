@@ -1,18 +1,21 @@
 <template>
   <div class="left-container">
-    <a class="button is-success post" :href="createTopicUrl">
+    <a :href="createTopicUrl" class="button is-success post">
       <i class="iconfont icon-topic" />&nbsp;
       <strong>发表主题</strong>
     </a>
     <ul class="m-nav">
       <li>
-        <a :class="{'active': currentTagId == 0}" href="/topics">
+        <a :class="{ active: currentTagId == 0 }" href="/topics">
           <i class="iconfont icon-topic" />
           <span>全部话题</span>
         </a>
       </li>
       <li v-for="tag in bbsNavTags" :key="tag.tagId">
-        <a :class="{'active': currentTagId == tag.tagId}" :href="'/topics/tag/' + tag.tagId">
+        <a
+          :class="{ active: currentTagId == tag.tagId }"
+          :href="'/topics/tag/' + tag.tagId"
+        >
           <i class="iconfont icon-topic" />
           <span>{{ tag.tagName }}</span>
         </a>
@@ -29,7 +32,7 @@
       data-ad-slot="9345305153"
     />
     <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
+      ;(adsbygoogle = window.adsbygoogle || []).push({})
     </script>
 
     <!-- 展示广告190x480 -->
@@ -40,7 +43,7 @@
       data-ad-slot="3438372357"
     />
     <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
+      ;(adsbygoogle = window.adsbygoogle || []).push({})
     </script>
   </div>
 </template>
@@ -57,19 +60,18 @@ export default {
     }
   },
   computed: {
-    createTopicUrl: function () {
+    createTopicUrl() {
       let url = '/topic/create'
       if (this.currentTagId) {
         url += '?tagId=' + this.currentTagId
       }
       return url
     },
-    bbsNavTags: function () {
+    bbsNavTags() {
       return this.$store.state.config.config.bbsNavTags
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -10,12 +10,17 @@
               </div>
               <div class="content">
                 <div class="tags are-medium">
-                  <span v-for="tag in tagsPage.results" :key="tag.tagId" class="tag is-normal">
+                  <span
+                    v-for="tag in tagsPage.results"
+                    :key="tag.tagId"
+                    class="tag is-normal"
+                  >
                     <a
-                      :href="'/articles/tag/' + tag.tagId "
+                      :href="'/articles/tag/' + tag.tagId"
                       :title="tag.tagName"
                       target="_blank"
-                    >{{ tag.tagName }}</a>
+                      >{{ tag.tagName }}</a
+                    >
                   </span>
                 </div>
               </div>
@@ -39,12 +44,8 @@ import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: {
-    Pagination, WeixinGzh
-  },
-  head() {
-    return {
-      title: this.$siteTitle('标签')
-    }
+    Pagination,
+    WeixinGzh
   },
   async asyncData({ $axios, params }) {
     const [tagsPage] = await Promise.all([
@@ -55,11 +56,15 @@ export default {
       })
     ])
     return {
-      tagsPage: tagsPage
+      tagsPage
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('标签')
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

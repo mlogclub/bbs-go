@@ -18,13 +18,13 @@ export const actions = {
 }
 
 export const getters = {
-  siteTitle: function (state) {
+  siteTitle(state) {
     return state.config.siteTitle || ''
   },
-  siteDescription: function (state) {
+  siteDescription(state) {
     return state.config.siteDescription || ''
   },
-  siteKeywords: function (state) {
+  siteKeywords(state) {
     return state.config.siteKeywords || ''
   }
 }

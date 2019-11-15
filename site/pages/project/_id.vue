@@ -5,11 +5,15 @@
         <div v-if="project" class="project">
           <div class="project-header">
             <span class="project-name">{{ project.name }}</span>
-            <span v-if="project.title" class="project-title">&nbsp;-&nbsp;{{ project.title }}</span>
+            <span v-if="project.title" class="project-title"
+              >&nbsp;-&nbsp;{{ project.title }}</span
+            >
           </div>
           <div class="meta">
             <span>
-              <a :href="'/user/' + project.user.id">{{ project.user.nickname }}</a>
+              <a :href="'/user/' + project.user.id">{{
+                project.user.nickname
+              }}</a>
             </span>
             <span>{{ project.createTime | prettyDate }}</span>
           </div>
@@ -23,34 +27,37 @@
               data-ad-slot="4728140043"
             />
             <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
+              ;(adsbygoogle = window.adsbygoogle || []).push({})
             </script>
             <p v-highlight v-html="project.content" />
           </div>
           <div class="footer">
             <a
               v-if="projectUrl"
-              class="homepage"
               :href="projectUrl"
-              target="_blank"
-            >项目主页</a>
-            <a
-              v-if="docUrl"
               class="homepage"
-              :href="docUrl"
               target="_blank"
-            >文档地址</a>
+              >项目主页</a
+            >
+            <a v-if="docUrl" :href="docUrl" class="homepage" target="_blank"
+              >文档地址</a
+            >
             <a
               v-if="downloadUrl"
-              class="homepage"
               :href="downloadUrl"
+              class="homepage"
               target="_blank"
-            >下载地址</a>
+              >下载地址</a
+            >
           </div>
         </div>
 
         <!-- 评论 -->
-        <comment entity-type="project" :entity-id="project.projectId" :show-ad="true" />
+        <comment
+          :entity-id="project.projectId"
+          :show-ad="true"
+          entity-type="project"
+        />
       </div>
       <div class="right-container">
         <div style="max-height:60px;">
@@ -62,7 +69,7 @@
             data-ad-slot="9345305153"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
 
           <!-- 展示广告190x190 -->
@@ -73,7 +80,7 @@
             data-ad-slot="5685455263"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
 
           <!-- 展示广告190x480 -->
@@ -84,7 +91,7 @@
             data-ad-slot="3438372357"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </div>
@@ -97,14 +104,6 @@ import Comment from '~/components/Comment'
 export default {
   components: {
     Comment
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.project.name),
-      meta: [
-        { hid: 'description', name: 'description', content: this.project.title }
-      ]
-    }
   },
   async asyncData({ $axios, params }) {
     const [currentUser, project] = await Promise.all([
@@ -126,13 +125,21 @@ export default {
     }
     return {
       curretnUser: currentUser,
-      project: project,
+      project,
       projectUrl: buildUrl(project.url),
       docUrl: buildUrl(project.docUrl),
       downloadUrl: buildUrl(project.downloadUrl)
     }
   },
-  methods: {}
+  methods: {},
+  head() {
+    return {
+      title: this.$siteTitle(this.project.name),
+      meta: [
+        { hid: 'description', name: 'description', content: this.project.title }
+      ]
+    }
+  }
 }
 </script>
 

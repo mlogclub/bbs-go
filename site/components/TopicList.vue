@@ -1,7 +1,7 @@
 <template>
   <ul class="topic-list topic-wrap">
     <template v-for="(topic, index) in topics">
-      <li v-if="showAd && (index === 3)" :key="'ad-' + index ">
+      <li v-if="showAd && index === 3" :key="'ad-' + index">
         <div class="ad">
           <ins
             class="adsbygoogle"
@@ -12,7 +12,7 @@
             data-ad-slot="4728140043"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </li>
@@ -20,8 +20,8 @@
         <div class="header">
           <div class="left">
             <div
+              :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
               class="avatar avatar-size-45 is-rounded"
-              :style="{backgroundImage:'url('+ topic.user.avatar +')'}"
             />
           </div>
           <div class="center">
@@ -31,26 +31,38 @@
 
             <div class="topic-meta">
               <span class="meta-item">
-                <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+                <a :href="'/user/' + topic.user.id">{{
+                  topic.user.nickname
+                }}</a>
               </span>
               <span class="meta-item">
                 {{ topic.lastCommentTime | prettyDate }}
               </span>
               <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                  <a :href="'/topics/tag/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
+                  <a :href="'/topics/tag/' + tag.tagId + '/1'">{{
+                    tag.tagName
+                  }}</a>
                 </span>
               </span>
             </div>
           </div>
           <div class="right">
             <div class="like">
-              <span class="like-btn" :class="{'liked': topic.liked}" @click="like(topic)">
+              <span
+                :class="{ liked: topic.liked }"
+                @click="like(topic)"
+                class="like-btn"
+              >
                 <i class="iconfont icon-like" />
               </span>
-              <span v-if="topic.likeCount" class="like-count">{{ topic.likeCount }}</span>
+              <span v-if="topic.likeCount" class="like-count">{{
+                topic.likeCount
+              }}</span>
             </div>
-            <span class="count">{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span>
+            <span class="count"
+              >{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span
+            >
           </div>
         </div>
       </li>
@@ -64,7 +76,7 @@ export default {
   props: {
     topics: {
       type: Array,
-      default: function () {
+      default() {
         return []
       },
       required: false

@@ -5,15 +5,20 @@
         <div class="link">
           <div class="logo" />
           <div class="title">
-            <img v-if="link.logo" :src="link.logo">
-            <img v-if="!link.logo" src="https://file.mlog.club/mlog.club/link.png">
+            <img v-if="link.logo" :src="link.logo" />
+            <img
+              v-if="!link.logo"
+              src="https://file.mlog.club/mlog.club/link.png"
+            />
             {{ link.title }}
           </div>
           <div class="summary">
             {{ link.summary }}
           </div>
           <div class="link">
-            博客地址：<a :href="link.url" rel="external nofollow">{{ link.url }}</a>
+            博客地址：<a :href="link.url" rel="external nofollow">{{
+              link.url
+            }}</a>
           </div>
         </div>
         <div style="margin-top: 20px;">
@@ -26,7 +31,7 @@
             data-full-width-responsive="true"
           />
           <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
         </div>
       </div>
@@ -36,20 +41,24 @@
 
 <script>
 export default {
+  async asyncData({ $axios, params }) {
+    const link = await $axios.get('/api/link/' + params.id)
+    return {
+      link
+    }
+  },
   head() {
     const title = this.link.title + ' - 好博客'
     return {
       title: this.$siteTitle(title),
       meta: [
-        { hid: 'description', name: 'description', content: this.$siteDescription() },
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription()
+        },
         { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
       ]
-    }
-  },
-  async asyncData({ $axios, params }) {
-    const link = await $axios.get('/api/link/' + params.id)
-    return {
-      link: link
     }
   }
 }

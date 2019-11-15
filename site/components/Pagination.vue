@@ -1,14 +1,31 @@
 <template>
-  <nav v-if="page.total > 0" class="pagination" role="navigation" aria-label="pagination">
-    <a v-if="previousPageUrl" class="pagination-previous" :href="previousPageUrl">上一页</a>
+  <nav
+    v-if="page.total > 0"
+    class="pagination"
+    role="navigation"
+    aria-label="pagination"
+  >
+    <a
+      v-if="previousPageUrl"
+      :href="previousPageUrl"
+      class="pagination-previous"
+      >上一页</a
+    >
     <a v-else class="pagination-previous" disabled>上一页</a>
 
-    <a v-if="nextPageUrl" class="pagination-previous" :href="nextPageUrl">下一页</a>
+    <a v-if="nextPageUrl" :href="nextPageUrl" class="pagination-previous"
+      >下一页</a
+    >
     <a v-else class="pagination-previous" disabled>下一页</a>
 
     <ul class="pagination-list">
       <li v-for="p in pageList" :key="p">
-        <a class="pagination-link" :class="{'is-current': p == page.page}" :href="getPageUrl(p)">{{ p }}</a>
+        <a
+          :class="{ 'is-current': p == page.page }"
+          :href="getPageUrl(p)"
+          class="pagination-link"
+          >{{ p }}</a
+        >
       </li>
     </ul>
   </nav>
@@ -17,21 +34,23 @@
 <script>
 export default {
   props: {
-    page: { // 页码对象
+    page: {
+      // 页码对象
       type: Object,
-      default: function () {
+      default() {
         return { page: 1, total: 0, limit: 20 }
       },
       required: true
     },
-    urlPrefix: { // 分页url前缀
+    urlPrefix: {
+      // 分页url前缀
       type: String,
       default: '/',
       required: true
     }
   },
   computed: {
-    pageList: function () {
+    pageList() {
       const start = this.page.page - 2
       const end = this.page.page + 2
       const totalPage = this.getTotalPage()
@@ -58,10 +77,10 @@ export default {
         ]
       }
     },
-    previousPageUrl: function () {
+    previousPageUrl() {
       return this.getPreviousPageUrl()
     },
-    nextPageUrl: function () {
+    nextPageUrl() {
       return this.getNextPageUrl()
     }
   },
@@ -85,11 +104,11 @@ export default {
     },
     getTotalPage() {
       return this.page.total % this.page.limit > 0
-        ? parseInt(this.page.total / this.page.limit) + 1 : this.page.total / this.page.limit
+        ? parseInt(this.page.total / this.page.limit) + 1
+        : this.page.total / this.page.limit
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

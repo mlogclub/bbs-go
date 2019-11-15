@@ -8,30 +8,46 @@
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
-          <img src="~/assets/images/logo.png">
+          <img src="~/assets/images/logo.png" />
         </a>
         <a
-          class="navbar-burger burger"
-          :class="{'is-active': navbarActive}"
-          data-target="navbarBasic"
+          :class="{ 'is-active': navbarActive }"
           @click="toggleNav"
+          class="navbar-burger burger"
+          data-target="navbarBasic"
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
         </a>
       </div>
-      <div class="navbar-menu" :class="{'is-active': navbarActive}">
+      <div :class="{ 'is-active': navbarActive }" class="navbar-menu">
         <div class="navbar-start">
-          <a v-for="(nav, index) in config.siteNavs" :key="index" :href="nav.url" class="navbar-item">{{ nav.title }}</a>
+          <a
+            v-for="(nav, index) in config.siteNavs"
+            :key="index"
+            :href="nav.url"
+            class="navbar-item"
+            >{{ nav.title }}</a
+          >
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <form id="searchForm" action="https://www.google.com/search" target="_blank">
+            <form
+              id="searchForm"
+              action="https://www.google.com/search"
+              target="_blank"
+            >
               <div class="control has-icons-right">
-                <input name="q" type="hidden" value="site:mlog.club">
-                <input name="q" class="input" type="text" maxlength="30" placeholder="搜索">
+                <input name="q" type="hidden" value="site:mlog.club" />
+                <input
+                  name="q"
+                  class="input"
+                  type="text"
+                  maxlength="30"
+                  placeholder="搜索"
+                />
                 <span class="icon is-medium is-right">
                   <i class="iconfont icon-search" />
                 </span>
@@ -52,7 +68,7 @@
           -->
 
           <div v-if="user" class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" :href="'/user/' + user.id">
+            <a :href="'/user/' + user.id" class="navbar-link">
               <strong>{{ user.nickname }}</strong>
             </a>
             <div class="navbar-dropdown">
@@ -71,7 +87,7 @@
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </a>
-              <a class="navbar-item" @click="signout">
+              <a @click="signout" class="navbar-item">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>
             </div>
@@ -84,7 +100,9 @@
           </div>
 
           <div v-if="user && msgcount > 0" class="navbar-item">
-            <a :href="'/user/messages'" class="msgcount">{{ msgcount > 9 ? '9+' : msgcount }}</a>
+            <a :href="'/user/messages'" class="msgcount">{{
+              msgcount > 9 ? '9+' : msgcount
+            }}</a>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 const filters = {
-  formatDate: function (timestamp, fmt) {
+  formatDate(timestamp, fmt) {
     fmt = fmt || 'yyyy-MM-dd HH:mm:ss'
     const date = new Date(timestamp)
     const o = {
@@ -15,11 +15,19 @@ const filters = {
       S: date.getMilliseconds()
     }
     if (/(y+)/.test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+      fmt = fmt.replace(
+        RegExp.$1,
+        (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+      )
     }
     for (const k in o) {
       if (new RegExp('(' + k + ')').test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+        fmt = fmt.replace(
+          RegExp.$1,
+          RegExp.$1.length === 1
+            ? o[k]
+            : ('00' + o[k]).substr(('' + o[k]).length)
+        )
       }
     }
     return fmt
@@ -30,19 +38,19 @@ const filters = {
     const hour = minute * 60
     const day = hour * 24
     const diffValue = new Date().getTime() - timestamp
-    if ((diffValue / minute) < 1) {
+    if (diffValue / minute < 1) {
       return '刚刚'
-    } else if ((diffValue / minute) < 60) {
+    } else if (diffValue / minute < 60) {
       return parseInt(diffValue / minute) + '分钟前'
-    } else if ((diffValue / hour) <= 24) {
+    } else if (diffValue / hour <= 24) {
       return parseInt(diffValue / hour) + '小时前'
-    } else if ((diffValue / day) <= 30) {
+    } else if (diffValue / day <= 30) {
       return parseInt(diffValue / day) + '天前'
     }
     return filters.formatDate(timestamp, 'yyyy-MM-dd HH:mm:ss')
   }
 }
 
-Object.keys(filters).forEach(function (key) {
+Object.keys(filters).forEach(function(key) {
   Vue.filter(key, filters[key])
 })

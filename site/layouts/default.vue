@@ -15,7 +15,8 @@ import MyFooter from '~/components/MyFooter'
 export default {
   middleware: 'global',
   components: {
-    MyNav, MyFooter
+    MyNav,
+    MyFooter
   }
 }
 </script>

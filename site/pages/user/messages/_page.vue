@@ -6,13 +6,19 @@
           <div class="main-body">
             <div class="widget no-margin">
               <div class="header">
-                <nav class="breadcrumb" aria-label="breadcrumbs" style="margin-bottom: 0px;">
+                <nav
+                  class="breadcrumb"
+                  aria-label="breadcrumbs"
+                  style="margin-bottom: 0px;"
+                >
                   <ul>
                     <li>
                       <a href="/">首页</a>
                     </li>
                     <li>
-                      <a :href="'/user/' + currentUser.id">{{ currentUser.nickname }}</a>
+                      <a :href="'/user/' + currentUser.id">{{
+                        currentUser.nickname
+                      }}</a>
                     </li>
                     <li class="is-active">
                       <a href="#" aria-current="page">消息</a>
@@ -22,12 +28,21 @@
               </div>
 
               <div class="content">
-                <ul v-if="messagesPage && messagesPage.results" class="message-list">
-                  <li v-for="message in messagesPage.results" :key="message.messageId" class="message-item">
+                <ul
+                  v-if="messagesPage && messagesPage.results"
+                  class="message-list"
+                >
+                  <li
+                    v-for="message in messagesPage.results"
+                    :key="message.messageId"
+                    class="message-item"
+                  >
                     <div class="message-item-left">
                       <div
+                        :style="{
+                          backgroundImage: 'url(' + message.from.avatar + ')'
+                        }"
                         class="avatar is-rounded has-border"
-                        :style="{backgroundImage:'url(' + message.from.avatar + ')'}"
                       />
                     </div>
                     <div class="message-item-right">
@@ -36,34 +51,51 @@
                           <a
                             :href="'/user/' + message.from.id"
                             target="_blank"
-                          >{{ message.from.nickname }}</a>
+                            >{{ message.from.nickname }}</a
+                          >
                         </span>
                         <span v-else class="nickname">
-                          <a href="javascript:void(0)" target="_blank">{{ message.from.nickname }}</a>
+                          <a href="javascript:void(0)" target="_blank">{{
+                            message.from.nickname
+                          }}</a>
                         </span>
-                        <span class="time">{{ message.createTime | prettyDate }}</span>
+                        <span class="time">{{
+                          message.createTime | prettyDate
+                        }}</span>
                       </div>
                       <div class="content">
                         {{ message.content }}
                         <span v-if="message.detailUrl" class="show-more">
-                          <a :href="message.detailUrl" target="_blank">点击查看详情&gt;&gt;</a>
+                          <a :href="message.detailUrl" target="_blank"
+                            >点击查看详情&gt;&gt;</a
+                          >
                         </span>
                         <blockquote>{{ message.quoteContent }}</blockquote>
                       </div>
                     </div>
                   </li>
                 </ul>
-                <div v-else class="notification is-primary" style="margin-top: 10px;">
+                <div
+                  v-else
+                  class="notification is-primary"
+                  style="margin-top: 10px;"
+                >
                   暂无消息
                 </div>
-                <pagination :page="messagesPage.page" url-prefix="/user/messages/" />
+                <pagination
+                  :page="messagesPage.page"
+                  url-prefix="/user/messages/"
+                />
               </div>
             </div>
           </div>
         </div>
         <div class="column is-3">
           <div class="main-aside">
-            <user-center-sidebar :user="currentUser" :current-user="currentUser" />
+            <user-center-sidebar
+              :user="currentUser"
+              :current-user="currentUser"
+            />
           </div>
         </div>
       </div>
@@ -78,21 +110,21 @@ export default {
   components: {
     UserCenterSidebar
   },
-  data() {
-    return {
-      messages: [],
-      cursor: 0,
-      hasMore: true
-    }
-  },
   async asyncData({ $axios, params }) {
     const [currentUser, messagesPage] = await Promise.all([
       $axios.get('/api/user/current'),
       $axios.get('/api/user/messages?page=' + (params.page || 1))
     ])
     return {
-      currentUser: currentUser,
-      messagesPage: messagesPage
+      currentUser,
+      messagesPage
+    }
+  },
+  data() {
+    return {
+      messages: [],
+      cursor: 0,
+      hasMore: true
     }
   },
   mounted() {

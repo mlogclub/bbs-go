@@ -8,9 +8,11 @@
               <div class="header">
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                   <ul>
-                    <li> <a href="/">首页</a> </li>
+                    <li><a href="/">首页</a></li>
                     <li>
-                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{ currentUser.nickname }}</a>
+                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                        currentUser.nickname
+                      }}</a>
                     </li>
                     <li class="is-active">
                       <a href="#" aria-current="page">主题</a>
@@ -26,7 +28,7 @@
                       class="input"
                       type="text"
                       placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
-                    >
+                    />
                   </div>
                 </div>
 
@@ -44,7 +46,13 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <a class="button is-success" :class="{'is-loading': publishing}" :disabled="publishing" @click="submitCreate">发表主题</a>
+                    <a
+                      :class="{ 'is-loading': publishing }"
+                      :disabled="publishing"
+                      @click="submitCreate"
+                      class="button is-success"
+                      >发表主题</a
+                    >
                   </div>
                 </div>
               </div>
@@ -68,22 +76,8 @@ import MarkdownHelp from '~/components/MarkdownHelp'
 export default {
   middleware: 'authenticated',
   components: {
-    TagInput, MarkdownHelp
-  },
-  data() {
-    return {
-      publishing: false, // 当前是否正处于发布中...
-      postForm: {
-        title: '',
-        tags: [],
-        content: ''
-      }
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle('发表话题')
-    }
+    TagInput,
+    MarkdownHelp
   },
   async asyncData({ $axios, query }) {
     const currentUser = await $axios.get('/api/user/current')
@@ -102,14 +96,23 @@ export default {
     }
 
     return {
-      currentUser: currentUser,
+      currentUser,
       postForm: {
-        tags: tags
+        tags
       }
     }
   },
-  mounted() {
+  data() {
+    return {
+      publishing: false, // 当前是否正处于发布中...
+      postForm: {
+        title: '',
+        tags: [],
+        content: ''
+      }
+    }
   },
+  mounted() {},
   methods: {
     async submitCreate() {
       const me = this
@@ -127,7 +130,7 @@ export default {
         })
         this.$toast.success('提交成功', {
           duration: 1000,
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/topic/' + topic.topicId)
           }
         })
@@ -137,9 +140,13 @@ export default {
         this.$toast.error('提交失败：' + (e.message || e))
       }
     }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('发表话题')
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

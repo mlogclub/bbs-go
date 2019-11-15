@@ -8,9 +8,11 @@
               <div class="header">
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                   <ul>
-                    <li> <a href="/">首页</a> </li>
+                    <li><a href="/">首页</a></li>
                     <li>
-                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{ currentUser.nickname }}</a>
+                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                        currentUser.nickname
+                      }}</a>
                     </li>
                     <li class="is-active">
                       <a href="#" aria-current="page">主题</a>
@@ -26,7 +28,7 @@
                       class="input"
                       type="text"
                       placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
-                    >
+                    />
                   </div>
                 </div>
 
@@ -44,7 +46,13 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <a class="button is-success" :class="{'is-loading': publishing}" :disabled="publishing" @click="submitCreate">提交更改</a>
+                    <a
+                      :class="{ 'is-loading': publishing }"
+                      :disabled="publishing"
+                      @click="submitCreate"
+                      class="button is-success"
+                      >提交更改</a
+                    >
                   </div>
                 </div>
               </div>
@@ -68,7 +76,23 @@ import MarkdownHelp from '~/components/MarkdownHelp'
 export default {
   middleware: 'authenticated',
   components: {
-    TagInput, MarkdownHelp
+    TagInput,
+    MarkdownHelp
+  },
+  async asyncData({ $axios, params }) {
+    const [currentUser, topic] = await Promise.all([
+      $axios.get('/api/user/current'),
+      $axios.get('/api/topic/edit/' + params.id)
+    ])
+    return {
+      currentUser,
+      topic,
+      postForm: {
+        title: topic.title,
+        tags: topic.tags,
+        content: topic.content
+      }
+    }
   },
   data() {
     return {
@@ -80,28 +104,7 @@ export default {
       }
     }
   },
-  head() {
-    return {
-      title: this.$siteTitle('发表话题')
-    }
-  },
-  async asyncData({ $axios, params }) {
-    const [currentUser, topic] = await Promise.all([
-      $axios.get('/api/user/current'),
-      $axios.get('/api/topic/edit/' + params.id)
-    ])
-    return {
-      currentUser: currentUser,
-      topic: topic,
-      postForm: {
-        title: topic.title,
-        tags: topic.tags,
-        content: topic.content
-      }
-    }
-  },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     async submitCreate() {
       const me = this
@@ -111,14 +114,17 @@ export default {
       me.publishing = true
 
       try {
-        const topic = await this.$axios.post('/api/topic/edit/' + this.topic.topicId, {
-          title: this.postForm.title,
-          content: this.postForm.content,
-          tags: this.postForm.tags ? this.postForm.tags.join(',') : ''
-        })
+        const topic = await this.$axios.post(
+          '/api/topic/edit/' + this.topic.topicId,
+          {
+            title: this.postForm.title,
+            content: this.postForm.content,
+            tags: this.postForm.tags ? this.postForm.tags.join(',') : ''
+          }
+        )
         this.$toast.success('提交成功', {
           duration: 1000,
-          onComplete: function () {
+          onComplete() {
             utils.linkTo('/topic/' + topic.topicId)
           }
         })
@@ -128,9 +134,13 @@ export default {
         this.$toast.error('提交失败：' + (e.message || e))
       }
     }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('发表话题')
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
