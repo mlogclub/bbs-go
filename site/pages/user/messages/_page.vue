@@ -5,7 +5,7 @@
         <div class="column is-9">
           <div class="main-body">
             <div class="widget no-margin">
-              <div class="header">
+              <div class="widget-header">
                 <nav
                   class="breadcrumb"
                   aria-label="breadcrumbs"
@@ -27,7 +27,7 @@
                 </nav>
               </div>
 
-              <div class="content">
+              <div class="widget-content">
                 <ul
                   v-if="messagesPage && messagesPage.results"
                   class="message-list"

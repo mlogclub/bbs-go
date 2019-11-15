@@ -112,11 +112,11 @@
 
           <weixin-gzh />
 
-          <div ref="toc" v-if="topic.toc" class="toc widget">
-            <div class="header">
+          <div ref="toc" v-if="topic.toc" class="widget toc">
+            <div class="widget-header">
               目录
             </div>
-            <div v-html="topic.toc" class="content" />
+            <div v-html="topic.toc" class="widget-content" />
           </div>
         </div>
       </div>

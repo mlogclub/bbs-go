@@ -31,10 +31,10 @@
                 v-if="recommendArticles && recommendArticles.length"
                 class="widget"
               >
-                <div class="header">
+                <div class="widget-header">
                   推荐文章
                 </div>
-                <div class="content">
+                <div class="widget-content">
                   <ul>
                     <li v-for="a in recommendArticles" :key="a.articleId">
                       <a
@@ -53,10 +53,10 @@
                 v-if="recommendTopics && recommendTopics.length"
                 class="widget"
               >
-                <div class="header">
+                <div class="widget-header">
                   推荐话题
                 </div>
-                <div class="content">
+                <div class="widget-content">
                   <ul>
                     <li v-for="t in recommendTopics" :key="t.topicId">
                       <a

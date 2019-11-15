@@ -5,10 +5,10 @@
         <div class="column is-9">
           <div class="main-body">
             <div class="widget no-margin">
-              <div class="header">
+              <div class="widget-header">
                 <span>标签</span>
               </div>
-              <div class="content">
+              <div class="widget-content">
                 <div class="tags are-medium">
                   <span
                     v-for="tag in tagsPage.results"

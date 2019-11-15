@@ -2,10 +2,10 @@
   <section class="main">
     <div class="container">
       <div class="widget">
-        <div class="header">
+        <div class="widget-header">
           关于
         </div>
-        <div class="content">
+        <div class="widget-content">
           <h3>简介</h3>
           <p>
             本站是基于

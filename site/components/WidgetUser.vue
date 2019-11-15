@@ -1,9 +1,9 @@
 <template>
   <div v-if="user" class="widget">
-    <div class="header">
+    <div class="widget-header">
       个人信息
     </div>
-    <div class="content">
+    <div class="widget-content">
       <img :src="user.avatar" class="img-avatar" />
       <div class="nickname">
         <a :href="'/user/' + user.id">{{ user.nickname }}</a>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isOwner" class="widget no-margin">
-      <div class="content">
+      <div class="widget-content">
         <a class="button is-primary" href="/topic/create">
           <i class="iconfont icon-topic" />&nbsp;
           <strong>发表主题</strong>
@@ -14,10 +14,10 @@
     </div>
 
     <div class="widget">
-      <div class="header">
+      <div class="widget-header">
         个人资料
       </div>
-      <div class="content">
+      <div class="widget-content">
         <img :src="user.avatar" class="img-avatar" />
         <div class="nickname">
           <a :href="'/user/' + user.id">{{ user.nickname }}</a>
@@ -97,6 +97,8 @@ export default {
   margin-top: 5px;
   border: 1px dotted #eeeeee;
   border-radius: 5%;
+  width: 190px;
+  height: 190px;
 }
 .description {
   font-size: 14px;

@@ -1,9 +1,9 @@
 <template>
   <div class="widget">
-    <div class="header">
+    <div class="widget-header">
       公众号
     </div>
-    <div>
+    <div class="widget-content">
       <img src="https://open.weixin.qq.com/qr/code?username=gh_950827012b8d" />
     </div>
   </div>

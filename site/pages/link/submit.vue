@@ -14,10 +14,10 @@
         </div>
 
         <div class="widget">
-          <div class="header">
+          <div class="widget-header">
             提交博客地址
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <label class="label">博客链接</label>
               <div class="control">

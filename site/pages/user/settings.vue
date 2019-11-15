@@ -5,7 +5,7 @@
         <div class="column is-9">
           <div class="main-body">
             <div class="widget no-margin">
-              <div class="header">
+              <div class="widget-header">
                 <nav
                   class="breadcrumb"
                   aria-label="breadcrumbs"
@@ -24,7 +24,7 @@
                   </ul>
                 </nav>
               </div>
-              <div class="content">
+              <div class="widget-content">
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
                     <label class="label">用户名：</label>
@@ -178,7 +178,7 @@
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
-          <div class="header">
+          <div class="widget-header">
             设置用户名
             <button
               @click="showSetUsername = false"
@@ -186,7 +186,7 @@
               aria-label="close"
             />
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
@@ -202,7 +202,7 @@
               </div>
             </div>
           </div>
-          <div class="footer is-right">
+          <div class="widget-footer is-right">
             <a @click="setUsername" class="button is-success">确定</a>
             <a @click="showSetUsername = false" class="button">取消</a>
           </div>
@@ -215,7 +215,7 @@
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
-          <div class="header">
+          <div class="widget-header">
             设置邮箱
             <button
               @click="showSetEmail = false"
@@ -223,7 +223,7 @@
               aria-label="close"
             />
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
@@ -239,7 +239,7 @@
               </div>
             </div>
           </div>
-          <div class="footer is-right">
+          <div class="widget-footer is-right">
             <a @click="setEmail" class="button is-success">确定</a>
             <a @click="showSetEmail = false" class="button">取消</a>
           </div>
@@ -252,7 +252,7 @@
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
-          <div class="header">
+          <div class="widget-header">
             设置密码
             <button
               @click="showSetPassword = false"
@@ -260,7 +260,7 @@
               aria-label="close"
             />
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
@@ -290,7 +290,7 @@
               </div>
             </div>
           </div>
-          <div class="footer is-right">
+          <div class="widget-footer is-right">
             <a @click="setPassword" class="button is-success">确定</a>
             <a @click="showSetPassword = false" class="button">取消</a>
           </div>
@@ -303,7 +303,7 @@
       <div class="modal-background" />
       <div class="modal-card">
         <div class="widget">
-          <div class="header">
+          <div class="widget-header">
             修改密码
             <button
               @click="showUpdatePassword = false"
@@ -311,7 +311,7 @@
               aria-label="close"
             />
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <div class="control has-icons-left">
                 <input
@@ -355,7 +355,7 @@
               </div>
             </div>
           </div>
-          <div class="footer is-right">
+          <div class="widget-footer is-right">
             <a @click="updatePassword" class="button is-success">确定</a>
             <a @click="showUpdatePassword = false" class="button">取消</a>
           </div>

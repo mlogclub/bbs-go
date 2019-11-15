@@ -115,10 +115,10 @@
         <div class="columns article-related">
           <div class="column">
             <div v-if="newestArticles && newestArticles.length" class="widget">
-              <div class="header">
+              <div class="widget-header">
                 最新文章
               </div>
-              <div class="content">
+              <div class="widget-content">
                 <ul>
                   <li v-for="a in newestArticles" :key="a.articleId">
                     <a
@@ -137,10 +137,10 @@
               v-if="relatedArticles && relatedArticles.length"
               class="widget"
             >
-              <div class="header">
+              <div class="widget-header">
                 相关文章
               </div>
-              <div class="content">
+              <div class="widget-content">
                 <ul>
                   <li v-for="a in relatedArticles" :key="a.articleId">
                     <a
@@ -169,11 +169,11 @@
           ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
-        <div v-if="article.toc" class="toc widget">
-          <div class="header">
+        <div v-if="article.toc" class="widget toc">
+          <div class="widget-header">
             目录
           </div>
-          <div v-html="article.toc" class="content" />
+          <div v-html="article.toc" class="widget-content" />
         </div>
 
         <!-- 展示广告190x90 -->

@@ -3,10 +3,10 @@
     <div class="container">
       <div class="main-body">
         <div class="widget no-margin">
-          <div class="header">
+          <div class="widget-header">
             登录
           </div>
-          <div class="content">
+          <div class="widget-content">
             <div class="field">
               <label class="label">用户名/邮箱</label>
               <div class="control has-icons-left">

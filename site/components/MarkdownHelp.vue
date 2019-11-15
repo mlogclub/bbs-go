@@ -1,9 +1,9 @@
 <template>
   <div class="widget no-margin markdown-help">
-    <div class="header">
+    <div class="widget-header">
       Markdown 语法参考
     </div>
-    <div class="content">
+    <div class="widget-content content">
       <ol>
         <li><tt>### 单行的标题</tt></li>
         <li><tt>**粗体**</tt></li>

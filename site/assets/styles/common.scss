@@ -132,7 +132,7 @@ $sidebar-width: 190px;
     margin: 0px;
   }
 
-  &>.header {
+  &>.widget-header {
     padding-bottom: 8px;
     font-size: 16px;
     font-weight: bold;
@@ -147,13 +147,13 @@ $sidebar-width: 190px;
     }
   }
 
-  &>.content {
+  &>.widget-content {
     background-color: #fff;
     // font-size: 12px;
     margin-top: 8px;
   }
 
-  &>.footer {
+  &>.widget-footer {
     border-top: 1px dashed #ddd;
     padding: 10px 0 10px 0;
 

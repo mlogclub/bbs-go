@@ -5,7 +5,7 @@
         <div class="column is-21">
           <div class="main-body">
             <div class="widget no-margin">
-              <div class="header">
+              <div class="widget-header">
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                   <ul>
                     <li><a href="/">首页</a></li>
@@ -20,7 +20,7 @@
                   </ul>
                 </nav>
               </div>
-              <div class="content">
+              <div class="widget-content">
                 <div class="field">
                   <div class="control">
                     <input
