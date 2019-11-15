@@ -24,4 +24,4 @@ footer: Copyright © 2019
 
 ## 源码
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
-- 码云：[https://gitee.com/mlog/bbs-go](https://gitee.com/mlog/bbs-go)
+- 码云：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)

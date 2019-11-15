@@ -25,7 +25,7 @@ bbs-go 是一款基于Go语言开发的论坛系统，采用前后端分离技�
 ## 项目地址
 
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
-- 码云：[https://gitee.com/mlog/bbs-go](https://gitee.com/mlog/bbs-go)
+- 码云：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
 ## 演示
 
