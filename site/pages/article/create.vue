@@ -10,8 +10,8 @@
                   <ul>
                     <li><a href="/">首页</a></li>
                     <li>
-                      <a :href="'/user/' + currentUser.id + '?tab=articles'">{{
-                        currentUser.nickname
+                      <a :href="'/user/' + user.id + '?tab=articles'">{{
+                        user.nickname
                       }}</a>
                     </li>
                     <li class="is-active">
@@ -79,12 +79,6 @@ export default {
     TagInput,
     MarkdownHelp
   },
-  async asyncData({ $axios }) {
-    const [currentUser] = await Promise.all([$axios.get('/api/user/current')])
-    return {
-      currentUser
-    }
-  },
   data() {
     return {
       publishing: false, // 当前是否正处于发布中...
@@ -93,6 +87,11 @@ export default {
         tags: [],
         content: ''
       }
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.current
     }
   },
   mounted() {},

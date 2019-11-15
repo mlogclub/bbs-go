@@ -223,22 +223,26 @@ export default {
       })
       return
     }
-    const currentUser = await $axios.get('/api/user/current')
-    const favorited = await $axios.get('/api/favorite/favorited', {
-      params: {
-        entityType: 'article',
-        entityId: params.id
-      }
-    })
-    const [newestArticles, relatedArticles, commentsPage] = await Promise.all([
-      $axios.get('/api/article/user/newest/' + article.user.id),
-      $axios.get('/api/article/related/' + article.articleId),
+    const [
+      commentsPage,
+      favorited,
+      newestArticles,
+      relatedArticles
+    ] = await Promise.all([
       $axios.get('/api/comment/list', {
         params: {
           entityType: 'article',
           entityId: article.articleId
         }
-      })
+      }),
+      $axios.get('/api/favorite/favorited', {
+        params: {
+          entityType: 'article',
+          entityId: params.id
+        }
+      }),
+      $axios.get('/api/article/user/newest/' + article.user.id),
+      $axios.get('/api/article/related/' + article.articleId)
     ])
 
     // 文章关键字
@@ -263,7 +267,6 @@ export default {
     }
 
     return {
-      currentUser,
       article,
       favorited: favorited.favorited,
       newestArticles,
@@ -276,9 +279,9 @@ export default {
   computed: {
     isOwner() {
       return (
-        this.currentUser &&
+        this.$store.state.user.current &&
         this.article &&
-        this.currentUser.id === this.article.user.id
+        this.$store.state.user.current.id === this.article.user.id
       )
     }
   },
@@ -350,7 +353,6 @@ export default {
 article {
   .article-title {
     a {
-      // color: #999;
       color: #0f0f0f;
       font-weight: normal;
       overflow: hidden;

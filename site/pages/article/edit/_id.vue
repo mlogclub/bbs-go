@@ -81,12 +81,10 @@ export default {
     MarkdownHelp
   },
   async asyncData({ $axios, params }) {
-    const [currentUser, article] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [article] = await Promise.all([
       $axios.get('/api/article/edit/' + params.id)
     ])
     return {
-      currentUser,
       article,
       postForm: {
         title: article.title,
@@ -105,7 +103,11 @@ export default {
       }
     }
   },
-  mounted() {},
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
+    }
+  },
   methods: {
     async submitCreate() {
       const me = this
