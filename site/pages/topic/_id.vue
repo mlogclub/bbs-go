@@ -71,7 +71,7 @@
           </div>
 
           <!-- 评论 -->
-          <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="true" />
+          <comment entity-type="topic" :entity-id="topic.topicId" :show-ad="false" />
         </div>
         <div class="right-container">
           <!-- 展示广告190x90 -->

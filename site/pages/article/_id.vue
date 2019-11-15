@@ -96,7 +96,7 @@
         </article>
 
         <!-- 评论 -->
-        <comment entity-type="article" :entity-id="article.articleId" :show-ad="false" />
+        <comment entity-type="article" :entity-id="article.articleId" :show-ad="true" />
 
         <div class="columns article-related">
           <div class="column">

@@ -73,21 +73,23 @@
             />
           </div>
           <div class="comment-meta">
-            <div>
-              <span class="comment-nickname"><a :href="'/user/' + comment.user.id">{{ comment.user.nickname }}</a></span>
-              <span class="comment-reply"><a @click="reply(comment)">回复</a></span>
-            </div>
-            <div>
-              <small class="comment-time">{{ comment.createTime | prettyDate }}</small>
-            </div>
+            <span class="comment-nickname"><a :href="'/user/' + comment.user.id">{{ comment.user.nickname }}</a></span>
+            <span class="comment-time">{{ comment.createTime | prettyDate }}</span>
+            <span class="comment-reply"><a @click="reply(comment)">回复</a></span>
           </div>
-          <div v-highlight class="content comment-content">
+          <div v-highlight class="comment-content content">
+            <blockquote v-if="comment.quote" class="comment-quote">
+              <div class="comment-quote-user">
+                <div
+                  class="quote-avatar avatar has-border is-rounded"
+                  :style="{backgroundImage:'url(' + comment.quote.user.avatar + ')'}"
+                />
+                <a class="quote-nickname">{{ comment.quote.user.nickname }}</a>
+                <span class="quote-time">{{ comment.quote.createTime | prettyDate }}</span>
+              </div>
+              <div v-html="comment.quote.content" />
+            </blockquote>
             <p v-html="comment.content" />
-            <blockquote
-              v-if="comment.quoteContent"
-              class="comment-quote"
-              v-html="comment.quoteContent"
-            />
           </div>
         </div>
       </div>
@@ -215,25 +217,34 @@ export default {
 <style lang="scss" scoped>
 .comments {
   .comment {
-    padding: .5rem 0;
+    padding: 8px 0;
     overflow: hidden;
-    border-bottom: 1px dashed #f5f5f5;
+
+    // border-bottom: 1px dashed #f5f5f5;
+    border-bottom: 1px dashed #d1d1d1;
 
     .comment-avatar {
       float: left;
-      padding: .125rem;
-      margin-right: .7525rem;
+      padding: 3px;
+      margin-right: 5px;
+
+      .avatar {
+        min-width: 36px;
+        min-height: 36px;
+        width: 36px;
+        height: 36px;
+      }
     }
 
     .comment-meta {
       position: relative;
-      height: 50px;
+      height: 36px;
 
       .comment-nickname {
         position: relative;
-        font-size: .875rem;
+        font-size: 14px;
         font-weight: 800;
-        margin-right: .875rem;
+        margin-right: 5px;
         cursor: pointer;
         color: #1abc9c;
         text-decoration: none;
@@ -260,13 +271,50 @@ export default {
       text-align: justify;
       color: #4a4a4a;
       font-size: 14px;
-      line-height: 2;
+      line-height: 1.6;
       position: relative;
-      padding-left: 62px;
+      padding-left: 45px;
+      margin-top: -5px;
     }
 
     .comment-quote {
       font-size: 12px;
+      padding: 10px 10px;
+      border-left: 2px solid #5978F3;
+      // quotes:"\201C""\201D""\2018""\2019";
+
+      &::after {
+        content: "\201D";
+        font-family: Georgia, serif;
+        font-size: 60px;
+        font-weight: bold;
+        color: #aaa;
+        position: absolute;
+        right: 0px;
+        top: -18px;
+      }
+
+      .comment-quote-user {
+        display:flex;
+        .quote-avatar {
+          min-width: 20px;
+          min-height: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        .quote-nickname {
+          line-height: 20px;
+          font-weight: 700;
+          margin-left: 5px;
+        }
+
+        .quote-time {
+          line-height: 20px;
+          margin-left: 5px;
+          color: rgba(134, 142, 150, 0.8);
+        }
+      }
     }
   }
 
@@ -343,11 +391,6 @@ export default {
         margin-right: 10px;
       }
     }
-  }
-
-  .comment-show-more {
-    margin-top: 10px;
-    text-align: center;
   }
 }
 </style>
