@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       cursor: this.initData.cursor, // 分页标识
-      results: this.initData.results, // 列表数据
+      results: this.initData.results || [], // 列表数据
       hasMore: true, // 是否有更多数据
       loading: false // 是否正在加载中
     }

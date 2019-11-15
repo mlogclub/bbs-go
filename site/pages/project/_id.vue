@@ -55,6 +55,7 @@
         <!-- 评论 -->
         <comment
           :entity-id="project.projectId"
+          :comments-page="commentsPage"
           :show-ad="true"
           entity-type="project"
         />
@@ -105,17 +106,22 @@ export default {
   components: {
     Comment
   },
-  async asyncData({ $axios, params }) {
-    const [currentUser, project] = await Promise.all([
-      $axios.get('/api/user/current'),
-      $axios.get('/api/project/' + params.id)
+  async asyncData({ $axios, params, store }) {
+    const [project, commentsPage] = await Promise.all([
+      $axios.get('/api/project/' + params.id),
+      $axios.get('/api/comment/list', {
+        params: {
+          entityType: 'project',
+          entityId: params.id
+        }
+      })
     ])
     // 构建url，如果登录了直接跳转到原地址，如果没登陆那么跳转到登录
     function buildUrl(url) {
       if (!url || !project) {
         return ''
       }
-      if (currentUser) {
+      if (store.state.user.current) {
         // 如果用户登录了
         return '/redirect?url=' + encodeURI(url)
       } else {
@@ -124,14 +130,13 @@ export default {
       }
     }
     return {
-      curretnUser: currentUser,
       project,
+      commentsPage,
       projectUrl: buildUrl(project.url),
       docUrl: buildUrl(project.docUrl),
       downloadUrl: buildUrl(project.downloadUrl)
     }
   },
-  methods: {},
   head() {
     return {
       title: this.$siteTitle(this.project.name),

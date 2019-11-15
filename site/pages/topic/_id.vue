@@ -93,6 +93,7 @@
           <!-- 评论 -->
           <comment
             :entity-id="topic.topicId"
+            :comments-page="commentsPage"
             :show-ad="false"
             entity-type="topic"
           />
@@ -144,26 +145,33 @@ export default {
       return
     }
 
-    const currentUser = await $axios.get('/api/user/current')
-    const favorited = await $axios.get('/api/favorite/favorited', {
-      params: {
-        entityType: 'topic',
-        entityId: params.id
-      }
-    })
+    const [favorited, commentsPage] = await Promise.all([
+      $axios.get('/api/favorite/favorited', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id
+        }
+      }),
+      $axios.get('/api/comment/list', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id
+        }
+      })
+    ])
 
     return {
-      currentUser,
       topic,
+      commentsPage,
       favorited: favorited.favorited
     }
   },
   computed: {
     isOwner() {
       return (
-        this.currentUser &&
+        this.$store.state.user.current &&
         this.topic &&
-        this.currentUser.id === this.topic.user.id
+        this.$store.state.user.current.id === this.topic.user.id
       )
     }
   },

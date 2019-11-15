@@ -107,6 +107,7 @@
         <!-- 评论 -->
         <comment
           :entity-id="article.articleId"
+          :comments-page="commentsPage"
           :show-ad="true"
           entity-type="article"
         />
@@ -218,7 +219,7 @@ export default {
     } catch (e) {
       error({
         statusCode: 404,
-        message: '文章不存在'
+        message: '文章不存在，或已被删除'
       })
       return
     }
@@ -229,9 +230,15 @@ export default {
         entityId: params.id
       }
     })
-    const [newestArticles, relatedArticles] = await Promise.all([
+    const [newestArticles, relatedArticles, commentsPage] = await Promise.all([
       $axios.get('/api/article/user/newest/' + article.user.id),
-      $axios.get('/api/article/related/' + article.articleId)
+      $axios.get('/api/article/related/' + article.articleId),
+      $axios.get('/api/comment/list', {
+        params: {
+          entityType: 'article',
+          entityId: article.articleId
+        }
+      })
     ])
 
     // 文章关键字
@@ -261,6 +268,7 @@ export default {
       favorited: favorited.favorited,
       newestArticles,
       relatedArticles,
+      commentsPage,
       keywords,
       description
     }

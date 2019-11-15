@@ -129,6 +129,12 @@ export default {
       default: 0,
       required: true
     },
+    commentsPage: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     showAd: {
       type: Boolean,
       default: false
@@ -136,7 +142,6 @@ export default {
   },
   data() {
     return {
-      commentsPage: null, // 数据
       content: '', // 内容
       sending: false, // 发送中
       quote: null // 引用的对象
@@ -153,18 +158,7 @@ export default {
       return this.$store.state.user.current != null
     }
   },
-  created() {
-    this.list()
-  },
   methods: {
-    async list() {
-      this.commentsPage = await this.$axios.get('/api/comment/list', {
-        params: {
-          entityType: this.entityType,
-          entityId: this.entityId
-        }
-      })
-    },
     ctrlEnterCreate(event) {
       event.stopPropagation()
       event.preventDefault()
