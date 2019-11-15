@@ -58,6 +58,7 @@
     </div>
 
     <load-more
+      ref="commentsLoadMore"
       v-if="commentsPage"
       v-slot="{ results }"
       :init-data="commentsPage"
@@ -137,7 +138,6 @@ export default {
     return {
       commentsPage: null, // 数据
       content: '', // 内容
-      currentUser: true, // 当前登录用户
       sending: false, // 发送中
       quote: null // 引用的对象
     }
@@ -146,23 +146,17 @@ export default {
     btnName() {
       return this.sending ? '正在发表...' : '发表 (ctrl+enter)'
     },
+    user() {
+      return this.$store.state.user.current
+    },
     isLogin() {
-      return this.currentUser != null
+      return this.$store.state.user.current != null
     }
   },
   created() {
     this.list()
-    this.getCurrentUser()
   },
   methods: {
-    async getCurrentUser() {
-      try {
-        const ret = await this.$axios.get('/api/user/current')
-        this.currentUser = ret
-      } catch (e) {
-        console.error(e)
-      }
-    },
     async list() {
       this.commentsPage = await this.$axios.get('/api/comment/list', {
         params: {
@@ -193,7 +187,7 @@ export default {
           content: this.content,
           quoteId: this.quote ? this.quote.commentId : ''
         })
-        this.results.unshift(data)
+        this.$refs.commentsLoadMore.unshiftResults(data)
         this.content = ''
         this.quote = null
       } catch (e) {
@@ -231,8 +225,6 @@ export default {
   .comment {
     padding: 8px 0;
     overflow: hidden;
-
-    // border-bottom: 1px dashed #f5f5f5;
     border-bottom: 1px dashed #d1d1d1;
 
     .comment-avatar {

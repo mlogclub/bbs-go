@@ -77,6 +77,22 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * 在results最前面加一条数据
+     */
+    unshiftResults(item) {
+      if (item) {
+        this.results.unshift(item)
+      }
+    },
+    /**
+     * 在results最后面加一条数据
+     */
+    pushResults(item) {
+      if (item) {
+        this.results.push(item)
+      }
     }
   }
 }
