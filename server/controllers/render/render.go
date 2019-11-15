@@ -482,8 +482,8 @@ func BuildHtmlContent(htmlContent string) string {
 
 		// 内部跳转
 		if len(href) > 0 && !urls.IsInternalUrl(href) {
-			newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
-			selection.SetAttr("href", newHref)
+			// newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+			// selection.SetAttr("href", newHref)
 			selection.SetAttr("target", "_blank")
 		}
 
