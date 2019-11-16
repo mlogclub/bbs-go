@@ -3,7 +3,7 @@
     <el-tabs value="first">
       <el-tab-pane label="通用配置" name="first">
         <div class="config">
-          <el-form label-width="100px">
+          <el-form label-width="160px">
             <el-form-item label="网站名称">
               <el-input v-model="config.siteTitle" type="text" placeholder="网站名称"></el-input>
             </el-form-item>
@@ -73,6 +73,12 @@
                   ></el-option>
                 </template>
               </el-select>
+            </el-form-item>
+
+            <el-form-item label="启用站外链接跳转页面">
+              <el-tooltip content="在跳转前需手动确认是否前往该站外链接" placement="top">
+                <el-switch v-model="config.urlRedirect"></el-switch>
+              </el-tooltip>
             </el-form-item>
           </el-form>
         </div>
@@ -154,7 +160,8 @@ export default {
             siteKeywords: this.config.siteKeywords,
             siteNavs: this.config.siteNavs,
             recommendTags: this.config.recommendTags,
-            bbsNavTags: this.config.bbsNavTagIds
+            bbsNavTags: this.config.bbsNavTagIds,
+            urlRedirect: this.config.urlRedirect
           })
         });
         this.$message({ message: "提交成功", type: "success" });

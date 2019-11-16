@@ -10,7 +10,7 @@ export default new Router({
       path: '/',
       hidden: true,
       redirect: {
-        path: '/article/index',
+        path: '/topic/index',
       },
     },
     {
@@ -22,19 +22,19 @@ export default new Router({
       },
       children: [
         {
-          path: '/article/index',
-          component: () => import('@/views/article/Index.vue'),
-          meta: {
-            title: '文章',
-            icon: 'iconfont icon-article',
-          }
-        },
-        {
           path: '/topic/index',
           component: () => import('@/views/topic/Index.vue'),
           meta: {
             title: '话题',
             icon: 'iconfont icon-topic',
+          }
+        },
+        {
+          path: '/article/index',
+          component: () => import('@/views/article/Index.vue'),
+          meta: {
+            title: '文章',
+            icon: 'iconfont icon-article',
           }
         },
         {
