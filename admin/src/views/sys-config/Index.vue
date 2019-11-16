@@ -157,8 +157,8 @@
 </template>
 
 <script>
-import HttpClient from '@/apis/HttpClient'
 import draggable from 'vuedraggable'
+import HttpClient from '@/apis/HttpClient'
 
 export default {
   name: 'List',

@@ -9,11 +9,6 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
-    // '@vue/airbnb',
-
-    // "plugin:vue/essential",
-    // "eslint:recommended"
-
     'prettier',
     'prettier/vue',
     'plugin:prettier/recommended'

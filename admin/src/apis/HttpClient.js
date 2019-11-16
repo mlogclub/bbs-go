@@ -9,7 +9,7 @@ const baseURL = 'http://localhost:8082'
 class HttpClient {
   constructor() {
     this.http = axios.create({
-      baseURL: baseURL
+      baseURL
     })
     this.http.defaults.headers.common['X-Client'] = 'bbs-go-admin'
     this.http.defaults.headers.post['Content-Type'] =
@@ -59,7 +59,7 @@ class HttpClient {
 
   get(api, params) {
     return this.http.get(api, {
-      params: params
+      params
     })
   }
 

@@ -32,6 +32,7 @@
 
 <script>
 import cookies from 'js-cookie'
+
 export default {
   name: 'Header',
   data() {
@@ -60,7 +61,7 @@ export default {
       return this.$store.state.Default.collapsed
     },
     userInfo() {
-      let userInfo = this.$store.state.Login.userInfo
+      let { userInfo } = this.$store.state.Login
       if (!userInfo) {
         const userInfoStr = cookies.get('userInfo')
         if (userInfoStr) {

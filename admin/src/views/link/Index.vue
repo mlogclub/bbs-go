@@ -284,9 +284,9 @@ export default {
   },
   methods: {
     list() {
-      let me = this
+      const me = this
       me.listLoading = true
-      let params = Object.assign(me.filters, {
+      const params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
       })
@@ -312,7 +312,7 @@ export default {
       this.addFormVisible = true
     },
     addSubmit() {
-      let me = this
+      const me = this
       HttpClient.post('/api/admin/link/create', this.addForm)
         .then((data) => {
           me.$message({ message: '提交成功', type: 'success' })
@@ -347,8 +347,8 @@ export default {
       }
     },
     handleEdit(index, row) {
-      let me = this
-      HttpClient.get('/api/admin/link/' + row.id)
+      const me = this
+      HttpClient.get(`/api/admin/link/${row.id}`)
         .then((data) => {
           me.editForm = Object.assign({}, data)
           me.editFormVisible = true
@@ -358,7 +358,7 @@ export default {
         })
     },
     editSubmit() {
-      let me = this
+      const me = this
       HttpClient.post('/api/admin/link/update', me.editForm)
         .then((data) => {
           me.list()

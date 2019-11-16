@@ -202,9 +202,9 @@ export default {
   },
   methods: {
     list() {
-      let me = this
+      const me = this
       me.listLoading = true
-      let params = Object.assign(me.filters, {
+      const params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
       })
@@ -233,7 +233,7 @@ export default {
       this.addFormVisible = true
     },
     addSubmit() {
-      let me = this
+      const me = this
       HttpClient.post('/api/admin/collect-rule/create', this.addForm)
         .then((data) => {
           me.$message({ message: '提交成功', type: 'success' })
@@ -245,8 +245,8 @@ export default {
         })
     },
     handleEdit(index, row) {
-      let me = this
-      HttpClient.get('/api/admin/collect-rule/' + row.id)
+      const me = this
+      HttpClient.get(`/api/admin/collect-rule/${row.id}`)
         .then((data) => {
           me.editForm = Object.assign({}, data)
           me.editFormVisible = true
@@ -256,7 +256,7 @@ export default {
         })
     },
     editSubmit() {
-      let me = this
+      const me = this
       HttpClient.post('/api/admin/collect-rule/update', me.editForm)
         .then((data) => {
           me.list()
@@ -274,7 +274,7 @@ export default {
     async handleRun(id) {
       try {
         await HttpClient.get('/api/admin/collect-rule/run', {
-          id: id
+          id
         })
         this.$message({ message: '启动成功', type: 'success' })
       } catch (e) {

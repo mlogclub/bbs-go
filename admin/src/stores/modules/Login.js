@@ -1,5 +1,6 @@
-import httpClient from '@/apis/HttpClient'
 import cookies from 'js-cookie'
+import httpClient from '@/apis/HttpClient'
+
 const state = {
   showLogin: false,
   userToken: '',
@@ -36,7 +37,7 @@ const actions = {
       context.commit('loginSuccess', ret)
       this._vm.$message.success('登录成功')
     } catch (e) {
-      this._vm.$message.error('登录失败：' + (e.message || e))
+      this._vm.$message.error(`登录失败：${e.message || e}`)
     }
   }
 }
