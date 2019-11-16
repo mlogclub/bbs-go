@@ -10,16 +10,22 @@ import (
 	"github.com/mlogclub/bbs-go/common/config"
 )
 
-func IsInternalUrl(rawUrl string) bool {
+// 是否是内部链接
+func IsInternalUrl(href string) bool {
+	if IsAnchor(href) {
+		return true
+	}
 	u, err := url.Parse(config.Conf.BaseUrl)
 	if err != nil {
 		logrus.Error(err)
 		return false
 	}
-	if strings.Index(rawUrl, "#") == 0 { // 如果是“#”开头，说明是锚链接
-		return true
-	}
-	return strings.Contains(rawUrl, u.Host)
+	return strings.Contains(href, u.Host)
+}
+
+// 是否是锚链接
+func IsAnchor(href string) bool {
+	return strings.Index(href, "#") == 0
 }
 
 func AbsUrl(path string) string {

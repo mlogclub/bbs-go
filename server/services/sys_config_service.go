@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
@@ -121,6 +122,7 @@ func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		siteNavs        = cache.SysConfigCache.GetValue(model.SysConfigSiteNavs)
 		recommendTags   = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
 		bbsNavTags      = cache.SysConfigCache.GetValue(model.SysConfigBbsNavTags)
+		urlRedirect     = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
 	)
 
 	var siteKeywordsArr []string
@@ -164,5 +166,6 @@ func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		RecommendTags:   recommendTagsArr,
 		BbsNavTags:      bbsNavTagsArr,
 		BbsNavTagIds:    bbsNavTagIds,
+		UrlRedirect:     strings.ToLower(urlRedirect) == "true",
 	}
 }

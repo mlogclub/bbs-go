@@ -153,4 +153,5 @@ type ConfigResponse struct {
 	RecommendTags   []string      `json:"recommendTags"`
 	BbsNavTags      []TagResponse `json:"bbsNavTags"`
 	BbsNavTagIds    []int64       `json:"bbsNavTagIds"`
+	UrlRedirect     bool          `json:"urlRedirect"`
 }

@@ -475,20 +475,24 @@ func BuildHtmlContent(htmlContent string) string {
 	doc.Find("a").Each(func(i int, selection *goquery.Selection) {
 		href := selection.AttrOr("href", "")
 
-		// // 标记站外链接，搜索引擎爬虫不传递权重值
-		// if !strings.Contains(href, "mlog.club") {
-		// 	selection.SetAttr("rel", "external nofollow")
-		// }
+		if len(href) == 0 {
+			return
+		}
 
-		// 内部跳转
-		if len(href) > 0 && !urls.IsInternalUrl(href) {
-			// newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
-			// selection.SetAttr("href", newHref)
+		// 不是内部链接
+		if !urls.IsInternalUrl(href) {
 			selection.SetAttr("target", "_blank")
+			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
+
+			config := services.SysConfigService.GetConfigResponse()
+			if config.UrlRedirect { // 开启非内部链接跳转
+				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+				selection.SetAttr("href", newHref)
+			}
 		}
 
 		// 如果是锚链接
-		if strings.Index(href, "#") == 0 {
+		if urls.IsAnchor(href) {
 			selection.ReplaceWithHtml(selection.Text())
 		}
 
