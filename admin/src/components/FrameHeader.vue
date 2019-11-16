@@ -1,13 +1,13 @@
 <template>
   <el-col :span="24" class="header">
-    <el-col :span="10" class="logo" :class="{'collapsed': collapsed}">
+    <el-col :span="10" class="logo" :class="{ collapsed: collapsed }">
       <template v-if="collapsed">
         <div class="logo-img" />
       </template>
       <template v-else>
         <div class="logo-name">
           <img src="../assets/logo.png" />
-          <span>{{sysName}}</span>
+          <span>{{ sysName }}</span>
         </div>
       </template>
     </el-col>
@@ -20,7 +20,7 @@
       <el-dropdown trigger="hover">
         <span class="el-dropdown-link userinfo-inner">
           <img :src="userInfo.avatar" />
-          {{userInfo.nickname}}
+          {{ userInfo.nickname }}
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
@@ -31,55 +31,55 @@
 </template>
 
 <script>
-import cookies from "js-cookie";
+import cookies from 'js-cookie'
 export default {
-  name: "Header",
+  name: 'Header',
   data() {
     return {
-      sysName: "BBS-GO"
-    };
+      sysName: 'BBS-GO'
+    }
   },
   methods: {
     // 折叠导航栏
     collapse() {
-      this.$store.dispatch("Default/collapse");
+      this.$store.dispatch('Default/collapse')
     },
     // 退出登录
     logout() {
-      this.$message({ message: "暂未实现", type: "success" });
+      this.$message({ message: '暂未实现', type: 'success' })
     }
   },
   mounted() {
-    let user = sessionStorage.getItem("user");
+    let user = sessionStorage.getItem('user')
     if (user) {
-      user = JSON.parse(user);
+      user = JSON.parse(user)
     }
   },
   computed: {
     collapsed() {
-      return this.$store.state.Default.collapsed;
+      return this.$store.state.Default.collapsed
     },
     userInfo() {
-      let userInfo = this.$store.state.Login.userInfo;
+      let userInfo = this.$store.state.Login.userInfo
       if (!userInfo) {
-        const userInfoStr = cookies.get("userInfo");
+        const userInfoStr = cookies.get('userInfo')
         if (userInfoStr) {
           try {
-            userInfo = JSON.parse(userInfoStr);
-            this.$store.dispatch("Login/setUserInfo", userInfo);
+            userInfo = JSON.parse(userInfoStr)
+            this.$store.dispatch('Login/setUserInfo', userInfo)
           } catch (e) {
-            console.error(e);
+            console.error(e)
           }
         }
       }
-      return userInfo;
+      return userInfo
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
-@import "../styles/vars.scss";
+@import '../styles/vars.scss';
 
 .header {
   height: 50px;

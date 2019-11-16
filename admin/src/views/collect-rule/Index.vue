@@ -1,4 +1,3 @@
-
 <template>
   <section class="page-container">
     <el-col :span="24" class="toolbar">
@@ -7,7 +6,12 @@
           <el-input v-model="filters.title" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+          <el-select
+            v-model="filters.status"
+            clearable
+            placeholder="请选择状态"
+            @change="list"
+          >
             <el-option label="启用" value="0"></el-option>
             <el-option label="禁用" value="1"></el-option>
           </el-select>
@@ -39,18 +43,31 @@
       <el-table-column prop="title" label="名称"></el-table-column>
       <!-- <el-table-column prop="description" label="描述"></el-table-column> -->
       <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">{{scope.row.status === 0 ? '启用' : '禁用'}}</template>
+        <template slot-scope="scope">{{
+          scope.row.status === 0 ? '启用' : '禁用'
+        }}</template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        <template slot-scope="scope">{{
+          scope.row.createTime | formatDate
+        }}</template>
       </el-table-column>
       <el-table-column prop="updateTime" label="更新时间">
-        <template slot-scope="scope">{{scope.row.updateTime | formatDate}}</template>
+        <template slot-scope="scope">{{
+          scope.row.updateTime | formatDate
+        }}</template>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="small" type="primary" @click="handleRun(scope.row.id)">启动</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button
+          >
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleRun(scope.row.id)"
+            >启动</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -68,14 +85,22 @@
       ></el-pagination>
     </el-col>
 
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
+    <el-dialog
+      title="新增"
+      :visible.sync="addFormVisible"
+      :close-on-click-modal="false"
+    >
       <el-form :model="addForm" label-width="80px" ref="addForm">
         <el-form-item label="名称">
           <el-input v-model="addForm.title"></el-input>
         </el-form-item>
 
         <el-form-item label="描述">
-          <el-input v-model="addForm.description" type="textarea" autosize></el-input>
+          <el-input
+            v-model="addForm.description"
+            type="textarea"
+            autosize
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="规则">
@@ -93,11 +118,20 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="addSubmit"
+          :loading="addLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
 
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+    <el-dialog
+      title="编辑"
+      :visible.sync="editFormVisible"
+      :close-on-click-modal="false"
+    >
       <el-form :model="editForm" label-width="80px" ref="editForm">
         <el-input v-model="editForm.id" type="hidden"></el-input>
 
@@ -106,7 +140,11 @@
         </el-form-item>
 
         <el-form-item label="描述">
-          <el-input v-model="editForm.description" type="textarea" autosize></el-input>
+          <el-input
+            v-model="editForm.description"
+            type="textarea"
+            autosize
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="规则">
@@ -114,7 +152,11 @@
         </el-form-item>
 
         <el-form-item label="状态">
-          <el-select v-model="editForm.status" clearable placeholder="请选择状态">
+          <el-select
+            v-model="editForm.status"
+            clearable
+            placeholder="请选择状态"
+          >
             <el-option label="启用" :value="0"></el-option>
             <el-option label="禁用" :value="1"></el-option>
           </el-select>
@@ -122,17 +164,22 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="editSubmit"
+          :loading="editLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import HttpClient from "../../apis/HttpClient";
+import HttpClient from '../../apis/HttpClient'
 
 export default {
-  name: "List",
+  name: 'List',
   data() {
     return {
       results: [],
@@ -148,94 +195,94 @@ export default {
       editForm: {},
       editFormVisible: false,
       editLoading: false
-    };
+    }
   },
   mounted() {
-    this.list();
+    this.list()
   },
   methods: {
     list() {
-      let me = this;
-      me.listLoading = true;
+      let me = this
+      me.listLoading = true
       let params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
-      });
-      HttpClient.post("/api/admin/collect-rule/list", params)
-        .then(data => {
-          me.results = data.results;
-          me.page = data.page;
+      })
+      HttpClient.post('/api/admin/collect-rule/list', params)
+        .then((data) => {
+          me.results = data.results
+          me.page = data.page
         })
         .finally(() => {
-          me.listLoading = false;
-        });
+          me.listLoading = false
+        })
     },
     handlePageChange(val) {
-      this.page.page = val;
-      this.list();
+      this.page.page = val
+      this.list()
     },
     handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
+      this.page.limit = val
+      this.list()
     },
     handleAdd() {
       this.addForm = {
-        name: "",
-        description: ""
-      };
-      this.addFormVisible = true;
+        name: '',
+        description: ''
+      }
+      this.addFormVisible = true
     },
     addSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-rule/create", this.addForm)
-        .then(data => {
-          me.$message({ message: "提交成功", type: "success" });
-          me.addFormVisible = false;
-          me.list();
+      let me = this
+      HttpClient.post('/api/admin/collect-rule/create', this.addForm)
+        .then((data) => {
+          me.$message({ message: '提交成功', type: 'success' })
+          me.addFormVisible = false
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     handleEdit(index, row) {
-      let me = this;
-      HttpClient.get("/api/admin/collect-rule/" + row.id)
-        .then(data => {
-          me.editForm = Object.assign({}, data);
-          me.editFormVisible = true;
+      let me = this
+      HttpClient.get('/api/admin/collect-rule/' + row.id)
+        .then((data) => {
+          me.editForm = Object.assign({}, data)
+          me.editFormVisible = true
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     editSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-rule/update", me.editForm)
-        .then(data => {
-          me.list();
-          me.editFormVisible = false;
+      let me = this
+      HttpClient.post('/api/admin/collect-rule/update', me.editForm)
+        .then((data) => {
+          me.list()
+          me.editFormVisible = false
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
 
     handleSelectionChange(val) {
-      this.selectedRows = val;
+      this.selectedRows = val
     },
 
     async handleRun(id) {
       try {
-        await HttpClient.get("/api/admin/collect-rule/run", {
+        await HttpClient.get('/api/admin/collect-rule/run', {
           id: id
-        });
-        this.$message({ message: "启动成功", type: "success" });
+        })
+        this.$message({ message: '启动成功', type: 'success' })
       } catch (e) {
-          this.$notify.error({ title: "错误", message: e.message || e });
+        this.$notify.error({ title: '错误', message: e.message || e })
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -251,4 +298,3 @@ pre {
   overflow-x: none;
 }
 </style>
-

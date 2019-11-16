@@ -5,7 +5,11 @@
         <div class="config">
           <el-form label-width="160px">
             <el-form-item label="网站名称">
-              <el-input v-model="config.siteTitle" type="text" placeholder="网站名称"></el-input>
+              <el-input
+                v-model="config.siteTitle"
+                type="text"
+                placeholder="网站名称"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label="网站描述">
@@ -76,7 +80,10 @@
             </el-form-item>
 
             <el-form-item label="启用站外链接跳转页面">
-              <el-tooltip content="在跳转前需手动确认是否前往该站外链接" placement="top">
+              <el-tooltip
+                content="在跳转前需手动确认是否前往该站外链接"
+                placement="top"
+              >
                 <el-switch v-model="config.urlRedirect"></el-switch>
               </el-tooltip>
             </el-form-item>
@@ -84,17 +91,32 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="导航配置" name="second" class="nav-panel">
-        <draggable v-model="config.siteNavs" draggable=".nav" handle=".nav-sort-btn" class="navs">
+        <draggable
+          v-model="config.siteNavs"
+          draggable=".nav"
+          handle=".nav-sort-btn"
+          class="navs"
+        >
           <div v-for="(nav, index) in config.siteNavs" :key="index" class="nav">
             <el-row :gutter="20">
               <el-col :span="1">
                 <i class="iconfont icon-sort nav-sort-btn" />
               </el-col>
               <el-col :span="10">
-                <el-input v-model="nav.title" type="text" size="small" placeholder="标题"></el-input>
+                <el-input
+                  v-model="nav.title"
+                  type="text"
+                  size="small"
+                  placeholder="标题"
+                ></el-input>
               </el-col>
               <el-col :span="11">
-                <el-input v-model="nav.url" type="text" size="small" placeholder="链接"></el-input>
+                <el-input
+                  v-model="nav.url"
+                  type="text"
+                  size="small"
+                  placeholder="链接"
+                ></el-input>
               </el-col>
               <el-col :span="2">
                 <el-button
@@ -109,25 +131,37 @@
           </div>
         </draggable>
         <div class="add-nav">
-          <el-tooltip class="item" effect="dark" content="点击按钮添加导航" placement="top">
-            <el-button type="primary" icon="el-icon-plus" circle @click="addNav"></el-button>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击按钮添加导航"
+            placement="top"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              circle
+              @click="addNav"
+            ></el-button>
           </el-tooltip>
         </div>
       </el-tab-pane>
     </el-tabs>
 
     <div style="margin-top: 20px;">
-      <el-button type="primary" :loading="loading" @click="save">保存</el-button>
+      <el-button type="primary" :loading="loading" @click="save"
+        >保存</el-button
+      >
     </div>
   </section>
 </template>
 
 <script>
-import HttpClient from "@/apis/HttpClient";
-import draggable from "vuedraggable";
+import HttpClient from '@/apis/HttpClient'
+import draggable from 'vuedraggable'
 
 export default {
-  name: "List",
+  name: 'List',
   components: {
     draggable
   },
@@ -137,23 +171,23 @@ export default {
       loading: false,
       autocompleteTags: [],
       autocompleteTagLoading: false
-    };
+    }
   },
   mounted() {
-    this.load();
+    this.load()
   },
   methods: {
     async load() {
       try {
-        this.config = await HttpClient.get("/api/admin/sys-config/all");
+        this.config = await HttpClient.get('/api/admin/sys-config/all')
       } catch (err) {
-        this.$notify.error({ title: "错误", message: err.message });
+        this.$notify.error({ title: '错误', message: err.message })
       }
     },
     async save() {
-      this.loading = true;
+      this.loading = true
       try {
-        await HttpClient.post("/api/admin/sys-config/save", {
+        await HttpClient.post('/api/admin/sys-config/save', {
           config: JSON.stringify({
             siteTitle: this.config.siteTitle,
             siteDescription: this.config.siteDescription,
@@ -163,68 +197,68 @@ export default {
             bbsNavTags: this.config.bbsNavTagIds,
             urlRedirect: this.config.urlRedirect
           })
-        });
-        this.$message({ message: "提交成功", type: "success" });
-        this.load();
+        })
+        this.$message({ message: '提交成功', type: 'success' })
+        this.load()
       } catch (err) {
-        this.$notify.error({ title: "错误", message: err.message });
+        this.$notify.error({ title: '错误', message: err.message })
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     addNav() {
       if (!this.config.siteNavs) {
-        this.config.siteNavs = [];
+        this.config.siteNavs = []
       }
       this.config.siteNavs.push({
-        title: "",
-        url: ""
-      });
+        title: '',
+        url: ''
+      })
     },
     delNav(index) {
       if (!this.config.siteNavs) {
-        return;
+        return
       }
-      this.config.siteNavs.splice(index, 1);
+      this.config.siteNavs.splice(index, 1)
     },
     async loadAutocompleteTags(query) {
-      this.autocompleteTagLoading = true;
-      this.autocompleteTags = [];
+      this.autocompleteTagLoading = true
+      this.autocompleteTags = []
       try {
-        const list = await HttpClient.get("/api/admin/tag/autocomplete", {
+        const list = await HttpClient.get('/api/admin/tag/autocomplete', {
           keyword: query
-        });
+        })
 
         if (list && list.length) {
-          const me = this;
-          this.autocompleteTags = list.filter(item => {
+          const me = this
+          this.autocompleteTags = list.filter((item) => {
             if (
               !me.config.bbsNavTagIds ||
               me.config.bbsNavTagIds.length === 0
             ) {
-              return true;
+              return true
             }
-            return me.config.bbsNavTagIds.indexOf(item.tagId) === -1;
-          });
+            return me.config.bbsNavTagIds.indexOf(item.tagId) === -1
+          })
         }
       } catch (err) {
-        console.log(err);
+        console.log(err)
       } finally {
-        this.autocompleteTagLoading = false;
+        this.autocompleteTagLoading = false
       }
     },
     async changeBbsNavTags() {
       try {
-        const tags = await HttpClient.get("/api/admin/tag/tags", {
-          tagIds: this.config.bbsNavTagIds.join(",")
-        });
-        this.config.bbsNavTags = tags || [];
+        const tags = await HttpClient.get('/api/admin/tag/tags', {
+          tagIds: this.config.bbsNavTagIds.join(',')
+        })
+        this.config.bbsNavTags = tags || []
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

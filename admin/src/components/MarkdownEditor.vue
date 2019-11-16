@@ -1,10 +1,18 @@
 <template>
-  <mavon-editor ref="editor" :value="value" :toolbars="toolbars" :ishljs="true"
-                @imgAdd="imgAdd" @fullScreen="fullScreen" @change="change"
-                :boxShadow="false" :subfield="true" defaultOpen="edit"
-                placeholder="内容"
-                codeStyle="atom-one-dark"
-                :style="{height: contentHeight, width: '100%'}"
+  <mavon-editor
+    ref="editor"
+    :value="value"
+    :toolbars="toolbars"
+    :ishljs="true"
+    @imgAdd="imgAdd"
+    @fullScreen="fullScreen"
+    @change="change"
+    :boxShadow="false"
+    :subfield="true"
+    defaultOpen="edit"
+    placeholder="内容"
+    codeStyle="atom-one-dark"
+    :style="{ height: contentHeight, width: '100%' }"
   />
 </template>
 
@@ -14,16 +22,16 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     initValue: {
       type: String,
-      default: '',
+      default: ''
     },
     height: {
       type: Number,
-      default: 350,
-    },
+      default: 350
+    }
   },
   data() {
     return {
@@ -59,50 +67,46 @@ export default {
         alignright: true, // 右对齐
         /* 2.2.1 */
         subfield: true, // 单双栏模式
-        preview: true, // 预览
-      },
-    };
+        preview: true // 预览
+      }
+    }
   },
-  mounted() {
-  },
-  beforeDestroy() {
-  },
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     /**
-       * 添加图片
-       */
+     * 添加图片
+     */
     async imgAdd(pos, file) {
       // let me = this
       // me.uploading = true
       // me.uploadingText = '正在上传 ' + file.name
     },
     /**
-       * 内容变更
-       * @param value
-       * @param render
-       */
+     * 内容变更
+     * @param value
+     * @param render
+     */
     change(value) {
-      this.$emit('input', value);
+      this.$emit('input', value)
       if (value !== this.initValue) {
-        this.$emit('change', value);
+        this.$emit('change', value)
       }
     },
     /**
-       * 切换全屏
-       * @param status
-       */
+     * 切换全屏
+     * @param status
+     */
     fullScreen(status) {
-      this.fullScreenStatus = status;
+      this.fullScreenStatus = status
       if (status) {
-        this.contentHeight = 'auto';
+        this.contentHeight = 'auto'
       } else {
-        this.contentHeight = `${this.height}px`;
+        this.contentHeight = `${this.height}px`
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

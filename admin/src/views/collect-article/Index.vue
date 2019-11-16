@@ -1,10 +1,12 @@
-
 <template>
   <section class="page-container">
     <el-col :span="24" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.articleId" placeholder="文章编号"></el-input>
+          <el-input
+            v-model="filters.articleId"
+            placeholder="文章编号"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-input v-model="filters.ruleId" placeholder="规则编号"></el-input>
@@ -13,7 +15,12 @@
           <el-input v-model="filters.linkId" placeholder="链接编号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+          <el-select
+            v-model="filters.status"
+            clearable
+            placeholder="请选择状态"
+            @change="list"
+          >
             <el-option label="待审核" :value="0"></el-option>
             <el-option label="审核通过" :value="1"></el-option>
             <el-option label="审核失败" :value="2"></el-option>
@@ -45,20 +52,22 @@
           <div class="content-form">
             <div class="form-item">
               <div class="field-key">文章编号：</div>
-              <div class="field-value">{{scope.row.articleId}}</div>
+              <div class="field-value">{{ scope.row.articleId }}</div>
             </div>
             <div class="form-item">
               <div class="field-key">规则编号：</div>
-              <div class="field-value">{{scope.row.ruleId}}</div>
+              <div class="field-value">{{ scope.row.ruleId }}</div>
             </div>
             <div class="form-item">
               <div class="field-key">描述：</div>
-              <div class="field-value">{{scope.row.summary}}</div>
+              <div class="field-value">{{ scope.row.summary }}</div>
             </div>
             <div class="form-item">
               <div class="field-key">原链接：</div>
               <div class="field-value">
-                <a :href="scope.row.sourceUrl" target="_blank">{{scope.row.sourceUrl}}</a>
+                <a :href="scope.row.sourceUrl" target="_blank">{{
+                  scope.row.sourceUrl
+                }}</a>
               </div>
             </div>
           </div>
@@ -85,15 +94,19 @@
           <span v-else-if="scope.row.status === 1">审核通过</span>
           <span v-else-if="scope.row.status === 2">审核失败</span>
           <span v-else-if="scope.row.status === 3">已发布</span>
-          <span v-else>{{scope.row.status}}</span>
+          <span v-else>{{ scope.row.status }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        <template slot-scope="scope">{{
+          scope.row.createTime | formatDate
+        }}</template>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -111,7 +124,11 @@
       ></el-pagination>
     </el-col>
 
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
+    <el-dialog
+      title="新增"
+      :visible.sync="addFormVisible"
+      :close-on-click-modal="false"
+    >
       <el-form :model="addForm" label-width="80px" ref="addForm">
         <el-form-item label="userId">
           <el-input v-model="addForm.userId"></el-input>
@@ -130,11 +147,19 @@
         </el-form-item>
 
         <el-form-item label="summary">
-          <el-input v-model="addForm.summary" type="textarea" autosize></el-input>
+          <el-input
+            v-model="addForm.summary"
+            type="textarea"
+            autosize
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="content">
-          <el-input v-model="addForm.content" type="textarea" autosize></el-input>
+          <el-input
+            v-model="addForm.content"
+            type="textarea"
+            autosize
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="contentType">
@@ -171,7 +196,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="addSubmit"
+          :loading="addLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
 
@@ -197,11 +227,18 @@
             :height="500"
           />
 
-          <html-editor v-if="editForm.contentType == 'html'" v-model="editForm.content"></html-editor>
+          <html-editor
+            v-if="editForm.contentType == 'html'"
+            v-model="editForm.content"
+          ></html-editor>
         </el-form-item>
 
         <el-form-item label="摘要">
-          <el-input v-model="editForm.summary" type="textarea" autosize></el-input>
+          <el-input
+            v-model="editForm.summary"
+            type="textarea"
+            autosize
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="状态">
@@ -261,19 +298,24 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="editSubmit"
+          :loading="editLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import HttpClient from "../../apis/HttpClient";
-import MarkdownEditor from "@/components/MarkdownEditor";
-import HtmlEditor from "@/components/HtmlEditor";
+import HttpClient from '../../apis/HttpClient'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import HtmlEditor from '@/components/HtmlEditor'
 
 export default {
-  name: "List",
+  name: 'List',
   components: { MarkdownEditor, HtmlEditor },
   data() {
     return {
@@ -284,149 +326,147 @@ export default {
       selectedRows: [],
 
       addForm: {
-        userId: "",
+        userId: '',
 
-        ruleId: "",
+        ruleId: '',
 
-        linkId: "",
+        linkId: '',
 
-        title: "",
+        title: '',
 
-        summary: "",
+        summary: '',
 
-        content: "",
+        content: '',
 
-        contentType: "",
+        contentType: '',
 
-        sourceUrl: "",
+        sourceUrl: '',
 
-        sourceId: "",
+        sourceId: '',
 
-        sourceUrlMd5: "",
+        sourceUrlMd5: '',
 
-        sourceTitleMd5: "",
+        sourceTitleMd5: '',
 
-        status: "",
+        status: '',
 
-        articleId: "",
+        articleId: '',
 
-        createTime: ""
+        createTime: ''
       },
       addFormVisible: false,
       addLoading: false,
 
       editForm: {
-        id: "",
+        id: '',
 
-        userId: "",
+        userId: '',
 
-        ruleId: "",
+        ruleId: '',
 
-        linkId: "",
+        linkId: '',
 
-        title: "",
+        title: '',
 
-        summary: "",
+        summary: '',
 
-        content: "",
+        content: '',
 
-        contentType: "",
+        contentType: '',
 
-        sourceUrl: "",
+        sourceUrl: '',
 
-        sourceId: "",
+        sourceId: '',
 
-        sourceUrlMd5: "",
+        sourceUrlMd5: '',
 
-        sourceTitleMd5: "",
+        sourceTitleMd5: '',
 
-        status: "",
+        status: '',
 
-        articleId: "",
+        articleId: '',
 
-        createTime: ""
+        createTime: ''
       },
       editFormVisible: false,
       editLoading: false
-    };
+    }
   },
   mounted() {
-    this.list();
+    this.list()
   },
   methods: {
     list() {
-      let me = this;
-      me.listLoading = true;
+      let me = this
+      me.listLoading = true
       let params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
-      });
-      HttpClient.post("/api/admin/collect-article/list", params)
-        .then(data => {
-          me.results = data.results;
-          me.page = data.page;
+      })
+      HttpClient.post('/api/admin/collect-article/list', params)
+        .then((data) => {
+          me.results = data.results
+          me.page = data.page
         })
         .finally(() => {
-          me.listLoading = false;
-        });
+          me.listLoading = false
+        })
     },
     handlePageChange(val) {
-      this.page.page = val;
-      this.list();
+      this.page.page = val
+      this.list()
     },
     handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
+      this.page.limit = val
+      this.list()
     },
     handleAdd() {
       this.addForm = {
-        name: "",
-        description: ""
-      };
-      this.addFormVisible = true;
+        name: '',
+        description: ''
+      }
+      this.addFormVisible = true
     },
     addSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-article/create", this.addForm)
-        .then(data => {
-          me.$message({ message: "提交成功", type: "success" });
-          me.addFormVisible = false;
-          me.list();
+      let me = this
+      HttpClient.post('/api/admin/collect-article/create', this.addForm)
+        .then((data) => {
+          me.$message({ message: '提交成功', type: 'success' })
+          me.addFormVisible = false
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     handleEdit(index, row) {
-      let me = this;
-      HttpClient.get("/api/admin/collect-article/" + row.id)
-        .then(data => {
-          me.editForm = Object.assign({}, data);
-          me.editFormVisible = true;
+      let me = this
+      HttpClient.get('/api/admin/collect-article/' + row.id)
+        .then((data) => {
+          me.editForm = Object.assign({}, data)
+          me.editFormVisible = true
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     editSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-article/update", me.editForm)
-        .then(data => {
-          me.list();
-          me.editFormVisible = false;
+      let me = this
+      HttpClient.post('/api/admin/collect-article/update', me.editForm)
+        .then((data) => {
+          me.list()
+          me.editFormVisible = false
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
 
     handleSelectionChange(val) {
-      this.selectedRows = val;
+      this.selectedRows = val
     }
   }
-};
+}
 </script>
 
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

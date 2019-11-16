@@ -13,7 +13,12 @@
           <el-input v-model="filters.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+          <el-select
+            v-model="filters.status"
+            clearable
+            placeholder="请选择状态"
+            @change="list"
+          >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
@@ -34,20 +39,28 @@
           <img class="avatar" :src="item.user.avatar" />
           <div class="article-right">
             <div class="article-title">
-              <a @click="toArticle(item)" href="javascript:void(0)">{{item.title}}</a>
+              <a @click="toArticle(item)" href="javascript:void(0)">{{
+                item.title
+              }}</a>
             </div>
             <div class="article-meta">
-              <label class="author" v-if="item.user">{{item.user.nickname}}</label>
-              <label>{{item.createTime | formatDate}}</label>
-              <label class="category" v-if="item.category">{{item.category.categoryName}}</label>
-              <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{tag.tagName}}</label>
+              <label class="author" v-if="item.user">{{
+                item.user.nickname
+              }}</label>
+              <label>{{ item.createTime | formatDate }}</label>
+              <label class="category" v-if="item.category">{{
+                item.category.categoryName
+              }}</label>
+              <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{
+                tag.tagName
+              }}</label>
             </div>
           </div>
         </div>
-        <div class="summary">{{item.summary}}</div>
+        <div class="summary">{{ item.summary }}</div>
         <div class="article-footer">
           <span class="danger" v-if="item.status === 1">已删除</span>
-          <span class="info">编号：{{item.id}}</span>
+          <span class="info">编号：{{ item.id }}</span>
           <a class="btn" @click="deleteSubmit(item)">删除</a>
         </div>
       </div>
@@ -75,11 +88,20 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form
+        :model="addForm"
+        label-width="80px"
+        :rules="addFormRules"
+        ref="addForm"
+      >
         <el-input v-model="addForm.contentType" type="hidden"></el-input>
         <el-form-item label="标签" prop="tagId">
           <el-select v-model="addForm.tagId" placeholder="请选择标签">
-            <el-option-group v-for="group in tagOptions" :key="group.label" :label="group.label">
+            <el-option-group
+              v-for="group in tagOptions"
+              :key="group.label"
+              :label="group.label"
+            >
               <el-option
                 v-for="item in group.children"
                 :key="item.value"
@@ -91,7 +113,11 @@
         </el-form-item>
 
         <el-form-item label="采集" prop="title">
-          <el-input v-model="collectUrl" auto-complete="off" style="width: 60%"></el-input>
+          <el-input
+            v-model="collectUrl"
+            auto-complete="off"
+            style="width: 60%"
+          ></el-input>
           <el-button type="primary" @click.prevent="doCollect">采集</el-button>
         </el-form-item>
 
@@ -103,7 +129,10 @@
           <el-input v-model="addForm.title" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <markdown-editor v-model="addForm.content" :init-value="addForm.content" />
+          <markdown-editor
+            v-model="addForm.content"
+            :init-value="addForm.content"
+          />
         </el-form-item>
         <!--
         <el-form-item label="摘要" prop="summary">
@@ -124,7 +153,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="addSubmit"
+          :loading="addLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
 
@@ -136,12 +170,21 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form
+        :model="editForm"
+        label-width="80px"
+        :rules="editFormRules"
+        ref="editForm"
+      >
         <el-input v-model="editForm.id" type="hidden"></el-input>
         <el-input v-model="editForm.contentType" type="hidden"></el-input>
         <el-form-item label="标签" prop="tagId">
           <el-select v-model="editForm.tagId" placeholder="请选择标签">
-            <el-option-group v-for="group in tagOptions" :key="group.label" :label="group.label">
+            <el-option-group
+              v-for="group in tagOptions"
+              :key="group.label"
+              :label="group.label"
+            >
               <el-option
                 v-for="item in group.children"
                 :key="item.value"
@@ -162,10 +205,17 @@
             :height="500"
           />
 
-          <html-editor v-if="editForm.contentType == 'html'" v-model="editForm.content"></html-editor>
+          <html-editor
+            v-if="editForm.contentType == 'html'"
+            v-model="editForm.content"
+          ></html-editor>
         </el-form-item>
         <el-form-item label="摘要" prop="summary">
-          <el-input type="textarea" v-model="editForm.summary" autosize></el-input>
+          <el-input
+            type="textarea"
+            v-model="editForm.summary"
+            autosize
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="editForm.status" placeholder="请选择">
@@ -179,19 +229,24 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="editSubmit"
+          :loading="editLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import HttpClient from "@/apis/HttpClient";
-import MarkdownEditor from "@/components/MarkdownEditor";
-import HtmlEditor from "@/components/HtmlEditor";
+import HttpClient from '@/apis/HttpClient'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import HtmlEditor from '@/components/HtmlEditor'
 
 export default {
-  name: "List",
+  name: 'List',
   components: { MarkdownEditor, HtmlEditor },
   data() {
     return {
@@ -199,167 +254,167 @@ export default {
       listLoading: false,
       page: {},
       filters: {
-        title: "",
-        status: ""
+        title: '',
+        status: ''
       },
 
       tagOptions: [],
 
       addForm: {
-        contentType: "markdown",
-        userId: "",
-        tagId: "",
-        title: "",
-        summary: "",
-        content: "",
-        sourceUrl: "",
+        contentType: 'markdown',
+        userId: '',
+        tagId: '',
+        title: '',
+        summary: '',
+        content: '',
+        sourceUrl: '',
         status: 0
       },
-      collectUrl: "",
+      collectUrl: '',
       addFormVisible: false,
       addFormRules: {},
       addLoading: false,
 
       editForm: {
-        id: "",
-        contentType: "markdown",
-        tagId: "",
-        title: "",
-        summary: "",
-        content: "",
-        sourceUrl: "",
+        id: '',
+        contentType: 'markdown',
+        tagId: '',
+        title: '',
+        summary: '',
+        content: '',
+        sourceUrl: '',
         status: 0
       },
       editFormVisible: false,
       editFormRules: {},
       editLoading: false
-    };
+    }
   },
   mounted() {
-    this.list();
+    this.list()
   },
   methods: {
     list() {
-      const me = this;
-      me.listLoading = true;
+      const me = this
+      me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
-      });
-      HttpClient.post("/api/admin/article/list", params)
-        .then(data => {
-          me.results = data.results;
-          me.page = data.page;
+      })
+      HttpClient.post('/api/admin/article/list', params)
+        .then((data) => {
+          me.results = data.results
+          me.page = data.page
         })
         .finally(() => {
-          me.listLoading = false;
-        });
+          me.listLoading = false
+        })
     },
     handlePageChange(val) {
-      this.page.page = val;
-      this.list();
+      this.page.page = val
+      this.list()
     },
     handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
+      this.page.limit = val
+      this.list()
     },
     handleAdd() {
       this.addForm = {
-        contentType: "markdown",
-        tagId: "",
-        title: "",
-        summary: "",
-        content: "",
-        sourceUrl: "",
+        contentType: 'markdown',
+        tagId: '',
+        title: '',
+        summary: '',
+        content: '',
+        sourceUrl: '',
         status: 0
-      };
-      this.addFormVisible = true;
+      }
+      this.addFormVisible = true
     },
     addSubmit() {
-      const me = this;
-      HttpClient.post("/api/admin/article/create", this.addForm)
-        .then(data => {
-          me.$message({ message: "提交成功", type: "success" });
-          me.addFormVisible = false;
-          me.list();
+      const me = this
+      HttpClient.post('/api/admin/article/create', this.addForm)
+        .then((data) => {
+          me.$message({ message: '提交成功', type: 'success' })
+          me.addFormVisible = false
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     handleEdit(index, row) {
-      const me = this;
+      const me = this
       HttpClient.get(`/api/admin/article/${row.id}`)
-        .then(data => {
-          me.editForm = Object.assign({}, data);
-          me.editFormVisible = true;
+        .then((data) => {
+          me.editForm = Object.assign({}, data)
+          me.editFormVisible = true
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     editSubmit() {
-      const me = this;
-      HttpClient.post("/api/admin/article/update", me.editForm)
-        .then(data => {
-          me.list();
-          me.editFormVisible = false;
+      const me = this
+      HttpClient.post('/api/admin/article/update', me.editForm)
+        .then((data) => {
+          me.list()
+          me.editFormVisible = false
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     deleteSubmit(row) {
-      const me = this;
-      HttpClient.post("/api/admin/article/delete", { id: row.id })
-        .then(data => {
-          me.$message({ message: "删除成功", type: "success" });
-          me.list();
+      const me = this
+      HttpClient.post('/api/admin/article/delete', { id: row.id })
+        .then((data) => {
+          me.$message({ message: '删除成功', type: 'success' })
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     doCollect() {
-      const me = this;
+      const me = this
       if (!me.collectUrl) {
-        me.$notify.error({ title: "错误", message: "请填写采集地址" });
-        return;
+        me.$notify.error({ title: '错误', message: '请填写采集地址' })
+        return
       }
-      this.$confirm("确定采集吗，采集之后将覆盖现有内容?", "提示", {
-        type: "warning"
+      this.$confirm('确定采集吗，采集之后将覆盖现有内容?', '提示', {
+        type: 'warning'
       })
         .then(() => {
-          HttpClient.post("/api/admin/article/collect", {
+          HttpClient.post('/api/admin/article/collect', {
             url: me.collectUrl
           })
-            .then(data => {
-              me.addForm.title = data.title;
-              me.addForm.content = data.content;
-              me.addForm.sourceUrl = me.collectUrl;
+            .then((data) => {
+              me.addForm.title = data.title
+              me.addForm.content = data.content
+              me.addForm.sourceUrl = me.collectUrl
 
               me.$message({
                 showClose: true,
-                message: "采集成功！",
-                type: "success"
-              });
+                message: '采集成功！',
+                type: 'success'
+              })
             })
-            .catch(rsp => {
-              me.$notify.error({ title: "错误", message: rsp.message });
-            });
+            .catch((rsp) => {
+              me.$notify.error({ title: '错误', message: rsp.message })
+            })
         })
         .catch(() => {
           me.$message({
             showClose: true,
-            message: "取消采集！"
-          });
-        });
+            message: '取消采集！'
+          })
+        })
     },
     toArticle(row) {
-      window.open(`https://mlog.club/article/${row.id}`, "_blank");
+      window.open(`https://mlog.club/article/${row.id}`, '_blank')
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

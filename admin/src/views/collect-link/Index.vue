@@ -1,4 +1,3 @@
-
 <template>
   <section class="page-container">
     <el-col :span="24" class="toolbar">
@@ -7,7 +6,12 @@
           <el-input v-model="filters.ruleId" placeholder="规则编号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.collected" clearable placeholder="是否采集" @change="list">
+          <el-select
+            v-model="filters.collected"
+            clearable
+            placeholder="是否采集"
+            @change="list"
+          >
             <el-option label="未采集" value="0"></el-option>
             <el-option label="已采集" value="1"></el-option>
           </el-select>
@@ -33,23 +37,33 @@
     >
       <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
-      <el-table-column prop="ruleId" label="规则编号" width="80"></el-table-column>
+      <el-table-column
+        prop="ruleId"
+        label="规则编号"
+        width="80"
+      ></el-table-column>
       <!-- <el-table-column prop="md5" label="MD5"></el-table-column> -->
       <el-table-column prop="url" label="Url">
         <template slot-scope="scope">
-          <a :href="scope.row.url" target="_blank">{{scope.row.url}}</a>
+          <a :href="scope.row.url" target="_blank">{{ scope.row.url }}</a>
         </template>
       </el-table-column>
       <el-table-column prop="parentUrl" label="上级页面Url">
         <template slot-scope="scope">
-          <a :href="scope.row.parentUrl" target="_blank">{{scope.row.parentUrl}}</a>
+          <a :href="scope.row.parentUrl" target="_blank">{{
+            scope.row.parentUrl
+          }}</a>
         </template>
       </el-table-column>
       <el-table-column prop="collected" label="是否采集" width="80">
-        <template slot-scope="scope">{{scope.row.collected ? '是' : '否'}}</template>
+        <template slot-scope="scope">{{
+          scope.row.collected ? '是' : '否'
+        }}</template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间"  width="160">
-        <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+      <el-table-column prop="createTime" label="创建时间" width="160">
+        <template slot-scope="scope">{{
+          scope.row.createTime | formatDate
+        }}</template>
       </el-table-column>
       <!--
       <el-table-column label="操作" width="150">
@@ -73,7 +87,11 @@
       ></el-pagination>
     </el-col>
 
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
+    <el-dialog
+      title="新增"
+      :visible.sync="addFormVisible"
+      :close-on-click-modal="false"
+    >
       <el-form :model="addForm" label-width="80px" ref="addForm">
         <el-form-item label="ruleId">
           <el-input v-model="addForm.ruleId"></el-input>
@@ -101,11 +119,20 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="addSubmit"
+          :loading="addLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
 
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+    <el-dialog
+      title="编辑"
+      :visible.sync="editFormVisible"
+      :close-on-click-modal="false"
+    >
       <el-form :model="editForm" label-width="80px" ref="editForm">
         <el-input v-model="editForm.id" type="hidden"></el-input>
 
@@ -135,17 +162,22 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="editSubmit"
+          :loading="editLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import HttpClient from "../../apis/HttpClient";
+import HttpClient from '../../apis/HttpClient'
 
 export default {
-  name: "List",
+  name: 'List',
   data() {
     return {
       results: [],
@@ -155,118 +187,115 @@ export default {
       selectedRows: [],
 
       addForm: {
-        ruleId: "",
+        ruleId: '',
 
-        md5: "",
+        md5: '',
 
-        url: "",
+        url: '',
 
-        parentUrl: "",
+        parentUrl: '',
 
-        collected: "",
+        collected: '',
 
-        createTime: ""
+        createTime: ''
       },
       addFormVisible: false,
       addLoading: false,
 
       editForm: {
-        id: "",
+        id: '',
 
-        ruleId: "",
+        ruleId: '',
 
-        md5: "",
+        md5: '',
 
-        url: "",
+        url: '',
 
-        parentUrl: "",
+        parentUrl: '',
 
-        collected: "",
+        collected: '',
 
-        createTime: ""
+        createTime: ''
       },
       editFormVisible: false,
       editLoading: false
-    };
+    }
   },
   mounted() {
-    this.list();
+    this.list()
   },
   methods: {
     list() {
-      let me = this;
-      me.listLoading = true;
+      let me = this
+      me.listLoading = true
       let params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
-      });
-      HttpClient.post("/api/admin/collect-link/list", params)
-        .then(data => {
-          me.results = data.results;
-          me.page = data.page;
+      })
+      HttpClient.post('/api/admin/collect-link/list', params)
+        .then((data) => {
+          me.results = data.results
+          me.page = data.page
         })
         .finally(() => {
-          me.listLoading = false;
-        });
+          me.listLoading = false
+        })
     },
     handlePageChange(val) {
-      this.page.page = val;
-      this.list();
+      this.page.page = val
+      this.list()
     },
     handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
+      this.page.limit = val
+      this.list()
     },
     handleAdd() {
       this.addForm = {
-        name: "",
-        description: ""
-      };
-      this.addFormVisible = true;
+        name: '',
+        description: ''
+      }
+      this.addFormVisible = true
     },
     addSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-link/create", this.addForm)
-        .then(data => {
-          me.$message({ message: "提交成功", type: "success" });
-          me.addFormVisible = false;
-          me.list();
+      let me = this
+      HttpClient.post('/api/admin/collect-link/create', this.addForm)
+        .then((data) => {
+          me.$message({ message: '提交成功', type: 'success' })
+          me.addFormVisible = false
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     handleEdit(index, row) {
-      let me = this;
-      HttpClient.get("/api/admin/collect-link/" + row.id)
-        .then(data => {
-          me.editForm = Object.assign({}, data);
-          me.editFormVisible = true;
+      let me = this
+      HttpClient.get('/api/admin/collect-link/' + row.id)
+        .then((data) => {
+          me.editForm = Object.assign({}, data)
+          me.editFormVisible = true
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
     editSubmit() {
-      let me = this;
-      HttpClient.post("/api/admin/collect-link/update", me.editForm)
-        .then(data => {
-          me.list();
-          me.editFormVisible = false;
+      let me = this
+      HttpClient.post('/api/admin/collect-link/update', me.editForm)
+        .then((data) => {
+          me.list()
+          me.editFormVisible = false
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     },
 
     handleSelectionChange(val) {
-      this.selectedRows = val;
+      this.selectedRows = val
     }
   }
-};
+}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-
+<style lang="scss" scoped></style>

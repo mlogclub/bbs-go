@@ -4,16 +4,21 @@
       <frame-header />
     </el-header>
     <el-container class="sec-main">
-      <el-aside class="sec-aside" :class="{'collapse': collapsed}">
+      <el-aside class="sec-aside" :class="{ collapse: collapsed }">
         <side-menu />
       </el-aside>
       <el-main class="sec-main-view">
         <router-tab>
-          <template v-slot="{ tab: { id, title, icon, closable }, tabs, index}">
+          <template v-slot="{ tab: { id, title, icon, closable }, tabs }">
             <i v-if="icon" class="tab-icon" :class="icon" />
-            <span class="tab-title">{{ $routerTab.i18nText(title) || '未命名页签' }}</span>
-            <i v-if="closable !== false && tabs.length > 1"
-              @click.prevent="$routerTab.closeTab(id)" class="tabclose iconfont icon-close" />
+            <span class="tab-title">{{
+              $routerTab.i18nText(title) || '未命名页签'
+            }}</span>
+            <i
+              v-if="closable !== false && tabs.length > 1"
+              @click.prevent="$routerTab.closeTab(id)"
+              class="tabclose iconfont icon-close"
+            />
           </template>
         </router-tab>
       </el-main>
@@ -22,8 +27,8 @@
 </template>
 
 <script>
-import FrameHeader from "../components/FrameHeader";
-import SideMenu from "../components/SideMenu";
+import FrameHeader from '../components/FrameHeader'
+import SideMenu from '../components/SideMenu'
 
 export default {
   components: {
@@ -33,28 +38,28 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       }
-    };
+    }
   },
   methods: {},
   computed: {
     collapsed() {
-      return this.$store.state.Default.collapsed;
+      return this.$store.state.Default.collapsed
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
-@import "../styles/vars.scss";
+@import '../styles/vars.scss';
 
 .sec {
   margin: 0px;

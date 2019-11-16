@@ -6,15 +6,22 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <el-form
-      status-icon
-      label-width="100px"
-    >
+    <el-form status-icon label-width="100px">
       <el-form-item label="用户名" prop="username">
-        <el-input type="text" v-model="username" autocomplete="off" @keyup.enter="submitForm"></el-input>
+        <el-input
+          type="text"
+          v-model="username"
+          autocomplete="off"
+          @keyup.enter="submitForm"
+        ></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="password" autocomplete="off" @keyup.enter="submitForm"></el-input>
+        <el-input
+          type="password"
+          v-model="password"
+          autocomplete="off"
+          @keyup.enter="submitForm"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm()">登录</el-button>
@@ -29,7 +36,7 @@ export default {
     return {
       username: '',
       password: ''
-    };
+    }
   },
   methods: {
     submitForm() {
@@ -37,16 +44,15 @@ export default {
         username: this.username,
         password: this.password
       }
-      this.$store.dispatch('Login/doLogin',  params)
+      this.$store.dispatch('Login/doLogin', params)
     }
   },
   computed: {
     isShowLogin() {
-      return this.$store.state.Login.showLogin;
+      return this.$store.state.Login.showLogin
     }
   }
-};
+}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

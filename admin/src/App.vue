@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import Login from "./components/Login";
+import Login from './components/Login'
 
 export default {
-  name: "app",
+  name: 'app',
   components: { Login }
-};
+}
 </script>
 
 <style lang="scss">
@@ -43,12 +43,12 @@ a {
   width: 100%;
 }
 
-.el-submenu [class^="fa"] {
+.el-submenu [class^='fa'] {
   vertical-align: baseline;
   margin-right: 10px;
 }
 
-.el-menu-item [class^="fa"] {
+.el-menu-item [class^='fa'] {
   vertical-align: baseline;
   margin-right: 10px;
 }

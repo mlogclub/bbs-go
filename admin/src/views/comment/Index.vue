@@ -23,11 +23,16 @@
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
-            <div class="avatar" :style="{backgroundImage:'url(' + item.user.avatar + ')'}"></div>
+            <div
+              class="avatar"
+              :style="{ backgroundImage: 'url(' + item.user.avatar + ')' }"
+            ></div>
             <div class="content">
               <div class="meta">
-                <span class="nickname">{{item.user.nickname}}</span>
-                <span class="create-time">{{item.createTime | formatDate}}</span>
+                <span class="nickname">{{ item.user.nickname }}</span>
+                <span class="create-time">{{
+                  item.createTime | formatDate
+                }}</span>
               </div>
               <div class="summary" v-html="item.content"></div>
               <div class="tools">
@@ -56,93 +61,93 @@
 </template>
 
 <script>
-import HttpClient from "@/apis/HttpClient";
+import HttpClient from '@/apis/HttpClient'
 
 export default {
-  name: "List",
+  name: 'List',
   data() {
     return {
       results: [],
       listLoading: false,
       page: {},
       filters: {
-        userId: "",
-        status: ""
+        userId: '',
+        status: ''
       },
       selectedRows: [],
 
       addForm: {
-        userId: "",
-        entityType: "",
-        entityId: "",
-        content: "",
-        quoteId: "",
-        status: "",
-        createTime: ""
+        userId: '',
+        entityType: '',
+        entityId: '',
+        content: '',
+        quoteId: '',
+        status: '',
+        createTime: ''
       },
       addFormVisible: false,
       addFormRules: {},
       addLoading: false,
 
       editForm: {
-        id: "",
-        userId: "",
-        entityType: "",
-        entityId: "",
-        content: "",
-        quoteId: "",
-        status: "",
-        createTime: ""
+        id: '',
+        userId: '',
+        entityType: '',
+        entityId: '',
+        content: '',
+        quoteId: '',
+        status: '',
+        createTime: ''
       },
       editFormVisible: false,
       editFormRules: {},
       editLoading: false
-    };
+    }
   },
   mounted() {
-    this.list();
+    this.list()
   },
   methods: {
     list() {
-      const me = this;
-      me.listLoading = true;
+      const me = this
+      me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
         limit: me.page.limit
-      });
-      HttpClient.post("/api/admin/comment/list", params)
-        .then(data => {
-          me.results = data.results;
-          me.page = data.page;
+      })
+      HttpClient.post('/api/admin/comment/list', params)
+        .then((data) => {
+          me.results = data.results
+          me.page = data.page
         })
         .finally(() => {
-          me.listLoading = false;
-        });
+          me.listLoading = false
+        })
     },
     handlePageChange(val) {
-      this.page.page = val;
-      this.list();
+      this.page.page = val
+      this.list()
     },
     handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
+      this.page.limit = val
+      this.list()
     },
     handleSelectionChange(val) {
-      this.selectedRows = val;
+      this.selectedRows = val
     },
     handleDelete(row) {
-      const me = this;
+      const me = this
       HttpClient.post(`/api/admin/comment/delete/${row.id}`)
-        .then(data => {
-          me.$message.success("删除成功");
-          me.list();
+        .then((data) => {
+          me.$message.success('删除成功')
+          me.list()
         })
-        .catch(rsp => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
+        .catch((rsp) => {
+          me.$notify.error({ title: '错误', message: rsp.message })
+        })
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
