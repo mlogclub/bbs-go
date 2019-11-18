@@ -83,8 +83,8 @@
       :params="{ entityType: entityType, entityId: entityId }"
       url="/api/comment/list"
     >
-      <ul v-for="comment in results" :key="comment.commentId" class="comments">
-        <li class="comment">
+      <ul class="comments">
+        <li v-for="comment in results" :key="comment.commentId" class="comment">
           <div class="comment-avatar">
             <div
               :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
@@ -315,7 +315,10 @@ export default {
     .comment {
       padding: 8px 0;
       overflow: hidden;
-      border-bottom: 1px dashed #d1d1d1;
+
+      &:not(:last-child) {
+        border-bottom: 1px dashed #d1d1d1;
+      }
 
       .comment-avatar {
         float: left;
