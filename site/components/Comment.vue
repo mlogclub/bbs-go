@@ -48,6 +48,7 @@
     </div>
 
     <div v-if="showAd">
+      <!--
       <ins
         class="adsbygoogle"
         style="display:block"
@@ -55,6 +56,19 @@
         data-ad-slot="1742173616"
         data-ad-format="auto"
         data-full-width-responsive="true"
+      />
+      <script>
+        ;(adsbygoogle = window.adsbygoogle || []).push({})
+      </script>
+      -->
+
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-format="fluid"
+        data-ad-layout-key="-ig-s+1x-t-q"
+        data-ad-client="ca-pub-5683711753850351"
+        data-ad-slot="4728140043"
       />
       <script>
         ;(adsbygoogle = window.adsbygoogle || []).push({})
@@ -69,8 +83,8 @@
       :params="{ entityType: entityType, entityId: entityId }"
       url="/api/comment/list"
     >
-      <ul v-for="comment in results" :key="comment.commentId" class="comments">
-        <li class="comment">
+      <ul class="comments">
+        <li v-for="comment in results" :key="comment.commentId" class="comment">
           <div class="comment-avatar">
             <div
               :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
@@ -301,7 +315,10 @@ export default {
     .comment {
       padding: 8px 0;
       overflow: hidden;
-      border-bottom: 1px dashed #d1d1d1;
+
+      &:not(:last-child) {
+        border-bottom: 1px dashed #d1d1d1;
+      }
 
       .comment-avatar {
         float: left;

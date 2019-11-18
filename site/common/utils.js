@@ -13,12 +13,11 @@ class Utils {
     this.linkTo('/user/signin?ref=' + encodeURIComponent(ref))
   }
 
-  handleToc() {
-    if (!window || !window.document) {
+  handleToc(tocDom) {
+    if (!window || !window.document || !tocDom) {
       return
     }
     const tocSelector = '.toc'
-    const tocList = document.querySelectorAll(tocSelector)
     window.addEventListener('scroll', (event) => {
       const fromTop = window.scrollY
       const mainNavLinks = document.querySelectorAll(tocSelector + ' a')
@@ -26,6 +25,9 @@ class Utils {
         const section = document.getElementById(
           decodeURI(link.hash).substring(1)
         )
+        if (!section) {
+          return
+        }
         let nextSection = null
         if (mainNavLinks[index + 1]) {
           nextSection = document.getElementById(
@@ -49,24 +51,20 @@ class Utils {
     })
 
     // 滚动的时候控制toc位置
+    const oldTop = tocDom.offsetTop
     window.addEventListener('scroll', (event) => {
-      tocList.forEach((toc, index) => {
-        changePos(toc, toc.offsetTop)
-      })
-    })
-
-    // 更改toc位置
-    function changePos(obj, height) {
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop < height + 100) {
-        // 这里+100，控制还没滚动到顶部的时候就固定toc
-        obj.style.position = 'relative'
+      // 更改toc位置
+      const scrollTop = Math.max(
+        document.body.scrollTop || document.documentElement.scrollTop
+      )
+      if (scrollTop < oldTop) {
+        tocDom.style.position = 'relative'
+        tocDom.style.top = 'unset'
       } else {
-        obj.style.position = 'fixed'
-        obj.style.top = '5px'
+        tocDom.style.position = 'fixed'
+        tocDom.style.top = '52px'
       }
-    }
+    })
   }
 
   isArray(sources) {

@@ -100,9 +100,9 @@
           </div>
 
           <div v-if="user && msgcount > 0" class="navbar-item">
-            <a :href="'/user/messages'" class="msgcount">{{
-              msgcount > 9 ? '9+' : msgcount
-            }}</a>
+            <a :href="'/user/messages'" class="msgcount">
+              {{ msgcount > 9 ? '9+' : msgcount }}
+            </a>
           </div>
         </div>
       </div>
@@ -151,10 +151,12 @@ export default {
       this.navbarActive = !this.navbarActive
     },
     handleScroll() {
-      if (window.scrollY > 0) {
-        this.$refs.nav.classList.add('scrolled')
-      } else {
-        this.$refs.nav.classList.remove('scrolled')
+      if (this.$refs.nav) {
+        if (window.scrollY > 0) {
+          this.$refs.nav.classList.add('scrolled')
+        } else {
+          this.$refs.nav.classList.remove('scrolled')
+        }
       }
     }
   }
