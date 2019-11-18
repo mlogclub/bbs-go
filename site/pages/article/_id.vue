@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <article class="article-item">
+        <article class="article-item article-detail">
           <div class="article-item-left">
             <a
               :href="'/user/' + article.user.id"
@@ -17,35 +17,40 @@
           </div>
 
           <div class="article-item-right">
-            <div class="article-title">
-              <a :href="'/article/' + article.articleId">{{ article.title }}</a>
-            </div>
+            <div class="article-title">{{ article.title }}</div>
 
             <div class="article-meta">
               <span class="article-meta-item">
-                <a :href="'/user/' + article.user.id">{{
-                  article.user.nickname
-                }}</a>
-              </span>
-
-              <span v-if="article.category" class="article-meta-item">
-                <a :href="'/articles/cat/' + article.category.categoryId">{{
-                  article.category.categoryName
-                }}</a>
-              </span>
-
-              <span
-                v-for="tag in article.tags"
-                :key="tag.tagId"
-                class="article-meta-item"
-              >
-                <a :href="'/articles/tag/' + tag.tagId">{{ tag.tagName }}</a>
-              </span>
-
-              <span class="article-meta-item">
+                由
+                <a :href="'/user/' + article.user.id" class="article-author"
+                  >&nbsp;{{ article.user.nickname }}&nbsp;</a
+                >发布于
                 <time itemprop="datePublished">{{
                   article.createTime | prettyDate
                 }}</time>
+              </span>
+
+              <span v-if="article.category" class="article-meta-item">
+                <span class="article-tag tag">
+                  <a :href="'/articles/cat/' + article.category.categoryId">{{
+                    article.category.categoryName
+                  }}</a>
+                </span>
+              </span>
+
+              <span
+                v-if="article.tags && article.tags.length > 0"
+                class="article-meta-item"
+              >
+                <span
+                  v-for="tag in article.tags"
+                  :key="tag.tagId"
+                  class="article-tag tag"
+                >
+                  <a :href="'/articles/tag/' + tag.tagId" class>{{
+                    tag.tagName
+                  }}</a>
+                </span>
               </span>
             </div>
 
@@ -115,9 +120,7 @@
         <div class="columns article-related">
           <div class="column">
             <div v-if="newestArticles && newestArticles.length" class="widget">
-              <div class="widget-header">
-                最新文章
-              </div>
+              <div class="widget-header">最新文章</div>
               <div class="widget-content">
                 <ul>
                   <li v-for="a in newestArticles" :key="a.articleId">
@@ -137,9 +140,7 @@
               v-if="relatedArticles && relatedArticles.length"
               class="widget"
             >
-              <div class="widget-header">
-                相关文章
-              </div>
+              <div class="widget-header">相关文章</div>
               <div class="widget-content">
                 <ul>
                   <li v-for="a in relatedArticles" :key="a.articleId">
@@ -158,6 +159,7 @@
       </div>
       <div class="right-container">
         <weixin-gzh />
+
         <!-- 展示广告190x190 -->
         <ins
           class="adsbygoogle"
@@ -170,9 +172,7 @@
         </script>
 
         <div ref="toc" v-if="article.toc" class="widget no-margin no-bg toc">
-          <div class="widget-header">
-            目录
-          </div>
+          <div class="widget-header">目录</div>
           <div v-html="article.toc" class="widget-content" />
         </div>
 
@@ -336,150 +336,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.article-item-left {
-  width: 50px;
-  height: 50px;
-  float: left;
-  vertical-align: middle;
-}
-
-.article-item-right {
-  margin-left: 50px;
-  padding-left: 10px;
-  vertical-align: middle;
-}
-
-article {
-  .article-title {
-    a {
-      color: #0f0f0f;
-      font-weight: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 18px;
-      line-height: 30px;
-    }
-  }
-
-  .article-summary {
-    color: #000;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    text-align: justify;
-    padding-top: 6px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    font-size: 14px;
-  }
-
-  .article-meta {
-    display: inline-block;
-    font-size: 13px;
-    padding-top: 6px;
-
-    .article-meta-item {
-      padding: 0 6px 0 0;
-    }
-
-    a {
-      color: #3273dc;
-    }
-
-    span {
-      color: #999;
-    }
-  }
-
-  .article-tool {
-    display: inline-block;
-    font-size: 13px;
-
-    & > span {
-      margin-left: 10px;
-    }
-
-    a {
-      font-size: 12px;
-      i {
-        font-size: 12px;
-        color: #000;
-      }
-    }
-  }
-}
-
-.article-content {
-  margin-top: 20px;
-
-  a.article-share-summary {
-    color: #4a4a4a;
-  }
-}
-
-.article-footer {
-  margin-top: 20px;
-  word-break: break-all;
-
-  blockquote {
-    padding: 10px 15px;
-    margin: 0 0 20px;
-    border: 1px dotted #eeeeee;
-    border-left: 3px solid #eeeeee;
-    background-color: #fbfbfb;
-  }
-
-  blockquote p:last-child,
-  blockquote ul:last-child,
-  blockquote ol:last-child {
-    margin-bottom: 0;
-  }
-
-  blockquote footer,
-  blockquote small,
-  blockquote .small {
-    display: block;
-    font-size: 80%;
-    line-height: 1.42857;
-    color: #777777;
-  }
-
-  blockquote footer:before,
-  blockquote small:before,
-  blockquote .small:before {
-    content: '\2014 \00A0';
-  }
-
-  blockquote.pull-right {
-    padding-right: 15px;
-    padding-left: 0;
-    border-right: 5px solid #eeeeee;
-    border-left: 0;
-    text-align: right;
-  }
-
-  blockquote.pull-right footer:before,
-  blockquote.pull-right small:before,
-  blockquote.pull-right .small:before {
-    content: '';
-  }
-
-  blockquote.pull-right footer:after,
-  blockquote.pull-right small:after,
-  blockquote.pull-right .small:after {
-    content: '\00A0 \2014';
-  }
-}
-
-.article-related {
-  margin: 20px 0 0 0;
-  font-size: 12px;
-
-  .widget > .header {
-    color: #000;
-    font-size: 20px;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

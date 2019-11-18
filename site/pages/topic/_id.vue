@@ -99,6 +99,8 @@
           />
         </div>
         <div class="right-container">
+          <weixin-gzh />
+
           <!-- 展示广告190x90 -->
           <ins
             class="adsbygoogle"
@@ -109,8 +111,6 @@
           <script>
             ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
-
-          <weixin-gzh />
 
           <div ref="toc" v-if="topic.toc" class="widget no-margin no-bg toc">
             <div class="widget-header">

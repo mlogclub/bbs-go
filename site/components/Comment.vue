@@ -48,6 +48,7 @@
     </div>
 
     <div v-if="showAd">
+      <!--
       <ins
         class="adsbygoogle"
         style="display:block"
@@ -55,6 +56,19 @@
         data-ad-slot="1742173616"
         data-ad-format="auto"
         data-full-width-responsive="true"
+      />
+      <script>
+        ;(adsbygoogle = window.adsbygoogle || []).push({})
+      </script>
+      -->
+
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-format="fluid"
+        data-ad-layout-key="-ig-s+1x-t-q"
+        data-ad-client="ca-pub-5683711753850351"
+        data-ad-slot="4728140043"
       />
       <script>
         ;(adsbygoogle = window.adsbygoogle || []).push({})
