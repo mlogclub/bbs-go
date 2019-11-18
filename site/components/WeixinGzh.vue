@@ -1,5 +1,5 @@
 <template>
-  <div class="widget">
+  <div class="widget no-margin">
     <div class="widget-header">
       公众号
     </div>

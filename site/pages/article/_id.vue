@@ -158,7 +158,7 @@
       </div>
       <div class="right-container">
         <weixin-gzh />
-        <!-- 展示广告190x190 -->
+        <!-- 展示广告190x190
         <ins
           class="adsbygoogle"
           style="display:inline-block;width:190px;height:190px"
@@ -168,8 +168,9 @@
         <script>
           ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
+        -->
 
-        <div v-if="article.toc" class="widget toc">
+        <div ref="toc" v-if="article.toc" class="widget no-margin no-bg toc">
           <div class="widget-header">
             目录
           </div>
@@ -286,7 +287,7 @@ export default {
     }
   },
   mounted() {
-    utils.handleToc()
+    utils.handleToc(this.$refs.toc)
   },
   methods: {
     async deleteArticle(articleId) {

@@ -32,7 +32,7 @@ $sidebar-width: 190px;
 
   .left-container,
   .right-container {
-    background: #fff;
+    // background: #fff;
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
@@ -41,7 +41,9 @@ $sidebar-width: 190px;
 
   // 左侧大，右侧小
   &.left-main {
-    display: flex;
+    .left-container {
+      background: #fff;
+    }
 
     @media screen and (max-width: 768px) {
       .right-container {
@@ -56,17 +58,23 @@ $sidebar-width: 190px;
     .left-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
+      margin-right: 10px;
     }
 
     .right-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
-      margin-left: 10px;
+      // margin-left: 10px;
+      padding: 0px;
     }
   }
 
   // 左侧小，右侧大
   &.right-main {
+    .right-container {
+      background: #fff;
+    }
+
     @media screen and (max-width: 768px) {
       .left-container {
         display: none;
@@ -80,12 +88,14 @@ $sidebar-width: 190px;
     .left-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
-      margin-right: 10px;
+      // margin-right: 10px;
+      padding: 0px;
     }
 
     .right-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
+      margin-left: 10px;
     }
   }
 
@@ -125,6 +135,7 @@ $sidebar-width: 190px;
   background: #fff;
   // font-size: 13px;
   // padding-left: 8px;
+  padding: 0 6px;
 
   margin-top: 20px;
 
@@ -132,8 +143,13 @@ $sidebar-width: 190px;
     margin: 0px;
   }
 
+  &.no-bg {
+    background: none;
+  }
+
   &>.widget-header {
-    padding-bottom: 8px;
+    // padding-bottom: 8px;
+    padding: 8px 0;
     font-size: 16px;
     font-weight: bold;
     border-bottom: 1px dashed #ddd;
@@ -148,7 +164,7 @@ $sidebar-width: 190px;
   }
 
   &>.widget-content {
-    background-color: #fff;
+    // background-color: #fff;
     // font-size: 12px;
     margin-top: 8px;
   }
@@ -256,14 +272,12 @@ div.avatar {
 
 .toc {
   position: relative;
-  width: 170px;
+  width: $sidebar-width;
 
-  ul,
-  ul ul,
-  ul ul ul {
+  ul {
     margin: 0px;
-    list-style: circle;
-    padding-left: 10px;
+    padding-left: 20px;
+    list-style: disc;
 
     li {
       a {
@@ -277,7 +291,7 @@ div.avatar {
       a.active {
         color: #009a61;
         font-weight: bold;
-        font-size: 15px;
+        // font-size: 15px;
       }
     }
   }
