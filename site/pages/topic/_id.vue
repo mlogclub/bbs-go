@@ -4,14 +4,14 @@
       <div class="container main-container left-main">
         <div class="left-container">
           <div class="topic-detail topic-wrap">
-            <div class="header">
-              <div class="left">
+            <div class="topic-header">
+              <div class="topic-header-left">
                 <div
                   :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
                   class="avatar avatar-size-45 is-rounded"
                 />
               </div>
-              <div class="center">
+              <div class="topic-header-center">
                 <a :href="'/topic/' + topic.topicId" :title="topic.title">
                   <div class="topic-title">{{ topic.title }}</div>
                 </a>
@@ -54,7 +54,7 @@
                   </span>
                 </div>
               </div>
-              <div class="right">
+              <div class="topic-header-right">
                 <div class="like">
                   <span
                     :class="{ liked: topic.liked }"
@@ -75,7 +75,7 @@
               </div>
             </div>
 
-            <div v-html="topic.content" class="content" />
+            <div v-html="topic.content" class="content topic-content" />
 
             <ins
               class="adsbygoogle"

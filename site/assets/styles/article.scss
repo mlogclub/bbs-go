@@ -44,6 +44,11 @@
 
   // 详情页
   &.article-detail {
+    .article-header {
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #d1d1d1;
+    }
+
     .article-title {
       color: #0f0f0f;
       font-weight: normal;
@@ -53,8 +58,6 @@
       line-height: 30px;
     }
   }
-
-
 
   .article-summary {
     font-size: 14px;
@@ -124,6 +127,7 @@
 
   .article-content {
     margin-top: 20px;
+    font-size: 15px;
 
     a.article-share-summary {
       color: #4a4a4a;

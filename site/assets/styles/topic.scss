@@ -1,8 +1,15 @@
 .topic-wrap {
-  .header {
+  .topic-detail {
+    .topic-header {
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #d1d1d1;
+    }
+  }
+
+  .topic-header {
     display: flex;
 
-    .left {
+    .topic-header-left {
       min-width: 48px;
       min-height: 48px;
 
@@ -14,7 +21,7 @@
       // }
     }
 
-    .center {
+    .topic-header-center {
       width: 100%;
       margin-left: 8px;
 
@@ -73,7 +80,7 @@
       }
     }
 
-    .right {
+    .topic-header-right {
       min-width: 100px;
       max-width: 100px;
       text-align: right;
@@ -125,5 +132,9 @@
         font-weight: 700;
       }
     }
+  }
+
+  .topic-content {
+    font-size: 15px;
   }
 }

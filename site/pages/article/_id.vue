@@ -3,75 +3,78 @@
     <div class="container main-container left-main">
       <div class="left-container">
         <article class="article-item article-detail">
-          <div class="article-item-left">
-            <a
-              :href="'/user/' + article.user.id"
-              :title="article.user.nickname"
-              target="_blank"
-            >
-              <div
-                :style="{ backgroundImage: 'url(' + article.user.avatar + ')' }"
-                class="avatar is-rounded"
-              />
-            </a>
-          </div>
-
-          <div class="article-item-right">
-            <div class="article-title">{{ article.title }}</div>
-
-            <div class="article-meta">
-              <span class="article-meta-item">
-                由
-                <a :href="'/user/' + article.user.id" class="article-author"
-                  >&nbsp;{{ article.user.nickname }}&nbsp;</a
-                >发布于
-                <time itemprop="datePublished">{{
-                  article.createTime | prettyDate
-                }}</time>
-              </span>
-
-              <span v-if="article.category" class="article-meta-item">
-                <span class="article-tag tag">
-                  <a :href="'/articles/cat/' + article.category.categoryId">{{
-                    article.category.categoryName
-                  }}</a>
-                </span>
-              </span>
-
-              <span
-                v-if="article.tags && article.tags.length > 0"
-                class="article-meta-item"
+          <div class="article-header">
+            <div class="article-item-left">
+              <a
+                :href="'/user/' + article.user.id"
+                :title="article.user.nickname"
+                target="_blank"
               >
-                <span
-                  v-for="tag in article.tags"
-                  :key="tag.tagId"
-                  class="article-tag tag"
-                >
-                  <a :href="'/articles/tag/' + tag.tagId" class>{{
-                    tag.tagName
-                  }}</a>
-                </span>
-              </span>
+                <div
+                  :style="{
+                    backgroundImage: 'url(' + article.user.avatar + ')'
+                  }"
+                  class="avatar is-rounded"
+                />
+              </a>
             </div>
+            <div class="article-item-right">
+              <div class="article-title">{{ article.title }}</div>
 
-            <div class="article-tool">
-              <span v-if="isOwner">
-                <a @click="deleteArticle(article.articleId)">
-                  <i class="iconfont icon-delete" />删除
-                </a>
-              </span>
-              <span v-if="isOwner">
-                <a :href="'/article/edit/' + article.articleId">
-                  <i class="iconfont icon-edit" />修改
-                </a>
-              </span>
-              <span>
-                <a @click="addFavorite(article.articleId)">
-                  <i class="iconfont icon-favorite" />{{
-                    favorited ? '已收藏' : '收藏'
-                  }}
-                </a>
-              </span>
+              <div class="article-meta">
+                <span class="article-meta-item">
+                  由
+                  <a :href="'/user/' + article.user.id" class="article-author"
+                    >&nbsp;{{ article.user.nickname }}&nbsp;</a
+                  >发布于
+                  <time itemprop="datePublished">{{
+                    article.createTime | prettyDate
+                  }}</time>
+                </span>
+
+                <span v-if="article.category" class="article-meta-item">
+                  <span class="article-tag tag">
+                    <a :href="'/articles/cat/' + article.category.categoryId">{{
+                      article.category.categoryName
+                    }}</a>
+                  </span>
+                </span>
+
+                <span
+                  v-if="article.tags && article.tags.length > 0"
+                  class="article-meta-item"
+                >
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag.tagId"
+                    class="article-tag tag"
+                  >
+                    <a :href="'/articles/tag/' + tag.tagId" class>{{
+                      tag.tagName
+                    }}</a>
+                  </span>
+                </span>
+              </div>
+
+              <div class="article-tool">
+                <span v-if="isOwner">
+                  <a @click="deleteArticle(article.articleId)">
+                    <i class="iconfont icon-delete" />删除
+                  </a>
+                </span>
+                <span v-if="isOwner">
+                  <a :href="'/article/edit/' + article.articleId">
+                    <i class="iconfont icon-edit" />修改
+                  </a>
+                </span>
+                <span>
+                  <a @click="addFavorite(article.articleId)">
+                    <i class="iconfont icon-favorite" />{{
+                      favorited ? '已收藏' : '收藏'
+                    }}
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
 
