@@ -3,7 +3,7 @@ home: true
 # heroImage: https://file.mlog.club/mlog.club/logo_364x200.png
 actionText: 快速上手 →
 actionLink: /guide/
-# features:
+features:
 # - title: 简洁至上
 #   details: 以 Markdown 为中心的项目结构，以最少的配置帮助你专注于写作。
 # - title: Vue驱动
@@ -13,15 +13,21 @@ actionLink: /guide/
 footer: Copyright © 2019
 ---
 
-## 演示
+## 官方演示交流站
+
 [https://mlog.club](https://mlog.club)
 
-## 交流群
-- QQ群号：653248175
-- 扫码进群：
+## 公众号
+
+> 欢迎关注公众号`码农俱乐部`获取更多干货资源。
+
+![码农俱乐部](https://open.weixin.qq.com/qr/code?username=gh_950827012b8d)
+
+## 交流QQ群：653248175
 
 ![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
 
 ## 源码
+
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - 码云：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
