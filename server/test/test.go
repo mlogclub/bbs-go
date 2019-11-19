@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common/config"
 	"github.com/mlogclub/bbs-go/services/task"
@@ -15,6 +16,26 @@ func init() {
 }
 
 func main() {
+	go func() {
+		buildSitemap()
+	}()
+	go func() {
+		buildSitemap()
+	}()
+}
+
+var sitemapBuilding = false
+
+func buildSitemap() {
+	if sitemapBuilding {
+		logrus.Info("Sitemap in building...")
+		return
+	}
+	sitemapBuilding = true
+	defer func() {
+		sitemapBuilding = false
+	}()
+
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost("https://mlog.club")
 	// sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")

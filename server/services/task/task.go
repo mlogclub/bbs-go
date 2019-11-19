@@ -16,8 +16,19 @@ import (
 	"github.com/mlogclub/bbs-go/services"
 )
 
+var sitemapBuilding = false
+
 // 生成sitemap
 func SitemapTask() {
+	if sitemapBuilding {
+		logrus.Info("Sitemap in building...")
+		return
+	}
+	sitemapBuilding = true
+	defer func() {
+		sitemapBuilding = false
+	}()
+
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
 	sm.SetSitemapsPath("sitemap")
