@@ -49,4 +49,4 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 ## 功能预览
 
 ![前台页面.png](https://i.loli.net/2019/09/12/EfPJDwKpgjrM1CW.png)
-![后台页面.png](https://i.loli.net/2019/09/12/BotKdEkGMLx3g9w.png)
+![后台页面.png](https://i.loli.net/2019/11/19/li5nfdabGmSygIC.png)
