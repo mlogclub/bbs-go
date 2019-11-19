@@ -33,7 +33,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
+          <div class="navbar-item searchFormDiv">
             <form
               id="searchForm"
               action="https://www.google.com/search"
@@ -100,9 +100,9 @@
           </div>
 
           <div v-if="user && msgcount > 0" class="navbar-item">
-            <a :href="'/user/messages'" class="msgcount">
-              {{ msgcount > 9 ? '9+' : msgcount }}
-            </a>
+            <a :href="'/user/messages'" class="msgcount">{{
+              msgcount > 9 ? '9+' : msgcount
+            }}</a>
           </div>
         </div>
       </div>
@@ -164,22 +164,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#searchForm {
-  .input {
-    // box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
-    box-shadow: none;
-    border-radius: 2px;
-    background-color: #fff;
-    transition: all 0.4s;
-    float: right;
-    position: relative;
-    &:focus {
+.searchFormDiv {
+  @media screen and (max-width: 768px) {
+    & {
+      display: none;
+    }
+  }
+
+  #searchForm {
+    .input {
+      // box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+      box-shadow: none;
+      border-radius: 2px;
       background-color: #fff;
-      border-color: #e7672e;
-      outline: none;
+      transition: all 0.4s;
+      float: right;
+      position: relative;
+      &:focus {
+        background-color: #fff;
+        border-color: #e7672e;
+        outline: none;
+      }
     }
   }
 }
+
 .navbar {
   opacity: 0.99;
   border-bottom: 1px solid #e7edf3;
