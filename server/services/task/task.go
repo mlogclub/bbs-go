@@ -1,6 +1,8 @@
 package task
 
 import (
+	"bytes"
+	"compress/gzip"
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -124,7 +126,19 @@ func (adp *AliyunOssAdapter) Bytes() [][]byte {
 
 // Write will create sitemap xml file into the file systems.
 func (adp *AliyunOssAdapter) Write(loc *stm.Location, data []byte) {
-	sitemapUrl, err := oss.PutObject(loc.PathInPublic(), data)
+
+	var out []byte
+	if stm.GzipPtn.MatchString(loc.Filename()) { // 如果需要压缩
+		var in bytes.Buffer
+		w := gzip.NewWriter(&in)
+		_, _ = w.Write(data)
+		_ = w.Close()
+		out = in.Bytes()
+	} else { // 如果不需要压缩
+		out = data
+	}
+
+	sitemapUrl, err := oss.PutObject(loc.PathInPublic(), out)
 	if err != nil {
 		logrus.Error("Upload sitemap to aliyun oss error:", err)
 	} else {

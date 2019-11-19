@@ -7,6 +7,7 @@ import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 
 	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/services/task"
 )
 
 func init() {
@@ -17,9 +18,10 @@ func main() {
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost("https://mlog.club")
 	// sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")
-	sm.SetSitemapsPath("sitemap")
+	sm.SetSitemapsPath("sitemap1")
 	sm.SetVerbose(false)
-	sm.SetCompress(false)
+	sm.SetCompress(true)
+	sm.SetAdapter(&task.AliyunOssAdapter{})
 	sm.Create()
 
 	sm.Add(stm.URL{
