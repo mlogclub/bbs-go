@@ -19,11 +19,11 @@ func SitemapTask() {
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
 	// sm.SetPublicPath(config.Conf.StaticPath)
+	// sm.SetSitemapsPath("")
 	sm.SetSitemapsPath("sitemap")
-	sm.SetSitemapsPath("")
 	sm.SetVerbose(false)
-	sm.SetCompress(false)
 	sm.SetPretty(false)
+	sm.SetCompress(true)
 	sm.SetAdapter(&AliyunOssAdapter{})
 	sm.Create()
 
@@ -49,6 +49,9 @@ func SitemapTask() {
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
 				})
+				logrus.WithFields(logrus.Fields{
+					"sitemap": "article",
+				}).Info(articleUrl)
 			}
 		}
 		return true
@@ -62,6 +65,9 @@ func SitemapTask() {
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
 				})
+				logrus.WithFields(logrus.Fields{
+					"sitemap": "topic",
+				}).Info(topicUrl)
 			}
 		}
 		return true
@@ -74,6 +80,9 @@ func SitemapTask() {
 				{"loc", projectUrl},
 				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
 			})
+			logrus.WithFields(logrus.Fields{
+				"sitemap": "project",
+			}).Info(projectUrl)
 		}
 		return true
 	})
@@ -87,6 +96,9 @@ func SitemapTask() {
 				{"changefreq", "daily"},
 				{"priority", 0.6},
 			})
+			logrus.WithFields(logrus.Fields{
+				"sitemap": "tag",
+			}).Info(tagUrl)
 		}
 		return true
 	})
