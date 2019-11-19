@@ -1,3 +1,8 @@
+## 项目地址
+
+- [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
+- [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
+
 ## 公众号
 
 > 欢迎关注公众号`码农俱乐部`获取更多干货资源。
