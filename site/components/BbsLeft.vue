@@ -1,26 +1,32 @@
 <template>
   <div class="left-container">
-    <a :href="createTopicUrl" class="button is-success post">
-      <i class="iconfont icon-topic" />&nbsp;
-      <strong>发表主题</strong>
-    </a>
-    <ul class="m-nav">
-      <li>
-        <a :class="{ active: currentTagId == 0 }" href="/topics">
-          <i class="iconfont icon-topic" />
-          <span>全部话题</span>
+    <div class="widget no-margin">
+      <div class="widget-header">
+        <a :href="createTopicUrl" class="button is-success post">
+          <i class="iconfont icon-topic" />&nbsp;
+          <strong>发表主题</strong>
         </a>
-      </li>
-      <li v-for="tag in bbsNavTags" :key="tag.tagId">
-        <a
-          :class="{ active: currentTagId == tag.tagId }"
-          :href="'/topics/tag/' + tag.tagId"
-        >
-          <i class="iconfont icon-topic" />
-          <span>{{ tag.tagName }}</span>
-        </a>
-      </li>
-    </ul>
+      </div>
+      <div class="widget-content">
+        <ul class="m-nav">
+          <li>
+            <a :class="{ active: currentTagId == 0 }" href="/topics">
+              <i class="iconfont icon-topic" />
+              <span>全部话题</span>
+            </a>
+          </li>
+          <li v-for="tag in bbsNavTags" :key="tag.tagId">
+            <a
+              :class="{ active: currentTagId == tag.tagId }"
+              :href="'/topics/tag/' + tag.tagId"
+            >
+              <i class="iconfont icon-topic" />
+              <span>{{ tag.tagName }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <weixin-gzh />
 
