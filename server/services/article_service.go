@@ -287,7 +287,7 @@ func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "update_time").Where("id < ? ",
-			cursor).Desc("id").Limit(100))
+			cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}

@@ -19,6 +19,7 @@ func main() {
 	sm.SetDefaultHost("https://mlog.club")
 	// sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")
 	sm.SetSitemapsPath("sitemap1")
+	sm.SetFilename("1")
 	sm.SetVerbose(false)
 	sm.SetCompress(true)
 	sm.SetAdapter(&task.AliyunOssAdapter{})

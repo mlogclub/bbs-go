@@ -10,7 +10,7 @@ import (
 func startSchedule() {
 	c := cron.New()
 	addCronFunc(c, "@every 30m", task.RssTask)
-	addCronFunc(c, "@every 1h", task.SitemapTask)
+	addCronFunc(c, "@every 1d", task.SitemapTask)
 	c.Start()
 }
 

@@ -20,14 +20,19 @@ import (
 func SitemapTask() {
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
-	// sm.SetPublicPath(config.Conf.StaticPath)
-	// sm.SetSitemapsPath("")
 	sm.SetSitemapsPath("sitemap")
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
-	sm.SetCompress(false)
+	sm.SetCompress(true)
 	sm.SetAdapter(&AliyunOssAdapter{})
 	sm.Create()
+
+	sm.Add(stm.URL{
+		{"loc", "/"},
+		{"lastmod", time.Now()},
+		{"changefreq", "daily"},
+		{"priority", 1.0},
+	})
 
 	sm.Add(stm.URL{
 		{"loc", "/topics"},
