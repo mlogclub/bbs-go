@@ -30,8 +30,9 @@ func SitemapTask() {
 	}()
 
 	sm := stm.NewSitemap(1)
-	sm.SetDefaultHost(config.Conf.BaseUrl)
-	sm.SetSitemapsPath("sitemap")
+	sm.SetDefaultHost(config.Conf.BaseUrl)         // 网站host
+	sm.SetSitemapsHost(config.Conf.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	sm.SetSitemapsPath("sitemap")                  // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
 	sm.SetCompress(true)
