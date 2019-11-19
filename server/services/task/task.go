@@ -23,7 +23,7 @@ func SitemapTask() {
 	sm.SetSitemapsPath("sitemap")
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
-	sm.SetCompress(true)
+	sm.SetCompress(false)
 	sm.SetAdapter(&AliyunOssAdapter{})
 	sm.Create()
 
