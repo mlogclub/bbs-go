@@ -1,6 +1,7 @@
 package services
 
 import (
+	"math"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -10,6 +11,8 @@ import (
 	"github.com/mlogclub/bbs-go/repositories"
 	"github.com/mlogclub/bbs-go/services/cache"
 )
+
+type ScanTagCallback func(tags []model.Tag) bool
 
 var TagService = newTagService()
 
@@ -99,4 +102,19 @@ func (this *tagService) GetTags() []model.TagResponse {
 
 func (this *tagService) GetTagInIds(tagIds []int64) []model.Tag {
 	return repositories.TagRepository.GetTagInIds(tagIds)
+}
+
+// 倒序扫描
+func (this *tagService) ScanDesc(cb ScanTagCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", cursor).Desc("id").Limit(100))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		if !cb(list) {
+			break
+		}
+	}
 }
