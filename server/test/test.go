@@ -5,13 +5,19 @@ import (
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
+
+	"github.com/mlogclub/bbs-go/common/config"
 )
+
+func init() {
+	config.InitConfig("./bbs-go.yaml")
+}
 
 func main() {
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost("https://mlog.club")
-	sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")
-	sm.SetSitemapsPath("")
+	// sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")
+	sm.SetSitemapsPath("sitemap")
 	sm.SetVerbose(false)
 	sm.SetCompress(false)
 	sm.Create()
@@ -35,7 +41,6 @@ func main() {
 		sm.Add(stm.URL{
 			{"loc", url},
 			{"lastmod", time.Now()},
-			// {"changefreq", "weekly"},
 			{"priority", 0.5},
 		})
 	}

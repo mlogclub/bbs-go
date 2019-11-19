@@ -5,8 +5,10 @@ import (
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/common/oss"
 	"github.com/mlogclub/bbs-go/common/urls"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
@@ -16,11 +18,13 @@ import (
 func SitemapTask() {
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(config.Conf.BaseUrl)
-	sm.SetPublicPath(config.Conf.StaticPath)
+	// sm.SetPublicPath(config.Conf.StaticPath)
+	sm.SetSitemapsPath("sitemap")
 	sm.SetSitemapsPath("")
 	sm.SetVerbose(false)
 	sm.SetCompress(false)
 	sm.SetPretty(false)
+	sm.SetAdapter(&AliyunOssAdapter{})
 	sm.Create()
 
 	sm.Add(stm.URL{
@@ -95,4 +99,23 @@ func RssTask() {
 	services.ArticleService.GenerateRss()
 	services.TopicService.GenerateRss()
 	services.ProjectService.GenerateRss()
+}
+
+// sitemap上传到aliyun
+type AliyunOssAdapter struct {
+}
+
+// Bytes gets written content.
+func (adp *AliyunOssAdapter) Bytes() [][]byte {
+	return nil
+}
+
+// Write will create sitemap xml file into the file systems.
+func (adp *AliyunOssAdapter) Write(loc *stm.Location, data []byte) {
+	sitemapUrl, err := oss.PutObject(loc.PathInPublic(), data)
+	if err != nil {
+		logrus.Error("Upload sitemap to aliyun oss error:", err)
+	} else {
+		logrus.Info("Upload sitemap:", sitemapUrl)
+	}
 }

@@ -9,9 +9,6 @@ import (
 
 	"github.com/go-resty/resty/v2"
 
-	"github.com/mlogclub/bbs-go/common/config"
-	"github.com/mlogclub/bbs-go/controllers/api"
-
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/logger"
@@ -19,6 +16,9 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
+
+	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/controllers/api"
 
 	"github.com/mlogclub/bbs-go/controllers/admin"
 	"github.com/mlogclub/bbs-go/middleware"
