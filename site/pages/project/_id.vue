@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container-wrapper main-container left-main">
       <div class="left-container">
         <div v-if="project" class="project">
           <div class="project-header">

@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/baiduseo"
 	"github.com/mlogclub/bbs-go/common/config"
 	"github.com/mlogclub/bbs-go/common/urls"
 	"github.com/mlogclub/bbs-go/model"
@@ -113,6 +114,9 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
+	if err == nil {
+		baiduseo.PushUrl(urls.TopicUrl(topic.Id))
+	}
 	return topic, simple.FromError(err)
 }
 

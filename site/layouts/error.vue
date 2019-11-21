@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container-wrapper">
       <div class="error">
         <div>
           <img src="~/assets/images/logo.png" style="max-width: 100px;" />
@@ -11,6 +11,11 @@
           }}</span>
           <span v-else>页面异常</span>
         </div>
+        <div class="report">
+          <a href="https://mlog.club/topic/create" target="_blank"
+            >点击这里反馈该问题>></a
+          >
+        </div>
       </div>
     </div>
   </section>
@@ -18,7 +23,7 @@
 
 <script>
 export default {
-  layout: 'default', // 你可以为错误页面指定自定义的布局
+  layout: 'no-footer', // 你可以为错误页面指定自定义的布局
   props: {
     error: {
       type: Object,
@@ -34,11 +39,22 @@ export default {
   vertical-align: center;
   padding: 100px 0;
 
-  .description span {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 22px;
-    color: rgb(230, 76, 76);
+  .description {
+    margin-top: 30px;
+    span {
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 22px;
+      color: rgb(230, 76, 76);
+    }
+  }
+
+  .report {
+    margin-top: 20px;
+    a {
+      font-size: 15px;
+      font-weight: 700;
+    }
   }
 }
 </style>

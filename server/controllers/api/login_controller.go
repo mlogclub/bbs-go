@@ -24,7 +24,7 @@ func (this *LoginController) PostSignup() *simple.JsonResult {
 		nickname   = this.Ctx.PostValueTrim("nickname")
 		ref        = this.Ctx.FormValue("ref")
 	)
-	user, err := services.UserService.SignUp(username, "", nickname, "", password, rePassword)
+	user, err := services.UserService.SignUp(username, "", nickname, password, rePassword)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

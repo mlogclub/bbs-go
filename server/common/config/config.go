@@ -44,7 +44,14 @@ type Config struct {
 	BaiduAi struct {
 		ApiKey    string `yaml:"ApiKey"`
 		SecretKey string `yaml:"SecretKey"`
-	}
+	} `yaml:"BaiduAi"`
+
+	// 百度SEO相关配置
+	// 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
+	BaiduSEO struct {
+		Site  string `yaml:"Site"`
+		Token string `yaml:"Token"`
+	} `yaml:"BaiduSEO"`
 
 	// smtp
 	Smtp struct {

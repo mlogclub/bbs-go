@@ -9,6 +9,7 @@ import (
 
 	"github.com/emirpasic/gods/sets/hashset"
 
+	"github.com/mlogclub/bbs-go/common/baiduseo"
 	"github.com/mlogclub/bbs-go/common/config"
 	"github.com/mlogclub/bbs-go/common/urls"
 	"github.com/mlogclub/bbs-go/repositories"
@@ -203,7 +204,7 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 	})
 
 	if err == nil {
-		SubjectContentService.AnalyzeArticle(article)
+		baiduseo.PushUrl(urls.ArticleUrl(article.Id))
 	}
 	return
 }

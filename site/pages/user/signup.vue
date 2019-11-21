@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="main-body">
-        <div class="widget no-margin">
+        <div class="widget">
           <div class="widget-header">
             注册
           </div>

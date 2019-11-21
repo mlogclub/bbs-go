@@ -1,5 +1,5 @@
 <template>
-  <div class="widget no-margin markdown-help">
+  <div class="widget markdown-help">
     <div class="widget-header">
       Markdown 语法参考
     </div>

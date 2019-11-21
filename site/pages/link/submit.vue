@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container-wrapper">
       <div class="main-body">
         <div class="notice">
           <h1>收录规则：</h1>

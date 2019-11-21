@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container-wrapper">
       <div class="main-body">
         <div
           style="text-align: center; vertical-align: center; margin-top: 100px;"

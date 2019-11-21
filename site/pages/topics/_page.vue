@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container right-main">
+    <div class="container-wrapper main-container right-main">
       <bbs-left />
       <div class="right-container">
         <topic-list :topics="topicsPage.results" :show-ad="false" />

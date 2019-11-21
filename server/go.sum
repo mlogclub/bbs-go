@@ -135,6 +135,9 @@ github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a h1:5Q
 github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a/go.mod h1:06j50fbSIHFfu+Re5afbm6bF2oXLl3520SfqpsZUf9o=
 github.com/iris-contrib/schema v0.0.1 h1:10g/WnoRR+U+XXHWKBHeNy/+tZmM2kcAVGLOsz+yaDA=
 github.com/iris-contrib/schema v0.0.1/go.mod h1:urYA3uvUNG1TIIjOSCzHr9/LmbQo8LrOcOqfqxa4hXw=
+github.com/issue9/assert v1.3.1/go.mod h1:9Ger+iz8X7r1zMYYwEhh++2wMGWcNN2oVI+zIQXxcio=
+github.com/issue9/identicon v1.0.1 h1:pCDfjMDM6xWK0Chxo8Lif+ST/nOEtmXgMITgV1YA9Og=
+github.com/issue9/identicon v1.0.1/go.mod h1:UKNVkUFI68RPz/RlLhsAr1aX6bBSaYEWRHVfdjrMUmk=
 github.com/jinzhu/gorm v1.9.11 h1:gaHGvE+UnWGlbWG4Y3FUwY1EcZ5n6S9WtqBA/uySMLE=
 github.com/jinzhu/gorm v1.9.11/go.mod h1:bu/pK8szGZ2puuErfU0RwyeNdsf3e6nCX/noXaVxkfw=
 github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=

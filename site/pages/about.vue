@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container-wrapper">
       <div class="widget">
         <div class="widget-header">
           关于

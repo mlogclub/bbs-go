@@ -37,3 +37,9 @@ Smtp:
 BaiduAi:
   ApiKey:
   SecretKey:
+
+# 百度SEO相关配置
+# 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
+BaiduSEO:
+  Site: mlog.club
+  Token: Y0b5JDk00GSjyMu3

@@ -1,6 +1,6 @@
 <template>
   <div class="left-container">
-    <div class="widget no-margin">
+    <div class="widget">
       <div class="widget-header">
         <a :href="createTopicUrl" class="button is-success post">
           <i class="iconfont icon-topic" />&nbsp;

@@ -15,24 +15,6 @@ type SubjectController struct {
 	Ctx iris.Context
 }
 
-func (this *SubjectController) GetAnalyze() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	if user == nil || user.Id != 1 {
-		return simple.JsonErrorMsg("无权限")
-	}
-	go func() {
-		services.ArticleService.Scan(func(articles []model.Article) bool {
-			for _, article := range articles {
-				if article.Status == model.ArticleStatusPublished {
-					services.SubjectContentService.AnalyzeArticle(&article)
-				}
-			}
-			return true
-		})
-	}()
-	return simple.JsonSuccess()
-}
-
 func (this *SubjectController) GetBy(subjectId int64) *simple.JsonResult {
 	s := services.SubjectService.Get(subjectId)
 	return simple.JsonData(s)

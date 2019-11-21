@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container-wrapper main-container left-main">
       <div class="left-container">
         <article class="article-item article-detail">
           <div class="article-header">
@@ -174,7 +174,7 @@
           ;(adsbygoogle = window.adsbygoogle || []).push({})
         </script>
 
-        <div ref="toc" v-if="article.toc" class="widget no-margin no-bg toc">
+        <div ref="toc" v-if="article.toc" class="widget no-bg toc">
           <div class="widget-header">目录</div>
           <div v-html="article.toc" class="widget-content" />
         </div>

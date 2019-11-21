@@ -1,5 +1,5 @@
 <template>
-  <a :class="{ button: isButton }" @click="githubLogin" class="is-dark">
+  <a :class="{ button: isButton }" @click="githubLogin" class="is-white">
     <i class="iconfont icon-github" />&nbsp;
     <strong>{{ title }}</strong>
   </a>

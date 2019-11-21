@@ -24,7 +24,7 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 		user = &model.User{}
 		user.Id = id
 		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
-		user.Avatar = avatar.GetDefaultAvatar(id)
+		user.Avatar = avatar.DefaultAvatar
 		user.CreateTime = simple.NowTimestamp()
 	}
 	return BuildUser(user)
@@ -44,7 +44,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 	}
 	a := user.Avatar
 	if len(a) == 0 {
-		a = avatar.GetDefaultAvatar(user.Id)
+		a = avatar.DefaultAvatar
 	}
 	roles := strings.Split(user.Roles, ",")
 	return &model.UserInfo{
@@ -439,7 +439,7 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 	from := BuildUserDefaultIfNull(message.FromId)
 	if message.FromId <= 0 {
 		from.Nickname = "系统通知"
-		from.Avatar = avatar.DefaultAvatars[0]
+		from.Avatar = avatar.DefaultAvatar
 	}
 	return &model.MessageResponse{
 		MessageId:    message.Id,

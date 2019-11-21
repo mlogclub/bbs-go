@@ -5,8 +5,6 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/subject"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
 )
@@ -78,24 +76,6 @@ func (this *subjectContentService) GetSubjectContents(subjectId, cursor int64) (
 		nextCursor = cursor
 	}
 	return
-}
-
-// 分析文章
-func (this *subjectContentService) AnalyzeArticle(article *model.Article) {
-	subjectIds := subject.AnalyzeSubjects(article.UserId, article.Title, article.Content)
-	if len(subjectIds) > 0 {
-		for _, subjectId := range subjectIds {
-			summary := article.Summary
-			if summary == "" {
-				summary = common.GetSummary(article.ContentType, article.Content)
-			}
-			_, err := this.Publish(subjectId, model.EntityTypeArticle, article.Id,
-				article.Title, summary)
-			if err != nil {
-				logrus.Error(err)
-			}
-		}
-	}
 }
 
 // 发布

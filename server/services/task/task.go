@@ -68,9 +68,9 @@ func SitemapTask() {
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
 				})
-				logrus.WithFields(logrus.Fields{
-					"sitemap": "article",
-				}).Info(articleUrl)
+				// logrus.WithFields(logrus.Fields{
+				// 	"sitemap": "article",
+				// }).Info(articleUrl)
 			}
 		}
 		return true
@@ -84,9 +84,9 @@ func SitemapTask() {
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
 				})
-				logrus.WithFields(logrus.Fields{
-					"sitemap": "topic",
-				}).Info(topicUrl)
+				// logrus.WithFields(logrus.Fields{
+				// 	"sitemap": "topic",
+				// }).Info(topicUrl)
 			}
 		}
 		return true
@@ -99,9 +99,9 @@ func SitemapTask() {
 				{"loc", projectUrl},
 				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
 			})
-			logrus.WithFields(logrus.Fields{
-				"sitemap": "project",
-			}).Info(projectUrl)
+			// logrus.WithFields(logrus.Fields{
+			// 	"sitemap": "project",
+			// }).Info(projectUrl)
 		}
 		return true
 	})
@@ -115,14 +115,14 @@ func SitemapTask() {
 				{"changefreq", "daily"},
 				{"priority", 0.6},
 			})
-			logrus.WithFields(logrus.Fields{
-				"sitemap": "tag",
-			}).Info(tagUrl)
+			// logrus.WithFields(logrus.Fields{
+			// 	"sitemap": "tag",
+			// }).Info(tagUrl)
 		}
 		return true
 	})
 
-	sm.Finalize().PingSearchEngines()
+	sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
 }
 
 // 生成rss

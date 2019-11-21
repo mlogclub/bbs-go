@@ -40,7 +40,7 @@ func (this *UserController) PostCreate() *simple.JsonResult {
 	nickname := simple.FormValue(this.Ctx, "nickname")
 	password := simple.FormValue(this.Ctx, "password")
 
-	user, err := services.UserService.SignUp(username, email, nickname, "", password, password)
+	user, err := services.UserService.SignUp(username, email, nickname, password, password)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

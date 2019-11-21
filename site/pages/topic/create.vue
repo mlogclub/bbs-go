@@ -1,10 +1,10 @@
 <template>
   <section class="main">
-    <div class="container">
+    <div class="container-wrapper">
       <div class="columns">
         <div class="column is-21">
           <div class="main-body">
-            <div class="widget no-margin">
+            <div class="widget">
               <div class="widget-header">
                 <nav class="breadcrumb" aria-label="breadcrumbs">
                   <ul>

@@ -1,68 +1,48 @@
 package main
 
 import (
-	"strconv"
-	"time"
+	"fmt"
 
-	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
-	"github.com/sirupsen/logrus"
+	"github.com/emirpasic/gods/sets/hashset"
+	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common/config"
+	"github.com/mlogclub/bbs-go/common/avatar"
 )
 
-func init() {
-	config.InitConfig("./bbs-go.yaml")
-}
-
 func main() {
-	buildSitemap()
-}
+	// var fores []color.Color
+	// for _, hexColor := range hexColors {
+	// 	c, _ := colorToRGB(hexColor)
+	// 	fores = append(fores, c)
+	// }
+	//
+	// instance, _ := identicon.New(100, color.Transparent, fores...)
+	// for i := 0; i < 10; i++ {
+	// 	img := instance.Make([]byte(strconv.Itoa(i)))
+	// 	fi, err := os.Create("/Users/gaoyoubo/Downloads/avatar/" + strconv.Itoa(i) + ".png")
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// 	_ = png.Encode(fi, img)
+	// 	_ = fi.Close()
+	// }
 
-var sitemapBuilding = false
+	hs := hashset.New()
+	var i int64 = 0
+	for ; i < 1000; i++ {
+		data, _ := avatar.Generate(i)
+		md5 := simple.MD5Bytes(data)
+		hs.Add(md5)
 
-func buildSitemap() {
-	if sitemapBuilding {
-		logrus.Info("Sitemap in building...")
-		return
-	}
-	sitemapBuilding = true
-	defer func() {
-		sitemapBuilding = false
-	}()
-
-	sm := stm.NewSitemap(1)
-	sm.SetDefaultHost("https://mlog.club")
-	sm.SetSitemapsHost("https://static.mlog.club")
-	sm.SetSitemapsPath("")
-	sm.SetPublicPath("/Users/gaoyoubo/Downloads/sitemap")
-	sm.SetVerbose(false)
-	sm.SetCompress(false)
-	sm.SetPretty(true)
-	// sm.SetAdapter(&task.AliyunOssAdapter{})
-	sm.Create()
-
-	sm.Add(stm.URL{
-		{"loc", "/topics"},
-		{"lastmod", time.Now()},
-		{"changefreq", "daily"},
-		{"priority", 1.0},
-	})
-
-	sm.Add(stm.URL{
-		{"loc", "/articles"},
-		{"lastmod", time.Now()},
-		{"changefreq", "daily"},
-		{"priority", 1.0},
-	})
-
-	for i := 0; i < 1; i++ {
-		url := "https://mlog.club/article/" + strconv.Itoa(i)
-		sm.Add(stm.URL{
-			{"loc", url},
-			{"lastmod", time.Now()},
-			{"priority", 0.5},
-		})
+		fmt.Println(hs.Size())
 	}
 
-	sm.Finalize()
+	// fmt.Println(len(data))
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// {
+	// 	fi, _ := os.Create("/Users/gaoyoubo/Downloads/avatar/fuck.png")
+	// 	fi.Write(data)
+	// }
 }

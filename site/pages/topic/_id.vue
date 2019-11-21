@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container left-main">
+      <div class="container-wrapper main-container left-main">
         <div class="left-container">
           <div class="topic-detail topic-wrap">
             <div class="topic-header">
@@ -12,9 +12,7 @@
                 />
               </div>
               <div class="topic-header-center">
-                <a :href="'/topic/' + topic.topicId" :title="topic.title">
-                  <div class="topic-title">{{ topic.title }}</div>
-                </a>
+                <div class="topic-title">{{ topic.title }}</div>
 
                 <div class="topic-meta">
                   <span class="meta-item">
@@ -112,7 +110,7 @@
             ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
 
-          <div ref="toc" v-if="topic.toc" class="widget no-margin no-bg toc">
+          <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
             <div class="widget-header">
               目录
             </div>

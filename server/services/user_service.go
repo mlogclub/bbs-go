@@ -2,14 +2,14 @@ package services
 
 import (
 	"database/sql"
-	"strings"
 	"errors"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/bbs-go/common"
+	"github.com/mlogclub/bbs-go/common/avatar"
 	"github.com/mlogclub/bbs-go/common/oss"
 	"github.com/mlogclub/bbs-go/services/cache"
 
@@ -91,7 +91,7 @@ func (this *userService) GetByUsername(username string) *model.User {
 }
 
 // 注册
-func (this *userService) SignUp(username, email, nickname, avatar, password, rePassword string) (*model.User, error) {
+func (this *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 	nickname = strings.TrimSpace(nickname)
@@ -130,16 +130,30 @@ func (this *userService) SignUp(username, email, nickname, avatar, password, reP
 		Email:      simple.SqlNullString(email),
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
-		Avatar:     avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
 
-	if err := this.Create(user); err != nil {
+	err = simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+		if err := repositories.UserRepository.Create(tx, user); err != nil {
+			return err
+		}
+
+		avatarUrl, err := this.HandleAvatar(user.Id, "")
+		if err != nil {
+			return err
+		}
+
+		if err := repositories.UserRepository.UpdateColumn(tx, user.Id, "avatar", avatarUrl); err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err != nil {
 		return nil, err
 	}
-	cache.UserCache.Invalidate(user.Id)
 	return user, nil
 }
 
@@ -173,29 +187,29 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 		return user, nil
 	}
 
-	avatar, copyAvatarErr := oss.CopyImage(thirdAccount.Avatar)
-	if copyAvatarErr != nil {
-		logrus.Error("复制第三方头像异常", thirdAccount.Avatar, copyAvatarErr)
-		avatar = thirdAccount.Avatar
-	}
 	user = &model.User{
 		Username:   sql.NullString{},
 		Nickname:   thirdAccount.Nickname,
-		Avatar:     avatar,
 		Status:     model.UserStatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		err := repositories.UserRepository.Create(tx, user)
+		if err := repositories.UserRepository.Create(tx, user); err != nil {
+			return err
+		}
+
+		if err := repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id); err != nil {
+			return err
+		}
+
+		avatarUrl, err := this.HandleAvatar(user.Id, thirdAccount.Avatar)
 		if err != nil {
 			return err
 		}
-		if user.Id > 0 {
-			err = repositories.ThirdAccountRepository.UpdateColumn(tx, thirdAccount.Id, "user_id", user.Id)
-			if err != nil {
-				return err
-			}
+
+		if err := repositories.UserRepository.UpdateColumn(tx, user.Id, "avatar", avatarUrl); err != nil {
+			return err
 		}
 		return nil
 	})
@@ -204,6 +218,20 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 	}
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil
+}
+
+// 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
+// thirdAvatar: 第三方登录带过来的头像
+func (this *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
+	if len(thirdAvatar) > 0 {
+		return oss.CopyImage(thirdAvatar)
+	}
+
+	avatarBytes, err := avatar.Generate(userId)
+	if err != nil {
+		return "", err
+	}
+	return oss.PutImage(avatarBytes)
 }
 
 // 邮箱是否存在

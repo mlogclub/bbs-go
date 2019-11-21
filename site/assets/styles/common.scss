@@ -27,12 +27,16 @@ body {
 // main-container
 $sidebar-width: 190px;
 
+.container-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 .main-container {
   display: flex;
 
   .left-container,
   .right-container {
-    // background: #fff;
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
@@ -46,12 +50,13 @@ $sidebar-width: 190px;
     }
 
     @media screen and (max-width: 768px) {
-      .right-container {
-        display: none;
-      }
-
       .left-container {
         width: 100% !important;
+        margin-right: 0 !important;
+      }
+
+      .right-container {
+        display: none;
       }
     }
 
@@ -64,7 +69,6 @@ $sidebar-width: 190px;
     .right-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
-      // margin-left: 10px;
       padding: 0px;
     }
   }
@@ -76,26 +80,26 @@ $sidebar-width: 190px;
     }
 
     @media screen and (max-width: 768px) {
+      .right-container {
+        width: 100% !important;
+        margin-left: 0 !important;
+      }
+
       .left-container {
         display: none;
       }
-
-      .right-container {
-        width: 100% !important;
-      }
-    }
-
-    .left-container {
-      min-width: $sidebar-width;
-      max-width: $sidebar-width;
-      // margin-right: 10px;
-      padding: 0px;
     }
 
     .right-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
       margin-left: 10px;
+    }
+
+    .left-container {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+      padding: 0px;
     }
   }
 
@@ -133,11 +137,18 @@ $sidebar-width: 190px;
 
 .widget {
   background: #fff;
+  padding: 0 6px;
   // font-size: 13px;
   // padding-left: 8px;
-  padding: 0 6px;
-
   margin-top: 20px;
+
+  &:first-child {
+    margin: 0px;
+  }
+
+  &.has-margin {
+    margin-top: 20px;
+  }
 
   &.no-margin {
     margin: 0px;
