@@ -55,17 +55,7 @@
           </form>
         </div>
 
-        <!--
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-success" href="/topic/create">
-              <i class="iconfont icon-topic">
-                <strong>发帖/提问</strong>
-              </i>
-            </a>
-          </div>
-        </div>
-        -->
+        <msg-notice />
 
         <div v-if="user" class="navbar-item has-dropdown is-hoverable">
           <a :href="'/user/' + user.id" class="navbar-link">
@@ -79,10 +69,10 @@
             <a class="navbar-item" href="/article/create">
               <i class="iconfont icon-publish" />&nbsp;发表文章
             </a>
-            -->
             <a class="navbar-item" href="/user/messages">
               <i class="iconfont icon-message" />&nbsp;消息
             </a>
+            -->
             <a class="navbar-item" href="/user/favorites">
               <i class="iconfont icon-favorites" />&nbsp;收藏
             </a>
@@ -100,16 +90,6 @@
             <qq-login />
           </div>
         </div>
-
-        <div
-          v-if="user && msgcount > 0"
-          class="navbar-item"
-          style="display:block; width: 100px;"
-        >
-          <a :href="'/user/messages'" class="msgcount">{{
-            msgcount > 9 ? '9+' : msgcount
-          }}</a>
-        </div>
       </div>
     </div>
     <!-- </div> -->
@@ -120,11 +100,11 @@
 import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
+import MsgNotice from '~/components/MsgNotice'
 export default {
-  components: { GithubLogin, QqLogin },
+  components: { GithubLogin, QqLogin, MsgNotice },
   data() {
     return {
-      msgcount: 0,
       navbarActive: false
     }
   },
@@ -138,16 +118,11 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
-    this.getMsgcount()
   },
   methods: {
-    async getMsgcount() {
-      this.msgcount = await this.$axios.get('/api/user/msgcount')
-    },
     async signout() {
       try {
         await this.$store.dispatch('user/signout')
-        this.msgcount = 0
         utils.linkTo('/')
       } catch (e) {
         console.error(e)
@@ -179,7 +154,6 @@ export default {
 
   #searchForm {
     .input {
-      // box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
       box-shadow: none;
       border-radius: 2px;
       background-color: #fff;

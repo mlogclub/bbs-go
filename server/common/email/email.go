@@ -2,9 +2,10 @@ package email
 
 import (
 	"bytes"
+	"crypto/tls"
 	"html/template"
+	"net"
 	"net/smtp"
-	"time"
 
 	"github.com/jordan-wright/email"
 	"github.com/sirupsen/logrus"
@@ -64,24 +65,33 @@ func SendTemplateEmail(to, subject, title, content, quoteContent, url string) {
 
 // 发送邮件
 func SendEmail(to string, subject, html string) {
+	var (
+		host      = config.Conf.Smtp.Host
+		port      = config.Conf.Smtp.Port
+		username  = config.Conf.Smtp.Username
+		password  = config.Conf.Smtp.Password
+		ssl       = config.Conf.Smtp.SSL
+		addr      = net.JoinHostPort(host, port)
+		auth      = smtp.PlainAuth("", username, password, host)
+		tlsConfig = &tls.Config{
+			InsecureSkipVerify: true,
+			ServerName:         host,
+		}
+	)
+
 	e := email.NewEmail()
 	e.From = config.Conf.Smtp.Username
 	e.To = []string{to}
 	e.Subject = subject
 	e.HTML = []byte(html)
-	doSend(e)
-}
 
-// 执行发送
-func doSend(e *email.Email) {
-	addr := config.Conf.Smtp.Host + ":" + config.Conf.Smtp.Port
-	emailPool, err := email.NewPool(addr, 3, smtp.PlainAuth("", config.Conf.Smtp.Username, config.Conf.Smtp.Password,
-		config.Conf.Smtp.Host))
-	if err != nil {
-		logrus.Error(err)
-	}
-	err = emailPool.Send(e, 10*time.Second)
-	if err != nil {
-		logrus.Error(err)
+	if ssl {
+		if err := e.SendWithTLS(addr, auth, tlsConfig); err != nil {
+			logrus.Error("发送邮件异常", err)
+		}
+	} else {
+		if err := e.Send(addr, auth); err != nil {
+			logrus.Error("发送邮件异常", err)
+		}
 	}
 }

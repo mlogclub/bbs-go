@@ -59,6 +59,7 @@ type Config struct {
 		Port     string `yaml:"Port"`
 		Username string `yaml:"Username"`
 		Password string `yaml:"Password"`
+		SSL      bool   `yaml:"SSL"`
 	} `yaml:"Smtp"`
 }
 

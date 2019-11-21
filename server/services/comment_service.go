@@ -78,6 +78,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 	if len(form.Content) == 0 {
 		return nil, errors.New("请输入评论内容")
 	}
+
 	comment := &model.Comment{
 		UserId:     userId,
 		EntityType: form.EntityType,
@@ -87,7 +88,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 		Status:     model.CommentStatusOk,
 		CreateTime: simple.NowTimestamp(),
 	}
-	if err := repositories.CommentRepository.Create(simple.DB(), comment); err != nil {
+	if err := this.Create(comment); err != nil {
 		return nil, err
 	}
 

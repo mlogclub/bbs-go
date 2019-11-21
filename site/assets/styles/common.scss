@@ -258,29 +258,6 @@ div.avatar {
   }
 }
 
-.navbar .msgcount {
-  text-align: center;
-  vertical-align: middle;
-  height: 25px;
-  width: 25px;
-  margin: 0px;
-  padding: 1px;
-  background: #e50000;
-  border-radius: 50%;
-  font-size: 15px;
-  font-weight: 900;
-  color: #fff;
-  animation: msgnotice 1s 3; // infinite 可以指定循环
-
-  @keyframes msgnotice {
-    50% {
-      background: transparent;
-      color: transparent;
-    }
-  }
-}
-
-
 .toc {
   position: relative;
   width: $sidebar-width;

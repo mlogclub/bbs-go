@@ -44,7 +44,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_rf3iafzqutm.css'
+        href: '//at.alicdn.com/t/font_1142441_yem1kd8hp2n.css'
       }
     ]
   },

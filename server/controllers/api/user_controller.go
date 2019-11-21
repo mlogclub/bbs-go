@@ -178,7 +178,7 @@ func (this *UserController) GetMessages() *simple.JsonResult {
 		Page(page, 20).Desc("id"))
 
 	// 全部标记为已读
-	services.MessageService.MarkReadAll(user.Id)
+	services.MessageService.MarkRead(user.Id)
 
 	return simple.JsonPageData(render.BuildMessages(messages), paging)
 }
