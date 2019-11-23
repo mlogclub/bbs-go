@@ -55,7 +55,9 @@ export default {
           'upload',
           'link',
           'table',
+          'both',
           'preview',
+          'format',
           'fullscreen'
         ],
         // placeholder: '请输入...',
