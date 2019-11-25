@@ -127,16 +127,6 @@ func (this *UserController) PostUpdatePassword() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-// 未读消息数量
-func (this *UserController) GetMsgcount() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	var count int64 = 0
-	if user != nil {
-		count = services.MessageService.GetUnReadCount(user.Id)
-	}
-	return simple.NewEmptyRspBuilder().Put("count", count).JsonResult()
-}
-
 // 用户收藏
 func (this *UserController) GetFavorites() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
@@ -161,6 +151,18 @@ func (this *UserController) GetFavorites() *simple.JsonResult {
 	}
 
 	return simple.JsonCursorData(render.BuildFavorites(favorites), strconv.FormatInt(cursor, 10))
+}
+
+// 获取最近3条未读消息
+func (this *UserController) GetMsgrecent() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(this.Ctx)
+	var count int64 = 0
+	var messages []model.Message
+	if user != nil {
+		count = services.MessageService.GetUnReadCount(user.Id)
+		messages = services.MessageService.Find(simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.MsgStatusUnread).Limit(3).Desc("id"))
+	}
+	return simple.NewEmptyRspBuilder().Put("count", count).Put("messages", render.BuildMessages(messages)).JsonResult()
 }
 
 // 用户消息

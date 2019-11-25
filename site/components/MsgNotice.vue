@@ -1,6 +1,6 @@
 <template>
-  <!-- <div class="navbar-item dropdown is-hoverable is-right msg-notice"> -->
-  <div class="navbar-item is-hoverable is-right msg-notice">
+  <div class="navbar-item dropdown is-hoverable is-right msg-notice">
+    <!-- <div class="navbar-item is-hoverable is-right msg-notice"> -->
     <div class="dropdown-trigger">
       <a
         :class="{ 'msg-flicker': msgcount > 0 }"
@@ -8,18 +8,18 @@
         class="msgicon"
       >
         <i class="iconfont icon-bell"></i>
-        <sup v-if="msgcount > 0">
-          {{ msgcount > 9 ? '9+' : msgcount }}
-        </sup>
+        <sup v-if="msgcount > 0">{{ msgcount > 9 ? '9+' : msgcount }}</sup>
       </a>
     </div>
-    <div class="dropdown-menu">
+    <div v-if="messages && messages.length" class="dropdown-menu">
       <div class="dropdown-content msglist-wrapper">
-        <div class="msglist">
-          我是内容
-        </div>
+        <ul class="msglist">
+          <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
+            <a href="/user/messages">{{ msg.content }}</a>
+          </li>
+        </ul>
         <div class="msgfooter">
-          消息中心
+          <a href="/user/messages">消息中心&gt;&gt;</a>
         </div>
       </div>
     </div>
@@ -30,7 +30,8 @@
 export default {
   data() {
     return {
-      msgcount: 0
+      msgcount: 0,
+      messages: []
     }
   },
   computed: {
@@ -44,8 +45,9 @@ export default {
   methods: {
     async getMsgcount() {
       if (this.user) {
-        const ret = await this.$axios.get('/api/user/msgcount')
+        const ret = await this.$axios.get('/api/user/msgrecent')
         this.msgcount = ret.count
+        this.messages = ret.messages
       }
     }
   }
@@ -73,6 +75,33 @@ export default {
     50% {
       // color: transparent;
       color: red;
+    }
+  }
+
+  .msglist-wrapper {
+    padding: 5px 10px;
+    .msglist {
+      .msg-item {
+        padding: 3px 0;
+        font-size: 12px;
+        line-height: 21px;
+        overflow: hidden;
+        word-break: break-all;
+        -webkit-line-clamp: 1;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        &:not(:last-child) {
+          border-bottom: 1px solid #f7f7f7;
+        }
+      }
+    }
+    .msgfooter {
+      border-top: 1px solid #f7f7f7;
+      text-align: right;
+      a {
+        font-size: 13px;
+      }
     }
   }
 }
