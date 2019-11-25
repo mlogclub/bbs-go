@@ -1,6 +1,5 @@
 <template>
   <div class="navbar-item dropdown is-hoverable is-right msg-notice">
-    <!-- <div class="navbar-item is-hoverable is-right msg-notice"> -->
     <div class="dropdown-trigger">
       <a
         :class="{ 'msg-flicker': msgcount > 0 }"
@@ -13,11 +12,13 @@
     </div>
     <div v-if="messages && messages.length" class="dropdown-menu">
       <div class="dropdown-content msglist-wrapper">
-        <ul class="msglist">
-          <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
-            <a href="/user/messages">{{ msg.content }}</a>
-          </li>
-        </ul>
+        <div class="msglist">
+          <ul>
+            <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
+              <a href="/user/messages">{{ msg.content }}</a>
+            </li>
+          </ul>
+        </div>
         <div class="msgfooter">
           <a href="/user/messages">消息中心&gt;&gt;</a>
         </div>
