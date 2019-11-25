@@ -47,6 +47,28 @@ func (this *UserController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(this.buildUserItem(user))
 }
 
+func (this *UserController) PostCreate2() *simple.JsonResult {
+	username := simple.FormValue(this.Ctx, "username")
+	email := simple.FormValue(this.Ctx, "email")
+	nickname := simple.FormValue(this.Ctx, "nickname")
+	password := simple.FormValue(this.Ctx, "password")
+
+	user, err := services.UserService.SignUp(username, email, nickname, password, password)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	token, err := services.UserTokenService.Generate(user.Id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	ret := this.buildUserItem(user)
+	ret["token"] = token
+
+	return simple.JsonData(ret)
+}
+
 func (this *UserController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
