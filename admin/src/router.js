@@ -81,33 +81,6 @@ export default new Router({
     },
 
     {
-      path: '2',
-      component: Home,
-      meta: {
-        title: '专栏管理',
-        icon: 'iconfont icon-article'
-      },
-      children: [
-        {
-          path: '/subject/index',
-          component: () => import('@/views/subject/Index.vue'),
-          meta: {
-            title: '专栏',
-            icon: 'iconfont icon-article'
-          }
-        },
-        {
-          path: '/subject-content/index',
-          component: () => import('@/views/subject-content/Index.vue'),
-          meta: {
-            title: '专栏内容',
-            icon: 'iconfont icon-topic'
-          }
-        }
-      ]
-    },
-
-    {
       path: '3',
       component: Home,
       meta: {

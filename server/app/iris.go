@@ -66,7 +66,6 @@ func InitIris() {
 		m.Party("/favorite").Handle(new(api.FavoriteController))
 		m.Party("/config").Handle(new(api.ConfigController))
 		m.Party("/upload").Handle(new(api.UploadController))
-		m.Party("/subject").Handle(new(api.SubjectController))
 		m.Party("/link").Handle(new(api.LinkController))
 	})
 
@@ -83,8 +82,6 @@ func InitIris() {
 		m.Party("/article-tag").Handle(new(admin.ArticleTagController))
 		m.Party("/topic").Handle(new(admin.TopicController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
-		m.Party("/subject").Handle(new(admin.SubjectController))
-		m.Party("/subject-content").Handle(new(admin.SubjectContentController))
 		m.Party("/link").Handle(new(admin.LinkController))
 		m.Party("/collect-rule").Handle(new(admin.CollectRuleController))
 		m.Party("/collect-article").Handle(new(admin.CollectArticleController))
