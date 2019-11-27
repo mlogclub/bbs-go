@@ -13,7 +13,6 @@ import (
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/bbs-go/services/cache"
-	"github.com/mlogclub/bbs-go/services/collect"
 )
 
 type ArticleController struct {
@@ -117,16 +116,4 @@ func (this *ArticleController) PostDelete() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
-}
-
-func (this *ArticleController) PostCollect() *simple.JsonResult {
-	url := this.Ctx.PostValue("url")
-	if len(url) == 0 {
-		return simple.JsonErrorMsg("链接不存在")
-	}
-	title, content, err := collect.Collect(url, true)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.NewEmptyRspBuilder().Put("title", title).Put("content", content).JsonResult()
 }
