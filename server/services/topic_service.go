@@ -172,7 +172,7 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 	return
 }
 
-// 根据编号批量获取主题
+// GetTopicInIds 根据编号批量获取主题
 func (this *topicService) GetTopicInIds(topicIds []int64) []model.Topic {
 	if len(topicIds) == 0 {
 		return nil
