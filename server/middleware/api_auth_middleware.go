@@ -9,26 +9,7 @@ import (
 	"github.com/mlogclub/bbs-go/services/cache"
 )
 
-// 接口权限
-func ApiAuth(ctx iris.Context) {
-	token := getUserToken(ctx)
-	userToken := cache.UserTokenCache.Get(token)
-
-	// 没找到授权
-	if userToken == nil || userToken.Status == model.UserTokenStatusDisabled {
-		notLogin(ctx)
-		return
-	}
-	// 授权过期
-	if userToken.ExpiredAt <= simple.NowTimestamp() {
-		notLogin(ctx)
-		return
-	}
-
-	ctx.Next()
-}
-
-// 后台权限
+// AdminAuth 后台权限
 func AdminAuth(ctx iris.Context) {
 	token := getUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
