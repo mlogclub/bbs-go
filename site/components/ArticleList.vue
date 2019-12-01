@@ -1,13 +1,7 @@
 <template>
   <ul class="article-list">
     <li v-for="(article, index) in articles" :key="article.articleId">
-      <div
-        v-if="
-          showAd &&
-            ((articles.length < 3 && index === 1) ||
-              (index !== 0 && index % 5 === 0))
-        "
-      >
+      <div v-if="showAd && (index === 1 || index % 5 === 0)">
         <ins
           class="adsbygoogle"
           style="display:block"

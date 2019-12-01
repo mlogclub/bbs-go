@@ -1,7 +1,10 @@
 <template>
   <ul class="topic-list topic-wrap">
     <template v-for="(topic, index) in topics">
-      <li v-if="showAd && index === 3" :key="'ad-' + index">
+      <li
+        v-if="showAd && (index === 1 || index % 5 === 0)"
+        :key="'topic-' + index"
+      >
         <div class="ad">
           <ins
             class="adsbygoogle"

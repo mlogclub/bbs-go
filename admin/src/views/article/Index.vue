@@ -26,9 +26,6 @@
         <el-form-item>
           <el-button type="primary" v-on:click="list">查询</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>
       </el-form>
     </el-col>
 
@@ -79,175 +76,14 @@
         style="float:right;"
       ></el-pagination>
     </el-col>
-
-    <!--新增界面-->
-    <el-dialog
-      title="新增"
-      :visible.sync="addFormVisible"
-      :fullscreen="true"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
-      <el-form
-        :model="addForm"
-        label-width="80px"
-        :rules="addFormRules"
-        ref="addForm"
-      >
-        <el-input v-model="addForm.contentType" type="hidden"></el-input>
-        <el-form-item label="标签" prop="tagId">
-          <el-select v-model="addForm.tagId" placeholder="请选择标签">
-            <el-option-group
-              v-for="group in tagOptions"
-              :key="group.label"
-              :label="group.label"
-            >
-              <el-option
-                v-for="item in group.children"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="采集" prop="title">
-          <el-input
-            v-model="collectUrl"
-            auto-complete="off"
-            style="width: 60%"
-          ></el-input>
-          <el-button type="primary" @click.prevent="doCollect">采集</el-button>
-        </el-form-item>
-
-        <el-form-item label="用户编号" prop="title">
-          <el-input v-model="addForm.userId" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="addForm.title" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <markdown-editor
-            v-model="addForm.content"
-            :init-value="addForm.content"
-          />
-        </el-form-item>
-        <!--
-        <el-form-item label="摘要" prop="summary">
-          <el-input type="textarea" v-model="addForm.summary" autosize></el-input>
-        </el-form-item>
-        -->
-        <el-form-item label="原文地址" prop="sourceUrl">
-          <el-input v-model="addForm.sourceUrl"></el-input>
-        </el-form-item>
-        <!--
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="addForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
-          </el-select>
-        </el-form-item>
-        -->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click.native="addSubmit"
-          :loading="addLoading"
-          >提交</el-button
-        >
-      </div>
-    </el-dialog>
-
-    <!--编辑界面-->
-    <el-dialog
-      title="编辑"
-      :visible.sync="editFormVisible"
-      :fullscreen="true"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
-      <el-form
-        :model="editForm"
-        label-width="80px"
-        :rules="editFormRules"
-        ref="editForm"
-      >
-        <el-input v-model="editForm.id" type="hidden"></el-input>
-        <el-input v-model="editForm.contentType" type="hidden"></el-input>
-        <el-form-item label="标签" prop="tagId">
-          <el-select v-model="editForm.tagId" placeholder="请选择标签">
-            <el-option-group
-              v-for="group in tagOptions"
-              :key="group.label"
-              :label="group.label"
-            >
-              <el-option
-                v-for="item in group.children"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="editForm.title" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <markdown-editor
-            v-if="editForm.contentType == 'markdown'"
-            v-model="editForm.content"
-            :init-value="editForm.content"
-            :height="500"
-          />
-
-          <html-editor
-            v-if="editForm.contentType == 'html'"
-            v-model="editForm.content"
-          ></html-editor>
-        </el-form-item>
-        <el-form-item label="摘要" prop="summary">
-          <el-input
-            type="textarea"
-            v-model="editForm.summary"
-            autosize
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="editForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="原文地址" prop="sourceUrl">
-          <el-input v-model="editForm.sourceUrl"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click.native="editSubmit"
-          :loading="editLoading"
-          >提交</el-button
-        >
-      </div>
-    </el-dialog>
   </section>
 </template>
 
 <script>
 import HttpClient from '@/apis/HttpClient'
-import MarkdownEditor from '@/components/MarkdownEditor'
-import HtmlEditor from '@/components/HtmlEditor'
 
 export default {
   name: 'List',
-  components: { MarkdownEditor, HtmlEditor },
   data() {
     return {
       results: [],
@@ -257,37 +93,7 @@ export default {
         title: '',
         status: ''
       },
-
-      tagOptions: [],
-
-      addForm: {
-        contentType: 'markdown',
-        userId: '',
-        tagId: '',
-        title: '',
-        summary: '',
-        content: '',
-        sourceUrl: '',
-        status: 0
-      },
-      collectUrl: '',
-      addFormVisible: false,
-      addFormRules: {},
-      addLoading: false,
-
-      editForm: {
-        id: '',
-        contentType: 'markdown',
-        tagId: '',
-        title: '',
-        summary: '',
-        content: '',
-        sourceUrl: '',
-        status: 0
-      },
-      editFormVisible: false,
-      editFormRules: {},
-      editLoading: false
+      tagOptions: []
     }
   },
   mounted() {
@@ -318,52 +124,6 @@ export default {
       this.page.limit = val
       this.list()
     },
-    handleAdd() {
-      this.addForm = {
-        contentType: 'markdown',
-        tagId: '',
-        title: '',
-        summary: '',
-        content: '',
-        sourceUrl: '',
-        status: 0
-      }
-      this.addFormVisible = true
-    },
-    addSubmit() {
-      const me = this
-      HttpClient.post('/api/admin/article/create', this.addForm)
-        .then((data) => {
-          me.$message({ message: '提交成功', type: 'success' })
-          me.addFormVisible = false
-          me.list()
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
-        })
-    },
-    handleEdit(index, row) {
-      const me = this
-      HttpClient.get(`/api/admin/article/${row.id}`)
-        .then((data) => {
-          me.editForm = Object.assign({}, data)
-          me.editFormVisible = true
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
-        })
-    },
-    editSubmit() {
-      const me = this
-      HttpClient.post('/api/admin/article/update', me.editForm)
-        .then((data) => {
-          me.list()
-          me.editFormVisible = false
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
-        })
-    },
     deleteSubmit(row) {
       const me = this
       HttpClient.post('/api/admin/article/delete', { id: row.id })
@@ -373,41 +133,6 @@ export default {
         })
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
-        })
-    },
-    doCollect() {
-      const me = this
-      if (!me.collectUrl) {
-        me.$notify.error({ title: '错误', message: '请填写采集地址' })
-        return
-      }
-      this.$confirm('确定采集吗，采集之后将覆盖现有内容?', '提示', {
-        type: 'warning'
-      })
-        .then(() => {
-          HttpClient.post('/api/admin/article/collect', {
-            url: me.collectUrl
-          })
-            .then((data) => {
-              me.addForm.title = data.title
-              me.addForm.content = data.content
-              me.addForm.sourceUrl = me.collectUrl
-
-              me.$message({
-                showClose: true,
-                message: '采集成功！',
-                type: 'success'
-              })
-            })
-            .catch((rsp) => {
-              me.$notify.error({ title: '错误', message: rsp.message })
-            })
-        })
-        .catch(() => {
-          me.$message({
-            showClose: true,
-            message: '取消采集！'
-          })
         })
     },
     toArticle(row) {

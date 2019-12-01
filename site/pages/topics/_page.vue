@@ -3,7 +3,7 @@
     <div class="container-wrapper main-container right-main">
       <bbs-left />
       <div class="right-container">
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics/" />
       </div>
     </div>

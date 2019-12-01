@@ -4,7 +4,7 @@ import "database/sql"
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Category{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Subject{}, &SubjectContent{}, &Link{},
+	&Topic{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{},
 	&CollectRule{}, &CollectArticle{}, &ThirdAccount{},
 }
 
@@ -242,28 +242,6 @@ type Project struct {
 	ContentType string `gorm:"type:varchar(32);" json:"contentType" form:"contentType"`
 	Content     string `gorm:"type:longtext" json:"content" form:"content"`
 	CreateTime  int64  `json:"createTime" form:"createTime"`
-}
-
-// 专栏
-type Subject struct {
-	Model
-	Title       string `gorm:"not null" json:"title" form:"title"`             // 标题
-	Description string `gorm:"not null" json:"description" form:"description"` // 描述
-	Logo        string `json:"logo" form:"logo"`                               // LOGO
-	Status      int    `gorm:"not null" json:"status" form:"status"`           // 状态，0：正常，1：删除
-	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
-}
-
-// 专栏内容
-type SubjectContent struct {
-	Model
-	SubjectId  int64  `gorm:"not null;index:idx_subject_id" json:"subjectId" form:"subjectId"`        // 专栏编号
-	EntityType string `gorm:"not null;size:32;index:idx_entity;" json:"entityType" form:"entityType"` // 实体类型
-	EntityId   int64  `gorm:"not null;index:idx_entity;" json:"entityId" form:"entityId"`             // 实体编号
-	Title      string `gorm:"not null" json:"title" form:"title"`                                     // 标题
-	Summary    string `gorm:"not null;size:1024" json:"summary" form:"summary"`                       // 描述
-	Deleted    bool   `gorm:"not null;index:idx_deleted" json:"deleted" form:"deleted"`               // 是否删除
-	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`                           // 创建时间
 }
 
 type Link struct {

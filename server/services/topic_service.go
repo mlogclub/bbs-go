@@ -73,8 +73,6 @@ func (this *topicService) UpdateColumn(id int64, name string, value interface{})
 func (this *topicService) Delete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.TopicStatusDeleted)
 	if err == nil {
-		// 删掉专栏文章
-		SubjectContentService.DeleteByEntity(model.EntityTypeTopic, id)
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(id)
 	}
@@ -174,7 +172,7 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 	return
 }
 
-// 根据编号批量获取主题
+// GetTopicInIds 根据编号批量获取主题
 func (this *topicService) GetTopicInIds(topicIds []int64) []model.Topic {
 	if len(topicIds) == 0 {
 		return nil

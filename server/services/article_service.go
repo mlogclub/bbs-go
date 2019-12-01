@@ -29,9 +29,7 @@ type ScanArticleCallback func(articles []model.Article) bool
 var ArticleService = newArticleService()
 
 func newArticleService() *articleService {
-	return &articleService{
-
-	}
+	return &articleService{}
 }
 
 type articleService struct {
@@ -79,8 +77,6 @@ func (this *articleService) UpdateColumn(id int64, name string, value interface{
 func (this *articleService) Delete(id int64) error {
 	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", model.ArticleStatusDeleted)
 	if err == nil {
-		// 删掉专栏文章
-		SubjectContentService.DeleteByEntity(model.EntityTypeArticle, id)
 		// 删掉标签文章
 		ArticleTagService.DeleteByArticleId(id)
 	}
