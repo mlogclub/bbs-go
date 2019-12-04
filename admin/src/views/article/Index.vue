@@ -45,9 +45,6 @@
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
-              <label class="category" v-if="item.category">{{
-                item.category.categoryName
-              }}</label>
               <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{
                 tag.tagName
               }}</label>
@@ -187,10 +184,6 @@ export default {
           label {
             color: #999;
             font-size: 12px;
-          }
-
-          label.category {
-            color: #3273dc;
           }
 
           label.tag {

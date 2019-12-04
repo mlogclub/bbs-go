@@ -38,14 +38,6 @@ export default new Router({
           }
         },
         {
-          path: '/category/index',
-          component: () => import('@/views/category/Index.vue'),
-          meta: {
-            title: '分类',
-            icon: 'iconfont icon-category'
-          }
-        },
-        {
           path: '/tag/index',
           component: () => import('@/views/tag/Index.vue'),
           meta: {
