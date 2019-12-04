@@ -32,14 +32,6 @@
                   }}</time>
                 </span>
 
-                <span v-if="article.category" class="article-meta-item">
-                  <span class="article-tag tag">
-                    <a :href="'/articles/cat/' + article.category.categoryId">{{
-                      article.category.categoryName
-                    }}</a>
-                  </span>
-                </span>
-
                 <span
                   v-if="article.tags && article.tags.length > 0"
                   class="article-meta-item"

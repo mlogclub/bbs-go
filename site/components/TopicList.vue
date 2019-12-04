@@ -2,7 +2,7 @@
   <ul class="topic-list topic-wrap">
     <template v-for="(topic, index) in topics">
       <li
-        v-if="showAd && (index === 1 || index % 5 === 0)"
+        v-if="showAd && index !== 0 && index % 5 === 0"
         :key="'topic-' + index"
       >
         <div class="ad">

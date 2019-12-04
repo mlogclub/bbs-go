@@ -33,7 +33,7 @@ func (this *userTokenService) Find(cnd *simple.SqlCnd) []model.UserToken {
 	return repositories.UserTokenRepository.Find(simple.DB(), cnd)
 }
 
-func (this *userTokenService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Category) {
+func (this *userTokenService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.UserToken) {
 	cnd.FindOne(db, &ret)
 	return
 }

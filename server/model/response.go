@@ -29,27 +29,20 @@ func (this *UserInfo) HasRole(role string) bool {
 	return false
 }
 
-type CategoryResponse struct {
-	CategoryId   int64         `json:"categoryId"`
-	CategoryName string        `json:"categoryName"`
-	Tags         []TagResponse `json:"tags"`
-}
-
 type TagResponse struct {
 	TagId   int64  `json:"tagId"`
 	TagName string `json:"tagName"`
 }
 
 type ArticleSimpleResponse struct {
-	ArticleId  int64             `json:"articleId"`
-	User       *UserInfo         `json:"user"`
-	Category   *CategoryResponse `json:"category"`
-	Tags       *[]TagResponse    `json:"tags"`
-	Title      string            `json:"title"`
-	Summary    string            `json:"summary"`
-	Share      bool              `json:"share"`
-	SourceUrl  string            `json:"sourceUrl"`
-	CreateTime int64             `json:"createTime"`
+	ArticleId  int64          `json:"articleId"`
+	User       *UserInfo      `json:"user"`
+	Tags       *[]TagResponse `json:"tags"`
+	Title      string         `json:"title"`
+	Summary    string         `json:"summary"`
+	Share      bool           `json:"share"`
+	SourceUrl  string         `json:"sourceUrl"`
+	CreateTime int64          `json:"createTime"`
 }
 
 type ArticleResponse struct {

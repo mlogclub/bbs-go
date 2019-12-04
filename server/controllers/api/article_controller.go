@@ -45,7 +45,7 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 	)
 
 	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
-		model.ContentTypeMarkdown, 0, tags, "", false)
+		model.ContentTypeMarkdown, tags, "", false)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -206,14 +206,6 @@ func (this *ArticleController) GetTagArticles() *simple.JsonResult {
 	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
 	tagId := simple.FormValueInt64Default(this.Ctx, "tagId", 0)
 	articles, cursor := services.ArticleService.GetTagArticles(tagId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
-}
-
-// 分类文章列表
-func (this *ArticleController) GetCategoryArticles() *simple.JsonResult {
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
-	categoryId := simple.FormValueInt64Default(this.Ctx, "categoryId", 0)
-	articles, cursor := services.ArticleService.GetCategoryArticles(categoryId, cursor)
 	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 

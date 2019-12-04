@@ -137,25 +137,9 @@ func (this *articleService) GetTagArticles(tagId int64, cursor int64) (articles 
 	return
 }
 
-// 分类文章列表
-func (this *articleService) GetCategoryArticles(categoryId int64, cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("category_id", categoryId).Eq("status", model.ArticleStatusPublished).Limit(20).Desc("id")
-	if cursor > 0 {
-		cnd.Lt("id", cursor)
-	}
-	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
-	if len(articles) > 0 {
-		nextCursor = articles[len(articles)-1].Id
-	} else {
-		nextCursor = cursor
-	}
-	return
-}
-
 // 发布文章
-func (this *articleService) Publish(userId int64, title, summary, content, contentType string, categoryId int64,
-	tags []string, sourceUrl string, share bool) (article *model.Article, err error) {
-
+func (this *articleService) Publish(userId int64, title, summary, content, contentType string, tags []string,
+	sourceUrl string, share bool) (article *model.Article, err error) {
 	title = strings.TrimSpace(title)
 	summary = strings.TrimSpace(summary)
 	content = strings.TrimSpace(content)
@@ -181,7 +165,6 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 		Summary:     summary,
 		Content:     content,
 		ContentType: contentType,
-		CategoryId:  categoryId,
 		Status:      model.ArticleStatusPublished,
 		Share:       share,
 		SourceUrl:   sourceUrl,

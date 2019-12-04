@@ -75,13 +75,6 @@ func BuildUsers(users []model.User) []model.UserInfo {
 	return responses
 }
 
-func BuildCategory(category *model.Category) *model.CategoryResponse {
-	if category == nil {
-		return nil
-	}
-	return &model.CategoryResponse{CategoryId: category.Id, CategoryName: category.Name}
-}
-
 func BuildArticle(article *model.Article) *model.ArticleResponse {
 	if article == nil {
 		return nil
@@ -96,11 +89,6 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
-
-	if article.CategoryId > 0 {
-		category := cache.CategoryCache.Get(article.CategoryId)
-		rsp.Category = BuildCategory(category)
-	}
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
@@ -148,11 +136,6 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
-
-	if article.CategoryId > 0 {
-		category := cache.CategoryCache.Get(article.CategoryId)
-		rsp.Category = BuildCategory(category)
-	}
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
@@ -279,7 +262,7 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	return rsp
 }
 
-func BuildSimpleProjects(projects []model.Project) [] model.ProjectSimpleResponse {
+func BuildSimpleProjects(projects []model.Project) []model.ProjectSimpleResponse {
 	if projects == nil || len(projects) == 0 {
 		return nil
 	}

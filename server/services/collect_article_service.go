@@ -135,7 +135,7 @@ func (this *collectArticleService) Publish(collectArticleId int64) error {
 		}
 
 		article, err := ArticleService.Publish(ca.UserId, ca.Title, summary, ca.Content, ca.ContentType,
-			0, tags, ca.SourceUrl, false)
+			tags, ca.SourceUrl, false)
 		if err != nil {
 			return err
 		}
