@@ -2,6 +2,7 @@
   <section class="main">
     <div class="container-wrapper main-container left-main">
       <div class="left-container">
+        <topics-nav :current-tag-id="tag.tagId" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination
           :page="topicsPage.page"
@@ -15,12 +16,14 @@
 
 <script>
 import TopicSide from '~/components/TopicSide'
+import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
 
 export default {
   components: {
     TopicSide,
+    TopicsNav,
     TopicList,
     Pagination
   },
