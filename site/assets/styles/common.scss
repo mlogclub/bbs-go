@@ -25,7 +25,7 @@ body {
 }
 
 // main-container
-$sidebar-width: 190px;
+$sidebar-width: 220px;
 
 .container-wrapper {
   max-width: 1440px;
@@ -63,13 +63,13 @@ $sidebar-width: 190px;
     .left-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
-      margin-right: 10px;
     }
 
     .right-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       padding: 0px;
+      margin-left: 10px;
     }
   }
 
@@ -93,13 +93,13 @@ $sidebar-width: 190px;
     .right-container {
       width: calc(100% - #{$sidebar-width});
       transition: width .2s;
-      margin-left: 10px;
     }
 
     .left-container {
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       padding: 0px;
+      margin-right: 10px;
     }
   }
 

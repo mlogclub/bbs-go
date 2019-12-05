@@ -1,23 +1,23 @@
 <template>
   <section class="main">
-    <div class="container-wrapper main-container right-main">
-      <bbs-left />
-      <div class="right-container">
+    <div class="container-wrapper main-container left-main">
+      <div class="left-container">
         <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics/" />
       </div>
+      <topic-side />
     </div>
   </section>
 </template>
 
 <script>
-import BbsLeft from '~/components/BbsLeft'
+import TopicSide from '~/components/TopicSide'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    BbsLeft,
+    TopicSide,
     TopicList,
     Pagination
   },

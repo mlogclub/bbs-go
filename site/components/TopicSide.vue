@@ -1,5 +1,5 @@
 <template>
-  <div class="left-container">
+  <div class="right-container">
     <div class="widget">
       <div class="widget-header">
         <a :href="createTopicUrl" class="button is-success post">
