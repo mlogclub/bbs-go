@@ -95,6 +95,7 @@ func (this *WxbotApi) initTags(db *gorm.DB, wxArticle *WxArticle) []string {
 	return tagNames
 }
 
+// WxArticle 微信文章
 type WxArticle struct {
 	Id          int64  `json:"id"`          // 编号
 	Title       string `json:"title"`       // 标题
