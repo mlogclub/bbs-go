@@ -25,7 +25,9 @@ body {
 }
 
 // main-container
-$sidebar-width: 220px;
+$sidebar-width: 220px; // 侧边栏宽度
+$sidebar-margin: 10px; // 侧边栏之间的缝隙
+$main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // 主栏目的宽度
 
 .container-wrapper {
   max-width: 1440px;
@@ -61,7 +63,7 @@ $sidebar-width: 220px;
     }
 
     .left-container {
-      width: calc(100% - #{$sidebar-width});
+      width: $main-container-width;
       transition: width .2s;
     }
 
@@ -91,7 +93,7 @@ $sidebar-width: 220px;
     }
 
     .right-container {
-      width: calc(100% - #{$sidebar-width});
+      width: $main-container-width;
       transition: width .2s;
     }
 
