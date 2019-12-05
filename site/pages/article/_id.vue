@@ -71,14 +71,15 @@
           </div>
 
           <div class="article-content content">
+            <!-- 信息流广告 -->
             <ins
               class="adsbygoogle"
               style="display:block"
               data-ad-format="fluid"
-              data-ad-layout-key="-ig-s+1x-t-q"
+              data-ad-layout-key="-ht-19-1m-3j+mu"
               data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="4728140043"
-            />
+              data-ad-slot="4980294904"
+            ></ins>
             <script>
               ;(adsbygoogle = window.adsbygoogle || []).push({})
             </script>
