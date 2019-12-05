@@ -1,24 +1,5 @@
 <template>
   <section class="page-container">
-    <!--
-    <el-col :span="24" class="toolbar">
-      <el-form :inline="true" :model="filters">
-        <el-form-item>
-          <el-input v-model="filters.userId" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="删除" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" v-on:click="list">查询</el-button>
-        </el-form-item>
-      </el-form>
-    </el-col>
-    -->
-
     <div class="main-content">
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
@@ -29,10 +10,31 @@
             ></div>
             <div class="content">
               <div class="meta">
-                <span class="nickname">{{ item.user.nickname }}</span>
-                <span class="create-time">{{
-                  item.createTime | formatDate
-                }}</span>
+                <span class="nickname"
+                  ><a
+                    target="_blank"
+                    :href="'https://mlog.club/user/' + item.user.id"
+                    >{{ item.user.nickname }}</a
+                  ></span
+                >
+                <span class="create-time"
+                  >@{{ item.createTime | formatDate }}</span
+                >
+                <span v-if="item.entityType === 'article'">
+                  <a
+                    target="_blank"
+                    :href="'https://mlog.club/article/' + item.entityId"
+                    >文章：{{ item.entityId }}</a
+                  >
+                </span>
+
+                <span v-if="item.entityType === 'topic'">
+                  <a
+                    target="_blank"
+                    :href="'https://mlog.club/topic/' + item.entityId"
+                    >文章：{{ item.entityId }}</a
+                  >
+                </span>
               </div>
               <div class="summary" v-html="item.content"></div>
               <div class="tools">
@@ -183,6 +185,10 @@ export default {
               margin-right: 5px;
             }
 
+            font-size: 13px;
+            color: #999;
+            font-weight: bold;
+
             &.nickname {
               color: #1a1a1a;
               font-size: 14px;
@@ -192,6 +198,7 @@ export default {
             &.create-time {
               color: #999;
               font-size: 13px;
+              font-weight: normal;
             }
           }
         }
