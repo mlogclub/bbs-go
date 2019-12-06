@@ -29,7 +29,7 @@
                       :key="tag.tagId"
                       class="tag"
                     >
-                      <a :href="'/topics/tag/' + tag.tagId + '/1'">{{
+                      <a :href="'/topics/' + tag.tagId + '/1'">{{
                         tag.tagName
                       }}</a>
                     </span>

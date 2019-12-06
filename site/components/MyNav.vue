@@ -66,13 +66,13 @@
                 <i class="iconfont icon-topic" />&nbsp;发帖
               </a>
               <!--
-            <a class="navbar-item" href="/article/create">
-              <i class="iconfont icon-publish" />&nbsp;发表文章
-            </a>
-            <a class="navbar-item" href="/user/messages">
-              <i class="iconfont icon-message" />&nbsp;消息
-            </a>
-            -->
+              <a class="navbar-item" href="/article/create">
+                <i class="iconfont icon-publish" />&nbsp;发表文章
+              </a>
+              <a class="navbar-item" href="/user/messages">
+                <i class="iconfont icon-message" />&nbsp;消息
+              </a>
+              -->
               <a class="navbar-item" href="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;收藏
               </a>

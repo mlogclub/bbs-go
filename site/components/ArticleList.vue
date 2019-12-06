@@ -44,9 +44,7 @@
               :key="tag.tagId"
               class="article-tag tag"
             >
-              <a :href="'/articles/tag/' + tag.tagId" class>{{
-                tag.tagName
-              }}</a>
+              <a :href="'/articles/' + tag.tagId" class>{{ tag.tagName }}</a>
             </span>
           </span>
         </div>

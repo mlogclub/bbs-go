@@ -2,14 +2,11 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :current-tag-id="tag.tagId" />
+        <topics-nav />
         <topic-list :topics="topicsPage.results" :show-ad="false" />
-        <pagination
-          :page="topicsPage.page"
-          :url-prefix="'/topics/tag/' + tag.tagId + '/'"
-        />
+        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
-      <topic-side :current-tag-id="tag.tagId" />
+      <topic-side />
     </div>
   </section>
 </template>
@@ -27,26 +24,24 @@ export default {
     TopicList,
     Pagination
   },
-  async asyncData({ $axios, params }) {
-    const [tag, user, topicsPage] = await Promise.all([
-      $axios.get('/api/tag/' + params.tagId),
-      $axios.get('/api/user/current'),
-      $axios.get('/api/topic/tag/topics', {
-        params: {
-          tagId: params.tagId,
-          page: params.page || 1
-        }
-      })
-    ])
-    return {
-      tag,
-      user,
-      topicsPage
+  async asyncData({ $axios, query }) {
+    try {
+      const [user, topicsPage] = await Promise.all([
+        $axios.get('/api/user/current'),
+        $axios.get('/api/topic/topics', {
+          params: {
+            page: query.p || 1
+          }
+        })
+      ])
+      return { user, topicsPage }
+    } catch (e) {
+      console.error(e)
     }
   },
   head() {
     return {
-      title: this.$siteTitle(this.tag.tagName + ' - 话题'),
+      title: this.$siteTitle('话题'),
       meta: [
         {
           hid: 'description',
