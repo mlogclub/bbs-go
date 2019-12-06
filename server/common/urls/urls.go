@@ -44,7 +44,7 @@ func ArticleUrl(articleId int64) string {
 
 // 标签文章列表
 func TagArticlesUrl(tagId int64) string {
-	return AbsUrl("/articles/tag/" + strconv.FormatInt(tagId, 10))
+	return AbsUrl("/articles/" + strconv.FormatInt(tagId, 10))
 }
 
 // 话题详情
