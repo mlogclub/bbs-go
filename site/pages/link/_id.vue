@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container-wrapper">
+    <div class="container">
       <div class="main-body">
         <div class="link">
           <div class="logo" />

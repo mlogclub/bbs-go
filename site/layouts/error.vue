@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container-wrapper">
+    <div class="container">
       <div class="error">
         <div>
           <img src="~/assets/images/logo.png" style="max-width: 100px;" />

@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container-wrapper">
+    <div class="container">
       <div class="columns">
         <div class="column is-21">
           <div class="main-body">

@@ -1,9 +1,9 @@
 <template>
   <section class="main">
-    <div class="container-wrapper main-container left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
         <topics-nav />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
+        <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination :page="topicsPage.page" url-prefix="/topics/" />
       </div>
       <topic-side />

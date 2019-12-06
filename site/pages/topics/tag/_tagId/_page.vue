@@ -1,9 +1,9 @@
 <template>
   <section class="main">
-    <div class="container-wrapper main-container left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
         <topics-nav :current-tag-id="tag.tagId" />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
+        <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination
           :page="topicsPage.page"
           :url-prefix="'/topics/tag/' + tag.tagId + '/'"

@@ -1,11 +1,11 @@
 <template>
   <nav
     ref="nav"
-    class="navbar is-dark is-fixed-top"
+    class="navbar is-white is-fixed-top"
     role="navigation"
     aria-label="main navigation"
   >
-    <div class="container nav-container">
+    <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
           <img src="~/assets/images/logo.png" />
@@ -145,10 +145,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nav-container {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0px 20px;
+.navbar {
+  opacity: 0.99;
+  border-bottom: 1px solid #e7edf3;
+  &.scrolled {
+    box-shadow: 1px 0px 6px rgba(0, 0, 0, 0.25);
+    border-bottom: none;
+  }
+  .navbar-item {
+    font-weight: 600;
+    &:hover,
+    &.active {
+      color: #009a61 !important;
+    }
+  }
 }
 .searchFormDiv {
   @media screen and (max-width: 768px) {
@@ -170,22 +180,6 @@ export default {
         border-color: #e7672e;
         outline: none;
       }
-    }
-  }
-}
-
-.navbar {
-  opacity: 0.99;
-  border-bottom: 1px solid #e7edf3;
-  &.scrolled {
-    box-shadow: 1px 0px 6px rgba(0, 0, 0, 0.25);
-    border-bottom: none;
-  }
-  .navbar-item {
-    font-weight: 600;
-    &:hover,
-    &.active {
-      color: #009a61 !important;
     }
   }
 }

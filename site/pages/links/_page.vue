@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container-wrapper">
+    <div class="container">
       <div class="main-body">
         <div class="notice">
           <h1>什么是好博客导航？</h1>
