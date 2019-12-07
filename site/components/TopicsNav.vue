@@ -42,7 +42,7 @@ export default {
   .topics-nav-list {
     .topics-nav-item {
       display: inline-block;
-      padding: 0 20px;
+      padding: 0 15px;
 
       a {
         position: relative;
@@ -52,6 +52,10 @@ export default {
         text-align: center;
         font-weight: 500;
         color: #8590a6;
+
+        &:hover {
+          color: #343a40;
+        }
       }
 
       &.active {
@@ -61,9 +65,9 @@ export default {
 
           &:after {
             position: absolute;
-            right: 0;
+            right: -3px;
             bottom: -1px;
-            left: 0;
+            left: -3px;
             height: 3px;
             background: #e0245e;
             content: '';

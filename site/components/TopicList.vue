@@ -67,6 +67,11 @@
             >
           </div>
         </div>
+        <div class="topic-summary">
+          <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
+            topic.summary
+          }}</a>
+        </div>
       </li>
     </template>
   </ul>
@@ -113,26 +118,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.topic-list {
-  margin: 0 0 10px 0 !important;
-
-  li {
-    padding: 8px 0 8px 8px;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.5s;
-
-    // border-bottom: 1px solid #f0f0f0;
-
-    // border-radius: 4px;
-    &:hover {
-      background: #f3f6f9;
-    }
-
-    &:not(:last-child) {
-      border-bottom: 1px solid #f2f2f2;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
