@@ -1,11 +1,4 @@
 .topic-wrap {
-  .topic-detail {
-    .topic-header {
-      padding-bottom: 5px;
-      border-bottom: 1px dashed #d1d1d1;
-    }
-  }
-
   .topic-header {
     display: flex;
 
@@ -149,6 +142,15 @@
 
   .topic-content {
     font-size: 15px;
+  }
+}
+
+.topic-detail {
+  .topic-header {
+    padding: 5px 10px;
+    margin: -10px;
+    border-bottom: 1px solid #f2f2f2;
+    // background: #fafafa;
   }
 }
 
