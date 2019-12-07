@@ -47,13 +47,13 @@ export default {}
 
   .aside-actions-btn {
     display: flex;
-    color: #8590a6;
+    color: #000;
     position: relative;
     margin: 0 auto;
     padding: 0.375rem 0.75rem;
     font-weight: 500;
     font-size: 1rem;
-    line-height: 2;
+    line-height: 2.5;
     border-radius: 0.25rem;
     border: 1px solid transparent;
     background-color: #fff;

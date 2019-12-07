@@ -180,6 +180,7 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // ä
     // background-color: #fff;
     // font-size: 12px;
     margin-top: 8px;
+    padding: 8px 0;
   }
 
   &>.widget-footer {
