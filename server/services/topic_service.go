@@ -167,19 +167,32 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 		for _, topicTag := range topicTags {
 			topicIds = append(topicIds, topicTag.TopicId)
 		}
-		topics = this.GetTopicInIds(topicIds)
+
+		topicsMap := this.GetTopicInIds(topicIds)
+		if topicsMap != nil {
+			for _, topicTag := range topicTags {
+				if topic, found := topicsMap[topicTag.TopicId]; found {
+					topics = append(topics, topic)
+				}
+			}
+		}
 	}
 	return
 }
 
 // GetTopicInIds 根据编号批量获取主题
-func (this *topicService) GetTopicInIds(topicIds []int64) []model.Topic {
+func (this *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic {
 	if len(topicIds) == 0 {
 		return nil
 	}
 	var topics []model.Topic
 	simple.DB().Where("id in (?)", topicIds).Find(&topics)
-	return topics
+
+	topicsMap := make(map[int64]model.Topic, len(topics))
+	for _, topic := range topics {
+		topicsMap[topic.Id] = topic
+	}
+	return topicsMap
 }
 
 // 浏览数+1
@@ -189,7 +202,7 @@ func (this *topicService) IncrViewCount(topicId int64) {
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
 func (this *topicService) OnComment(topicId, lastCommentTime int64) {
-	 simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		if err := tx.Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?", lastCommentTime, topicId).Error; err != nil {
 			return err
 		}
