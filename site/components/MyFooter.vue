@@ -1,7 +1,7 @@
 <template>
   <div>
     <footer class="footer">
-      <div class="content has-text-centered">
+      <div class="container content">
         <div>
           <a href="/about">关于</a>
           <a href="/tags">标签</a>
@@ -26,6 +26,8 @@ export default {}
 .footer {
   font-size: 13px;
   color: #aaa;
+  background: none;
+  text-align: left;
   a {
     color: #aaa;
     text-decoration: underline;
