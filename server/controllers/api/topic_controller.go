@@ -238,30 +238,3 @@ func (this *TopicController) GetRecommend() *simple.JsonResult {
 		return simple.JsonData(render.BuildSimpleTopics(ret))
 	}
 }
-
-// // 采集发布
-// func (this *TopicController) PostBotPublish() *simple.JsonResult {
-// 	token := this.Ctx.FormValue("token")
-// 	data, err := ioutil.ReadFile("/data/publish_token")
-// 	if err != nil {
-// 		return simple.JsonErrorMsg("ReadToken error: " + err.Error())
-// 	}
-// 	token2 := strings.TrimSpace(string(data))
-// 	if token != token2 {
-// 		return simple.JsonErrorMsg("Token invalidate")
-// 	}
-// 	userId := simple.FormValueInt64Default(this.Ctx, "userId", 0)
-// 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
-// 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
-// 	tags := simple.FormValueStringArray(this.Ctx, "tags")
-// 	extraDataStr := simple.FormValue(this.Ctx, "extraData")
-// 	extraData := gjson.Parse(extraDataStr).Map()
-// 	if userId <= 0 {
-// 		return simple.JsonErrorMsg("用户编号不能为空")
-// 	}
-// 	topic, err2 := services.TopicService.Publish(userId, tags, title, content, extraData)
-// 	if err2 != nil {
-// 		return simple.JsonError(err2)
-// 	}
-// 	return simple.NewEmptyRspBuilder().Put("id", topic.Id).JsonResult()
-// }

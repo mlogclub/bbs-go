@@ -20,5 +20,6 @@ export default {}
   font-weight: 700;
   color: red;
   text-align: center;
+  padding-bottom: 10px;
 }
 </style>

@@ -67,11 +67,13 @@
             >
           </div>
         </div>
+        <!--
         <div class="topic-summary">
           <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
             topic.summary
           }}</a>
         </div>
+        -->
       </li>
     </template>
   </ul>

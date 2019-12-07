@@ -161,7 +161,7 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", model.ArticleTagStatusOk).
-		Page(page, 20).Desc("id"))
+		Page(page, 20).Desc("last_comment_time"))
 	if len(topicTags) > 0 {
 		var topicIds []int64
 		for _, topicTag := range topicTags {
@@ -189,8 +189,15 @@ func (this *topicService) IncrViewCount(topicId int64) {
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
 func (this *topicService) OnComment(topicId, lastCommentTime int64) {
-	simple.DB().Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?",
-		lastCommentTime, topicId)
+	 simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+		if err := tx.Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?", lastCommentTime, topicId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("update t_topic_tag set last_comment_time = ? where topic_id = ?", lastCommentTime, topicId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
 // rss
