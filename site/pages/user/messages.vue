@@ -86,7 +86,7 @@
             </div>
             <pagination
               :page="messagesPage.page"
-              url-prefix="/user/messages/"
+              url-prefix="/user/messages?p="
             />
           </div>
         </div>
@@ -98,15 +98,14 @@
 
 <script>
 import UserCenterSidebar from '~/components/UserCenterSidebar'
+import Pagination from '~/components/Pagination'
 export default {
   middleware: 'authenticated',
-  components: {
-    UserCenterSidebar
-  },
-  async asyncData({ $axios, params }) {
+  components: { UserCenterSidebar, Pagination },
+  async asyncData({ $axios, query }) {
     const [currentUser, messagesPage] = await Promise.all([
       $axios.get('/api/user/current'),
-      $axios.get('/api/user/messages?page=' + (params.page || 1))
+      $axios.get('/api/user/messages?page=' + (query.p || 1))
     ])
     return {
       currentUser,
@@ -118,24 +117,6 @@ export default {
       messages: [],
       cursor: 0,
       hasMore: true
-    }
-  },
-  mounted() {
-    // this.list()
-  },
-  methods: {
-    async list() {
-      const ret = await this.$axios.get('/api/user/messages', {
-        params: {
-          cursor: this.cursor
-        }
-      })
-      if (ret.results && ret.results.length) {
-        this.messages = this.messages.concat(ret.results)
-      } else {
-        this.hasMore = false
-      }
-      this.cursor = ret.cursor
     }
   }
 }
