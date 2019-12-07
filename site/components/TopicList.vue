@@ -44,7 +44,7 @@
               </span>
               <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                  <a :href="'/topics/' + tag.tagId + '/1'">{{ tag.tagName }}</a>
+                  <a :href="'/topics/' + tag.tagId">{{ tag.tagName }}</a>
                 </span>
               </span>
             </div>

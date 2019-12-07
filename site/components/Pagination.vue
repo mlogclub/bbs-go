@@ -1,7 +1,7 @@
 <template>
   <nav
     v-if="page.total > 0"
-    class="pagination"
+    class="pagination is-small"
     role="navigation"
     aria-label="pagination"
   >
