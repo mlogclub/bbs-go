@@ -60,13 +60,19 @@
                     }}</span>
                   </div>
                   <div class="content">
-                    {{ message.content }}
-                    <span v-if="message.detailUrl" class="show-more">
-                      <a :href="message.detailUrl" target="_blank"
+                    <div class="message-content">
+                      {{ message.content }}
+                      <a
+                        v-if="message.detailUrl"
+                        :href="message.detailUrl"
+                        class="show-more"
+                        target="_blank"
                         >点击查看详情&gt;&gt;</a
                       >
-                    </span>
-                    <blockquote>{{ message.quoteContent }}</blockquote>
+                    </div>
+                    <blockquote class="message-quote">
+                      {{ message.quoteContent }}
+                    </blockquote>
                   </div>
                 </div>
               </li>
@@ -177,19 +183,24 @@ export default {
       .content {
         margin-top: 5px;
         margin-bottom: 0px;
-        font-size: 14px;
-        color: #4a4a4a;
 
-        blockquote {
-          margin: 0px;
+        .message-content {
+          font-size: 15px;
+          font-weight: 400;
+          color: #000;
+
+          .show-more {
+            text-align: right;
+            margin-left: 5px;
+          }
         }
-      }
 
-      .show-more {
-        text-align: right;
-
-        a {
+        .message-quote {
+          margin: 8px 0;
+          padding: 8px;
           font-size: 13px;
+          font-weight: 400;
+          color: #4a4a4a;
         }
       }
     }
