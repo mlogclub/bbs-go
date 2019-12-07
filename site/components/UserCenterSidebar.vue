@@ -1,6 +1,6 @@
 <template>
   <div class="right-container">
-    <post-btns />
+    <post-btns v-if="isOwner" />
 
     <div class="widget">
       <div class="widget-header">
