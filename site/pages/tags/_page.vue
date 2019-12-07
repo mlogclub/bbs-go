@@ -16,7 +16,7 @@
                     class="tag is-normal"
                   >
                     <a
-                      :href="'/articles/tag/' + tag.tagId"
+                      :href="'/articles/' + tag.tagId"
                       :title="tag.tagName"
                       target="_blank"
                       >{{ tag.tagName }}</a
