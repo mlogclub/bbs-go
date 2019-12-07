@@ -1,17 +1,6 @@
 <template>
-  <div>
-    <div v-if="isOwner" class="widget">
-      <div class="widget-content">
-        <a class="button is-primary" href="/topic/create">
-          <i class="iconfont icon-topic" />&nbsp;
-          <strong>发表主题</strong>
-        </a>
-        <a class="button is-success" href="/article/create">
-          <i class="iconfont icon-publish" />&nbsp;
-          <strong>发表文章</strong>
-        </a>
-      </div>
-    </div>
+  <div class="right-container">
+    <post-btns />
 
     <div class="widget">
       <div class="widget-header">
@@ -64,7 +53,9 @@
 </template>
 
 <script>
+import PostBtns from '~/components/PostBtns'
 export default {
+  components: { PostBtns },
   props: {
     user: {
       type: Object,

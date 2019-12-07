@@ -1,86 +1,75 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <div class="widget">
-              <div class="widget-header">
-                <nav
-                  class="breadcrumb"
-                  aria-label="breadcrumbs"
-                  style="margin-bottom: 0px;"
-                >
-                  <ul>
-                    <li><a href="/">首页</a></li>
-                    <li>
-                      <a :href="'/user/' + currentUser.id">{{
-                        currentUser.nickname
-                      }}</a>
-                    </li>
-                    <li class="is-active">
-                      <a href="#" aria-current="page">收藏列表</a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-
-              <div class="widget-content">
-                <ul v-if="favorites && favorites.length" class="article-list">
-                  <li v-for="favorite in favorites" :key="favorite.favoriteId">
-                    <article v-if="favorite.deleted" class="article-item">
-                      <div class="article-summary">
-                        收藏内容失效!!!
-                      </div>
-                    </article>
-                    <article v-else class="article-item">
-                      <div class="article-item-left">
-                        <a :href="'/user/' + favorite.user.id" target="_blank">
-                          <img :src="favorite.user.avatar" class="avatar" />
-                        </a>
-                      </div>
-
-                      <div class="article-item-right">
-                        <div class="article-title">
-                          <a :href="favorite.url">{{ favorite.title }}</a>
-                        </div>
-
-                        <div class="article-summary">
-                          {{ favorite.content }}
-                        </div>
-
-                        <div class="article-meta">
-                          <span class="article-meta-item"
-                            ><a :href="'/user/' + favorite.user.id">{{
-                              favorite.user.nickname
-                            }}</a></span
-                          >
-                          <span class="article-meta-item"
-                            ><time>{{
-                              favorite.createTime | prettyDate
-                            }}</time></span
-                          >
-                        </div>
-                      </div>
-                    </article>
-                  </li>
-                  <li v-if="hasMore" class="more">
-                    <a @click="list">查看更多&gt;&gt;</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <div class="widget">
+          <div class="widget-header">
+            <nav
+              class="breadcrumb"
+              aria-label="breadcrumbs"
+              style="margin-bottom: 0px;"
+            >
+              <ul>
+                <li><a href="/">首页</a></li>
+                <li>
+                  <a :href="'/user/' + currentUser.id">{{
+                    currentUser.nickname
+                  }}</a>
+                </li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">收藏列表</a>
+                </li>
+              </ul>
+            </nav>
           </div>
-        </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <user-center-sidebar
-              :user="currentUser"
-              :current-user="currentUser"
-            />
+
+          <div class="widget-content">
+            <ul v-if="favorites && favorites.length" class="article-list">
+              <li v-for="favorite in favorites" :key="favorite.favoriteId">
+                <article v-if="favorite.deleted" class="article-item">
+                  <div class="article-summary">
+                    收藏内容失效!!!
+                  </div>
+                </article>
+                <article v-else class="article-item">
+                  <div class="article-item-left">
+                    <a :href="'/user/' + favorite.user.id" target="_blank">
+                      <img :src="favorite.user.avatar" class="avatar" />
+                    </a>
+                  </div>
+
+                  <div class="article-item-right">
+                    <div class="article-title">
+                      <a :href="favorite.url">{{ favorite.title }}</a>
+                    </div>
+
+                    <div class="article-summary">
+                      {{ favorite.content }}
+                    </div>
+
+                    <div class="article-meta">
+                      <span class="article-meta-item"
+                        ><a :href="'/user/' + favorite.user.id">{{
+                          favorite.user.nickname
+                        }}</a></span
+                      >
+                      <span class="article-meta-item"
+                        ><time>{{
+                          favorite.createTime | prettyDate
+                        }}</time></span
+                      >
+                    </div>
+                  </div>
+                </article>
+              </li>
+              <li v-if="hasMore" class="more">
+                <a @click="list">查看更多&gt;&gt;</a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+      <user-center-sidebar :user="currentUser" :current-user="currentUser" />
     </div>
   </section>
 </template>

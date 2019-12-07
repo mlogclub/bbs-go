@@ -1,40 +1,32 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <nav
-              class="breadcrumb"
-              aria-label="breadcrumbs"
-              style="margin-bottom: 10px;"
-            >
-              <ul>
-                <li><a href="article">首页</a></li>
-                <li>
-                  <a :href="'/user/' + user.id + '?tab=topics'">{{
-                    user.nickname
-                  }}</a>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">话题列表</a>
-                </li>
-              </ul>
-            </nav>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <nav
+          class="breadcrumb"
+          aria-label="breadcrumbs"
+          style="margin-bottom: 10px;"
+        >
+          <ul>
+            <li><a href="article">首页</a></li>
+            <li>
+              <a :href="'/user/' + user.id + '?tab=topics'">{{
+                user.nickname
+              }}</a>
+            </li>
+            <li class="is-active">
+              <a href="#" aria-current="page">话题列表</a>
+            </li>
+          </ul>
+        </nav>
 
-            <topic-list :topics="topicsPage.results" />
-            <pagination
-              :page="topicsPage.page"
-              :url-prefix="'/user/' + user.id + '/topics/'"
-            />
-          </div>
-        </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <user-center-sidebar :user="user" :current-user="currentUser" />
-          </div>
-        </div>
+        <topic-list :topics="topicsPage.results" />
+        <pagination
+          :page="topicsPage.page"
+          :url-prefix="'/user/' + user.id + '/topics/'"
+        />
       </div>
+      <user-center-sidebar :user="user" :current-user="currentUser" />
     </div>
   </section>
 </template>

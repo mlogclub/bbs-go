@@ -1,71 +1,53 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <div class="tabs">
-              <ul>
-                <li :class="{ 'is-active': activeTab === 'articles' }">
-                  <a :href="'/user/' + user.id + '?tab=articles'">
-                    <span class="icon is-small">
-                      <i class="iconfont icon-article" aria-hidden="true" />
-                    </span>
-                    <span>文章</span>
-                  </a>
-                </li>
-                <li :class="{ 'is-active': activeTab === 'topics' }">
-                  <a :href="'/user/' + user.id + '?tab=topics'">
-                    <span class="icon is-small">
-                      <i class="iconfont icon-topic" aria-hidden="true" />
-                    </span>
-                    <span>话题</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <div class="tabs">
+          <ul>
+            <li :class="{ 'is-active': activeTab === 'articles' }">
+              <a :href="'/user/' + user.id + '?tab=articles'">
+                <span class="icon is-small">
+                  <i class="iconfont icon-article" aria-hidden="true" />
+                </span>
+                <span>文章</span>
+              </a>
+            </li>
+            <li :class="{ 'is-active': activeTab === 'topics' }">
+              <a :href="'/user/' + user.id + '?tab=topics'">
+                <span class="icon is-small">
+                  <i class="iconfont icon-topic" aria-hidden="true" />
+                </span>
+                <span>话题</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-            <div v-if="activeTab === 'topics'">
-              <div v-if="recentTopics && recentTopics.length">
-                <topic-list :topics="recentTopics" />
-                <div class="more">
-                  <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
-                </div>
-              </div>
-              <div
-                v-else
-                class="notification is-primary"
-                style="margin-top: 10px;"
-              >
-                暂无话题
-              </div>
-            </div>
-
-            <div v-if="activeTab === 'articles'">
-              <div v-if="recentArticles && recentArticles.length">
-                <article-list :articles="recentArticles" />
-                <div class="more">
-                  <a :href="'/user/' + user.id + '/articles'"
-                    >查看更多&gt;&gt;</a
-                  >
-                </div>
-              </div>
-              <div
-                v-else
-                class="notification is-primary"
-                style="margin-top: 10px;"
-              >
-                暂无文章
-              </div>
+        <div v-if="activeTab === 'topics'">
+          <div v-if="recentTopics && recentTopics.length">
+            <topic-list :topics="recentTopics" />
+            <div class="more">
+              <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
             </div>
           </div>
+          <div v-else class="notification is-primary" style="margin-top: 10px;">
+            暂无话题
+          </div>
         </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <user-center-sidebar :user="user" :current-user="currentUser" />
+
+        <div v-if="activeTab === 'articles'">
+          <div v-if="recentArticles && recentArticles.length">
+            <article-list :articles="recentArticles" />
+            <div class="more">
+              <a :href="'/user/' + user.id + '/articles'">查看更多&gt;&gt;</a>
+            </div>
+          </div>
+          <div v-else class="notification is-primary" style="margin-top: 10px;">
+            暂无文章
           </div>
         </div>
       </div>
+      <user-center-sidebar :user="user" :current-user="currentUser" />
     </div>
   </section>
 </template>

@@ -1,176 +1,168 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <div class="widget">
-              <div class="widget-header">
-                <nav
-                  class="breadcrumb"
-                  aria-label="breadcrumbs"
-                  style="margin-bottom: 0px;"
-                >
-                  <ul>
-                    <li>
-                      <a href="/">首页</a>
-                    </li>
-                    <li>
-                      <a :href="'/user/' + user.id">{{ user.nickname }}</a>
-                    </li>
-                    <li class="is-active">
-                      <a href="#" aria-current="page">编辑资料</a>
-                    </li>
-                  </ul>
-                </nav>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <div class="widget">
+          <div class="widget-header">
+            <nav
+              class="breadcrumb"
+              aria-label="breadcrumbs"
+              style="margin-bottom: 0px;"
+            >
+              <ul>
+                <li>
+                  <a href="/">首页</a>
+                </li>
+                <li>
+                  <a :href="'/user/' + user.id">{{ user.nickname }}</a>
+                </li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">编辑资料</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="widget-content">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">用户名：</label>
               </div>
-              <div class="widget-content">
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">用户名：</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control has-icons-left">
-                        <label v-if="user.username">{{ user.username }}</label>
-                        <a v-else @click="showSetUsername = true">点击设置</a>
-                      </div>
-                    </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <label v-if="user.username">{{ user.username }}</label>
+                    <a v-else @click="showSetUsername = true">点击设置</a>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">邮箱：</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control has-icons-left">
-                        <label v-if="user.email">{{ user.email }}</label>
-                        <a v-else @click="showSetEmail = true">点击设置</a>
-                      </div>
-                    </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">邮箱：</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <label v-if="user.email">{{ user.email }}</label>
+                    <a v-else @click="showSetEmail = true">点击设置</a>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">密码：</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control has-icons-left">
-                        <template v-if="user.passwordSet">
-                          <label>密码已设置&nbsp;</label>
-                          <a @click="showUpdatePassword = true">点击修改</a>
-                        </template>
-                        <a v-else @click="showSetPassword = true">点击设置</a>
-                      </div>
-                    </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">密码：</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <template v-if="user.passwordSet">
+                      <label>密码已设置&nbsp;</label>
+                      <a @click="showUpdatePassword = true">点击修改</a>
+                    </template>
+                    <a v-else @click="showSetPassword = true">点击设置</a>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">
-                      <span style="color:red;">*&nbsp;</span>昵称：
-                    </label>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">
+                  <span style="color:red;">*&nbsp;</span>昵称：
+                </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <input
+                      v-model="user.nickname"
+                      name="nickname"
+                      class="input is-success"
+                      type="text"
+                      placeholder="请输入昵称"
+                    />
+                    <span class="icon is-small is-left">
+                      <i class="iconfont icon-username" />
+                    </span>
                   </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control has-icons-left">
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">
+                  <span style="color:red;">*&nbsp;</span>头像：
+                </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <img
+                      :src="user.avatar"
+                      style="width: 150px;height:150px;"
+                    />
+                    <div class="file">
+                      <label class="file-label">
                         <input
-                          v-model="user.nickname"
-                          name="nickname"
-                          class="input is-success"
-                          type="text"
-                          placeholder="请输入昵称"
+                          @change="uploadAvatar"
+                          class="file-input"
+                          type="file"
                         />
-                        <span class="icon is-small is-left">
-                          <i class="iconfont icon-username" />
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <i class="iconfont icon-upload" />
+                          </span>
+                          <span class="file-label">选择头像</span>
                         </span>
-                      </div>
+                      </label>
                     </div>
+                    <span style="font-weight: bold; color:red;"
+                      >*图像必须为正方形，大小不要超过1M。</span
+                    >
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">
-                      <span style="color:red;">*&nbsp;</span>头像：
-                    </label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control">
-                        <img
-                          :src="user.avatar"
-                          style="width: 150px;height:150px;"
-                        />
-                        <div class="file">
-                          <label class="file-label">
-                            <input
-                              @change="uploadAvatar"
-                              class="file-input"
-                              type="file"
-                            />
-                            <span class="file-cta">
-                              <span class="file-icon">
-                                <i class="iconfont icon-upload" />
-                              </span>
-                              <span class="file-label">选择头像</span>
-                            </span>
-                          </label>
-                        </div>
-                        <span style="font-weight: bold; color:red;"
-                          >*图像必须为正方形，大小不要超过1M。</span
-                        >
-                      </div>
-                    </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">简介：</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <textarea
+                      v-model="user.description"
+                      name="description"
+                      class="textarea"
+                      rows="2"
+                      placeholder="一句话介绍你自己"
+                    />
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label class="label">简介：</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control">
-                        <textarea
-                          v-model="user.description"
-                          name="description"
-                          class="textarea"
-                          rows="2"
-                          placeholder="一句话介绍你自己"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal" />
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="control">
-                        <a @click="submitForm" class="button is-success"
-                          >提交修改</a
-                        >
-                      </div>
-                    </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal" />
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <a @click="submitForm" class="button is-success"
+                      >提交修改</a
+                    >
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <user-center-sidebar :user="user" :current-user="user" />
-          </div>
-        </div>
       </div>
+      <user-center-sidebar :user="user" :current-user="user" />
     </div>
 
     <!-- 设置用户名 -->

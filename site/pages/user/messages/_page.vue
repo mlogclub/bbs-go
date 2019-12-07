@@ -1,104 +1,91 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="main-body">
-            <div class="widget">
-              <div class="widget-header">
-                <nav
-                  class="breadcrumb"
-                  aria-label="breadcrumbs"
-                  style="margin-bottom: 0px;"
-                >
-                  <ul>
-                    <li>
-                      <a href="/">首页</a>
-                    </li>
-                    <li>
-                      <a :href="'/user/' + currentUser.id">{{
-                        currentUser.nickname
-                      }}</a>
-                    </li>
-                    <li class="is-active">
-                      <a href="#" aria-current="page">消息</a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-
-              <div class="widget-content">
-                <ul
-                  v-if="messagesPage && messagesPage.results"
-                  class="message-list"
-                >
-                  <li
-                    v-for="message in messagesPage.results"
-                    :key="message.messageId"
-                    class="message-item"
-                  >
-                    <div class="message-item-left">
-                      <div
-                        :style="{
-                          backgroundImage: 'url(' + message.from.avatar + ')'
-                        }"
-                        class="avatar is-rounded has-border"
-                      />
-                    </div>
-                    <div class="message-item-right">
-                      <div class="message-item-meta">
-                        <span v-if="message.from.id > 0" class="nickname">
-                          <a
-                            :href="'/user/' + message.from.id"
-                            target="_blank"
-                            >{{ message.from.nickname }}</a
-                          >
-                        </span>
-                        <span v-else class="nickname">
-                          <a href="javascript:void(0)" target="_blank">{{
-                            message.from.nickname
-                          }}</a>
-                        </span>
-                        <span class="time">{{
-                          message.createTime | prettyDate
-                        }}</span>
-                      </div>
-                      <div class="content">
-                        {{ message.content }}
-                        <span v-if="message.detailUrl" class="show-more">
-                          <a :href="message.detailUrl" target="_blank"
-                            >点击查看详情&gt;&gt;</a
-                          >
-                        </span>
-                        <blockquote>{{ message.quoteContent }}</blockquote>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-                <div
-                  v-else
-                  class="notification is-primary"
-                  style="margin-top: 10px;"
-                >
-                  暂无消息
-                </div>
-                <pagination
-                  :page="messagesPage.page"
-                  url-prefix="/user/messages/"
-                />
-              </div>
-            </div>
+    <div class="container main-container left-main">
+      <div class="left-container">
+        <div class="widget">
+          <div class="widget-header">
+            <nav
+              class="breadcrumb"
+              aria-label="breadcrumbs"
+              style="margin-bottom: 0px;"
+            >
+              <ul>
+                <li>
+                  <a href="/">首页</a>
+                </li>
+                <li>
+                  <a :href="'/user/' + currentUser.id">{{
+                    currentUser.nickname
+                  }}</a>
+                </li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">消息</a>
+                </li>
+              </ul>
+            </nav>
           </div>
-        </div>
-        <div class="column is-3">
-          <div class="main-aside">
-            <user-center-sidebar
-              :user="currentUser"
-              :current-user="currentUser"
+
+          <div class="widget-content">
+            <ul
+              v-if="messagesPage && messagesPage.results"
+              class="message-list"
+            >
+              <li
+                v-for="message in messagesPage.results"
+                :key="message.messageId"
+                class="message-item"
+              >
+                <div class="message-item-left">
+                  <div
+                    :style="{
+                      backgroundImage: 'url(' + message.from.avatar + ')'
+                    }"
+                    class="avatar is-rounded has-border"
+                  />
+                </div>
+                <div class="message-item-right">
+                  <div class="message-item-meta">
+                    <span v-if="message.from.id > 0" class="nickname">
+                      <a :href="'/user/' + message.from.id" target="_blank">{{
+                        message.from.nickname
+                      }}</a>
+                    </span>
+                    <span v-else class="nickname">
+                      <a href="javascript:void(0)" target="_blank">{{
+                        message.from.nickname
+                      }}</a>
+                    </span>
+                    <span class="time">{{
+                      message.createTime | prettyDate
+                    }}</span>
+                  </div>
+                  <div class="content">
+                    {{ message.content }}
+                    <span v-if="message.detailUrl" class="show-more">
+                      <a :href="message.detailUrl" target="_blank"
+                        >点击查看详情&gt;&gt;</a
+                      >
+                    </span>
+                    <blockquote>{{ message.quoteContent }}</blockquote>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div
+              v-else
+              class="notification is-primary"
+              style="margin-top: 10px;"
+            >
+              暂无消息
+            </div>
+            <pagination
+              :page="messagesPage.page"
+              url-prefix="/user/messages/"
             />
           </div>
         </div>
       </div>
+      <user-center-sidebar :user="currentUser" :current-user="currentUser" />
     </div>
   </section>
 </template>

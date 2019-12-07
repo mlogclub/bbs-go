@@ -72,7 +72,7 @@
                 <i class="iconfont icon-favorites" />&nbsp;收藏
               </a>
               <a class="navbar-item" href="/user/settings">
-                <i class="iconfont icon-username" />&nbsp;个人资料
+                <i class="iconfont icon-username" />&nbsp;编辑资料
               </a>
               <a @click="signout" class="navbar-item">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
