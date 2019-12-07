@@ -87,6 +87,7 @@
 
               <p v-html="topic.content"></p>
 
+              <!--
               <ins
                 class="adsbygoogle"
                 style="display:block"
@@ -98,6 +99,7 @@
               <script>
                 ;(adsbygoogle = window.adsbygoogle || []).push({})
               </script>
+              -->
             </div>
           </div>
 
