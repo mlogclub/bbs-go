@@ -35,7 +35,23 @@
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    currentTagId: {
+      type: Number,
+      default: 0
+    }
+  },
+  computed: {
+    createTopicUrl() {
+      let url = '/topic/create'
+      if (this.currentTagId) {
+        url += '?tagId=' + this.currentTagId
+      }
+      return url
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

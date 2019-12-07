@@ -1,6 +1,6 @@
 <template>
   <div class="right-container">
-    <post-btns />
+    <post-btns :current-tag-id="currentTagId" />
     <weixin-gzh />
 
     <!-- 展示广告
@@ -51,15 +51,6 @@ export default {
     currentTagId: {
       type: Number,
       default: 0
-    }
-  },
-  computed: {
-    createTopicUrl() {
-      let url = '/topic/create'
-      if (this.currentTagId) {
-        url += '?tagId=' + this.currentTagId
-      }
-      return url
     }
   }
 }
