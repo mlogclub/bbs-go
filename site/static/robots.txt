@@ -1,3 +1,3 @@
 User-agent: *
 Disallow:
-Sitemap: https://mlog.club/sitemap.xml
+Sitemap: https://static.mlog.club/sitemap/sitemap.xml.gz
