@@ -145,7 +145,7 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 	return simple.FromError(err)
 }
 
-// 主题标签
+// 话题的标签
 func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
 
@@ -156,7 +156,7 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 	return cache.TagCache.GetList(tagIds)
 }
 
-// 指定标签下的主题列表
+// 指定标签下话题列表
 func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
