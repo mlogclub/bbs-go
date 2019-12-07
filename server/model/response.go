@@ -57,6 +57,7 @@ type TopicSimpleResponse struct {
 	User            *UserInfo      `json:"user"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
+	Summary         string         `json:"summary"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CommentCount    int64          `json:"commentCount"`

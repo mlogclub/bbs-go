@@ -212,6 +212,7 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 
 	rsp.TopicId = topic.Id
 	rsp.Title = topic.Title
+	rsp.Summary = common.GetMarkdownSummary(topic.Content)
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
 	rsp.CreateTime = topic.CreateTime

@@ -121,17 +121,18 @@ export default {
     padding: 8px 0 8px 8px;
     position: relative;
     overflow: hidden;
-    border-radius: 4px;
     transition: background 0.5s;
 
+    // border-bottom: 1px solid #f0f0f0;
+
+    // border-radius: 4px;
     &:hover {
       background: #f3f6f9;
-      border-bottom: none;
     }
 
-    // &:not(:last-child) {
-    //   border-bottom: 1px dashed #f2f2f2;
-    // }
+    &:not(:last-child) {
+      border-bottom: 1px solid #f2f2f2;
+    }
   }
 }
 </style>
