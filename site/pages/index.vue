@@ -1,36 +1,47 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
-      <div class="left-container">
-        <topics-nav />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
-        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+    <div class="container">
+      <div class="widget">
+        <div class="widget-header">最新话题</div>
+        <div class="widget-content">
+          <div class="columns">
+            <div class="column">
+              <topic-list :topics="topics1" :show-ad="false" />
+            </div>
+            <div class="column">
+              <topic-list :topics="topics2" :show-ad="false" />
+            </div>
+          </div>
+        </div>
       </div>
-      <topic-side />
+
+      <div class="widget">
+        <div class="widget-header">最新文章</div>
+        <div class="widget-content">
+          <article-list :articles="articles" :show-ad="false" />
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import TopicSide from '~/components/TopicSide'
-import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
-import Pagination from '~/components/Pagination'
+import ArticleList from '~/components/ArticleList'
 
 export default {
-  components: {
-    TopicSide,
-    TopicsNav,
-    TopicList,
-    Pagination
-  },
+  components: { TopicList, ArticleList },
   async asyncData({ $axios, params }) {
     try {
-      const [user, topicsPage] = await Promise.all([
-        $axios.get('/api/user/current'),
-        $axios.get('/api/topic/topics')
+      const [topics, articles] = await Promise.all([
+        $axios.get('/api/topic/newest'),
+        $axios.get('/api/article/newest')
       ])
-      return { user, topicsPage }
+      return {
+        topics1: topics.slice(0, 5),
+        topics2: topics.slice(5, 10),
+        articles
+      }
     } catch (e) {
       console.error(e)
     }

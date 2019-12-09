@@ -244,7 +244,7 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 
 // 最新文章
 func (this *ArticleController) GetNewest() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(20))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildArticles(articles))
 }
 
