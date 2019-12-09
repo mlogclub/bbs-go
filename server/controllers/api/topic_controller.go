@@ -238,3 +238,9 @@ func (this *TopicController) GetRecommend() *simple.JsonResult {
 		return simple.JsonData(render.BuildSimpleTopics(ret))
 	}
 }
+
+// 最新话题
+func (this *TopicController) GetNewest() *simple.JsonResult {
+	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", model.TopicStatusOk).Desc("id").Limit(20))
+	return simple.JsonData(render.BuildTopics(topics))
+}

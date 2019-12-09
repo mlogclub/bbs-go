@@ -187,6 +187,6 @@ func (this *UserController) GetMessages() *simple.JsonResult {
 
 // 最新用户
 func (this *UserController) GetNewest() *simple.JsonResult {
-	users := services.UserService.GetNewest(10)
+	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildUsers(users))
 }
