@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container left-main">
+      <div class="container main-container is-white left-main">
         <div class="left-container">
           <div class="topic-detail topic-wrap">
             <div class="topic-header">

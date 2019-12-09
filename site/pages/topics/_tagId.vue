@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :current-tag-id="tag.tagId" />
         <topic-list :topics="topicsPage.results" :show-ad="false" />

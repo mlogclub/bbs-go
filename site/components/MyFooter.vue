@@ -8,7 +8,9 @@
         </div>
         <div>
           © 2019 Powered by
-          <a href="http://docs.bbs-go.com" target="_blank">bbs-go</a>
+          <a href="http://docs.bbs-go.com" target="_blank" class="light"
+            >BBS-GO</a
+          >
           <a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow"
             >鄂ICP备19023811号-3</a
           >
@@ -24,13 +26,18 @@ export default {}
 
 <style lang="scss" scoped>
 .footer {
-  font-size: 13px;
-  color: #aaa;
+  font-size: 14px;
+  color: #666;
   background: none;
   text-align: left;
   a {
-    color: #aaa;
-    text-decoration: underline;
+    color: #666;
+    text-decoration: none;
+  }
+
+  .light {
+    color: #eb5424;
+    font-weight: bold;
   }
 }
 </style>

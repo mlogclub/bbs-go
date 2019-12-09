@@ -40,18 +40,29 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
 
   .left-container,
   .right-container {
-    padding: 10px;
+    padding: 0;
+    margin: 0;
     height: 100%;
     box-sizing: border-box;
     display: block;
   }
 
-  // 左侧大，右侧小
-  &.left-main {
+  &.is-white.left-main {
     .left-container {
       background: #fff;
+      padding: 0 10px 10px 10px;
     }
+  }
 
+  &.is-white.right-main {
+    .right-container {
+      background: #fff;
+      padding: 0 10px 10px 10px;
+    }
+  }
+
+  // 左侧大，右侧小
+  &.left-main {
     @media screen and (max-width: 768px) {
       .left-container {
         width: 100% !important;
@@ -78,10 +89,6 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
 
   // 左侧小，右侧大
   &.right-main {
-    .right-container {
-      background: #fff;
-    }
-
     @media screen and (max-width: 768px) {
       .right-container {
         width: 100% !important;
