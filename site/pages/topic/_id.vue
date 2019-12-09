@@ -257,10 +257,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.aside-avatar {
-  width: 150px;
-  height: 150px;
-}
 .topic-detail {
   margin-bottom: 20px;
 
