@@ -372,3 +372,8 @@ func (this *articleService) GetDailyContent(userIds []int64) string {
 	})
 	return content
 }
+
+// 浏览数+1
+func (this *articleService) IncrViewCount(articleId int64) {
+	simple.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
+}

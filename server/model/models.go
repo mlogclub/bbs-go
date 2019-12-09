@@ -125,6 +125,7 @@ type Article struct {
 	Status      int    `gorm:"int;not null" json:"status" form:"status"`                        // 状态
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                              // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                     // 原文链接
+	ViewCount   int64  `gorm:"not null" json:"viewCount" form:"viewCount"`                      // 查看数量
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                    // 创建时间
 	UpdateTime  int64  `json:"updateTime" form:"updateTime"`                                    // 更新时间
 }

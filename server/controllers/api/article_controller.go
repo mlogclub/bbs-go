@@ -28,6 +28,7 @@ func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	if article == nil || article.Status != model.ArticleStatusPublished {
 		return simple.JsonErrorMsg("文章不存在")
 	}
+	services.ArticleService.IncrViewCount(articleId) // 增加浏览量
 	return simple.JsonData(render.BuildArticle(article))
 }
 
