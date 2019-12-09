@@ -4,7 +4,7 @@
       <div class="left-container">
         <topics-nav />
         <topic-list :topics="topicsPage.results" :show-ad="false" />
-        <pagination :page="topicsPage.page" url-prefix="/topics/" />
+        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
       <topic-side />
     </div>
