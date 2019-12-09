@@ -184,3 +184,9 @@ func (this *UserController) GetMessages() *simple.JsonResult {
 
 	return simple.JsonPageData(render.BuildMessages(messages), paging)
 }
+
+// 最新用户
+func (this *UserController) GetNewest() *simple.JsonResult {
+	users := services.UserService.GetNewest(10)
+	return simple.JsonData(render.BuildUsers(users))
+}

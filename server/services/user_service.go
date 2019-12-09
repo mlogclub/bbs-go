@@ -306,3 +306,8 @@ func (this *userService) UpdatePassword(userId int64, oldPassword, password, reP
 
 	return this.UpdateColumn(userId, "password", simple.EncodePassword(password))
 }
+
+// 最新用户
+func (this *userService) GetNewest(limit int) []model.User {
+	return this.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(limit))
+}
