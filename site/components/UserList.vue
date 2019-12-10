@@ -34,7 +34,7 @@ export default {
     display: flex;
     font-size: 14px;
     padding: 5px 0;
-    &:not(last-child) {
+    &:not(:last-child) {
       border-bottom: 1px solid #f7f7f7;
     }
 

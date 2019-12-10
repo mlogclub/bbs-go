@@ -18,6 +18,7 @@
             <span>{{ project.createTime | prettyDate }}</span>
           </div>
           <div class="content">
+            <!-- 信息流广告 -->
             <ins
               class="adsbygoogle"
               style="display:block"

@@ -72,14 +72,14 @@
             </div>
 
             <div class="content topic-content">
-              <!-- 信息流广告 -->
+              <!-- 展示广告 -->
               <ins
                 class="adsbygoogle"
                 style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-ht-19-1m-3j+mu"
                 data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="4980294904"
+                data-ad-slot="1742173616"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
               ></ins>
               <script>
                 ;(adsbygoogle = window.adsbygoogle || []).push({})
@@ -87,7 +87,7 @@
 
               <p v-html="topic.content"></p>
 
-              <!--
+              <!-- 信息流广告
               <ins
                 class="adsbygoogle"
                 style="display:block"
