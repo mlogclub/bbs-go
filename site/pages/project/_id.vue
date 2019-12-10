@@ -62,40 +62,18 @@
         />
       </div>
       <div class="right-container">
-        <div style="max-height:60px;">
-          <!-- 展示广告190x90 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:90px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="9345305153"
-          />
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
+        <weixin-gzh />
 
-          <!-- 展示广告190x190 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:190px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="5685455263"
-          />
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
-
-          <!-- 展示广告190x480 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:480px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="3438372357"
-          />
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
-        </div>
+        <!-- 展示广告220*220 -->
+        <ins
+          class="adsbygoogle"
+          style="display:inline-block;width:220px;height:220px"
+          data-ad-client="ca-pub-5683711753850351"
+          data-ad-slot="1361835285"
+        ></ins>
+        <script>
+          ;(adsbygoogle = window.adsbygoogle || []).push({})
+        </script>
       </div>
     </div>
   </section>
@@ -103,9 +81,12 @@
 
 <script>
 import Comment from '~/components/Comment'
+import WeixinGzh from '~/components/WeixinGzh'
+
 export default {
   components: {
-    Comment
+    Comment,
+    WeixinGzh
   },
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
