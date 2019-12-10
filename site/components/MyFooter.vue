@@ -30,6 +30,7 @@ export default {}
   color: #666;
   background: none;
   text-align: left;
+  margin: 0px 10px;
   a {
     color: #666;
     text-decoration: none;

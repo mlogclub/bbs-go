@@ -63,7 +63,8 @@ export default {
     },
     currentUser: {
       type: Object,
-      required: true
+      required: false,
+      default: null
     }
   },
   computed: {
