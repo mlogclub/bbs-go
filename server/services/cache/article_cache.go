@@ -11,13 +11,15 @@ import (
 )
 
 var (
-	recommendCacheKey = "recommend_articles_cache"
+	articleRecommendCacheKey = "recommend_articles_cache"
+	articleHotCacheKey       = "hot_articles_cache"
 )
 
 var ArticleCache = newArticleCache()
 
 type articleCache struct {
 	recommendCache cache.LoadingCache
+	hotCache       cache.LoadingCache
 }
 
 func newArticleCache() *articleCache {
@@ -31,11 +33,21 @@ func newArticleCache() *articleCache {
 			cache.WithMaximumSize(1),
 			cache.WithRefreshAfterWrite(30*time.Minute),
 		),
+		hotCache: cache.NewLoadingCache(
+			func(key cache.Key) (value cache.Value, err error) {
+				createTime := simple.Timestamp(time.Now().AddDate(0, 0, -7))
+				value = repositories.ArticleRepository.Find(simple.DB(),
+					simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Gt("create_time", createTime).Desc("view_count").Limit(5))
+				return
+			},
+			cache.WithMaximumSize(1),
+			cache.WithRefreshAfterWrite(10*time.Minute),
+		),
 	}
 }
 
 func (this *articleCache) GetRecommendArticles() []model.Article {
-	val, err := this.recommendCache.Get(recommendCacheKey)
+	val, err := this.recommendCache.Get(articleRecommendCacheKey)
 	if err != nil {
 		return nil
 	}
@@ -46,5 +58,16 @@ func (this *articleCache) GetRecommendArticles() []model.Article {
 }
 
 func (this *articleCache) InvalidateRecommend() {
-	this.recommendCache.Invalidate(recommendCacheKey)
+	this.recommendCache.Invalidate(articleRecommendCacheKey)
+}
+
+func (this *articleCache) GetHotArticles() []model.Article {
+	val, err := this.hotCache.Get(articleHotCacheKey)
+	if err != nil {
+		return nil
+	}
+	if val != nil {
+		return val.([]model.Article)
+	}
+	return nil
 }

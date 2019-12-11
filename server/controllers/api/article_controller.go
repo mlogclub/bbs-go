@@ -244,7 +244,13 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 
 // 最新文章
 func (this *ArticleController) GetNewest() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(10))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(5))
+	return simple.JsonData(render.BuildArticles(articles))
+}
+
+// 热门文章
+func (this *ArticleController) GetHot() *simple.JsonResult {
+	articles := cache.ArticleCache.GetHotArticles()
 	return simple.JsonData(render.BuildArticles(articles))
 }
 
