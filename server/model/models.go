@@ -126,7 +126,7 @@ type Article struct {
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                              // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                     // 原文链接
 	ViewCount   int64  `gorm:"not null" json:"viewCount" form:"viewCount"`                      // 查看数量
-	CreateTime  int64  `json:"createTime" form:"createTime"`                                    // 创建时间
+	CreateTime  int64  `gorm:"index:idx_create_time" json:"createTime" form:"createTime"`       // 创建时间
 	UpdateTime  int64  `json:"updateTime" form:"updateTime"`                                    // 更新时间
 }
 
@@ -171,7 +171,7 @@ type Topic struct {
 	LikeCount       int64  `gorm:"not null" json:"likeCount" form:"likeCount"`                                // 点赞数量
 	Status          int    `gorm:"index:idx_status;" json:"status" form:"status"`                             // 状态：0：正常、1：删除
 	LastCommentTime int64  `gorm:"index:idx_last_comment_time" json:"lastCommentTime" form:"lastCommentTime"` // 最后回复时间
-	CreateTime      int64  `json:"createTime" form:"createTime"`                                              // 创建时间
+	CreateTime      int64  `gorm:"index:idx_create_time" json:"createTime" form:"createTime"`                 // 创建时间
 	ExtraData       string `gorm:"type:text" json:"extraData" form:"extraData"`                               // 扩展数据
 }
 
