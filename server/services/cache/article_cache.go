@@ -35,9 +35,9 @@ func newArticleCache() *articleCache {
 		),
 		hotCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, err error) {
-				createTime := simple.Timestamp(time.Now().AddDate(0, 0, -7))
+				createTime := simple.Timestamp(time.Now().AddDate(0, 0, -3))
 				value = repositories.ArticleRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Gt("create_time", createTime).Desc("view_count").Limit(5))
+					simple.NewSqlCnd().Gt("create_time", createTime).Eq("status", model.ArticleStatusPublished).Desc("view_count").Limit(5))
 				return
 			},
 			cache.WithMaximumSize(1),

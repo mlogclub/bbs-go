@@ -10,6 +10,10 @@ import (
 	"github.com/mlogclub/bbs-go/repositories"
 )
 
+var (
+	topicRecommendCacheKey = "recommend_topics_cache"
+)
+
 var TopicCache = newTopicCache()
 
 type topicCache struct {
@@ -21,7 +25,7 @@ func newTopicCache() *topicCache {
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TopicRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(50))
+					simple.NewSqlCnd().Eq("status", model.TopicStatusOk).Desc("id").Limit(50))
 				return
 			},
 			cache.WithMaximumSize(10),
@@ -31,7 +35,7 @@ func newTopicCache() *topicCache {
 }
 
 func (this *topicCache) GetRecommendTopics() []model.Topic {
-	val, err := this.recommendCache.Get(recommendCacheKey)
+	val, err := this.recommendCache.Get(topicRecommendCacheKey)
 	if err != nil {
 		return nil
 	}
@@ -42,5 +46,5 @@ func (this *topicCache) GetRecommendTopics() []model.Topic {
 }
 
 func (this *topicCache) InvalidateRecommend() {
-	this.recommendCache.Invalidate(recommendCacheKey)
+	this.recommendCache.Invalidate(topicRecommendCacheKey)
 }
