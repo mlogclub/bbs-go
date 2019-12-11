@@ -2,7 +2,10 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <div class="widget">
+        <div
+          v-if="(topics1 && topics1.length) || (topics2 && topics2.length)"
+          class="widget"
+        >
           <div class="widget-header">最新话题</div>
           <div class="widget-content">
             <div class="columns">
@@ -19,7 +22,17 @@
           </div>
         </div>
 
-        <div class="widget">
+        <div v-if="hotArticles && hotArticles.length" class="widget">
+          <div class="widget-header">热门文章</div>
+          <div class="widget-content">
+            <article-list :articles="hotArticles" :show-ad="false" />
+          </div>
+          <div class="widget-footer is-right">
+            <a href="/articles" class="more-text">查看更多文章...</a>
+          </div>
+        </div>
+
+        <div v-if="articles && articles.length" class="widget">
           <div class="widget-header">最新文章</div>
           <div class="widget-content">
             <article-list :articles="articles" :show-ad="false" />
@@ -54,15 +67,17 @@ export default {
   components: { TopicList, ArticleList, UserList, WeixinGzh, PostBtns },
   async asyncData({ $axios, params }) {
     try {
-      const [topics, articles, users] = await Promise.all([
+      const [topics, articles, hotArticles, users] = await Promise.all([
         $axios.get('/api/topic/newest'),
         $axios.get('/api/article/newest'),
+        $axios.get('/api/article/hot'),
         $axios.get('/api/user/newest')
       ])
       return {
         topics1: topics.slice(0, 5),
         topics2: topics.slice(5, 10),
-        articles: articles.slice(0, 5),
+        articles,
+        hotArticles,
         users
       }
     } catch (e) {

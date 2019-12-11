@@ -22,6 +22,7 @@
           </div>
         </div>
         <div style="margin-top: 20px;">
+          <!-- 展示广告 -->
           <ins
             class="adsbygoogle"
             style="display:block"
@@ -29,7 +30,7 @@
             data-ad-slot="1742173616"
             data-ad-format="auto"
             data-full-width-responsive="true"
-          />
+          ></ins>
           <script>
             ;(adsbygoogle = window.adsbygoogle || []).push({})
           </script>
