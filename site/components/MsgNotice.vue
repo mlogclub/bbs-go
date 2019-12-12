@@ -59,7 +59,7 @@ export default {
 .msg-notice {
   .msgicon {
     font-size: 16px;
-    color: #000;
+    color: #fff;
 
     &:hover {
       color: red;

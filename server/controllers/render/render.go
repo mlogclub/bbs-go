@@ -86,6 +86,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Summary = article.Summary
 	rsp.Share = article.Share
 	rsp.SourceUrl = article.SourceUrl
+	rsp.ViewCount = article.ViewCount
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
@@ -133,6 +134,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	rsp.Summary = article.Summary
 	rsp.Share = article.Share
 	rsp.SourceUrl = article.SourceUrl
+	rsp.ViewCount = article.ViewCount
 	rsp.CreateTime = article.CreateTime
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)

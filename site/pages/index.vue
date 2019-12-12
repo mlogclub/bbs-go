@@ -74,8 +74,8 @@ export default {
         $axios.get('/api/user/newest')
       ])
       return {
-        topics1: topics.slice(0, 5),
-        topics2: topics.slice(5, 10),
+        topics1: topics.slice(0, 3),
+        topics2: topics.slice(3, 6),
         articles,
         hotArticles,
         users

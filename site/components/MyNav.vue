@@ -148,11 +148,11 @@ export default {
     border-bottom: none;
   }
   .navbar-item {
-    font-weight: 600;
-    &:hover,
-    &.active {
-      color: #009a61 !important;
-    }
+    font-weight: 700;
+    // &:hover,
+    // &.active {
+    //   color: #009a61 !important;
+    // }
   }
 }
 .searchFormDiv {
