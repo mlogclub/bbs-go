@@ -26,7 +26,7 @@
     -->
     <div class="item">
       <div class="icon">
-        <a href="/articles"
+        <a href="/topic/40"
           ><i class="iconfont icon-book" style="color:#fee83c;"></i
         ></a>
       </div>
