@@ -100,9 +100,74 @@
                   <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
                   >），我们将在24小时之内删除。
                 </li>
+                <li v-if="article.sourceUrl">
+                  <strong>原文链接：</strong>
+                  <a
+                    :href="article.sourceUrl"
+                    class="source-url"
+                    rel="external nofollow"
+                    target="_blank"
+                    >{{ article.sourceUrl }}</a
+                  >
+                </li>
               </ul>
             </blockquote>
           </div>
+
+          <div class="columns article-related">
+            <div v-if="newestArticles && newestArticles.length" class="column">
+              <div class="widget">
+                <div class="widget-header">最新文章</div>
+                <div class="widget-content">
+                  <ul>
+                    <li v-for="a in newestArticles" :key="a.articleId">
+                      <a
+                        :href="'/article/' + a.articleId"
+                        :title="a.title"
+                        class="article-related-title"
+                        target="_blank"
+                        >{{ a.title }}</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="relatedArticles && relatedArticles.length"
+              class="column"
+            >
+              <div class="widget">
+                <div class="widget-header">相关文章</div>
+                <div class="widget-content">
+                  <ul>
+                    <li v-for="a in relatedArticles" :key="a.articleId">
+                      <a
+                        :href="'/article/' + a.articleId"
+                        :title="a.title"
+                        class="article-related-title"
+                        target="_blank"
+                        >{{ a.title }}</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 展示广告 -->
+          <ins
+            class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-5683711753850351"
+            data-ad-slot="1742173616"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <script>
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
+          </script>
         </article>
 
         <!-- 评论 -->
@@ -112,46 +177,6 @@
           :show-ad="true"
           entity-type="article"
         />
-
-        <div class="columns article-related">
-          <div class="column">
-            <div v-if="newestArticles && newestArticles.length" class="widget">
-              <div class="widget-header">最新文章</div>
-              <div class="widget-content">
-                <ul>
-                  <li v-for="a in newestArticles" :key="a.articleId">
-                    <a
-                      :href="'/article/' + a.articleId"
-                      :title="a.title"
-                      target="_blank"
-                      >{{ a.title }}</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <div
-              v-if="relatedArticles && relatedArticles.length"
-              class="widget"
-            >
-              <div class="widget-header">相关文章</div>
-              <div class="widget-content">
-                <ul>
-                  <li v-for="a in relatedArticles" :key="a.articleId">
-                    <a
-                      :href="'/article/' + a.articleId"
-                      :title="a.title"
-                      target="_blank"
-                      >{{ a.title }}</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="right-container">
         <weixin-gzh />

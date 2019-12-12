@@ -138,6 +138,11 @@
     margin-top: 20px;
     word-break: break-all;
 
+    &, a {
+      color: #4a4a4a;
+      font-size: 14px;
+    }
+
     blockquote {
       padding: 10px 15px;
       margin: 0 0 20px;
@@ -186,16 +191,23 @@
     blockquote.pull-right .small:after {
       content: '\00A0 \2014';
     }
+
   }
 
 }
 
 .article-related {
   margin: 20px 0 0 0;
-  font-size: 13px;
 
-  .widget>.header {
-    color: #000;
-    font-size: 20px;
+  .article-related-title {
+    overflow: hidden;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+
+    font-size: 13px;
+    font-weight: 700;
   }
 }

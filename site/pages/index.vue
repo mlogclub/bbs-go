@@ -2,6 +2,8 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
+        <home-icons />
+
         <div
           v-if="(topics1 && topics1.length) || (topics2 && topics2.length)"
           class="widget"
@@ -43,7 +45,7 @@
         </div>
       </div>
       <div class="right-container">
-        <post-btns />
+        <!-- <post-btns /> -->
         <weixin-gzh />
 
         <div class="widget">
@@ -58,13 +60,14 @@
 </template>
 
 <script>
+import HomeIcons from '~/components/HomeIcons'
 import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserList from '~/components/UserList'
 import WeixinGzh from '~/components/WeixinGzh'
-import PostBtns from '~/components/PostBtns'
+// import PostBtns from '~/components/PostBtns'
 export default {
-  components: { TopicList, ArticleList, UserList, WeixinGzh, PostBtns },
+  components: { HomeIcons, TopicList, ArticleList, UserList, WeixinGzh },
   async asyncData({ $axios, params }) {
     try {
       const [topics, articles, hotArticles, users] = await Promise.all([
