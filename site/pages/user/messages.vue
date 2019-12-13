@@ -4,11 +4,7 @@
       <div class="left-container">
         <div class="widget">
           <div class="widget-header">
-            <nav
-              class="breadcrumb"
-              aria-label="breadcrumbs"
-              style="margin-bottom: 0px;"
-            >
+            <nav class="breadcrumb">
               <ul>
                 <li>
                   <a href="/">首页</a>

@@ -60,6 +60,13 @@ func SitemapTask() {
 		{"priority", 1.0},
 	})
 
+	sm.Add(stm.URL{
+		{"loc", "/projects"},
+		{"lastmod", time.Now()},
+		{"changefreq", "daily"},
+		{"priority", 1.0},
+	})
+
 	services.ArticleService.ScanDesc(func(articles []model.Article) bool {
 		for _, article := range articles {
 			if article.Status == model.ArticleStatusPublished {

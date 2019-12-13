@@ -8,14 +8,14 @@
             <span v-if="project.title" class="project-title"
               >&nbsp;-&nbsp;{{ project.title }}</span
             >
-          </div>
-          <div class="meta">
-            <span>
-              <a :href="'/user/' + project.user.id">{{
-                project.user.nickname
-              }}</a>
-            </span>
-            <span>{{ project.createTime | prettyDate }}</span>
+            <div class="project-meta">
+              <span>
+                <a :href="'/user/' + project.user.id">{{
+                  project.user.nickname
+                }}</a>
+              </span>
+              <span>{{ project.createTime | prettyDate }}</span>
+            </div>
           </div>
           <div class="content">
             <!-- 信息流广告 -->
@@ -120,11 +120,13 @@ export default {
     }
   },
   head() {
+    let siteTitle = this.project.name
+    if (this.project.title) {
+      siteTitle += ' - ' + this.project.title
+    }
     return {
-      title: this.$siteTitle(this.project.name),
-      meta: [
-        { hid: 'description', name: 'description', content: this.project.title }
-      ]
+      title: this.$siteTitle(siteTitle),
+      meta: [{ hid: 'description', name: 'description', content: siteTitle }]
     }
   }
 }
@@ -135,37 +137,38 @@ export default {
   margin-bottom: 10px;
 
   .project-header {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
     .project-name {
       font-size: 18px;
       font-weight: 700;
       color: rgba(0, 0, 0, 0.75);
-      margin-top: 5px;
-      margin-bottom: 5px;
     }
 
     .project-title {
       font-size: 16px;
-      font-weight: 400;
+      font-weight: 500;
       color: rgba(0, 0, 0, 0.6);
     }
-  }
 
-  .meta {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #f4f4f5;
-    span {
-      display: inline-block;
-      font-size: 14px;
-      color: #999;
-      padding-top: 6px;
-
-      a {
+    .project-meta {
+      span {
+        font-size: 14px;
         color: #999;
-        cursor: pointer;
+        padding-top: 6px;
 
-        &:hover {
-          color: #3273dc;
-          font-weight: 500;
+        &:not(:first-child) {
+          margin-left: 10px;
+        }
+
+        a {
+          color: #999;
+          cursor: pointer;
+
+          &:hover {
+            color: #3273dc;
+            font-weight: 500;
+          }
         }
       }
     }

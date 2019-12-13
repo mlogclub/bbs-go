@@ -2,11 +2,7 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <nav
-          class="breadcrumb"
-          aria-label="breadcrumbs"
-          style="margin-bottom: 10px;"
-        >
+        <nav class="breadcrumb my-breadcrumb">
           <ul>
             <li><a href="article">首页</a></li>
             <li>

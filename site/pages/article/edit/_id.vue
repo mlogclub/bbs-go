@@ -6,7 +6,7 @@
           <div class="main-body">
             <div class="widget">
               <div class="widget-header">
-                <nav class="breadcrumb" aria-label="breadcrumbs">
+                <nav class="breadcrumb">
                   <ul>
                     <li><a href="/">首页</a></li>
                     <li>
