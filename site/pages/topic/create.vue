@@ -1,69 +1,63 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-21">
-          <div class="main-body">
-            <div class="widget">
-              <div class="widget-header">
-                <nav class="breadcrumb">
-                  <ul>
-                    <li><a href="/">首页</a></li>
-                    <li>
-                      <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
-                        currentUser.nickname
-                      }}</a>
-                    </li>
-                    <li class="is-active">
-                      <a href="#" aria-current="page">主题</a>
-                    </li>
-                  </ul>
-                </nav>
+    <div class="container main-container is-white left-main">
+      <div class="left-container">
+        <div class="widget">
+          <div class="widget-header">
+            <nav class="breadcrumb">
+              <ul>
+                <li><a href="/">首页</a></li>
+                <li>
+                  <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                    currentUser.nickname
+                  }}</a>
+                </li>
+                <li class="is-active">
+                  <a href="#" aria-current="page">主题</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="widget-content">
+            <div class="field">
+              <div class="control">
+                <input
+                  v-model="postForm.title"
+                  class="input"
+                  type="text"
+                  placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
+                />
               </div>
-              <div class="widget-content">
-                <div class="field">
-                  <div class="control">
-                    <input
-                      v-model="postForm.title"
-                      class="input"
-                      type="text"
-                      placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
-                    />
-                  </div>
-                </div>
+            </div>
 
-                <div class="field">
-                  <div class="control">
-                    <tag-input v-model="postForm.tags" />
-                  </div>
-                </div>
+            <div class="field">
+              <div class="control">
+                <tag-input v-model="postForm.tags" />
+              </div>
+            </div>
 
-                <div class="field">
-                  <div class="control">
-                    <vditor v-model="postForm.content" />
-                  </div>
-                </div>
+            <div class="field">
+              <div class="control">
+                <vditor v-model="postForm.content" />
+              </div>
+            </div>
 
-                <div class="field is-grouped">
-                  <div class="control">
-                    <a
-                      :class="{ 'is-loading': publishing }"
-                      :disabled="publishing"
-                      @click="submitCreate"
-                      class="button is-success"
-                      >发表主题</a
-                    >
-                  </div>
-                </div>
+            <div class="field is-grouped">
+              <div class="control">
+                <a
+                  :class="{ 'is-loading': publishing }"
+                  :disabled="publishing"
+                  @click="submitCreate"
+                  class="button is-success"
+                  >发表主题</a
+                >
               </div>
             </div>
           </div>
         </div>
-        <div class="column is-3 ">
-          <div class="main-aside">
-            <markdown-help />
-          </div>
-        </div>
+      </div>
+      <div class="right-container">
+        <markdown-help />
       </div>
     </div>
   </section>
