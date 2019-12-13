@@ -35,7 +35,9 @@
             }}</time>
           </span>
 
-          <span class="article-meta-item" v-if="article.viewCount > 0"> 热度 {{ article.viewCount }} </span>
+          <span v-if="article.viewCount > 0" class="article-meta-item">
+            热度 {{ article.viewCount }}
+          </span>
 
           <span
             v-if="article.tags && article.tags.length > 0"

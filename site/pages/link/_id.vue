@@ -16,9 +16,7 @@
             {{ link.summary }}
           </div>
           <div class="link">
-            博客地址：<a :href="link.url" rel="nofollow">{{
-              link.url
-            }}</a>
+            博客地址：<a :href="link.url" rel="nofollow">{{ link.url }}</a>
           </div>
         </div>
         <div style="margin-top: 20px;">
