@@ -105,7 +105,7 @@
                   <a
                     :href="article.sourceUrl"
                     class="source-url"
-                    rel="external nofollow"
+                    rel="nofollow"
                     target="_blank"
                     >{{ article.sourceUrl }}</a
                   >
