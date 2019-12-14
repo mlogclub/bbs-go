@@ -13,7 +13,7 @@
       ad-slot="1361835285"
     />
 
-    <!-- 展示广告220*220 -->
+    <!-- 展示广告220*220
     <adsbygoogle
       :ad-style="{
         display: 'inline-block',
@@ -22,6 +22,7 @@
       }"
       ad-slot="1361835285"
     />
+    -->
   </div>
 </template>
 
