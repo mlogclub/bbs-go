@@ -18,18 +18,8 @@
             </div>
           </div>
           <div class="content">
-            <!-- 信息流广告 -->
-            <ins
-              class="adsbygoogle"
-              style="display:block"
-              data-ad-format="fluid"
-              data-ad-layout-key="-ig-s+1x-t-q"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="4728140043"
-            />
-            <script>
-              ;(adsbygoogle = window.adsbygoogle || []).push({})
-            </script>
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
             <p v-highlight v-html="project.content" />
           </div>
           <div class="footer">
@@ -65,15 +55,14 @@
         <weixin-gzh />
 
         <!-- 展示广告220*220 -->
-        <ins
-          class="adsbygoogle"
-          style="display:inline-block;width:220px;height:220px"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="1361835285"
-        ></ins>
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
+        <adsbygoogle
+          :ad-style="{
+            display: 'inline-block',
+            width: '220px',
+            height: '220px'
+          }"
+          ad-slot="1361835285"
+        />
       </div>
     </div>
   </section>

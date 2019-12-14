@@ -19,32 +19,8 @@
           </p>
         </div>
 
-        <!-- 信息流广告
-        <ins
-          class="adsbygoogle"
-          style="display:block"
-          data-ad-format="fluid"
-          data-ad-layout-key="-ig-s+1x-t-q"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="4728140043"
-        />
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
-        -->
-
         <!-- 展示广告 -->
-        <ins
-          class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="1742173616"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
+        <adsbygoogle ad-slot="1742173616" />
 
         <ul class="links">
           <li v-for="link in linksPage.results" :key="link.linkId" class="link">

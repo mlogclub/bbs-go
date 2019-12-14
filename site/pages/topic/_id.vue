@@ -73,33 +73,9 @@
 
             <div class="content topic-content">
               <!-- 展示广告 -->
-              <ins
-                class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="1742173616"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              ></ins>
-              <script>
-                ;(adsbygoogle = window.adsbygoogle || []).push({})
-              </script>
+              <adsbygoogle ad-slot="1742173616" />
 
               <p v-html="topic.content"></p>
-
-              <!-- 信息流广告
-              <ins
-                class="adsbygoogle"
-                style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-ig-s+1x-t-q"
-                data-ad-client="ca-pub-5683711753850351"
-                data-ad-slot="4728140043"
-              />
-              <script>
-                ;(adsbygoogle = window.adsbygoogle || []).push({})
-              </script>
-              -->
             </div>
           </div>
 
@@ -114,16 +90,15 @@
         <div class="right-container">
           <weixin-gzh />
 
-          <!-- 展示广告190x90 -->
-          <ins
-            class="adsbygoogle"
-            style="display:inline-block;width:190px;height:90px"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="9345305153"
+          <!-- 展示广告220*220 -->
+          <adsbygoogle
+            :ad-style="{
+              display: 'inline-block',
+              width: '220px',
+              height: '220px'
+            }"
+            ad-slot="1361835285"
           />
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
 
           <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
             <div class="widget-header">

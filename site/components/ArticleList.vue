@@ -3,17 +3,11 @@
     <li v-for="(article, index) in articles" :key="article.articleId">
       <div v-if="showAd && (index === 2 || index === 10 || index === 18)">
         <!-- 信息流广告 -->
-        <ins
-          class="adsbygoogle"
-          style="display:block"
-          data-ad-format="fluid"
-          data-ad-layout-key="-ht-19-1m-3j+mu"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="4980294904"
-        ></ins>
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
+        <adsbygoogle
+          ad-slot="4980294904"
+          ad-format="fluid"
+          ad-layout-key="-ht-19-1m-3j+mu"
+        />
       </div>
       <article class="article-item">
         <div class="article-title">

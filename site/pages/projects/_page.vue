@@ -9,15 +9,14 @@
         <weixin-gzh />
 
         <!-- 展示广告220*220 -->
-        <ins
-          class="adsbygoogle"
-          style="display:inline-block;width:220px;height:220px"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="1361835285"
-        ></ins>
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
+        <adsbygoogle
+          :ad-style="{
+            display: 'inline-block',
+            width: '220px',
+            height: '220px'
+          }"
+          ad-slot="1361835285"
+        />
       </div>
     </div>
   </section>
