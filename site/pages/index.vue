@@ -45,8 +45,16 @@
         </div>
       </div>
       <div class="right-container">
-        <!-- <post-btns /> -->
         <weixin-gzh />
+
+        <adsbygoogle
+          :ad-style="{
+            display: 'inline-block',
+            width: '220px',
+            height: '220px'
+          }"
+          ad-slot="1361835285"
+        />
 
         <div class="widget">
           <div class="widget-header">新入驻</div>
@@ -65,7 +73,6 @@ import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserList from '~/components/UserList'
 import WeixinGzh from '~/components/WeixinGzh'
-// import PostBtns from '~/components/PostBtns'
 export default {
   components: { HomeIcons, TopicList, ArticleList, UserList, WeixinGzh },
   async asyncData({ $axios, params }) {

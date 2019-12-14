@@ -72,10 +72,14 @@
             </div>
 
             <div class="content topic-content">
-              <!-- 展示广告 -->
-              <adsbygoogle ad-slot="1742173616" />
+              <!-- 信息流广告 -->
+              <adsbygoogle
+                ad-slot="4980294904"
+                ad-format="fluid"
+                ad-layout-key="-ht-19-1m-3j+mu"
+              />
 
-              <p v-html="topic.content"></p>
+              <p v-html="topic.content" class="topic-content-p"></p>
             </div>
           </div>
 
@@ -94,8 +98,8 @@
           <adsbygoogle
             :ad-style="{
               display: 'inline-block',
-              width: '220px',
-              height: '220px'
+              maxWidth: '220px',
+              maxHeight: '220px'
             }"
             ad-slot="1361835285"
           />
