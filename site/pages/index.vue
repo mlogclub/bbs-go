@@ -40,6 +40,12 @@
           </div>
         </div>
 
+        <adsbygoogle
+          ad-slot="4980294904"
+          ad-format="fluid"
+          ad-layout-key="-ht-19-1m-3j+mu"
+        />
+
         <div v-if="articles && articles.length" class="widget">
           <div class="widget-header">最新文章</div>
           <div class="widget-content">
@@ -49,7 +55,14 @@
             <a href="/articles" class="more-text">查看更多文章...</a>
           </div>
         </div>
+
+        <adsbygoogle
+          ad-slot="4980294904"
+          ad-format="fluid"
+          ad-layout-key="-ht-19-1m-3j+mu"
+        />
       </div>
+
       <div class="right-container">
         <weixin-gzh />
 
