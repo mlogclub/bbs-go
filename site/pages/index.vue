@@ -24,6 +24,12 @@
           </div>
         </div>
 
+        <adsbygoogle
+          ad-slot="4980294904"
+          ad-format="fluid"
+          ad-layout-key="-ht-19-1m-3j+mu"
+        />
+
         <div v-if="hotArticles && hotArticles.length" class="widget">
           <div class="widget-header">热门文章</div>
           <div class="widget-content">
