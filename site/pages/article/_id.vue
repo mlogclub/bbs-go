@@ -104,6 +104,8 @@
             </blockquote>
           </div>
 
+          <adsbygoogle ad-slot="1742173616" />
+
           <div class="columns article-related">
             <div v-if="newestArticles && newestArticles.length" class="column">
               <div class="widget">
