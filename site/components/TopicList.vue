@@ -7,17 +7,11 @@
       >
         <div class="ad">
           <!-- 信息流广告 -->
-          <ins
-            class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-ht-19-1m-3j+mu"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="4980294904"
-          ></ins>
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
+          <adsbygoogle
+            ad-slot="4980294904"
+            ad-format="fluid"
+            ad-layout-key="-ht-19-1m-3j+mu"
+          />
         </div>
       </li>
       <li :key="topic.topicId">

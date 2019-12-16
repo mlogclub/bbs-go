@@ -84,7 +84,14 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/eslint-module',
     '@nuxtjs/toast',
-    ['cookie-universal-nuxt', { alias: 'cookies' }]
+    ['cookie-universal-nuxt', { alias: 'cookies' }],
+    [
+      '@nuxtjs/google-adsense',
+      {
+        id: 'ca-pub-5683711753850351',
+        pageLevelAds: true
+      }
+    ]
   ],
   /*
    ** Axios module configuration

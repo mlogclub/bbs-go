@@ -12,17 +12,7 @@
             <a :href="url" rel="nofollow"
               >即将跳往站外地址，点击该链接继续跳转&gt;&gt;</a
             >
-            <ins
-              class="adsbygoogle"
-              style="display:block"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="1742173616"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-            <script>
-              ;(adsbygoogle = window.adsbygoogle || []).push({})
-            </script>
+            <adsbygoogle ad-slot="1742173616" />
           </div>
 
           <div class="columns recommend">

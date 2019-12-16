@@ -72,17 +72,7 @@
 
           <div class="article-content content">
             <!-- 展示广告 -->
-            <ins
-              class="adsbygoogle"
-              style="display:block"
-              data-ad-client="ca-pub-5683711753850351"
-              data-ad-slot="1742173616"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            <script>
-              ;(adsbygoogle = window.adsbygoogle || []).push({})
-            </script>
+            <adsbygoogle ad-slot="1742173616" />
 
             <p v-highlight v-html="article.content" />
           </div>
@@ -157,17 +147,7 @@
           </div>
 
           <!-- 展示广告 -->
-          <ins
-            class="adsbygoogle"
-            style="display:block"
-            data-ad-client="ca-pub-5683711753850351"
-            data-ad-slot="1742173616"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <script>
-            ;(adsbygoogle = window.adsbygoogle || []).push({})
-          </script>
+          <adsbygoogle ad-slot="1742173616" />
         </article>
 
         <!-- 评论 -->
@@ -182,15 +162,14 @@
         <weixin-gzh />
 
         <!-- 展示广告220*220 -->
-        <ins
-          class="adsbygoogle"
-          style="display:inline-block;width:220px;height:220px"
-          data-ad-client="ca-pub-5683711753850351"
-          data-ad-slot="1361835285"
-        ></ins>
-        <script>
-          ;(adsbygoogle = window.adsbygoogle || []).push({})
-        </script>
+        <adsbygoogle
+          :ad-style="{
+            display: 'inline-block',
+            width: '220px',
+            height: '220px'
+          }"
+          ad-slot="1361835285"
+        />
 
         <div ref="toc" v-if="article.toc" class="widget no-bg toc">
           <div class="widget-header">目录</div>
