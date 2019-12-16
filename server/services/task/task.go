@@ -67,7 +67,17 @@ func SitemapTask() {
 		{"priority", 1.0},
 	})
 
-	services.ArticleService.ScanDesc(func(articles []model.Article) bool {
+	services.UserService.Scan(func(users []model.User) {
+		for _, user := range users {
+			userUrl := urls.UserUrl(user.Id)
+			sm.Add(stm.URL{
+				{"loc", userUrl},
+				{"lastmod", time.Now()},
+			})
+		}
+	})
+
+	services.ArticleService.Scan(func(articles []model.Article) bool {
 		for _, article := range articles {
 			if article.Status == model.ArticleStatusPublished {
 				articleUrl := urls.ArticleUrl(article.Id)
@@ -75,15 +85,12 @@ func SitemapTask() {
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
 				})
-				// logrus.WithFields(logrus.Fields{
-				// 	"sitemap": "article",
-				// }).Info(articleUrl)
 			}
 		}
 		return true
 	})
 
-	services.TopicService.ScanDesc(func(topics []model.Topic) bool {
+	services.TopicService.Scan(func(topics []model.Topic) bool {
 		for _, topic := range topics {
 			if topic.Status == model.TopicStatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
@@ -91,29 +98,23 @@ func SitemapTask() {
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
 				})
-				// logrus.WithFields(logrus.Fields{
-				// 	"sitemap": "topic",
-				// }).Info(topicUrl)
 			}
 		}
 		return true
 	})
 
-	services.ProjectService.ScanDesc(func(projects []model.Project) bool {
+	services.ProjectService.Scan(func(projects []model.Project) bool {
 		for _, project := range projects {
 			projectUrl := urls.ProjectUrl(project.Id)
 			sm.Add(stm.URL{
 				{"loc", projectUrl},
 				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
 			})
-			// logrus.WithFields(logrus.Fields{
-			// 	"sitemap": "project",
-			// }).Info(projectUrl)
 		}
 		return true
 	})
 
-	services.TagService.ScanDesc(func(tags []model.Tag) bool {
+	services.TagService.Scan(func(tags []model.Tag) bool {
 		for _, tag := range tags {
 			tagUrl := urls.TagArticlesUrl(tag.Id)
 			sm.Add(stm.URL{
@@ -122,9 +123,6 @@ func SitemapTask() {
 				{"changefreq", "daily"},
 				{"priority", 0.6},
 			})
-			// logrus.WithFields(logrus.Fields{
-			// 	"sitemap": "tag",
-			// }).Info(tagUrl)
 		}
 		return true
 	})

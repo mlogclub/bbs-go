@@ -17,6 +17,8 @@ import (
 	"github.com/mlogclub/bbs-go/repositories"
 )
 
+type ScanUserCallback func(users []model.User)
+
 var UserService = newUserService()
 
 func newUserService() *userService {
@@ -80,6 +82,19 @@ func (this *userService) UpdateColumn(id int64, name string, value interface{}) 
 func (this *userService) Delete(id int64) {
 	repositories.UserRepository.Delete(simple.DB(), id)
 	cache.UserCache.Invalidate(id)
+}
+
+// 扫描
+func (this *userService) Scan(cb ScanUserCallback) {
+	var cursor int64
+	for {
+		list := repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		cb(list)
+	}
 }
 
 func (this *userService) GetByEmail(email string) *model.User {

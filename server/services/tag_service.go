@@ -1,7 +1,6 @@
 package services
 
 import (
-	"math"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -104,11 +103,11 @@ func (this *tagService) GetTagInIds(tagIds []int64) []model.Tag {
 	return repositories.TagRepository.GetTagInIds(tagIds)
 }
 
-// 倒序扫描
-func (this *tagService) ScanDesc(cb ScanTagCallback) {
-	var cursor int64 = math.MaxInt64
+// 扫描
+func (this *tagService) Scan(cb ScanTagCallback) {
+	var cursor int64
 	for {
-		list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", cursor).Desc("id").Limit(100))
+		list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if list == nil || len(list) == 0 {
 			break
 		}
