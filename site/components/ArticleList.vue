@@ -1,7 +1,7 @@
 <template>
   <ul class="article-list">
     <li v-for="(article, index) in articles" :key="article.articleId">
-      <div v-if="showAd && (index === 2 || index === 10 || index === 18)">
+      <div v-if="showAd && (index !== 0 || index % 3 === 0)">
         <!-- 信息流广告 -->
         <adsbygoogle
           ad-slot="4980294904"

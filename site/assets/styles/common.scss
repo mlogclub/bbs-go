@@ -149,16 +149,10 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // ä
 .widget {
   background: #fff;
   padding: 0 6px;
-  // font-size: 13px;
-  // padding-left: 8px;
-  margin-top: 15px;
+  margin-top: 10px;
 
   &:first-child {
     margin: 0px;
-  }
-
-  &.has-margin {
-    margin-top: 20px;
   }
 
   &.no-margin {

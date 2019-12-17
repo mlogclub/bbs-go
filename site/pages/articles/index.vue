@@ -12,15 +12,18 @@
       </div>
       <div class="right-container">
         <weixin-gzh />
-        <!-- 展示广告220*220 -->
-        <adsbygoogle
-          :ad-style="{
-            display: 'inline-block',
-            width: '220px',
-            height: '220px'
-          }"
-          ad-slot="1361835285"
-        />
+
+        <div class="ad">
+          <!-- 展示广告220*220 -->
+          <adsbygoogle
+            :ad-style="{
+              display: 'inline-block',
+              width: '220px',
+              height: '220px'
+            }"
+            ad-slot="1361835285"
+          />
+        </div>
       </div>
     </div>
   </section>

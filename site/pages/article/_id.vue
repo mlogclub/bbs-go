@@ -104,7 +104,14 @@
             </blockquote>
           </div>
 
-          <adsbygoogle ad-slot="1742173616" />
+          <div class="ad">
+            <!-- 信息流广告 -->
+            <adsbygoogle
+              ad-slot="4980294904"
+              ad-format="fluid"
+              ad-layout-key="-ht-19-1m-3j+mu"
+            />
+          </div>
 
           <div class="columns article-related">
             <div v-if="newestArticles && newestArticles.length" class="column">
@@ -148,8 +155,14 @@
             </div>
           </div>
 
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
+          <div class="ad">
+            <!-- 信息流广告 -->
+            <adsbygoogle
+              ad-slot="4980294904"
+              ad-format="fluid"
+              ad-layout-key="-ht-19-1m-3j+mu"
+            />
+          </div>
         </article>
 
         <!-- 评论 -->
@@ -163,15 +176,17 @@
       <div class="right-container">
         <weixin-gzh />
 
-        <!-- 展示广告220*220 -->
-        <adsbygoogle
-          :ad-style="{
-            display: 'inline-block',
-            width: '220px',
-            height: '220px'
-          }"
-          ad-slot="1361835285"
-        />
+        <div class="ad">
+          <!-- 展示广告220*220 -->
+          <adsbygoogle
+            :ad-style="{
+              display: 'inline-block',
+              width: '220px',
+              height: '220px'
+            }"
+            ad-slot="1361835285"
+          />
+        </div>
 
         <div ref="toc" v-if="article.toc" class="widget no-bg toc">
           <div class="widget-header">目录</div>

@@ -35,16 +35,19 @@
             <a href="/user/favorites">&nbsp;收藏</a>
           </li>
         </ul>
-        <!-- 展示广告220*220 -->
-        <adsbygoogle
-          :ad-style="{
-            display: 'inline-block',
-            width: '220px',
-            height: '220px'
-          }"
-          ad-slot="1361835285"
-        />
       </div>
+    </div>
+
+    <div class="ad">
+      <!-- 展示广告220*220 -->
+      <adsbygoogle
+        :ad-style="{
+          display: 'block',
+          width: '220px',
+          height: '220px'
+        }"
+        ad-slot="1361835285"
+      />
     </div>
   </div>
 </template>
