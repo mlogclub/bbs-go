@@ -79,14 +79,20 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 		return nil, errors.New("请输入评论内容")
 	}
 
+	contentType := form.ContentType
+	if contentType == "" {
+		contentType = model.ContentTypeMarkdown
+	}
+
 	comment := &model.Comment{
-		UserId:     userId,
-		EntityType: form.EntityType,
-		EntityId:   form.EntityId,
-		Content:    form.Content,
-		QuoteId:    form.QuoteId,
-		Status:     model.CommentStatusOk,
-		CreateTime: simple.NowTimestamp(),
+		UserId:      userId,
+		EntityType:  form.EntityType,
+		EntityId:    form.EntityId,
+		Content:     form.Content,
+		ContentType: contentType,
+		QuoteId:     form.QuoteId,
+		Status:      model.CommentStatusOk,
+		CreateTime:  simple.NowTimestamp(),
 	}
 	if err := this.Create(comment); err != nil {
 		return nil, err

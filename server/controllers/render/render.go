@@ -316,18 +316,22 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	if comment == nil {
 		return nil
 	}
-	markdownResult := simple.NewMd().Run(comment.Content)
-	content := template.HTML(markdownResult.ContentHtml)
 
 	ret := &model.CommentResponse{
 		CommentId:  comment.Id,
 		User:       BuildUserDefaultIfNull(comment.UserId),
 		EntityType: comment.EntityType,
 		EntityId:   comment.EntityId,
-		Content:    content,
 		QuoteId:    comment.QuoteId,
 		Status:     comment.Status,
 		CreateTime: comment.CreateTime,
+	}
+
+	if comment.ContentType == model.ContentTypeMarkdown {
+		markdownResult := simple.NewMd().Run(comment.Content)
+		ret.Content = template.HTML(markdownResult.ContentHtml)
+	} else {
+		ret.Content = template.HTML(comment.Content)
 	}
 
 	if buildQuote && comment.QuoteId > 0 {

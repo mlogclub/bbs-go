@@ -44,9 +44,10 @@ func (this *SpiderApi) PublishComment(comment *SpiderComment) (commentId int64, 
 	}
 
 	c, err := services.CommentService.Publish(comment.UserId, &model.CreateCommentForm{
-		EntityType: comment.EntityType,
-		EntityId:   comment.EntityId,
-		Content:    comment.Content,
+		EntityType:  comment.EntityType,
+		EntityId:    comment.EntityId,
+		Content:     comment.Content,
+		ContentType: model.ContentTypeHtml,
 	})
 	if err == nil {
 		commentId = c.Id
