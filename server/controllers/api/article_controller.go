@@ -292,6 +292,25 @@ func (this *ArticleController) PostSpiderPublish() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("id", articleId).JsonResult()
 }
 
+func (this *ArticleController) PostSpiderCommentPublish() *simple.JsonResult {
+	err := this.checkToken()
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	comment := &collect.SpiderComment{}
+	err = this.Ctx.ReadJSON(comment)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	commentId, err := collect.NewSpiderApi().PublishComment(comment)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().Put("id", commentId).JsonResult()
+}
+
 func (this *ArticleController) checkToken() error {
 	token := this.Ctx.FormValue("token")
 	data, err := ioutil.ReadFile("/data/publish_token")
