@@ -1,8 +1,11 @@
 .ad {
-  margin-top: 10px;
-  background: none;
+  margin: 10px 0;
 
-  .no-margin {
+  &.no-margin-top {
     margin-top: 0;
+  }
+
+  &.no-margin-bottom {
+    margin-bottom: 0;
   }
 }

@@ -71,15 +71,17 @@
               </div>
             </div>
 
-            <div class="content topic-content">
+            <div class="ad">
               <!-- 信息流广告 -->
               <adsbygoogle
                 ad-slot="4980294904"
                 ad-format="fluid"
                 ad-layout-key="-ht-19-1m-3j+mu"
               />
+            </div>
 
-              <p v-html="topic.content" class="topic-content-p"></p>
+            <div class="content topic-content">
+              <p v-html="topic.content"></p>
             </div>
           </div>
 
