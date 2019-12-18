@@ -33,7 +33,7 @@
           />
         </div>
 
-        <div v-if="hotArticles && hotArticles.length" class="widget">
+        <div v-if="hotArticles && hotArticles.length" class="widget no-margin">
           <div class="widget-header">热门文章</div>
           <div class="widget-content">
             <article-list :articles="hotArticles" :show-ad="false" />
@@ -52,7 +52,7 @@
           />
         </div>
 
-        <div v-if="articles && articles.length" class="widget">
+        <div v-if="articles && articles.length" class="widget no-margin">
           <div class="widget-header">最新文章</div>
           <div class="widget-content">
             <article-list :articles="articles" :show-ad="false" />
@@ -87,7 +87,7 @@
           />
         </div>
 
-        <div class="widget">
+        <div class="widget no-margin">
           <div class="widget-header">新入驻</div>
           <div class="widget-content">
             <user-list :users="users" />

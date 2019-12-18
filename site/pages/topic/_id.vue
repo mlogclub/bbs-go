@@ -89,7 +89,7 @@
           <comment
             :entity-id="topic.topicId"
             :comments-page="commentsPage"
-            :show-ad="true"
+            :show-ad="false"
             entity-type="topic"
           />
         </div>
