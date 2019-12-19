@@ -45,40 +45,6 @@
               ></el-select>
             </el-form-item>
 
-            <el-form-item label="论坛导航">
-              <el-select
-                v-model="config.bbsNavTagIds"
-                style="width:100%"
-                multiple
-                filterable
-                remote
-                placeholder="论坛导航标签，用于显示在讨论区侧边栏"
-                :remote-method="loadAutocompleteTags"
-                :loading="autocompleteTagLoading"
-                @change="changeBbsNavTags"
-              >
-                <!-- 已经选择的 -->
-                <template v-if="config.bbsNavTags && config.bbsNavTags.length">
-                  <el-option
-                    v-for="tag in config.bbsNavTags"
-                    :key="'selected-tag-' + tag.tagId"
-                    :value="tag.tagId"
-                    :label="tag.tagName"
-                  ></el-option>
-                </template>
-
-                <!-- 远程搜索的 -->
-                <template v-if="autocompleteTags && autocompleteTags.length">
-                  <el-option
-                    v-for="tag in autocompleteTags"
-                    :key="'autocomplete-tag-' + tag.tagId"
-                    :value="tag.tagId"
-                    :label="tag.tagName"
-                  ></el-option>
-                </template>
-              </el-select>
-            </el-form-item>
-
             <el-form-item label="启用站外链接跳转页面">
               <el-tooltip
                 content="在跳转前需手动确认是否前往该站外链接"
@@ -194,7 +160,6 @@ export default {
             siteKeywords: this.config.siteKeywords,
             siteNavs: this.config.siteNavs,
             recommendTags: this.config.recommendTags,
-            bbsNavTags: this.config.bbsNavTagIds,
             urlRedirect: this.config.urlRedirect
           })
         })
@@ -220,42 +185,6 @@ export default {
         return
       }
       this.config.siteNavs.splice(index, 1)
-    },
-    async loadAutocompleteTags(query) {
-      this.autocompleteTagLoading = true
-      this.autocompleteTags = []
-      try {
-        const list = await HttpClient.get('/api/admin/tag/autocomplete', {
-          keyword: query
-        })
-
-        if (list && list.length) {
-          const me = this
-          this.autocompleteTags = list.filter((item) => {
-            if (
-              !me.config.bbsNavTagIds ||
-              me.config.bbsNavTagIds.length === 0
-            ) {
-              return true
-            }
-            return me.config.bbsNavTagIds.indexOf(item.tagId) === -1
-          })
-        }
-      } catch (err) {
-        console.log(err)
-      } finally {
-        this.autocompleteTagLoading = false
-      }
-    },
-    async changeBbsNavTags() {
-      try {
-        const tags = await HttpClient.get('/api/admin/tag/tags', {
-          tagIds: this.config.bbsNavTagIds.join(',')
-        })
-        this.config.bbsNavTags = tags || []
-      } catch (err) {
-        console.log(err)
-      }
     }
   }
 }

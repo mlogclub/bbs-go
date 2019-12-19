@@ -121,7 +121,6 @@ func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		siteKeywords    = cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords)
 		siteNavs        = cache.SysConfigCache.GetValue(model.SysConfigSiteNavs)
 		recommendTags   = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
-		bbsNavTags      = cache.SysConfigCache.GetValue(model.SysConfigBbsNavTags)
 		urlRedirect     = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
 	)
 
@@ -140,32 +139,12 @@ func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		logrus.Error("推荐标签数据错误", err)
 	}
 
-	var bbsNavTagsArr []model.TagResponse
-	var bbsNavTagIds []int64
-	var bbsNavTagIdsTemp []int64
-	if err := simple.ParseJson(bbsNavTags, &bbsNavTagIdsTemp); err != nil {
-		logrus.Error("论坛导航标签数据错误", err)
-	} else {
-		for _, tagId := range bbsNavTagIdsTemp {
-			t := cache.TagCache.Get(tagId)
-			if t != nil && t.Status == model.StatusOk {
-				bbsNavTagIds = append(bbsNavTagIds, t.Id)
-				bbsNavTagsArr = append(bbsNavTagsArr, model.TagResponse{
-					TagId:   t.Id,
-					TagName: t.Name,
-				})
-			}
-		}
-	}
-
 	return &model.ConfigResponse{
 		SiteTitle:       siteTitle,
 		SiteDescription: siteDescription,
 		SiteKeywords:    siteKeywordsArr,
 		SiteNavs:        siteNavsArr,
 		RecommendTags:   recommendTagsArr,
-		BbsNavTags:      bbsNavTagsArr,
-		BbsNavTagIds:    bbsNavTagIds,
 		UrlRedirect:     strings.ToLower(urlRedirect) == "true",
 	}
 }
