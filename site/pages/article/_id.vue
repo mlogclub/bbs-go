@@ -79,6 +79,11 @@
             <p v-highlight v-html="article.content" />
           </div>
 
+          <div class="ad">
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
+          </div>
+
           <div class="article-footer">
             <blockquote v-if="article.share">
               <ul>
@@ -184,13 +189,6 @@
             ad-slot="1361835285"
           />
         </div>
-
-        <weixin-gzh />
-
-        <div ref="toc" v-if="article.toc" class="widget no-bg toc">
-          <div class="widget-header">目录</div>
-          <div v-html="article.toc" class="widget-content" />
-        </div>
       </div>
     </div>
   </section>
@@ -199,12 +197,10 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
-import WeixinGzh from '~/components/WeixinGzh'
 
 export default {
   components: {
-    Comment,
-    WeixinGzh
+    Comment
   },
   async asyncData({ $axios, params, error }) {
     let article
@@ -278,9 +274,6 @@ export default {
         this.$store.state.user.current.id === this.article.user.id
       )
     }
-  },
-  mounted() {
-    utils.handleToc(this.$refs.toc)
   },
   methods: {
     async deleteArticle(articleId) {
