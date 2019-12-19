@@ -32,7 +32,7 @@
                 <div class="field">
                   <div class="select">
                     <select v-model="postForm.nodeId">
-                      <option disabled>选择节点</option>
+                      <option value="0">选择节点</option>
                       <option
                         v-for="node in nodes"
                         :key="node.nodeId"
@@ -105,7 +105,7 @@ export default {
     return {
       nodes,
       postForm: {
-        nodeId: currentNode ? currentNode.nodeId : ''
+        nodeId: currentNode ? currentNode.nodeId : 0
       }
     }
   },
@@ -113,7 +113,7 @@ export default {
     return {
       publishing: false, // 当前是否正处于发布中...
       postForm: {
-        nodeId: '',
+        nodeId: 0,
         title: '',
         tags: [],
         content: ''
