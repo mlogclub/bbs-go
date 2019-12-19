@@ -132,11 +132,23 @@ export default {
       if (me.publishing) {
         return
       }
+
+      if (!me.postForm.title) {
+        this.$toast.error('请输入标题')
+        return
+      }
+
+      if (!me.postForm.nodeId) {
+        this.$toast.error('请选择节点')
+        return
+      }
+
       me.publishing = true
 
       try {
         const me = this
         const topic = await this.$axios.post('/api/topic/create', {
+          nodeId: me.postForm.nodeId,
           title: me.postForm.title,
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
