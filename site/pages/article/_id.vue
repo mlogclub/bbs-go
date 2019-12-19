@@ -74,6 +74,7 @@
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
           </div>
+
           <div class="article-content content">
             <p v-highlight v-html="article.content" />
           </div>
@@ -153,12 +154,8 @@
           </div>
 
           <div class="ad">
-            <!-- 信息流广告 -->
-            <adsbygoogle
-              ad-slot="4980294904"
-              ad-format="fluid"
-              ad-layout-key="-ht-19-1m-3j+mu"
-            />
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
           </div>
         </article>
 
@@ -171,7 +168,10 @@
         />
       </div>
       <div class="right-container">
-        <weixin-gzh />
+        <div class="ad">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
 
         <div class="ad">
           <!-- 展示广告220*220 -->
@@ -184,6 +184,8 @@
             ad-slot="1361835285"
           />
         </div>
+
+        <weixin-gzh />
 
         <div ref="toc" v-if="article.toc" class="widget no-bg toc">
           <div class="widget-header">目录</div>
