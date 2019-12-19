@@ -35,16 +35,23 @@ func (this *TopicController) GetSynccount() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// 节点
+func (this *TopicController) GetNodes() *simple.JsonResult {
+	nodes := services.TopicNodeService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id"))
+	return simple.JsonData(render.BuildNodes(nodes))
+}
+
 // 发表帖子
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+	nodeId := simple.FormValueInt64Default(this.Ctx, "nodeId", 0)
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
-	topic, err := services.TopicService.Publish(user.Id, tags, title, content, nil)
+	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
 	if err != nil {
 		return simple.JsonError(err)
 	}
@@ -59,7 +66,7 @@ func (this *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.TopicStatusOk {
+	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 	if topic.UserId != user.Id {
@@ -90,7 +97,7 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.TopicStatusOk {
+	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 	if topic.UserId != user.Id {
@@ -115,7 +122,7 @@ func (this *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.TopicStatusOk {
+	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonSuccess()
 	}
 	if topic.UserId != user.Id {
@@ -131,7 +138,7 @@ func (this *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 // 帖子详情
 func (this *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.TopicStatusOk {
+	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonErrorMsg("主题不存在")
 	}
 	services.TopicService.IncrViewCount(topicId) // 增加浏览量
@@ -153,7 +160,7 @@ func (this *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (this *TopicController) GetRecent() *simple.JsonResult {
-	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(10))
+	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
@@ -164,7 +171,7 @@ func (this *TopicController) GetUserRecent() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	topics := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.TopicStatusOk).Desc("id").Limit(10))
+		userId, model.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
@@ -178,7 +185,7 @@ func (this *TopicController) GetUserTopics() *simple.JsonResult {
 
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
-		Eq("status", model.TopicStatusOk).
+		Eq("status", model.StatusOk).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -189,7 +196,7 @@ func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.TopicStatusOk).
+		Eq("status", model.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -241,6 +248,6 @@ func (this *TopicController) GetRecommend() *simple.JsonResult {
 
 // 最新话题
 func (this *TopicController) GetNewest() *simple.JsonResult {
-	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", model.TopicStatusOk).Desc("id").Limit(6))
+	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(6))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }

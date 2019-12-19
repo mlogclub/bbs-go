@@ -15,7 +15,7 @@ func AdminAuth(ctx iris.Context) {
 	userToken := cache.UserTokenCache.Get(token)
 
 	// 没找到授权
-	if userToken == nil || userToken.Status == model.UserTokenStatusDisabled {
+	if userToken == nil || userToken.Status == model.StatusDeleted {
 		notLogin(ctx)
 		return
 	}

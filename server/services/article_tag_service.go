@@ -53,5 +53,5 @@ func (this *articleTagService) UpdateColumn(id int64, name string, value interfa
 }
 
 func (this *articleTagService) DeleteByArticleId(topicId int64) {
-	simple.DB().Model(model.ArticleTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.ArticleTagStatusDeleted)
+	simple.DB().Model(model.ArticleTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusDeleted)
 }

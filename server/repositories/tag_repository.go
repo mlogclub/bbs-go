@@ -111,7 +111,7 @@ func (this *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, er
 	} else {
 		tag = &model.Tag{
 			Name:       name,
-			Status:     model.TagStatusOk,
+			Status:     model.StatusOk,
 			CreateTime: simple.NowTimestamp(),
 			UpdateTime: simple.NowTimestamp(),
 		}

@@ -75,7 +75,7 @@ func (this *articleService) UpdateColumn(id int64, name string, value interface{
 }
 
 func (this *articleService) Delete(id int64) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", model.ArticleStatusDeleted)
+	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		ArticleTagService.DeleteByArticleId(id)
@@ -105,7 +105,7 @@ func (this *articleService) GetArticleTags(articleId int64) []model.Tag {
 
 // 文章列表
 func (this *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(20)
+	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(20)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -120,7 +120,7 @@ func (this *articleService) GetArticles(cursor int64) (articles []model.Article,
 
 // 标签文章列表
 func (this *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", model.ArticleTagStatusOk).Desc("id").Limit(20)
+	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", model.StatusOk).Desc("id").Limit(20)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -165,7 +165,7 @@ func (this *articleService) Publish(userId int64, title, summary, content, conte
 		Summary:     summary,
 		Content:     content,
 		ContentType: contentType,
-		Status:      model.ArticleStatusPublished,
+		Status:      model.StatusOk,
 		Share:       share,
 		SourceUrl:   sourceUrl,
 		CreateTime:  simple.NowTimestamp(),
@@ -243,7 +243,7 @@ func (this *articleService) GetRelatedArticles(articleId int64) []model.Article 
 // 最新文章
 func (this *articleService) GetUserNewestArticles(userId int64) []model.Article {
 	return repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
+		userId, model.StatusOk).Desc("id").Limit(10))
 }
 
 // 扫描
@@ -283,7 +283,7 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 	var cursor int64
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? and status = ? and create_time >= ? and create_time < ?",
-			cursor, model.ArticleStatusPublished, dateFrom, dateTo).Asc("id").Limit(300))
+			cursor, model.StatusOk, dateFrom, dateTo).Asc("id").Limit(300))
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -295,7 +295,7 @@ func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleC
 // rss
 func (this *articleService) GenerateRss() {
 	articles := repositories.ArticleRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(1000))
 
 	var items []*feeds.Item
 	for _, article := range articles {

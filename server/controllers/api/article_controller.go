@@ -25,7 +25,7 @@ type ArticleController struct {
 // 文章详情
 func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.ArticleStatusPublished {
+	if article == nil || article.Status != model.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 	services.ArticleService.IncrViewCount(articleId) // 增加浏览量
@@ -61,7 +61,7 @@ func (this *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.ArticleStatusPublished {
+	if article == nil || article.Status != model.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 	if article.UserId != user.Id {
@@ -98,7 +98,7 @@ func (this *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	)
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.ArticleStatusDeleted {
+	if article == nil || article.Status == model.StatusDeleted {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
@@ -121,7 +121,7 @@ func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult 
 	}
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.ArticleStatusDeleted {
+	if article == nil || article.Status == model.StatusDeleted {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
@@ -152,7 +152,7 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 // 文章跳转链接
 func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.ArticleStatusPublished {
+	if article == nil || article.Status != model.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 	if article.Share && len(article.SourceUrl) > 0 {
@@ -164,7 +164,7 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 
 // 最近文章
 func (this *ArticleController) GetRecent() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.ArticleStatusPublished).Desc("id").Limit(10))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
@@ -175,7 +175,7 @@ func (this *ArticleController) GetUserRecent() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.ArticleStatusPublished).Desc("id").Limit(10))
+		userId, model.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
@@ -189,7 +189,7 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 
 	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
-		Eq("status", model.ArticleStatusPublished).
+		Eq("status", model.StatusOk).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
@@ -244,7 +244,7 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 
 // 最新文章
 func (this *ArticleController) GetNewest() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.ArticleStatusPublished).Desc("id").Limit(5))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(5))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 

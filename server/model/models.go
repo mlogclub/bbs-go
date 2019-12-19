@@ -13,36 +13,15 @@ type Model struct {
 }
 
 const (
-	UserStatusOk       = 0
-	UserStatusDisabled = 1
-
-	UserTokenStatusOk       = 0
-	UserTokenStatusDisabled = 1
+	StatusOk      = 0 // 正常
+	StatusDeleted = 1 // 删除
+	StatusPending = 2 // 待审核
 
 	UserTypeNormal = 0 // 普通用户
 	UserTypeGzh    = 1 // 公众号用户
 
-	TagStatusOk       = 0
-	TagStatusDisabled = 1
-
-	ArticleStatusPublished = 0 // 已发布
-	ArticleStatusDeleted   = 1 // 已删除
-	ArticleStatusDraft     = 2 // 草稿
-
-	ArticleTagStatusOk      = 0
-	ArticleTagStatusDeleted = 1
-
-	TopicStatusOk      = 0
-	TopicStatusDeleted = 1
-
-	TopicTagStatusOk      = 0
-	TopicTagStatusDeleted = 1
-
 	ContentTypeHtml     = "html"
 	ContentTypeMarkdown = "markdown"
-
-	CommentStatusOk      = 0
-	CommentStatusDeleted = 1
 
 	EntityTypeArticle = "article"
 	EntityTypeTopic   = "topic"
@@ -51,13 +30,6 @@ const (
 	MsgStatusReaded = 1 // 消息已读
 
 	MsgTypeComment = 0 // 回复消息
-
-	LinkStatusOk      = 0 // 正常
-	LinkStatusDeleted = 1 // 删除
-	LinkStatusPending = 2 // 待审核
-
-	CollectRuleStatusOk       = 0 // 启用
-	CollectRuleStatusDisabled = 1 // 禁用
 
 	CollectArticleStatusPending   = 0 // 待审核
 	CollectArticleStatusAuditPass = 1 // 审核通过
@@ -161,9 +133,19 @@ type Favorite struct {
 	CreateTime int64  `json:"createTime" form:"createTime"`                                               // 创建时间
 }
 
-// 主题
+// 话题节点
+type TopicNode struct {
+	Model
+	Name        string `gorm:"size:32;unique" json:"name" form:"name"` // 名称
+	Description string `json:"description" form:"description"`         // 描述
+	Status      int    `gorm:"not null" json:"status" form:"status"`   // 状态
+	CreateTime  int64  `json:"createTime" form:"createTime"`           // 创建时间
+}
+
+// 话题节点
 type Topic struct {
 	Model
+	NodeId          int64  `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`                   // 节点编号
 	UserId          int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`                   // 用户
 	Title           string `gorm:"size:128" json:"title" form:"title"`                                        // 标题
 	Content         string `gorm:"type:longtext" json:"content" form:"content"`                               // 内容

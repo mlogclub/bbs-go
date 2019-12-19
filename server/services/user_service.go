@@ -145,7 +145,7 @@ func (this *userService) SignUp(username, email, nickname, password, rePassword 
 		Email:      simple.SqlNullString(email),
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
-		Status:     model.UserStatusOk,
+		Status:     model.StatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
@@ -205,7 +205,7 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 	user = &model.User{
 		Username:   sql.NullString{},
 		Nickname:   thirdAccount.Nickname,
-		Status:     model.UserStatusOk,
+		Status:     model.StatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}

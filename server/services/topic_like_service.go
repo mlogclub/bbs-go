@@ -73,7 +73,7 @@ func (this *topicLikeService) Count(topicId int64) int64 {
 
 func (this *topicLikeService) Like(userId int64, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil || topic.Status != model.TopicStatusOk {
+	if topic == nil || topic.Status != model.StatusOk {
 		return errors.New("话题不存在")
 	}
 

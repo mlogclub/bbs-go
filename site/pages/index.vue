@@ -75,6 +75,13 @@
       <div class="right-container">
         <weixin-gzh />
 
+        <div class="widget">
+          <div class="widget-header">新入驻</div>
+          <div class="widget-content">
+            <user-list :users="users" />
+          </div>
+        </div>
+
         <div class="ad">
           <!-- 展示广告220*220 -->
           <adsbygoogle
@@ -85,13 +92,6 @@
             }"
             ad-slot="1361835285"
           />
-        </div>
-
-        <div class="widget no-margin">
-          <div class="widget-header">新入驻</div>
-          <div class="widget-content">
-            <user-list :users="users" />
-          </div>
         </div>
       </div>
     </div>

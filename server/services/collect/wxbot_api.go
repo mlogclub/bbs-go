@@ -53,7 +53,7 @@ func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
 			Nickname:    article.AppName,
 			Description: article.WxIntro,
 			Avatar:      avatar,
-			Status:      model.UserStatusOk,
+			Status:      model.StatusOk,
 			Type:        model.UserTypeGzh,
 			CreateTime:  simple.NowTimestamp(),
 			UpdateTime:  simple.NowTimestamp(),

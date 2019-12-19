@@ -46,7 +46,7 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
-	t.Status = model.TagStatusOk
+	t.Status = model.StatusOk
 	t.CreateTime = simple.NowTimestamp()
 	t.UpdateTime = simple.NowTimestamp()
 

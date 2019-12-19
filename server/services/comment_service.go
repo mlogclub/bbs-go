@@ -62,7 +62,7 @@ func (this *commentService) UpdateColumn(id int64, name string, value interface{
 }
 
 func (this *commentService) Delete(id int64) error {
-	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", model.CommentStatusDeleted)
+	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 }
 
 // 发表评论
@@ -91,7 +91,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 		Content:     form.Content,
 		ContentType: contentType,
 		QuoteId:     form.QuoteId,
-		Status:      model.CommentStatusOk,
+		Status:      model.StatusOk,
 		CreateTime:  simple.NowTimestamp(),
 	}
 	if err := this.Create(comment); err != nil {
@@ -118,7 +118,7 @@ func (this *commentService) Count(entityType string, entityId int64) int64 {
 
 // 列表
 func (this *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", model.CommentStatusOk).Desc("id").Limit(50)
+	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", model.StatusOk).Desc("id").Limit(50)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}

@@ -79,7 +79,7 @@ func SitemapTask() {
 
 	services.ArticleService.Scan(func(articles []model.Article) bool {
 		for _, article := range articles {
-			if article.Status == model.ArticleStatusPublished {
+			if article.Status == model.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
@@ -92,7 +92,7 @@ func SitemapTask() {
 
 	services.TopicService.Scan(func(topics []model.Topic) bool {
 		for _, topic := range topics {
-			if topic.Status == model.TopicStatusOk {
+			if topic.Status == model.StatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},

@@ -19,7 +19,7 @@ type LinkController struct {
 
 func (this *LinkController) GetBy(id int64) *simple.JsonResult {
 	link := services.LinkService.Get(id)
-	if link == nil || link.Status == model.LinkStatusDeleted {
+	if link == nil || link.Status == model.StatusDeleted {
 		return simple.JsonErrorMsg("数据不存在")
 	}
 	return simple.JsonData(this.buildLink(*link))
@@ -29,7 +29,7 @@ func (this *LinkController) GetLinks() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
 	links, paging := services.LinkService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.LinkStatusOk).Page(page, 20).Desc("id"))
+		Eq("status", model.StatusOk).Page(page, 20).Desc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range links {
@@ -59,7 +59,7 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 		Title:      title,
 		Summary:    summary,
 		Logo:       logo,
-		Status:     model.LinkStatusPending,
+		Status:     model.StatusPending,
 		CreateTime: simple.NowTimestamp(),
 	}
 	err := services.LinkService.Create(link)

@@ -19,7 +19,7 @@ func NewDefaultCollector(ruleId int64) (MyCollector, error) {
 		return nil, errors.New("没找到采集规则:" + strconv.FormatInt(ruleId, 10))
 	}
 
-	if collectRule.Status != model.CollectRuleStatusOk {
+	if collectRule.Status != model.StatusOk {
 		return nil, errors.New("采集规则被禁用...ruleId=" + strconv.FormatInt(ruleId, 10))
 	}
 

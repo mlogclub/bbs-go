@@ -27,7 +27,7 @@ func (this *TagController) GetBy(tagId int64) *simple.JsonResult {
 func (this *TagController) GetTags() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 	tags, paging := services.TagService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.TagStatusOk).
+		Eq("status", model.StatusOk).
 		Page(page, 200).Desc("id"))
 
 	return simple.JsonPageData(render.BuildTags(tags), paging)

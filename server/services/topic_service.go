@@ -71,7 +71,7 @@ func (this *topicService) UpdateColumn(id int64, name string, value interface{})
 }
 
 func (this *topicService) Delete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.TopicStatusDeleted)
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(id)
@@ -80,7 +80,7 @@ func (this *topicService) Delete(id int64) error {
 }
 
 // 发表
-func (this *topicService) Publish(userId int64, tags []string, title, content string, extra map[string]interface{}) (*model.Topic, *simple.CodeError) {
+func (this *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -89,17 +89,19 @@ func (this *topicService) Publish(userId int64, tags []string, title, content st
 		return nil, simple.NewErrorMsg("标题长度不能超过128")
 	}
 
+	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
+	if node == nil || node.Status != model.StatusOk {
+		return nil, simple.NewErrorMsg("节点不存在")
+	}
+
 	now := simple.NowTimestamp()
 	topic := &model.Topic{
 		UserId:          userId,
 		Title:           title,
 		Content:         content,
-		Status:          model.TopicStatusOk,
+		Status:          model.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
-	}
-	if len(extra) > 0 {
-		topic.ExtraData, _ = simple.FormatJson(extra)
 	}
 
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
@@ -160,7 +162,7 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
-		Eq("status", model.ArticleTagStatusOk).
+		Eq("status", model.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 	if len(topicTags) > 0 {
 		var topicIds []int64
@@ -216,7 +218,7 @@ func (this *topicService) OnComment(topicId, lastCommentTime int64) {
 // rss
 func (this *topicService) GenerateRss() {
 	topics := repositories.TopicRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", model.TopicStatusOk).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(1000))
 
 	var items []*feeds.Item
 	for _, topic := range topics {

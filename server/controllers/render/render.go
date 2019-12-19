@@ -168,6 +168,28 @@ func BuildSimpleArticles(articles []model.Article) []model.ArticleSimpleResponse
 	return responses
 }
 
+func BuildNode(node *model.TopicNode) *model.NodeResponse {
+	if node == nil {
+		return nil
+	}
+	return &model.NodeResponse{
+		NodeId:      node.Id,
+		Name:        node.Name,
+		Description: node.Description,
+	}
+}
+
+func BuildNodes(nodes []model.TopicNode) []model.NodeResponse {
+	if len(nodes) == 0 {
+		return nil
+	}
+	var ret []model.NodeResponse
+	for _, node := range nodes {
+		ret = append(ret, *BuildNode(&node))
+	}
+	return ret
+}
+
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	if topic == nil {
 		return nil
@@ -183,6 +205,9 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
+
+	node := services.TopicNodeService.Get(topic.NodeId)
+	rsp.Node = BuildNode(node)
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
@@ -370,7 +395,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 
 	if favorite.EntityType == model.EntityTypeArticle {
 		article := services.ArticleService.Get(favorite.EntityId)
-		if article == nil || article.Status != model.ArticleStatusPublished {
+		if article == nil || article.Status != model.StatusOk {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.ArticleUrl(article.Id)
@@ -388,7 +413,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		}
 	} else {
 		topic := services.TopicService.Get(favorite.EntityId)
-		if topic == nil || topic.Status != model.TopicStatusOk {
+		if topic == nil || topic.Status != model.StatusOk {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.TopicUrl(topic.Id)

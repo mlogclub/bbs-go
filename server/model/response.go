@@ -52,10 +52,17 @@ type ArticleResponse struct {
 	Toc     template.HTML `json:"toc"`
 }
 
+type NodeResponse struct {
+	NodeId      int64  `json:"nodeId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
 // 帖子列表返回实体
 type TopicSimpleResponse struct {
 	TopicId         int64          `json:"topicId"`
 	User            *UserInfo      `json:"user"`
+	Node            *NodeResponse  `json:"node"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
 	Summary         string         `json:"summary"`

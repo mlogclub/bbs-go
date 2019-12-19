@@ -51,7 +51,7 @@ func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	token := this.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
-	if userToken == nil || userToken.Status == model.UserTokenStatusDisabled {
+	if userToken == nil || userToken.Status == model.StatusDeleted {
 		return nil
 	}
 	// 授权过期
@@ -68,7 +68,7 @@ func (this *userTokenService) Signout(ctx iris.Context) error {
 	if userToken == nil {
 		return nil
 	}
-	return repositories.UserTokenRepository.UpdateColumn(simple.DB(), userToken.Id, "status", model.UserTokenStatusDisabled)
+	return repositories.UserTokenRepository.UpdateColumn(simple.DB(), userToken.Id, "status", model.StatusDeleted)
 }
 
 // 从请求体中获取UserToken
@@ -88,7 +88,7 @@ func (this *userTokenService) Generate(userId int64) (string, error) {
 		Token:      token,
 		UserId:     userId,
 		ExpiredAt:  simple.Timestamp(expiredAt),
-		Status:     model.UserTokenStatusOk,
+		Status:     model.StatusOk,
 		CreateTime: simple.NowTimestamp(),
 	}
 	err := repositories.UserTokenRepository.Create(simple.DB(), userToken)
@@ -104,7 +104,7 @@ func (this *userTokenService) Disable(token string) error {
 	if t == nil {
 		return nil
 	}
-	err := repositories.UserTokenRepository.UpdateColumn(simple.DB(), t.Id, "status", model.UserTokenStatusDisabled)
+	err := repositories.UserTokenRepository.UpdateColumn(simple.DB(), t.Id, "status", model.StatusDeleted)
 	if err != nil {
 		cache.UserTokenCache.Invalidate(token)
 	}

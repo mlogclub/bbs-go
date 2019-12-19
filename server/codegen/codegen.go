@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.ThirdAccount{}))
+	simple.Generate("./", "github.com/mlogclub/bbs-go", simple.GetGenerateStruct(&model.TopicNode{}))
 }

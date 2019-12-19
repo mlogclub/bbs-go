@@ -148,7 +148,7 @@ func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 	} else {
 		for _, tagId := range bbsNavTagIdsTemp {
 			t := cache.TagCache.Get(tagId)
-			if t != nil && t.Status == model.TagStatusOk {
+			if t != nil && t.Status == model.StatusOk {
 				bbsNavTagIds = append(bbsNavTagIds, t.Id)
 				bbsNavTagsArr = append(bbsNavTagsArr, model.TagResponse{
 					TagId:   t.Id,
