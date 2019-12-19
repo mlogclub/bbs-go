@@ -37,7 +37,7 @@
 <script>
 export default {
   props: {
-    currentTagId: {
+    currentNodeId: {
       type: Number,
       default: 0
     }
@@ -45,8 +45,8 @@ export default {
   computed: {
     createTopicUrl() {
       let url = '/topic/create'
-      if (this.currentTagId) {
-        url += '?tagId=' + this.currentTagId
+      if (this.currentNodeId) {
+        url += '?nodeId=' + this.currentNodeId
       }
       return url
     }

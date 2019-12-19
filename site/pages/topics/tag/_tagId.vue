@@ -2,14 +2,14 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav :current-tag-id="tag.tagId" />
+        <topics-nav :nodes="nodes" />
         <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination
           :page="topicsPage.page"
           :url-prefix="'/topics/' + tag.tagId + '?p='"
         />
       </div>
-      <topic-side :current-tag-id="tag.tagId" />
+      <topic-side />
     </div>
   </section>
 </template>
@@ -28,9 +28,10 @@ export default {
     Pagination
   },
   async asyncData({ $axios, params, query }) {
-    const [tag, user, topicsPage] = await Promise.all([
+    const [tag, user, nodes, topicsPage] = await Promise.all([
       $axios.get('/api/tag/' + params.tagId),
       $axios.get('/api/user/current'),
+      $axios.get('/api/topic/nodes'),
       $axios.get('/api/topic/tag/topics', {
         params: {
           tagId: params.tagId,
@@ -41,6 +42,7 @@ export default {
     return {
       tag,
       user,
+      nodes,
       topicsPage
     }
   },

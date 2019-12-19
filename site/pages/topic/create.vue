@@ -89,26 +89,23 @@ export default {
     MarkdownHelp
   },
   async asyncData({ $axios, query }) {
+    // 节点
+    const nodes = await $axios.get('/api/topic/nodes')
+
     // 发帖标签
-    const tags = []
-    if (query.tagId) {
+    let currentNode = null
+    if (query.nodeId) {
       try {
-        const tag = await $axios.get('/api/tag/' + query.tagId)
-        if (tag) {
-          tags.push(tag.tagName)
-        }
+        currentNode = await $axios.get('/api/topic/node?nodeId=' + query.nodeId)
       } catch (e) {
         console.error(e)
       }
     }
 
-    // 节点
-    const nodes = await $axios.get('/api/topic/nodes')
-
     return {
       nodes,
       postForm: {
-        tags
+        nodeId: currentNode ? currentNode.nodeId : ''
       }
     }
   },

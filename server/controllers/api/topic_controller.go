@@ -45,7 +45,7 @@ func (this *TopicController) GetNodes() *simple.JsonResult {
 func (this *TopicController) GetNode() *simple.JsonResult {
 	nodeId := simple.FormValueInt64Default(this.Ctx, "nodeId", 0)
 	node := services.TopicNodeService.Get(nodeId)
-	return simple.JsonData(node)
+	return simple.JsonData(render.BuildNode(node))
 }
 
 // 发表帖子

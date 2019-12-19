@@ -2,11 +2,11 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav />
+        <topics-nav :nodes="nodes" />
         <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
-      <topic-side />
+      <topic-side :nodes="nodes" />
     </div>
   </section>
 </template>
@@ -26,11 +26,12 @@ export default {
   },
   async asyncData({ $axios, params }) {
     try {
-      const [user, topicsPage] = await Promise.all([
+      const [user, nodes, topicsPage] = await Promise.all([
         $axios.get('/api/user/current'),
+        $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics')
       ])
-      return { user, topicsPage }
+      return { user, nodes, topicsPage }
     } catch (e) {
       console.error(e)
     }

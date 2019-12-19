@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav />
+        <topics-nav :nodes="nodes" />
         <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
@@ -26,15 +26,16 @@ export default {
   },
   async asyncData({ $axios, query }) {
     try {
-      const [user, topicsPage] = await Promise.all([
+      const [user, nodes, topicsPage] = await Promise.all([
         $axios.get('/api/user/current'),
+        $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics', {
           params: {
             page: query.p || 1
           }
         })
       ])
-      return { user, topicsPage }
+      return { user, nodes, topicsPage }
     } catch (e) {
       console.error(e)
     }

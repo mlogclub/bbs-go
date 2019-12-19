@@ -1,6 +1,6 @@
 <template>
   <div class="right-container">
-    <post-btns :current-tag-id="currentTagId" />
+    <post-btns :current-node-id="currentNodeId" />
     <weixin-gzh />
 
     <div class="ad">
@@ -24,7 +24,7 @@ import PostBtns from '~/components/PostBtns'
 export default {
   components: { WeixinGzh, PostBtns },
   props: {
-    currentTagId: {
+    currentNodeId: {
       type: Number,
       default: 0
     }

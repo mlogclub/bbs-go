@@ -1,16 +1,16 @@
 <template>
   <div class="topics-nav">
     <ul class="topics-nav-list">
-      <li :class="{ active: currentTagId <= 0 }" class="topics-nav-item">
+      <li :class="{ active: currentNodeId <= 0 }" class="topics-nav-item">
         <a href="/topics">全部</a>
       </li>
       <li
-        v-for="tag in bbsNavTags"
-        :key="tag.tagId"
-        :class="{ active: currentTagId == tag.tagId }"
+        v-for="node in nodes"
+        :key="node.nodeId"
+        :class="{ active: currentNodeId == node.nodeId }"
         class="topics-nav-item"
       >
-        <a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a>
+        <a :href="'/topics/node/' + node.nodeId">{{ node.name }}</a>
       </li>
     </ul>
   </div>
@@ -19,14 +19,15 @@
 <script>
 export default {
   props: {
-    currentTagId: {
+    currentNodeId: {
       type: Number,
       default: 0
-    }
-  },
-  computed: {
-    bbsNavTags() {
-      return this.$store.state.config.config.bbsNavTags
+    },
+    nodes: {
+      type: Array,
+      default() {
+        return []
+      }
     }
   }
 }
