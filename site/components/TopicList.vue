@@ -37,6 +37,11 @@
                 {{ topic.lastCommentTime | prettyDate }}
               </span>
               <span class="meta-item">
+                <a :href="'/topics/node/' + topic.node.nodeId">{{
+                  topic.node.name
+                }}</a>
+              </span>
+              <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
                   <a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a>
                 </span>

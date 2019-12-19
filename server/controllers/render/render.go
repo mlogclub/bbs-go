@@ -247,6 +247,9 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
+	node := services.TopicNodeService.Get(topic.NodeId)
+	rsp.Node = BuildNode(node)
+
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 	return rsp

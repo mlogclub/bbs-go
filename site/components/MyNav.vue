@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="nav"
-    class="navbar is-info"
+    class="navbar is-white"
     role="navigation"
     aria-label="main navigation"
   >

@@ -97,6 +97,7 @@ func (this *topicService) Publish(userId, nodeId int64, tags []string, title, co
 	now := simple.NowTimestamp()
 	topic := &model.Topic{
 		UserId:          userId,
+		NodeId:          nodeId,
 		Title:           title,
 		Content:         content,
 		Status:          model.StatusOk,
