@@ -10,7 +10,7 @@ export default new Router({
       path: '/',
       hidden: true,
       redirect: {
-        path: '/topic/index'
+        path: '/topic/nodes'
       }
     },
     {
@@ -21,6 +21,14 @@ export default new Router({
         icon: 'iconfont icon-topic'
       },
       children: [
+        {
+          path: '/topic/nodes',
+          component: () => import('@/views/topic/TopicNode.vue'),
+          meta: {
+            title: '节点',
+            icon: 'iconfont icon-topic'
+          }
+        },
         {
           path: '/topic/index',
           component: () => import('@/views/topic/Index.vue'),

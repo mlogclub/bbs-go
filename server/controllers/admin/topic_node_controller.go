@@ -32,7 +32,7 @@ func (this *TopicNodeController) PostCreate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-
+	t.CreateTime = simple.NowTimestamp()
 	err = services.TopicNodeService.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

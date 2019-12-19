@@ -41,6 +41,13 @@ func (this *TopicController) GetNodes() *simple.JsonResult {
 	return simple.JsonData(render.BuildNodes(nodes))
 }
 
+// 节点信息
+func (this *TopicController) GetNode() *simple.JsonResult {
+	nodeId := simple.FormValueInt64Default(this.Ctx, "nodeId", 0)
+	node := services.TopicNodeService.Get(nodeId)
+	return simple.JsonData(node)
+}
+
 // 发表帖子
 func (this *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
@@ -196,6 +203,18 @@ func (this *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("status", model.StatusOk).
+		Page(page, 20).Desc("last_comment_time"))
+
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+}
+
+// 节点帖子列表
+func (this *TopicController) GetNodeTopics() *simple.JsonResult {
+	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+	nodeId := simple.FormValueInt64Default(this.Ctx, "nodeId", 0)
+	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("node_id", nodeId).
 		Eq("status", model.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 

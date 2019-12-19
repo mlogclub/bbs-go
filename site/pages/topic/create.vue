@@ -8,8 +8,8 @@
               <ul>
                 <li><a href="/">首页</a></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
-                    currentUser.nickname
+                  <a :href="'/user/' + user.id + '?tab=topics'">{{
+                    user.nickname
                   }}</a>
                 </li>
                 <li class="is-active">
@@ -19,26 +19,41 @@
             </nav>
           </div>
           <div class="widget-content">
-            <div class="field">
-              <div class="control">
-                <input
-                  v-model="postForm.title"
-                  class="input"
-                  type="text"
-                  placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <tag-input v-model="postForm.tags" />
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field" style="width:100%;">
+                  <input
+                    v-model="postForm.title"
+                    class="input"
+                    type="text"
+                    placeholder="请输入标题"
+                  />
+                </div>
+                <div class="field">
+                  <div class="select">
+                    <select v-model="postForm.nodeId">
+                      <option disabled>选择节点</option>
+                      <option
+                        v-for="node in nodes"
+                        :key="node.nodeId"
+                        :value="node.nodeId"
+                        >{{ node.name }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="field">
               <div class="control">
                 <vditor v-model="postForm.content" />
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <tag-input v-model="postForm.tags" />
               </div>
             </div>
 
@@ -74,8 +89,6 @@ export default {
     MarkdownHelp
   },
   async asyncData({ $axios, query }) {
-    const currentUser = await $axios.get('/api/user/current')
-
     // 发帖标签
     const tags = []
     if (query.tagId) {
@@ -89,8 +102,11 @@ export default {
       }
     }
 
+    // 节点
+    const nodes = await $axios.get('/api/topic/nodes')
+
     return {
-      currentUser,
+      nodes,
       postForm: {
         tags
       }
@@ -100,10 +116,16 @@ export default {
     return {
       publishing: false, // 当前是否正处于发布中...
       postForm: {
+        nodeId: '',
         title: '',
         tags: [],
         content: ''
       }
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.current
     }
   },
   mounted() {},

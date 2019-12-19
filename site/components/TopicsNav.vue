@@ -10,7 +10,7 @@
         :class="{ active: currentTagId == tag.tagId }"
         class="topics-nav-item"
       >
-        <a :href="'/topics/' + tag.tagId">{{ tag.tagName }}</a>
+        <a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a>
       </li>
     </ul>
   </div>
