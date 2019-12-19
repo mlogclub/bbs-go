@@ -37,7 +37,7 @@ func (this *TopicController) GetSynccount() *simple.JsonResult {
 
 // 节点
 func (this *TopicController) GetNodes() *simple.JsonResult {
-	nodes := services.TopicNodeService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id"))
+	nodes := services.TopicNodeService.GetNodes()
 	return simple.JsonData(render.BuildNodes(nodes))
 }
 

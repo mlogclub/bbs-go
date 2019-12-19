@@ -29,6 +29,8 @@
 
       <el-table-column prop="description" label="描述"></el-table-column>
 
+      <el-table-column prop="sortNo" label="排序"></el-table-column>
+
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">{{
           scope.row.status === 0 ? '启用' : '禁用'
@@ -80,6 +82,9 @@
             auto-complete="off"
           ></el-input>
         </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="addForm.sortNo"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -108,6 +113,9 @@
             v-model="editForm.description"
             auto-complete="off"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="editForm.sortNo"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <el-select
@@ -150,6 +158,7 @@ export default {
         name: '',
         description: '',
         status: '',
+        sortNo: '',
         createTime: ''
       },
       addFormVisible: false,
@@ -160,6 +169,7 @@ export default {
         name: '',
         description: '',
         status: '',
+        sortNo: '',
         createTime: ''
       },
       editFormVisible: false,

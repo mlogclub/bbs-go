@@ -1,16 +1,16 @@
-
 package services
 
 import (
+	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var TopicNodeService = newTopicNodeService()
 
 func newTopicNodeService() *topicNodeService {
-	return &topicNodeService {}
+	return &topicNodeService{}
 }
 
 type topicNodeService struct {
@@ -60,3 +60,6 @@ func (this *topicNodeService) Delete(id int64) {
 	repositories.TopicNodeRepository.Delete(simple.DB(), id)
 }
 
+func (this *topicNodeService) GetNodes() []model.TopicNode {
+	return repositories.TopicNodeRepository.Find(simple.DB(), simple.NewSqlCnd().Eq("status", model.StatusOk).Asc("sort_no").Desc("id"))
+}
