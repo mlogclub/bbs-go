@@ -90,6 +90,7 @@ func (this *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 
 	return simple.NewEmptyRspBuilder().
 		Put("topicId", topic.Id).
+		Put("nodeId", topic.NodeId).
 		Put("title", topic.Title).
 		Put("content", topic.Content).
 		Put("tags", tagNames).
@@ -111,11 +112,12 @@ func (this *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 
+	nodeId := simple.FormValueInt64Default(this.Ctx, "nodeId", 0)
 	title := strings.TrimSpace(simple.FormValue(this.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(this.Ctx, "content"))
 	tags := simple.FormValueStringArray(this.Ctx, "tags")
 
-	err := services.TopicService.Edit(topicId, tags, title, content)
+	err := services.TopicService.Edit(topicId, nodeId, tags, title, content)
 	if err != nil {
 		return simple.JsonError(err)
 	}

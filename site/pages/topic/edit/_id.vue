@@ -13,32 +13,49 @@
                   }}</a>
                 </li>
                 <li class="is-active">
-                  <a href="#" aria-current="page">主题</a>
+                  <a href="#" aria-current="page"
+                    >主题{{ postForm.nodeId }}xx</a
+                  >
                 </li>
               </ul>
             </nav>
           </div>
           <div class="widget-content">
-            <div class="field">
-              <div class="control">
-                <input
-                  v-model="postForm.title"
-                  class="input"
-                  type="text"
-                  placeholder="请输入标题，如果标题能够表达完整内容，则正文可以为空"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <tag-input v-model="postForm.tags" />
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field" style="width:100%;">
+                  <input
+                    v-model="postForm.title"
+                    class="input"
+                    type="text"
+                    placeholder="请输入标题"
+                  />
+                </div>
+                <div class="field">
+                  <div class="select">
+                    <select v-model="postForm.nodeId">
+                      <option value="0">选择节点</option>
+                      <option
+                        v-for="node in nodes"
+                        :key="node.nodeId"
+                        :value="node.nodeId"
+                        >{{ node.name }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="field">
               <div class="control">
                 <vditor v-model="postForm.content" />
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <tag-input v-model="postForm.tags" />
               </div>
             </div>
 
@@ -74,14 +91,17 @@ export default {
     MarkdownHelp
   },
   async asyncData({ $axios, params }) {
-    const [currentUser, topic] = await Promise.all([
+    const [currentUser, topic, nodes] = await Promise.all([
       $axios.get('/api/user/current'),
-      $axios.get('/api/topic/edit/' + params.id)
+      $axios.get('/api/topic/edit/' + params.id),
+      $axios.get('/api/topic/nodes')
     ])
     return {
       currentUser,
       topic,
+      nodes,
       postForm: {
+        nodeId: topic.nodeId,
         title: topic.title,
         tags: topic.tags,
         content: topic.content
@@ -92,6 +112,7 @@ export default {
     return {
       publishing: false, // 当前是否正处于发布中...
       postForm: {
+        nodeId: 0,
         title: '',
         tags: [],
         content: ''
@@ -111,6 +132,7 @@ export default {
         const topic = await this.$axios.post(
           '/api/topic/edit/' + this.topic.topicId,
           {
+            nodeId: this.postForm.nodeId,
             title: this.postForm.title,
             content: this.postForm.content,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : ''

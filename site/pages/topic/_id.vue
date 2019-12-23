@@ -24,6 +24,13 @@
                     topic.lastCommentTime | prettyDate
                   }}</span>
                   <span class="meta-item">
+                    <a
+                      :href="'/topics/node/' + topic.node.nodeId"
+                      class="node"
+                      >{{ topic.node.name }}</a
+                    >
+                  </span>
+                  <span class="meta-item">
                     <span
                       v-for="tag in topic.tags"
                       :key="tag.tagId"
@@ -36,8 +43,9 @@
                   </span>
                   <span class="meta-item act">
                     <a @click="addFavorite(topic.topicId)">
-                      <i class="iconfont icon-favorite" />
-                      &nbsp;{{ favorited ? '已收藏' : '收藏' }}
+                      <i class="iconfont icon-favorite" />{{
+                        favorited ? '已收藏' : '收藏'
+                      }}
                     </a>
                   </span>
                   <span v-if="isOwner" class="meta-item act">

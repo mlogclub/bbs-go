@@ -122,7 +122,7 @@ func (this *topicService) Publish(userId, nodeId int64, tags []string, title, co
 }
 
 // 更新
-func (this *topicService) Edit(topicId int64, tags []string, title, content string) *simple.CodeError {
+func (this *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *simple.CodeError {
 	if len(title) == 0 {
 		return simple.NewErrorMsg("标题不能为空")
 	}
@@ -131,8 +131,14 @@ func (this *topicService) Edit(topicId int64, tags []string, title, content stri
 		return simple.NewErrorMsg("标题长度不能超过128")
 	}
 
+	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
+	if node == nil || node.Status != model.StatusOk {
+		return simple.NewErrorMsg("节点不存在")
+	}
+
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		err := repositories.TopicRepository.Updates(simple.DB(), topicId, map[string]interface{}{
+			"node_id": nodeId,
 			"title":   title,
 			"content": content,
 		})

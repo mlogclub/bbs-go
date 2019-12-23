@@ -30,6 +30,7 @@
       @keydown.40="selectDown"
       @keydown.esc="close"
       @focus="openRecommendTags"
+      @blur="closeRecommendTags"
       @click="openRecommendTags"
       class="input"
       type="text"
@@ -81,7 +82,7 @@ export default {
   data() {
     return {
       tags: this.value || [],
-      maxTagCount: 5, // 最多可以选择的标签数量
+      maxTagCount: 3, // 最多可以选择的标签数量
       maxWordCount: 15, // 每个标签最大字数
       showRecommendTags: false, // 是否显示推荐
       inputTag: '',
@@ -236,7 +237,9 @@ export default {
 
     // 开启推荐
     closeRecommendTags() {
-      this.showRecommendTags = false
+      setTimeout(() => {
+        this.showRecommendTags = false
+      }, 300)
     },
 
     // 关闭自动补全

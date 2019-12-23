@@ -37,7 +37,7 @@
                 {{ topic.lastCommentTime | prettyDate }}
               </span>
               <span class="meta-item">
-                <a :href="'/topics/node/' + topic.node.nodeId">{{
+                <a :href="'/topics/node/' + topic.node.nodeId" class="node">{{
                   topic.node.name
                 }}</a>
               </span>
