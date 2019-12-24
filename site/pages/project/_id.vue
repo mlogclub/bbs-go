@@ -17,9 +17,13 @@
               <span>{{ project.createTime | prettyDate }}</span>
             </div>
           </div>
-          <div class="content">
+
+          <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
+          </div>
+
+          <div class="content">
             <p v-highlight v-html="project.content" />
           </div>
           <div class="footer">
