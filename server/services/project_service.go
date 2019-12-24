@@ -1,12 +1,10 @@
 package services
 
 import (
-	"math"
 	"path"
 	"time"
 
 	"github.com/gorilla/feeds"
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -41,8 +39,8 @@ func (this *projectService) Find(cnd *simple.SqlCnd) []model.Project {
 	return repositories.ProjectRepository.Find(simple.DB(), cnd)
 }
 
-func (this *projectService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Project) {
-	cnd.FindOne(db, &ret)
+func (this *projectService) FindOne(cnd *simple.SqlCnd) (ret *model.Project) {
+	cnd.FindOne(simple.DB(), &ret)
 	return
 }
 
@@ -101,21 +99,6 @@ func (this *projectService) Scan(callback ProjectScanCallback) {
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
 			cursor).Asc("id").Limit(100))
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !callback(list) {
-			break
-		}
-	}
-}
-
-func (this *projectService) ScanDesc(callback ProjectScanCallback) {
-	var cursor int64 = math.MaxInt64
-	for {
-		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?",
-			cursor).Desc("id").Limit(100))
 		if list == nil || len(list) == 0 {
 			break
 		}

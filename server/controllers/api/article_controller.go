@@ -1,11 +1,8 @@
 package api
 
 import (
-	"errors"
-	"io/ioutil"
 	"math/rand"
 	"strconv"
-	"strings"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -15,7 +12,6 @@ import (
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 	"github.com/mlogclub/bbs-go/services/cache"
-	"github.com/mlogclub/bbs-go/services/collect"
 )
 
 type ArticleController struct {
@@ -252,74 +248,4 @@ func (this *ArticleController) GetNewest() *simple.JsonResult {
 func (this *ArticleController) GetHot() *simple.JsonResult {
 	articles := cache.ArticleCache.GetHotArticles()
 	return simple.JsonData(render.BuildSimpleArticles(articles))
-}
-
-// 微信采集发布接口
-func (this *ArticleController) PostWxpublish() *simple.JsonResult {
-	err := this.checkToken()
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	article := &collect.WxArticle{}
-	err = this.Ctx.ReadJSON(article)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	t, err := collect.NewWxbotApi().Publish(article)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.NewEmptyRspBuilder().Put("id", t.Id).JsonResult()
-}
-
-// 采集发布
-func (this *ArticleController) PostSpiderPublish() *simple.JsonResult {
-	err := this.checkToken()
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	article := &collect.SpiderArticle{}
-	err = this.Ctx.ReadJSON(article)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	articleId, err := collect.NewSpiderApi().Publish(article)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.NewEmptyRspBuilder().Put("id", articleId).JsonResult()
-}
-
-func (this *ArticleController) PostSpiderCommentPublish() *simple.JsonResult {
-	err := this.checkToken()
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	comment := &collect.SpiderComment{}
-	err = this.Ctx.ReadJSON(comment)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	commentId, err := collect.NewSpiderApi().PublishComment(comment)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.NewEmptyRspBuilder().Put("id", commentId).JsonResult()
-}
-
-func (this *ArticleController) checkToken() error {
-	token := this.Ctx.FormValue("token")
-	data, err := ioutil.ReadFile("/data/publish_token")
-	if err != nil {
-		return err
-	}
-	token2 := strings.TrimSpace(string(data))
-	if token != token2 {
-		return errors.New("token invalidate")
-	}
-	return nil
 }

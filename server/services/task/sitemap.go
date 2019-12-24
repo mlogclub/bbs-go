@@ -130,13 +130,6 @@ func SitemapTask() {
 	sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
 }
 
-// 生成rss
-func RssTask() {
-	services.ArticleService.GenerateRss()
-	services.TopicService.GenerateRss()
-	services.ProjectService.GenerateRss()
-}
-
 // sitemap上传到aliyun
 type AliyunOssAdapter struct {
 }
@@ -148,7 +141,6 @@ func (adp *AliyunOssAdapter) Bytes() [][]byte {
 
 // Write will create sitemap xml file into the file systems.
 func (adp *AliyunOssAdapter) Write(loc *stm.Location, data []byte) {
-
 	var out []byte
 	if stm.GzipPtn.MatchString(loc.Filename()) { // 如果需要压缩
 		var in bytes.Buffer

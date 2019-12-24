@@ -66,6 +66,7 @@ func InitIris() {
 		m.Party("/config").Handle(new(api.ConfigController))
 		m.Party("/upload").Handle(new(api.UploadController))
 		m.Party("/link").Handle(new(api.LinkController))
+		m.Party("/spider").Handle(new(api.SpiderController))
 	})
 
 	// admin
