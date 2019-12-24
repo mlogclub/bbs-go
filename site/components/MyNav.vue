@@ -8,7 +8,7 @@
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
-          <img src="~/assets/images/logo.png" />
+          <img :alt="config.siteTitle" src="~/assets/images/logo.png" />
         </a>
         <a
           :class="{ 'is-active': navbarActive }"

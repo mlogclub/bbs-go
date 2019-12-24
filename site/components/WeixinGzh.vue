@@ -4,7 +4,10 @@
       公众号
     </div>
     <div class="widget-content">
-      <img src="https://open.weixin.qq.com/qr/code?username=gh_950827012b8d" />
+      <img
+        src="https://open.weixin.qq.com/qr/code?username=gh_950827012b8d"
+        alt="码农俱乐部"
+      />
       <div class="gzh-desc">关注公众号订阅更多技术干货！</div>
     </div>
   </div>
