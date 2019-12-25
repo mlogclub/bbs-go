@@ -19,7 +19,7 @@
               </a>
             </div>
             <div class="article-item-right">
-              <div class="article-title">{{ article.title }}</div>
+              <h1 class="article-title">{{ article.title }}</h1>
 
               <div class="article-meta">
                 <span class="article-meta-item">
@@ -173,10 +173,8 @@
         />
       </div>
       <div class="right-container">
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
 
         <div class="ad">
           <!-- 展示广告220*220 -->

@@ -4,10 +4,12 @@
       <div class="left-container">
         <div v-if="project" class="project">
           <div class="project-header">
-            <span class="project-name">{{ project.name }}</span>
-            <span v-if="project.title" class="project-title"
-              >&nbsp;-&nbsp;{{ project.title }}</span
-            >
+            <h1>
+              <span class="project-name">{{ project.name }}</span>
+              <span v-if="project.title" class="project-title"
+                >&nbsp;-&nbsp;{{ project.title }}</span
+              >
+            </h1>
             <div class="project-meta">
               <span>
                 <a :href="'/user/' + project.user.id">{{

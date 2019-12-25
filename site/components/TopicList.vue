@@ -24,7 +24,7 @@
           </div>
           <div class="topic-header-center">
             <a :href="'/topic/' + topic.topicId" :title="topic.title">
-              <div class="topic-title">{{ topic.title }}</div>
+              <h2 class="topic-title">{{ topic.title }}</h2>
             </a>
 
             <div class="topic-meta">

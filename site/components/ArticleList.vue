@@ -11,7 +11,9 @@
       </div>
       <article class="article-item">
         <div class="article-title">
-          <a :href="'/article/' + article.articleId">{{ article.title }}</a>
+          <a :href="'/article/' + article.articleId"
+            ><h2>{{ article.title }}</h2></a
+          >
         </div>
 
         <div class="article-summary">

@@ -12,10 +12,12 @@
         </div>
         <div class="project-header">
           <a :href="'/project/' + p.projectId">
-            <span class="project-name">{{ p.name }}</span>
-            <span v-if="p.title" class="project-title"
-              >&nbsp;-&nbsp;{{ p.title }}</span
-            >
+            <h2>
+              <span class="project-name">{{ p.name }}</span>
+              <span v-if="p.title" class="project-title"
+                >&nbsp;-&nbsp;{{ p.title }}</span
+              >
+            </h2>
           </a>
         </div>
         <div class="summary">

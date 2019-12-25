@@ -12,7 +12,7 @@
                 />
               </div>
               <div class="topic-header-center">
-                <div class="topic-title">{{ topic.title }}</div>
+                <h1 class="topic-title">{{ topic.title }}</h1>
 
                 <div class="topic-meta">
                   <span class="meta-item">
