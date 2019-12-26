@@ -2,33 +2,45 @@
   <div class="projects">
     <ul>
       <li v-for="(p, index) in projects" :key="p.projectId" class="project">
-        <div v-if="index === 2 || index === 6 || index === 12 || index === 18">
-          <!-- 信息流广告 -->
-          <adsbygoogle
-            ad-slot="4980294904"
-            ad-format="fluid"
-            ad-layout-key="-ht-19-1m-3j+mu"
-          />
-        </div>
-        <div class="project-header">
-          <a :href="'/project/' + p.projectId">
-            <h2>
-              <span class="project-name">{{ p.name }}</span>
-              <span v-if="p.title" class="project-title"
-                >&nbsp;-&nbsp;{{ p.title }}</span
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+          <div
+            v-if="index === 2 || index === 6 || index === 12 || index === 18"
+          >
+            <!-- 信息流广告 -->
+            <adsbygoogle
+              ad-slot="4980294904"
+              ad-format="fluid"
+              ad-layout-key="-ht-19-1m-3j+mu"
+            />
+          </div>
+          <div class="project-header">
+            <h1 itemprop="title">
+              <a :href="'/project/' + p.projectId">
+                <span class="project-name">{{ p.name }}</span>
+                <span v-if="p.title" class="project-title"
+                  >&nbsp;-&nbsp;{{ p.title }}</span
+                >
+              </a>
+            </h1>
+          </div>
+          <div class="summary" itemprop="description">
+            {{ p.summary }}
+          </div>
+          <span class="meta">
+            <span>
+              <a :href="'/user/' + p.user.id" itemprop="author">{{
+                p.user.nickname
+              }}</a>
+            </span>
+            <span>
+              <time
+                :datetime="p.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"
+                itemprop="datePublished"
+                >{{ p.createTime | prettyDate }}</time
               >
-            </h2>
-          </a>
-        </div>
-        <div class="summary">
-          {{ p.summary }}
-        </div>
-        <div class="meta">
-          <span>
-            <a :href="'/user/' + p.user.id">{{ p.user.nickname }}</a>
+            </span>
           </span>
-          <span>{{ p.createTime | prettyDate }}</span>
-        </div>
+        </article>
       </li>
     </ul>
   </div>
