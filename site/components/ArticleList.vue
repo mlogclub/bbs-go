@@ -9,26 +9,35 @@
           ad-layout-key="-ht-19-1m-3j+mu"
         />
       </div>
-      <article class="article-item">
-        <div class="article-title">
+      <article
+        class="article-item"
+        itemscope
+        itemtype="http://schema.org/BlogPosting"
+      >
+        <h1 class="article-title" itemprop="title">
           <a :href="'/article/' + article.articleId"
             ><h2>{{ article.title }}</h2></a
           >
-        </div>
+        </h1>
 
-        <div class="article-summary">
+        <div class="article-summary" itemprop="description">
           {{ article.summary }}
         </div>
 
         <div class="article-meta">
           <span class="article-meta-item">
             由
-            <a :href="'/user/' + article.user.id" class="article-author"
+            <a
+              :href="'/user/' + article.user.id"
+              class="article-author"
+              itemprop="author"
               >&nbsp;{{ article.user.nickname }}&nbsp;</a
             >发布于
-            <time itemprop="datePublished">{{
-              article.createTime | prettyDate
-            }}</time>
+            <time
+              :datetime="article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"
+              itemprop="datePublished"
+              >{{ article.createTime | prettyDate }}</time
+            >
           </span>
 
           <span
