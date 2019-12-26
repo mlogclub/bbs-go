@@ -15,64 +15,82 @@
         </div>
       </li>
       <li :key="topic.topicId">
-        <div class="topic-header">
-          <div class="topic-header-left">
-            <div
-              :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
-              class="avatar avatar-size-45 is-rounded"
-            />
-          </div>
-          <div class="topic-header-center">
-            <a :href="'/topic/' + topic.topicId" :title="topic.title">
-              <h2 class="topic-title">{{ topic.title }}</h2>
-            </a>
-
-            <div class="topic-meta">
-              <span class="meta-item">
-                <a :href="'/user/' + topic.user.id">{{
-                  topic.user.nickname
-                }}</a>
-              </span>
-              <span class="meta-item">
-                {{ topic.lastCommentTime | prettyDate }}
-              </span>
-              <span class="meta-item">
-                <a :href="'/topics/node/' + topic.node.nodeId" class="node">{{
-                  topic.node.name
-                }}</a>
-              </span>
-              <span class="meta-item">
-                <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
-                  <a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div class="topic-header-right">
-            <div class="like">
-              <span
-                :class="{ liked: topic.liked }"
-                @click="like(topic)"
-                class="like-btn"
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+          <div class="topic-header">
+            <div class="topic-header-left">
+              <a
+                :href="'/user/' + topic.user.id"
+                :title="topic.user.nickname"
+                itemprop="author"
               >
-                <i class="iconfont icon-like" />
-              </span>
-              <span v-if="topic.likeCount" class="like-count">{{
-                topic.likeCount
-              }}</span>
+                <div
+                  :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
+                  class="avatar avatar-size-45 is-rounded"
+                />
+              </a>
             </div>
-            <span class="count"
-              >{{ topic.commentCount }}&nbsp;/&nbsp;{{ topic.viewCount }}</span
-            >
+            <div class="topic-header-center">
+              <h1 class="topic-title" itemprop="title">
+                <a :href="'/topic/' + topic.topicId" :title="topic.title">
+                  {{ topic.title }}
+                </a>
+              </h1>
+
+              <div class="topic-meta">
+                <span class="meta-item">
+                  <a :href="'/user/' + topic.user.id" itemprop="author">{{
+                    topic.user.nickname
+                  }}</a>
+                </span>
+                <span class="meta-item">
+                  <time
+                    :datetime="
+                      topic.lastCommentTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                    "
+                    itemprop="datePublished"
+                    >{{ topic.lastCommentTime | prettyDate }}</time
+                  >
+                </span>
+                <span class="meta-item">
+                  <a :href="'/topics/node/' + topic.node.nodeId" class="node">{{
+                    topic.node.name
+                  }}</a>
+                </span>
+                <span class="meta-item">
+                  <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
+                    <a :href="'/topics/tag/' + tag.tagId">{{ tag.tagName }}</a>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="topic-header-right">
+              <div class="like">
+                <span
+                  :class="{ liked: topic.liked }"
+                  @click="like(topic)"
+                  class="like-btn"
+                >
+                  <i class="iconfont icon-like" />
+                </span>
+                <span v-if="topic.likeCount" class="like-count">{{
+                  topic.likeCount
+                }}</span>
+              </div>
+              <span class="count"
+                >{{ topic.commentCount }}&nbsp;/&nbsp;{{
+                  topic.viewCount
+                }}</span
+              >
+            </div>
           </div>
-        </div>
-        <!--
-        <div class="topic-summary">
-          <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
-            topic.summary
-          }}</a>
-        </div>
-        -->
+          <!--
+          <div class="topic-summary" itemprop="description">
+            <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
+              topic.summary
+            }}</a>
+          </div>
+          -->
+        </article>
       </li>
     </template>
   </ul>
