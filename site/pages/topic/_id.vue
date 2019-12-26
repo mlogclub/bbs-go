@@ -3,26 +3,45 @@
     <section class="main">
       <div class="container main-container is-white left-main">
         <div class="left-container">
-          <div class="topic-detail topic-wrap">
+          <article
+            class="topic-detail topic-wrap"
+            itemscope
+            itemtype="http://schema.org/BlogPosting"
+          >
             <div class="topic-header">
               <div class="topic-header-left">
-                <div
-                  :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
-                  class="avatar avatar-size-45 is-rounded"
-                />
+                <a
+                  :href="'/user/' + topic.user.id"
+                  :title="topic.user.nickname"
+                  itemprop="author"
+                >
+                  <div
+                    :style="{
+                      backgroundImage: 'url(' + topic.user.avatar + ')'
+                    }"
+                    class="avatar avatar-size-45 is-rounded"
+                  />
+                </a>
               </div>
               <div class="topic-header-center">
-                <h1 class="topic-title">{{ topic.title }}</h1>
+                <h1 class="topic-title" itemprop="title">{{ topic.title }}</h1>
 
                 <div class="topic-meta">
                   <span class="meta-item">
-                    <a :href="'/user/' + topic.user.id">{{
+                    <a :href="'/user/' + topic.user.id" itemprop="author">{{
                       topic.user.nickname
                     }}</a>
                   </span>
-                  <span class="meta-item">{{
-                    topic.lastCommentTime | prettyDate
-                  }}</span>
+                  <span class="meta-item">
+                    <time
+                      :datetime="
+                        topic.lastCommentTime
+                          | formatDate('yyyy-MM-ddTHH:mm:ss')
+                      "
+                      itemprop="datePublished"
+                      >{{ topic.lastCommentTime | prettyDate }}</time
+                    >
+                  </span>
                   <span class="meta-item">
                     <a
                       :href="'/topics/node/' + topic.node.nodeId"
@@ -90,10 +109,10 @@
               />
             </div>
 
-            <div class="content topic-content">
+            <div class="content topic-content" itemprop="articleBody">
               <p v-html="topic.content"></p>
             </div>
-          </div>
+          </article>
 
           <!-- 评论 -->
           <comment

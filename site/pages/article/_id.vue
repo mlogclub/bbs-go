@@ -2,7 +2,11 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <article class="article-item article-detail">
+        <article
+          class="article-item article-detail"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
           <div class="article-header">
             <div class="article-item-left">
               <a
@@ -19,17 +23,26 @@
               </a>
             </div>
             <div class="article-item-right">
-              <h1 class="article-title">{{ article.title }}</h1>
+              <h1 class="article-title" itemprop="title">
+                {{ article.title }}
+              </h1>
 
               <div class="article-meta">
                 <span class="article-meta-item">
                   由
-                  <a :href="'/user/' + article.user.id" class="article-author"
+                  <a
+                    :href="'/user/' + article.user.id"
+                    class="article-author"
+                    itemprop="author"
                     >&nbsp;{{ article.user.nickname }}&nbsp;</a
                   >发布于
-                  <time itemprop="datePublished">{{
-                    article.createTime | prettyDate
-                  }}</time>
+                  <time
+                    :datetime="
+                      article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                    "
+                    itemprop="datePublished"
+                    >{{ article.createTime | prettyDate }}</time
+                  >
                 </span>
 
                 <span
@@ -75,7 +88,7 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div class="article-content content">
+          <div class="article-content content" itemprop="articleBody">
             <p v-highlight v-html="article.content" />
           </div>
 
