@@ -85,23 +85,13 @@
           </div>
 
           <div class="ad">
-            <!-- 信息流广告 -->
-            <adsbygoogle
-              ad-slot="4980294904"
-              ad-format="fluid"
-              ad-layout-key="-ht-19-1m-3j+mu"
-            />
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
           </div>
 
           <div class="article-content content" itemprop="articleBody">
             <p v-highlight v-html="article.content" />
           </div>
-
-          <!-- 展示广告
-          <div class="ad">
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
-          -->
 
           <div class="article-footer">
             <blockquote v-if="article.share">
@@ -129,17 +119,12 @@
               </ul>
             </blockquote>
           </div>
-
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
-
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
         </article>
+
+        <div class="ad">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
 
         <!-- 评论 -->
         <comment

@@ -3,7 +3,7 @@
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination
           :page="topicsPage.page"
           :url-prefix="'/topics/node/' + node.nodeId + '?p='"

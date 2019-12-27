@@ -3,7 +3,7 @@
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
       <topic-side :nodes="nodes" />

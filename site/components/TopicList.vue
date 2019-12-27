@@ -5,14 +5,12 @@
         v-if="showAd && (index === 2 || index === 10 || index === 18)"
         :key="'topic-' + index"
       >
-        <div class="ad">
-          <!-- 信息流广告 -->
-          <adsbygoogle
-            ad-slot="4980294904"
-            ad-format="fluid"
-            ad-layout-key="-ht-19-1m-3j+mu"
-          />
-        </div>
+        <!-- 信息流广告 -->
+        <adsbygoogle
+          ad-slot="4980294904"
+          ad-format="fluid"
+          ad-layout-key="-ht-19-1m-3j+mu"
+        />
       </li>
       <li :key="topic.topicId">
         <article itemscope itemtype="http://schema.org/BlogPosting">
