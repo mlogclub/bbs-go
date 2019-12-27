@@ -5,7 +5,7 @@
         <a href="/topics/node/recommend">推荐</a>
       </li>
       <li :class="{ active: currentNodeId === 0 }" class="topics-nav-item">
-        <a href="/topics/node/all">全部</a>
+        <a href="/topics/node/newest">最新</a>
       </li>
       <li
         v-for="node in nodes"
