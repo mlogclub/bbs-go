@@ -154,6 +154,11 @@ func (this *topicService) Edit(topicId, nodeId int64, tags []string, title, cont
 	return simple.FromError(err)
 }
 
+// 推荐
+func (this *topicService) SetRecommend(topicId int64, recommend bool) error {
+	return this.UpdateColumn(topicId, "recommend", recommend)
+}
+
 // 话题的标签
 func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
