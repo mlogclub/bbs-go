@@ -61,27 +61,13 @@
         <weixin-gzh />
 
         <div class="ad">
-          <!-- 展示广告220*220 -->
-          <adsbygoogle
-            :ad-style="{
-              display: 'inline-block',
-              width: '220px',
-              height: '220px'
-            }"
-            ad-slot="1361835285"
-          />
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
         </div>
 
         <div class="ad">
-          <!-- 展示广告220*220 -->
-          <adsbygoogle
-            :ad-style="{
-              display: 'inline-block',
-              width: '220px',
-              height: '220px'
-            }"
-            ad-slot="1361835285"
-          />
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
         </div>
       </div>
     </div>
