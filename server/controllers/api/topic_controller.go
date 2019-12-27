@@ -234,6 +234,17 @@ func (this *TopicController) GetTagTopics() *simple.JsonResult {
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
 }
 
+// 推荐帖子
+func (this *TopicController) GetRecommendTopics() *simple.JsonResult {
+	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("recommend", true).
+		Eq("status", model.StatusOk).
+		Page(page, 20).Desc("last_comment_time"))
+
+	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+}
+
 // 收藏
 func (this *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(this.Ctx)
