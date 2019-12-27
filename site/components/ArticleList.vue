@@ -14,10 +14,8 @@
         itemscope
         itemtype="http://schema.org/BlogPosting"
       >
-        <h1 class="article-title" itemprop="title">
-          <a :href="'/article/' + article.articleId"
-            ><h2>{{ article.title }}</h2></a
-          >
+        <h1 class="article-title" itemprop="headline">
+          <a :href="'/article/' + article.articleId">{{ article.title }}</a>
         </h1>
 
         <div class="article-summary" itemprop="description">
@@ -31,7 +29,9 @@
               :href="'/user/' + article.user.id"
               class="article-author"
               itemprop="author"
-              >&nbsp;{{ article.user.nickname }}&nbsp;</a
+              itemscope
+              itemtype="http://schema.org/Person"
+              ><span itemprop="name">{{ article.user.nickname }}</span></a
             >发布于
             <time
               :datetime="article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"

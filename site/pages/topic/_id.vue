@@ -13,7 +13,6 @@
                 <a
                   :href="'/user/' + topic.user.id"
                   :title="topic.user.nickname"
-                  itemprop="author"
                 >
                   <div
                     :style="{
@@ -24,11 +23,17 @@
                 </a>
               </div>
               <div class="topic-header-center">
-                <h1 class="topic-title" itemprop="title">{{ topic.title }}</h1>
-
+                <h1 class="topic-title" itemprop="headline">
+                  {{ topic.title }}
+                </h1>
                 <div class="topic-meta">
-                  <span class="meta-item">
-                    <a :href="'/user/' + topic.user.id" itemprop="author">{{
+                  <span
+                    class="meta-item"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <a :href="'/user/' + topic.user.id" itemprop="name">{{
                       topic.user.nickname
                     }}</a>
                   </span>

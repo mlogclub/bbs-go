@@ -14,7 +14,7 @@
             />
           </div>
           <div class="project-header">
-            <h1 itemprop="title">
+            <h1 itemprop="headline">
               <a :href="'/project/' + p.projectId">
                 <span class="project-name">{{ p.name }}</span>
                 <span v-if="p.title" class="project-title"
@@ -27,8 +27,12 @@
             {{ p.summary }}
           </div>
           <span class="meta">
-            <span>
-              <a :href="'/user/' + p.user.id" itemprop="author">{{
+            <span
+              itemprop="author"
+              itemscope
+              itemtype="http://schema.org/Person"
+            >
+              <a :href="'/user/' + p.user.id" itemprop="name">{{
                 p.user.nickname
               }}</a>
             </span>

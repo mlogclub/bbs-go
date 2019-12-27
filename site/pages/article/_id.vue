@@ -23,10 +23,9 @@
               </a>
             </div>
             <div class="article-item-right">
-              <h1 class="article-title" itemprop="title">
+              <h1 class="article-title" itemprop="headline">
                 {{ article.title }}
               </h1>
-
               <div class="article-meta">
                 <span class="article-meta-item">
                   由
@@ -34,7 +33,9 @@
                     :href="'/user/' + article.user.id"
                     class="article-author"
                     itemprop="author"
-                    >&nbsp;{{ article.user.nickname }}&nbsp;</a
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                    ><span itemprop="name">{{ article.user.nickname }}</span></a
                   >发布于
                   <time
                     :datetime="

@@ -18,11 +18,7 @@
         <article itemscope itemtype="http://schema.org/BlogPosting">
           <div class="topic-header">
             <div class="topic-header-left">
-              <a
-                :href="'/user/' + topic.user.id"
-                :title="topic.user.nickname"
-                itemprop="author"
-              >
+              <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
                 <div
                   :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
                   class="avatar avatar-size-45 is-rounded"
@@ -30,15 +26,20 @@
               </a>
             </div>
             <div class="topic-header-center">
-              <h1 class="topic-title" itemprop="title">
-                <a :href="'/topic/' + topic.topicId" :title="topic.title">
-                  {{ topic.title }}
-                </a>
+              <h1 class="topic-title" itemprop="headline">
+                <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
+                  topic.title
+                }}</a>
               </h1>
 
               <div class="topic-meta">
-                <span class="meta-item">
-                  <a :href="'/user/' + topic.user.id" itemprop="author">{{
+                <span
+                  class="meta-item"
+                  itemprop="author"
+                  itemscope
+                  itemtype="http://schema.org/Person"
+                >
+                  <a :href="'/user/' + topic.user.id" itemprop="name">{{
                     topic.user.nickname
                   }}</a>
                 </span>
