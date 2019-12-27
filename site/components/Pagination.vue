@@ -100,6 +100,9 @@ export default {
       return this.getPageUrl(previousPage)
     },
     getPageUrl(page) {
+      if (this.page.page === page) {
+        return 'javascript:void(0)'
+      }
       return this.urlPrefix + page
     },
     getTotalPage() {

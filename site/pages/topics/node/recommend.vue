@@ -2,9 +2,12 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" />
+        <topics-nav :nodes="nodes" :current-node-id="-1" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
-        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+        <pagination
+          :page="topicsPage.page"
+          url-prefix="/topics/node/recommend?p="
+        />
       </div>
       <topic-side />
     </div>

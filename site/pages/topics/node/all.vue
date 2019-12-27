@@ -2,11 +2,11 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" />
+        <topics-nav :nodes="nodes" :current-node-id="0" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
-        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+        <pagination :page="topicsPage.page" url-prefix="/topics/node/all?p=" />
       </div>
-      <topic-side :nodes="nodes" />
+      <topic-side />
     </div>
   </section>
 </template>
@@ -24,12 +24,16 @@ export default {
     TopicList,
     Pagination
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, query }) {
     try {
       const [user, nodes, topicsPage] = await Promise.all([
         $axios.get('/api/user/current'),
         $axios.get('/api/topic/nodes'),
-        $axios.get('/api/topic/recommend/topics')
+        $axios.get('/api/topic/topics', {
+          params: {
+            page: query.p || 1
+          }
+        })
       ])
       return { user, nodes, topicsPage }
     } catch (e) {
@@ -38,6 +42,7 @@ export default {
   },
   head() {
     return {
+      title: this.$siteTitle('全部话题'),
       meta: [
         {
           hid: 'description',
