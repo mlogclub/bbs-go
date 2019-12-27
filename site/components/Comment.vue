@@ -67,7 +67,7 @@
           class="comment"
         >
           <adsbygoogle
-            v-if="index % 3 === 0 && index !== 0"
+            v-if="(index + 1) % 3 === 0 && index !== 0"
             ad-slot="4980294904"
             ad-format="fluid"
             ad-layout-key="-ht-19-1m-3j+mu"

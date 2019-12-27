@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container size-360 is-white left-main">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -85,18 +85,23 @@
           </div>
 
           <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
+            <!-- 信息流广告 -->
+            <adsbygoogle
+              ad-slot="4980294904"
+              ad-format="fluid"
+              ad-layout-key="-ht-19-1m-3j+mu"
+            />
           </div>
 
           <div class="article-content content" itemprop="articleBody">
             <p v-highlight v-html="article.content" />
           </div>
 
+          <!-- 展示广告
           <div class="ad">
-            <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
           </div>
+          -->
 
           <div class="article-footer">
             <blockquote v-if="article.share">
@@ -130,48 +135,6 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div class="columns article-related">
-            <div v-if="newestArticles && newestArticles.length" class="column">
-              <div class="widget">
-                <div class="widget-header">最新文章</div>
-                <div class="widget-content">
-                  <ul>
-                    <li v-for="a in newestArticles" :key="a.articleId">
-                      <a
-                        :href="'/article/' + a.articleId"
-                        :title="a.title"
-                        class="article-related-title"
-                        target="_blank"
-                        >{{ a.title }}</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="relatedArticles && relatedArticles.length"
-              class="column"
-            >
-              <div class="widget">
-                <div class="widget-header">相关文章</div>
-                <div class="widget-content">
-                  <ul>
-                    <li v-for="a in relatedArticles" :key="a.articleId">
-                      <a
-                        :href="'/article/' + a.articleId"
-                        :title="a.title"
-                        class="article-related-title"
-                        target="_blank"
-                        >{{ a.title }}</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
@@ -187,19 +150,53 @@
         />
       </div>
       <div class="right-container">
-        <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
+        <div style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
 
-        <div class="ad">
-          <!-- 展示广告220*220 -->
-          <adsbygoogle
-            :ad-style="{
-              display: 'inline-block',
-              width: '220px',
-              height: '220px'
-            }"
-            ad-slot="1361835285"
-          />
+        <div v-if="relatedArticles && relatedArticles.length" class="widget">
+          <div class="widget-header">相关文章</div>
+          <div class="widget-content article-related">
+            <ul>
+              <li v-for="a in relatedArticles" :key="a.articleId">
+                <a
+                  :href="'/article/' + a.articleId"
+                  :title="a.title"
+                  class="article-related-title"
+                  target="_blank"
+                  >{{ a.title }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ad" style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
+
+        <div v-if="newestArticles && newestArticles.length" class="widget">
+          <div class="widget-header">最新文章</div>
+          <div class="widget-content article-related">
+            <ul>
+              <li v-for="a in newestArticles" :key="a.articleId">
+                <a
+                  :href="'/article/' + a.articleId"
+                  :title="a.title"
+                  class="article-related-title"
+                  target="_blank"
+                  >{{ a.title }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ad" style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
         </div>
       </div>
     </div>
