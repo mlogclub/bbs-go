@@ -61,7 +61,17 @@
       url="/api/comment/list"
     >
       <ul class="comments">
-        <li v-for="comment in results" :key="comment.commentId" class="comment">
+        <li
+          v-for="(comment, index) in results"
+          :key="comment.commentId"
+          class="comment"
+        >
+          <adsbygoogle
+            v-if="index % 3 === 0 && index !== 0"
+            ad-slot="4980294904"
+            ad-format="fluid"
+            ad-layout-key="-ht-19-1m-3j+mu"
+          />
           <div class="comment-avatar">
             <div
               :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
