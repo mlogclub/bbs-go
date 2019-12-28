@@ -38,7 +38,7 @@
 
             <div class="field">
               <div class="control">
-                <vditor v-model="postForm.content" />
+                <markdown-editor v-model="postForm.content" />
               </div>
             </div>
 
@@ -67,12 +67,14 @@
 import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
+import MarkdownEditor from '~/components/MarkdownEditor'
 
 export default {
   middleware: 'authenticated',
   components: {
     TagInput,
-    MarkdownHelp
+    MarkdownHelp,
+    MarkdownEditor
   },
   async asyncData({ $axios, params }) {
     const [article] = await Promise.all([

@@ -67,7 +67,6 @@ export default {
     '~/plugins/axios',
     '~/plugins/mlog',
     '~/plugins/highlight',
-    { src: '~/plugins/vditor', ssr: false },
     { src: '~/plugins/infinite-scroll', ssr: false }
   ],
   /*
