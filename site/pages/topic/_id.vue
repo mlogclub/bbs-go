@@ -114,9 +114,11 @@
               />
             </div>
 
-            <div class="content topic-content" itemprop="articleBody">
-              <p v-html="topic.content"></p>
-            </div>
+            <div
+              v-html="topic.content"
+              class="content topic-content"
+              itemprop="articleBody"
+            ></div>
           </article>
 
           <!-- 评论 -->
@@ -200,6 +202,7 @@ export default {
   },
   mounted() {
     utils.handleToc(this.$refs.toc)
+    this.highLight()
   },
   methods: {
     async addFavorite(topicId) {
@@ -256,11 +259,29 @@ export default {
           this.$toast.error(e.message || e)
         }
       }
+    },
+    highLight() {
+      if (process.client) {
+        window.hljs.initHighlightingOnLoad()
+      }
     }
   },
   head() {
     return {
-      title: this.$siteTitle(this.topic.title)
+      title: this.$siteTitle(this.topic.title),
+      link: [
+        {
+          rel: 'stylesheet',
+          href: '//cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css'
+        }
+      ],
+      script: [
+        {
+          src: '//cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js',
+          defer: true,
+          async: true
+        }
+      ]
     }
   }
 }

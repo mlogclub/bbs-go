@@ -76,7 +76,6 @@ export default {
         },
         input(val) {
           me.$emit('input', val)
-          console.log(val)
         },
         upload: {
           accept: 'image/*',
