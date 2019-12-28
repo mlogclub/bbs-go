@@ -272,14 +272,13 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css'
+          href:
+            '//cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css'
         }
       ],
       script: [
         {
-          src: '//cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js',
-          defer: true,
-          async: true
+          src: '//cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js'
         }
       ]
     }
