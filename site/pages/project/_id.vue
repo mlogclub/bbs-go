@@ -113,16 +113,6 @@ export default {
       downloadUrl: buildUrl(project.downloadUrl)
     }
   },
-  mounted() {
-    this.highLight()
-  },
-  methods: {
-    highLight() {
-      if (process.client) {
-        window.hljs.initHighlightingOnLoad()
-      }
-    }
-  },
   head() {
     let siteTitle = this.project.name
     if (this.project.title) {
@@ -130,19 +120,7 @@ export default {
     }
     return {
       title: this.$siteTitle(siteTitle),
-      meta: [{ hid: 'description', name: 'description', content: siteTitle }],
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css'
-        }
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js'
-        }
-      ]
+      meta: [{ hid: 'description', name: 'description', content: siteTitle }]
     }
   }
 }

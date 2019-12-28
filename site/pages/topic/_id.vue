@@ -202,7 +202,6 @@ export default {
   },
   mounted() {
     utils.handleToc(this.$refs.toc)
-    this.highLight()
   },
   methods: {
     async addFavorite(topicId) {
@@ -259,28 +258,11 @@ export default {
           this.$toast.error(e.message || e)
         }
       }
-    },
-    highLight() {
-      if (process.client) {
-        window.hljs.initHighlightingOnLoad()
-      }
     }
   },
   head() {
     return {
-      title: this.$siteTitle(this.topic.title),
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css'
-        }
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js'
-        }
-      ]
+      title: this.$siteTitle(this.topic.title)
     }
   }
 }

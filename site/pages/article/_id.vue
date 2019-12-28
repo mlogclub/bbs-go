@@ -271,9 +271,6 @@ export default {
       )
     }
   },
-  mounted() {
-    this.highLight()
-  },
   methods: {
     async deleteArticle(articleId) {
       try {
@@ -308,11 +305,6 @@ export default {
         console.error(e)
         this.$toast.error('收藏失败：' + (e.message || e))
       }
-    },
-    highLight() {
-      if (process.client) {
-        window.hljs.initHighlightingOnLoad()
-      }
     }
   },
   head() {
@@ -321,18 +313,6 @@ export default {
       meta: [
         { hid: 'description', name: 'description', content: this.description },
         { hid: 'keywords', name: 'keywords', content: this.keywords }
-      ],
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css'
-        }
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js'
-        }
       ]
     }
   }
