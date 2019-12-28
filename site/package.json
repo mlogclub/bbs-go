@@ -1,7 +1,7 @@
 {
-  "name": "mlog-club-site",
+  "name": "bbs-go-site",
   "version": "1.0.0",
-  "description": "mlog-club-site",
+  "description": "bbs-go-site",
   "author": "mlog-club",
   "private": true,
   "scripts": {
