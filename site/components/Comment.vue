@@ -91,7 +91,7 @@
               <a @click="reply(comment)">回复</a>
             </span>
           </div>
-          <div v-highlight class="comment-content content">
+          <div class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
                 <div
