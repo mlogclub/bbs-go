@@ -273,6 +273,9 @@ export default {
   },
   methods: {
     async deleteArticle(articleId) {
+      if (process.client && !window.confirm('是否确认删除该文章？')) {
+        return
+      }
       try {
         await this.$axios.post('/api/article/delete/' + articleId)
         this.$toast.success('删除成功！', {

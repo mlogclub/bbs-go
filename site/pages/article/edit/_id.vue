@@ -32,13 +32,13 @@
 
             <div class="field">
               <div class="control">
-                <tag-input v-model="postForm.tags" />
+                <markdown-editor v-model="postForm.content" />
               </div>
             </div>
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <tag-input v-model="postForm.tags" />
               </div>
             </div>
 

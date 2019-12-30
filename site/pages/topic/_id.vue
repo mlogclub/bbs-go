@@ -226,6 +226,9 @@ export default {
       }
     },
     async deleteTopic(topicId) {
+      if (process.client && !window.confirm('是否确认删除该话题？')) {
+        return
+      }
       try {
         await this.$axios.post('/api/topic/delete/' + topicId)
         this.$toast.success('删除成功', {
