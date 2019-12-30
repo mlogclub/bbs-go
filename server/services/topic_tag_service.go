@@ -61,3 +61,7 @@ func (this *topicTagService) UpdateColumn(id int64, name string, value interface
 func (this *topicTagService) DeleteByTopicId(topicId int64) {
 	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusDeleted)
 }
+
+func (this *topicTagService) UndeleteByTopicId(topicId int64) {
+	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusOk)
+}

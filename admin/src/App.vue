@@ -55,6 +55,7 @@ a {
 
 .main-content {
   padding: 0 10px;
+  width: 100%;
 }
 
 .fade-enter-active,

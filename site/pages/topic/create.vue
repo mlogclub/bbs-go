@@ -47,7 +47,7 @@
 
             <div class="field">
               <div class="control">
-                <vditor v-model="postForm.content" />
+                <markdown-editor v-model="postForm.content" />
               </div>
             </div>
 
@@ -82,11 +82,14 @@
 import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
+import MarkdownEditor from '~/components/MarkdownEditor'
+
 export default {
   middleware: 'authenticated',
   components: {
     TagInput,
-    MarkdownHelp
+    MarkdownHelp,
+    MarkdownEditor
   },
   async asyncData({ $axios, query }) {
     // 节点
@@ -169,6 +172,18 @@ export default {
   head() {
     return {
       title: this.$siteTitle('发表话题')
+      // link: [
+      //   {
+      //     rel: 'stylesheet',
+      //     href: '//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css'
+      //   }
+      // ],
+      // script: [
+      //   {
+      //     src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js',
+      //     defer: true
+      //   }
+      // ]
     }
   }
 }

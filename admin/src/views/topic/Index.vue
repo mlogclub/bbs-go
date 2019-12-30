@@ -13,6 +13,17 @@
         </el-form-item>
         <el-form-item>
           <el-select
+            v-model="filters.recommend"
+            clearable
+            placeholder="是否推荐"
+            @change="list"
+          >
+            <el-option label="推荐" value="1"></el-option>
+            <el-option label="未推荐" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
             v-model="filters.status"
             clearable
             placeholder="请选择状态"
@@ -25,11 +36,6 @@
         <el-form-item>
           <el-button type="primary" v-on:click="list">查询</el-button>
         </el-form-item>
-        <!--
-        <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>
-        -->
       </el-form>
     </el-col>
 
@@ -39,7 +45,7 @@
           <img class="avatar" :src="item.user.avatar" />
           <div class="topic-right">
             <div class="topic-title">
-              <a @click="toTopic(item)" href="javascript:void(0)">{{
+              <a :href="'https://mlog.club/topic/' + item.id">{{
                 item.title
               }}</a>
             </div>
@@ -48,6 +54,7 @@
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
+              <label class="node">{{ item.node ? item.node.name : '' }}</label>
               <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{
                 tag.tagName
               }}</label>
@@ -62,7 +69,16 @@
         <div class="topic-footer">
           <span class="danger" v-if="item.status === 1">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
-          <a class="btn" @click="deleteSubmit(item)">删除</a>
+
+          <a v-if="item.status === 0" class="btn" @click="deleteSubmit(item)"
+            >删除</a
+          >
+          <a v-else class="btn" @click="undeleteSubmit(item)">取消删除</a>
+
+          <a v-if="!item.recommend" class="btn" @click="recommend(item.id)"
+            >推荐</a
+          >
+          <a v-else class="btn" @click="cancelRecommend(item.id)">取消推荐</a>
         </div>
       </div>
     </div>
@@ -183,7 +199,9 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {},
+      filters: {
+        status: '0'
+      },
       selectedRows: [],
 
       addForm: {
@@ -281,23 +299,54 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    deleteSubmit(row) {
-      const me = this
-      HttpClient.post('/api/admin/topic/delete', { id: row.id })
-        .then((data) => {
-          me.$message({ message: '删除成功', type: 'success' })
-          me.list()
+    async deleteSubmit(row) {
+      await this.$confirm('是否确认删除该话题?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+
+      try {
+        await HttpClient.post('/api/admin/topic/delete', { id: row.id })
+        this.$message({ message: '删除成功', type: 'success' })
+        this.list()
+      } catch (err) {
+        this.$notify.error({ title: '错误', message: err.message || err })
+      }
+    },
+    async undeleteSubmit(row) {
+      try {
+        await HttpClient.post('/api/admin/topic/undelete', { id: row.id })
+        this.list()
+        this.$message({ message: '取消删除成功', type: 'success' })
+      } catch (err) {
+        this.$notify.error({ title: '错误', message: err.message || err })
+      }
+    },
+    async recommend(id) {
+      try {
+        await HttpClient.post('/api/admin/topic/recommend', {
+          id: id
         })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
+        this.$message({ message: '推荐成功', type: 'success' })
+        this.list()
+      } catch (e) {
+        this.$notify.error({ title: '错误', message: rsp.message })
+      }
+    },
+    async cancelRecommend(id) {
+      try {
+        await HttpClient.delete('/api/admin/topic/recommend', {
+          id: id
         })
+        this.$message({ message: '取消推荐成功', type: 'success' })
+        this.list()
+      } catch (e) {
+        this.$notify.error({ title: '错误', message: rsp.message })
+      }
     },
     handleSelectionChange(val) {
       this.selectedRows = val
-    },
-
-    toTopic(row) {
-      window.open(`https://mlog.club/topic/${row.id}`, '_blank')
     }
   }
 }
@@ -352,6 +401,11 @@ export default {
 
           label.author {
             /*color: #dc2323;*/
+            font-weight: bold;
+          }
+
+          label.node {
+            color: #dc2323;
             font-weight: bold;
           }
 

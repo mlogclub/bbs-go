@@ -114,9 +114,11 @@
               />
             </div>
 
-            <div class="content topic-content" itemprop="articleBody">
-              <p v-html="topic.content"></p>
-            </div>
+            <div
+              v-html="topic.content"
+              class="content topic-content"
+              itemprop="articleBody"
+            ></div>
           </article>
 
           <!-- 评论 -->
@@ -130,15 +132,10 @@
         <div class="right-container">
           <weixin-gzh />
 
-          <!-- 展示广告220*220 -->
-          <adsbygoogle
-            :ad-style="{
-              display: 'inline-block',
-              maxWidth: '220px',
-              maxHeight: '220px'
-            }"
-            ad-slot="1361835285"
-          />
+          <div class="ad">
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
+          </div>
 
           <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
             <div class="widget-header">
@@ -229,6 +226,9 @@ export default {
       }
     },
     async deleteTopic(topicId) {
+      if (process.client && !window.confirm('是否确认删除该话题？')) {
+        return
+      }
       try {
         await this.$axios.post('/api/topic/delete/' + topicId)
         this.$toast.success('删除成功', {

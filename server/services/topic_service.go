@@ -70,11 +70,22 @@ func (this *topicService) UpdateColumn(id int64, name string, value interface{})
 	return repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
+// 删除
 func (this *topicService) Delete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(id)
+	}
+	return err
+}
+
+// 取消删除
+func (this *topicService) Undelete(id int64) error {
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusOk)
+	if err == nil {
+		// 删掉标签文章
+		TopicTagService.UndeleteByTopicId(id)
 	}
 	return err
 }
@@ -152,6 +163,11 @@ func (this *topicService) Edit(topicId, nodeId int64, tags []string, title, cont
 		return nil
 	})
 	return simple.FromError(err)
+}
+
+// 推荐
+func (this *topicService) SetRecommend(topicId int64, recommend bool) error {
+	return this.UpdateColumn(topicId, "recommend", recommend)
 }
 
 // 话题的标签

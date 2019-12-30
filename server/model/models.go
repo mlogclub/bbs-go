@@ -150,6 +150,7 @@ type Topic struct {
 	UserId          int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`                   // 用户
 	Title           string `gorm:"size:128" json:"title" form:"title"`                                        // 标题
 	Content         string `gorm:"type:longtext" json:"content" form:"content"`                               // 内容
+	Recommend       bool   `gorm:"not null;index:idx_recommend" json:"recommend" form:"recommend"`            // 是否推荐
 	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`                                // 查看数量
 	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                          // 跟帖数量
 	LikeCount       int64  `gorm:"not null" json:"likeCount" form:"likeCount"`                                // 点赞数量

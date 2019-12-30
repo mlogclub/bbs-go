@@ -66,6 +66,12 @@ class HttpClient {
   post(api, data) {
     return this.http.post(api, qs.stringify(data))
   }
+
+  delete(api, params) {
+    return this.http.delete(api, {
+      params
+    })
+  }
 }
 
 export default new HttpClient()

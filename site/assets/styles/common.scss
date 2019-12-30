@@ -1,6 +1,7 @@
 html,
 body {
-  font-family: "-apple-system", "system-ui", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, sans-serif !important;
+  font-family: '-apple-system', 'system-ui', 'Helvetica Neue', 'Luxi Sans',
+    'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti, sans-serif !important;
   // background: #e5e5e5;
   // background: #f7f7f7;
   background: url(/images/bg.gif) repeat;
@@ -27,17 +28,50 @@ body {
 }
 
 // main-container
-$sidebar-width: 220px; // 侧边栏宽度
 $sidebar-margin: 10px; // 侧边栏之间的缝隙
-$main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // 主栏目的宽度
 
-.container-wrapper {
-  max-width: 1440px;
-  margin: 0 auto;
+// 计算页面宽度
+@mixin main-size($side-width) {
+  // 侧边栏宽度
+  $sidebar-width: $side-width !global;
+  // 主栏目的宽度
+  $main-container-width: calc(
+    100% - #{$side-width} - #{$sidebar-margin}
+  ) !global;
+
+  &.left-main {
+    .left-container {
+      width: $main-container-width;
+    }
+
+    .right-container {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+    }
+  }
+
+  &.right-main {
+    .left-container {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+    }
+
+    .right-container {
+      width: $main-container-width;
+    }
+  }
 }
 
 .main-container {
   display: flex;
+
+  // 默认宽度260
+  @include main-size(260px);
+
+  // 设定宽度360
+  &.size-360 {
+    @include main-size(360px);
+  }
 
   .left-container,
   .right-container {
@@ -76,15 +110,12 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
     }
 
     .left-container {
-      width: $main-container-width;
-      transition: width .2s;
+      transition: width 0.2s;
     }
 
     .right-container {
-      min-width: $sidebar-width;
-      max-width: $sidebar-width;
       padding: 0px;
-      margin-left: 10px;
+      margin-left: $sidebar-margin;
     }
   }
 
@@ -102,46 +133,12 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
     }
 
     .right-container {
-      width: $main-container-width;
-      transition: width .2s;
+      transition: width 0.2s;
     }
 
     .left-container {
-      min-width: $sidebar-width;
-      max-width: $sidebar-width;
       padding: 0px;
-      margin-right: 10px;
-    }
-  }
-
-}
-
-.m-nav {
-  margin-top: 10px;
-  padding-left: 10px;
-
-  li {
-    a {
-      display: block;
-      width: 100%;
-      padding: 8px 0;
-      color: #667d99;
-      font-weight: 500;
-      font-size: 15px;
-
-      i {
-        margin-right: 8px;
-      }
-
-      &:hover {
-        color: #f36322;
-        text-decoration: none;
-      }
-
-      &.active {
-        color: rgb(75, 147, 209);
-        font-weight: 900;
-      }
+      margin-right: $sidebar-margin;
     }
   }
 }
@@ -163,7 +160,7 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
     background: none;
   }
 
-  &>.widget-header {
+  & > .widget-header {
     // padding-bottom: 8px;
     padding: 8px 0;
     font-size: 16px;
@@ -179,14 +176,14 @@ $main-container-width: calc(100% - #{$sidebar-width} - #{$sidebar-margin}); // �
     }
   }
 
-  &>.widget-content {
+  & > .widget-content {
     // background-color: #fff;
     // font-size: 12px;
     margin-top: 8px;
     padding: 8px 0;
   }
 
-  &>.widget-footer {
+  & > .widget-footer {
     border-top: 1px dashed #ddd;
     padding: 10px 0 10px 0;
 
@@ -290,7 +287,7 @@ div.avatar {
     }
   }
 
-  &>ul:not(li a) {
+  & > ul:not(li a) {
     list-style: none;
   }
 
@@ -314,11 +311,9 @@ div.avatar {
       background: rgba(0, 0, 0, 0.1);
     }
   }
-
 }
 
 @media screen and (max-width: 768px) {
-
   // 屏幕宽度小于768的时候隐藏toc目录
   .toc {
     display: none;
@@ -340,7 +335,7 @@ div.avatar {
 
   &:before,
   &:after {
-    content: "";
+    content: '';
     width: inherit;
     height: inherit;
     border-radius: 50%;
@@ -359,7 +354,6 @@ div.avatar {
   }
 
   @-webkit-keyframes loading-animation {
-
     0%,
     100% {
       -webkit-transform: scale(0);
@@ -373,7 +367,6 @@ div.avatar {
   }
 
   @keyframes loading-animation {
-
     0%,
     100% {
       -webkit-transform: scale(0);
@@ -386,7 +379,6 @@ div.avatar {
     }
   }
 }
-
 
 .breadcrumb.my-breadcrumb {
   padding: 10px 0;

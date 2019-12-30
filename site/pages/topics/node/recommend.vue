@@ -3,14 +3,14 @@
     <top-notice />
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
+        <topics-nav :nodes="nodes" :current-node-id="-1" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination
           :page="topicsPage.page"
-          :url-prefix="'/topics/node/' + node.nodeId + '?p='"
+          url-prefix="/topics/node/recommend?p="
         />
       </div>
-      <topic-side :current-node-id="node.nodeId" />
+      <topic-side />
     </div>
   </section>
 </template>
@@ -30,28 +30,25 @@ export default {
     Pagination,
     TopNotice
   },
-  async asyncData({ $axios, params, query }) {
-    const [node, user, nodes, topicsPage] = await Promise.all([
-      $axios.get('/api/topic/node?nodeId=' + params.nodeId),
-      $axios.get('/api/user/current'),
-      $axios.get('/api/topic/nodes'),
-      $axios.get('/api/topic/node/topics', {
-        params: {
-          nodeId: params.nodeId,
-          page: query.p || 1
-        }
-      })
-    ])
-    return {
-      node,
-      user,
-      nodes,
-      topicsPage
+  async asyncData({ $axios, query }) {
+    try {
+      const [user, nodes, topicsPage] = await Promise.all([
+        $axios.get('/api/user/current'),
+        $axios.get('/api/topic/nodes'),
+        $axios.get('/api/topic/recommend/topics', {
+          params: {
+            page: query.p || 1
+          }
+        })
+      ])
+      return { user, nodes, topicsPage }
+    } catch (e) {
+      console.error(e)
     }
   },
   head() {
     return {
-      title: this.$siteTitle(this.node.name + ' - 话题'),
+      title: this.$siteTitle('热门话题'),
       meta: [
         {
           hid: 'description',

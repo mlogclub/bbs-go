@@ -1,13 +1,8 @@
 <template>
-  <div ref="editor" :style="{ width: width }">
-    <div id="vditor" class="vditor" />
-  </div>
+  <div id="vditor" :style="{ width: width, height: height }" class="vditor" />
 </template>
 
 <script>
-import Vditor from 'vditor'
-import 'vditor/src/assets/scss/classic.scss'
-
 export default {
   props: {
     value: {
@@ -17,24 +12,31 @@ export default {
   },
   data() {
     return {
-      width: 'auto',
       isLoading: true,
-      vditor: null
+      vditor: null,
+      width: '100%',
+      height: '400px'
     }
   },
   mounted() {
-    this.initVditor()
-    this.initSize()
+    this.doInit()
     this.$nextTick(async () => {
-      await this.vditor.getHTML(true)
-      this.isLoading = false
+      if (this.vditor) {
+        await this.vditor.getHTML(true)
+        this.isLoading = false
+      }
     })
   },
   methods: {
-    initVditor() {
+    doInit() {
+      if (!process.client) {
+        return
+      }
       const me = this
       const userToken = this.$cookies.get('userToken')
       const options = {
+        width: me.width,
+        height: me.height,
         cache: false,
         toolbar: [
           'emoji',
@@ -61,15 +63,19 @@ export default {
           'fullscreen'
         ],
         // placeholder: '请输入...',
-        width: '100%',
-        height: 400,
         counter: '999999',
+        delay: 500,
+        mode: 'markdown-show',
         preview: {
-          mode: 'both'
+          mode: 'editor',
+          hljs: {
+            enable: true,
+            style: 'GitHub',
+            lineNumber: true
+          }
         },
         input(val) {
           me.$emit('input', val)
-          me.initSize()
         },
         upload: {
           accept: 'image/*',
@@ -80,28 +86,26 @@ export default {
           }
         }
       }
-      this.vditor = new Vditor('vditor', options)
-      // this.vditor.focus()
+      this.vditor = new window.Vditor('vditor', options)
       if (this.value) {
         this.vditor.setValue(this.value)
       }
-    },
-    initSize() {
-      if (!process.client) {
-        return
-      }
-      const me = this
-      const wrapper = this.$refs.editor
-      const parentElement = wrapper.parentElement
-      if (!parentElement) {
-        return
-      }
-      me.width = parentElement.clientWidth + 'px'
-      parentElement.parentElement.style.width = me.width
-      window.addEventListener('resize', function() {
-        me.width = parentElement.clientWidth + 'px'
-        parentElement.parentElement.style.width = me.width
-      })
+    }
+  },
+  head() {
+    return {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: '//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css'
+        }
+      ],
+      script: [
+        {
+          src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js',
+          defer: true
+        }
+      ]
     }
   }
 }
@@ -110,5 +114,6 @@ export default {
 <style lang="scss" scoped>
 .vditor {
   border: 1px solid #d1d5da;
+  width: 100%;
 }
 </style>

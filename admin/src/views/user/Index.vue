@@ -28,6 +28,48 @@
       style="width: 100%;"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <div class="content-form">
+            <div class="form-item">
+              <div class="field-key">角色：</div>
+              <div class="field-value">
+                <el-tag
+                  size="mini"
+                  v-for="role in scope.row.roles"
+                  :key="role"
+                  style="margin-right:3px;"
+                  >{{ role }}
+                </el-tag>
+              </div>
+            </div>
+          </div>
+          <div class="content-form">
+            <div class="form-item">
+              <div class="field-key">状态：</div>
+              <div class="field-value">
+                {{ scope.row.status === 0 ? '正常' : '删除' }}
+              </div>
+            </div>
+          </div>
+          <div class="content-form">
+            <div class="form-item">
+              <div class="field-key">注册时间：</div>
+              <div class="field-value">
+                {{ scope.row.createTime | formatDate }}
+              </div>
+            </div>
+          </div>
+          <div class="content-form">
+            <div class="form-item">
+              <div class="field-key">更新时间：</div>
+              <div class="field-value">
+                {{ scope.row.updateTime | formatDate }}
+              </div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
       <el-table-column prop="avatar" label="头像" width="80">
@@ -38,33 +80,9 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名信息">
-        <template slot-scope="scope">
-          <div>{{ scope.row.nickname }}</div>
-          <div>{{ scope.row.username }}</div>
-          <div>{{ scope.row.email }}</div>
-          <div v-if="scope.row.roles && scope.row.roles.length">
-            <el-tag
-              size="mini"
-              v-for="role in scope.row.roles"
-              :key="role"
-              style="margin-right:3px;"
-              >{{ role }}
-            </el-tag>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">{{
-          scope.row.status === 0 ? '正常' : '删除'
-        }}</template>
-      </el-table-column>
-      <el-table-column label="时间" width="200">
-        <template slot-scope="scope">
-          注册：{{ scope.row.createTime | formatDate }}<br />
-          更新：{{ scope.row.updateTime | formatDate }}
-        </template>
-      </el-table-column>
+      <el-table-column prop="username" label="用户名"></el-table-column>
+      <el-table-column prop="nickname" label="昵称"></el-table-column>
+      <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"

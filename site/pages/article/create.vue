@@ -32,13 +32,13 @@
 
             <div class="field">
               <div class="control">
-                <tag-input v-model="postForm.tags" />
+                <markdown-editor v-model="postForm.content" />
               </div>
             </div>
 
             <div class="field">
               <div class="control">
-                <vditor v-model="postForm.content" />
+                <tag-input v-model="postForm.tags" />
               </div>
             </div>
 
@@ -67,11 +67,14 @@
 import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
+import MarkdownEditor from '~/components/MarkdownEditor'
+
 export default {
   middleware: 'authenticated',
   components: {
     TagInput,
-    MarkdownHelp
+    MarkdownHelp,
+    MarkdownEditor
   },
   data() {
     return {

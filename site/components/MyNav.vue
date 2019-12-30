@@ -111,9 +111,6 @@ export default {
       return this.$store.state.config.config
     }
   },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-  },
   methods: {
     async signout() {
       try {
@@ -125,15 +122,6 @@ export default {
     },
     toggleNav() {
       this.navbarActive = !this.navbarActive
-    },
-    handleScroll() {
-      if (this.$refs.nav) {
-        if (window.scrollY > 0) {
-          this.$refs.nav.classList.add('scrolled')
-        } else {
-          this.$refs.nav.classList.remove('scrolled')
-        }
-      }
     }
   }
 }
@@ -143,16 +131,8 @@ export default {
 .navbar {
   opacity: 0.99;
   border-bottom: 1px solid #e7edf3;
-  &.scrolled {
-    box-shadow: 1px 0px 6px rgba(0, 0, 0, 0.25);
-    border-bottom: none;
-  }
   .navbar-item {
     font-weight: 700;
-    // &:hover,
-    // &.active {
-    //   color: #009a61 !important;
-    // }
   }
 }
 .searchFormDiv {

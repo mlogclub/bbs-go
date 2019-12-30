@@ -67,7 +67,7 @@
           class="comment"
         >
           <adsbygoogle
-            v-if="index % 3 === 0 && index !== 0"
+            v-if="(index + 1) % 3 === 0 && index !== 0"
             ad-slot="4980294904"
             ad-format="fluid"
             ad-layout-key="-ht-19-1m-3j+mu"
@@ -91,7 +91,7 @@
               <a @click="reply(comment)">回复</a>
             </span>
           </div>
-          <div v-highlight class="comment-content content">
+          <div class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
                 <div

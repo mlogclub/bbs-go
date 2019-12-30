@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container size-360 is-white left-main">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -89,14 +89,11 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div class="article-content content" itemprop="articleBody">
-            <p v-highlight v-html="article.content" />
-          </div>
-
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
+          <div
+            v-html="article.content"
+            class="article-content content"
+            itemprop="articleBody"
+          ></div>
 
           <div class="article-footer">
             <blockquote v-if="article.share">
@@ -124,59 +121,12 @@
               </ul>
             </blockquote>
           </div>
-
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
-
-          <div class="columns article-related">
-            <div v-if="newestArticles && newestArticles.length" class="column">
-              <div class="widget">
-                <div class="widget-header">最新文章</div>
-                <div class="widget-content">
-                  <ul>
-                    <li v-for="a in newestArticles" :key="a.articleId">
-                      <a
-                        :href="'/article/' + a.articleId"
-                        :title="a.title"
-                        class="article-related-title"
-                        target="_blank"
-                        >{{ a.title }}</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="relatedArticles && relatedArticles.length"
-              class="column"
-            >
-              <div class="widget">
-                <div class="widget-header">相关文章</div>
-                <div class="widget-content">
-                  <ul>
-                    <li v-for="a in relatedArticles" :key="a.articleId">
-                      <a
-                        :href="'/article/' + a.articleId"
-                        :title="a.title"
-                        class="article-related-title"
-                        target="_blank"
-                        >{{ a.title }}</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
         </article>
+
+        <div class="ad">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
 
         <!-- 评论 -->
         <comment
@@ -187,19 +137,53 @@
         />
       </div>
       <div class="right-container">
-        <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
+        <div style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
 
-        <div class="ad">
-          <!-- 展示广告220*220 -->
-          <adsbygoogle
-            :ad-style="{
-              display: 'inline-block',
-              width: '220px',
-              height: '220px'
-            }"
-            ad-slot="1361835285"
-          />
+        <div v-if="relatedArticles && relatedArticles.length" class="widget">
+          <div class="widget-header">相关文章</div>
+          <div class="widget-content article-related">
+            <ul>
+              <li v-for="a in relatedArticles" :key="a.articleId">
+                <a
+                  :href="'/article/' + a.articleId"
+                  :title="a.title"
+                  class="article-related-title"
+                  target="_blank"
+                  >{{ a.title }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ad" style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
+        </div>
+
+        <div v-if="newestArticles && newestArticles.length" class="widget">
+          <div class="widget-header">最新文章</div>
+          <div class="widget-content article-related">
+            <ul>
+              <li v-for="a in newestArticles" :key="a.articleId">
+                <a
+                  :href="'/article/' + a.articleId"
+                  :title="a.title"
+                  class="article-related-title"
+                  target="_blank"
+                  >{{ a.title }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ad" style="max-height: 360px;">
+          <!-- 展示广告 -->
+          <adsbygoogle ad-slot="1742173616" />
         </div>
       </div>
     </div>
@@ -289,6 +273,9 @@ export default {
   },
   methods: {
     async deleteArticle(articleId) {
+      if (process.client && !window.confirm('是否确认删除该文章？')) {
+        return
+      }
       try {
         await this.$axios.post('/api/article/delete/' + articleId)
         this.$toast.success('删除成功！', {

@@ -1,9 +1,10 @@
 <template>
   <section class="main">
+    <top-notice />
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination
           :page="topicsPage.page"
           :url-prefix="'/topics/' + tag.tagId + '?p='"
@@ -19,13 +20,15 @@ import TopicSide from '~/components/TopicSide'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
+import TopNotice from '~/components/TopNotice'
 
 export default {
   components: {
     TopicSide,
     TopicsNav,
     TopicList,
-    Pagination
+    Pagination,
+    TopNotice
   },
   async asyncData({ $axios, params, query }) {
     const [tag, user, nodes, topicsPage] = await Promise.all([
