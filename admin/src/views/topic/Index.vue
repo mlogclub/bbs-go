@@ -69,7 +69,12 @@
         <div class="topic-footer">
           <span class="danger" v-if="item.status === 1">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
-          <a class="btn" @click="deleteSubmit(item)">删除</a>
+
+          <a v-if="item.status === 0" class="btn" @click="deleteSubmit(item)"
+            >删除</a
+          >
+          <a v-else class="btn" @click="undeleteSubmit(item)">取消删除</a>
+
           <a v-if="!item.recommend" class="btn" @click="recommend(item.id)"
             >推荐</a
           >
@@ -294,16 +299,29 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    deleteSubmit(row) {
-      const me = this
-      HttpClient.post('/api/admin/topic/delete', { id: row.id })
-        .then((data) => {
-          me.$message({ message: '删除成功', type: 'success' })
-          me.list()
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
-        })
+    async deleteSubmit(row) {
+      await this.$confirm('是否确认删除该话题?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+
+      try {
+        await HttpClient.post('/api/admin/topic/delete', { id: row.id })
+        this.$message({ message: '删除成功', type: 'success' })
+        this.list()
+      } catch (err) {
+        this.$notify.error({ title: '错误', message: err.message || err })
+      }
+    },
+    async undeleteSubmit(row) {
+      try {
+        await HttpClient.post('/api/admin/topic/undelete', { id: row.id })
+        this.list()
+        this.$message({ message: '取消删除成功', type: 'success' })
+      } catch (err) {
+        this.$notify.error({ title: '错误', message: err.message || err })
+      }
     },
     async recommend(id) {
       try {
