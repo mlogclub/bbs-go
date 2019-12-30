@@ -126,3 +126,15 @@ func (this *TopicController) PostDelete() *simple.JsonResult {
 	}
 	return simple.JsonSuccess()
 }
+
+func (this *TopicController) Undelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(this.Ctx, "id")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	err = services.TopicService.Undelete(id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
