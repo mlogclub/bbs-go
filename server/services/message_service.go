@@ -187,7 +187,10 @@ func (this *messageService) Consume() {
 func (this *messageService) SendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
 	if user != nil && len(user.Email.String) > 0 {
-		email.SendTemplateEmail(user.Email.String, "M-LOG新消息提醒", "M-LOG新消息提醒", message.Content,
+		siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+		emailTitle := siteTitle + " 新消息提醒"
+
+		email.SendTemplateEmail(user.Email.String, emailTitle, emailTitle, message.Content,
 			message.QuoteContent, urls.AbsUrl("/user/messages"))
 		messageLog.Info("发送邮件...email=", user.Email)
 	} else {
