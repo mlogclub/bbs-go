@@ -30,7 +30,10 @@
     >
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <div class="content-form">
+          <div
+            class="content-form"
+            v-if="scope.row.roles && scope.row.roles.length"
+          >
             <div class="form-item">
               <div class="field-key">角色：</div>
               <div class="field-value">
