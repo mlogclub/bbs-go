@@ -32,7 +32,7 @@ export default {
       const [user, nodes, topicsPage] = await Promise.all([
         $axios.get('/api/user/current'),
         $axios.get('/api/topic/nodes'),
-        $axios.get('/api/topic/recommend/topics', {
+        $axios.get('/api/topic/topics', {
           params: {
             page: query.p || 1
           }

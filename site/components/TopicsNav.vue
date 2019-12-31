@@ -1,11 +1,11 @@
 <template>
   <div class="topics-nav">
     <ul class="topics-nav-list">
-      <li :class="{ active: currentNodeId === -1 }" class="topics-nav-item">
-        <a href="/topics/node/recommend">推荐</a>
-      </li>
       <li :class="{ active: currentNodeId === 0 }" class="topics-nav-item">
         <a href="/topics/node/newest">最新</a>
+      </li>
+      <li :class="{ active: currentNodeId === -1 }" class="topics-nav-item">
+        <a href="/topics/node/recommend">推荐</a>
       </li>
       <li
         v-for="node in nodes"
@@ -24,7 +24,7 @@ export default {
   props: {
     currentNodeId: {
       type: Number,
-      default: -1
+      default: 0
     },
     nodes: {
       type: Array,
