@@ -250,7 +250,7 @@ func (this *articleService) GetUserNewestArticles(userId int64) []model.Article 
 func (this *articleService) Scan(cb ScanArticleCallback) {
 	var cursor int64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? ",
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").Where("id > ? ",
 			cursor).Asc("id").Limit(100))
 		if list == nil || len(list) == 0 {
 			break
@@ -266,7 +266,7 @@ func (this *articleService) Scan(cb ScanArticleCallback) {
 func (this *articleService) ScanDesc(cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "update_time").Where("id < ? ",
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").Where("id < ? ",
 			cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
