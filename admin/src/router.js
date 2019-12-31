@@ -17,8 +17,8 @@ export default new Router({
       path: '1',
       component: Home,
       meta: {
-        title: '内容管理',
-        icon: 'iconfont icon-topic'
+        title: '控制台',
+        icon: 'iconfont icon-dashboard'
       },
       children: [
         {
@@ -27,6 +27,14 @@ export default new Router({
           meta: {
             title: '节点',
             icon: 'iconfont icon-topic'
+          }
+        },
+        {
+          path: '/user/index',
+          component: () => import('@/views/user/Index.vue'),
+          meta: {
+            title: '用户',
+            icon: 'iconfont icon-username'
           }
         },
         {
@@ -75,52 +83,6 @@ export default new Router({
           meta: {
             title: '配置',
             icon: 'iconfont icon-setting'
-          }
-        }
-      ]
-    },
-
-    {
-      path: '3',
-      component: Home,
-      meta: {
-        title: '用户管理',
-        icon: 'iconfont icon-username'
-      },
-      children: [
-        {
-          path: '/user/index',
-          component: () => import('@/views/user/Index.vue'),
-          meta: {
-            title: '用户',
-            icon: 'iconfont icon-username'
-          }
-        }
-      ]
-    },
-
-    {
-      path: '4',
-      component: Home,
-      meta: {
-        title: '采集管理',
-        icon: 'iconfont icon-spider'
-      },
-      children: [
-        {
-          path: '/collect-rule/index',
-          component: () => import('@/views/collect-rule/Index.vue'),
-          meta: {
-            title: '采集规则',
-            icon: 'iconfont icon-ruler'
-          }
-        },
-        {
-          path: '/collect-article/index',
-          component: () => import('@/views/collect-article/Index.vue'),
-          meta: {
-            title: '采集文章',
-            icon: 'iconfont icon-article'
           }
         }
       ]
