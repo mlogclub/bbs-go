@@ -11,7 +11,7 @@ import (
 	"github.com/issue9/identicon"
 )
 
-const DefaultAvatar = "https://file.mlog.club/avatar/club_default_avatar1.png"
+const DefaultAvatar = "http://static.mlog.club/images/default-avatar/default.png"
 
 var (
 	err                   error
@@ -35,7 +35,7 @@ func init() {
 		c, _ := colorToRGB(hexColor)
 		avatarFrontColors = append(avatarFrontColors, *c)
 	}
-	identiconIns, _ = identicon.New(300, color.Transparent, avatarFrontColors...)
+	identiconIns, _ = identicon.New(300, avatarBackgroundColor, avatarFrontColors...)
 }
 
 func Generate(userId int64) ([]byte, error) {

@@ -46,6 +46,9 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if len(a) == 0 {
 		a = avatar.DefaultAvatar
 	}
+
+	a = common.ApplyImageStyle(a, model.ImageStyleAvatar)
+
 	roles := strings.Split(user.Roles, ",")
 	return &model.UserInfo{
 		Id:          user.Id,
@@ -110,17 +113,6 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	}
 
 	return rsp
-}
-
-func BuildArticles(articles []model.Article) []model.ArticleResponse {
-	if articles == nil || len(articles) == 0 {
-		return nil
-	}
-	var responses []model.ArticleResponse
-	for _, article := range articles {
-		responses = append(responses, *BuildArticle(&article))
-	}
-	return responses
 }
 
 func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
@@ -525,9 +517,11 @@ func BuildHtmlContent(htmlContent string) string {
 	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
 		src := selection.AttrOr("src", "")
 		if strings.Contains(src, "qpic.cn") {
-			newSrc := simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
-			selection.SetAttr("src", newSrc)
+			src = simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
+		} else {
+			src = common.ApplyImageStyle(src, model.ImageStyleDetail)
 		}
+		selection.SetAttr("src", src)
 	})
 
 	html, err := doc.Html()
