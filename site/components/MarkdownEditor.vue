@@ -37,7 +37,7 @@ export default {
       const options = {
         width: me.width,
         height: me.height,
-        cache: false,
+        cache: true,
         toolbar: [
           'emoji',
           'headings',
