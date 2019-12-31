@@ -83,8 +83,6 @@ func InitIris() {
 		m.Party("/topic-node").Handle(new(admin.TopicNodeController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		m.Party("/link").Handle(new(admin.LinkController))
-		m.Party("/collect-rule").Handle(new(admin.CollectRuleController))
-		m.Party("/collect-article").Handle(new(admin.CollectArticleController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {

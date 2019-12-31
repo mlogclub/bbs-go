@@ -5,7 +5,7 @@ import "database/sql"
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicNode{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{},
-	&CollectRule{}, &CollectArticle{}, &ThirdAccount{},
+	&ThirdAccount{},
 }
 
 type Model struct {
@@ -30,11 +30,6 @@ const (
 	MsgStatusReaded = 1 // 消息已读
 
 	MsgTypeComment = 0 // 回复消息
-
-	CollectArticleStatusPending   = 0 // 待审核
-	CollectArticleStatusAuditPass = 1 // 审核通过
-	CollectArticleStatusAuditFail = 2 // 审核失败
-	CollectArticleStatusPublished = 3 // 已发布
 
 	ThirdAccountTypeGithub = "github"
 	ThirdAccountTypeQQ     = "qq"
@@ -228,34 +223,4 @@ type Link struct {
 	Score      int    `gorm:"not null" json:"score" form:"score"`           // 评分，0-100分，分数越高越优质
 	Remark     string `gorm:"size:1024" json:"remark" form:"remark"`        // 备注，后台填写的
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
-}
-
-// 采集规则
-type CollectRule struct {
-	Model
-	Title       string `gorm:"not null;size:128" json:"title" form:"title"`     // 标题
-	Rule        string `gorm:"type:text;not null" json:"rule" form:"rule"`      // 规则详情，JSON文件
-	Status      int    `gorm:"not null" json:"status" form:"status"`            // 状态
-	Description string `gorm:"size:1024" json:"description" form:"description"` // 规则描述
-	CreateTime  int64  `json:"createTime" form:"createTime"`                    // 创建时间
-	UpdateTime  int64  `json:"updateTime" form:"updateTime"`                    // 更新时间
-}
-
-// 采集文章
-type CollectArticle struct {
-	Model
-	UserId         int64  `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`          // 用户编号
-	RuleId         int64  `gorm:"index:idx_rule_id;not null" json:"ruleId" form:"ruleId"`          // 采集规则编号
-	LinkId         int64  `gorm:"not null;index:idx_link_id" json:"linkId" form:"linkId"`          // CollectLink外键
-	Title          string `gorm:"size:128;not null;" json:"title" form:"title"`                    // 标题
-	Summary        string `gorm:"type:text" json:"summary" form:"summary"`                         // 摘要
-	Content        string `gorm:"type:longtext;not null;" json:"content" form:"content"`           // 内容
-	ContentType    string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"` // 内容类型：markdown、html
-	SourceUrl      string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                     // 原文链接
-	SourceId       string `gorm:"size:1024" json:"sourceId" form:"sourceId"`                       // 原id
-	SourceUrlMd5   string `gorm:"index:idx_url_md5" json:"sourceUrlMd5" form:"sourceUrlMd5"`       // url md5
-	SourceTitleMd5 string `gorm:"index:idx_title_md5" json:"sourceTitleMd5" form:"sourceTitleMd5"` // 标题 md5
-	Status         int    `gorm:"int" json:"status" form:"status"`                                 // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
-	ArticleId      int64  `gorm:"index:idx_article_id;not null" json:"articleId" form:"articleId"` // 发布之后的文章id
-	CreateTime     int64  `json:"createTime" form:"createTime"`                                    // 创建时间
 }
