@@ -357,9 +357,9 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 
 	if comment.ContentType == model.ContentTypeMarkdown {
 		markdownResult := simple.NewMd().Run(comment.Content)
-		ret.Content = template.HTML(markdownResult.ContentHtml)
+		ret.Content = template.HTML(BuildHtmlContent(markdownResult.ContentHtml))
 	} else {
-		ret.Content = template.HTML(comment.Content)
+		ret.Content = template.HTML(BuildHtmlContent(comment.Content))
 	}
 
 	if buildQuote && comment.QuoteId > 0 {
