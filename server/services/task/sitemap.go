@@ -67,17 +67,20 @@ func SitemapTask() {
 		{"priority", 1.0},
 	})
 
-	services.UserService.Scan(func(users []model.User) {
-		for _, user := range users {
-			userUrl := urls.UserUrl(user.Id)
-			sm.Add(stm.URL{
-				{"loc", userUrl},
-				{"lastmod", time.Now()},
-			})
+	services.TopicService.ScanDesc(func(topics []model.Topic) bool {
+		for _, topic := range topics {
+			if topic.Status == model.StatusOk {
+				topicUrl := urls.TopicUrl(topic.Id)
+				sm.Add(stm.URL{
+					{"loc", topicUrl},
+					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
+				})
+			}
 		}
+		return true
 	})
 
-	services.ArticleService.Scan(func(articles []model.Article) bool {
+	services.ArticleService.ScanDesc(func(articles []model.Article) bool {
 		for _, article := range articles {
 			if article.Status == model.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
@@ -90,17 +93,14 @@ func SitemapTask() {
 		return true
 	})
 
-	services.TopicService.Scan(func(topics []model.Topic) bool {
-		for _, topic := range topics {
-			if topic.Status == model.StatusOk {
-				topicUrl := urls.TopicUrl(topic.Id)
-				sm.Add(stm.URL{
-					{"loc", topicUrl},
-					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
-				})
-			}
+	services.UserService.Scan(func(users []model.User) {
+		for _, user := range users {
+			userUrl := urls.UserUrl(user.Id)
+			sm.Add(stm.URL{
+				{"loc", userUrl},
+				{"lastmod", time.Now()},
+			})
 		}
-		return true
 	})
 
 	services.ProjectService.Scan(func(projects []model.Project) bool {
