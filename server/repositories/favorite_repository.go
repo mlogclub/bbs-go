@@ -39,7 +39,9 @@ func (this *favoriteRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []mo
 
 func (this *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Favorite {
 	ret := &model.Favorite{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

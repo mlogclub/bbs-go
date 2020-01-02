@@ -39,7 +39,9 @@ func (this *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list 
 
 func (this *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ThirdAccount {
 	ret := &model.ThirdAccount{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

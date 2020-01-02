@@ -39,7 +39,9 @@ func (this *topicLikeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []m
 
 func (this *topicLikeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.TopicLike {
 	ret := &model.TopicLike{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

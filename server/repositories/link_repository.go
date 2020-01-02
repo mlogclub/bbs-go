@@ -39,7 +39,9 @@ func (this *linkRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.
 
 func (this *linkRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Link {
 	ret := &model.Link{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

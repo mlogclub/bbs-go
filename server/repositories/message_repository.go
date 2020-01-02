@@ -39,7 +39,9 @@ func (this *messageRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []mod
 
 func (this *messageRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Message {
 	ret := &model.Message{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

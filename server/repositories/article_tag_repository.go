@@ -39,7 +39,9 @@ func (this *articleTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []
 
 func (this *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ArticleTag {
 	ret := &model.ArticleTag{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 
