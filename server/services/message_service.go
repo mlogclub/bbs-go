@@ -92,46 +92,50 @@ func (this *messageService) MarkRead(userId int64) {
 // 评论被回复消息
 func (this *messageService) SendCommentMsg(comment *model.Comment) {
 	user := cache.UserCache.Get(comment.UserId)
+	quote := this.getQuoteComment(comment.QuoteId)
 	summary := common.GetMarkdownSummary(comment.Content)
 
-	// 文章评论消息
 	var (
-		userId          int64
-		msgContent      string
-		msgQuoteContent string
-		quoteContent    string
+		fromId       = comment.UserId // 消息发送人
+		toId         int64            // 消息接收人
+		content      string           // 消息内容
+		quoteContent string           // 引用内容
 	)
-	if comment.EntityType == model.EntityTypeArticle {
+
+	if comment.EntityType == model.EntityTypeArticle { // 文章被评论
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 		if article != nil && article.UserId != comment.UserId {
-			userId = article.UserId
-			msgContent = user.Nickname + " 回复了你的文章：" + summary
-			msgQuoteContent = "《" + article.Title + "》"
+			toId = article.UserId
+			content = user.Nickname + " 回复了你的文章：" + summary
+			quoteContent = "《" + article.Title + "》"
 		}
-	} else if comment.EntityType == model.EntityTypeTopic {
+	} else if comment.EntityType == model.EntityTypeTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 		if topic != nil && topic.UserId != comment.UserId {
-			userId = topic.UserId
-			msgContent = user.Nickname + " 回复了你的主题：" + summary
-			msgQuoteContent = "《" + topic.Title + "》"
+			toId = topic.UserId
+			content = user.Nickname + " 回复了你的话题：" + summary
+			quoteContent = "《" + topic.Title + "》"
 		}
 	}
-	if userId > 0 {
-		this.Produce(comment.UserId, userId, msgContent, msgQuoteContent, model.MsgTypeComment, map[string]interface{}{
-			"entityType": comment.EntityType,
-			"entityId":   comment.EntityId,
-			"commentId":  comment.Id,
-			"quoteId":    comment.QuoteId,
-		})
-	}
 
-	// 评论被引用的时候，给被引用的人发送消息
-	if comment.QuoteId > 0 {
-		quote := repositories.CommentRepository.Get(simple.DB(), comment.QuoteId)
-		if quote != nil && quote.UserId != comment.UserId {
-			msgContent = user.Nickname + " 回复了你的评论：" + summary
+	if toId > 0 {
+
+		// 给帖子/文章作者发消息（如果引用评论的作者和帖子作者是同一个人，那么就不发送该条消息，因为接下来会发送评论被回复消息）
+		if quote == nil || quote.UserId != toId {
+			this.Produce(fromId, toId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
+				"entityType": comment.EntityType,
+				"entityId":   comment.EntityId,
+				"commentId":  comment.Id,
+				"quoteId":    comment.QuoteId,
+			})
+		}
+
+		// 评论被回复的时候，给被引用的人发送消息
+		if quote != nil {
+			toId = quote.UserId
+			content = user.Nickname + " 回复了你的评论：" + summary
 			quoteContent = common.GetMarkdownSummary(quote.Content)
-			this.Produce(comment.UserId, quote.UserId, msgContent, quoteContent, model.MsgTypeComment, map[string]interface{}{
+			this.Produce(fromId, toId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
@@ -139,6 +143,13 @@ func (this *messageService) SendCommentMsg(comment *model.Comment) {
 			})
 		}
 	}
+}
+
+func (this *messageService) getQuoteComment(quoteId int64) *model.Comment {
+	if quoteId <= 0 {
+		return nil
+	}
+	return repositories.CommentRepository.Get(simple.DB(), quoteId)
 }
 
 // 生产，将消息数据放入chan
