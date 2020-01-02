@@ -42,7 +42,9 @@ func (this *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.T
 
 func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
 	ret := &model.Tag{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

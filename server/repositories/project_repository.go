@@ -39,7 +39,9 @@ func (this *projectRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []mod
 
 func (this *projectRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Project {
 	ret := &model.Project{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

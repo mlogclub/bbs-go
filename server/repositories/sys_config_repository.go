@@ -39,7 +39,9 @@ func (this *sysConfigRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []m
 
 func (this *sysConfigRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.SysConfig {
 	ret := &model.SysConfig{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 
