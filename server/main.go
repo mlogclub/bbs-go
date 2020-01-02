@@ -18,9 +18,9 @@ var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
 func init() {
 	flag.Parse()
 
-	config.InitConfig(*configFile)                                                          // 初始化配置
-	initLogrus()                                                                            // 初始化日志
-	err := simple.OpenDB(config.Conf.MySqlUrl, 10, 20, config.Conf.ShowSql, model.Models...) // 连接数据库
+	config.InitConfig(*configFile)                                                              // 初始化配置
+	initLogrus()                                                                                // 初始化日志
+	err := simple.OpenMySql(config.Conf.MySqlUrl, 10, 20, config.Conf.ShowSql, model.Models...) // 连接数据库
 	if err != nil {
 		logrus.Error(err)
 	}

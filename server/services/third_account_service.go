@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/common/github"
@@ -35,9 +34,8 @@ func (this *thirdAccountService) Find(cnd *simple.SqlCnd) []model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Find(simple.DB(), cnd)
 }
 
-func (this *thirdAccountService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.ThirdAccount) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *thirdAccountService) FindOne(cnd *simple.SqlCnd) *model.ThirdAccount {
+	return repositories.ThirdAccountRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *thirdAccountService) FindPageByParams(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {

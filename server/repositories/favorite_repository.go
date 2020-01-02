@@ -37,9 +37,10 @@ func (this *favoriteRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []mo
 	return
 }
 
-func (this *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Favorite) {
+func (this *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Favorite {
+	ret := &model.Favorite{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *favoriteRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Favorite, paging *simple.Paging) {

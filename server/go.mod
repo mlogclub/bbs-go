@@ -25,7 +25,7 @@ require (
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.6 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
-	github.com/mlogclub/simple v1.0.46 // currently it is v1.0.42 but based on the latest PR it should be updated to 1.0.43 (that's why it is presented as this here) in order to be compatible with this project.
+	github.com/mlogclub/simple v1.0.48 // currently it is v1.0.42 but based on the latest PR it should be updated to 1.0.43 (that's why it is presented as this here) in order to be compatible with this project.
 	github.com/robfig/cron v1.2.0
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/sirupsen/logrus v1.4.2

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -29,9 +28,8 @@ func (this *linkService) Find(cnd *simple.SqlCnd) []model.Link {
 	return repositories.LinkRepository.Find(simple.DB(), cnd)
 }
 
-func (this *linkService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Link) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *linkService) FindOne(cnd *simple.SqlCnd) *model.Link {
+	return repositories.LinkRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *linkService) FindPageByParams(params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {

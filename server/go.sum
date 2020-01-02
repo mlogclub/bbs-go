@@ -205,6 +205,8 @@ github.com/mlogclub/simple v1.0.45 h1:wJ9eUVyhWBXeQlwPtJ18GGv9xcnrWnGDHXMx/g/4Qq
 github.com/mlogclub/simple v1.0.45/go.mod h1:J5p18ObwMAb7pJ8nodcHuZrmU0G3bnoFX2VEzeuj5Os=
 github.com/mlogclub/simple v1.0.46 h1:RWdiqzJy+loj/gzfC6pj+1Xd/zikZwlIv3MOfglJDJA=
 github.com/mlogclub/simple v1.0.46/go.mod h1:J5p18ObwMAb7pJ8nodcHuZrmU0G3bnoFX2VEzeuj5Os=
+github.com/mlogclub/simple v1.0.48 h1:4G++Cm4v2QF1U8ZBfQkbKYrJTw04UTS9ilFa0hz7I6Q=
+github.com/mlogclub/simple v1.0.48/go.mod h1:J5p18ObwMAb7pJ8nodcHuZrmU0G3bnoFX2VEzeuj5Os=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

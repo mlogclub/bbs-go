@@ -37,9 +37,10 @@ func (this *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list 
 	return
 }
 
-func (this *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.ThirdAccount) {
+func (this *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ThirdAccount {
+	ret := &model.ThirdAccount{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {

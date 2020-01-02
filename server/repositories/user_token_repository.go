@@ -44,9 +44,10 @@ func (this *userTokenRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []m
 	return
 }
 
-func (this *userTokenRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.UserToken) {
+func (this *userTokenRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.UserToken {
+	ret := &model.UserToken{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *userTokenRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {

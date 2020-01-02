@@ -39,9 +39,8 @@ func (this *projectService) Find(cnd *simple.SqlCnd) []model.Project {
 	return repositories.ProjectRepository.Find(simple.DB(), cnd)
 }
 
-func (this *projectService) FindOne(cnd *simple.SqlCnd) (ret *model.Project) {
-	cnd.FindOne(simple.DB(), &ret)
-	return
+func (this *projectService) FindOne(cnd *simple.SqlCnd) *model.Project {
+	return repositories.ProjectRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {

@@ -35,9 +35,8 @@ func (this *sysConfigService) Find(cnd *simple.SqlCnd) []model.SysConfig {
 	return repositories.SysConfigRepository.Find(simple.DB(), cnd)
 }
 
-func (this *sysConfigService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.SysConfig) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *sysConfigService) FindOne(cnd *simple.SqlCnd) *model.SysConfig {
+	return repositories.SysConfigRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *sysConfigService) FindPageByParams(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
