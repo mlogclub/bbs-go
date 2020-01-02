@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -29,9 +28,8 @@ func (this *topicTagService) Find(cnd *simple.SqlCnd) []model.TopicTag {
 	return repositories.TopicTagRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicTagService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.TopicTag) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *topicTagService) FindOne(cnd *simple.SqlCnd) *model.TopicTag {
+	return repositories.TopicTagRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *topicTagService) FindPageByParams(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {

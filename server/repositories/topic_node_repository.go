@@ -1,10 +1,10 @@
-
 package repositories
 
 import (
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/bbs-go/model"
 )
 
 var TopicNodeRepository = newTopicNodeRepository()
@@ -37,9 +37,10 @@ func (this *topicNodeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []m
 	return
 }
 
-func (this *topicNodeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.TopicNode) {
+func (this *topicNodeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.TopicNode {
+	ret := &model.TopicNode{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *topicNodeRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.TopicNode, paging *simple.Paging) {
@@ -81,4 +82,3 @@ func (this *topicNodeRepository) UpdateColumn(db *gorm.DB, id int64, name string
 func (this *topicNodeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.TopicNode{}, "id = ?", id)
 }
-

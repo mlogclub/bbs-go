@@ -31,9 +31,8 @@ func (this *topicLikeService) Find(cnd *simple.SqlCnd) []model.TopicLike {
 	return repositories.TopicLikeRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicLikeService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.TopicLike) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *topicLikeService) FindOne(cnd *simple.SqlCnd) *model.TopicLike {
+	return repositories.TopicLikeRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *topicLikeService) FindPageByParams(params *simple.QueryParams) (list []model.TopicLike, paging *simple.Paging) {

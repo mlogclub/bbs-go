@@ -40,9 +40,10 @@ func (this *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.T
 	return
 }
 
-func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Tag) {
+func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
+	ret := &model.Tag{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *tagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {

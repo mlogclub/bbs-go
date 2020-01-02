@@ -3,7 +3,6 @@ package services
 import (
 	"sync"
 
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -44,9 +43,8 @@ func (this *messageService) Find(cnd *simple.SqlCnd) []model.Message {
 	return repositories.MessageRepository.Find(simple.DB(), cnd)
 }
 
-func (this *messageService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Message) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *messageService) FindOne(cnd *simple.SqlCnd) *model.Message {
+	return repositories.MessageRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *messageService) FindPageByParams(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {

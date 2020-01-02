@@ -37,9 +37,10 @@ func (this *commentRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []mod
 	return
 }
 
-func (this *commentRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Comment) {
+func (this *commentRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Comment {
+	ret := &model.Comment{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *commentRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {

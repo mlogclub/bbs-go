@@ -3,7 +3,6 @@ package services
 import (
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
 	"github.com/mlogclub/bbs-go/model"
@@ -34,9 +33,8 @@ func (this *tagService) Find(cnd *simple.SqlCnd) []model.Tag {
 	return repositories.TagRepository.Find(simple.DB(), cnd)
 }
 
-func (this *tagService) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.Tag) {
-	cnd.FindOne(db, &ret)
-	return
+func (this *tagService) FindOne(cnd *simple.SqlCnd) *model.Tag {
+	return repositories.TagRepository.FindOne(simple.DB(), cnd)
 }
 
 func (this *tagService) FindPageByParams(params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
