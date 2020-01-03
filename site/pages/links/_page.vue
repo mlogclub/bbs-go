@@ -22,6 +22,13 @@
         <!-- 展示广告 -->
         <adsbygoogle ad-slot="1742173616" />
 
+        <div v-if="pendingLinks && pendingLinks.length" class="pending-links">
+          <div class="pending-links-title">待审核：</div>
+          <div v-for="link in pendingLinks" :key="link.linkId" class="link">
+            {{ link.title }}
+          </div>
+        </div>
+
         <ul class="links">
           <li v-for="link in linksPage.results" :key="link.linkId" class="link">
             <div class="link-logo">
@@ -58,15 +65,17 @@ export default {
     Pagination
   },
   async asyncData({ $axios, params }) {
-    const [linksPage] = await Promise.all([
+    const [linksPage, pendingLinks] = await Promise.all([
       $axios.get('/api/link/links', {
         params: {
           page: params.page || 1
         }
-      })
+      }),
+      $axios.get('/api/link/pending')
     ])
     return {
-      linksPage
+      linksPage,
+      pendingLinks
     }
   },
   head() {
@@ -174,6 +183,36 @@ export default {
         display: -webkit-box;
       }
     }
+  }
+}
+
+.pending-links {
+  display: flex;
+
+  .pending-links-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .link {
+    &:not(:last-child) {
+      margin-right: 10px;
+      &::after {
+        content: '|';
+        color: #000;
+      }
+    }
+
+    font-size: 15px;
+    font-weight: 600;
+    color: #3273dc;
+
+    overflow: hidden;
+    word-break: break-all;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
   }
 }
 </style>

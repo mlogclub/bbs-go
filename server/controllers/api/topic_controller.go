@@ -17,23 +17,23 @@ type TopicController struct {
 	Ctx iris.Context
 }
 
-// 同步帖子相关计数
-func (this *TopicController) GetSynccount() *simple.JsonResult {
-	go func() {
-		services.TopicService.Scan(func(topics []model.Topic) bool {
-			for _, topic := range topics {
-				commentCount := services.CommentService.Count(model.EntityTypeTopic, topic.Id)
-				likeCount := services.TopicLikeService.Count(topic.Id)
-				_ = services.TopicService.Updates(topic.Id, map[string]interface{}{
-					"comment_count": commentCount,
-					"like_count":    likeCount,
-				})
-			}
-			return true
-		})
-	}()
-	return simple.JsonSuccess()
-}
+// // 同步帖子相关计数
+// func (this *TopicController) GetSynccount() *simple.JsonResult {
+// 	go func() {
+// 		services.TopicService.Scan(func(topics []model.Topic) bool {
+// 			for _, topic := range topics {
+// 				commentCount := services.CommentService.Count(model.EntityTypeTopic, topic.Id)
+// 				likeCount := services.TopicLikeService.Count(topic.Id)
+// 				_ = services.TopicService.Updates(topic.Id, map[string]interface{}{
+// 					"comment_count": commentCount,
+// 					"like_count":    likeCount,
+// 				})
+// 			}
+// 			return true
+// 		})
+// 	}()
+// 	return simple.JsonSuccess()
+// }
 
 // 节点
 func (this *TopicController) GetNodes() *simple.JsonResult {

@@ -212,8 +212,10 @@ type Project struct {
 	CreateTime  int64  `json:"createTime" form:"createTime"`
 }
 
+// 好博客导航
 type Link struct {
 	Model
+	UserId     int64  `gorm:"not null" json:"userId" form:"userId"`         // 用户
 	Url        string `gorm:"not null;type:text" json:"url" form:"url"`     // 链接
 	Title      string `gorm:"not null;size:128" json:"title" form:"title"`  // 标题
 	Summary    string `gorm:"size:1024" json:"summary" form:"summary"`      // 站点描述

@@ -44,6 +44,15 @@ func (this *userTokenService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Us
 	return repositories.UserTokenRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
+// 获取当前登录用户的id
+func (this *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
+	user := this.GetCurrent(ctx)
+	if user != nil {
+		return user.Id
+	}
+	return 0
+}
+
 // 获取当前登录用户
 func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	token := this.GetUserToken(ctx)
