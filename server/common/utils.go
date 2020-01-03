@@ -119,3 +119,34 @@ func IsValidatePassword(password, rePassword string) error {
 	}
 	return nil
 }
+
+// 是否是合法的URL
+func IsValidateUrl(url string) error {
+	if len(url) == 0 {
+		return errors.New("URL格式错误")
+	}
+	indexOfHttp := strings.Index(url, "http://")
+	indexOfHttps := strings.Index(url, "https://")
+	if indexOfHttp == 0 || indexOfHttps == 0 {
+		return nil
+	}
+	return errors.New("URL格式错误")
+}
+
+// 是否是内部图片
+func IsInternalImage(imageUrl string) bool {
+	// TODO @ 2019/12/31 这个地方硬编码了，要修改
+	return strings.Contains(imageUrl, "file.mlog.club") || strings.Contains(imageUrl, "static.mlog.club")
+}
+
+// 应用图片样式
+func ApplyImageStyle(imageUrl, styleName string) string {
+	if !IsInternalImage(imageUrl) {
+		return imageUrl
+	}
+	splitterIndex := strings.LastIndex(imageUrl, "!")
+	if splitterIndex >= 0 {
+		imageUrl = imageUrl[:splitterIndex]
+	}
+	return imageUrl + "!" + styleName
+}

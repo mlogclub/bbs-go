@@ -27,7 +27,7 @@
                   @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
-                  placeholder="博客链接（必填）"
+                  placeholder="博客链接 必填 以 http(s):// 开头"
                 />
               </div>
             </div>
@@ -40,7 +40,7 @@
                   @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
-                  placeholder="博客标题（必填）"
+                  placeholder="博客标题 必填"
                 />
               </div>
             </div>
@@ -53,7 +53,7 @@
                   @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
-                  placeholder="博客简介（必填）"
+                  placeholder="博客简介 必填"
                 />
               </div>
             </div>
@@ -93,6 +93,7 @@
 <script>
 import utils from '~/common/utils'
 export default {
+  middleware: 'authenticated',
   data() {
     return {
       publishing: false,
@@ -120,7 +121,7 @@ export default {
         this.$toast.success('提交成功，请耐心等待审核。', {
           duration: 1000,
           onComplete() {
-            utils.linkTo('/links')
+            utils.linkTo('/links/pending')
           }
         })
       } catch (e) {

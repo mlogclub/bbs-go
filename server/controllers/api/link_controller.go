@@ -9,6 +9,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/model"
 	"github.com/mlogclub/bbs-go/services"
 )
@@ -25,6 +26,7 @@ func (this *LinkController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(this.buildLink(*link))
 }
 
+// 列表
 func (this *LinkController) GetLinks() *simple.JsonResult {
 	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
 
@@ -38,6 +40,18 @@ func (this *LinkController) GetLinks() *simple.JsonResult {
 	return simple.JsonPageData(itemList, paging)
 }
 
+// 待审核
+func (this *LinkController) GetPending() *simple.JsonResult {
+	links := services.LinkService.Find(simple.NewSqlCnd().
+		Eq("status", model.StatusPending).Limit(3).Desc("id"))
+
+	var itemList []map[string]interface{}
+	for _, v := range links {
+		itemList = append(itemList, this.buildLink(v))
+	}
+	return simple.JsonData(itemList)
+}
+
 func (this *LinkController) PostCreate() *simple.JsonResult {
 	var (
 		title   = this.Ctx.FormValue("title")
@@ -45,16 +59,19 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 		summary = this.Ctx.FormValue("summary")
 		logo    = this.Ctx.FormValue("logo")
 	)
+	if err := common.IsValidateUrl(url); err != nil {
+		return simple.JsonErrorMsg("博客链接错误")
+	}
 	if len(title) == 0 {
 		return simple.JsonErrorMsg("标题不能为空")
-	}
-	if len(url) == 0 {
-		return simple.JsonErrorMsg("链接不能为空")
 	}
 	if len(summary) == 0 {
 		return simple.JsonErrorMsg("描述不能为空")
 	}
+
+	userId := services.UserTokenService.GetCurrentUserId(this.Ctx)
 	link := &model.Link{
+		UserId:     userId,
 		Url:        url,
 		Title:      title,
 		Summary:    summary,
@@ -72,6 +89,10 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 // 通过网址检测标题和描述
 func (this *LinkController) PostDetect() *simple.JsonResult {
 	url := this.Ctx.FormValue("url")
+	if err := common.IsValidateUrl(url); err != nil {
+		logrus.Error(err.Error(), url)
+		return simple.JsonSuccess()
+	}
 	resp, err := resty.New().SetRedirectPolicy(resty.FlexibleRedirectPolicy(3)).R().Get(url)
 	if err != nil {
 		logrus.Error(err)
