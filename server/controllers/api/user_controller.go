@@ -29,7 +29,7 @@ func (this *UserController) GetCurrent() *simple.JsonResult {
 // 用户详情
 func (this *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
-	if user != nil {
+	if user != nil && user.Status != model.StatusDeleted {
 		return simple.JsonData(render.BuildUser(user))
 	}
 	return simple.JsonErrorMsg("用户不存在")

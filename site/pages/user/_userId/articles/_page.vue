@@ -37,10 +37,20 @@ export default {
     Pagination,
     UserCenterSidebar
   },
-  async asyncData({ $axios, params }) {
-    const [currentUser, user, articlesPage] = await Promise.all([
+  async asyncData({ $axios, params, error }) {
+    let user
+    try {
+      user = await $axios.get('/api/user/' + params.userId)
+    } catch (err) {
+      error({
+        statusCode: 404,
+        message: err.message || '系统错误'
+      })
+      return
+    }
+
+    const [currentUser, articlesPage] = await Promise.all([
       $axios.get('/api/user/current'),
-      $axios.get('/api/user/' + params.userId),
       $axios.get('/api/article/user/articles', {
         params: {
           userId: params.userId,
@@ -48,6 +58,7 @@ export default {
         }
       })
     ])
+
     return {
       currentUser,
       user,

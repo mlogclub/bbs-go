@@ -65,12 +65,20 @@ export default {
     ArticleList,
     UserCenterSidebar
   },
-  async asyncData({ $axios, params, query }) {
+  async asyncData({ $axios, params, query, error }) {
+    let user
+    try {
+      user = await $axios.get('/api/user/' + params.userId)
+    } catch (err) {
+      error({
+        statusCode: 404,
+        message: err.message || '系统错误'
+      })
+      return
+    }
+    const currentUser = await $axios.get('/api/user/current')
+
     const activeTab = query.tab || defaultTab
-    const [currentUser, user] = await Promise.all([
-      $axios.get('/api/user/current'),
-      $axios.get('/api/user/' + params.userId)
-    ])
     let recentTopics = null
     let recentArticles = null
     if (activeTab === 'topics') {
