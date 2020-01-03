@@ -65,7 +65,11 @@ func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	if userToken.ExpiredAt <= simple.NowTimestamp() {
 		return nil
 	}
-	return cache.UserCache.Get(userToken.UserId)
+	user := cache.UserCache.Get(userToken.UserId)
+	if user == nil || user.Status != model.StatusOk {
+		return nil
+	}
+	return user
 }
 
 // 退出登录
