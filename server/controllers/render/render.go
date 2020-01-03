@@ -47,7 +47,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		a = avatar.DefaultAvatar
 	}
 	roles := strings.Split(user.Roles, ",")
-	return &model.UserInfo{
+	ret := &model.UserInfo{
 		Id:          user.Id,
 		Username:    user.Username.String,
 		Nickname:    user.Nickname,
@@ -57,8 +57,16 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Roles:       roles,
 		Description: user.Description,
 		PasswordSet: len(user.Password) > 0,
+		Status:      user.Status,
 		CreateTime:  user.CreateTime,
 	}
+	if user.Status == model.StatusDeleted {
+		ret.Username = "blacklist"
+		ret.Nickname = "黑名单用户"
+		ret.Avatar = avatar.DefaultAvatar
+		ret.Email = ""
+	}
+	return ret
 }
 
 func BuildUsers(users []model.User) []model.UserInfo {

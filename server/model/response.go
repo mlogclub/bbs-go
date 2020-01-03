@@ -14,6 +14,7 @@ type UserInfo struct {
 	Roles       []string `json:"roles"`
 	Description string   `json:"description"`
 	PasswordSet bool     `json:"passwordSet"` // 密码已设置
+	Status      int      `json:"status"`
 	CreateTime  int64    `json:"createTime"`
 }
 
