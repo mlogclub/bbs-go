@@ -185,8 +185,8 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 	} else {
 		user = this.GetByUsername(username)
 	}
-	if user == nil {
-		return nil, errors.New("用户不存在")
+	if user == nil || user.Status != model.StatusOk {
+		return nil, errors.New("用户不存在或被禁用")
 	}
 	if !simple.ValidatePassword(user.Password, password) {
 		return nil, errors.New("密码错误")
@@ -198,6 +198,9 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
 	user := this.Get(thirdAccount.UserId.Int64)
 	if user != nil {
+		if user.Status != model.StatusOk {
+			return nil, simple.NewErrorMsg("用户已被禁用")
+		}
 		return user, nil
 	}
 
