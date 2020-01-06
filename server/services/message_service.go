@@ -152,6 +152,11 @@ func (this *messageService) getQuoteComment(quoteId int64) *model.Comment {
 
 // 生产，将消息数据放入chan
 func (this *messageService) Produce(fromId, toId int64, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
+	to := cache.UserCache.Get(toId)
+	if to == nil || to.Type != model.UserTypeNormal {
+		return
+	}
+
 	this.Consume()
 
 	var (
