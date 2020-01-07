@@ -72,6 +72,31 @@
             </div>
 
             <div class="field">
+              <label class="label">验证码</label>
+              <div class="control has-icons-left">
+                <div class="field is-horizontal">
+                  <div class="field" style="width:100%;">
+                    <input
+                      v-model="captchaCode"
+                      @keyup.enter="signup"
+                      class="input"
+                      type="text"
+                      placeholder="验证码"
+                    />
+                    <span class="icon is-small is-left"
+                      ><i class="iconfont icon-captcha"
+                    /></span>
+                  </div>
+                  <div v-if="captchaUrl" class="field">
+                    <a @click="showCaptcha"
+                      ><img :src="captchaUrl" style="height: 40px;"
+                    /></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
               <div class="control">
                 <button @click="signup" class="button is-success">
                   注册
@@ -92,7 +117,13 @@
 
 <script>
 import utils from '~/common/utils'
+import GithubLogin from '~/components/GithubLogin'
+import QqLogin from '~/components/QqLogin'
 export default {
+  components: {
+    GithubLogin,
+    QqLogin
+  },
   asyncData({ params, query }) {
     return {
       ref: query.ref
@@ -103,13 +134,21 @@ export default {
       nickname: '',
       username: '',
       password: '',
-      rePassword: ''
+      rePassword: '',
+      captchaId: '',
+      captchaUrl: '',
+      captchaCode: ''
     }
+  },
+  mounted() {
+    this.showCaptcha()
   },
   methods: {
     async signup() {
       try {
         await this.$store.dispatch('user/signup', {
+          captchaId: this.captchaId,
+          captchaCode: this.captchaCode,
           nickname: this.nickname,
           username: this.username,
           password: this.password,
@@ -125,6 +164,16 @@ export default {
         }
       } catch (err) {
         this.$toast.error(err.message || err)
+        await this.showCaptcha()
+      }
+    },
+    async showCaptcha() {
+      try {
+        const ret = await this.$axios.get('/api/captcha/request')
+        this.captchaId = ret.captchaId
+        this.captchaUrl = ret.captchaUrl
+      } catch (e) {
+        this.$toast.error(e.message || e)
       }
     }
   },

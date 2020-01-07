@@ -47,7 +47,7 @@ export default {
     },
     // 退出登录
     logout() {
-      this.$message({ message: '暂未实现', type: 'success' })
+      this.$store.dispatch('Login/doLogout')
     }
   },
   mounted() {

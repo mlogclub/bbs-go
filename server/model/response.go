@@ -149,10 +149,11 @@ type SiteNav struct {
 
 // 配置返回结构体
 type ConfigResponse struct {
-	SiteTitle       string    `json:"siteTitle"`
-	SiteDescription string    `json:"siteDescription"`
-	SiteKeywords    []string  `json:"siteKeywords"`
-	SiteNavs        []SiteNav `json:"siteNavs"`
-	RecommendTags   []string  `json:"recommendTags"`
-	UrlRedirect     bool      `json:"urlRedirect"`
+	SiteTitle        string    `json:"siteTitle"`
+	SiteDescription  string    `json:"siteDescription"`
+	SiteKeywords     []string  `json:"siteKeywords"`
+	SiteNavs         []SiteNav `json:"siteNavs"`
+	SiteNotification string    `json:"siteNotification"`
+	RecommendTags    []string  `json:"recommendTags"`
+	UrlRedirect      bool      `json:"urlRedirect"`
 }

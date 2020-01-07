@@ -39,6 +39,17 @@ const actions = {
     } catch (e) {
       this._vm.$message.error(`登录失败：${e.message || e}`)
     }
+  },
+  async doLogout(context) {
+    try {
+      await httpClient.get('/api/login/signout')
+      cookies.remove('userToken')
+      cookies.remove('userInfo')
+      context.commit('setShowLogin', true)
+      this._vm.$message.success('退出登录成功')
+    } catch (e) {
+      this._vm.$message.error(`退出登录失败：${e.message || e}`)
+    }
   }
 }
 

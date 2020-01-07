@@ -10,6 +10,7 @@ require (
 	github.com/antchfx/htmlquery v1.1.0 // indirect
 	github.com/antchfx/xmlquery v1.1.0 // indirect
 	github.com/antchfx/xpath v1.1.0 // indirect
+	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
 	github.com/goburrow/cache v0.1.0
