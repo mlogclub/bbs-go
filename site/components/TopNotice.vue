@@ -2,16 +2,10 @@
   <div v-if="show" class="container" style="margin-bottom: 10px;">
     <article class="message is-info">
       <div class="message-header">
-        <p>温馨提示</p>
+        <p>公告</p>
         <button @click="close" class="delete" aria-label="delete"></button>
       </div>
-      <div class="message-body">
-        欢迎访问&nbsp;码农俱乐部，<a href="/user/settings"
-          ><strong>点击这里设置您的邮箱</strong></a
-        >&nbsp;可以接收站内跟帖、回复邮件提醒，不错过任何一条消息。bbs-go交流群：<strong
-          >653248175</strong
-        >
-      </div>
+      <div v-html="config.siteNotification" class="message-body"></div>
     </article>
   </div>
 </template>
@@ -25,6 +19,11 @@ export default {
       show: false
     }
   },
+  computed: {
+    config() {
+      return this.$store.state.config.config
+    }
+  },
   mounted() {
     this.show = this.isShow()
   },
@@ -34,6 +33,9 @@ export default {
       this.$cookies.set(closeTimeKey, new Date().getTime())
     },
     isShow() {
+      if (!this.config.siteNotification) {
+        return false
+      }
       const closeTime = this.$cookies.get(closeTimeKey) // 上次关闭的时间
       if (!closeTime) {
         // 说明没关闭过

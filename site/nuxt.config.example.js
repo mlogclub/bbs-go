@@ -43,11 +43,11 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//cdn.staticfile.org/bulma/0.7.5/css/bulma.min.css'
+        href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css'
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_rf3iafzqutm.css'
+        href: '//at.alicdn.com/t/font_1142441_gaoe30cisdn.css'
       }
     ]
   },

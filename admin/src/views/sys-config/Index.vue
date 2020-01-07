@@ -33,6 +33,15 @@
               ></el-select>
             </el-form-item>
 
+            <el-form-item label="网站公告">
+              <el-input
+                v-model="config.siteNotification"
+                type="textarea"
+                autosize
+                placeholder="网站公告（支持输入HTML）"
+              ></el-input>
+            </el-form-item>
+
             <el-form-item label="推荐标签">
               <el-select
                 v-model="config.recommendTags"
@@ -45,7 +54,7 @@
               ></el-select>
             </el-form-item>
 
-            <el-form-item label="启用站外链接跳转页面">
+            <el-form-item label="站外链接跳转页面">
               <el-tooltip
                 content="在跳转前需手动确认是否前往该站外链接"
                 placement="top"
@@ -154,14 +163,7 @@ export default {
       this.loading = true
       try {
         await HttpClient.post('/api/admin/sys-config/save', {
-          config: JSON.stringify({
-            siteTitle: this.config.siteTitle,
-            siteDescription: this.config.siteDescription,
-            siteKeywords: this.config.siteKeywords,
-            siteNavs: this.config.siteNavs,
-            recommendTags: this.config.recommendTags,
-            urlRedirect: this.config.urlRedirect
-          })
+          config: JSON.stringify(this.config)
         })
         this.$message({ message: '提交成功', type: 'success' })
         this.load()

@@ -23,6 +23,17 @@
           @keyup.enter="submitForm"
         ></el-input>
       </el-form-item>
+      <el-form-item label="验证码" prop="captchaCode">
+        <el-input
+          type="text"
+          v-model="captchaCode"
+          autocomplete="off"
+          @keyup.enter="submitForm"
+        ></el-input>
+        <a v-if="captchaUrl" @click="showCaptcha">
+          <img :src="captchaUrl" style="height: 40px;cursor: pointer;" />
+        </a>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm()">登录</el-button>
       </el-form-item>
@@ -31,20 +42,39 @@
 </template>
 
 <script>
+import HttpClient from '@/apis/HttpClient'
 export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      captchaId: '',
+      captchaUrl: '',
+      captchaCode: ''
     }
   },
+  mounted() {
+    this.showCaptcha()
+  },
   methods: {
-    submitForm() {
+    async submitForm() {
       const params = {
+        captchaId: this.captchaId,
+        captchaCode: this.captchaCode,
         username: this.username,
         password: this.password
       }
-      this.$store.dispatch('Login/doLogin', params)
+      await this.$store.dispatch('Login/doLogin', params)
+      await this.showCaptcha()
+    },
+    async showCaptcha() {
+      try {
+        const ret = await HttpClient.get('/api/captcha/request')
+        this.captchaId = ret.captchaId
+        this.captchaUrl = ret.captchaUrl
+      } catch (e) {
+        this.$message({ message: e.message || e, type: 'success' })
+      }
     }
   },
   computed: {

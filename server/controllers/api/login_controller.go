@@ -1,9 +1,11 @@
 package api
 
 import (
+	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"github.com/mlogclub/bbs-go/common"
 	"github.com/mlogclub/bbs-go/common/github"
 	"github.com/mlogclub/bbs-go/common/qq"
 	"github.com/mlogclub/bbs-go/controllers/render"
@@ -18,12 +20,17 @@ type LoginController struct {
 // 注册
 func (this *LoginController) PostSignup() *simple.JsonResult {
 	var (
-		username   = this.Ctx.PostValueTrim("username")
-		password   = this.Ctx.PostValueTrim("password")
-		rePassword = this.Ctx.PostValueTrim("rePassword")
-		nickname   = this.Ctx.PostValueTrim("nickname")
-		ref        = this.Ctx.FormValue("ref")
+		captchaId   = this.Ctx.PostValueTrim("captchaId")
+		captchaCode = this.Ctx.PostValueTrim("captchaCode")
+		username    = this.Ctx.PostValueTrim("username")
+		password    = this.Ctx.PostValueTrim("password")
+		rePassword  = this.Ctx.PostValueTrim("rePassword")
+		nickname    = this.Ctx.PostValueTrim("nickname")
+		ref         = this.Ctx.FormValue("ref")
 	)
+	if !captcha.VerifyString(captchaId, captchaCode) {
+		return simple.JsonError(common.CaptchaError)
+	}
 	user, err := services.UserService.SignUp(username, "", nickname, password, rePassword)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -34,10 +41,15 @@ func (this *LoginController) PostSignup() *simple.JsonResult {
 // 用户名密码登录
 func (this *LoginController) PostSignin() *simple.JsonResult {
 	var (
-		username = this.Ctx.PostValueTrim("username")
-		password = this.Ctx.PostValueTrim("password")
-		ref      = this.Ctx.FormValue("ref")
+		captchaId   = this.Ctx.PostValueTrim("captchaId")
+		captchaCode = this.Ctx.PostValueTrim("captchaCode")
+		username    = this.Ctx.PostValueTrim("username")
+		password    = this.Ctx.PostValueTrim("password")
+		ref         = this.Ctx.FormValue("ref")
 	)
+	if !captcha.VerifyString(captchaId, captchaCode) {
+		return simple.JsonError(common.CaptchaError)
+	}
 	user, err := services.UserService.SignIn(username, password)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

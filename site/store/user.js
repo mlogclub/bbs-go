@@ -35,8 +35,10 @@ export const actions = {
   },
 
   // 登录
-  async signin(context, { username, password }) {
+  async signin(context, { captchaId, captchaCode, username, password }) {
     const ret = await this.$axios.post('/api/login/signin', {
+      captchaId,
+      captchaCode,
       username,
       password
     })
@@ -68,8 +70,13 @@ export const actions = {
     return ret.user
   },
 
-  async signup(context, { nickname, username, password, rePassword }) {
+  async signup(
+    context,
+    { captchaId, captchaCode, nickname, username, password, rePassword }
+  ) {
     const ret = await this.$axios.post('/api/login/signup', {
+      captchaId,
+      captchaCode,
       nickname,
       username,
       password,
