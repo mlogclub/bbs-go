@@ -37,7 +37,7 @@ func newOauthConfig(redirectUrl string) *oauth2.Config {
 		ClientID:     config.Conf.Github.ClientID,
 		ClientSecret: config.Conf.Github.ClientSecret,
 		RedirectURL:  redirectUrl,
-		Scopes:       []string{"public_repo", "user"},
+		Scopes:       []string{},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://github.com/login/oauth/authorize",
 			TokenURL: "https://github.com/login/oauth/access_token",
