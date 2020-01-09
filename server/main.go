@@ -8,9 +8,9 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/app"
-	"github.com/mlogclub/bbs-go/common/config"
-	"github.com/mlogclub/bbs-go/model"
+	"bbs-go/app"
+	"bbs-go/common/config"
+	"bbs-go/model"
 )
 
 var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")

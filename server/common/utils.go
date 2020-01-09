@@ -7,8 +7,8 @@ import (
 
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common/config"
-	"github.com/mlogclub/bbs-go/model"
+	"bbs-go/common/config"
+	"bbs-go/model"
 )
 
 // 是否是正式环境

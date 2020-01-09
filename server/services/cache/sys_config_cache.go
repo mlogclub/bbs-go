@@ -2,8 +2,8 @@ package cache
 
 import (
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"time"
 )

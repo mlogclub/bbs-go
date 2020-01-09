@@ -8,13 +8,13 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/avatar"
-	"github.com/mlogclub/bbs-go/common/oss"
-	"github.com/mlogclub/bbs-go/services/cache"
+	"bbs-go/common"
+	"bbs-go/common/avatar"
+	"bbs-go/common/oss"
+	"bbs-go/services/cache"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 type ScanUserCallback func(users []model.User)

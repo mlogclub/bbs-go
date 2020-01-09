@@ -10,7 +10,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sundy-li/html2article"
 
-	"github.com/mlogclub/bbs-go/common/oss"
+	"bbs-go/common/oss"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-resty/resty/v2"

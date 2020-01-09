@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
+	"bbs-go/model"
 )
 
 var TagRepository = newTagRepository()

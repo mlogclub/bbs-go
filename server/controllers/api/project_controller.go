@@ -4,8 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/controllers/render"
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/controllers/render"
+	"bbs-go/services"
 )
 
 type ProjectController struct {

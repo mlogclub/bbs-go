@@ -4,13 +4,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/model"
+	"bbs-go/common"
+	"bbs-go/model"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/services"
 )
 
 type UserController struct {
