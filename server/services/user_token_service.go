@@ -6,9 +6,9 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/bbs-go/services/cache"
+	"bbs-go/model"
+	"bbs-go/repositories"
+	"bbs-go/services/cache"
 )
 
 var UserTokenService = newUserTokenService()

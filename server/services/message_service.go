@@ -6,12 +6,12 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/email"
-	"github.com/mlogclub/bbs-go/common/urls"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/bbs-go/services/cache"
+	"bbs-go/common"
+	"bbs-go/common/email"
+	"bbs-go/common/urls"
+	"bbs-go/model"
+	"bbs-go/repositories"
+	"bbs-go/services/cache"
 )
 
 var MessageService = newMessageService()

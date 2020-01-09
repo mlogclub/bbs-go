@@ -4,13 +4,13 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/mlogclub/bbs-go/common/oss"
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/common/oss"
+	"bbs-go/services"
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
+	"bbs-go/model"
 )
 
 type WxbotApi struct {

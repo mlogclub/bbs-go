@@ -7,8 +7,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/oss"
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/common/oss"
+	"bbs-go/services"
 )
 
 const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M

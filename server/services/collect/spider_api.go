@@ -3,10 +3,10 @@ package collect
 import (
 	"errors"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/baiduai"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/common"
+	"bbs-go/common/baiduai"
+	"bbs-go/model"
+	"bbs-go/services"
 )
 
 type SpiderApi struct {

@@ -6,8 +6,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var TopicLikeService = newTopicLikeService()

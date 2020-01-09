@@ -6,7 +6,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/urls"
+	"bbs-go/common/urls"
 )
 
 type CaptchaController struct {

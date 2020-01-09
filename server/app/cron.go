@@ -4,7 +4,7 @@ import (
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/services/task"
+	"bbs-go/services/task"
 )
 
 func startSchedule() {

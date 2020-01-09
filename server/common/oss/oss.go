@@ -10,7 +10,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/config"
+	"bbs-go/common/config"
 )
 
 // 上传图片

@@ -1,7 +1,7 @@
 package task
 
 import (
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/services"
 )
 
 // 生成rss

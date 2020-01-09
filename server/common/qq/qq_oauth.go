@@ -13,8 +13,8 @@ import (
 	"github.com/tidwall/gjson"
 	"gopkg.in/resty.v1"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/config"
+	"bbs-go/common"
+	"bbs-go/common/config"
 )
 
 type UserInfo struct {
