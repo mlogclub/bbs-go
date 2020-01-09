@@ -17,7 +17,7 @@ import (
 
 	"github.com/gorilla/feeds"
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common"

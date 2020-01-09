@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"gopkg.in/resty.v1"

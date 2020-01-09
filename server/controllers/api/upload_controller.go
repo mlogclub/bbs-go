@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common/oss"

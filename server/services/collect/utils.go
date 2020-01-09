@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/mattn/godown"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sundy-li/html2article"
 
 	"bbs-go/common/oss"

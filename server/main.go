@@ -5,7 +5,7 @@ import (
 	"os"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/app"

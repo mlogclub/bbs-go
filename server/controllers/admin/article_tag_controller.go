@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"bbs-go/model"
 	"bbs-go/services"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"strconv"
 )
 

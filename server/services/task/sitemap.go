@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common/config"

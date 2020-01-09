@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 )
 
 func TestAi(t *testing.T) {

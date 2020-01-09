@@ -18,6 +18,8 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
+	github.com/iris-contrib/blackfriday v2.0.0+incompatible
+	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a
 	github.com/issue9/identicon v1.0.1
 	github.com/jinzhu/gorm v1.9.11
@@ -26,6 +28,7 @@ require (
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.6 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
+	github.com/microcosm-cc/bluemonday v1.0.2
 	github.com/mlogclub/simple v1.0.50 // currently it is v1.0.42 but based on the latest PR it should be updated to 1.0.43 (that's why it is presented as this here) in order to be compatible with this project.
 	github.com/robfig/cron v1.2.0
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
@@ -33,6 +36,8 @@ require (
 	github.com/sundy-li/html2article v0.0.0-20180131134645-09ac198090c2
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	github.com/tidwall/gjson v1.3.4
+	github.com/vinta/pangu v3.0.0+incompatible
+	golang.org/x/crypto v0.0.0-20191106202628-ed6320f186d4
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	gopkg.in/resty.v1 v1.12.0
 	gopkg.in/yaml.v2 v2.2.5

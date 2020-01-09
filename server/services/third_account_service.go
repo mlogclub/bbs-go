@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/common/github"
 	"bbs-go/common/qq"

@@ -7,7 +7,7 @@ package repositories
 
 import (
 	"{{.PkgName}}/model"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/jinzhu/gorm"
 )
 
@@ -97,7 +97,7 @@ package services
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/repositories"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 )
 
 var {{.Name}}Service = new{{.Name}}Service()
@@ -161,7 +161,7 @@ package admin
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/services"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/kataras/iris/v12"
 	"strconv"
 )

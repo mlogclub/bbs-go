@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 )
 
 const (

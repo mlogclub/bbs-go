@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/common"
 	"bbs-go/common/github"

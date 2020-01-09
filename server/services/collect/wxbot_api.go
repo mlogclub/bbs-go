@@ -8,7 +8,7 @@ import (
 	"bbs-go/services"
 
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/model"
 )

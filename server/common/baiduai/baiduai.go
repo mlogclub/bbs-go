@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/go-resty/resty/v2"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 

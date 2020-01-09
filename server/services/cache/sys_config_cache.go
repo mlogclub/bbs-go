@@ -4,7 +4,7 @@ import (
 	"github.com/goburrow/cache"
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"time"
 )
 

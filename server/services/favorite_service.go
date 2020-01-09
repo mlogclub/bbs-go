@@ -3,7 +3,7 @@ package services
 import (
 	"errors"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/model"
 	"bbs-go/repositories"

@@ -3,7 +3,7 @@ package services
 import (
 	"sync"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common"

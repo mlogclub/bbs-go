@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/common"
 	"bbs-go/common/avatar"

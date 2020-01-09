@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/model"
 	"bbs-go/repositories"

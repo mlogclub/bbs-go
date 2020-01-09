@@ -7,7 +7,7 @@ import (
 	"bbs-go/repositories"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 )
 
 type userCache struct {

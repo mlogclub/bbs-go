@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gorilla/feeds"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common"

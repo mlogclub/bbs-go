@@ -9,7 +9,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/simple/strcase"
+	"bbs-go/simple/strcase"
 )
 
 type GenerateStruct struct {

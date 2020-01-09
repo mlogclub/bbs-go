@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 

@@ -4,7 +4,7 @@ package admin
 import (
 	"bbs-go/model"
 	"bbs-go/services"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 	"github.com/kataras/iris/v12"
 	"strconv"
 )

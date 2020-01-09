@@ -8,7 +8,7 @@ import (
 	"bbs-go/model"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/services"
 )

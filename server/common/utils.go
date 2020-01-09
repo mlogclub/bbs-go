@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"bbs-go/simple"
 
 	"bbs-go/common/config"
 	"bbs-go/model"
