@@ -7,7 +7,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/config"
+	"bbs-go/common/config"
 )
 
 // 是否是内部链接

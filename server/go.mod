@@ -1,4 +1,4 @@
-module github.com/mlogclub/bbs-go
+module bbs-go
 
 go 1.13
 

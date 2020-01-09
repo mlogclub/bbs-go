@@ -9,9 +9,9 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/bbs-go/services/collect"
+	"bbs-go/model"
+	"bbs-go/services"
+	"bbs-go/services/collect"
 )
 
 type SpiderController struct {

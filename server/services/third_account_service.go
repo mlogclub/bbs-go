@@ -7,10 +7,10 @@ import (
 
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common/github"
-	"github.com/mlogclub/bbs-go/common/qq"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
+	"bbs-go/common/github"
+	"bbs-go/common/qq"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var ThirdAccountService = newThirdAccountService()

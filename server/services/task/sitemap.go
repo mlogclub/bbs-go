@@ -9,11 +9,11 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/config"
-	"github.com/mlogclub/bbs-go/common/oss"
-	"github.com/mlogclub/bbs-go/common/urls"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/services"
+	"bbs-go/common/config"
+	"bbs-go/common/oss"
+	"bbs-go/common/urls"
+	"bbs-go/model"
+	"bbs-go/services"
 )
 
 var sitemapBuilding = false

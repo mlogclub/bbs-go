@@ -10,12 +10,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/common"
-	"github.com/mlogclub/bbs-go/common/avatar"
-	"github.com/mlogclub/bbs-go/common/urls"
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/services"
-	"github.com/mlogclub/bbs-go/services/cache"
+	"bbs-go/common"
+	"bbs-go/common/avatar"
+	"bbs-go/common/urls"
+	"bbs-go/model"
+	"bbs-go/services"
+	"bbs-go/services/cache"
 )
 
 func BuildUserDefaultIfNull(id int64) *model.UserInfo {

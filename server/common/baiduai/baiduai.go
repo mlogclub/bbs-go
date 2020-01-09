@@ -13,7 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	"github.com/mlogclub/bbs-go/common/config"
+	"bbs-go/common/config"
 )
 
 type ai struct {

@@ -3,8 +3,8 @@ package services
 import (
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var ArticleTagService = newArticleTagService()

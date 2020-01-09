@@ -17,11 +17,11 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"github.com/mlogclub/bbs-go/common/config"
-	"github.com/mlogclub/bbs-go/controllers/api"
+	"bbs-go/common/config"
+	"bbs-go/controllers/api"
 
-	"github.com/mlogclub/bbs-go/controllers/admin"
-	"github.com/mlogclub/bbs-go/middleware"
+	"bbs-go/controllers/admin"
+	"bbs-go/middleware"
 )
 
 func InitIris() {

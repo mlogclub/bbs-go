@@ -5,9 +5,9 @@ import (
 
 	"github.com/mlogclub/simple"
 
-	"github.com/mlogclub/bbs-go/model"
-	"github.com/mlogclub/bbs-go/repositories"
-	"github.com/mlogclub/bbs-go/services/cache"
+	"bbs-go/model"
+	"bbs-go/repositories"
+	"bbs-go/services/cache"
 )
 
 type ScanTagCallback func(tags []model.Tag) bool
