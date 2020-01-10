@@ -11,9 +11,6 @@
           <a href="http://docs.bbs-go.com" target="_blank" class="light"
             >BBS-GO</a
           >
-          <a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow"
-            >鄂ICP备19023811号-3</a
-          >
         </div>
         <div>
           <span style="line-height: 20px; font-size: 18px;"
@@ -26,7 +23,7 @@
           >
             <img
               style="max-height: 20px;"
-              src="https://static.mlog.club/images/misc/logo_onwhite.webp"
+              src="https://file.mlog.club/images/misc/logo_onwhite.webp"
             />
           </a>
         </div>
