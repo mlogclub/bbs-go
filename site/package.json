@@ -9,7 +9,7 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "dev": "nuxt",
-    "debug": "node --inspect node_modules/.bin/nuxt",
+    "debug": "node --inspect ./node_modules/.bin/nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
