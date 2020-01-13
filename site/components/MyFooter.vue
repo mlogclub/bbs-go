@@ -12,21 +12,6 @@
             >BBS-GO</a
           >
         </div>
-        <div>
-          <span style="line-height: 20px; font-size: 18px;"
-            >服务器资源赞助：</span
-          >
-          <a
-            href="https://www.vultr.com/?ref=8358872"
-            target="_blank"
-            style="line-height: 20px;"
-          >
-            <img
-              style="max-height: 20px;"
-              src="https://file.mlog.club/images/misc/logo_onwhite.webp"
-            />
-          </a>
-        </div>
       </div>
     </footer>
   </div>
