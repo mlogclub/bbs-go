@@ -65,6 +65,9 @@
           v-for="(comment, index) in results"
           :key="comment.commentId"
           class="comment"
+          itemprop="comment"
+          itemscope
+          itemtype="http://schema.org/Comment"
         >
           <adsbygoogle
             v-if="(index + 1) % 3 === 0 && index !== 0"
@@ -79,13 +82,24 @@
             />
           </div>
           <div class="comment-meta">
-            <span class="comment-nickname">
-              <a :href="'/user/' + comment.user.id">
+            <span
+              class="comment-nickname"
+              itemprop="creator"
+              itemscope
+              itemtype="http://schema.org/Person"
+            >
+              <a :href="'/user/' + comment.user.id" itemprop="name">
                 {{ comment.user.nickname }}
               </a>
             </span>
             <span class="comment-time">
-              {{ comment.createTime | prettyDate }}
+              <time
+                :datetime="
+                  comment.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                "
+                itemprop="datePublished"
+                >{{ comment.createTime | prettyDate }}</time
+              >
             </span>
             <span class="comment-reply">
               <a @click="reply(comment)">回复</a>
@@ -105,7 +119,7 @@
                   {{ comment.quote.createTime | prettyDate }}
                 </span>
               </div>
-              <div v-html="comment.quote.content" />
+              <div v-html="comment.quote.content" itemprop="text" />
             </blockquote>
             <p v-html="comment.content" />
           </div>

@@ -121,20 +121,20 @@
               </ul>
             </blockquote>
           </div>
+
+          <div class="ad">
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
+          </div>
+
+          <!-- 评论 -->
+          <comment
+            :entity-id="article.articleId"
+            :comments-page="commentsPage"
+            :show-ad="true"
+            entity-type="article"
+          />
         </article>
-
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
-
-        <!-- 评论 -->
-        <comment
-          :entity-id="article.articleId"
-          :comments-page="commentsPage"
-          :show-ad="true"
-          entity-type="article"
-        />
       </div>
       <div class="right-container">
         <div style="max-height: 360px;">
