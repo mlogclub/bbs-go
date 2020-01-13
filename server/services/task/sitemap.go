@@ -29,52 +29,69 @@ func SitemapTask() {
 		sitemapBuilding = false
 	}()
 
-	sm := stm.NewSitemap(1)
-	sm.SetDefaultHost(config.Conf.BaseUrl)         // 网站host
-	sm.SetSitemapsHost(config.Conf.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
-	sm.SetSitemapsPath("sitemap")                  // sitemap存放目录
-	sm.SetVerbose(false)
-	sm.SetPretty(false)
-	sm.SetCompress(true)
-	sm.SetAdapter(&AliyunOssAdapter{})
-	sm.Create()
 
-	sm.Add(stm.URL{
+	// gzip 格式sitemap
+	smGzip := stm.NewSitemap(1)
+	smGzip.SetDefaultHost(config.Conf.BaseUrl)         // 网站host
+	smGzip.SetSitemapsHost(config.Conf.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	smGzip.SetSitemapsPath("sitemap")                  // sitemap存放目录
+	smGzip.SetVerbose(false)
+	smGzip.SetPretty(false)
+	smGzip.SetCompress(true)
+	smGzip.SetAdapter(&AliyunOssAdapter{})
+	smGzip.Create()
+
+	// xml 格式sitemap
+	smXml := stm.NewSitemap(1)
+	smXml.SetDefaultHost(config.Conf.BaseUrl)         // 网站host
+	smXml.SetSitemapsHost(config.Conf.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	smXml.SetSitemapsPath("sitemap")                  // sitemap存放目录
+	smXml.SetVerbose(false)
+	smXml.SetPretty(false)
+	smXml.SetCompress(false)
+	smXml.SetAdapter(&AliyunOssAdapter{})
+	smXml.Create()
+
+	generate(smGzip, smXml)
+}
+
+func generate(smArr ...*stm.Sitemap) {
+	addStmUrl(stm.URL{
 		{"loc", "/"},
 		{"lastmod", time.Now()},
 		{"changefreq", "daily"},
 		{"priority", 1.0},
-	})
+	}, smArr...)
 
-	sm.Add(stm.URL{
+	addStmUrl(stm.URL{
 		{"loc", "/topics"},
 		{"lastmod", time.Now()},
 		{"changefreq", "daily"},
 		{"priority", 1.0},
-	})
+	}, smArr...)
 
-	sm.Add(stm.URL{
+	addStmUrl(stm.URL{
 		{"loc", "/articles"},
 		{"lastmod", time.Now()},
 		{"changefreq", "daily"},
 		{"priority", 1.0},
-	})
+	}, smArr...)
 
-	sm.Add(stm.URL{
+	addStmUrl(stm.URL{
 		{"loc", "/projects"},
 		{"lastmod", time.Now()},
 		{"changefreq", "daily"},
 		{"priority", 1.0},
-	})
+	}, smArr...)
 
 	services.TopicService.ScanDesc(func(topics []model.Topic) bool {
 		for _, topic := range topics {
 			if topic.Status == model.StatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
-				sm.Add(stm.URL{
+				addStmUrl(stm.URL{
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.CreateTime)},
-				})
+				}, smArr...)
 			}
 		}
 		return true
@@ -84,10 +101,10 @@ func SitemapTask() {
 		for _, article := range articles {
 			if article.Status == model.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
-				sm.Add(stm.URL{
+				addStmUrl(stm.URL{
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
-				})
+				}, smArr...)
 			}
 		}
 		return true
@@ -96,20 +113,20 @@ func SitemapTask() {
 	services.UserService.Scan(func(users []model.User) {
 		for _, user := range users {
 			userUrl := urls.UserUrl(user.Id)
-			sm.Add(stm.URL{
+			addStmUrl(stm.URL{
 				{"loc", userUrl},
 				{"lastmod", time.Now()},
-			})
+			}, smArr...)
 		}
 	})
 
 	services.ProjectService.Scan(func(projects []model.Project) bool {
 		for _, project := range projects {
 			projectUrl := urls.ProjectUrl(project.Id)
-			sm.Add(stm.URL{
+			addStmUrl(stm.URL{
 				{"loc", projectUrl},
 				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
-			})
+			}, smArr...)
 		}
 		return true
 	})
@@ -117,17 +134,25 @@ func SitemapTask() {
 	services.TagService.Scan(func(tags []model.Tag) bool {
 		for _, tag := range tags {
 			tagUrl := urls.TagArticlesUrl(tag.Id)
-			sm.Add(stm.URL{
+			addStmUrl(stm.URL{
 				{"loc", tagUrl},
 				{"lastmod", time.Now()},
 				{"changefreq", "daily"},
 				{"priority", 0.6},
-			})
+			}, smArr...)
 		}
 		return true
 	})
 
-	sm.Finalize().PingSearchEngines()
+	for _, sm := range smArr {
+		sm.Finalize().PingSearchEngines()
+	}
+}
+
+func addStmUrl(stmUrl stm.URL, smArr ...*stm.Sitemap) {
+	for _, sm := range smArr {
+		sm.Add(stmUrl)
+	}
 }
 
 // sitemap上传到aliyun
