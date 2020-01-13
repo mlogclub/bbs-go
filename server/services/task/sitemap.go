@@ -127,7 +127,7 @@ func SitemapTask() {
 		return true
 	})
 
-	sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
+	sm.Finalize().PingSearchEngines()
 }
 
 // sitemap上传到aliyun
