@@ -4,7 +4,7 @@
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" :current-node-id="0" />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
+        <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination
           :page="topicsPage.page"
           url-prefix="/topics/node/newest?p="
