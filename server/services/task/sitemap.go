@@ -29,7 +29,6 @@ func SitemapTask() {
 		sitemapBuilding = false
 	}()
 
-
 	// gzip 格式sitemap
 	smGzip := stm.NewSitemap(1)
 	smGzip.SetDefaultHost(config.Conf.BaseUrl)         // 网站host
