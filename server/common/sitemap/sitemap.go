@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"bbs-go/common/oss"
 )
 
@@ -30,6 +32,8 @@ func NewGenerator(sitemapHost, sitemapPath, sitemapName string, sitemapFunc Site
 
 func (sm *Generator) AddURL(url URL) {
 	sm.URLs = append(sm.URLs, url)
+
+	logrus.Info("Sitemap add url ", url.Loc)
 
 	if len(sm.URLs) >= MaxSitemapLinks-1 {
 		sm.Finalize()
@@ -71,6 +75,7 @@ func (sm *Generator) WriteIndex(sitemapLocs []IndexURL) string {
 func write(path, xml string) (sitemapUrl string) {
 	if len(xml) > 0 {
 		sitemapUrl, _ = oss.PutObject(path, []byte(xml))
+		logrus.Info("Upload sitemap success, " + sitemapUrl)
 	}
 	return
 }

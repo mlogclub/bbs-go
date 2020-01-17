@@ -84,11 +84,17 @@ func (this *sitemapService) GenerateToday() {
 
 	dateFrom := simple.WithTimeAsStartOfDay(time.Now())
 	dateTo := dateFrom.Add(time.Hour * 24)
+
+	this.GenerateMisc()
+	this.GenerateUser()
 	this.Generate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo))
 }
 
 func (this *sitemapService) Generate(dateFrom, dateTo int64) {
-	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap", this.OnSitemapFinalize)
+	sitemapName := "sitemap-" + simple.TimeFormat(simple.TimeFromTimestamp(dateFrom), simple.FMT_DATE)
+	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
+		this.AddSitemapIndex(sm, sitemapLoc)
+	})
 
 	// topics
 	TopicService.ScanDesc(dateFrom, dateTo, func(topics []model.Topic) {
@@ -134,7 +140,9 @@ func (this *sitemapService) Generate(dateFrom, dateTo int64) {
 }
 
 func (this *sitemapService) GenerateMisc() {
-	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-misc", this.OnSitemapFinalize)
+	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-misc", func(sm *sitemap.Generator, sitemapLoc string) {
+		this.AddSitemapIndex(sm, sitemapLoc)
+	})
 	sm.AddURL(sitemap.URL{
 		Loc:        urls.AbsUrl("/"),
 		Lastmod:    time.Now(),
@@ -178,7 +186,9 @@ func (this *sitemapService) GenerateMisc() {
 }
 
 func (this *sitemapService) GenerateUser() {
-	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-user", this.OnSitemapFinalize)
+	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-user", func(sm *sitemap.Generator, sitemapLoc string) {
+		this.AddSitemapIndex(sm, sitemapLoc)
+	})
 	UserService.Scan(func(users []model.User) {
 		for _, user := range users {
 			sm.AddURL(sitemap.URL{
@@ -191,10 +201,6 @@ func (this *sitemapService) GenerateUser() {
 	})
 
 	sm.Finalize()
-}
-
-func (this *sitemapService) OnSitemapFinalize(sm *sitemap.Generator, sitemapLoc string) {
-	this.AddSitemapIndex(sm, sitemapLoc)
 }
 
 func (this *sitemapService) AddSitemapIndex(sm *sitemap.Generator, sitemapLoc string) {

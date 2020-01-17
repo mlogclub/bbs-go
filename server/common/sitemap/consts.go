@@ -2,7 +2,7 @@ package sitemap
 
 const (
 	// MaxSitemapLinks max link num in a sitemap file
-	MaxSitemapLinks = 3
+	MaxSitemapLinks = 50000
 	// SitemapIndexName sitemap index file name
 	SitemapIndexName = "sitemap"
 	// SitemapXmlExt sitemap xml file extension
