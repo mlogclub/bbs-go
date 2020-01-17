@@ -32,6 +32,8 @@ func (this *ConfigController) GetTest() *simple.JsonResult {
 			}
 			dateTo := dateFrom.Add(time.Hour * 24)
 			services.SitemapService.Generate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo))
+
+			dateFrom = dateFrom.Add(24 * time.Hour)
 		}
 
 	}()

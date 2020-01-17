@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	sitemapPath = "sitemap-test"
+	sitemapPath = "sitemap"
 )
 
 var SitemapService = newSitemapService()
