@@ -1,6 +1,7 @@
 package services
 
 import (
+	"math"
 	"path"
 	"time"
 
@@ -18,7 +19,7 @@ import (
 
 var ProjectService = newProjectService()
 
-type ProjectScanCallback func(projects []model.Project) bool
+type ProjectScanCallback func(projects []model.Project)
 
 func newProjectService() *projectService {
 	return &projectService{}
@@ -93,18 +94,16 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 	return project, nil
 }
 
-func (this *projectService) Scan(callback ProjectScanCallback) {
-	var cursor int64
+func (this *projectService) ScanDesc(dateFrom, dateTo int64, callback ProjectScanCallback) {
+	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?",
-			cursor).Asc("id").Limit(100))
+		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		if !callback(list) {
-			break
-		}
+		callback(list)
 	}
 }
 

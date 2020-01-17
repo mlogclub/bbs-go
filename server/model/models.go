@@ -1,11 +1,13 @@
 package model
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicNode{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{},
-	&ThirdAccount{},
+	&ThirdAccount{}, &Sitemap{},
 }
 
 type Model struct {
@@ -209,7 +211,7 @@ type Project struct {
 	DownloadUrl string `gorm:"type:varchar(1024)" json:"downloadUrl" form:"downloadUrl"`
 	ContentType string `gorm:"type:varchar(32);" json:"contentType" form:"contentType"`
 	Content     string `gorm:"type:longtext" json:"content" form:"content"`
-	CreateTime  int64  `json:"createTime" form:"createTime"`
+	CreateTime  int64  `gorm:"index:idx_create_time" json:"createTime" form:"createTime"`
 }
 
 // 好博客导航
@@ -225,4 +227,13 @@ type Link struct {
 	Score      int    `gorm:"not null" json:"score" form:"score"`           // 评分，0-100分，分数越高越优质
 	Remark     string `gorm:"size:1024" json:"remark" form:"remark"`        // 备注，后台填写的
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
+}
+
+// 站点地图
+type Sitemap struct {
+	Model
+	Loc        string `gorm:"not null;size:1024" json:"loc" form:"loc"`       // loc
+	Lastmod    int64  `gorm:"not null" json:"lastmod" form:"lastmod"`         // 最后更新时间
+	LocName    string `gorm:"not null;size:32;unique" json:"locName" form:"locName"` // loc的md5
+	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
 }

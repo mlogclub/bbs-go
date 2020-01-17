@@ -2,81 +2,133 @@ package sitemap
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"bbs-go/common/oss"
 )
 
-type Sitemap struct {
-	opts      *Options
-	URLs      []URL
-	IndexURLs []SitemapIndexURL
+type Generator struct {
+	opts        *Options
+	index       int
+	sitemapFunc SitemapFunc
+	URLs        []URL
+	IndexURLs   []IndexURL
 }
 
-func NewSitemap(sitemapHost, sitemapPath, sitemapName string) *Sitemap {
-	return &Sitemap{
-		opts: NewOptions(sitemapHost, sitemapPath, sitemapName),
+type SitemapFunc func(sm *Generator, sitemapLoc string)
+
+func NewGenerator(sitemapHost, sitemapPath, sitemapName string, sitemapFunc SitemapFunc) *Generator {
+	return &Generator{
+		opts:        NewOptions(sitemapHost, sitemapPath, sitemapName),
+		index:       1,
+		sitemapFunc: sitemapFunc,
 	}
 }
 
-func (sm *Sitemap) Add(url URL) {
+func (sm *Generator) AddURL(url URL) {
 	sm.URLs = append(sm.URLs, url)
+
+	if len(sm.URLs) >= MaxSitemapLinks-1 {
+		sm.Finalize()
+	}
 }
 
-func (sm *Sitemap) Write() {
-	// Clean current sitemap urls
+func (sm *Generator) Finalize() {
+	if len(sm.URLs) == 0 {
+		return
+	}
 	defer func() {
+		// Clean current sitemap urls
 		sm.URLs = nil
+
+		// Generator index + 1
+		sm.index++
 	}()
 
-	// Add current sitemap to sitemap index
-	if len(sm.URLs) > 0 {
-		sitemapLoc := sm.opts.SitemapLoc(".xml")
-		sm.IndexURLs = append(sm.IndexURLs, SitemapIndexURL{
-			Loc:     sitemapLoc,
-			Lastmod: time.Now(),
-		})
+	sitemapPath := sm.opts.SitemapPathInPublic("-" + strconv.Itoa(sm.index) + SitemapXmlExt)
+	sitemapLoc := write(sitemapPath, XmlContent(sm.URLs))
+	if len(sitemapLoc) > 0 {
+		// execute callback
+		if sm.sitemapFunc != nil {
+			sm.sitemapFunc(sm, sitemapLoc)
+		}
+		// ping search engine
+		go func() {
+			PingSearchEngines(sitemapLoc)
+		}()
 	}
-
-	sm.WriteToOSS()
 }
 
-// WriteToOSS write sitemap and index to aliyun oss
-func (sm *Sitemap) WriteToOSS() {
-	// Upload sitemap
-	sitemapXml := sm.SitemapXml()
-	sitemapUrl, _ := oss.PutObject(sm.opts.SitemapPathInPublic(SitemapXmlExt), []byte(sitemapXml))
-	fmt.Println(sitemapUrl)
-
-	// Upload sitemap index
-	sitemapIndexXml := sm.SitemapIndexXml()
-	sitemapIndexUrl, _ := oss.PutObject(sm.opts.SitemapIndexPathInPublic(SitemapXmlExt), []byte(sitemapIndexXml))
-	fmt.Println(sitemapIndexUrl)
+func (sm *Generator) WriteIndex(sitemapLocs []IndexURL) string {
+	sitemapPath := sm.opts.SitemapIndexPathInPublic(SitemapXmlExt)
+	return write(sitemapPath, IndexXmlContent(sitemapLocs))
 }
 
-func (sm *Sitemap) SitemapXml() string {
-	if len(sm.URLs) == 0 {
+// write sitemap and index to aliyun oss
+func write(path, xml string) (sitemapUrl string) {
+	if len(xml) > 0 {
+		sitemapUrl, _ = oss.PutObject(path, []byte(xml))
+	}
+	return
+}
+
+func XmlContent(urls []URL) string {
+	if len(urls) == 0 {
 		return ""
 	}
 	b := strings.Builder{}
 	b.Write(XMLHeader)
-	for _, url := range sm.URLs {
+	for _, url := range urls {
 		b.WriteString(url.String())
 	}
 	b.Write(XMLFooter)
 	return b.String()
 }
 
-func (sm *Sitemap) SitemapIndexXml() string {
-	if len(sm.IndexURLs) == 0 {
+func IndexXmlContent(sitemapLocs []IndexURL) string {
+	if len(sitemapLocs) == 0 {
 		return ""
 	}
 	b := strings.Builder{}
 	b.Write(IndexXMLHeader)
-	for _, url := range sm.IndexURLs {
-		b.WriteString(url.String())
+	for _, loc := range sitemapLocs {
+		b.WriteString(loc.String())
 	}
 	b.Write(IndexXMLFooter)
 	return b.String()
+}
+
+func PingSearchEngines(sitemapLoc string) {
+	engines := []string{
+		"http://www.google.com/webmasters/tools/ping?sitemap=%s",
+		"http://www.bing.com/webmaster/ping.aspx?siteMap=%s",
+	}
+
+	bufs := len(engines)
+	does := make(chan string, bufs)
+	client := http.Client{Timeout: 5 * time.Second}
+
+	for _, engine := range engines {
+		go func(baseurl string) {
+			url := fmt.Sprintf(baseurl, sitemapLoc)
+			println("Ping now:", url)
+
+			resp, err := client.Get(url)
+			if err != nil {
+				does <- fmt.Sprintf("[E] Ping failed: %s (URL:%s)",
+					err, url)
+				return
+			}
+			defer resp.Body.Close()
+
+			does <- fmt.Sprintf("Successful ping of `%s`", url)
+		}(engine)
+	}
+
+	for i := 0; i < bufs; i++ {
+		println(<-does)
+	}
 }

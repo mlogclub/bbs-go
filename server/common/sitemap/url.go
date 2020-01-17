@@ -14,12 +14,12 @@ const (
 	ChangefreqNever   = "never"
 )
 
-type SitemapIndexURL struct {
+type IndexURL struct {
 	Loc     string
 	Lastmod time.Time
 }
 
-func (u *SitemapIndexURL) String() string {
+func (u IndexURL) String() string {
 	return "<sitemap>" +
 		"<loc>" + u.Loc + "</loc>" +
 		"<lastmod>" + u.Lastmod.Format(time.RFC3339) + "</lastmod>" +
@@ -33,7 +33,7 @@ type URL struct {
 	Priority   string
 }
 
-func (u *URL) String() string {
+func (u URL) String() string {
 	return "<url>" +
 		"<loc>" + u.Loc + "</loc>" +
 		"<lastmod>" + u.Lastmod.Format(time.RFC3339) + "</lastmod>" +

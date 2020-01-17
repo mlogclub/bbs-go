@@ -19,7 +19,7 @@ import (
 	"bbs-go/services/cache"
 )
 
-type ScanTopicCallback func(topics []model.Topic) bool
+type ScanTopicCallback func(topics []model.Topic)
 
 var TopicService = newTopicService()
 
@@ -283,32 +283,16 @@ func (this *topicService) GenerateRss() {
 	}
 }
 
-// 扫描
-func (this *topicService) Scan(cb ScanTopicCallback) {
-	var cursor int64
-	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
-	}
-}
-
 // 倒序扫描
-func (this *topicService) ScanDesc(cb ScanTopicCallback) {
+func (this *topicService) ScanDesc(dateFrom, dateTo int64, cb ScanTopicCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", cursor).Desc("id").Limit(100))
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
+		cb(list)
 	}
 }
