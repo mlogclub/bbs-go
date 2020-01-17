@@ -33,7 +33,7 @@ func NewGenerator(sitemapHost, sitemapPath, sitemapName string, sitemapFunc Site
 func (sm *Generator) AddURL(url URL) {
 	sm.URLs = append(sm.URLs, url)
 
-	logrus.Info("Sitemap add url ", url.Loc)
+	// logrus.Info("Sitemap add url ", url.Loc)
 
 	if len(sm.URLs) >= MaxSitemapLinks-1 {
 		sm.Finalize()
