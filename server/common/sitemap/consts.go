@@ -27,7 +27,7 @@ const (
 var (
 	// IndexXMLHeader exists for create sitemap xml as a specific sitemap document.
 	IndexXMLHeader = []byte(`<?xml version="1.0" encoding="UTF-8"?>
-      <?xml-stylesheet type="text/xsl" href="https://file.mlog.club/sitemap.xsl"?>
+      <?xml-stylesheet type="text/xsl" href="https://file.mlog.club/sitemap/sitemap.xsl"?>
       <sitemapindex
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
@@ -41,7 +41,7 @@ var (
 var (
 	// XMLHeader exists for create sitemap xml as a specific sitemap document.
 	XMLHeader = []byte(`<?xml version="1.0" encoding="UTF-8"?>
-      <?xml-stylesheet type="text/xsl" href="https://file.mlog.club/sitemap.xsl"?>
+      <?xml-stylesheet type="text/xsl" href="https://file.mlog.club/sitemap/sitemap.xsl"?>
       <urlset
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
