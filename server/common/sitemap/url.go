@@ -1,6 +1,8 @@
 package sitemap
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	ChangefreqAlways  = "always"
@@ -18,7 +20,6 @@ type SitemapIndexURL struct {
 }
 
 func (u *SitemapIndexURL) String() string {
-	time.Now().Format(time.RFC3339)
 	return "<sitemap>" +
 		"<loc>" + u.Loc + "</loc>" +
 		"<lastmod>" + u.Lastmod.Format(time.RFC3339) + "</lastmod>" +

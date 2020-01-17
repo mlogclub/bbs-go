@@ -33,8 +33,11 @@ func (opts *Options) SitemapLoc(ext string) string {
 	return base.String()
 }
 
-// SitemapPathInPublic returns path to combine sitemapsPath and Filename on website.
-// It also indicates where url file path is
+// SitemapPathInPublic
 func (opts *Options) SitemapPathInPublic(ext string) string {
 	return filepath.Join(opts.SitemapPath, opts.SitemapName) + ext
+}
+
+func (opts *Options) SitemapIndexPathInPublic(ext string) string {
+	return filepath.Join(opts.SitemapPath, SitemapIndexName) + ext
 }

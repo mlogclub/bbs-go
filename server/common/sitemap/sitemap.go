@@ -8,11 +8,6 @@ import (
 	"bbs-go/common/oss"
 )
 
-const (
-	MaxSitemapLinks  = 50000
-	SitemapIndexName = "sitemap.xml"
-)
-
 type Sitemap struct {
 	opts      *Options
 	URLs      []URL
@@ -30,16 +25,18 @@ func (sm *Sitemap) Add(url URL) {
 }
 
 func (sm *Sitemap) Write() {
+	// Clean current sitemap urls
+	defer func() {
+		sm.URLs = nil
+	}()
+
+	// Add current sitemap to sitemap index
 	if len(sm.URLs) > 0 {
-		// Add current sitemap to sitemap index
 		sitemapLoc := sm.opts.SitemapLoc(".xml")
 		sm.IndexURLs = append(sm.IndexURLs, SitemapIndexURL{
 			Loc:     sitemapLoc,
 			Lastmod: time.Now(),
 		})
-
-		// Clean current sitemap urls
-		sm.URLs = nil
 	}
 
 	sm.WriteToOSS()
@@ -49,10 +46,13 @@ func (sm *Sitemap) Write() {
 func (sm *Sitemap) WriteToOSS() {
 	// Upload sitemap
 	sitemapXml := sm.SitemapXml()
-	sitemapUrl, _ := oss.PutObject(sm.opts.SitemapPathInPublic(".xml"), []byte(sitemapXml))
+	sitemapUrl, _ := oss.PutObject(sm.opts.SitemapPathInPublic(SitemapXmlExt), []byte(sitemapXml))
 	fmt.Println(sitemapUrl)
 
 	// Upload sitemap index
+	sitemapIndexXml := sm.SitemapIndexXml()
+	sitemapIndexUrl, _ := oss.PutObject(sm.opts.SitemapIndexPathInPublic(SitemapXmlExt), []byte(sitemapIndexXml))
+	fmt.Println(sitemapIndexUrl)
 }
 
 func (sm *Sitemap) SitemapXml() string {
