@@ -2,13 +2,6 @@
 
 该项目为：https://mlog.club 的后台管理。利用element-ui进行构建。
 
-## 交流群
-
-- QQ群号：653248175
-- 扫码进群：
-
-![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
-
 ## Project setup
 ```
 npm install

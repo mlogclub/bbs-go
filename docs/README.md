@@ -23,10 +23,6 @@ footer: Copyright © 2019
 
 ![码农俱乐部](https://open.weixin.qq.com/qr/code?username=gh_950827012b8d)
 
-## 交流QQ群：653248175
-
-![bbs-go-qq.jpg](https://i.loli.net/2019/09/12/eiKSXycnDB7R6Gw.jpg)
-
 ## 源码
 
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
