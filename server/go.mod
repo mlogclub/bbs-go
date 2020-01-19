@@ -17,7 +17,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.2.0
 	github.com/gorilla/feeds v1.1.1
-	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a
 	github.com/issue9/identicon v1.0.1
 	github.com/jinzhu/gorm v1.9.11

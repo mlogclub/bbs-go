@@ -24,7 +24,7 @@ import (
 	"bbs-go/model"
 )
 
-type ScanArticleCallback func(articles []model.Article) bool
+type ScanArticleCallback func(articles []model.Article)
 
 var ArticleService = newArticleService()
 
@@ -246,44 +246,12 @@ func (this *articleService) GetUserNewestArticles(userId int64) []model.Article 
 		userId, model.StatusOk).Desc("id").Limit(10))
 }
 
-// 扫描
-func (this *articleService) Scan(cb ScanArticleCallback) {
-	var cursor int64
-	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").Where("id > ? ",
-			cursor).Asc("id").Limit(100))
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
-	}
-}
-
-// 从新往旧扫描
-func (this *articleService) ScanDesc(cb ScanArticleCallback) {
+// 倒序扫描
+func (this *articleService) ScanDesc(dateFrom, dateTo int64, cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").Where("id < ? ",
-			cursor).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
-	}
-}
-
-// 扫描
-func (this *articleService) ScanWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
-	var cursor int64
-	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ? and status = ? and create_time >= ? and create_time < ?",
-			cursor, model.StatusOk, dateFrom, dateTo).Asc("id").Limit(300))
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}
@@ -343,34 +311,6 @@ func (this *articleService) GenerateRss() {
 	} else {
 		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "rss.xml"), rss, false)
 	}
-}
-
-// 生成码农日报内容
-func (this *articleService) GetDailyContent(userIds []int64) string {
-	if userIds == nil || len(userIds) == 0 {
-		return ""
-	}
-
-	content := "\n"
-
-	dateFromTemp := time.Now().Add(-time.Hour * 24)
-	dateToTemp := time.Now()
-	dateFrom := time.Date(dateFromTemp.Year(), dateFromTemp.Month(), dateFromTemp.Day(), 0, 0, 0, 0, dateFromTemp.Location())
-	dateTo := time.Date(dateToTemp.Year(), dateToTemp.Month(), dateToTemp.Day(), 0, 0, 0, 0, dateToTemp.Location())
-
-	this.ScanWithDate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo), func(articles []model.Article) bool {
-		for _, article := range articles {
-			if common.IndexOf(userIds, article.UserId) != -1 {
-				content += "## " + article.Title + "\n\n"
-				if len(strings.TrimSpace(article.Summary)) > 0 {
-					content += strings.TrimSpace(article.Summary) + "\n\n"
-				}
-				content += "[点击查看原文>>](" + urls.ArticleUrl(article.Id) + ")\n\n"
-			}
-		}
-		return true
-	})
-	return content
 }
 
 // 浏览数+1
