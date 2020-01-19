@@ -19,6 +19,7 @@ jobs:
     - name: Get dependencies
       run: |
         export GOPROXY=https://goproxy.io
+        cd server
         go mod download
 
     - name: Build
