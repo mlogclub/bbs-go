@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-	"gopkg.in/resty.v1"
 
 	"bbs-go/common"
 	"bbs-go/common/config"

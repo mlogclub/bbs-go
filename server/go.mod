@@ -33,6 +33,5 @@ require (
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	github.com/tidwall/gjson v1.3.4
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
-	gopkg.in/resty.v1 v1.12.0
 	gopkg.in/yaml.v2 v2.2.5
 )

@@ -3,8 +3,8 @@ package baiduseo
 import (
 	"strings"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/resty.v1"
 
 	"bbs-go/common/config"
 )
@@ -23,7 +23,7 @@ func PushUrls(urls []string) {
 	}
 	api := "http://data.zz.baidu.com/urls?site=" + config.Conf.BaiduSEO.Site + "&token=" + config.Conf.BaiduSEO.Token
 	body := strings.Join(urls, "\n")
-	if response, err := resty.R().SetBody(body).Post(api); err != nil {
+	if response, err := resty.New().R().SetBody(body).Post(api); err != nil {
 		logrus.Error(err)
 	} else {
 		logrus.Info("百度链接提交完成：", string(response.Body()))
