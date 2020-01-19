@@ -1,4 +1,4 @@
-name: Go
+name: bbs-go-server
 on: [push]
 jobs:
 
