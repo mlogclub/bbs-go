@@ -32,9 +32,6 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 
 func BuildUserById(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
-	if user == nil {
-		return nil
-	}
 	return BuildUser(user)
 }
 
@@ -225,17 +222,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.Toc = template.HTML(mr.TocHtml)
 
 	return rsp
-}
-
-func BuildTopics(topics []model.Topic) []model.TopicResponse {
-	if topics == nil || len(topics) == 0 {
-		return nil
-	}
-	var responses []model.TopicResponse
-	for _, topic := range topics {
-		responses = append(responses, *BuildTopic(&topic))
-	}
-	return responses
 }
 
 func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
