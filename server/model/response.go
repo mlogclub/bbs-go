@@ -18,11 +18,11 @@ type UserInfo struct {
 	CreateTime  int64    `json:"createTime"`
 }
 
-func (this *UserInfo) HasRole(role string) bool {
-	if len(this.Roles) == 0 {
+func (info *UserInfo) HasRole(role string) bool {
+	if len(info.Roles) == 0 {
 		return false
 	}
-	for _, r := range this.Roles {
+	for _, r := range info.Roles {
 		if r == role {
 			return true
 		}

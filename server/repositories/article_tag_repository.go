@@ -16,7 +16,7 @@ func newArticleTagRepository() *articleTagRepository {
 type articleTagRepository struct {
 }
 
-func (this *articleTagRepository) Get(db *gorm.DB, id int64) *model.ArticleTag {
+func (r *articleTagRepository) Get(db *gorm.DB, id int64) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -24,7 +24,7 @@ func (this *articleTagRepository) Get(db *gorm.DB, id int64) *model.ArticleTag {
 	return ret
 }
 
-func (this *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model.ArticleTag {
+func (r *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -32,12 +32,12 @@ func (this *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model
 	return ret
 }
 
-func (this *articleTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag) {
+func (r *articleTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ArticleTag {
+func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,11 +45,11 @@ func (this *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *mode
 	return ret
 }
 
-func (this *articleTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *articleTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, paging *simple.Paging) {
+func (r *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.ArticleTag{})
 
@@ -61,37 +61,37 @@ func (this *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd)
 	return
 }
 
-func (this *articleTagRepository) Create(db *gorm.DB, t *model.ArticleTag) (err error) {
+func (r *articleTagRepository) Create(db *gorm.DB, t *model.ArticleTag) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *articleTagRepository) Update(db *gorm.DB, t *model.ArticleTag) (err error) {
+func (r *articleTagRepository) Update(db *gorm.DB, t *model.ArticleTag) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *articleTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *articleTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.ArticleTag{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *articleTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *articleTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.ArticleTag{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *articleTagRepository) Delete(db *gorm.DB, id int64) {
+func (r *articleTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.ArticleTag{}, "id = ?", id)
 }
 
-func (this *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, tagIds []int64) {
+func (r *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, tagIds []int64) {
 	if articleId <= 0 || len(tagIds) == 0 {
 		return
 	}
 
 	for _, tagId := range tagIds {
-		_ = this.Create(db, &model.ArticleTag{
+		_ = r.Create(db, &model.ArticleTag{
 			ArticleId:  articleId,
 			TagId:      tagId,
 			CreateTime: simple.NowTimestamp(),
@@ -99,13 +99,13 @@ func (this *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, t
 	}
 }
 
-func (this *articleTagRepository) DeleteArticleTags(db *gorm.DB, articleId int64) {
+func (r *articleTagRepository) DeleteArticleTags(db *gorm.DB, articleId int64) {
 	if articleId <= 0 {
 		return
 	}
 	db.Where("article_id = ?", articleId).Delete(model.ArticleTag{})
 }
 
-func (this *articleTagRepository) FindByArticleId(db *gorm.DB, articleId int64) []model.ArticleTag {
-	return this.Find(db, simple.NewSqlCnd().Where("article_id = ?", articleId))
+func (r *articleTagRepository) FindByArticleId(db *gorm.DB, articleId int64) []model.ArticleTag {
+	return r.Find(db, simple.NewSqlCnd().Where("article_id = ?", articleId))
 }

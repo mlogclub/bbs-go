@@ -12,10 +12,10 @@ type FavoriteController struct {
 }
 
 // 是否收藏了
-func (this *FavoriteController) GetFavorited() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	entityType := simple.FormValue(this.Ctx, "entityType")
-	entityId := simple.FormValueInt64Default(this.Ctx, "entityId", 0)
+func (c *FavoriteController) GetFavorited() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	entityType := simple.FormValue(c.Ctx, "entityType")
+	entityId := simple.FormValueInt64Default(c.Ctx, "entityId", 0)
 	if user == nil || len(entityType) == 0 || entityId <= 0 {
 		return simple.NewEmptyRspBuilder().Put("favorited", false).JsonResult()
 	} else {
@@ -25,10 +25,10 @@ func (this *FavoriteController) GetFavorited() *simple.JsonResult {
 }
 
 // 取消收藏
-func (this *FavoriteController) GetDelete() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	entityType := simple.FormValue(this.Ctx, "entityType")
-	entityId := simple.FormValueInt64Default(this.Ctx, "entityId", 0)
+func (c *FavoriteController) GetDelete() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	entityType := simple.FormValue(c.Ctx, "entityType")
+	entityId := simple.FormValueInt64Default(c.Ctx, "entityId", 0)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}

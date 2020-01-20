@@ -19,7 +19,7 @@ func newTagRepository() *tagRepository {
 type tagRepository struct {
 }
 
-func (this *tagRepository) Get(db *gorm.DB, id int64) *model.Tag {
+func (r *tagRepository) Get(db *gorm.DB, id int64) *model.Tag {
 	ret := &model.Tag{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -27,7 +27,7 @@ func (this *tagRepository) Get(db *gorm.DB, id int64) *model.Tag {
 	return ret
 }
 
-func (this *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
+func (r *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
 	ret := &model.Tag{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -35,12 +35,12 @@ func (this *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
 	return ret
 }
 
-func (this *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag) {
+func (r *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
+func (r *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
 	ret := &model.Tag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -48,11 +48,11 @@ func (this *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
 	return ret
 }
 
-func (this *tagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *tagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *tagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag, paging *simple.Paging) {
+func (r *tagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Tag{})
 
@@ -64,31 +64,31 @@ func (this *tagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list 
 	return
 }
 
-func (this *tagRepository) Create(db *gorm.DB, t *model.Tag) (err error) {
+func (r *tagRepository) Create(db *gorm.DB, t *model.Tag) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *tagRepository) Update(db *gorm.DB, t *model.Tag) (err error) {
+func (r *tagRepository) Update(db *gorm.DB, t *model.Tag) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *tagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *tagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Tag{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *tagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *tagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Tag{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *tagRepository) Delete(db *gorm.DB, id int64) {
+func (r *tagRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Tag{}, "id = ?", id)
 }
 
-func (this *tagRepository) GetTagInIds(tagIds []int64) []model.Tag {
+func (r *tagRepository) GetTagInIds(tagIds []int64) []model.Tag {
 	if len(tagIds) == 0 {
 		return nil
 	}
@@ -97,18 +97,18 @@ func (this *tagRepository) GetTagInIds(tagIds []int64) []model.Tag {
 	return tags
 }
 
-func (this *tagRepository) GetByName(name string) *model.Tag {
+func (r *tagRepository) GetByName(name string) *model.Tag {
 	if len(name) == 0 {
 		return nil
 	}
-	return this.Take(simple.DB(), "name = ?", name)
+	return r.Take(simple.DB(), "name = ?", name)
 }
 
-func (this *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error) {
+func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error) {
 	if len(name) == 0 {
 		return nil, errors.New("标签为空")
 	}
-	tag := this.GetByName(name)
+	tag := r.GetByName(name)
 	if tag != nil {
 		return tag, nil
 	} else {
@@ -118,7 +118,7 @@ func (this *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, er
 			CreateTime: simple.NowTimestamp(),
 			UpdateTime: simple.NowTimestamp(),
 		}
-		err := this.Create(db, tag)
+		err := r.Create(db, tag)
 		if err != nil {
 			return nil, err
 		}
@@ -126,10 +126,10 @@ func (this *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, er
 	}
 }
 
-func (this *tagRepository) GetOrCreates(db *gorm.DB, tags []string) (tagIds []int64) {
+func (r *tagRepository) GetOrCreates(db *gorm.DB, tags []string) (tagIds []int64) {
 	for _, tagName := range tags {
 		tagName = strings.TrimSpace(tagName)
-		tag, err := this.GetOrCreate(db, tagName)
+		tag, err := r.GetOrCreate(db, tagName)
 		if err == nil {
 			tagIds = append(tagIds, tag.Id)
 		}

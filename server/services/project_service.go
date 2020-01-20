@@ -28,52 +28,52 @@ func newProjectService() *projectService {
 type projectService struct {
 }
 
-func (this *projectService) Get(id int64) *model.Project {
+func (s *projectService) Get(id int64) *model.Project {
 	return repositories.ProjectRepository.Get(simple.DB(), id)
 }
 
-func (this *projectService) Take(where ...interface{}) *model.Project {
+func (s *projectService) Take(where ...interface{}) *model.Project {
 	return repositories.ProjectRepository.Take(simple.DB(), where...)
 }
 
-func (this *projectService) Find(cnd *simple.SqlCnd) []model.Project {
+func (s *projectService) Find(cnd *simple.SqlCnd) []model.Project {
 	return repositories.ProjectRepository.Find(simple.DB(), cnd)
 }
 
-func (this *projectService) FindOne(cnd *simple.SqlCnd) *model.Project {
+func (s *projectService) FindOne(cnd *simple.SqlCnd) *model.Project {
 	return repositories.ProjectRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
+func (s *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
 	return repositories.ProjectRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *projectService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Project, paging *simple.Paging) {
+func (s *projectService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Project, paging *simple.Paging) {
 	return repositories.ProjectRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *projectService) Create(t *model.Project) error {
+func (s *projectService) Create(t *model.Project) error {
 	return repositories.ProjectRepository.Create(simple.DB(), t)
 }
 
-func (this *projectService) Update(t *model.Project) error {
+func (s *projectService) Update(t *model.Project) error {
 	return repositories.ProjectRepository.Update(simple.DB(), t)
 }
 
-func (this *projectService) Updates(id int64, columns map[string]interface{}) error {
+func (s *projectService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.ProjectRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *projectService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *projectService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.ProjectRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *projectService) Delete(id int64) {
+func (s *projectService) Delete(id int64) {
 	repositories.ProjectRepository.Delete(simple.DB(), id)
 }
 
 // 发布
-func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl, downloadUrl, contentType,
+func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, downloadUrl, contentType,
 	content string) (*model.Project, error) {
 	project := &model.Project{
 		UserId:      userId,
@@ -94,7 +94,7 @@ func (this *projectService) Publish(userId int64, name, title, logo, url, docUrl
 	return project, nil
 }
 
-func (this *projectService) ScanDesc(dateFrom, dateTo int64, callback ProjectScanCallback) {
+func (s *projectService) ScanDesc(dateFrom, dateTo int64, callback ProjectScanCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
@@ -108,7 +108,7 @@ func (this *projectService) ScanDesc(dateFrom, dateTo int64, callback ProjectSca
 }
 
 // rss
-func (this *projectService) GenerateRss() {
+func (s *projectService) GenerateRss() {
 	projects := repositories.ProjectRepository.Find(simple.DB(),
 		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(2000))
 

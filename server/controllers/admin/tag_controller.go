@@ -16,7 +16,7 @@ type TagController struct {
 	Ctx iris.Context
 }
 
-func (this *TagController) GetBy(id int64) *simple.JsonResult {
+func (c *TagController) GetBy(id int64) *simple.JsonResult {
 	t := services.TagService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -24,17 +24,17 @@ func (this *TagController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TagController) AnyList() *simple.JsonResult {
-	list, paging := services.TagService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+func (c *TagController) AnyList() *simple.JsonResult {
+	list, paging := services.TagService.FindPageByParams(simple.NewQueryParams(c.Ctx).
 		LikeByReq("name").
 		EqByReq("status").
 		PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *TagController) PostCreate() *simple.JsonResult {
+func (c *TagController) PostCreate() *simple.JsonResult {
 	t := &model.Tag{}
-	err := this.Ctx.ReadForm(t)
+	err := c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -57,8 +57,8 @@ func (this *TagController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TagController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TagController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -67,7 +67,7 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -88,8 +88,8 @@ func (this *TagController) PostUpdate() *simple.JsonResult {
 }
 
 // 自动完成
-func (this *TagController) GetAutocomplete() *simple.JsonResult {
-	keyword := strings.TrimSpace(this.Ctx.URLParam("keyword"))
+func (c *TagController) GetAutocomplete() *simple.JsonResult {
+	keyword := strings.TrimSpace(c.Ctx.URLParam("keyword"))
 	var tags []model.Tag
 	if len(keyword) > 0 {
 		tags = services.TagService.Find(simple.NewSqlCnd().Starting("name", keyword).Desc("id"))
@@ -100,8 +100,8 @@ func (this *TagController) GetAutocomplete() *simple.JsonResult {
 }
 
 // 根据标签编号批量获取
-func (this *TagController) GetTags() *simple.JsonResult {
-	tagIds := simple.FormValueInt64Array(this.Ctx, "tagIds")
+func (c *TagController) GetTags() *simple.JsonResult {
+	tagIds := simple.FormValueInt64Array(c.Ctx, "tagIds")
 	var tags *[]model.TagResponse
 	if len(tagIds) > 0 {
 		tagArr := services.TagService.Find(simple.NewSqlCnd().In("id", tagIds))

@@ -14,7 +14,7 @@ type FavoriteController struct {
 	Ctx iris.Context
 }
 
-func (this *FavoriteController) GetBy(id int64) *simple.JsonResult {
+func (c *FavoriteController) GetBy(id int64) *simple.JsonResult {
 	t := services.FavoriteService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -22,14 +22,14 @@ func (this *FavoriteController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *FavoriteController) AnyList() *simple.JsonResult {
-	list, paging := services.FavoriteService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
+func (c *FavoriteController) AnyList() *simple.JsonResult {
+	list, paging := services.FavoriteService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *FavoriteController) PostCreate() *simple.JsonResult {
+func (c *FavoriteController) PostCreate() *simple.JsonResult {
 	t := &model.Favorite{}
-	this.Ctx.ReadForm(t)
+	c.Ctx.ReadForm(t)
 
 	err := services.FavoriteService.Create(t)
 	if err != nil {
@@ -38,8 +38,8 @@ func (this *FavoriteController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *FavoriteController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *FavoriteController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -48,7 +48,7 @@ func (this *FavoriteController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	this.Ctx.ReadForm(t)
+	c.Ctx.ReadForm(t)
 
 	err = services.FavoriteService.Update(t)
 	if err != nil {

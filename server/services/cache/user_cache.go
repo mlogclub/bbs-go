@@ -29,17 +29,17 @@ func newUserCache() *userCache {
 	}
 }
 
-func (this *userCache) Get(userId int64) *model.User {
+func (c *userCache) Get(userId int64) *model.User {
 	if userId <= 0 {
 		return nil
 	}
-	val, err := this.cache.Get(userId)
+	val, err := c.cache.Get(userId)
 	if err != nil {
 		return nil
 	}
 	return val.(*model.User)
 }
 
-func (this *userCache) Invalidate(userId int64) {
-	this.cache.Invalidate(userId)
+func (c *userCache) Invalidate(userId int64) {
+	c.cache.Invalidate(userId)
 }

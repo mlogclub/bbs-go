@@ -23,35 +23,35 @@ func newSysConfigService() *sysConfigService {
 type sysConfigService struct {
 }
 
-func (this *sysConfigService) Get(id int64) *model.SysConfig {
+func (s *sysConfigService) Get(id int64) *model.SysConfig {
 	return repositories.SysConfigRepository.Get(simple.DB(), id)
 }
 
-func (this *sysConfigService) Take(where ...interface{}) *model.SysConfig {
+func (s *sysConfigService) Take(where ...interface{}) *model.SysConfig {
 	return repositories.SysConfigRepository.Take(simple.DB(), where...)
 }
 
-func (this *sysConfigService) Find(cnd *simple.SqlCnd) []model.SysConfig {
+func (s *sysConfigService) Find(cnd *simple.SqlCnd) []model.SysConfig {
 	return repositories.SysConfigRepository.Find(simple.DB(), cnd)
 }
 
-func (this *sysConfigService) FindOne(cnd *simple.SqlCnd) *model.SysConfig {
+func (s *sysConfigService) FindOne(cnd *simple.SqlCnd) *model.SysConfig {
 	return repositories.SysConfigRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *sysConfigService) FindPageByParams(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
+func (s *sysConfigService) FindPageByParams(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
 	return repositories.SysConfigRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *sysConfigService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
+func (s *sysConfigService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
 	return repositories.SysConfigRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *sysConfigService) GetAll() []model.SysConfig {
+func (s *sysConfigService) GetAll() []model.SysConfig {
 	return repositories.SysConfigRepository.Find(simple.DB(), simple.NewSqlCnd().Asc("id"))
 }
 
-func (this *sysConfigService) SetAll(configStr string) error {
+func (s *sysConfigService) SetAll(configStr string) error {
 	json := gjson.Parse(configStr)
 	configs, ok := json.Value().(map[string]interface{})
 	if !ok {
@@ -60,7 +60,7 @@ func (this *sysConfigService) SetAll(configStr string) error {
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		for k, _ := range configs {
 			v := json.Get(k).String()
-			if err := this.setSingle(tx, k, v, "", ""); err != nil {
+			if err := s.setSingle(tx, k, v, "", ""); err != nil {
 				return err
 			}
 		}
@@ -69,16 +69,16 @@ func (this *sysConfigService) SetAll(configStr string) error {
 }
 
 // 设置配置，如果配置不存在，那么创建
-func (this *sysConfigService) Set(key, value, name, description string) error {
+func (s *sysConfigService) Set(key, value, name, description string) error {
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		if err := this.setSingle(tx, key, value, name, description); err != nil {
+		if err := s.setSingle(tx, key, value, name, description); err != nil {
 			return err
 		}
 		return nil
 	})
 }
 
-func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) error {
+func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) error {
 	if len(key) == 0 {
 		return errors.New("sys config key is null")
 	}
@@ -113,7 +113,7 @@ func (this *sysConfigService) setSingle(db *gorm.DB, key, value, name, descripti
 	}
 }
 
-func (this *sysConfigService) GetConfigResponse() *model.ConfigResponse {
+func (s *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 	var (
 		siteTitle        = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
 		siteDescription  = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)

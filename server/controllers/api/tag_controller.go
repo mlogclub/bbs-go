@@ -15,7 +15,7 @@ type TagController struct {
 }
 
 // 标签详情
-func (this *TagController) GetBy(tagId int64) *simple.JsonResult {
+func (c *TagController) GetBy(tagId int64) *simple.JsonResult {
 	tag := cache.TagCache.Get(tagId)
 	if tag == nil {
 		return simple.JsonErrorMsg("标签不存在")
@@ -24,8 +24,8 @@ func (this *TagController) GetBy(tagId int64) *simple.JsonResult {
 }
 
 // 标签列表
-func (this *TagController) GetTags() *simple.JsonResult {
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+func (c *TagController) GetTags() *simple.JsonResult {
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 	tags, paging := services.TagService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("status", model.StatusOk).
 		Page(page, 200).Desc("id"))
@@ -34,8 +34,8 @@ func (this *TagController) GetTags() *simple.JsonResult {
 }
 
 // 标签自动完成
-func (this *TagController) PostAutocomplete() *simple.JsonResult {
-	input := this.Ctx.FormValue("input")
+func (c *TagController) PostAutocomplete() *simple.JsonResult {
+	input := c.Ctx.FormValue("input")
 	tags := services.TagService.Autocomplete(input)
 	return simple.JsonData(tags)
 }

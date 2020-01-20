@@ -16,46 +16,46 @@ func newLinkService() *linkService {
 type linkService struct {
 }
 
-func (this *linkService) Get(id int64) *model.Link {
+func (s *linkService) Get(id int64) *model.Link {
 	return repositories.LinkRepository.Get(simple.DB(), id)
 }
 
-func (this *linkService) Take(where ...interface{}) *model.Link {
+func (s *linkService) Take(where ...interface{}) *model.Link {
 	return repositories.LinkRepository.Take(simple.DB(), where...)
 }
 
-func (this *linkService) Find(cnd *simple.SqlCnd) []model.Link {
+func (s *linkService) Find(cnd *simple.SqlCnd) []model.Link {
 	return repositories.LinkRepository.Find(simple.DB(), cnd)
 }
 
-func (this *linkService) FindOne(cnd *simple.SqlCnd) *model.Link {
+func (s *linkService) FindOne(cnd *simple.SqlCnd) *model.Link {
 	return repositories.LinkRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *linkService) FindPageByParams(params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
+func (s *linkService) FindPageByParams(params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
 	return repositories.LinkRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *linkService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Link, paging *simple.Paging) {
+func (s *linkService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Link, paging *simple.Paging) {
 	return repositories.LinkRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *linkService) Create(t *model.Link) error {
+func (s *linkService) Create(t *model.Link) error {
 	return repositories.LinkRepository.Create(simple.DB(), t)
 }
 
-func (this *linkService) Update(t *model.Link) error {
+func (s *linkService) Update(t *model.Link) error {
 	return repositories.LinkRepository.Update(simple.DB(), t)
 }
 
-func (this *linkService) Updates(id int64, columns map[string]interface{}) error {
+func (s *linkService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.LinkRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *linkService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *linkService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.LinkRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *linkService) Delete(id int64) {
+func (s *linkService) Delete(id int64) {
 	repositories.LinkRepository.Delete(simple.DB(), id)
 }

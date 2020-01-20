@@ -19,7 +19,7 @@ type ArticleController struct {
 	Ctx iris.Context
 }
 
-func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
+func (c *ArticleController) GetBy(id int64) *simple.JsonResult {
 	t := services.ArticleService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -27,8 +27,8 @@ func (this *ArticleController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *ArticleController) AnyList() *simple.JsonResult {
-	list, paging := services.ArticleService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+func (c *ArticleController) AnyList() *simple.JsonResult {
+	list, paging := services.ArticleService.FindPageByParams(simple.NewQueryParams(c.Ctx).
 		EqByReq("id").EqByReq("user_id").EqByReq("status").LikeByReq("title").PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
@@ -64,12 +64,12 @@ func (this *ArticleController) AnyList() *simple.JsonResult {
 	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
 }
 
-func (this *ArticleController) PostCreate() *simple.JsonResult {
+func (c *ArticleController) PostCreate() *simple.JsonResult {
 	return simple.JsonErrorMsg("为实现")
 }
 
-func (this *ArticleController) PostUpdate() *simple.JsonResult {
-	id := this.Ctx.PostValueInt64Default("id", 0)
+func (c *ArticleController) PostUpdate() *simple.JsonResult {
+	id := c.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
 		return simple.JsonErrorMsg("id is required")
 	}
@@ -78,7 +78,7 @@ func (this *ArticleController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	this.Ctx.ReadForm(t)
+	c.Ctx.ReadForm(t)
 
 	// 数据校验
 	if len(t.Title) == 0 {
@@ -100,8 +100,8 @@ func (this *ArticleController) PostUpdate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *ArticleController) PostDelete() *simple.JsonResult {
-	id := this.Ctx.PostValueInt64Default("id", 0)
+func (c *ArticleController) PostDelete() *simple.JsonResult {
+	id := c.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
 		return simple.JsonErrorMsg("id is required")
 	}

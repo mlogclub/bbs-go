@@ -20,33 +20,33 @@ func newUserTokenService() *userTokenService {
 type userTokenService struct {
 }
 
-func (this *userTokenService) Get(id int64) *model.UserToken {
+func (s *userTokenService) Get(id int64) *model.UserToken {
 	return repositories.UserTokenRepository.Get(simple.DB(), id)
 }
 
-func (this *userTokenService) Take(where ...interface{}) *model.UserToken {
+func (s *userTokenService) Take(where ...interface{}) *model.UserToken {
 	return repositories.UserTokenRepository.Take(simple.DB(), where...)
 }
 
-func (this *userTokenService) Find(cnd *simple.SqlCnd) []model.UserToken {
+func (s *userTokenService) Find(cnd *simple.SqlCnd) []model.UserToken {
 	return repositories.UserTokenRepository.Find(simple.DB(), cnd)
 }
 
-func (this *userTokenService) FindOne(cnd *simple.SqlCnd) *model.UserToken {
+func (s *userTokenService) FindOne(cnd *simple.SqlCnd) *model.UserToken {
 	return repositories.UserTokenRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *userTokenService) FindPageByParams(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
+func (s *userTokenService) FindPageByParams(params *simple.QueryParams) (list []model.UserToken, paging *simple.Paging) {
 	return repositories.UserTokenRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *userTokenService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.UserToken, paging *simple.Paging) {
+func (s *userTokenService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.UserToken, paging *simple.Paging) {
 	return repositories.UserTokenRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 // 获取当前登录用户的id
-func (this *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
-	user := this.GetCurrent(ctx)
+func (s *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
+	user := s.GetCurrent(ctx)
 	if user != nil {
 		return user.Id
 	}
@@ -54,8 +54,8 @@ func (this *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
 }
 
 // 获取当前登录用户
-func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
-	token := this.GetUserToken(ctx)
+func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
+	token := s.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
 	if userToken == nil || userToken.Status == model.StatusDeleted {
@@ -73,8 +73,8 @@ func (this *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 }
 
 // 退出登录
-func (this *userTokenService) Signout(ctx iris.Context) error {
-	token := this.GetUserToken(ctx)
+func (s *userTokenService) Signout(ctx iris.Context) error {
+	token := s.GetUserToken(ctx)
 	userToken := repositories.UserTokenRepository.GetByToken(simple.DB(), token)
 	if userToken == nil {
 		return nil
@@ -83,7 +83,7 @@ func (this *userTokenService) Signout(ctx iris.Context) error {
 }
 
 // 从请求体中获取UserToken
-func (this *userTokenService) GetUserToken(ctx iris.Context) string {
+func (s *userTokenService) GetUserToken(ctx iris.Context) string {
 	userToken := ctx.FormValue("userToken")
 	if len(userToken) > 0 {
 		return userToken
@@ -92,7 +92,7 @@ func (this *userTokenService) GetUserToken(ctx iris.Context) string {
 }
 
 // 生成
-func (this *userTokenService) Generate(userId int64) (string, error) {
+func (s *userTokenService) Generate(userId int64) (string, error) {
 	token := simple.Uuid()
 	expiredAt := time.Now().Add(time.Hour * 24 * 7) // 7天后过期
 	userToken := &model.UserToken{
@@ -110,7 +110,7 @@ func (this *userTokenService) Generate(userId int64) (string, error) {
 }
 
 // 禁用
-func (this *userTokenService) Disable(token string) error {
+func (s *userTokenService) Disable(token string) error {
 	t := repositories.UserTokenRepository.GetByToken(simple.DB(), token)
 	if t == nil {
 		return nil

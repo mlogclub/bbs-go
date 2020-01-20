@@ -18,8 +18,8 @@ type UserController struct {
 }
 
 // 获取当前登录用户
-func (this *UserController) GetCurrent() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) GetCurrent() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user != nil {
 		return simple.JsonData(render.BuildUser(user))
 	}
@@ -27,7 +27,7 @@ func (this *UserController) GetCurrent() *simple.JsonResult {
 }
 
 // 用户详情
-func (this *UserController) GetBy(userId int64) *simple.JsonResult {
+func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
 	if user != nil && user.Status != model.StatusDeleted {
 		return simple.JsonData(render.BuildUser(user))
@@ -36,17 +36,17 @@ func (this *UserController) GetBy(userId int64) *simple.JsonResult {
 }
 
 // 修改用户资料
-func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	if user.Id != userId {
 		return simple.JsonErrorMsg("无权限")
 	}
-	nickname := strings.TrimSpace(simple.FormValue(this.Ctx, "nickname"))
-	avatar := strings.TrimSpace(simple.FormValue(this.Ctx, "avatar"))
-	description := simple.FormValue(this.Ctx, "description")
+	nickname := strings.TrimSpace(simple.FormValue(c.Ctx, "nickname"))
+	avatar := strings.TrimSpace(simple.FormValue(c.Ctx, "avatar"))
+	description := simple.FormValue(c.Ctx, "description")
 
 	if len(nickname) == 0 {
 		return simple.JsonErrorMsg("昵称不能为空")
@@ -67,12 +67,12 @@ func (this *UserController) PostEditBy(userId int64) *simple.JsonResult {
 }
 
 // 设置用户名
-func (this *UserController) PostSetUsername() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) PostSetUsername() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	username := strings.TrimSpace(simple.FormValue(this.Ctx, "username"))
+	username := strings.TrimSpace(simple.FormValue(c.Ctx, "username"))
 	err := services.UserService.SetUsername(user.Id, username)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -81,12 +81,12 @@ func (this *UserController) PostSetUsername() *simple.JsonResult {
 }
 
 // 设置邮箱
-func (this *UserController) PostSetEmail() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) PostSetEmail() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	email := strings.TrimSpace(simple.FormValue(this.Ctx, "email"))
+	email := strings.TrimSpace(simple.FormValue(c.Ctx, "email"))
 	err := services.UserService.SetEmail(user.Id, email)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -95,13 +95,13 @@ func (this *UserController) PostSetEmail() *simple.JsonResult {
 }
 
 // 设置密码
-func (this *UserController) PostSetPassword() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) PostSetPassword() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	password := simple.FormValue(this.Ctx, "password")
-	rePassword := simple.FormValue(this.Ctx, "rePassword")
+	password := simple.FormValue(c.Ctx, "password")
+	rePassword := simple.FormValue(c.Ctx, "rePassword")
 	err := services.UserService.SetPassword(user.Id, password, rePassword)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -110,15 +110,15 @@ func (this *UserController) PostSetPassword() *simple.JsonResult {
 }
 
 // 修改密码
-func (this *UserController) PostUpdatePassword() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) PostUpdatePassword() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	var (
-		oldPassword = simple.FormValue(this.Ctx, "oldPassword")
-		password    = simple.FormValue(this.Ctx, "password")
-		rePassword  = simple.FormValue(this.Ctx, "rePassword")
+		oldPassword = simple.FormValue(c.Ctx, "oldPassword")
+		password    = simple.FormValue(c.Ctx, "password")
+		rePassword  = simple.FormValue(c.Ctx, "rePassword")
 	)
 	err := services.UserService.UpdatePassword(user.Id, oldPassword, password, rePassword)
 	if err != nil {
@@ -128,9 +128,9 @@ func (this *UserController) PostUpdatePassword() *simple.JsonResult {
 }
 
 // 用户收藏
-func (this *UserController) GetFavorites() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+func (c *UserController) GetFavorites() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 
 	// 用户必须登录
 	if user == nil {
@@ -154,8 +154,8 @@ func (this *UserController) GetFavorites() *simple.JsonResult {
 }
 
 // 获取最近3条未读消息
-func (this *UserController) GetMsgrecent() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *UserController) GetMsgrecent() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	var count int64 = 0
 	var messages []model.Message
 	if user != nil {
@@ -166,9 +166,9 @@ func (this *UserController) GetMsgrecent() *simple.JsonResult {
 }
 
 // 用户消息
-func (this *UserController) GetMessages() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+func (c *UserController) GetMessages() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
 	// 用户必须登录
 	if user == nil {
@@ -186,7 +186,7 @@ func (this *UserController) GetMessages() *simple.JsonResult {
 }
 
 // 最新用户
-func (this *UserController) GetNewest() *simple.JsonResult {
+func (c *UserController) GetNewest() *simple.JsonResult {
 	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildUsers(users))
 }

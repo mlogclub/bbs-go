@@ -16,7 +16,7 @@ func newTopicRepository() *topicRepository {
 type topicRepository struct {
 }
 
-func (this *topicRepository) Get(db *gorm.DB, id int64) *model.Topic {
+func (r *topicRepository) Get(db *gorm.DB, id int64) *model.Topic {
 	ret := &model.Topic{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -24,7 +24,7 @@ func (this *topicRepository) Get(db *gorm.DB, id int64) *model.Topic {
 	return ret
 }
 
-func (this *topicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topic {
+func (r *topicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topic {
 	ret := &model.Topic{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -32,12 +32,12 @@ func (this *topicRepository) Take(db *gorm.DB, where ...interface{}) *model.Topi
 	return ret
 }
 
-func (this *topicRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Topic) {
+func (r *topicRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Topic) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *topicRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Topic {
+func (r *topicRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Topic {
 	ret := &model.Topic{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,11 +45,11 @@ func (this *topicRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Top
 	return ret
 }
 
-func (this *topicRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *topicRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *topicRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Topic, paging *simple.Paging) {
+func (r *topicRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Topic, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Topic{})
 
@@ -61,26 +61,26 @@ func (this *topicRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (lis
 	return
 }
 
-func (this *topicRepository) Create(db *gorm.DB, t *model.Topic) (err error) {
+func (r *topicRepository) Create(db *gorm.DB, t *model.Topic) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *topicRepository) Update(db *gorm.DB, t *model.Topic) (err error) {
+func (r *topicRepository) Update(db *gorm.DB, t *model.Topic) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *topicRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *topicRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Topic{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *topicRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *topicRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Topic{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *topicRepository) Delete(db *gorm.DB, id int64) {
+func (r *topicRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Topic{}, "id = ?", id)
 }

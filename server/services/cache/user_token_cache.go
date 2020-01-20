@@ -29,11 +29,11 @@ func newUserTokenCache() *userTokenCache {
 	}
 }
 
-func (this *userTokenCache) Get(token string) *model.UserToken {
+func (c *userTokenCache) Get(token string) *model.UserToken {
 	if len(token) == 0 {
 		return nil
 	}
-	val, err := this.cache.Get(token)
+	val, err := c.cache.Get(token)
 	if err != nil {
 		return nil
 	}
@@ -43,6 +43,6 @@ func (this *userTokenCache) Get(token string) *model.UserToken {
 	return nil
 }
 
-func (this *userTokenCache) Invalidate(token string) {
-	this.cache.Invalidate(token)
+func (c *userTokenCache) Invalidate(token string) {
+	c.cache.Invalidate(token)
 }

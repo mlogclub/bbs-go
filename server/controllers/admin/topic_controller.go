@@ -15,7 +15,7 @@ type TopicController struct {
 	Ctx iris.Context
 }
 
-func (this *TopicController) GetBy(id int64) *simple.JsonResult {
+func (c *TopicController) GetBy(id int64) *simple.JsonResult {
 	t := services.TopicService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -23,8 +23,8 @@ func (this *TopicController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TopicController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+func (c *TopicController) AnyList() *simple.JsonResult {
+	list, paging := services.TopicService.FindPageByParams(simple.NewQueryParams(c.Ctx).
 		EqByReq("id").EqByReq("user_id").EqByReq("status").EqByReq("recommend").LikeByReq("title").PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
@@ -53,8 +53,8 @@ func (this *TopicController) AnyList() *simple.JsonResult {
 }
 
 // 推荐
-func (this *TopicController) PostRecommend() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicController) PostRecommend() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -66,8 +66,8 @@ func (this *TopicController) PostRecommend() *simple.JsonResult {
 }
 
 // 取消推荐
-func (this *TopicController) DeleteRecommend() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicController) DeleteRecommend() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -78,9 +78,9 @@ func (this *TopicController) DeleteRecommend() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-func (this *TopicController) PostCreate() *simple.JsonResult {
+func (c *TopicController) PostCreate() *simple.JsonResult {
 	t := &model.Topic{}
-	err := this.Ctx.ReadForm(t)
+	err := c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -92,8 +92,8 @@ func (this *TopicController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TopicController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -102,7 +102,7 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -114,8 +114,8 @@ func (this *TopicController) PostUpdate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TopicController) PostDelete() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicController) PostDelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -127,8 +127,8 @@ func (this *TopicController) PostDelete() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-func (this *TopicController) PostUndelete() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicController) PostUndelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

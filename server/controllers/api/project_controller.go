@@ -12,7 +12,7 @@ type ProjectController struct {
 	Ctx iris.Context
 }
 
-func (this *ProjectController) GetBy(projectId int64) *simple.JsonResult {
+func (c *ProjectController) GetBy(projectId int64) *simple.JsonResult {
 	project := services.ProjectService.Get(projectId)
 	if project == nil {
 		return simple.JsonErrorMsg("项目不存在")
@@ -20,10 +20,10 @@ func (this *ProjectController) GetBy(projectId int64) *simple.JsonResult {
 	return simple.JsonData(render.BuildProject(project))
 }
 
-func (this *ProjectController) GetProjects() *simple.JsonResult {
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+func (c *ProjectController) GetProjects() *simple.JsonResult {
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
-	projects, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(this.Ctx).
+	projects, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(c.Ctx).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleProjects(projects), paging)

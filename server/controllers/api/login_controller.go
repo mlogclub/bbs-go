@@ -18,15 +18,15 @@ type LoginController struct {
 }
 
 // 注册
-func (this *LoginController) PostSignup() *simple.JsonResult {
+func (c *LoginController) PostSignup() *simple.JsonResult {
 	var (
-		captchaId   = this.Ctx.PostValueTrim("captchaId")
-		captchaCode = this.Ctx.PostValueTrim("captchaCode")
-		username    = this.Ctx.PostValueTrim("username")
-		password    = this.Ctx.PostValueTrim("password")
-		rePassword  = this.Ctx.PostValueTrim("rePassword")
-		nickname    = this.Ctx.PostValueTrim("nickname")
-		ref         = this.Ctx.FormValue("ref")
+		captchaId   = c.Ctx.PostValueTrim("captchaId")
+		captchaCode = c.Ctx.PostValueTrim("captchaCode")
+		username    = c.Ctx.PostValueTrim("username")
+		password    = c.Ctx.PostValueTrim("password")
+		rePassword  = c.Ctx.PostValueTrim("rePassword")
+		nickname    = c.Ctx.PostValueTrim("nickname")
+		ref         = c.Ctx.FormValue("ref")
 	)
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
@@ -35,17 +35,17 @@ func (this *LoginController) PostSignup() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return this.GenerateLoginResult(user, ref)
+	return c.GenerateLoginResult(user, ref)
 }
 
 // 用户名密码登录
-func (this *LoginController) PostSignin() *simple.JsonResult {
+func (c *LoginController) PostSignin() *simple.JsonResult {
 	var (
-		captchaId   = this.Ctx.PostValueTrim("captchaId")
-		captchaCode = this.Ctx.PostValueTrim("captchaCode")
-		username    = this.Ctx.PostValueTrim("username")
-		password    = this.Ctx.PostValueTrim("password")
-		ref         = this.Ctx.FormValue("ref")
+		captchaId   = c.Ctx.PostValueTrim("captchaId")
+		captchaCode = c.Ctx.PostValueTrim("captchaCode")
+		username    = c.Ctx.PostValueTrim("username")
+		password    = c.Ctx.PostValueTrim("password")
+		ref         = c.Ctx.FormValue("ref")
 	)
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
@@ -54,12 +54,12 @@ func (this *LoginController) PostSignin() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return this.GenerateLoginResult(user, ref)
+	return c.GenerateLoginResult(user, ref)
 }
 
 // 退出登录
-func (this *LoginController) GetSignout() *simple.JsonResult {
-	err := services.UserTokenService.Signout(this.Ctx)
+func (c *LoginController) GetSignout() *simple.JsonResult {
+	err := services.UserTokenService.Signout(c.Ctx)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -67,16 +67,16 @@ func (this *LoginController) GetSignout() *simple.JsonResult {
 }
 
 // 获取Github登录授权地址
-func (this *LoginController) GetGithubAuthorize() *simple.JsonResult {
-	ref := this.Ctx.FormValue("ref")
+func (c *LoginController) GetGithubAuthorize() *simple.JsonResult {
+	ref := c.Ctx.FormValue("ref")
 	url := github.AuthCodeURL(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
 // 获取Github回调信息获取
-func (this *LoginController) GetGithubCallback() *simple.JsonResult {
-	code := this.Ctx.FormValue("code")
-	state := this.Ctx.FormValue("state")
+func (c *LoginController) GetGithubCallback() *simple.JsonResult {
+	code := c.Ctx.FormValue("code")
+	state := c.Ctx.FormValue("state")
 
 	thirdAccount, err := services.ThirdAccountService.GetOrCreateByGithub(code, state)
 	if err != nil {
@@ -87,21 +87,21 @@ func (this *LoginController) GetGithubCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return this.GenerateLoginResult(user, "")
+		return c.GenerateLoginResult(user, "")
 	}
 }
 
 // 获取QQ登录授权地址
-func (this *LoginController) GetQqAuthorize() *simple.JsonResult {
-	ref := this.Ctx.FormValue("ref")
+func (c *LoginController) GetQqAuthorize() *simple.JsonResult {
+	ref := c.Ctx.FormValue("ref")
 	url := qq.AuthorizeUrl(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
 // 获取QQ回调信息获取
-func (this *LoginController) GetQqCallback() *simple.JsonResult {
-	code := this.Ctx.FormValue("code")
-	state := this.Ctx.FormValue("state")
+func (c *LoginController) GetQqCallback() *simple.JsonResult {
+	code := c.Ctx.FormValue("code")
+	state := c.Ctx.FormValue("state")
 
 	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state)
 	if err != nil {
@@ -112,12 +112,12 @@ func (this *LoginController) GetQqCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return this.GenerateLoginResult(user, "")
+		return c.GenerateLoginResult(user, "")
 	}
 }
 
 // user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
-func (this *LoginController) GenerateLoginResult(user *model.User, ref string) *simple.JsonResult {
+func (c *LoginController) GenerateLoginResult(user *model.User, ref string) *simple.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

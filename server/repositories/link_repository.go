@@ -16,7 +16,7 @@ func newLinkRepository() *linkRepository {
 type linkRepository struct {
 }
 
-func (this *linkRepository) Get(db *gorm.DB, id int64) *model.Link {
+func (r *linkRepository) Get(db *gorm.DB, id int64) *model.Link {
 	ret := &model.Link{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -24,7 +24,7 @@ func (this *linkRepository) Get(db *gorm.DB, id int64) *model.Link {
 	return ret
 }
 
-func (this *linkRepository) Take(db *gorm.DB, where ...interface{}) *model.Link {
+func (r *linkRepository) Take(db *gorm.DB, where ...interface{}) *model.Link {
 	ret := &model.Link{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -32,12 +32,12 @@ func (this *linkRepository) Take(db *gorm.DB, where ...interface{}) *model.Link 
 	return ret
 }
 
-func (this *linkRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link) {
+func (r *linkRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *linkRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Link {
+func (r *linkRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Link {
 	ret := &model.Link{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,11 +45,11 @@ func (this *linkRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Link
 	return ret
 }
 
-func (this *linkRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *linkRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Link, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *linkRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link, paging *simple.Paging) {
+func (r *linkRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Link, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Link{})
 
@@ -61,26 +61,26 @@ func (this *linkRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
-func (this *linkRepository) Create(db *gorm.DB, t *model.Link) (err error) {
+func (r *linkRepository) Create(db *gorm.DB, t *model.Link) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *linkRepository) Update(db *gorm.DB, t *model.Link) (err error) {
+func (r *linkRepository) Update(db *gorm.DB, t *model.Link) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *linkRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *linkRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Link{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *linkRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *linkRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Link{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *linkRepository) Delete(db *gorm.DB, id int64) {
+func (r *linkRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Link{}, "id = ?", id)
 }

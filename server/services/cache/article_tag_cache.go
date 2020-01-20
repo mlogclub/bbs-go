@@ -35,8 +35,8 @@ func newArticleTagCache() *articleTagCache {
 	}
 }
 
-func (this *articleTagCache) Get(articleId int64) []int64 {
-	val, err := this.cache.Get(articleId)
+func (c *articleTagCache) Get(articleId int64) []int64 {
+	val, err := c.cache.Get(articleId)
 	if err != nil {
 		return nil
 	}
@@ -46,6 +46,6 @@ func (this *articleTagCache) Get(articleId int64) []int64 {
 	return nil
 }
 
-func (this *articleTagCache) Invalidate(articleId int64) {
-	this.cache.Invalidate(articleId)
+func (c *articleTagCache) Invalidate(articleId int64) {
+	c.cache.Invalidate(articleId)
 }

@@ -22,61 +22,61 @@ func newThirdAccountService() *thirdAccountService {
 type thirdAccountService struct {
 }
 
-func (this *thirdAccountService) Get(id int64) *model.ThirdAccount {
+func (s *thirdAccountService) Get(id int64) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Get(simple.DB(), id)
 }
 
-func (this *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount {
+func (s *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Take(simple.DB(), where...)
 }
 
-func (this *thirdAccountService) Find(cnd *simple.SqlCnd) []model.ThirdAccount {
+func (s *thirdAccountService) Find(cnd *simple.SqlCnd) []model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Find(simple.DB(), cnd)
 }
 
-func (this *thirdAccountService) FindOne(cnd *simple.SqlCnd) *model.ThirdAccount {
+func (s *thirdAccountService) FindOne(cnd *simple.SqlCnd) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *thirdAccountService) FindPageByParams(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
+func (s *thirdAccountService) FindPageByParams(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
 	return repositories.ThirdAccountRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *thirdAccountService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
+func (s *thirdAccountService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
 	return repositories.ThirdAccountRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *thirdAccountService) Create(t *model.ThirdAccount) error {
+func (s *thirdAccountService) Create(t *model.ThirdAccount) error {
 	return repositories.ThirdAccountRepository.Create(simple.DB(), t)
 }
 
-func (this *thirdAccountService) Update(t *model.ThirdAccount) error {
+func (s *thirdAccountService) Update(t *model.ThirdAccount) error {
 	return repositories.ThirdAccountRepository.Update(simple.DB(), t)
 }
 
-func (this *thirdAccountService) Updates(id int64, columns map[string]interface{}) error {
+func (s *thirdAccountService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.ThirdAccountRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *thirdAccountService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *thirdAccountService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.ThirdAccountRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *thirdAccountService) Delete(id int64) {
+func (s *thirdAccountService) Delete(id int64) {
 	repositories.ThirdAccountRepository.Delete(simple.DB(), id)
 }
 
-func (this *thirdAccountService) GetThirdAccount(thirdType string, thirdId string) *model.ThirdAccount {
+func (s *thirdAccountService) GetThirdAccount(thirdType string, thirdId string) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Take(simple.DB(), "third_type = ? and third_id = ?", thirdType, thirdId)
 }
 
-func (this *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {
+func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {
 	userInfo, err := github.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}
 
-	account := this.GetThirdAccount(model.ThirdAccountTypeGithub, strconv.FormatInt(userInfo.Id, 10))
+	account := s.GetThirdAccount(model.ThirdAccountTypeGithub, strconv.FormatInt(userInfo.Id, 10))
 	if account != nil {
 		return account, nil
 	}
@@ -97,20 +97,20 @@ func (this *thirdAccountService) GetOrCreateByGithub(code, state string) (*model
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
-	err = this.Create(account)
+	err = s.Create(account)
 	if err != nil {
 		return nil, err
 	}
 	return account, nil
 }
 
-func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdAccount, error) {
+func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdAccount, error) {
 	userInfo, err := qq.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}
 
-	account := this.GetThirdAccount(model.ThirdAccountTypeQQ, userInfo.Unionid)
+	account := s.GetThirdAccount(model.ThirdAccountTypeQQ, userInfo.Unionid)
 	if account != nil {
 		return account, nil
 	}
@@ -126,7 +126,7 @@ func (this *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.Thi
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
-	err = this.Create(account)
+	err = s.Create(account)
 	if err != nil {
 		return nil, err
 	}

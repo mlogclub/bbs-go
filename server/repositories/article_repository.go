@@ -16,7 +16,7 @@ func newArticleRepository() *articleRepository {
 type articleRepository struct {
 }
 
-func (this *articleRepository) Get(db *gorm.DB, id int64) *model.Article {
+func (r *articleRepository) Get(db *gorm.DB, id int64) *model.Article {
 	ret := &model.Article{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -24,7 +24,7 @@ func (this *articleRepository) Get(db *gorm.DB, id int64) *model.Article {
 	return ret
 }
 
-func (this *articleRepository) Take(db *gorm.DB, where ...interface{}) *model.Article {
+func (r *articleRepository) Take(db *gorm.DB, where ...interface{}) *model.Article {
 	ret := &model.Article{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -32,12 +32,12 @@ func (this *articleRepository) Take(db *gorm.DB, where ...interface{}) *model.Ar
 	return ret
 }
 
-func (this *articleRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Article) {
+func (r *articleRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Article) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *articleRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Article {
+func (r *articleRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Article {
 	ret := &model.Article{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,11 +45,11 @@ func (this *articleRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.A
 	return ret
 }
 
-func (this *articleRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *articleRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *articleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Article, paging *simple.Paging) {
+func (r *articleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Article, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Article{})
 
@@ -61,26 +61,26 @@ func (this *articleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (l
 	return
 }
 
-func (this *articleRepository) Create(db *gorm.DB, t *model.Article) (err error) {
+func (r *articleRepository) Create(db *gorm.DB, t *model.Article) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *articleRepository) Update(db *gorm.DB, t *model.Article) (err error) {
+func (r *articleRepository) Update(db *gorm.DB, t *model.Article) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *articleRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *articleRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.Article{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *articleRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *articleRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.Article{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *articleRepository) Delete(db *gorm.DB, id int64) {
+func (r *articleRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Article{}, "id = ?", id)
 }

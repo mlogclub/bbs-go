@@ -13,7 +13,7 @@ type CaptchaController struct {
 	Ctx iris.Context
 }
 
-func (this *CaptchaController) GetRequest() *simple.JsonResult {
+func (c *CaptchaController) GetRequest() *simple.JsonResult {
 	captchaId := captcha.NewLen(4)
 	captchaUrl := urls.AbsUrl("/api/captcha/show?captchaId=" + captchaId)
 	return simple.NewEmptyRspBuilder().
@@ -22,28 +22,28 @@ func (this *CaptchaController) GetRequest() *simple.JsonResult {
 		JsonResult()
 }
 
-func (this *CaptchaController) GetShow() {
-	captchaId := this.Ctx.URLParam("captchaId")
+func (c *CaptchaController) GetShow() {
+	captchaId := c.Ctx.URLParam("captchaId")
 
 	if captchaId == "" {
-		this.Ctx.StatusCode(404)
+		c.Ctx.StatusCode(404)
 		return
 	}
 
 	if !captcha.Reload(captchaId) {
-		this.Ctx.StatusCode(404)
+		c.Ctx.StatusCode(404)
 		return
 	}
 
-	this.Ctx.Header("Content-Type", "image/png")
-	if err := captcha.WriteImage(this.Ctx.ResponseWriter(), captchaId, captcha.StdWidth, captcha.StdHeight); err != nil {
+	c.Ctx.Header("Content-Type", "image/png")
+	if err := captcha.WriteImage(c.Ctx.ResponseWriter(), captchaId, captcha.StdWidth, captcha.StdHeight); err != nil {
 		logrus.Error(err)
 	}
 }
 
-func (this *CaptchaController) GetVerify() *simple.JsonResult {
-	captchaId := this.Ctx.URLParam("captchaId")
-	captchaCode := this.Ctx.URLParam("captchaCode")
+func (c *CaptchaController) GetVerify() *simple.JsonResult {
+	captchaId := c.Ctx.URLParam("captchaId")
+	captchaCode := c.Ctx.URLParam("captchaCode")
 	success := captcha.VerifyString(captchaId, captchaCode)
 	return simple.NewEmptyRspBuilder().Put("success", success).JsonResult()
 }

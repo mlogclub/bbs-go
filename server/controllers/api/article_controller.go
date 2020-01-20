@@ -19,7 +19,7 @@ type ArticleController struct {
 }
 
 // 文章详情
-func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
+func (c *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != model.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
@@ -29,16 +29,16 @@ func (this *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 }
 
 // 发表文章
-func (this *ArticleController) PostCreate() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *ArticleController) PostCreate() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	var (
-		tags    = simple.FormValueStringArray(this.Ctx, "tags")
-		title   = this.Ctx.PostValue("title")
-		summary = this.Ctx.PostValue("summary")
-		content = this.Ctx.PostValue("content")
+		tags    = simple.FormValueStringArray(c.Ctx, "tags")
+		title   = c.Ctx.PostValue("title")
+		summary = c.Ctx.PostValue("summary")
+		content = c.Ctx.PostValue("content")
 	)
 
 	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
@@ -50,8 +50,8 @@ func (this *ArticleController) PostCreate() *simple.JsonResult {
 }
 
 // 编辑时获取详情
-func (this *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
@@ -81,16 +81,16 @@ func (this *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 }
 
 // 编辑文章
-func (this *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 
 	var (
-		tags    = simple.FormValueStringArray(this.Ctx, "tags")
-		title   = this.Ctx.PostValue("title")
-		content = this.Ctx.PostValue("content")
+		tags    = simple.FormValueStringArray(c.Ctx, "tags")
+		title   = c.Ctx.PostValue("title")
+		content = c.Ctx.PostValue("content")
 	)
 
 	article := services.ArticleService.Get(articleId)
@@ -110,8 +110,8 @@ func (this *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 }
 
 // 删除文章
-func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
@@ -133,8 +133,8 @@ func (this *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult 
 }
 
 // 收藏文章
-func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(this.Ctx)
+func (c *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
@@ -146,7 +146,7 @@ func (this *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResul
 }
 
 // 文章跳转链接
-func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
+func (c *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != model.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
@@ -159,14 +159,14 @@ func (this *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult
 }
 
 // 最近文章
-func (this *ArticleController) GetRecent() *simple.JsonResult {
+func (c *ArticleController) GetRecent() *simple.JsonResult {
 	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
 // 用户最近的文章
-func (this *ArticleController) GetUserRecent() *simple.JsonResult {
-	userId, err := simple.FormValueInt64(this.Ctx, "userId")
+func (c *ArticleController) GetUserRecent() *simple.JsonResult {
+	userId, err := simple.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -176,12 +176,12 @@ func (this *ArticleController) GetUserRecent() *simple.JsonResult {
 }
 
 // 用户文章列表
-func (this *ArticleController) GetUserArticles() *simple.JsonResult {
-	userId, err := simple.FormValueInt64(this.Ctx, "userId")
+func (c *ArticleController) GetUserArticles() *simple.JsonResult {
+	userId, err := simple.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
 	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
@@ -192,34 +192,34 @@ func (this *ArticleController) GetUserArticles() *simple.JsonResult {
 }
 
 // 文章列表
-func (this *ArticleController) GetArticles() *simple.JsonResult {
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
+func (c *ArticleController) GetArticles() *simple.JsonResult {
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 	articles, cursor := services.ArticleService.GetArticles(cursor)
 	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 标签文章列表
-func (this *ArticleController) GetTagArticles() *simple.JsonResult {
-	cursor := simple.FormValueInt64Default(this.Ctx, "cursor", 0)
-	tagId := simple.FormValueInt64Default(this.Ctx, "tagId", 0)
+func (c *ArticleController) GetTagArticles() *simple.JsonResult {
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	tagId := simple.FormValueInt64Default(c.Ctx, "tagId", 0)
 	articles, cursor := services.ArticleService.GetTagArticles(tagId, cursor)
 	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 用户最新的文章
-func (this *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult {
+func (c *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult {
 	newestArticles := services.ArticleService.GetUserNewestArticles(userId)
 	return simple.JsonData(render.BuildSimpleArticles(newestArticles))
 }
 
 // 相关文章
-func (this *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
+func (c *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
 	relatedArticles := services.ArticleService.GetRelatedArticles(articleId)
 	return simple.JsonData(render.BuildSimpleArticles(relatedArticles))
 }
 
 // 推荐
-func (this *ArticleController) GetRecommend() *simple.JsonResult {
+func (c *ArticleController) GetRecommend() *simple.JsonResult {
 	articles := cache.ArticleCache.GetRecommendArticles()
 	if articles == nil || len(articles) == 0 {
 		return simple.JsonSuccess()
@@ -239,13 +239,13 @@ func (this *ArticleController) GetRecommend() *simple.JsonResult {
 }
 
 // 最新文章
-func (this *ArticleController) GetNewest() *simple.JsonResult {
+func (c *ArticleController) GetNewest() *simple.JsonResult {
 	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(5))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
 // 热门文章
-func (this *ArticleController) GetHot() *simple.JsonResult {
+func (c *ArticleController) GetHot() *simple.JsonResult {
 	articles := cache.ArticleCache.GetHotArticles()
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }

@@ -34,8 +34,8 @@ func newTopicCache() *topicCache {
 	}
 }
 
-func (this *topicCache) GetRecommendTopics() []model.Topic {
-	val, err := this.recommendCache.Get(topicRecommendCacheKey)
+func (c *topicCache) GetRecommendTopics() []model.Topic {
+	val, err := c.recommendCache.Get(topicRecommendCacheKey)
 	if err != nil {
 		return nil
 	}
@@ -45,6 +45,6 @@ func (this *topicCache) GetRecommendTopics() []model.Topic {
 	return nil
 }
 
-func (this *topicCache) InvalidateRecommend() {
-	this.recommendCache.Invalidate(topicRecommendCacheKey)
+func (c *topicCache) InvalidateRecommend() {
+	c.recommendCache.Invalidate(topicRecommendCacheKey)
 }

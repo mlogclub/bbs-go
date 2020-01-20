@@ -27,73 +27,73 @@ type sitemapService struct {
 	building bool // is in building
 }
 
-func (this *sitemapService) Get(id int64) *model.Sitemap {
+func (s *sitemapService) Get(id int64) *model.Sitemap {
 	return repositories.SitemapRepository.Get(simple.DB(), id)
 }
 
-func (this *sitemapService) Take(where ...interface{}) *model.Sitemap {
+func (s *sitemapService) Take(where ...interface{}) *model.Sitemap {
 	return repositories.SitemapRepository.Take(simple.DB(), where...)
 }
 
-func (this *sitemapService) Find(cnd *simple.SqlCnd) []model.Sitemap {
+func (s *sitemapService) Find(cnd *simple.SqlCnd) []model.Sitemap {
 	return repositories.SitemapRepository.Find(simple.DB(), cnd)
 }
 
-func (this *sitemapService) FindOne(cnd *simple.SqlCnd) *model.Sitemap {
+func (s *sitemapService) FindOne(cnd *simple.SqlCnd) *model.Sitemap {
 	return repositories.SitemapRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *sitemapService) FindPageByParams(params *simple.QueryParams) (list []model.Sitemap, paging *simple.Paging) {
+func (s *sitemapService) FindPageByParams(params *simple.QueryParams) (list []model.Sitemap, paging *simple.Paging) {
 	return repositories.SitemapRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *sitemapService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Sitemap, paging *simple.Paging) {
+func (s *sitemapService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Sitemap, paging *simple.Paging) {
 	return repositories.SitemapRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *sitemapService) Create(t *model.Sitemap) error {
+func (s *sitemapService) Create(t *model.Sitemap) error {
 	return repositories.SitemapRepository.Create(simple.DB(), t)
 }
 
-func (this *sitemapService) Update(t *model.Sitemap) error {
+func (s *sitemapService) Update(t *model.Sitemap) error {
 	return repositories.SitemapRepository.Update(simple.DB(), t)
 }
 
-func (this *sitemapService) Updates(id int64, columns map[string]interface{}) error {
+func (s *sitemapService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.SitemapRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *sitemapService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *sitemapService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.SitemapRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *sitemapService) Delete(id int64) {
+func (s *sitemapService) Delete(id int64) {
 	repositories.SitemapRepository.Delete(simple.DB(), id)
 }
 
-func (this *sitemapService) GenerateToday() {
-	if this.building {
+func (s *sitemapService) GenerateToday() {
+	if s.building {
 		logrus.Info("sitemap is in building")
 		return
 	}
 
-	this.building = true
+	s.building = true
 	defer func() {
-		this.building = false
+		s.building = false
 	}()
 
 	dateFrom := simple.WithTimeAsStartOfDay(time.Now())
 	dateTo := dateFrom.Add(time.Hour * 24)
 
-	this.GenerateMisc()
-	this.GenerateUser()
-	this.Generate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo))
+	s.GenerateMisc()
+	s.GenerateUser()
+	s.Generate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo))
 }
 
-func (this *sitemapService) Generate(dateFrom, dateTo int64) {
+func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	sitemapName := "sitemap-" + simple.TimeFormat(simple.TimeFromTimestamp(dateFrom), simple.FMT_DATE)
 	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
-		this.AddSitemapIndex(sm, sitemapLoc)
+		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 
 	// topics
@@ -139,9 +139,9 @@ func (this *sitemapService) Generate(dateFrom, dateTo int64) {
 	sm.Finalize()
 }
 
-func (this *sitemapService) GenerateMisc() {
+func (s *sitemapService) GenerateMisc() {
 	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-misc", func(sm *sitemap.Generator, sitemapLoc string) {
-		this.AddSitemapIndex(sm, sitemapLoc)
+		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 	sm.AddURL(sitemap.URL{
 		Loc:        urls.AbsUrl("/"),
@@ -185,9 +185,9 @@ func (this *sitemapService) GenerateMisc() {
 	sm.Finalize()
 }
 
-func (this *sitemapService) GenerateUser() {
+func (s *sitemapService) GenerateUser() {
 	sm := sitemap.NewGenerator(config.Conf.AliyunOss.Host, sitemapPath, "sitemap-user", func(sm *sitemap.Generator, sitemapLoc string) {
-		this.AddSitemapIndex(sm, sitemapLoc)
+		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 	UserService.Scan(func(users []model.User) {
 		for _, user := range users {
@@ -203,11 +203,11 @@ func (this *sitemapService) GenerateUser() {
 	sm.Finalize()
 }
 
-func (this *sitemapService) AddSitemapIndex(sm *sitemap.Generator, sitemapLoc string) {
+func (s *sitemapService) AddSitemapIndex(sm *sitemap.Generator, sitemapLoc string) {
 	locName := simple.MD5(sitemapLoc)
-	t := this.FindOne(simple.NewSqlCnd().Eq("loc_name", locName))
+	t := s.FindOne(simple.NewSqlCnd().Eq("loc_name", locName))
 	if t == nil {
-		_ = this.Create(&model.Sitemap{
+		_ = s.Create(&model.Sitemap{
 			Model:      model.Model{},
 			Loc:        sitemapLoc,
 			Lastmod:    simple.NowTimestamp(),
@@ -216,16 +216,16 @@ func (this *sitemapService) AddSitemapIndex(sm *sitemap.Generator, sitemapLoc st
 		})
 	} else {
 		t.Lastmod = simple.NowTimestamp()
-		_ = this.Update(t)
+		_ = s.Update(t)
 	}
 
 	go func() {
-		this.GenerateSitemapIndex(sm)
+		s.GenerateSitemapIndex(sm)
 	}()
 }
 
-func (this *sitemapService) GenerateSitemapIndex(sm *sitemap.Generator) {
-	sitemaps := this.Find(simple.NewSqlCnd().Desc("id"))
+func (s *sitemapService) GenerateSitemapIndex(sm *sitemap.Generator) {
+	sitemaps := s.Find(simple.NewSqlCnd().Desc("id"))
 
 	if len(sitemaps) == 0 {
 		return

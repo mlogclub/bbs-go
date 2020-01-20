@@ -18,46 +18,46 @@ type LinkController struct {
 	Ctx iris.Context
 }
 
-func (this *LinkController) GetBy(id int64) *simple.JsonResult {
+func (c *LinkController) GetBy(id int64) *simple.JsonResult {
 	link := services.LinkService.Get(id)
 	if link == nil || link.Status == model.StatusDeleted {
 		return simple.JsonErrorMsg("数据不存在")
 	}
-	return simple.JsonData(this.buildLink(*link))
+	return simple.JsonData(c.buildLink(*link))
 }
 
 // 列表
-func (this *LinkController) GetLinks() *simple.JsonResult {
-	page := simple.FormValueIntDefault(this.Ctx, "page", 1)
+func (c *LinkController) GetLinks() *simple.JsonResult {
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
 	links, paging := services.LinkService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("status", model.StatusOk).Page(page, 20).Desc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range links {
-		itemList = append(itemList, this.buildLink(v))
+		itemList = append(itemList, c.buildLink(v))
 	}
 	return simple.JsonPageData(itemList, paging)
 }
 
 // 待审核
-func (this *LinkController) GetPending() *simple.JsonResult {
+func (c *LinkController) GetPending() *simple.JsonResult {
 	links := services.LinkService.Find(simple.NewSqlCnd().
 		Eq("status", model.StatusPending).Limit(3).Desc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range links {
-		itemList = append(itemList, this.buildLink(v))
+		itemList = append(itemList, c.buildLink(v))
 	}
 	return simple.JsonData(itemList)
 }
 
-func (this *LinkController) PostCreate() *simple.JsonResult {
+func (c *LinkController) PostCreate() *simple.JsonResult {
 	var (
-		title   = this.Ctx.FormValue("title")
-		url     = this.Ctx.FormValue("url")
-		summary = this.Ctx.FormValue("summary")
-		logo    = this.Ctx.FormValue("logo")
+		title   = c.Ctx.FormValue("title")
+		url     = c.Ctx.FormValue("url")
+		summary = c.Ctx.FormValue("summary")
+		logo    = c.Ctx.FormValue("logo")
 	)
 	if err := common.IsValidateUrl(url); err != nil {
 		return simple.JsonErrorMsg("博客链接错误")
@@ -69,7 +69,7 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg("描述不能为空")
 	}
 
-	userId := services.UserTokenService.GetCurrentUserId(this.Ctx)
+	userId := services.UserTokenService.GetCurrentUserId(c.Ctx)
 	link := &model.Link{
 		UserId:     userId,
 		Url:        url,
@@ -87,8 +87,8 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 }
 
 // 通过网址检测标题和描述
-func (this *LinkController) PostDetect() *simple.JsonResult {
-	url := this.Ctx.FormValue("url")
+func (c *LinkController) PostDetect() *simple.JsonResult {
+	url := c.Ctx.FormValue("url")
 	if err := common.IsValidateUrl(url); err != nil {
 		logrus.Error(err.Error(), url)
 		return simple.JsonSuccess()
@@ -108,7 +108,7 @@ func (this *LinkController) PostDetect() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("title", title).Put("description", description).JsonResult()
 }
 
-func (this *LinkController) buildLink(link model.Link) map[string]interface{} {
+func (c *LinkController) buildLink(link model.Link) map[string]interface{} {
 	return map[string]interface{}{
 		"linkId":     link.Id,
 		"url":        link.Url,

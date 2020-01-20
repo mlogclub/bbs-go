@@ -28,31 +28,31 @@ func newUserService() *userService {
 type userService struct {
 }
 
-func (this *userService) Get(id int64) *model.User {
+func (s *userService) Get(id int64) *model.User {
 	return repositories.UserRepository.Get(simple.DB(), id)
 }
 
-func (this *userService) Take(where ...interface{}) *model.User {
+func (s *userService) Take(where ...interface{}) *model.User {
 	return repositories.UserRepository.Take(simple.DB(), where...)
 }
 
-func (this *userService) Find(cnd *simple.SqlCnd) []model.User {
+func (s *userService) Find(cnd *simple.SqlCnd) []model.User {
 	return repositories.UserRepository.Find(simple.DB(), cnd)
 }
 
-func (this *userService) FindOne(cnd *simple.SqlCnd) *model.User {
+func (s *userService) FindOne(cnd *simple.SqlCnd) *model.User {
 	return repositories.UserRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *userService) FindPageByParams(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
+func (s *userService) FindPageByParams(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
 	return repositories.UserRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *userService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.User, paging *simple.Paging) {
+func (s *userService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.User, paging *simple.Paging) {
 	return repositories.UserRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *userService) Create(t *model.User) error {
+func (s *userService) Create(t *model.User) error {
 	err := repositories.UserRepository.Create(simple.DB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
@@ -60,31 +60,31 @@ func (this *userService) Create(t *model.User) error {
 	return nil
 }
 
-func (this *userService) Update(t *model.User) error {
+func (s *userService) Update(t *model.User) error {
 	err := repositories.UserRepository.Update(simple.DB(), t)
 	cache.UserCache.Invalidate(t.Id)
 	return err
 }
 
-func (this *userService) Updates(id int64, columns map[string]interface{}) error {
+func (s *userService) Updates(id int64, columns map[string]interface{}) error {
 	err := repositories.UserRepository.Updates(simple.DB(), id, columns)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
-func (this *userService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *userService) UpdateColumn(id int64, name string, value interface{}) error {
 	err := repositories.UserRepository.UpdateColumn(simple.DB(), id, name, value)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
-func (this *userService) Delete(id int64) {
+func (s *userService) Delete(id int64) {
 	repositories.UserRepository.Delete(simple.DB(), id)
 	cache.UserCache.Invalidate(id)
 }
 
 // 扫描
-func (this *userService) Scan(cb ScanUserCallback) {
+func (s *userService) Scan(cb ScanUserCallback) {
 	var cursor int64
 	for {
 		list := repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
@@ -96,16 +96,16 @@ func (this *userService) Scan(cb ScanUserCallback) {
 	}
 }
 
-func (this *userService) GetByEmail(email string) *model.User {
+func (s *userService) GetByEmail(email string) *model.User {
 	return repositories.UserRepository.GetByEmail(simple.DB(), email)
 }
 
-func (this *userService) GetByUsername(username string) *model.User {
+func (s *userService) GetByUsername(username string) *model.User {
 	return repositories.UserRepository.GetByUsername(simple.DB(), username)
 }
 
 // 注册
-func (this *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
+func (s *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 	nickname = strings.TrimSpace(nickname)
@@ -129,13 +129,13 @@ func (this *userService) SignUp(username, email, nickname, password, rePassword 
 		if err := common.IsValidateEmail(email); err != nil {
 			return nil, err
 		}
-		if this.GetByEmail(email) != nil {
+		if s.GetByEmail(email) != nil {
 			return nil, errors.New("邮箱：" + email + " 已被占用")
 		}
 	}
 
 	// 验证用户名是否存在
-	if this.isUsernameExists(username) {
+	if s.isUsernameExists(username) {
 		return nil, errors.New("用户名：" + username + " 已被占用")
 	}
 
@@ -154,7 +154,7 @@ func (this *userService) SignUp(username, email, nickname, password, rePassword 
 			return err
 		}
 
-		avatarUrl, err := this.HandleAvatar(user.Id, "")
+		avatarUrl, err := s.HandleAvatar(user.Id, "")
 		if err != nil {
 			return err
 		}
@@ -172,7 +172,7 @@ func (this *userService) SignUp(username, email, nickname, password, rePassword 
 }
 
 // 登录
-func (this *userService) SignIn(username, password string) (*model.User, error) {
+func (s *userService) SignIn(username, password string) (*model.User, error) {
 	if len(username) == 0 {
 		return nil, errors.New("用户名/邮箱不能为空")
 	}
@@ -181,9 +181,9 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 	}
 	var user *model.User = nil
 	if err := common.IsValidateEmail(username); err == nil { // 如果用户输入的是邮箱
-		user = this.GetByEmail(username)
+		user = s.GetByEmail(username)
 	} else {
-		user = this.GetByUsername(username)
+		user = s.GetByUsername(username)
 	}
 	if user == nil || user.Status != model.StatusOk {
 		return nil, errors.New("用户不存在或被禁用")
@@ -195,8 +195,8 @@ func (this *userService) SignIn(username, password string) (*model.User, error) 
 }
 
 // 第三方账号登录
-func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
-	user := this.Get(thirdAccount.UserId.Int64)
+func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
+	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		if user.Status != model.StatusOk {
 			return nil, simple.NewErrorMsg("用户已被禁用")
@@ -220,7 +220,7 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 			return err
 		}
 
-		avatarUrl, err := this.HandleAvatar(user.Id, thirdAccount.Avatar)
+		avatarUrl, err := s.HandleAvatar(user.Id, thirdAccount.Avatar)
 		if err != nil {
 			return err
 		}
@@ -239,7 +239,7 @@ func (this *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) 
 
 // 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
 // thirdAvatar: 第三方登录带过来的头像
-func (this *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
+func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
 	if len(thirdAvatar) > 0 {
 		return oss.CopyImage(thirdAvatar)
 	}
@@ -252,66 +252,66 @@ func (this *userService) HandleAvatar(userId int64, thirdAvatar string) (string,
 }
 
 // 邮箱是否存在
-func (this *userService) isEmailExists(email string) bool {
+func (s *userService) isEmailExists(email string) bool {
 	if len(email) == 0 { // 如果邮箱为空，那么就认为是不存在
 		return false
 	}
-	return this.GetByEmail(email) != nil
+	return s.GetByEmail(email) != nil
 }
 
 // 用户名是否存在
-func (this *userService) isUsernameExists(username string) bool {
-	return this.GetByUsername(username) != nil
+func (s *userService) isUsernameExists(username string) bool {
+	return s.GetByUsername(username) != nil
 }
 
 // 设置用户名
-func (this *userService) SetUsername(userId int64, username string) error {
+func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
 	if err := common.IsValidateUsername(username); err != nil {
 		return err
 	}
 
-	user := this.Get(userId)
+	user := s.Get(userId)
 	if len(user.Username.String) > 0 {
 		return errors.New("你已设置了用户名，无法重复设置。")
 	}
-	if this.isUsernameExists(username) {
+	if s.isUsernameExists(username) {
 		return errors.New("用户名：" + username + " 已被占用")
 	}
-	return this.UpdateColumn(userId, "username", username)
+	return s.UpdateColumn(userId, "username", username)
 }
 
 // 设置密码
-func (this *userService) SetEmail(userId int64, email string) error {
+func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
 	if err := common.IsValidateEmail(email); err != nil {
 		return err
 	}
-	if this.isEmailExists(email) {
+	if s.isEmailExists(email) {
 		return errors.New("邮箱：" + email + " 已被占用")
 	}
-	return this.UpdateColumn(userId, "email", email)
+	return s.UpdateColumn(userId, "email", email)
 }
 
 // 设置密码
-func (this *userService) SetPassword(userId int64, password, rePassword string) error {
+func (s *userService) SetPassword(userId int64, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
 	}
-	user := this.Get(userId)
+	user := s.Get(userId)
 	if len(user.Password) > 0 {
 		return errors.New("你已设置了密码，如需修改请前往修改页面。")
 	}
 	password = simple.EncodePassword(password)
-	return this.UpdateColumn(userId, "password", password)
+	return s.UpdateColumn(userId, "password", password)
 }
 
 // 修改密码
-func (this *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
+func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
 	}
-	user := this.Get(userId)
+	user := s.Get(userId)
 
 	if len(user.Password) == 0 {
 		return errors.New("你没设置密码，请先设置密码")
@@ -321,5 +321,5 @@ func (this *userService) UpdatePassword(userId int64, oldPassword, password, reP
 		return errors.New("旧密码验证失败")
 	}
 
-	return this.UpdateColumn(userId, "password", simple.EncodePassword(password))
+	return s.UpdateColumn(userId, "password", simple.EncodePassword(password))
 }

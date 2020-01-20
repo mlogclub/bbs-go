@@ -14,7 +14,7 @@ type TopicNodeController struct {
 	Ctx iris.Context
 }
 
-func (this *TopicNodeController) GetBy(id int64) *simple.JsonResult {
+func (c *TopicNodeController) GetBy(id int64) *simple.JsonResult {
 	t := services.TopicNodeService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -22,14 +22,14 @@ func (this *TopicNodeController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TopicNodeController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicNodeService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Asc("sort_no").Desc("id"))
+func (c *TopicNodeController) AnyList() *simple.JsonResult {
+	list, paging := services.TopicNodeService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Asc("sort_no").Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *TopicNodeController) PostCreate() *simple.JsonResult {
+func (c *TopicNodeController) PostCreate() *simple.JsonResult {
 	t := &model.TopicNode{}
-	err := this.Ctx.ReadForm(t)
+	err := c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -41,8 +41,8 @@ func (this *TopicNodeController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *TopicNodeController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *TopicNodeController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (this *TopicNodeController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

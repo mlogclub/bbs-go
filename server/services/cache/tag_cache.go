@@ -30,8 +30,8 @@ func newTagCache() *tagCache {
 	}
 }
 
-func (this *tagCache) Get(tagId int64) *model.Tag {
-	val, err := this.cache.Get(tagId)
+func (c *tagCache) Get(tagId int64) *model.Tag {
+	val, err := c.cache.Get(tagId)
 	if err != nil {
 		logrus.Error(err)
 		return nil
@@ -42,12 +42,12 @@ func (this *tagCache) Get(tagId int64) *model.Tag {
 	return nil
 }
 
-func (this *tagCache) GetList(tagIds []int64) (tags []model.Tag) {
+func (c *tagCache) GetList(tagIds []int64) (tags []model.Tag) {
 	if len(tagIds) == 0 {
 		return nil
 	}
 	for _, tagId := range tagIds {
-		tag := this.Get(tagId)
+		tag := c.Get(tagId)
 		if tag != nil {
 			tags = append(tags, *tag)
 		}
@@ -55,6 +55,6 @@ func (this *tagCache) GetList(tagIds []int64) (tags []model.Tag) {
 	return
 }
 
-func (this *tagCache) Invalidate(tagId int64) {
-	this.cache.Invalidate(tagId)
+func (c *tagCache) Invalidate(tagId int64) {
+	c.cache.Invalidate(tagId)
 }

@@ -19,13 +19,13 @@ func NewWxbotApi() *WxbotApi {
 	return &WxbotApi{}
 }
 
-func (this *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
+func (api *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 	if len(article.Title) == 0 || len(article.HtmlContent) == 0 {
 		return nil, errors.New("内容为空")
 	}
 
-	userId, _ := this.initUser(article)
-	tags := this.initTags(article)
+	userId, _ := api.initUser(article)
+	tags := api.initTags(article)
 	summary := article.Summary
 	if simple.RuneLen(summary) == 0 {
 		summary = simple.GetSummary(article.TextContent, 256)
@@ -35,7 +35,7 @@ func (this *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 		article.HtmlContent, model.ContentTypeHtml, tags, article.Url, true)
 }
 
-func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
+func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
 	user := services.UserService.GetByUsername(article.AppID)
 	if user != nil {
 		user.Nickname = article.AppName
@@ -65,7 +65,7 @@ func (this *WxbotApi) initUser(article *WxArticle) (int64, error) {
 	}
 }
 
-func (this *WxbotApi) initTags(wxArticle *WxArticle) []string {
+func (api *WxbotApi) initTags(wxArticle *WxArticle) []string {
 	var tagNames []string
 
 	if len(wxArticle.Categories) > 0 {

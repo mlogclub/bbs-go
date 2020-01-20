@@ -19,13 +19,13 @@ type SpiderController struct {
 }
 
 // 微信采集发布接口
-func (this *SpiderController) PostWxPublish() *simple.JsonResult {
-	err := this.checkToken()
+func (c *SpiderController) PostWxPublish() *simple.JsonResult {
+	err := c.checkToken()
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	article := &collect.WxArticle{}
-	err = this.Ctx.ReadJSON(article)
+	err = c.Ctx.ReadJSON(article)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -37,14 +37,14 @@ func (this *SpiderController) PostWxPublish() *simple.JsonResult {
 }
 
 // 采集发布
-func (this *SpiderController) PostArticlePublish() *simple.JsonResult {
-	err := this.checkToken()
+func (c *SpiderController) PostArticlePublish() *simple.JsonResult {
+	err := c.checkToken()
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
 	article := &collect.Article{}
-	err = this.Ctx.ReadJSON(article)
+	err = c.Ctx.ReadJSON(article)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -56,14 +56,14 @@ func (this *SpiderController) PostArticlePublish() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("id", articleId).JsonResult()
 }
 
-func (this *SpiderController) PostCommentPublish() *simple.JsonResult {
-	err := this.checkToken()
+func (c *SpiderController) PostCommentPublish() *simple.JsonResult {
+	err := c.checkToken()
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
 	comment := &collect.Comment{}
-	err = this.Ctx.ReadJSON(comment)
+	err = c.Ctx.ReadJSON(comment)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -75,22 +75,22 @@ func (this *SpiderController) PostCommentPublish() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("id", commentId).JsonResult()
 }
 
-func (this *SpiderController) PostProjectPublish() *simple.JsonResult {
-	err := this.checkToken()
+func (c *SpiderController) PostProjectPublish() *simple.JsonResult {
+	err := c.checkToken()
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
 	var (
-		userIdStr   = this.Ctx.FormValue("userId")
+		userIdStr   = c.Ctx.FormValue("userId")
 		userId, _   = strconv.ParseInt(userIdStr, 10, 64)
-		name        = this.Ctx.FormValue("name")
-		title       = this.Ctx.FormValue("title")
-		logo        = this.Ctx.FormValue("logo")
-		url         = this.Ctx.FormValue("url")
-		docUrl      = this.Ctx.FormValue("docUrl")
-		downloadUrl = this.Ctx.FormValue("downloadUrl")
-		content     = this.Ctx.FormValue("content")
+		name        = c.Ctx.FormValue("name")
+		title       = c.Ctx.FormValue("title")
+		logo        = c.Ctx.FormValue("logo")
+		url         = c.Ctx.FormValue("url")
+		docUrl      = c.Ctx.FormValue("docUrl")
+		downloadUrl = c.Ctx.FormValue("downloadUrl")
+		content     = c.Ctx.FormValue("content")
 	)
 
 	if len(name) == 0 || len(title) == 0 || len(content) == 0 {
@@ -110,8 +110,8 @@ func (this *SpiderController) PostProjectPublish() *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("id", p.Id).JsonResult()
 }
 
-func (this *SpiderController) checkToken() error {
-	token := this.Ctx.FormValue("token")
+func (c *SpiderController) checkToken() error {
+	token := c.Ctx.FormValue("token")
 	data, err := ioutil.ReadFile("/data/publish_token")
 	if err != nil {
 		return err

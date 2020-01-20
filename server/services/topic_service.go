@@ -29,48 +29,48 @@ func newTopicService() *topicService {
 
 type topicService struct{}
 
-func (this *topicService) Get(id int64) *model.Topic {
+func (s *topicService) Get(id int64) *model.Topic {
 	return repositories.TopicRepository.Get(simple.DB(), id)
 }
 
-func (this *topicService) Take(where ...interface{}) *model.Topic {
+func (s *topicService) Take(where ...interface{}) *model.Topic {
 	return repositories.TopicRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicService) Find(cnd *simple.SqlCnd) []model.Topic {
+func (s *topicService) Find(cnd *simple.SqlCnd) []model.Topic {
 	return repositories.TopicRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicService) FindOne(cnd *simple.SqlCnd) *model.Topic {
+func (s *topicService) FindOne(cnd *simple.SqlCnd) *model.Topic {
 	return repositories.TopicRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *topicService) FindPageByParams(params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
+func (s *topicService) FindPageByParams(params *simple.QueryParams) (list []model.Topic, paging *simple.Paging) {
 	return repositories.TopicRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, paging *simple.Paging) {
+func (s *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, paging *simple.Paging) {
 	return repositories.TopicRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *topicService) Create(t *model.Topic) error {
+func (s *topicService) Create(t *model.Topic) error {
 	return repositories.TopicRepository.Create(simple.DB(), t)
 }
 
-func (this *topicService) Update(t *model.Topic) error {
+func (s *topicService) Update(t *model.Topic) error {
 	return repositories.TopicRepository.Update(simple.DB(), t)
 }
 
-func (this *topicService) Updates(id int64, columns map[string]interface{}) error {
+func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.TopicRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *topicService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *topicService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 // 删除
-func (this *topicService) Delete(id int64) error {
+func (s *topicService) Delete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
@@ -80,7 +80,7 @@ func (this *topicService) Delete(id int64) error {
 }
 
 // 取消删除
-func (this *topicService) Undelete(id int64) error {
+func (s *topicService) Undelete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusOk)
 	if err == nil {
 		// 删掉标签文章
@@ -90,7 +90,7 @@ func (this *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (this *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
+func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -132,7 +132,7 @@ func (this *topicService) Publish(userId, nodeId int64, tags []string, title, co
 }
 
 // 更新
-func (this *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *simple.CodeError {
+func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *simple.CodeError {
 	if len(title) == 0 {
 		return simple.NewErrorMsg("标题不能为空")
 	}
@@ -165,12 +165,12 @@ func (this *topicService) Edit(topicId, nodeId int64, tags []string, title, cont
 }
 
 // 推荐
-func (this *topicService) SetRecommend(topicId int64, recommend bool) error {
-	return this.UpdateColumn(topicId, "recommend", recommend)
+func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
+	return s.UpdateColumn(topicId, "recommend", recommend)
 }
 
 // 话题的标签
-func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
+func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
 
 	var tagIds []int64
@@ -181,7 +181,7 @@ func (this *topicService) GetTopicTags(topicId int64) []model.Tag {
 }
 
 // 指定标签下话题列表
-func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
+func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", model.StatusOk).
@@ -192,7 +192,7 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 			topicIds = append(topicIds, topicTag.TopicId)
 		}
 
-		topicsMap := this.GetTopicInIds(topicIds)
+		topicsMap := s.GetTopicInIds(topicIds)
 		if topicsMap != nil {
 			for _, topicTag := range topicTags {
 				if topic, found := topicsMap[topicTag.TopicId]; found {
@@ -205,7 +205,7 @@ func (this *topicService) GetTagTopics(tagId int64, page int) (topics []model.To
 }
 
 // GetTopicInIds 根据编号批量获取主题
-func (this *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic {
+func (s *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic {
 	if len(topicIds) == 0 {
 		return nil
 	}
@@ -220,12 +220,12 @@ func (this *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic 
 }
 
 // 浏览数+1
-func (this *topicService) IncrViewCount(topicId int64) {
+func (s *topicService) IncrViewCount(topicId int64) {
 	simple.DB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
 }
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
-func (this *topicService) OnComment(topicId, lastCommentTime int64) {
+func (s *topicService) OnComment(topicId, lastCommentTime int64) {
 	simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		if err := tx.Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?", lastCommentTime, topicId).Error; err != nil {
 			return err
@@ -238,7 +238,7 @@ func (this *topicService) OnComment(topicId, lastCommentTime int64) {
 }
 
 // rss
-func (this *topicService) GenerateRss() {
+func (s *topicService) GenerateRss() {
 	topics := repositories.TopicRepository.Find(simple.DB(),
 		simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(1000))
 
@@ -284,7 +284,7 @@ func (this *topicService) GenerateRss() {
 }
 
 // 倒序扫描
-func (this *topicService) ScanDesc(dateFrom, dateTo int64, cb ScanTopicCallback) {
+func (s *topicService) ScanDesc(dateFrom, dateTo int64, cb ScanTopicCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).

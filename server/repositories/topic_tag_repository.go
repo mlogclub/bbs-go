@@ -16,7 +16,7 @@ func newTopicTagRepository() *topicTagRepository {
 type topicTagRepository struct {
 }
 
-func (this *topicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
+func (r *topicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -24,7 +24,7 @@ func (this *topicTagRepository) Get(db *gorm.DB, id int64) *model.TopicTag {
 	return ret
 }
 
-func (this *topicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.TopicTag {
+func (r *topicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -32,12 +32,12 @@ func (this *topicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.T
 	return ret
 }
 
-func (this *topicTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag) {
+func (r *topicTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *topicTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.TopicTag {
+func (r *topicTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,11 +45,11 @@ func (this *topicTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.
 	return ret
 }
 
-func (this *topicTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *topicTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *topicTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
+func (r *topicTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.TopicTag{})
 
@@ -61,36 +61,36 @@ func (this *topicTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (
 	return
 }
 
-func (this *topicTagRepository) Create(db *gorm.DB, t *model.TopicTag) (err error) {
+func (r *topicTagRepository) Create(db *gorm.DB, t *model.TopicTag) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *topicTagRepository) Update(db *gorm.DB, t *model.TopicTag) (err error) {
+func (r *topicTagRepository) Update(db *gorm.DB, t *model.TopicTag) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *topicTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *topicTagRepository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.TopicTag{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *topicTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *topicTagRepository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.TopicTag{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *topicTagRepository) Delete(db *gorm.DB, id int64) {
+func (r *topicTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.TopicTag{}, "id = ?", id)
 }
 
-func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {
+func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {
 	if topicId <= 0 || len(tagIds) == 0 {
 		return
 	}
 	for _, tagId := range tagIds {
-		_ = this.Create(db, &model.TopicTag{
+		_ = r.Create(db, &model.TopicTag{
 			TopicId:    topicId,
 			TagId:      tagId,
 			CreateTime: simple.NowTimestamp(),
@@ -98,7 +98,7 @@ func (this *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds 
 	}
 }
 
-func (this *topicTagRepository) DeleteTopicTags(db *gorm.DB, topicId int64) {
+func (r *topicTagRepository) DeleteTopicTags(db *gorm.DB, topicId int64) {
 	if topicId <= 0 {
 		return
 	}

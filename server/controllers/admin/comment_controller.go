@@ -15,7 +15,7 @@ type CommentController struct {
 	Ctx iris.Context
 }
 
-func (this *CommentController) GetBy(id int64) *simple.JsonResult {
+func (c *CommentController) GetBy(id int64) *simple.JsonResult {
 	t := services.CommentService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -23,8 +23,8 @@ func (this *CommentController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *CommentController) AnyList() *simple.JsonResult {
-	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(this.Ctx).EqByReq("status").PageByReq().Desc("id"))
+func (c *CommentController) AnyList() *simple.JsonResult {
+	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).EqByReq("status").PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, comment := range list {
@@ -43,7 +43,7 @@ func (this *CommentController) AnyList() *simple.JsonResult {
 	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
 }
 
-func (this *CommentController) PostDeleteBy(id int64) *simple.JsonResult {
+func (c *CommentController) PostDeleteBy(id int64) *simple.JsonResult {
 	err := services.CommentService.Delete(id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

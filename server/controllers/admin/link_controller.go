@@ -18,7 +18,7 @@ type LinkController struct {
 	Ctx iris.Context
 }
 
-func (this *LinkController) GetBy(id int64) *simple.JsonResult {
+func (c *LinkController) GetBy(id int64) *simple.JsonResult {
 	t := services.LinkService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -26,14 +26,14 @@ func (this *LinkController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *LinkController) AnyList() *simple.JsonResult {
-	list, paging := services.LinkService.FindPageByParams(simple.NewQueryParams(this.Ctx).EqByReq("status").LikeByReq("title").LikeByReq("url").PageByReq().Desc("id"))
+func (c *LinkController) AnyList() *simple.JsonResult {
+	list, paging := services.LinkService.FindPageByParams(simple.NewQueryParams(c.Ctx).EqByReq("status").LikeByReq("title").LikeByReq("url").PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *LinkController) PostCreate() *simple.JsonResult {
+func (c *LinkController) PostCreate() *simple.JsonResult {
 	t := &model.Link{}
-	err := this.Ctx.ReadForm(t)
+	err := c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -45,8 +45,8 @@ func (this *LinkController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *LinkController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *LinkController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -55,7 +55,7 @@ func (this *LinkController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -67,8 +67,8 @@ func (this *LinkController) PostUpdate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *LinkController) GetDetect() *simple.JsonResult {
-	url := this.Ctx.FormValue("url")
+func (c *LinkController) GetDetect() *simple.JsonResult {
+	url := c.Ctx.FormValue("url")
 	resp, err := resty.New().SetRedirectPolicy(resty.FlexibleRedirectPolicy(3)).R().Get(url)
 	if err != nil {
 		logrus.Error(err)

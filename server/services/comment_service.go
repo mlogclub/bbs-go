@@ -19,52 +19,52 @@ func newCommentService() *commentService {
 type commentService struct {
 }
 
-func (this *commentService) Get(id int64) *model.Comment {
+func (s *commentService) Get(id int64) *model.Comment {
 	return repositories.CommentRepository.Get(simple.DB(), id)
 }
 
-func (this *commentService) Take(where ...interface{}) *model.Comment {
+func (s *commentService) Take(where ...interface{}) *model.Comment {
 	return repositories.CommentRepository.Take(simple.DB(), where...)
 }
 
-func (this *commentService) Find(cnd *simple.SqlCnd) []model.Comment {
+func (s *commentService) Find(cnd *simple.SqlCnd) []model.Comment {
 	return repositories.CommentRepository.Find(simple.DB(), cnd)
 }
 
-func (this *commentService) FindOne(cnd *simple.SqlCnd) *model.Comment {
+func (s *commentService) FindOne(cnd *simple.SqlCnd) *model.Comment {
 	return repositories.CommentRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *commentService) FindPageByParams(params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {
+func (s *commentService) FindPageByParams(params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {
 	return repositories.CommentRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment, paging *simple.Paging) {
+func (s *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment, paging *simple.Paging) {
 	return repositories.CommentRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *commentService) Create(t *model.Comment) error {
+func (s *commentService) Create(t *model.Comment) error {
 	return repositories.CommentRepository.Create(simple.DB(), t)
 }
 
-func (this *commentService) Update(t *model.Comment) error {
+func (s *commentService) Update(t *model.Comment) error {
 	return repositories.CommentRepository.Update(simple.DB(), t)
 }
 
-func (this *commentService) Updates(id int64, columns map[string]interface{}) error {
+func (s *commentService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.CommentRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *commentService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *commentService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *commentService) Delete(id int64) error {
+func (s *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
 }
 
 // 发表评论
-func (this *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
+func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
 
 	if len(form.EntityType) == 0 {
@@ -92,7 +92,7 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 		Status:      model.StatusOk,
 		CreateTime:  simple.NowTimestamp(),
 	}
-	if err := this.Create(comment); err != nil {
+	if err := s.Create(comment); err != nil {
 		return nil, err
 	}
 
@@ -108,14 +108,14 @@ func (this *commentService) Publish(userId int64, form *model.CreateCommentForm)
 }
 
 // 统计数量
-func (this *commentService) Count(entityType string, entityId int64) int64 {
+func (s *commentService) Count(entityType string, entityId int64) int64 {
 	var count int64 = 0
 	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
 	return count
 }
 
 // 列表
-func (this *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
+func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
 	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", model.StatusOk).Desc("id").Limit(50)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)

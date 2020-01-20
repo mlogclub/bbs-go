@@ -19,58 +19,58 @@ func newTopicLikeService() *topicLikeService {
 type topicLikeService struct {
 }
 
-func (this *topicLikeService) Get(id int64) *model.TopicLike {
+func (s *topicLikeService) Get(id int64) *model.TopicLike {
 	return repositories.TopicLikeRepository.Get(simple.DB(), id)
 }
 
-func (this *topicLikeService) Take(where ...interface{}) *model.TopicLike {
+func (s *topicLikeService) Take(where ...interface{}) *model.TopicLike {
 	return repositories.TopicLikeRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicLikeService) Find(cnd *simple.SqlCnd) []model.TopicLike {
+func (s *topicLikeService) Find(cnd *simple.SqlCnd) []model.TopicLike {
 	return repositories.TopicLikeRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicLikeService) FindOne(cnd *simple.SqlCnd) *model.TopicLike {
+func (s *topicLikeService) FindOne(cnd *simple.SqlCnd) *model.TopicLike {
 	return repositories.TopicLikeRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *topicLikeService) FindPageByParams(params *simple.QueryParams) (list []model.TopicLike, paging *simple.Paging) {
+func (s *topicLikeService) FindPageByParams(params *simple.QueryParams) (list []model.TopicLike, paging *simple.Paging) {
 	return repositories.TopicLikeRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *topicLikeService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicLike, paging *simple.Paging) {
+func (s *topicLikeService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicLike, paging *simple.Paging) {
 	return repositories.TopicLikeRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *topicLikeService) Create(t *model.TopicLike) error {
+func (s *topicLikeService) Create(t *model.TopicLike) error {
 	return repositories.TopicLikeRepository.Create(simple.DB(), t)
 }
 
-func (this *topicLikeService) Update(t *model.TopicLike) error {
+func (s *topicLikeService) Update(t *model.TopicLike) error {
 	return repositories.TopicLikeRepository.Update(simple.DB(), t)
 }
 
-func (this *topicLikeService) Updates(id int64, columns map[string]interface{}) error {
+func (s *topicLikeService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.TopicLikeRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *topicLikeService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *topicLikeService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.TopicLikeRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *topicLikeService) Delete(id int64) {
+func (s *topicLikeService) Delete(id int64) {
 	repositories.TopicLikeRepository.Delete(simple.DB(), id)
 }
 
 // 统计数量
-func (this *topicLikeService) Count(topicId int64) int64 {
+func (s *topicLikeService) Count(topicId int64) int64 {
 	var count int64 = 0
 	simple.DB().Model(&model.TopicLike{}).Where("topic_id = ?", topicId).Count(&count)
 	return count
 }
 
-func (this *topicLikeService) Like(userId int64, topicId int64) error {
+func (s *topicLikeService) Like(userId int64, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil || topic.Status != model.StatusOk {
 		return errors.New("话题不存在")

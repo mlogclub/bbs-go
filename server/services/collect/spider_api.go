@@ -16,13 +16,13 @@ func NewSpiderApi() *SpiderApi {
 	return &SpiderApi{}
 }
 
-func (this *SpiderApi) Publish(article *Article) (articleId int64, err error) {
+func (api *SpiderApi) Publish(article *Article) (articleId int64, err error) {
 	if article.Summary == "" {
 		article.Summary = common.GetSummary(article.ContentType, article.Content)
 	}
 
 	if len(article.Tags) == 0 {
-		article.Tags = this.AnalyzeTags(article)
+		article.Tags = api.AnalyzeTags(article)
 	}
 
 	t, err := services.ArticleService.Publish(article.UserId, article.Title, article.Summary, article.Content,
@@ -37,7 +37,7 @@ func (this *SpiderApi) Publish(article *Article) (articleId int64, err error) {
 	return
 }
 
-func (this *SpiderApi) PublishComment(comment *Comment) (commentId int64, err error) {
+func (api *SpiderApi) PublishComment(comment *Comment) (commentId int64, err error) {
 	if len(comment.Content) == 0 {
 		err = errors.New("评论内容不能为空")
 		return
@@ -59,7 +59,7 @@ func (this *SpiderApi) PublishComment(comment *Comment) (commentId int64, err er
 	return
 }
 
-func (this *SpiderApi) AnalyzeTags(article *Article) []string {
+func (api *SpiderApi) AnalyzeTags(article *Article) []string {
 	var analyzeRet *baiduai.AiAnalyzeRet
 	if article.ContentType == model.ContentTypeMarkdown {
 		analyzeRet, _ = baiduai.GetAi().AnalyzeMarkdown(article.Title, article.Content)

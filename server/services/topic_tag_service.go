@@ -16,50 +16,50 @@ func newTopicTagService() *topicTagService {
 type topicTagService struct {
 }
 
-func (this *topicTagService) Get(id int64) *model.TopicTag {
+func (s *topicTagService) Get(id int64) *model.TopicTag {
 	return repositories.TopicTagRepository.Get(simple.DB(), id)
 }
 
-func (this *topicTagService) Take(where ...interface{}) *model.TopicTag {
+func (s *topicTagService) Take(where ...interface{}) *model.TopicTag {
 	return repositories.TopicTagRepository.Take(simple.DB(), where...)
 }
 
-func (this *topicTagService) Find(cnd *simple.SqlCnd) []model.TopicTag {
+func (s *topicTagService) Find(cnd *simple.SqlCnd) []model.TopicTag {
 	return repositories.TopicTagRepository.Find(simple.DB(), cnd)
 }
 
-func (this *topicTagService) FindOne(cnd *simple.SqlCnd) *model.TopicTag {
+func (s *topicTagService) FindOne(cnd *simple.SqlCnd) *model.TopicTag {
 	return repositories.TopicTagRepository.FindOne(simple.DB(), cnd)
 }
 
-func (this *topicTagService) FindPageByParams(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
+func (s *topicTagService) FindPageByParams(params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
 	return repositories.TopicTagRepository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *topicTagService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
+func (s *topicTagService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
 	return repositories.TopicTagRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *topicTagService) Create(t *model.TopicTag) error {
+func (s *topicTagService) Create(t *model.TopicTag) error {
 	return repositories.TopicTagRepository.Create(simple.DB(), t)
 }
 
-func (this *topicTagService) Update(t *model.TopicTag) error {
+func (s *topicTagService) Update(t *model.TopicTag) error {
 	return repositories.TopicTagRepository.Update(simple.DB(), t)
 }
 
-func (this *topicTagService) Updates(id int64, columns map[string]interface{}) error {
+func (s *topicTagService) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.TopicTagRepository.Updates(simple.DB(), id, columns)
 }
 
-func (this *topicTagService) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *topicTagService) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.TopicTagRepository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *topicTagService) DeleteByTopicId(topicId int64) {
+func (s *topicTagService) DeleteByTopicId(topicId int64) {
 	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusDeleted)
 }
 
-func (this *topicTagService) UndeleteByTopicId(topicId int64) {
+func (s *topicTagService) UndeleteByTopicId(topicId int64) {
 	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusOk)
 }

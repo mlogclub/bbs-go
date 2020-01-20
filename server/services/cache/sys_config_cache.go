@@ -1,11 +1,13 @@
 package cache
 
 import (
+	"time"
+
 	"github.com/goburrow/cache"
+	"github.com/mlogclub/simple"
+
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
-	"time"
 )
 
 type sysConfigCache struct {
@@ -27,8 +29,8 @@ func newSysConfigCache() *sysConfigCache {
 	}
 }
 
-func (this *sysConfigCache) Get(key string) *model.SysConfig {
-	val, err := this.cache.Get(key)
+func (c *sysConfigCache) Get(key string) *model.SysConfig {
+	val, err := c.cache.Get(key)
 	if err != nil {
 		return nil
 	}
@@ -38,14 +40,14 @@ func (this *sysConfigCache) Get(key string) *model.SysConfig {
 	return nil
 }
 
-func (this *sysConfigCache) GetValue(key string) string {
-	sysConfig := this.Get(key)
+func (c *sysConfigCache) GetValue(key string) string {
+	sysConfig := c.Get(key)
 	if sysConfig == nil {
 		return ""
 	}
 	return sysConfig.Value
 }
 
-func (this *sysConfigCache) Invalidate(key string) {
-	this.cache.Invalidate(key)
+func (c *sysConfigCache) Invalidate(key string) {
+	c.cache.Invalidate(key)
 }

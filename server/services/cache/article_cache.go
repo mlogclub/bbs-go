@@ -46,8 +46,8 @@ func newArticleCache() *articleCache {
 	}
 }
 
-func (this *articleCache) GetRecommendArticles() []model.Article {
-	val, err := this.recommendCache.Get(articleRecommendCacheKey)
+func (c *articleCache) GetRecommendArticles() []model.Article {
+	val, err := c.recommendCache.Get(articleRecommendCacheKey)
 	if err != nil {
 		return nil
 	}
@@ -57,12 +57,12 @@ func (this *articleCache) GetRecommendArticles() []model.Article {
 	return nil
 }
 
-func (this *articleCache) InvalidateRecommend() {
-	this.recommendCache.Invalidate(articleRecommendCacheKey)
+func (c *articleCache) InvalidateRecommend() {
+	c.recommendCache.Invalidate(articleRecommendCacheKey)
 }
 
-func (this *articleCache) GetHotArticles() []model.Article {
-	val, err := this.hotCache.Get(articleHotCacheKey)
+func (c *articleCache) GetHotArticles() []model.Article {
+	val, err := c.hotCache.Get(articleHotCacheKey)
 	if err != nil {
 		return nil
 	}

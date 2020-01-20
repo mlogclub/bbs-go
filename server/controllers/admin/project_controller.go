@@ -14,7 +14,7 @@ type ProjectController struct {
 	Ctx iris.Context
 }
 
-func (this *ProjectController) GetBy(id int64) *simple.JsonResult {
+func (c *ProjectController) GetBy(id int64) *simple.JsonResult {
 	t := services.ProjectService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -22,14 +22,14 @@ func (this *ProjectController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *ProjectController) AnyList() *simple.JsonResult {
-	list, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
+func (c *ProjectController) AnyList() *simple.JsonResult {
+	list, paging := services.ProjectService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *ProjectController) PostCreate() *simple.JsonResult {
+func (c *ProjectController) PostCreate() *simple.JsonResult {
 	t := &model.Project{}
-	err := this.Ctx.ReadForm(t)
+	err := c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -41,8 +41,8 @@ func (this *ProjectController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *ProjectController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (c *ProjectController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (this *ProjectController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = c.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
