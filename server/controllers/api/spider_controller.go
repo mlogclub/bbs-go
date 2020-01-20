@@ -43,7 +43,7 @@ func (this *SpiderController) PostArticlePublish() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	article := &collect.SpiderArticle{}
+	article := &collect.Article{}
 	err = this.Ctx.ReadJSON(article)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -62,7 +62,7 @@ func (this *SpiderController) PostCommentPublish() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	comment := &collect.SpiderComment{}
+	comment := &collect.Comment{}
 	err = this.Ctx.ReadJSON(comment)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
