@@ -95,32 +95,35 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 
 	var (
 		fromId       = comment.UserId // 消息发送人
-		toId         int64            // 消息接收人
+		authorId     int64            // 帖子作者编号
 		content      string           // 消息内容
 		quoteContent string           // 引用内容
 	)
 
 	if comment.EntityType == model.EntityTypeArticle { // 文章被评论
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
-		if article != nil && article.UserId != comment.UserId {
-			toId = article.UserId
+		if article != nil {
+			authorId = article.UserId
 			content = user.Nickname + " 回复了你的文章：" + summary
 			quoteContent = "《" + article.Title + "》"
 		}
 	} else if comment.EntityType == model.EntityTypeTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
-		if topic != nil && topic.UserId != comment.UserId {
-			toId = topic.UserId
+		if topic != nil {
+			authorId = topic.UserId
 			content = user.Nickname + " 回复了你的话题：" + summary
 			quoteContent = "《" + topic.Title + "》"
 		}
 	}
 
-	if toId > 0 {
+	if authorId <= 0 {
+		return
+	}
 
-		// 给帖子/文章作者发消息（如果引用评论的作者和帖子作者是同一个人，那么就不发送该条消息，因为接下来会发送评论被回复消息）
-		if quote == nil || quote.UserId != toId {
-			s.Produce(fromId, toId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
+	if quote != nil { // 回复跟帖
+		if quote.UserId != authorId { // 被引用人和帖子作者不是同一个人，需要给帖子作者也发送一下消息
+			// 给帖子作者发消息
+			s.Produce(fromId, authorId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
@@ -128,18 +131,21 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 			})
 		}
 
-		// 评论被回复的时候，给被引用的人发送消息
-		if quote != nil {
-			toId = quote.UserId
-			content = user.Nickname + " 回复了你的评论：" + summary
-			quoteContent = common.GetMarkdownSummary(quote.Content)
-			s.Produce(fromId, toId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
-				"entityType": comment.EntityType,
-				"entityId":   comment.EntityId,
-				"commentId":  comment.Id,
-				"quoteId":    comment.QuoteId,
-			})
-		}
+		// 给被引用的人发消息
+		s.Produce(fromId, quote.UserId, user.Nickname+" 回复了你的评论："+summary, common.GetMarkdownSummary(quote.Content), model.MsgTypeComment, map[string]interface{}{
+			"entityType": comment.EntityType,
+			"entityId":   comment.EntityId,
+			"commentId":  comment.Id,
+			"quoteId":    comment.QuoteId,
+		})
+	} else if comment.UserId != authorId { // 回复主贴，并且不是自己回复自己
+		// 给帖子作者发消息
+		s.Produce(fromId, authorId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
+			"entityType": comment.EntityType,
+			"entityId":   comment.EntityId,
+			"commentId":  comment.Id,
+			"quoteId":    comment.QuoteId,
+		})
 	}
 }
 
