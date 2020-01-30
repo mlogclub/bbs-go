@@ -5,18 +5,12 @@
         <div class="widget-header">
           关于
         </div>
-        <div class="widget-content">
+        <div class="widget-content content">
           <h3>简介</h3>
           <p>
             本站是基于
             <a href="http://docs.bbs-go.com" target="_blank">bbs-go</a>
             搭建，旨在学习交流，欢迎各路大神提供意见和建议。
-          </p>
-          <p>
-            交流群：<br /><img
-              style="max-width: 200px;"
-              src="https://file.mlog.club/mlog.club/bbs-go-qq.jpg"
-            />
           </p>
 
           <h3>公众号</h3>
