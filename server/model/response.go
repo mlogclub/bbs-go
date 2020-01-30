@@ -12,6 +12,7 @@ type UserInfo struct {
 	Avatar      string   `json:"avatar"`
 	Type        int      `json:"type"`
 	Roles       []string `json:"roles"`
+	HomePage    string   `json:"homePage"`
 	Description string   `json:"description"`
 	PasswordSet bool     `json:"passwordSet"` // 密码已设置
 	Status      int      `json:"status"`

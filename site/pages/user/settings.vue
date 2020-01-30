@@ -67,30 +67,6 @@
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
-                  <span style="color:red;">*&nbsp;</span>昵称：
-                </label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="user.nickname"
-                      name="nickname"
-                      class="input is-success"
-                      type="text"
-                      placeholder="请输入昵称"
-                    />
-                    <span class="icon is-small is-left">
-                      <i class="iconfont icon-username" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">
                   <span style="color:red;">*&nbsp;</span>头像：
                 </label>
               </div>
@@ -126,6 +102,32 @@
 
             <div class="field is-horizontal">
               <div class="field-label is-normal">
+                <label class="label">
+                  <span style="color:red;">*&nbsp;</span>昵称：
+                </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <input
+                      v-model="user.nickname"
+                      name="nickname"
+                      value=""
+                      class="input is-success"
+                      type="text"
+                      autocomplete="off"
+                      placeholder="请输入昵称"
+                    />
+                    <span class="icon is-small is-left">
+                      <i class="iconfont icon-username" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
                 <label class="label">简介：</label>
               </div>
               <div class="field-body">
@@ -138,6 +140,29 @@
                       rows="2"
                       placeholder="一句话介绍你自己"
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">个人主页：</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control has-icons-left">
+                    <input
+                      v-model="user.homePage"
+                      name="homePage"
+                      class="input is-success"
+                      type="text"
+                      autocomplete="off"
+                      placeholder="请输入个人主页"
+                    />
+                    <span class="icon is-small is-left">
+                      <i class="iconfont icon-net" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -385,6 +410,7 @@ export default {
         await this.$axios.post('/api/user/edit/' + this.user.id, {
           nickname: this.user.nickname,
           avatar: this.user.avatar,
+          homePage: this.user.homePage,
           description: this.user.description
         })
         this.$toast.success('修改成功')

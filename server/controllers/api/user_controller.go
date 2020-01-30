@@ -7,6 +7,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/common"
 	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
@@ -46,6 +47,7 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	}
 	nickname := strings.TrimSpace(simple.FormValue(c.Ctx, "nickname"))
 	avatar := strings.TrimSpace(simple.FormValue(c.Ctx, "avatar"))
+	homePage := simple.FormValue(c.Ctx, "homePage")
 	description := simple.FormValue(c.Ctx, "description")
 
 	if len(nickname) == 0 {
@@ -55,9 +57,14 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("头像不能为空")
 	}
 
+	if len(homePage) > 0 && common.IsValidateUrl(homePage) != nil {
+		return simple.JsonErrorMsg("个人主页地址错误")
+	}
+
 	err := services.UserService.Updates(user.Id, map[string]interface{}{
 		"nickname":    nickname,
 		"avatar":      avatar,
+		"home_page":   homePage,
 		"description": description,
 	})
 	if err != nil {

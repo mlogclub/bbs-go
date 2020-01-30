@@ -52,6 +52,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Email:       user.Email.String,
 		Type:        user.Type,
 		Roles:       roles,
+		HomePage:    user.HomePage,
 		Description: user.Description,
 		PasswordSet: len(user.Password) > 0,
 		Status:      user.Status,
@@ -62,6 +63,8 @@ func BuildUser(user *model.User) *model.UserInfo {
 		ret.Nickname = "黑名单用户"
 		ret.Avatar = avatar.DefaultAvatar
 		ret.Email = ""
+		ret.HomePage = ""
+		ret.Description = ""
 	}
 	return ret
 }

@@ -39,17 +39,18 @@ const (
 
 type User struct {
 	Model
-	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`
-	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
-	Nickname    string         `gorm:"size:16;" json:"nickname" form:"nickname"`
-	Avatar      string         `gorm:"type:text" json:"avatar" form:"avatar"`
-	Password    string         `gorm:"size:512" json:"password" form:"password"`
-	Status      int            `gorm:"index:idx_user_status;not null" json:"status" form:"status"`
-	Roles       string         `gorm:"type:text" json:"roles" form:"roles"`
-	Type        int            `gorm:"not null" json:"type" form:"type"`
-	Description string         `gorm:"type:text" json:"description" form:"description"`
-	CreateTime  int64          `json:"createTime" form:"createTime"`
-	UpdateTime  int64          `json:"updateTime" form:"updateTime"`
+	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`            // 用户名
+	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`                 // 邮箱
+	Nickname    string         `gorm:"size:16;" json:"nickname" form:"nickname"`                   // 昵称
+	Avatar      string         `gorm:"type:text" json:"avatar" form:"avatar"`                      // 头像
+	Password    string         `gorm:"size:512" json:"password" form:"password"`                   // 密码
+	HomePage    string         `gorm:"size:1024" json:"homePage" form:"homePage"`                  // 个人主页
+	Description string         `gorm:"type:text" json:"description" form:"description"`            // 个人描述
+	Status      int            `gorm:"index:idx_user_status;not null" json:"status" form:"status"` // 状态
+	Roles       string         `gorm:"type:text" json:"roles" form:"roles"`                        // 角色
+	Type        int            `gorm:"not null" json:"type" form:"type"`                           // 用户类型
+	CreateTime  int64          `json:"createTime" form:"createTime"`                               // 创建时间
+	UpdateTime  int64          `json:"updateTime" form:"updateTime"`                               // 更新时间
 }
 
 type UserToken struct {
@@ -91,7 +92,7 @@ type Article struct {
 	Summary     string `gorm:"type:text" json:"summary" form:"summary"`                           // 摘要
 	Content     string `gorm:"type:longtext;not null;" json:"content" form:"content"`             // 内容
 	ContentType string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`   // 内容类型：markdown、html
-	Status      int    `gorm:"int;not null;index:idx_article_status" json:"status" form:"status"`                          // 状态
+	Status      int    `gorm:"int;not null;index:idx_article_status" json:"status" form:"status"` // 状态
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                                // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                       // 原文链接
 	ViewCount   int64  `gorm:"not null;index:idx_view_count;" json:"viewCount" form:"viewCount"`  // 查看数量
