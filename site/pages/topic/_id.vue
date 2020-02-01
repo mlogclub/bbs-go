@@ -151,7 +151,6 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
-import WeixinGzh from '~/components/WeixinGzh'
 export default {
   components: {
     Comment
@@ -168,7 +167,7 @@ export default {
       return
     }
 
-    const [favorited, commentsPage] = await Promise.all([
+    const [favorited, commentsPage, likeUsers] = await Promise.all([
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
@@ -180,13 +179,15 @@ export default {
           entityType: 'topic',
           entityId: params.id
         }
-      })
+      }),
+      $axios.get('/api/topic/recentlikes/' + params.id)
     ])
 
     return {
       topic,
       commentsPage,
-      favorited: favorited.favorited
+      favorited: favorited.favorited,
+      likeUsers
     }
   },
   computed: {
@@ -245,6 +246,8 @@ export default {
         await this.$axios.post('/api/topic/like/' + topic.topicId)
         topic.liked = true
         topic.likeCount++
+        this.likeUsers = this.likeUsers || []
+        this.likeUsers.unshift(this.$store.state.user.current)
       } catch (e) {
         if (e.errorCode === 1) {
           this.$toast.info('请登录后点赞！！！', {

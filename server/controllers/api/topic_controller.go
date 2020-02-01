@@ -149,6 +149,19 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// 点赞用户
+func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
+	topicLikes := services.TopicLikeService.Recent(topicId, 10)
+	var users []model.UserInfo
+	for _, topicLike := range topicLikes {
+		userInfo := render.BuildUserById(topicLike.UserId)
+		if userInfo != nil {
+			users = append(users, *userInfo)
+		}
+	}
+	return simple.JsonData(users)
+}
+
 // 最新帖子
 func (c *TopicController) GetRecent() *simple.JsonResult {
 	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
