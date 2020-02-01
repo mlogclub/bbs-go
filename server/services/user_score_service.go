@@ -1,15 +1,18 @@
 package services
 
 import (
+	"errors"
+
+	"github.com/mlogclub/simple"
+
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var UserScoreService = newUserScoreService()
 
 func newUserScoreService() *userScoreService {
-	return &userScoreService {}
+	return &userScoreService{}
 }
 
 type userScoreService struct {
@@ -59,3 +62,60 @@ func (s *userScoreService) Delete(id int64) {
 	repositories.UserScoreRepository.Delete(simple.DB(), id)
 }
 
+func (s *userScoreService) GetByUserId(userId int64) *model.UserScore {
+	return s.FindOne(simple.NewSqlCnd().Eq("user_id", userId))
+}
+
+func (s *userScoreService) CreateOrUpdate(t *model.UserScore) error {
+	if t.Id > 0 {
+		return s.Update(t)
+	} else {
+		return s.Create(t)
+	}
+}
+
+func (s *userScoreService) Increment(userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(userId, score, sourceType, sourceId, description)
+}
+
+func (s *userScoreService) Decrement(userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(userId, -score, sourceType, sourceId, description)
+}
+
+func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceId, description string) error {
+	if score == 0 {
+		return errors.New("分数不能为0")
+	}
+	userScore := s.GetByUserId(userId)
+	if userScore == nil {
+		userScore = &model.UserScore{
+			UserId:     userId,
+			CreateTime: simple.NowTimestamp(),
+		}
+	}
+	userScore.Score = userScore.Score + score
+	userScore.UpdateTime = simple.NowTimestamp()
+	if err := s.CreateOrUpdate(userScore); err != nil {
+		return err
+	}
+
+	scoreType := model.ScoreTypeIncr
+	if score < 0 {
+		scoreType = model.ScoreTypeDecr
+	}
+	return UserScoreLogService.Create(&model.UserScoreLog{
+		UserId:      userId,
+		SourceType:  sourceType,
+		SourceId:    sourceId,
+		Description: description,
+		Type:        scoreType,
+		Score:       score,
+		CreateTime:  simple.NowTimestamp(),
+	})
+}

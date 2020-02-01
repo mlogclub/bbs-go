@@ -35,6 +35,9 @@ const (
 
 	ThirdAccountTypeGithub = "github"
 	ThirdAccountTypeQQ     = "qq"
+
+	ScoreTypeIncr = 0 // 积分+
+	ScoreTypeDecr = 1 // 积分-
 )
 
 type User struct {
@@ -251,11 +254,11 @@ type UserScore struct {
 // 用户积分流水
 type UserScoreLog struct {
 	Model
-	UserId      int64  `json:"userId" form:"userId"`           // 用户编号
-	SourceType  string `json:"sourceType" form:"sourceType"`   // 积分来源类型
-	SourceId    string `json:"sourceId" form:"sourceId"`       // 积分来源编号
-	Description string `json:"description" form:"description"` // 描述
-	Type        int    `json:"type" form:"type"`               // 类型(增加、减少)
-	Score       int    `json:"score" form:"score"`             // 积分
-	CreateTime  int64  `json:"createTime" form:"createTime"`   // 创建时间
+	UserId      int64  `gorm:"not null;index:idx_user_score_log_user_id" json:"userId" form:"userId"`   // 用户编号
+	SourceType  string `gorm:"not null;index:idx_user_score_score" json:"sourceType" form:"sourceType"` // 积分来源类型
+	SourceId    string `gorm:"not null;index:idx_user_score_score" json:"sourceId" form:"sourceId"`     // 积分来源编号
+	Description string `json:"description" form:"description"`                                          // 描述
+	Type        int    `json:"type" form:"type"`                                                        // 类型(增加、减少)
+	Score       int    `json:"score" form:"score"`                                                      // 积分
+	CreateTime  int64  `json:"createTime" form:"createTime"`                                            // 创建时间
 }
