@@ -12,6 +12,6 @@ type ConfigController struct {
 }
 
 func (c *ConfigController) GetConfigs() *simple.JsonResult {
-	config := services.SysConfigService.GetConfigResponse()
+	config := services.SysConfigService.GetConfig()
 	return simple.JsonData(config)
 }

@@ -74,6 +74,7 @@ func (s *userScoreService) CreateOrUpdate(t *model.UserScore) error {
 	}
 }
 
+// Increment 增加分数
 func (s *userScoreService) Increment(userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
 		return errors.New("分数必须为正数")
@@ -81,6 +82,7 @@ func (s *userScoreService) Increment(userId int64, score int, sourceType, source
 	return s.addScore(userId, score, sourceType, sourceId, description)
 }
 
+// Decrement 减少分数
 func (s *userScoreService) Decrement(userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
 		return errors.New("分数必须为正数")
@@ -88,6 +90,7 @@ func (s *userScoreService) Decrement(userId int64, score int, sourceType, source
 	return s.addScore(userId, -score, sourceType, sourceId, description)
 }
 
+// addScore 加分数，也可以加负数
 func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceId, description string) error {
 	if score == 0 {
 		return errors.New("分数不能为0")

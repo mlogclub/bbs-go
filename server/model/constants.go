@@ -9,6 +9,7 @@ const (
 	SysConfigSiteNotification = "siteNotification" // 站点公告
 	SysConfigRecommendTags    = "recommendTags"    // 推荐标签
 	SysConfigUrlRedirect      = "urlRedirect"      // 是否开启链接跳转
+	SysConfigScoreConfig      = "scoreConfig"      // 分数配置
 )
 
 // 图片样式
