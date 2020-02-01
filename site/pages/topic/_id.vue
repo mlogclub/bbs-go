@@ -242,7 +242,7 @@ export default {
     },
     async like(topic) {
       try {
-        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        await this.$axios.post('/api/topic/like/' + topic.topicId)
         topic.liked = true
         topic.likeCount++
       } catch (e) {

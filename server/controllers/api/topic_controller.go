@@ -137,7 +137,7 @@ func (c *TopicController) GetBy(topicId int64) *simple.JsonResult {
 }
 
 // 点赞
-func (c *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
+func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
