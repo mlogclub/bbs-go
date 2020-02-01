@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
 	&Topic{}, &TopicNode{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{},
-	&ThirdAccount{}, &Sitemap{},
+	&ThirdAccount{}, &Sitemap{}, &UserScore{}, &UserScoreLog{},
 }
 
 type Model struct {
@@ -237,4 +237,25 @@ type Sitemap struct {
 	Lastmod    int64  `gorm:"not null" json:"lastmod" form:"lastmod"`                // 最后更新时间
 	LocName    string `gorm:"not null;size:32;unique" json:"locName" form:"locName"` // loc的md5
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`          // 创建时间
+}
+
+// 用户积分
+type UserScore struct {
+	Model
+	UserId     int64 `gorm:"unique;not null" json:"userId" form:"userId"` // 用户编号
+	Score      int   `gorm:"not null" json:"score" form:"score"`          // 积分
+	CreateTime int64 `json:"createTime" form:"createTime"`                // 创建时间
+	UpdateTime int64 `json:"updateTime" form:"updateTime"`                // 更新时间
+}
+
+// 用户积分流水
+type UserScoreLog struct {
+	Model
+	UserId      int64  `json:"userId" form:"userId"`           // 用户编号
+	SourceType  string `json:"sourceType" form:"sourceType"`   // 积分来源类型
+	SourceId    string `json:"sourceId" form:"sourceId"`       // 积分来源编号
+	Description string `json:"description" form:"description"` // 描述
+	Type        int    `json:"type" form:"type"`               // 类型(增加、减少)
+	Score       int    `json:"score" form:"score"`             // 积分
+	CreateTime  int64  `json:"createTime" form:"createTime"`   // 创建时间
 }

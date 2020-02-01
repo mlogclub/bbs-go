@@ -7,5 +7,6 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.Sitemap{}))
+	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.UserScore{}))
+	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.UserScoreLog{}))
 }
