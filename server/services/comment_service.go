@@ -101,6 +101,8 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
 	}
 
+	// 获得积分
+	UserScoreService.IncrementPostCommentScore(comment)
 	// 发送消息
 	MessageService.SendCommentMsg(comment)
 

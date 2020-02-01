@@ -117,7 +117,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
-		err := repositories.TopicRepository.Create(simple.DB(), topic)
+		err := repositories.TopicRepository.Create(tx, topic)
 		if err != nil {
 			return err
 		}
@@ -126,6 +126,9 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil
 	})
 	if err == nil {
+		// 获得积分
+		UserScoreService.IncrementPostTopicScore(topic)
+		// 百度链接推送
 		baiduseo.PushUrl(urls.TopicUrl(topic.Id))
 	}
 	return topic, simple.FromError(err)

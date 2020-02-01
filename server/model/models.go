@@ -27,6 +27,7 @@ const (
 
 	EntityTypeArticle = "article"
 	EntityTypeTopic   = "topic"
+	EntityTypeComment = "comment"
 
 	MsgStatusUnread = 0 // 消息未读
 	MsgStatusReaded = 1 // 消息已读

@@ -2,8 +2,10 @@ package services
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -71,6 +73,46 @@ func (s *userScoreService) CreateOrUpdate(t *model.UserScore) error {
 		return s.Update(t)
 	} else {
 		return s.Create(t)
+	}
+}
+
+// IncrementCreateTopicScore 发帖获积分
+func (s *userScoreService) IncrementPostTopicScore(topic *model.Topic) {
+	config := SysConfigService.GetConfig()
+	if config.ScoreConfig == nil {
+		logrus.Info("请先配置积分")
+		return
+	}
+	if config.ScoreConfig.PostTopicScore <= 0 {
+		logrus.Info("请配置发帖积分")
+		return
+	}
+	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, model.EntityTypeTopic,
+		strconv.FormatInt(topic.Id, 10), "发表话题")
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
+// IncrementPostCommentScore 跟帖获积分
+func (s *userScoreService) IncrementPostCommentScore(comment *model.Comment) {
+	// 非话题跟帖，跳过
+	if comment.EntityType != model.EntityTypeTopic {
+		return
+	}
+	config := SysConfigService.GetConfig()
+	if config.ScoreConfig == nil {
+		logrus.Info("请先配置积分")
+		return
+	}
+	if config.ScoreConfig.PostCommentScore <= 0 {
+		logrus.Info("请配置跟帖积分")
+		return
+	}
+	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, model.EntityTypeComment,
+		strconv.FormatInt(comment.Id, 10), "发表跟帖")
+	if err != nil {
+		logrus.Error(err)
 	}
 }
 
