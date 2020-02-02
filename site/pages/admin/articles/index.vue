@@ -78,7 +78,7 @@
 
 <script>
 export default {
-  name: 'List',
+  layout: 'admin',
   data() {
     return {
       results: [],
