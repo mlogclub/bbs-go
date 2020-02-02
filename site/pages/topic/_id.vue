@@ -129,13 +129,19 @@
                 >
                   <i class="iconfont icon-like" />
                 </div>
-                <ul>
-                  <li v-for="user in likeUsers" :key="user.id">
-                    <a :href="'/user/' + user.id" target="_blank">
-                      <img :src="user.avatar" class="avatar small" />
-                    </a>
-                  </li>
-                </ul>
+                <div v-for="user in likeUsers" :key="user.id">
+                  <a
+                    :href="'/user/' + user.id"
+                    :alt="user.nickname"
+                    target="_blank"
+                  >
+                    <img
+                      :src="user.avatar"
+                      :alt="user.nickname"
+                      class="avatar small"
+                    />
+                  </a>
+                </div>
               </div>
             </article>
           </div>
