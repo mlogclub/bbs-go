@@ -51,7 +51,7 @@
 export default {
   head() {
     return {
-      title: '后台管理'
+      title: 'BBS-GO管理'
     }
   }
 }
