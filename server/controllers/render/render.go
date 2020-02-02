@@ -499,7 +499,7 @@ func BuildHtmlContent(htmlContent string) string {
 			selection.SetAttr("target", "_blank")
 			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
 
-			config := services.SysConfigService.GetConfigResponse()
+			config := services.SysConfigService.GetConfig()
 			if config.UrlRedirect { // 开启非内部链接跳转
 				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 				selection.SetAttr("href", newHref)

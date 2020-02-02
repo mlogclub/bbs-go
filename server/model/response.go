@@ -131,30 +131,13 @@ type FavoriteResponse struct {
 // 消息
 type MessageResponse struct {
 	MessageId    int64     `json:"messageId"`
-	From         *UserInfo `json:"from"`   // 消息发送人
-	UserId       int64     `json:"userId"` // 消息接收人编号
-	Content      string    `json:"content"`
+	From         *UserInfo `json:"from"`    // 消息发送人
+	UserId       int64     `json:"userId"`  // 消息接收人编号
+	Content      string    `json:"content"` // 消息内容
 	QuoteContent string    `json:"quoteContent"`
 	Type         int       `json:"type"`
 	DetailUrl    string    `json:"detailUrl"` // 消息详情url
 	ExtraData    string    `json:"extraData"`
 	Status       int       `json:"status"`
 	CreateTime   int64     `json:"createTime"`
-}
-
-// 站点导航
-type SiteNav struct {
-	Title string `json:"title"`
-	Url   string `json:"url"`
-}
-
-// 配置返回结构体
-type ConfigResponse struct {
-	SiteTitle        string    `json:"siteTitle"`
-	SiteDescription  string    `json:"siteDescription"`
-	SiteKeywords     []string  `json:"siteKeywords"`
-	SiteNavs         []SiteNav `json:"siteNavs"`
-	SiteNotification string    `json:"siteNotification"`
-	RecommendTags    []string  `json:"recommendTags"`
-	UrlRedirect      bool      `json:"urlRedirect"`
 }

@@ -66,13 +66,6 @@
                         }}</a>
                       </span>
                     </span>
-                    <span class="meta-item act">
-                      <a @click="addFavorite(topic.topicId)">
-                        <i class="iconfont icon-favorite" />{{
-                          favorited ? '已收藏' : '收藏'
-                        }}
-                      </a>
-                    </span>
                     <span v-if="isOwner" class="meta-item act">
                       <a @click="deleteTopic(topic.topicId)">
                         <i class="iconfont icon-delete" />&nbsp;删除
@@ -120,8 +113,40 @@
                 class="content topic-content"
                 itemprop="articleBody"
               ></div>
+
+              <div class="topic-actions">
+                <div
+                  :class="{ active: favorited }"
+                  @click="addFavorite(topic.topicId)"
+                  class="action favorite"
+                >
+                  <i class="iconfont icon-favorite" />
+                </div>
+                <span class="split"></span>
+                <div
+                  :class="{ active: topic.liked }"
+                  @click="like(topic)"
+                  class="action like"
+                >
+                  <i class="iconfont icon-like" />
+                </div>
+                <div v-for="user in likeUsers" :key="user.id">
+                  <a
+                    :href="'/user/' + user.id"
+                    :alt="user.nickname"
+                    target="_blank"
+                  >
+                    <img
+                      :src="user.avatar"
+                      :alt="user.nickname"
+                      class="avatar small"
+                    />
+                  </a>
+                </div>
+              </div>
             </article>
           </div>
+
           <!-- 评论 -->
           <comment
             :entity-id="topic.topicId"
@@ -131,6 +156,8 @@
           />
         </div>
         <div class="right-container">
+          <site-notice />
+
           <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
@@ -151,10 +178,11 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 export default {
   components: {
-    Comment
+    Comment,
+    SiteNotice
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -168,7 +196,7 @@ export default {
       return
     }
 
-    const [favorited, commentsPage] = await Promise.all([
+    const [favorited, commentsPage, likeUsers] = await Promise.all([
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
@@ -180,13 +208,15 @@ export default {
           entityType: 'topic',
           entityId: params.id
         }
-      })
+      }),
+      $axios.get('/api/topic/recentlikes/' + params.id)
     ])
 
     return {
       topic,
       commentsPage,
-      favorited: favorited.favorited
+      favorited: favorited.favorited,
+      likeUsers
     }
   },
   computed: {
@@ -242,9 +272,11 @@ export default {
     },
     async like(topic) {
       try {
-        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        await this.$axios.post('/api/topic/like/' + topic.topicId)
         topic.liked = true
         topic.likeCount++
+        this.likeUsers = this.likeUsers || []
+        this.likeUsers.unshift(this.$store.state.user.current)
       } catch (e) {
         if (e.errorCode === 1) {
           this.$toast.info('请登录后点赞！！！', {
@@ -256,6 +288,7 @@ export default {
             }
           })
         } else {
+          topic.liked = true
           this.$toast.error(e.message || e)
         }
       }

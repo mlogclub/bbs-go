@@ -65,7 +65,7 @@ export default {
   plugins: [
     '~/plugins/filters',
     '~/plugins/axios',
-    '~/plugins/mlog',
+    '~/plugins/bbs-go',
     { src: '~/plugins/infinite-scroll', ssr: false }
   ],
   /*
@@ -104,8 +104,8 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://localhost:8082'
-    // '/api/': 'https://mlog.club'
+    // '/api/': 'http://localhost:8082'
+    '/api/': 'https://mlog.club'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted

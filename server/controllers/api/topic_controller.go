@@ -137,7 +137,7 @@ func (c *TopicController) GetBy(topicId int64) *simple.JsonResult {
 }
 
 // 点赞
-func (c *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
+func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
@@ -147,6 +147,19 @@ func (c *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
+}
+
+// 点赞用户
+func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
+	topicLikes := services.TopicLikeService.Recent(topicId, 10)
+	var users []model.UserInfo
+	for _, topicLike := range topicLikes {
+		userInfo := render.BuildUserById(topicLike.UserId)
+		if userInfo != nil {
+			users = append(users, *userInfo)
+		}
+	}
+	return simple.JsonData(users)
 }
 
 // 最新帖子

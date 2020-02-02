@@ -27,7 +27,7 @@ func (c *SysConfigController) AnyList() *simple.JsonResult {
 }
 
 func (c *SysConfigController) GetAll() *simple.JsonResult {
-	config := services.SysConfigService.GetConfigResponse()
+	config := services.SysConfigService.GetConfig()
 	return simple.JsonData(config)
 }
 
