@@ -120,6 +120,23 @@
                 class="content topic-content"
                 itemprop="articleBody"
               ></div>
+
+              <div class="topic-likes">
+                <div
+                  :class="{ liked: topic.liked }"
+                  @click="like(topic)"
+                  class="like"
+                >
+                  <i class="iconfont icon-like" />
+                </div>
+                <ul>
+                  <li v-for="user in likeUsers" :key="user.id">
+                    <a :href="'/user/' + user.id" target="_blank">
+                      <img :src="user.avatar" class="avatar small" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </article>
           </div>
           <!-- 评论 -->
@@ -259,6 +276,7 @@ export default {
             }
           })
         } else {
+          topic.liked = true
           this.$toast.error(e.message || e)
         }
       }
