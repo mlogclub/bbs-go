@@ -1,7 +1,7 @@
 <template>
   <section class="page-container">
     <!--工具条-->
-    <el-col :span="24" class="toolbar">
+    <div class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号"></el-input>
@@ -15,37 +15,37 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
+            @change="list"
             clearable
             placeholder="请选择状态"
-            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="list">查询</el-button>
+          <el-button v-on:click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
-    </el-col>
+    </div>
 
     <!--列表-->
     <div class="articles main-content">
-      <div class="article" v-for="item in results" :key="item.id">
+      <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
-          <img class="avatar" :src="item.user.avatar" />
+          <img :src="item.user.avatar" class="avatar" />
           <div class="article-right">
             <div class="article-title">
-              <a @click="toArticle(item)" href="javascript:void(0)">{{
+              <a :href="'/article/' + item.id" target="_blank">{{
                 item.title
               }}</a>
             </div>
             <div class="article-meta">
-              <label class="author" v-if="item.user">{{
+              <label v-if="item.user" class="author">{{
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
-              <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{
+              <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
                 tag.tagName
               }}</label>
             </div>
@@ -53,34 +53,32 @@
         </div>
         <div class="summary">{{ item.summary }}</div>
         <div class="article-footer">
-          <span class="danger" v-if="item.status === 1">已删除</span>
+          <span v-if="item.status === 1" class="danger">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
-          <a class="btn" @click="deleteSubmit(item)">删除</a>
+          <a @click="deleteSubmit(item)" class="btn">删除</a>
         </div>
       </div>
     </div>
 
     <!--工具条-->
-    <el-col :span="24" class="toolbar">
+    <div class="pagebar">
       <el-pagination
-        layout="total, sizes, prev, pager, next, jumper"
         :page-sizes="[20, 50, 100, 300]"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         style="float:right;"
       ></el-pagination>
-    </el-col>
+    </div>
   </section>
 </template>
 
 <script>
-import HttpClient from '@/apis/HttpClient'
-
 export default {
-  layout: 'admin',
+  name: 'List',
   data() {
     return {
       results: [],
@@ -89,7 +87,8 @@ export default {
       filters: {
         title: '',
         status: ''
-      }
+      },
+      tagOptions: []
     }
   },
   mounted() {
@@ -103,7 +102,8 @@ export default {
         page: me.page.page,
         limit: me.page.limit
       })
-      HttpClient.post('/api/admin/article/list', params)
+      this.$axios
+        .post('/api/admin/article/list', params)
         .then((data) => {
           me.results = data.results
           me.page = data.page
@@ -122,7 +122,8 @@ export default {
     },
     deleteSubmit(row) {
       const me = this
-      HttpClient.post('/api/admin/article/delete', { id: row.id })
+      this.$axios
+        .post('/api/admin/article/delete', { id: row.id })
         .then((data) => {
           me.$message({ message: '删除成功', type: 'success' })
           me.list()
@@ -130,9 +131,6 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    },
-    toArticle(row) {
-      window.open(`https://mlog.club/article/${row.id}`, '_blank')
     }
   }
 }

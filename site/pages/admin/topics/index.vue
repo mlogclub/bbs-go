@@ -1,6 +1,6 @@
 <template>
   <section class="page-container">
-    <el-col :span="24" class="toolbar">
+    <div class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号"></el-input>
@@ -14,9 +14,9 @@
         <el-form-item>
           <el-select
             v-model="filters.recommend"
+            @change="list"
             clearable
             placeholder="是否推荐"
-            @change="list"
           >
             <el-option label="推荐" value="1"></el-option>
             <el-option label="未推荐" value="0"></el-option>
@@ -25,24 +25,24 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
+            @change="list"
             clearable
             placeholder="请选择状态"
-            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="list">查询</el-button>
+          <el-button v-on:click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
-    </el-col>
+    </div>
 
     <div class="topics main-content">
-      <div class="topic" v-for="item in results" :key="item.id">
+      <div v-for="item in results" :key="item.id" class="topic">
         <div class="topic-header">
-          <img class="avatar" :src="item.user.avatar" />
+          <img :src="item.user.avatar" class="avatar" />
           <div class="topic-right">
             <div class="topic-title">
               <a :href="'https://mlog.club/topic/' + item.id">{{
@@ -50,12 +50,12 @@
               }}</a>
             </div>
             <div class="topic-meta">
-              <label class="author" v-if="item.user">{{
+              <label v-if="item.user" class="author">{{
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
               <label class="node">{{ item.node ? item.node.name : '' }}</label>
-              <label class="tag" v-for="tag in item.tags" :key="tag.tagId">{{
+              <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
                 tag.tagName
               }}</label>
             </div>
@@ -67,46 +67,45 @@
         </div>
 
         <div class="topic-footer">
-          <span class="danger" v-if="item.status === 1">已删除</span>
+          <span v-if="item.status === 1" class="danger">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
 
-          <a v-if="item.status === 0" class="btn" @click="deleteSubmit(item)"
+          <a v-if="item.status === 0" @click="deleteSubmit(item)" class="btn"
             >删除</a
           >
-          <a v-else class="btn" @click="undeleteSubmit(item)">取消删除</a>
+          <a v-else @click="undeleteSubmit(item)" class="btn">取消删除</a>
 
-          <a v-if="!item.recommend" class="btn" @click="recommend(item.id)"
+          <a v-if="!item.recommend" @click="recommend(item.id)" class="btn"
             >推荐</a
           >
-          <a v-else class="btn" @click="cancelRecommend(item.id)">取消推荐</a>
+          <a v-else @click="cancelRecommend(item.id)" class="btn">取消推荐</a>
         </div>
       </div>
     </div>
 
-    <el-col :span="24" class="toolbar">
+    <div class="pagebar">
       <el-pagination
-        layout="total, sizes, prev, pager, next, jumper"
         :page-sizes="[20, 50, 100, 300]"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
-        style="float:right;"
+        layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
-    </el-col>
+    </div>
 
     <el-dialog
-      title="新增"
       :visible.sync="addFormVisible"
       :close-on-click-modal="false"
+      title="新增"
     >
       <el-form
-        :model="addForm"
-        label-width="80px"
-        :rules="addFormRules"
         ref="addForm"
+        :model="addForm"
+        :rules="addFormRules"
+        label-width="80px"
       >
         <el-form-item label="userId" prop="rule">
           <el-input v-model="addForm.userId"></el-input>
@@ -131,24 +130,24 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          type="primary"
           @click.native="addSubmit"
           :loading="addLoading"
+          type="primary"
           >提交</el-button
         >
       </div>
     </el-dialog>
 
     <el-dialog
-      title="编辑"
       :visible.sync="editFormVisible"
       :close-on-click-modal="false"
+      title="编辑"
     >
       <el-form
-        :model="editForm"
-        label-width="80px"
-        :rules="editFormRules"
         ref="editForm"
+        :model="editForm"
+        :rules="editFormRules"
+        label-width="80px"
       >
         <el-input v-model="editForm.id" type="hidden"></el-input>
 
@@ -179,9 +178,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          type="primary"
           @click.native="editSubmit"
           :loading="editLoading"
+          type="primary"
           >提交</el-button
         >
       </div>
@@ -190,10 +189,8 @@
 </template>
 
 <script>
-import HttpClient from '@/apis/HttpClient'
-
 export default {
-  name: 'List',
+  layout: 'admin',
   data() {
     return {
       results: [],
@@ -203,7 +200,6 @@ export default {
         status: '0'
       },
       selectedRows: [],
-
       addForm: {
         forumId: '',
         userId: '',
@@ -241,7 +237,8 @@ export default {
         page: me.page.page,
         limit: me.page.limit
       })
-      HttpClient.post('/api/admin/topic/list', params)
+      this.$axios
+        .post('/api/admin/topic/list', params)
         .then((data) => {
           me.results = data.results
           me.page = data.page
@@ -267,7 +264,8 @@ export default {
     },
     addSubmit() {
       const me = this
-      HttpClient.post('/api/admin/topic/create', this.addForm)
+      this.$axios
+        .post('/api/admin/topic/create', this.addForm)
         .then((data) => {
           me.$message({ message: '提交成功', type: 'success' })
           me.addFormVisible = false
@@ -279,7 +277,8 @@ export default {
     },
     handleEdit(index, row) {
       const me = this
-      HttpClient.get(`/api/admin/topic/${row.id}`)
+      this.$axios
+        .get(`/api/admin/topic/${row.id}`)
         .then((data) => {
           me.editForm = Object.assign({}, data)
           me.editFormVisible = true
@@ -290,7 +289,8 @@ export default {
     },
     editSubmit() {
       const me = this
-      HttpClient.post('/api/admin/topic/update', me.editForm)
+      this.$axios
+        .post('/api/admin/topic/update', me.editForm)
         .then((data) => {
           me.list()
           me.editFormVisible = false
@@ -307,7 +307,7 @@ export default {
       })
 
       try {
-        await HttpClient.post('/api/admin/topic/delete', { id: row.id })
+        await this.$axios.post('/api/admin/topic/delete', { id: row.id })
         this.$message({ message: '删除成功', type: 'success' })
         this.list()
       } catch (err) {
@@ -316,7 +316,7 @@ export default {
     },
     async undeleteSubmit(row) {
       try {
-        await HttpClient.post('/api/admin/topic/undelete', { id: row.id })
+        await this.$axios.post('/api/admin/topic/undelete', { id: row.id })
         this.list()
         this.$message({ message: '取消删除成功', type: 'success' })
       } catch (err) {
@@ -325,8 +325,8 @@ export default {
     },
     async recommend(id) {
       try {
-        await HttpClient.post('/api/admin/topic/recommend', {
-          id: id
+        await this.$axios.post('/api/admin/topic/recommend', {
+          id
         })
         this.$message({ message: '推荐成功', type: 'success' })
         this.list()
@@ -336,8 +336,8 @@ export default {
     },
     async cancelRecommend(id) {
       try {
-        await HttpClient.delete('/api/admin/topic/recommend', {
-          id: id
+        await this.$axios.delete('/api/admin/topic/recommend', {
+          id
         })
         this.$message({ message: '取消推荐成功', type: 'success' })
         this.list()

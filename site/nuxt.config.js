@@ -66,7 +66,8 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
-    { src: '~/plugins/infinite-scroll', ssr: false }
+    { src: '~/plugins/infinite-scroll', ssr: false },
+    { src: '~/plugins/element-ui', ssr: true }
   ],
   /*
    ** Nuxt.js dev-modules
