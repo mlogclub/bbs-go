@@ -66,13 +66,6 @@
                         }}</a>
                       </span>
                     </span>
-                    <span class="meta-item act">
-                      <a @click="addFavorite(topic.topicId)">
-                        <i class="iconfont icon-favorite" />{{
-                          favorited ? '已收藏' : '收藏'
-                        }}
-                      </a>
-                    </span>
                     <span v-if="isOwner" class="meta-item act">
                       <a @click="deleteTopic(topic.topicId)">
                         <i class="iconfont icon-delete" />&nbsp;删除
@@ -121,11 +114,19 @@
                 itemprop="articleBody"
               ></div>
 
-              <div class="topic-likes">
+              <div class="topic-actions">
                 <div
-                  :class="{ liked: topic.liked }"
+                  :class="{ active: favorited }"
+                  @click="addFavorite(topic.topicId)"
+                  class="action favorite"
+                >
+                  <i class="iconfont icon-favorite" />
+                </div>
+                <span class="split"></span>
+                <div
+                  :class="{ active: topic.liked }"
                   @click="like(topic)"
-                  class="like"
+                  class="action like"
                 >
                   <i class="iconfont icon-like" />
                 </div>

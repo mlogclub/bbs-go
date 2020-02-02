@@ -160,11 +160,11 @@
     padding-top: 0 !important;
   }
 
-  .topic-likes {
+  .topic-actions {
     display: flex;
     height: 42px;
     width: max-content;
-    padding: 5px 5px 5px 0;
+    padding: 5px 10px 5px 5px;
 
     background: #fff;
     border: 1px solid #dae0e4;
@@ -173,22 +173,37 @@
 
     .avatar {
       margin-left: 5px;
+      border: solid 1px #e8ecee;
     }
 
-    .like {
+    .split {
+      display: inline-block;
+      margin: auto 7px auto 10px;
+      height: 16px;
+      width: 1px;
+      opacity: .4;
+      background: #dae0e4;
+      vertical-align: middle;
+    }
+
+    .action {
       margin-left: 5px;
       height: 30px;
       width: 30px;
       line-height: 30px;
+      text-align: center;
+      color: #e7672e;
       background-color: rgba(126, 107, 1, 0.08);
       border-radius: 50%;
-      text-align: center;
       transition: all 0.5s;
       cursor: pointer;
 
-      color: #e7672e;
+      i {
+        font-size: 16px;
+      }
+
       &:hover,
-      &.liked {
+      &.active {
         color: #fff;
         background-color: #e7672e;
       }
