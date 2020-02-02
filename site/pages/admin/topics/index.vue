@@ -1,5 +1,5 @@
 <template>
-  <section class="page-container">
+  <section v-loading="listLoading" class="page-container">
     <div class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>

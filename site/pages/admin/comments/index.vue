@@ -1,5 +1,5 @@
 <template>
-  <section class="page-container">
+  <section v-loading="listLoading" class="page-container">
     <div class="main-content">
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
