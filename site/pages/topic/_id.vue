@@ -139,6 +139,7 @@
               </div>
             </article>
           </div>
+
           <!-- 评论 -->
           <comment
             :entity-id="topic.topicId"
@@ -148,6 +149,8 @@
           />
         </div>
         <div class="right-container">
+          <site-notice />
+
           <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
@@ -168,9 +171,11 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import SiteNotice from '~/components/SiteNotice'
 export default {
   components: {
-    Comment
+    Comment,
+    SiteNotice
   },
   async asyncData({ $axios, params, error }) {
     let topic
