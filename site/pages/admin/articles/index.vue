@@ -70,7 +70,6 @@
         :page-size="page.limit"
         :total="page.total"
         layout="total, sizes, prev, pager, next, jumper"
-        style="float:right;"
       ></el-pagination>
     </div>
   </section>

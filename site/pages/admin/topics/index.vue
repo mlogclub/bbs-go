@@ -45,7 +45,7 @@
           <img :src="item.user.avatar" class="avatar" />
           <div class="topic-right">
             <div class="topic-title">
-              <a :href="'https://mlog.club/topic/' + item.id">{{
+              <a :href="'/topic/' + item.id" target="_blank">{{
                 item.title
               }}</a>
             </div>

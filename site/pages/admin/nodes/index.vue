@@ -48,7 +48,7 @@
       </el-table-column>
     </el-table>
 
-    <el-col :span="24" class="toolbar">
+    <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         @current-change="handlePageChange"
@@ -57,10 +57,9 @@
         :page-size="page.limit"
         :total="page.total"
         layout="total, sizes, prev, pager, next, jumper"
-        style="float:right;"
       >
       </el-pagination>
-    </el-col>
+    </div>
 
     <el-dialog
       :visible.sync="addFormVisible"
