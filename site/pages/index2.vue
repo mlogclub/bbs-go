@@ -73,8 +73,6 @@
       </div>
 
       <div class="right-container">
-        <weixin-gzh />
-
         <div class="widget">
           <div class="widget-header">新入驻</div>
           <div class="widget-content">
@@ -96,9 +94,8 @@ import HomeIcons from '~/components/HomeIcons'
 import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserList from '~/components/UserList'
-import WeixinGzh from '~/components/WeixinGzh'
 export default {
-  components: { HomeIcons, TopicList, ArticleList, UserList, WeixinGzh },
+  components: { HomeIcons, TopicList, ArticleList, UserList },
   async asyncData({ $axios, params }) {
     try {
       const [topics, articles, hotArticles, users] = await Promise.all([

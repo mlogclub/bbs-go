@@ -73,6 +73,12 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     @include main-size(360px);
   }
 
+  .main-content {
+    background-color: #fff;
+    padding: 0 10px 10px 10px;
+    margin-bottom: 1rem;
+  }
+
   .left-container,
   .right-container {
     padding: 0;
@@ -86,6 +92,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     .left-container {
       background: #fff;
       padding: 0 10px 10px 10px;
+      // padding: 0 0 10px 0;
     }
   }
 
@@ -93,6 +100,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     .right-container {
       background: #fff;
       padding: 0 10px 10px 10px;
+      // padding: 0 0 10px 0;
     }
   }
 

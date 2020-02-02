@@ -11,7 +11,7 @@
         </load-more>
       </div>
       <div class="right-container">
-        <weixin-gzh />
+        <site-notice />
 
         <div class="ad">
           <!-- 展示广告 -->
@@ -29,14 +29,14 @@
 
 <script>
 import ArticleList from '~/components/ArticleList'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
     ArticleList,
-    LoadMore,
-    WeixinGzh
+    SiteNotice,
+    LoadMore
   },
   async asyncData({ $axios }) {
     try {

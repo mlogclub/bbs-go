@@ -1,7 +1,7 @@
 <template>
   <div class="right-container">
     <post-btns :current-node-id="currentNodeId" />
-    <weixin-gzh />
+    <site-notice />
 
     <div class="ad">
       <!-- 展示广告 -->
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import WeixinGzh from '~/components/WeixinGzh'
 import PostBtns from '~/components/PostBtns'
+import SiteNotice from '~/components/SiteNotice'
 
 export default {
-  components: { WeixinGzh, PostBtns },
+  components: { PostBtns, SiteNotice },
   props: {
     currentNodeId: {
       type: Number,

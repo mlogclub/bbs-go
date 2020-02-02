@@ -12,7 +12,7 @@
         </load-more>
       </div>
       <div class="right-container">
-        <weixin-gzh />
+        <site-notice />
 
         <div class="ad">
           <!-- 展示广告 -->
@@ -31,10 +31,10 @@
 <script>
 import ArticleList from '~/components/ArticleList'
 import LoadMore from '~/components/LoadMore'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 
 export default {
-  components: { ArticleList, LoadMore, WeixinGzh },
+  components: { ArticleList, LoadMore, SiteNotice },
   async asyncData({ $axios, params }) {
     try {
       const [tag, articlesPage] = await Promise.all([

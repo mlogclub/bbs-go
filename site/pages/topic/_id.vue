@@ -1,126 +1,127 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container is-white left-main">
+      <div class="container main-container left-main">
         <div class="left-container">
-          <article
-            class="topic-detail topic-wrap"
-            itemscope
-            itemtype="http://schema.org/BlogPosting"
-          >
-            <div class="topic-header">
-              <div class="topic-header-left">
-                <a
-                  :href="'/user/' + topic.user.id"
-                  :title="topic.user.nickname"
-                >
-                  <div
-                    :style="{
-                      backgroundImage: 'url(' + topic.user.avatar + ')'
-                    }"
-                    class="avatar avatar-size-45 is-rounded"
-                  />
-                </a>
-              </div>
-              <div class="topic-header-center">
-                <h1 class="topic-title" itemprop="headline">
-                  {{ topic.title }}
-                </h1>
-                <div class="topic-meta">
-                  <span
-                    class="meta-item"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
+          <div class="main-content">
+            <article
+              class="topic-detail topic-wrap"
+              itemscope
+              itemtype="http://schema.org/BlogPosting"
+            >
+              <div class="topic-header">
+                <div class="topic-header-left">
+                  <a
+                    :href="'/user/' + topic.user.id"
+                    :title="topic.user.nickname"
                   >
-                    <a :href="'/user/' + topic.user.id" itemprop="name">{{
-                      topic.user.nickname
-                    }}</a>
-                  </span>
-                  <span class="meta-item">
-                    <time
-                      :datetime="
-                        topic.lastCommentTime
-                          | formatDate('yyyy-MM-ddTHH:mm:ss')
-                      "
-                      itemprop="datePublished"
-                      >{{ topic.lastCommentTime | prettyDate }}</time
-                    >
-                  </span>
-                  <span class="meta-item">
-                    <a
-                      :href="'/topics/node/' + topic.node.nodeId"
-                      class="node"
-                      >{{ topic.node.name }}</a
-                    >
-                  </span>
-                  <span class="meta-item">
+                    <div
+                      :style="{
+                        backgroundImage: 'url(' + topic.user.avatar + ')'
+                      }"
+                      class="avatar avatar-size-45 is-rounded"
+                    />
+                  </a>
+                </div>
+                <div class="topic-header-center">
+                  <h1 class="topic-title" itemprop="headline">
+                    {{ topic.title }}
+                  </h1>
+                  <div class="topic-meta">
                     <span
-                      v-for="tag in topic.tags"
-                      :key="tag.tagId"
-                      class="tag"
+                      class="meta-item"
+                      itemprop="author"
+                      itemscope
+                      itemtype="http://schema.org/Person"
                     >
-                      <a :href="'/topics/tag/' + tag.tagId">{{
-                        tag.tagName
+                      <a :href="'/user/' + topic.user.id" itemprop="name">{{
+                        topic.user.nickname
                       }}</a>
                     </span>
-                  </span>
-                  <span class="meta-item act">
-                    <a @click="addFavorite(topic.topicId)">
-                      <i class="iconfont icon-favorite" />{{
-                        favorited ? '已收藏' : '收藏'
-                      }}
-                    </a>
-                  </span>
-                  <span v-if="isOwner" class="meta-item act">
-                    <a @click="deleteTopic(topic.topicId)">
-                      <i class="iconfont icon-delete" />&nbsp;删除
-                    </a>
-                  </span>
-                  <span v-if="isOwner" class="meta-item act">
-                    <a :href="'/topic/edit/' + topic.topicId">
-                      <i class="iconfont icon-edit" />&nbsp;修改
-                    </a>
-                  </span>
+                    <span class="meta-item">
+                      <time
+                        :datetime="
+                          topic.lastCommentTime
+                            | formatDate('yyyy-MM-ddTHH:mm:ss')
+                        "
+                        itemprop="datePublished"
+                        >{{ topic.lastCommentTime | prettyDate }}</time
+                      >
+                    </span>
+                    <span class="meta-item">
+                      <a
+                        :href="'/topics/node/' + topic.node.nodeId"
+                        class="node"
+                        >{{ topic.node.name }}</a
+                      >
+                    </span>
+                    <span class="meta-item">
+                      <span
+                        v-for="tag in topic.tags"
+                        :key="tag.tagId"
+                        class="tag"
+                      >
+                        <a :href="'/topics/tag/' + tag.tagId">{{
+                          tag.tagName
+                        }}</a>
+                      </span>
+                    </span>
+                    <span class="meta-item act">
+                      <a @click="addFavorite(topic.topicId)">
+                        <i class="iconfont icon-favorite" />{{
+                          favorited ? '已收藏' : '收藏'
+                        }}
+                      </a>
+                    </span>
+                    <span v-if="isOwner" class="meta-item act">
+                      <a @click="deleteTopic(topic.topicId)">
+                        <i class="iconfont icon-delete" />&nbsp;删除
+                      </a>
+                    </span>
+                    <span v-if="isOwner" class="meta-item act">
+                      <a :href="'/topic/edit/' + topic.topicId">
+                        <i class="iconfont icon-edit" />&nbsp;修改
+                      </a>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="topic-header-right">
-                <div class="like">
-                  <span
-                    :class="{ liked: topic.liked }"
-                    @click="like(topic)"
-                    class="like-btn"
+                <div class="topic-header-right">
+                  <div class="like">
+                    <span
+                      :class="{ liked: topic.liked }"
+                      @click="like(topic)"
+                      class="like-btn"
+                    >
+                      <i class="iconfont icon-like" />
+                    </span>
+                    <span v-if="topic.likeCount" class="like-count">{{
+                      topic.likeCount
+                    }}</span>
+                  </div>
+                  <span class="count"
+                    >{{ topic.commentCount }}&nbsp;/&nbsp;{{
+                      topic.viewCount
+                    }}</span
                   >
-                    <i class="iconfont icon-like" />
-                  </span>
-                  <span v-if="topic.likeCount" class="like-count">{{
-                    topic.likeCount
-                  }}</span>
                 </div>
-                <span class="count"
-                  >{{ topic.commentCount }}&nbsp;/&nbsp;{{
-                    topic.viewCount
-                  }}</span
-                >
               </div>
-            </div>
 
-            <div class="ad">
-              <!-- 信息流广告 -->
-              <adsbygoogle
-                ad-slot="4980294904"
-                ad-format="fluid"
-                ad-layout-key="-ht-19-1m-3j+mu"
-              />
-            </div>
+              <div class="ad">
+                <!-- 信息流广告 -->
+                <adsbygoogle
+                  ad-slot="4980294904"
+                  ad-format="fluid"
+                  ad-layout-key="-ht-19-1m-3j+mu"
+                />
+              </div>
 
-            <div
-              v-html="topic.content"
-              class="content topic-content"
-              itemprop="articleBody"
-            ></div>
-          </article>
-
+              <div
+                v-html="topic.content"
+                class="content topic-content"
+                itemprop="articleBody"
+              ></div>
+            </article>
+          </div>
           <!-- 评论 -->
           <comment
             :entity-id="topic.topicId"
@@ -130,8 +131,6 @@
           />
         </div>
         <div class="right-container">
-          <weixin-gzh />
-
           <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
@@ -155,8 +154,7 @@ import Comment from '~/components/Comment'
 import WeixinGzh from '~/components/WeixinGzh'
 export default {
   components: {
-    Comment,
-    WeixinGzh
+    Comment
   },
   async asyncData({ $axios, params, error }) {
     let topic

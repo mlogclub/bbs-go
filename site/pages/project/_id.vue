@@ -57,7 +57,7 @@
         />
       </div>
       <div class="right-container">
-        <weixin-gzh />
+        <site-notice />
 
         <div class="ad">
           <!-- 展示广告 -->
@@ -75,12 +75,12 @@
 
 <script>
 import Comment from '~/components/Comment'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 
 export default {
   components: {
     Comment,
-    WeixinGzh
+    SiteNotice
   },
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
