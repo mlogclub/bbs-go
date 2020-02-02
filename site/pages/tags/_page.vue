@@ -30,7 +30,7 @@
         </div>
         <div class="column is-3">
           <div class="main-aside">
-            <weixin-gzh />
+            <site-notice />
 
             <div class="ad">
               <!-- 展示广告 -->
@@ -45,12 +45,12 @@
 
 <script>
 import Pagination from '~/components/Pagination'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 
 export default {
   components: {
     Pagination,
-    WeixinGzh
+    SiteNotice
   },
   async asyncData({ $axios, params }) {
     const [tagsPage] = await Promise.all([

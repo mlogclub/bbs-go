@@ -6,7 +6,7 @@
         <pagination :page="projectPage.page" url-prefix="/projects/" />
       </div>
       <div class="right-container">
-        <weixin-gzh />
+        <site-notice />
 
         <div class="ad">
           <!-- 展示广告 -->
@@ -25,12 +25,12 @@
 <script>
 import ProjectList from '~/components/ProjectList'
 import Pagination from '~/components/Pagination'
-import WeixinGzh from '~/components/WeixinGzh'
+import SiteNotice from '~/components/SiteNotice'
 export default {
   components: {
     ProjectList,
     Pagination,
-    WeixinGzh
+    SiteNotice
   },
   async asyncData({ $axios, params }) {
     const [projectPage] = await Promise.all([

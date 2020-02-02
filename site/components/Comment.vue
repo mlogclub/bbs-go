@@ -1,5 +1,5 @@
 <template>
-  <div class="comment-component">
+  <div class="comment-component main-content">
     <div class="comment-form">
       <div v-if="isLogin" class="comment-create">
         <div class="comment-input-wrapper">
@@ -238,6 +238,8 @@ export default {
 
 <style lang="scss" scoped>
 .comment-component {
+  padding-top: 10px;
+
   .comment-form {
     .comment-create {
       border: 1px solid #f0f0f0;

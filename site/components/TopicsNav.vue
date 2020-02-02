@@ -38,7 +38,6 @@ export default {
 
 <style lang="scss" scoped>
 .topics-nav {
-  margin-bottom: 8px;
   font-size: 16px;
   font-weight: bold;
   border-bottom: 1px solid #e6ecf0 !important;
