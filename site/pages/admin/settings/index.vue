@@ -1,5 +1,5 @@
 <template>
-  <section class="page-container">
+  <section v-loading="loading" class="page-container">
     <el-tabs value="first">
       <el-tab-pane label="通用配置" name="first">
         <div class="config">
@@ -152,10 +152,13 @@ export default {
   },
   methods: {
     async load() {
+      this.loading = true
       try {
         this.config = await this.$axios.get('/api/admin/sys-config/all')
       } catch (err) {
         this.$notify.error({ title: '错误', message: err.message })
+      } finally {
+        this.loading = false
       }
     },
     async save() {
