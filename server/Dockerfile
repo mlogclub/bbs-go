@@ -1,8 +1,9 @@
 # builder stage
 FROM golang:1.13-stretch AS builder
 
-# Install build dependencies   apt-get -qq update && \
-RUN     apt-get -qq install -y --no-install-recommends \
+# Install build dependencies
+RUN apt-get -qq update && \
+    apt-get -qq install -y --no-install-recommends \
       build-essential \
       git \
       openssh-client \
