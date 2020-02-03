@@ -1,5 +1,5 @@
 Env: prod # 环境，线上环境：prod、测试环境：dev
-BaseUrl: http://www.stonelan.com# 网站域名
+BaseUrl: http://www.stonelan.com
 Port: 8082 # 端口
 LogFile: /data/logs/bbs-go.log # 日志文件
 ShowSql: false # 是否打印sql
