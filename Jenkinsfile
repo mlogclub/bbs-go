@@ -1,6 +1,6 @@
 podTemplate(cloud:'kubernetes',containers: [
                             containerTemplate(name: 'ci-base',privileged:true,
-                            image: '10.0.3.200:32382/maven:3.0', ttyEnabled: true,
+                            image: '10.0.3.200:32382/ci-base', ttyEnabled: true,
                             command: 'cat'),
                             // containerTemplate(name: 'docker', image: 'docker',privileged:true, ttyEnabled: true, command: 'cat')
 ],volumes: [
