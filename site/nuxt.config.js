@@ -104,7 +104,7 @@ export default {
   },
 
   proxy: {
-     '/api/': 'http://bbs-server:8080'
+     '/api/': 'http://www.stonelan.com'
     //'/api/': 'https://mlog.club'
   },
 

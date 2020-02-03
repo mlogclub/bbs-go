@@ -5,7 +5,7 @@ import cookies from 'js-cookie'
 // 接口地址，请替换为你自己的
 // const baseURL = 'https://mlog.club'
 // const baseURL = 'http://localhost:8082'
-const baseURL = 'http://bbs-server:8080'
+const baseURL = 'http://10.0.3.200:32344'
 
 class HttpClient {
   constructor() {
