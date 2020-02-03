@@ -29,7 +29,7 @@ func (c *MessageController) AnyList() *simple.JsonResult {
 
 func (c *MessageController) PostCreate() *simple.JsonResult {
 	t := &model.Message{}
-	c.Ctx.ReadForm(t)
+	simple.ReadForm(c.Ctx, t)
 
 	err := services.MessageService.Create(t)
 	if err != nil {
@@ -48,7 +48,7 @@ func (c *MessageController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	c.Ctx.ReadForm(t)
+	simple.ReadForm(c.Ctx, t)
 
 	err = services.MessageService.Update(t)
 	if err != nil {

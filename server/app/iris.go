@@ -73,6 +73,7 @@ func InitIris() {
 	// admin
 	mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 		m.Router.Use(middleware.AdminAuth)
+		m.Party("/common").Handle(new(admin.CommonController))
 		m.Party("/user").Handle(new(admin.UserController))
 		m.Party("/third-account").Handle(new(admin.ThirdAccountController))
 		m.Party("/tag").Handle(new(admin.TagController))

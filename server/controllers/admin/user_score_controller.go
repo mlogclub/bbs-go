@@ -1,18 +1,20 @@
 package admin
 
 import (
+	"strconv"
+
+	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple"
+
 	"bbs-go/model"
 	"bbs-go/services"
-	"github.com/mlogclub/simple"
-	"github.com/kataras/iris/v12"
-	"strconv"
 )
 
 type UserScoreController struct {
-	Ctx             iris.Context
+	Ctx iris.Context
 }
 
-func (r *UserScoreController) GetBy(id int64) *simple.JsonResult {
+func (c *UserScoreController) GetBy(id int64) *simple.JsonResult {
 	t := services.UserScoreService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -20,14 +22,14 @@ func (r *UserScoreController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *UserScoreController) AnyList() *simple.JsonResult {
-	list, paging := services.UserScoreService.FindPageByParams(simple.NewQueryParams(r.Ctx).PageByReq().Desc("id"))
+func (c *UserScoreController) AnyList() *simple.JsonResult {
+	list, paging := services.UserScoreService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (r *UserScoreController) PostCreate() *simple.JsonResult {
+func (c *UserScoreController) PostCreate() *simple.JsonResult {
 	t := &model.UserScore{}
-	err := r.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -39,8 +41,8 @@ func (r *UserScoreController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *UserScoreController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(r.Ctx, "id")
+func (c *UserScoreController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -49,7 +51,7 @@ func (r *UserScoreController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = r.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -60,4 +62,3 @@ func (r *UserScoreController) PostUpdate() *simple.JsonResult {
 	}
 	return simple.JsonData(t)
 }
-

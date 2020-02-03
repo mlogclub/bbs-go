@@ -78,7 +78,7 @@ func (c *ArticleController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	c.Ctx.ReadForm(t)
+	simple.ReadForm(c.Ctx, t)
 
 	// 数据校验
 	if len(t.Title) == 0 {

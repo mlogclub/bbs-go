@@ -29,7 +29,7 @@ func (c *ProjectController) AnyList() *simple.JsonResult {
 
 func (c *ProjectController) PostCreate() *simple.JsonResult {
 	t := &model.Project{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *ProjectController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

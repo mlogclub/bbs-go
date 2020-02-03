@@ -47,7 +47,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_gaoe30cisdn.css'
+        href: '//at.alicdn.com/t/font_1142441_j56046itliq.css'
       }
     ]
   },
@@ -65,8 +65,15 @@ export default {
   plugins: [
     '~/plugins/filters',
     '~/plugins/axios',
-    '~/plugins/mlog',
+    '~/plugins/bbs-go',
     { src: '~/plugins/infinite-scroll', ssr: false }
+  ],
+  /*
+   ** Nuxt.js dev-modules
+   */
+  buildModules: [
+    // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/eslint-module'
   ],
   /*
    ** Nuxt.js modules
@@ -82,7 +89,7 @@ export default {
     [
       '@nuxtjs/google-adsense',
       {
-        id: 'ca-pub-xxx',
+        id: 'ca-pub-5683711753850351',
         pageLevelAds: true
       }
     ]
@@ -98,7 +105,6 @@ export default {
 
   proxy: {
     '/api/': 'http://bbs-go-server:8082'
-    // '/api/': 'https://mlog.club/'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
@@ -113,6 +119,12 @@ export default {
    ** Build configuration
    */
   build: {
+    optimizeCSS: true,
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true
+    },
     postcss: {
       preset: {
         features: {
