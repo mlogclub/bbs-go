@@ -11,30 +11,14 @@ podTemplate(cloud:'kubernetes',containers: [
     node(POD_LABEL) {
        checkout scm
        container('ci-base') {
-       
                        def sdf = System.currentTimeMillis()  
                        def reg='10.0.3.200:32382/'
-                       stage("build") {
-                        parallel{
-                         stage('Build server') {    
+                       stage('Build image') {    
                            sh 'kubectl get nodes'
-                           sh 'docker build server/ -t '+reg+'bbs-server:'+sdf                           
-                        }
-                         stage('Build site') {    
-                           sh 'kubectl get nodes'
-                         
+                           sh 'docker build server/ -t '+reg+'bbs-server:'+sdf
                            sh 'docker build site/ -t '+reg+'bbs-site:'+sdf
-                           
-                        }
-                         stage('Build admin') {    
-                           sh 'kubectl get nodes'
-                          
                            sh 'docker build admin/ -t '+reg+'bbs-admin:'+sdf    
-                        }
                        }
-                       }
-                      
-                      
                         stage('push image') {    
                            sh 'docker push '+reg+'bbs-server:'+sdf
                            sh 'docker push '+reg+'bbs-site:'+sdf
@@ -45,7 +29,6 @@ podTemplate(cloud:'kubernetes',containers: [
                            sh 'kubectl set image deployment bbs-site bbs-site='+reg+'bbs-site:'+sdf+' -n xbc'
                            sh 'kubectl set image deployment bbs-admin bbs-admin='+reg+'bbs-admin:'+sdf+' -n xbc'
                        }
-            
        }
       
     }
