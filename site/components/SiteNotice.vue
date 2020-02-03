@@ -20,6 +20,5 @@ export default {
 <style lang="scss" scoped>
 .notice-content {
   font-size: 80%;
-  word-break: break-all;
 }
 </style>
