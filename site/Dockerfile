@@ -22,6 +22,7 @@ ENV TZ=Asia/Shanghai
 WORKDIR /app
 
 # Install dependencies
+RUN npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 COPY package.json* ./
 RUN npm i --registry=https://registry.npm.taobao.org
 
