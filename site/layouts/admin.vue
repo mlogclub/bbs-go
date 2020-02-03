@@ -8,6 +8,13 @@
       text-color="#fff"
       active-text-color="#ffd04b"
     >
+      <el-menu-item index="/">
+        <span slot="title">
+          <el-tooltip effect="dark" content="返回前台" placement="bottom-end">
+            <i class="iconfont icon-home" style="color: #fff;"></i>
+          </el-tooltip>
+        </span>
+      </el-menu-item>
       <el-menu-item index="/admin">
         <span slot="title">
           <i class="iconfont icon-dashboard"></i>
