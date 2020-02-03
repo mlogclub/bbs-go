@@ -2,13 +2,13 @@
 FROM node:10.16-slim AS builder
 
 # Install build dependencies
-RUN apt-get -qq update && \
-    apt-get -qq install -y --no-install-recommends \
-      build-essential \
-      git \
-      openssh-client \
-      locales \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get -qq update && \
+#     apt-get -qq install -y --no-install-recommends \
+#       build-essential \
+#       git \
+#       openssh-client \
+#       locales \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Set locale: https://daten-und-bass.io/blog/fixing-missing-locale-setting-in-ubuntu-docker-image/
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
