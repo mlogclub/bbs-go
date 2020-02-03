@@ -13,24 +13,24 @@ podTemplate(cloud:'kubernetes',containers: [
        container('ci-base') {
                        def sdf = System.currentTimeMillis()  
                        def reg='10.0.3.200:32382/'
-                       stage('Build image') {    
-                           parallel{
-                               steps{
-                                    sh 'kubectl get nodes'
-                                    sh 'docker build server/ -t '+reg+'bbs-server:'+sdf
-                               }
-                               steps{
-    q                               sh 'docker build site/ -t '+reg+'bbs-site:'+sdf
-                               }
-                               steps{
-                                    sh 'docker build admin/ -t '+reg+'bbs-admin:'+sdf    
-                               }
-
-                           }
-                          
-                          
+                       parallel{
+                         stage('Build image') {    
+                           sh 'kubectl get nodes'
+                           sh 'docker build server/ -t '+reg+'bbs-server:'+sdf                           
+                        }
+                         stage('Build image') {    
+                           sh 'kubectl get nodes'
+                         
+                           sh 'docker build site/ -t '+reg+'bbs-site:'+sdf
                            
+                        }
+                         stage('Build image') {    
+                           sh 'kubectl get nodes'
+                          
+                           sh 'docker build admin/ -t '+reg+'bbs-admin:'+sdf    
+                        }
                        }
+                      
                         stage('push image') {    
                            sh 'docker push '+reg+'bbs-server:'+sdf
                            sh 'docker push '+reg+'bbs-site:'+sdf
