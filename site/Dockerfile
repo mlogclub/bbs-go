@@ -1,5 +1,5 @@
 # builder stage
-FROM node:10.16-slim AS builder
+FROM node:lts-slim AS builder
 
 # Install build dependencies
 # RUN apt-get -qq update && \

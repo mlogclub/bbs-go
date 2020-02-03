@@ -1,19 +1,19 @@
 # builder stage
-FROM node:10.16-slim AS builder
+FROM node:lts-slim AS builder
 
 # Install build dependencies
-RUN apt-get -qq update && \
-    apt-get -qq install -y --no-install-recommends \
-      build-essential \
-      git \
-      openssh-client \
-      locales \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get -qq update && \
+#     apt-get -qq install -y --no-install-recommends \
+#       build-essential \
+#       git \
+#       openssh-client \
+#       locales \
+#     && rm -rf /var/lib/apt/lists/*
 
-# Set locale: https://daten-und-bass.io/blog/fixing-missing-locale-setting-in-ubuntu-docker-image/
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
+# # Set locale: https://daten-und-bass.io/blog/fixing-missing-locale-setting-in-ubuntu-docker-image/
+# RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+#     dpkg-reconfigure --frontend noninteractive locales && \
+#     update-locale LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 # Update timezone
@@ -23,7 +23,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json* ./
-RUN npm i --registry=https://registry.npm.taobao.org
+RUN npm i --registry=https://registry.npm.taobao.org --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 
 FROM builder AS assets
 
@@ -38,19 +38,19 @@ RUN npm run build
 #RUN npm prune ${NPM_PRUNE_FLAGS}
 
 # application stage
-FROM node:10.16-slim AS application
+FROM node:lts-slim AS application
 
 # Install runtime dependencies
-RUN apt-get -qq update && \
-    apt-get -qq install -y --no-install-recommends \
-      curl \
-      locales \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get -qq update && \
+#     apt-get -qq install -y --no-install-recommends \
+#       curl \
+#       locales \
+#     && rm -rf /var/lib/apt/lists/*
 
-# Set locale: https://daten-und-bass.io/blog/fixing-missing-locale-setting-in-ubuntu-docker-image/
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
+# # Set locale: https://daten-und-bass.io/blog/fixing-missing-locale-setting-in-ubuntu-docker-image/
+# RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+#     dpkg-reconfigure --frontend noninteractive locales && \
+#     update-locale LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 # Update timezone
@@ -67,7 +67,7 @@ HEALTHCHECK --start-period=10s \
 WORKDIR /app
 
 # Install serve
-RUN npm i -g serve --registry=https://registry.npm.taobao.org
+RUN npm i -g serve --registry=https://registry.npm.taobao.org --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 
 # node_modules from former assets stage
 COPY --from=assets /app/dist /app/dist
