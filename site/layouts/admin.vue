@@ -71,8 +71,10 @@
 
 <script>
 import utils from '~/common/utils'
+import '~/plugins/element-ui'
+
 export default {
-  middleware: 'authenticated',
+  // middleware: 'authenticated',
   methods: {
     handleSelect(index, keyPath) {
       utils.linkTo(index)
@@ -80,7 +82,13 @@ export default {
   },
   head() {
     return {
-      title: 'BBS-GO管理'
+      title: 'BBS-GO管理',
+      link: [
+        {
+          rel: 'stylesheet',
+          href: '//unpkg.com/element-ui/lib/theme-chalk/index.css'
+        }
+      ]
     }
   }
 }

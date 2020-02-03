@@ -66,8 +66,7 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
-    { src: '~/plugins/infinite-scroll', ssr: false },
-    { src: '~/plugins/element-ui', ssr: true }
+    { src: '~/plugins/infinite-scroll', ssr: false }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -121,6 +120,12 @@ export default {
    ** Build configuration
    */
   build: {
+    optimizeCSS: true,
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true
+    },
     postcss: {
       preset: {
         features: {
