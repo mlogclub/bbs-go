@@ -24,7 +24,15 @@
         </div>
         <div>
           Github:
-          <a href="https://github.com/mlogclub/" target="_blank">码农俱乐部</a>
+          <a href="https://github.com/mlogclub/bbs-go" target="_blank"
+            >https://github.com/mlogclub/bbs-go</a
+          >
+        </div>
+        <div>
+          Gitee:
+          <a href="https://gitee.com/mlogclub/bbs-go" target="_blank"
+            >https://gitee.com/mlogclub/bbs-go</a
+          >
         </div>
       </div>
     </div>
