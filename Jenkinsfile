@@ -1,5 +1,5 @@
 podTemplate(cloud:'kubernetes',containers: [
-                            containerTemplate(name: 'maven',privileged:true,
+                            containerTemplate(name: 'ci-base',privileged:true,
                             image: '10.0.3.200:32382/maven:3.0', ttyEnabled: true,
                             command: 'cat'),
                             // containerTemplate(name: 'docker', image: 'docker',privileged:true, ttyEnabled: true, command: 'cat')
@@ -10,18 +10,24 @@ podTemplate(cloud:'kubernetes',containers: [
 {
     node(POD_LABEL) {
        checkout scm
-       container('maven') {
-                       stage('Build a Maven project xbcapi') {
-                           def sdf = System.currentTimeMillis()  
-                           sh 'cd xbcapi && ls && mvn  clean && mvn package'
+       container('ci-base') {
+                       def sdf = System.currentTimeMillis()  
+                       def reg='10.0.3.200:32382/'
+                       stage('Build image') {    
                            sh 'kubectl get nodes'
-                           sh 'docker build xbcapi/ -t 10.0.3.200:32382/xbcapi:'+sdf
-                           sh 'docker push 10.0.3.200:32382/xbcapi:'+sdf
-                           sh 'docker build mediaupload/ -t 10.0.3.200:32382/mediaupload:'+sdf
-                           sh 'docker push 10.0.3.200:32382/mediaupload:'+sdf
-                           sh 'kubectl set image deployment xbcapi xbcapi=10.0.3.200:32382/xbcapi:'+sdf+' -n xbc'
-                           sh 'kubectl set image deployment mediaupload mediaupload=10.0.3.200:32382/mediaupload:'+sdf+' -n xbc'
-
+                           sh 'docker build server/ -t '+reg+'bbs-server:'+sdf
+                           sh 'docker build site/ -t '+reg+'bbs-site:'+sdf
+                           sh 'docker build admin/ -t '+reg+'bbs-admin:'+sdf    
+                       }
+                        stage('push image') {    
+                           sh 'docker push '+reg'bbs-server:'+sdf
+                           sh 'docker push '+reg'bbs-site:'+sdf
+                           sh 'docker push '+reg'bbs-admin:'+sdf                           
+                       }
+                       stage('update deployment') { 
+                           sh 'kubectl set image deployment bbs-server bbs-server='+reg+'bbs-server:'+sdf+' -n xbc'
+                           sh 'kubectl set image deployment bbs-site bbs-site='+reg+'bbs-site:'+sdf+' -n xbc'
+                           sh 'kubectl set image deployment bbs-admin bbs-admin='+reg+'bbs-admin:'+sdf+' -n xbc'
                        }
        }
       
