@@ -1,74 +1,59 @@
 <template>
   <div class="bbs-admin">
     <el-menu
+      @select="handleSelect"
       class="el-menu-demo"
       mode="horizontal"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="/admin">
         <span slot="title">
-          <nuxt-link to="/admin">
-            <i class="iconfont icon-dashboard"></i>
-            <span>后台</span>
-          </nuxt-link>
+          <i class="iconfont icon-dashboard"></i>
+          <span>后台</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="/admin/nodes">
         <span slot="title">
-          <nuxt-link to="/admin/nodes">
-            <i class="iconfont icon-tags"></i>
-            <span>节点</span>
-          </nuxt-link>
+          <i class="iconfont icon-tags"></i>
+          <span>节点</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="/admin/topics">
         <span slot="title">
-          <nuxt-link to="/admin/topics">
-            <i class="iconfont icon-topic"></i>
-            <span>话题</span>
-          </nuxt-link>
+          <i class="iconfont icon-topic"></i>
+          <span>话题</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/admin/articles">
         <span slot="title">
-          <nuxt-link to="/admin/articles">
-            <i class="iconfont icon-article"></i>
-            <span>文章</span>
-          </nuxt-link>
+          <i class="iconfont icon-article"></i>
+          <span>文章</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/admin/comments">
         <span slot="title">
-          <nuxt-link to="/admin/comments">
-            <i class="iconfont icon-comment"></i>
-            <span>评论</span>
-          </nuxt-link>
+          <i class="iconfont icon-comment"></i>
+          <span>评论</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="6">
+      <el-menu-item index="/admin/users">
         <span slot="title">
-          <nuxt-link to="/admin/users">
-            <i class="iconfont icon-username"></i>
-            <span>用户</span>
-          </nuxt-link>
+          <i class="iconfont icon-username"></i>
+          <span>用户</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="7">
+      <el-menu-item index="/admin/links">
         <span slot="title">
-          <nuxt-link to="/admin/links"
-            ><i class="iconfont icon-link"></i>
-            <span>链接</span>
-          </nuxt-link>
+          <i class="iconfont icon-link"></i>
+          <span>链接</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="8">
+      <el-menu-item index="/admin/settings">
         <span slot="title">
-          <nuxt-link to="/admin/settings"
-            ><i class="iconfont icon-setting"></i>
-            <span>设置</span>
-          </nuxt-link>
+          <i class="iconfont icon-setting"></i>
+          <span>设置</span>
         </span>
       </el-menu-item>
     </el-menu>
@@ -78,7 +63,13 @@
 </template>
 
 <script>
+import utils from '~/common/utils'
 export default {
+  methods: {
+    handleSelect(index, keyPath) {
+      utils.linkTo(index)
+    }
+  },
   head() {
     return {
       title: 'BBS-GO管理'
