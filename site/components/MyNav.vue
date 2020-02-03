@@ -74,6 +74,9 @@
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </a>
+              <a v-if="isAdmin" class="navbar-item" href="/admin">
+                <i class="iconfont icon-dashboard" />&nbsp;后台管理
+              </a>
               <a @click="signout" class="navbar-item">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>
@@ -106,6 +109,19 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    isAdmin() {
+      const user = this.$store.state.user.current
+      if (!user || !user.roles || user.roles.length === 0) {
+        return false
+      }
+      for (let i = 0; i < user.roles.length; i++) {
+        const role = user.roles[i]
+        if (role === '管理员') {
+          return true
+        }
+      }
+      return false
     },
     config() {
       return this.$store.state.config.config
