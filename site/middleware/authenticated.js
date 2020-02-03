@@ -6,7 +6,6 @@ export default function(context) {
   }
   if (isAdminUrl(context)) {
     if (!isAdminUser(user)) {
-      // toSignIn(context) // TODO 应该跳转到无权限页面更合适一些
       context.error({
         statusCode: 403,
         message: '403 forbidden'
