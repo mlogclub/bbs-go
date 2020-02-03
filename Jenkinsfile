@@ -14,17 +14,17 @@ podTemplate(cloud:'kubernetes',containers: [
                        def sdf = System.currentTimeMillis()  
                        def reg='10.0.3.200:32382/'
                        parallel{
-                         stage('Build image') {    
+                         stage('Build server') {    
                            sh 'kubectl get nodes'
                            sh 'docker build server/ -t '+reg+'bbs-server:'+sdf                           
                         }
-                         stage('Build image') {    
+                         stage('Build site') {    
                            sh 'kubectl get nodes'
                          
                            sh 'docker build site/ -t '+reg+'bbs-site:'+sdf
                            
                         }
-                         stage('Build image') {    
+                         stage('Build admin') {    
                            sh 'kubectl get nodes'
                           
                            sh 'docker build admin/ -t '+reg+'bbs-admin:'+sdf    
