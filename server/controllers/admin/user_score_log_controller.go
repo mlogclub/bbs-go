@@ -12,7 +12,7 @@ type UserScoreLogController struct {
 	Ctx             iris.Context
 }
 
-func (r *UserScoreLogController) GetBy(id int64) *simple.JsonResult {
+func (c *UserScoreLogController) GetBy(id int64) *simple.JsonResult {
 	t := services.UserScoreLogService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -20,14 +20,14 @@ func (r *UserScoreLogController) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *UserScoreLogController) AnyList() *simple.JsonResult {
-	list, paging := services.UserScoreLogService.FindPageByParams(simple.NewQueryParams(r.Ctx).PageByReq().Desc("id"))
+func (c *UserScoreLogController) AnyList() *simple.JsonResult {
+	list, paging := services.UserScoreLogService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (r *UserScoreLogController) PostCreate() *simple.JsonResult {
+func (c *UserScoreLogController) PostCreate() *simple.JsonResult {
 	t := &model.UserScoreLog{}
-	err := r.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -39,8 +39,8 @@ func (r *UserScoreLogController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *UserScoreLogController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(r.Ctx, "id")
+func (c *UserScoreLogController) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -49,7 +49,7 @@ func (r *UserScoreLogController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = r.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

@@ -47,7 +47,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_3f971w5ii6l.css'
+        href: '//at.alicdn.com/t/font_1142441_nfkrpdye41h.css'
       }
     ]
   },
@@ -105,8 +105,8 @@ export default {
   },
 
   proxy: {
-    // '/api/': 'http://localhost:8082'
-    '/api/': 'https://mlog.club'
+    '/api/': 'http://localhost:8082'
+    // '/api/': 'https://mlog.club'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted

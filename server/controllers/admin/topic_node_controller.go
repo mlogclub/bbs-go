@@ -29,7 +29,7 @@ func (c *TopicNodeController) AnyList() *simple.JsonResult {
 
 func (c *TopicNodeController) PostCreate() *simple.JsonResult {
 	t := &model.TopicNode{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *TopicNodeController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

@@ -29,7 +29,7 @@ func (c *TopicLikeController) AnyList() *simple.JsonResult {
 
 func (c *TopicLikeController) PostCreate() *simple.JsonResult {
 	t := &model.TopicLike{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *TopicLikeController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
