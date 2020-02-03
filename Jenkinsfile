@@ -11,6 +11,7 @@ podTemplate(cloud:'kubernetes',containers: [
     node(POD_LABEL) {
        checkout scm
        container('ci-base') {
+            stages{
                        def sdf = System.currentTimeMillis()  
                        def reg='10.0.3.200:32382/'
                        stage("build"){
@@ -44,6 +45,7 @@ podTemplate(cloud:'kubernetes',containers: [
                            sh 'kubectl set image deployment bbs-site bbs-site='+reg+'bbs-site:'+sdf+' -n xbc'
                            sh 'kubectl set image deployment bbs-admin bbs-admin='+reg+'bbs-admin:'+sdf+' -n xbc'
                        }
+            }
        }
       
     }
