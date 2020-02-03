@@ -29,7 +29,7 @@ RUN go build -o bbs-go-server
 FROM debian:stretch-slim as application
 
 WORKDIR /app
-COPY sources.list  /etc/apt/sources.list
+#COPY sources.list  /etc/apt/sources.list
 # Install runtime dependencies
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends ca-certificates curl \
