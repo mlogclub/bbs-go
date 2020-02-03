@@ -6,7 +6,7 @@ ShowSql: false # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
 # 数据库连接
-MySqlUrl: root:123456@tcp(mysql:3306)/bbs_go?charset=utf8mb4&parseTime=True&loc=Local
+MySqlUrl: root:123456@tcp(mysql.default.svc:3306)/bbs_go?charset=utf8mb4&parseTime=True&loc=Local
 
 # github登录配置
 Github:
