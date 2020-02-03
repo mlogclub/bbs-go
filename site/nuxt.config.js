@@ -12,17 +12,23 @@ export default {
       lang: 'zh-cmn-Hans'
     },
     title: '',
-    meta: [
-      { charset: 'utf-8' },
+    meta: [{
+        charset: 'utf-8'
+      },
       {
         name: 'viewport',
-        content:
-          'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
+        content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
       },
-      { name: 'window-target', content: '_top' }
+      {
+        name: 'window-target',
+        content: '_top'
+      }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    link: [{
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico'
+      },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
@@ -54,11 +60,16 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#FFB90F' },
+  loading: {
+    color: '#FFB90F'
+  },
   /*
    ** Global CSS
    */
-  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
+  css: [{
+    src: '~/assets/styles/main.scss',
+    lang: 'scss'
+  }],
   /*
    ** Plugins to load before mounting the App
    */
@@ -66,7 +77,10 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/mlog',
-    { src: '~/plugins/infinite-scroll', ssr: false }
+    {
+      src: '~/plugins/infinite-scroll',
+      ssr: false
+    }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -85,7 +99,9 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/eslint-module',
     '@nuxtjs/toast',
-    ['cookie-universal-nuxt', { alias: 'cookies' }],
+    ['cookie-universal-nuxt', {
+      alias: 'cookies'
+    }],
     [
       '@nuxtjs/google-adsense',
       {
@@ -104,8 +120,8 @@ export default {
   },
 
   proxy: {
-     '/api/': 'http://www.stonelan.com'
-    //'/api/': 'https://mlog.club'
+    '/api/': 'http://10.0.3.200:32344/'
+    // '/api/': 'https://mlog.club'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
