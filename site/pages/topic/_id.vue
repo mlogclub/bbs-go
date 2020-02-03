@@ -1,0 +1,287 @@
+<template>
+  <div>
+    <section class="main">
+      <div class="container main-container is-white left-main">
+        <div class="left-container">
+          <article
+            class="topic-detail topic-wrap"
+            itemscope
+            itemtype="http://schema.org/BlogPosting"
+          >
+            <div class="topic-header">
+              <div class="topic-header-left">
+                <a
+                  :href="'/user/' + topic.user.id"
+                  :title="topic.user.nickname"
+                >
+                  <div
+                    :style="{
+                      backgroundImage: 'url(' + topic.user.avatar + ')'
+                    }"
+                    class="avatar avatar-size-45 is-rounded"
+                  />
+                </a>
+              </div>
+              <div class="topic-header-center">
+                <h1 class="topic-title" itemprop="headline">
+                  {{ topic.title }}
+                </h1>
+                <div class="topic-meta">
+                  <span
+                    class="meta-item"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <a :href="'/user/' + topic.user.id" itemprop="name">{{
+                      topic.user.nickname
+                    }}</a>
+                  </span>
+                  <span class="meta-item">
+                    <time
+                      :datetime="
+                        topic.lastCommentTime
+                          | formatDate('yyyy-MM-ddTHH:mm:ss')
+                      "
+                      itemprop="datePublished"
+                      >{{ topic.lastCommentTime | prettyDate }}</time
+                    >
+                  </span>
+                  <span class="meta-item">
+                    <a
+                      :href="'/topics/node/' + topic.node.nodeId"
+                      class="node"
+                      >{{ topic.node.name }}</a
+                    >
+                  </span>
+                  <span class="meta-item">
+                    <span
+                      v-for="tag in topic.tags"
+                      :key="tag.tagId"
+                      class="tag"
+                    >
+                      <a :href="'/topics/tag/' + tag.tagId">{{
+                        tag.tagName
+                      }}</a>
+                    </span>
+                  </span>
+                  <span class="meta-item act">
+                    <a @click="addFavorite(topic.topicId)">
+                      <i class="iconfont icon-favorite" />{{
+                        favorited ? '已收藏' : '收藏'
+                      }}
+                    </a>
+                  </span>
+                  <span v-if="isOwner" class="meta-item act">
+                    <a @click="deleteTopic(topic.topicId)">
+                      <i class="iconfont icon-delete" />&nbsp;删除
+                    </a>
+                  </span>
+                  <span v-if="isOwner" class="meta-item act">
+                    <a :href="'/topic/edit/' + topic.topicId">
+                      <i class="iconfont icon-edit" />&nbsp;修改
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div class="topic-header-right">
+                <div class="like">
+                  <span
+                    :class="{ liked: topic.liked }"
+                    @click="like(topic)"
+                    class="like-btn"
+                  >
+                    <i class="iconfont icon-like" />
+                  </span>
+                  <span v-if="topic.likeCount" class="like-count">{{
+                    topic.likeCount
+                  }}</span>
+                </div>
+                <span class="count"
+                  >{{ topic.commentCount }}&nbsp;/&nbsp;{{
+                    topic.viewCount
+                  }}</span
+                >
+              </div>
+            </div>
+
+            <div class="ad">
+              <!-- 信息流广告 -->
+              <adsbygoogle
+                ad-slot="4980294904"
+                ad-format="fluid"
+                ad-layout-key="-ht-19-1m-3j+mu"
+              />
+            </div>
+
+            <div
+              v-html="topic.content"
+              class="content topic-content"
+              itemprop="articleBody"
+            ></div>
+          </article>
+
+          <!-- 评论 -->
+          <comment
+            :entity-id="topic.topicId"
+            :comments-page="commentsPage"
+            :show-ad="false"
+            entity-type="topic"
+          />
+        </div>
+        <div class="right-container">
+          <weixin-gzh />
+
+          <div class="ad">
+            <!-- 展示广告 -->
+            <adsbygoogle ad-slot="1742173616" />
+          </div>
+
+          <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
+            <div class="widget-header">
+              目录
+            </div>
+            <div v-html="topic.toc" class="widget-content" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+import utils from '~/common/utils'
+import Comment from '~/components/Comment'
+import WeixinGzh from '~/components/WeixinGzh'
+export default {
+  components: {
+    Comment,
+    WeixinGzh
+  },
+  async asyncData({ $axios, params, error }) {
+    let topic
+    try {
+      topic = await $axios.get('/api/topic/' + params.id)
+    } catch (e) {
+      error({
+        statusCode: 404,
+        message: '话题不存在'
+      })
+      return
+    }
+
+    const [favorited, commentsPage] = await Promise.all([
+      $axios.get('/api/favorite/favorited', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id
+        }
+      }),
+      $axios.get('/api/comment/list', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id
+        }
+      })
+    ])
+
+    return {
+      topic,
+      commentsPage,
+      favorited: favorited.favorited
+    }
+  },
+  computed: {
+    isOwner() {
+      return (
+        this.$store.state.user.current &&
+        this.topic &&
+        this.$store.state.user.current.id === this.topic.user.id
+      )
+    }
+  },
+  mounted() {
+    utils.handleToc(this.$refs.toc)
+  },
+  methods: {
+    async addFavorite(topicId) {
+      try {
+        if (this.favorited) {
+          await this.$axios.get('/api/favorite/delete', {
+            params: {
+              entityType: 'topic',
+              entityId: topicId
+            }
+          })
+          this.favorited = false
+          this.$toast.success('已取消收藏！')
+        } else {
+          await this.$axios.get('/api/topic/favorite/' + topicId)
+          this.favorited = true
+          this.$toast.success('收藏成功')
+        }
+      } catch (e) {
+        console.error(e)
+        this.$toast.error('收藏失败：' + (e.message || e))
+      }
+    },
+    async deleteTopic(topicId) {
+      if (process.client && !window.confirm('是否确认删除该话题？')) {
+        return
+      }
+      try {
+        await this.$axios.post('/api/topic/delete/' + topicId)
+        this.$toast.success('删除成功', {
+          duration: 2000,
+          onComplete() {
+            utils.linkTo('/topics')
+          }
+        })
+      } catch (e) {
+        console.error(e)
+        this.$toast.error('删除失败：' + (e.message || e))
+      }
+    },
+    async like(topic) {
+      try {
+        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        topic.liked = true
+        topic.likeCount++
+      } catch (e) {
+        if (e.errorCode === 1) {
+          this.$toast.info('请登录后点赞！！！', {
+            action: {
+              text: '去登录',
+              onClick: (e, toastObject) => {
+                utils.toSignin()
+              }
+            }
+          })
+        } else {
+          this.$toast.error(e.message || e)
+        }
+      }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.topic.title)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.topic-detail {
+  margin-bottom: 20px;
+
+  .content {
+    padding-top: 10px;
+    font-size: 15px;
+    color: #000;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+}
+</style>

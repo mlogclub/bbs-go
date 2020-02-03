@@ -1,0 +1,39 @@
+{
+  "name": "admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --BUILD_ENV=prod",
+    "lint": "vue-cli-service lint",
+    "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "element-ui": "^2.9.2",
+    "highlight.js": "^9.15.6",
+    "js-cookie": "^2.2.0",
+    "mavon-editor": "^2.7.2",
+    "qs": "^6.7.0",
+    "turndown": "^5.0.3",
+    "vue": "^2.6.6",
+    "vue-quill-editor": "^3.0.6",
+    "vue-router": "^3.0.1",
+    "vue-router-tab": "^0.2.7",
+    "vuedraggable": "^2.23.2",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-vue": "^6.0.1",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.5.21"
+  }
+}

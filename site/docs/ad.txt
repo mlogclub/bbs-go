@@ -1,0 +1,82 @@
+<!-- 展示广告 -->
+<ins
+  class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-5683711753850351"
+  data-ad-slot="1742173616"
+  data-ad-format="auto"
+  data-full-width-responsive="true"
+></ins>
+<script>
+  ;(adsbygoogle = window.adsbygoogle || []).push({})
+</script>
+<adsbygoogle ad-slot="1742173616" />
+
+
+
+<!-- 展示广告220*220 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:220px;height:220px"
+     data-ad-client="ca-pub-5683711753850351"
+     data-ad-slot="1361835285"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<adsbygoogle
+  :ad-style="{
+    display: 'inline-block',
+    width: '220px',
+    height: '220px'
+  }"
+  ad-slot="1361835285"
+/>
+
+
+
+<!-- 信息流广告 -->
+<ins
+  class="adsbygoogle"
+  style="display:block"
+  data-ad-format="fluid"
+  data-ad-layout-key="-ht-19-1m-3j+mu"
+  data-ad-client="ca-pub-5683711753850351"
+  data-ad-slot="4980294904"
+></ins>
+<script>
+  ;(adsbygoogle = window.adsbygoogle || []).push({})
+</script>
+<adsbygoogle
+  ad-slot="4980294904"
+  ad-format="fluid"
+  ad-layout-key="-ht-19-1m-3j+mu"
+/>
+
+
+
+
+<!-- 展示广告190x190 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:190px;height:190px"
+     data-ad-client="ca-pub-5683711753850351"
+     data-ad-slot="5685455263"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<!-- 展示广告190x480 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:190px;height:480px"
+     data-ad-client="ca-pub-5683711753850351"
+     data-ad-slot="3438372357"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<!-- 展示广告190x90 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:190px;height:90px"
+     data-ad-client="ca-pub-5683711753850351"
+     data-ad-slot="9345305153"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>

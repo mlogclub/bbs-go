@@ -1,0 +1,388 @@
+html,
+body {
+  font-family: '-apple-system', 'system-ui', 'Helvetica Neue', 'Luxi Sans',
+    'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti, sans-serif !important;
+  // background: #e5e5e5;
+  // background: #f7f7f7;
+  background: url(/images/bg.gif) repeat;
+}
+
+.column {
+  padding: 3px !important;
+}
+
+.main {
+  padding: 1rem 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .main {
+    padding: 1rem 0.5rem 0 !important;
+  }
+}
+
+.main-body,
+.main-aside {
+  background: #fff;
+  padding: 10px;
+}
+
+// main-container
+$sidebar-margin: 10px; // 侧边栏之间的缝隙
+
+// 计算页面宽度
+@mixin main-size($side-width) {
+  // 侧边栏宽度
+  $sidebar-width: $side-width !global;
+  // 主栏目的宽度
+  $main-container-width: calc(
+    100% - #{$side-width} - #{$sidebar-margin}
+  ) !global;
+
+  &.left-main {
+    .left-container {
+      width: $main-container-width;
+    }
+
+    .right-container {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+    }
+  }
+
+  &.right-main {
+    .left-container {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+    }
+
+    .right-container {
+      width: $main-container-width;
+    }
+  }
+}
+
+.main-container {
+  display: flex;
+
+  // 默认宽度260
+  @include main-size(260px);
+
+  // 设定宽度360
+  &.size-360 {
+    @include main-size(360px);
+  }
+
+  .left-container,
+  .right-container {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+    display: block;
+  }
+
+  &.is-white.left-main {
+    .left-container {
+      background: #fff;
+      padding: 0 10px 10px 10px;
+    }
+  }
+
+  &.is-white.right-main {
+    .right-container {
+      background: #fff;
+      padding: 0 10px 10px 10px;
+    }
+  }
+
+  // 左侧大，右侧小
+  &.left-main {
+    @media screen and (max-width: 768px) {
+      .left-container {
+        width: 100% !important;
+        margin-right: 0 !important;
+      }
+
+      .right-container {
+        display: none;
+      }
+    }
+
+    .left-container {
+      transition: width 0.2s;
+    }
+
+    .right-container {
+      padding: 0px;
+      margin-left: $sidebar-margin;
+    }
+  }
+
+  // 左侧小，右侧大
+  &.right-main {
+    @media screen and (max-width: 768px) {
+      .right-container {
+        width: 100% !important;
+        margin-left: 0 !important;
+      }
+
+      .left-container {
+        display: none;
+      }
+    }
+
+    .right-container {
+      transition: width 0.2s;
+    }
+
+    .left-container {
+      padding: 0px;
+      margin-right: $sidebar-margin;
+    }
+  }
+}
+
+.widget {
+  background: #fff;
+  padding: 0 6px;
+  margin-top: 10px;
+
+  &:first-child {
+    margin: 0px;
+  }
+
+  &.no-margin {
+    margin: 0px;
+  }
+
+  &.no-bg {
+    background: none;
+  }
+
+  & > .widget-header {
+    // padding-bottom: 8px;
+    padding: 8px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px dashed #ddd;
+
+    .slot {
+      float: right;
+    }
+
+    .delete {
+      float: right;
+    }
+  }
+
+  & > .widget-content {
+    // background-color: #fff;
+    // font-size: 12px;
+    margin-top: 8px;
+    padding: 8px 0;
+  }
+
+  & > .widget-footer {
+    border-top: 1px dashed #ddd;
+    padding: 10px 0 10px 0;
+
+    &.is-right {
+      text-align: right;
+    }
+  }
+}
+
+img.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+div.avatar {
+  min-width: 50px;
+  min-height: 50px;
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+
+  &.small-avatar {
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &.avatar-size-45 {
+    min-width: 45px;
+    min-height: 45px;
+    width: 45px;
+    height: 45px;
+  }
+
+  &.is-rounded {
+    border-radius: 50%;
+  }
+
+  &.radius8 {
+    border-radius: 8px;
+  }
+
+  &.has-border {
+    border: 1px solid #f5f5f5;
+  }
+}
+
+.footer {
+  background: #fff;
+  padding: 20px 0 20px 0;
+
+  .hide {
+    a {
+      color: #efeaea;
+
+      &:hover {
+        color: #746f6f;
+      }
+    }
+  }
+}
+
+.categories {
+  background: #fff;
+  margin-bottom: 10px;
+
+  .tag {
+    a {
+      color: #4a4a4a;
+    }
+  }
+}
+
+.toc {
+  position: relative;
+  width: $sidebar-width;
+
+  ul {
+    margin: 0px;
+    padding-left: 20px;
+    list-style: disc;
+
+    li {
+      a {
+        font-size: 13px;
+        display: block;
+        padding: 3px 0;
+        color: #000;
+        background: transparent;
+      }
+
+      a.active {
+        color: #009a61;
+        font-weight: bold;
+        // font-size: 15px;
+      }
+    }
+  }
+
+  & > ul:not(li a) {
+    list-style: none;
+  }
+
+  .content {
+    overflow: auto;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  // 屏幕宽度小于768的时候隐藏toc目录
+  .toc {
+    display: none;
+  }
+}
+
+.button.post {
+  width: 100%;
+}
+
+.loading-animation {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  color: red;
+  vertical-align: middle;
+  pointer-events: none;
+  position: relative;
+
+  &:before,
+  &:after {
+    content: '';
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    background-color: currentcolor;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: loading-animation 2s infinite ease-in-out;
+    animation: loading-animation 2s infinite ease-in-out;
+  }
+
+  .loading-animation:after {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+  }
+
+  @-webkit-keyframes loading-animation {
+    0%,
+    100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    50% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+
+  @keyframes loading-animation {
+    0%,
+    100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+
+    50% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+  }
+}
+
+.breadcrumb.my-breadcrumb {
+  padding: 10px 0;
+  margin: 0;
+  font-weight: 700;
+  border-bottom: 1px dashed #ddd;
+}

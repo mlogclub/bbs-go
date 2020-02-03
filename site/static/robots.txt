@@ -1,0 +1,13 @@
+User-agent: *
+Disallow:
+Sitemap: https://file.mlog.club/sitemap/sitemap.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap1.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap2.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap3.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap4.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap5.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap6.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap7.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap8.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap9.xml.gz
+Sitemap: https://file.mlog.club/sitemap/sitemap10.xml.gz
