@@ -123,7 +123,6 @@ export default {
     '/api/': 'http://www.stonelan.com'
     // '/api/': 'https://mlog.club'
   },
-
   // Doc: https://github.com/shakee93/vue-toasted
   // Doc: https://github.com/nuxt-community/modules/tree/master/packages/toast
   toast: {
