@@ -120,7 +120,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://10.0.3.200:32344/'
+    '/api/': 'http://www.stonelan.com'
     // '/api/': 'https://mlog.club'
   },
 
