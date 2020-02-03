@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --disableHostCheck=true",
     "build": "vue-cli-service build --BUILD_ENV=prod",
     "lint": "vue-cli-service lint",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
