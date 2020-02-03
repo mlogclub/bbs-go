@@ -74,7 +74,7 @@ import utils from '~/common/utils'
 import '~/plugins/element-ui'
 
 export default {
-  middleware: 'authenticated',
+  middleware: ['global', 'authenticated'],
   methods: {
     handleSelect(index, keyPath) {
       utils.linkTo(index)
