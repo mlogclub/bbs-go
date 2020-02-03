@@ -120,6 +120,7 @@ export default {
    ** Build configuration
    */
   build: {
+    publicPath: 'https://file.mlog.club/static/nuxtclient/',
     optimizeCSS: true,
     splitChunks: {
       layouts: true,
