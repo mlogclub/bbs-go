@@ -35,14 +35,6 @@ func BuildUserById(id int64) *model.UserInfo {
 	return BuildUser(user)
 }
 
-func BuildUserWithScore(user *model.User) *model.UserInfo {
-	ret := BuildUser(user)
-	if user != nil && user.Status != model.StatusDeleted {
-		ret.Score = cache.UserCache.GetScore(user.Id)
-	}
-	return ret
-}
-
 func BuildUser(user *model.User) *model.UserInfo {
 	if user == nil {
 		return nil
@@ -73,6 +65,8 @@ func BuildUser(user *model.User) *model.UserInfo {
 		ret.Email = ""
 		ret.HomePage = ""
 		ret.Description = ""
+	} else {
+		ret.Score = cache.UserCache.GetScore(user.Id)
 	}
 	return ret
 }

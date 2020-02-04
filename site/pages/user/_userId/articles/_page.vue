@@ -49,8 +49,7 @@ export default {
       return
     }
 
-    const [currentUser, articlesPage] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [articlesPage] = await Promise.all([
       $axios.get('/api/article/user/articles', {
         params: {
           userId: params.userId,
@@ -60,17 +59,18 @@ export default {
     ])
 
     return {
-      currentUser,
       user,
       articlesPage
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.user.current
+    },
     // 是否是主人态
     isOwner() {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     }
   },
   head() {

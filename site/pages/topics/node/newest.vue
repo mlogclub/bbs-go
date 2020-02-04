@@ -29,8 +29,7 @@ export default {
   },
   async asyncData({ $axios, query }) {
     try {
-      const [user, nodes, topicsPage] = await Promise.all([
-        $axios.get('/api/user/current'),
+      const [nodes, topicsPage] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics', {
           params: {
@@ -38,7 +37,7 @@ export default {
           }
         })
       ])
-      return { user, nodes, topicsPage }
+      return { nodes, topicsPage }
     } catch (e) {
       console.error(e)
     }

@@ -28,9 +28,8 @@ export default {
     Pagination
   },
   async asyncData({ $axios, params, query }) {
-    const [tag, user, nodes, topicsPage] = await Promise.all([
+    const [tag, nodes, topicsPage] = await Promise.all([
       $axios.get('/api/tag/' + params.tagId),
-      $axios.get('/api/user/current'),
       $axios.get('/api/topic/nodes'),
       $axios.get('/api/topic/tag/topics', {
         params: {
@@ -41,7 +40,6 @@ export default {
     ])
     return {
       tag,
-      user,
       nodes,
       topicsPage
     }

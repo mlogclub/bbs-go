@@ -31,7 +31,7 @@ func (c *UserController) GetCurrent() *simple.JsonResult {
 func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
 	if user != nil && user.Status != model.StatusDeleted {
-		return simple.JsonData(render.BuildUserWithScore(user))
+		return simple.JsonData(render.BuildUser(user))
 	}
 	return simple.JsonErrorMsg("用户不存在")
 }

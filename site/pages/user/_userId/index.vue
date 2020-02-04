@@ -76,7 +76,6 @@ export default {
       })
       return
     }
-    const currentUser = await $axios.get('/api/user/current')
 
     const activeTab = query.tab || defaultTab
     let recentTopics = null
@@ -92,7 +91,6 @@ export default {
     }
     return {
       activeTab,
-      currentUser,
       user,
       recentTopics,
       recentArticles
@@ -102,11 +100,12 @@ export default {
     return {}
   },
   computed: {
-    // 是否是主人态
+    currentUser() {
+      return this.$store.state.user.current
+    },
     isOwner() {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     }
   },
   head() {

@@ -94,13 +94,11 @@ export default {
     MarkdownEditor
   },
   async asyncData({ $axios, params }) {
-    const [currentUser, topic, nodes] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [topic, nodes] = await Promise.all([
       $axios.get('/api/topic/edit/' + params.id),
       $axios.get('/api/topic/nodes')
     ])
     return {
-      currentUser,
       topic,
       nodes,
       postForm: {
@@ -120,6 +118,11 @@ export default {
         tags: [],
         content: ''
       }
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
     }
   },
   mounted() {},
