@@ -9,6 +9,7 @@ import (
 
 	"bbs-go/model"
 	"bbs-go/repositories"
+	"bbs-go/services/cache"
 )
 
 var UserScoreService = newUserScoreService()
@@ -146,7 +147,7 @@ func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceI
 	if score < 0 {
 		scoreType = model.ScoreTypeDecr
 	}
-	return UserScoreLogService.Create(&model.UserScoreLog{
+	err := UserScoreLogService.Create(&model.UserScoreLog{
 		UserId:      userId,
 		SourceType:  sourceType,
 		SourceId:    sourceId,
@@ -155,4 +156,8 @@ func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceI
 		Score:       score,
 		CreateTime:  simple.NowTimestamp(),
 	})
+	if err == nil {
+		cache.UserCache.InvalidateScore(userId)
+	}
+	return err
 }
