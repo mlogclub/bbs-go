@@ -21,7 +21,7 @@
           <span>后台</span>
         </span>
       </el-menu-item>
-      <el-menu-item index="/admin/nodes">
+      <el-menu-item index="/admin/topics/nodes">
         <span slot="title">
           <i class="iconfont icon-tags"></i>
           <span>节点</span>
@@ -49,6 +49,12 @@
         <span slot="title">
           <i class="iconfont icon-username"></i>
           <span>用户</span>
+        </span>
+      </el-menu-item>
+      <el-menu-item index="/admin/users/score">
+        <span slot="title">
+          <i class="iconfont icon-score"></i>
+          <span>积分</span>
         </span>
       </el-menu-item>
       <el-menu-item index="/admin/links">

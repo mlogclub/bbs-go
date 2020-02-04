@@ -6,7 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/model"
+	"bbs-go/controllers/render"
 	"bbs-go/services"
 )
 
@@ -23,42 +23,12 @@ func (c *UserScoreController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *UserScoreController) AnyList() *simple.JsonResult {
-	list, paging := services.UserScoreService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
-	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
-}
-
-func (c *UserScoreController) PostCreate() *simple.JsonResult {
-	t := &model.UserScore{}
-	err := simple.ReadForm(c.Ctx, t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+	list, paging := services.UserScoreService.FindPageByParams(simple.NewQueryParams(c.Ctx).EqByReq("user_id").PageByReq().Desc("id"))
+	var results []map[string]interface{}
+	for _, userScore := range list {
+		user := render.BuildUserDefaultIfNull(userScore.UserId)
+		item := simple.NewRspBuilder(userScore).Put("user", user).Build()
+		results = append(results, item)
 	}
-
-	err = services.UserScoreService.Create(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
-}
-
-func (c *UserScoreController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(c.Ctx, "id")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	t := services.UserScoreService.Get(id)
-	if t == nil {
-		return simple.JsonErrorMsg("entity not found")
-	}
-
-	err = simple.ReadForm(c.Ctx, t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	err = services.UserScoreService.Update(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
+	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
 }
