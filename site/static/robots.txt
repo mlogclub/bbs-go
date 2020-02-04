@@ -1,5 +1,5 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
 Sitemap: https://file.mlog.club/sitemap/sitemap.xml.gz
 Sitemap: https://file.mlog.club/sitemap/sitemap1.xml.gz
 Sitemap: https://file.mlog.club/sitemap/sitemap2.xml.gz

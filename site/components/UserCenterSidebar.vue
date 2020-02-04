@@ -14,7 +14,7 @@
         <div class="score">
           <i class="iconfont icon-score" />
           <span>{{ user.score }}</span>
-          <a class="score-log" href="#">积分详情&gt;&gt;</a>
+          <a class="score-log" href="#" target="_blank">积分详情&gt;&gt;</a>
         </div>
         <ul v-if="isOwner" class="operations">
           <li>
