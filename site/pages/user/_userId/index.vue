@@ -2,58 +2,48 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <div>
-          <div class="tabs">
-            <ul>
-              <li :class="{ 'is-active': activeTab === 'articles' }">
-                <a :href="'/user/' + user.id + '?tab=articles'">
-                  <span class="icon is-small">
-                    <i class="iconfont icon-article" aria-hidden="true" />
-                  </span>
-                  <span>文章</span>
-                </a>
-              </li>
-              <li :class="{ 'is-active': activeTab === 'topics' }">
-                <a :href="'/user/' + user.id + '?tab=topics'">
-                  <span class="icon is-small">
-                    <i class="iconfont icon-topic" aria-hidden="true" />
-                  </span>
-                  <span>话题</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+        <div class="tabs">
+          <ul>
+            <li :class="{ 'is-active': activeTab === 'topics' }">
+              <a :href="'/user/' + user.id + '?tab=topics'">
+                <span class="icon is-small">
+                  <i class="iconfont icon-topic" aria-hidden="true" />
+                </span>
+                <span>话题</span>
+              </a>
+            </li>
+            <li :class="{ 'is-active': activeTab === 'articles' }">
+              <a :href="'/user/' + user.id + '?tab=articles'">
+                <span class="icon is-small">
+                  <i class="iconfont icon-article" aria-hidden="true" />
+                </span>
+                <span>文章</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-          <div v-if="activeTab === 'topics'">
-            <div v-if="recentTopics && recentTopics.length">
-              <topic-list :topics="recentTopics" />
-              <div class="more">
-                <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
-              </div>
-            </div>
-            <div
-              v-else
-              class="notification is-primary"
-              style="margin-top: 10px;"
-            >
-              暂无话题
+        <div v-if="activeTab === 'topics'">
+          <div v-if="recentTopics && recentTopics.length">
+            <topic-list :topics="recentTopics" />
+            <div class="more">
+              <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
             </div>
           </div>
+          <div v-else class="notification is-primary" style="margin-top: 10px;">
+            暂无话题
+          </div>
+        </div>
 
-          <div v-if="activeTab === 'articles'">
-            <div v-if="recentArticles && recentArticles.length">
-              <article-list :articles="recentArticles" />
-              <div class="more">
-                <a :href="'/user/' + user.id + '/articles'">查看更多&gt;&gt;</a>
-              </div>
+        <div v-if="activeTab === 'articles'">
+          <div v-if="recentArticles && recentArticles.length">
+            <article-list :articles="recentArticles" />
+            <div class="more">
+              <a :href="'/user/' + user.id + '/articles'">查看更多&gt;&gt;</a>
             </div>
-            <div
-              v-else
-              class="notification is-primary"
-              style="margin-top: 10px;"
-            >
-              暂无文章
-            </div>
+          </div>
+          <div v-else class="notification is-primary" style="margin-top: 10px;">
+            暂无文章
           </div>
         </div>
       </div>
@@ -67,7 +57,7 @@ import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 
-const defaultTab = 'articles'
+const defaultTab = 'topics'
 
 export default {
   components: {
