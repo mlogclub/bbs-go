@@ -35,10 +35,6 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 
 > 前端页面服务，基于`nuxt.js`搭建。
 
-### admin
-
-> 后台管理系统，基于`Vue` + `Element-UI`搭建。
-
 ## 功能预览
 
 ![前台页面.png](https://i.loli.net/2019/09/12/EfPJDwKpgjrM1CW.png)
