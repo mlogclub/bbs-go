@@ -121,7 +121,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	}
 
 	if quote != nil { // 回复跟帖
-		if comment.UserId != authorId { // 被回复人和帖子作者不是同一个人，需要给帖子作者也发送一下消息
+		if comment.UserId != authorId && quote.UserId != authorId { // 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
 			// 给帖子作者发消息
 			s.Produce(fromId, authorId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
