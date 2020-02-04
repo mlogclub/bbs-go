@@ -183,7 +183,7 @@
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="user" :current-user="user" />
+      <user-center-sidebar :user="user" />
     </div>
 
     <!-- 设置用户名 -->

@@ -54,18 +54,16 @@ export default {
     user: {
       type: Object,
       required: true
-    },
-    currentUser: {
-      type: Object,
-      required: false,
-      default: null
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.user.current
+    },
+    // 是否是主人态
     isOwner() {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     }
   }
 }
