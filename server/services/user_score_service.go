@@ -79,10 +79,6 @@ func (s *userScoreService) CreateOrUpdate(t *model.UserScore) error {
 // IncrementCreateTopicScore 发帖获积分
 func (s *userScoreService) IncrementPostTopicScore(topic *model.Topic) {
 	config := SysConfigService.GetConfig()
-	if config.ScoreConfig == nil {
-		logrus.Info("请先配置积分")
-		return
-	}
 	if config.ScoreConfig.PostTopicScore <= 0 {
 		logrus.Info("请配置发帖积分")
 		return
@@ -101,10 +97,6 @@ func (s *userScoreService) IncrementPostCommentScore(comment *model.Comment) {
 		return
 	}
 	config := SysConfigService.GetConfig()
-	if config.ScoreConfig == nil {
-		logrus.Info("请先配置积分")
-		return
-	}
 	if config.ScoreConfig.PostCommentScore <= 0 {
 		logrus.Info("请配置跟帖积分")
 		return

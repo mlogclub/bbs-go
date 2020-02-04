@@ -1,7 +1,7 @@
 <template>
   <section v-loading="loading" class="page-container">
-    <el-tabs value="first">
-      <el-tab-pane label="通用配置" name="first">
+    <el-tabs value="commonConfigTab">
+      <el-tab-pane label="通用配置" name="commonConfigTab">
         <div class="config">
           <el-form label-width="160px">
             <el-form-item label="网站名称">
@@ -65,7 +65,7 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="导航配置" name="second" class="nav-panel">
+      <el-tab-pane label="导航配置" name="navConfigTab" class="nav-panel">
         <draggable
           v-model="config.siteNavs"
           draggable=".nav"
@@ -120,6 +120,30 @@
             ></el-button>
           </el-tooltip>
         </div>
+      </el-tab-pane>
+      <el-tab-pane
+        v-if="config.scoreConfig"
+        label="积分配置"
+        name="scoreConfigTab"
+      >
+        <el-form label-width="160px">
+          <el-form-item label="发帖获得积分">
+            <el-input-number
+              v-model="config.scoreConfig.postTopicScore"
+              :min="1"
+              type="text"
+              placeholder="发帖获得积分"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="跟帖获得积分">
+            <el-input-number
+              v-model="config.scoreConfig.postCommentScore"
+              :min="1"
+              type="text"
+              placeholder="跟帖获得积分"
+            ></el-input-number>
+          </el-form-item>
+        </el-form>
       </el-tab-pane>
     </el-tabs>
 

@@ -8,18 +8,18 @@ type SiteNav struct {
 
 // 积分配置
 type ScoreConfig struct {
-	PostTopicScore   int // 发帖获得积分
-	PostCommentScore int // 跟帖获得积分
+	PostTopicScore   int `json:"postTopicScore"`   // 发帖获得积分
+	PostCommentScore int `json:"postCommentScore"` // 跟帖获得积分
 }
 
 // 配置返回结构体
 type ConfigData struct {
-	SiteTitle        string       `json:"siteTitle"`
-	SiteDescription  string       `json:"siteDescription"`
-	SiteKeywords     []string     `json:"siteKeywords"`
-	SiteNavs         []SiteNav    `json:"siteNavs"`
-	SiteNotification string       `json:"siteNotification"`
-	RecommendTags    []string     `json:"recommendTags"`
-	UrlRedirect      bool         `json:"urlRedirect"`
-	ScoreConfig      *ScoreConfig `json:"scoreConfig"`
+	SiteTitle        string      `json:"siteTitle"`
+	SiteDescription  string      `json:"siteDescription"`
+	SiteKeywords     []string    `json:"siteKeywords"`
+	SiteNavs         []SiteNav   `json:"siteNavs"`
+	SiteNotification string      `json:"siteNotification"`
+	RecommendTags    []string    `json:"recommendTags"`
+	UrlRedirect      bool        `json:"urlRedirect"`
+	ScoreConfig      ScoreConfig `json:"scoreConfig"`
 }

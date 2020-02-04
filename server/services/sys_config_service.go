@@ -140,7 +140,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		logrus.Warn("推荐标签数据错误", err)
 	}
 
-	var scoreConfig *model.ScoreConfig
+	var scoreConfig model.ScoreConfig
 	if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
 		logrus.Warn("积分配置错误", err)
 	}
