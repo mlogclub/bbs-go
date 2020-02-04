@@ -16,13 +16,6 @@
           <span>{{ user.score }}</span>
           <a class="score-log" href="#">积分详情&gt;&gt;</a>
         </div>
-        <div v-if="user.type === 1">
-          <img
-            :src="
-              'https://open.weixin.qq.com/qr/code?username=' + user.username
-            "
-          />
-        </div>
         <ul v-if="isOwner" class="operations">
           <li>
             <i class="iconfont icon-edit" />
