@@ -19,7 +19,7 @@ func newArticleTagCache() *articleTagCache {
 	return &articleTagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articleTags := repositories.ArticleTagRepository.FindByArticleId(simple.DB(), Key2Int64(key))
+				articleTags := repositories.ArticleTagRepository.FindByArticleId(simple.DB(), key2Int64(key))
 				if len(articleTags) > 0 {
 					var tagIds []int64
 					for _, articleTag := range articleTags {
