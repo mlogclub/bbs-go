@@ -2,7 +2,7 @@ Env: prod # 环境，线上环境：prod、测试环境：dev
 BaseUrl: http://www.stonelan.com
 Port: 8082 # 端口
 LogFile: /data/logs/bbs-go.log # 日志文件
-ShowSql: false # 是否打印sql
+ShowSql: true # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
 # 数据库连接
@@ -10,8 +10,8 @@ MySqlUrl: root:123456@tcp(mysql.default.svc:3306)/bbs_go?charset=utf8mb4&parseTi
 
 # github登录配置
 Github:
-  ClientID:
-  ClientSecret:
+  ClientID: f2ffe7d23a998cb5bbb0
+  ClientSecret: 80c597d16e942a75b3d03ff1828ec3a5333e7703
 
 # qq登录配置
 QQConnect:
@@ -42,5 +42,5 @@ BaiduAi:
 # 百度SEO相关配置
 # 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
 BaiduSEO:
-  Site: mlog.club
-  Token: Y0b5JDk00GSjyMu3
+  Site: www.stonelan.com
+  Token: yYcBmViVjhVjMbOv
