@@ -19,7 +19,11 @@
       style="width: 100%;"
     >
       <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="userId" label="用户编号"></el-table-column>
+      <el-table-column prop="userId" label="用户">
+        <template slot-scope="scope">
+          <user-info :user="scope.row.user" />
+        </template>
+      </el-table-column>
       <el-table-column prop="score" label="积分"></el-table-column>
       <el-table-column prop="createTime" label="创建时间">
         <template slot-scope="scope">{{
@@ -58,8 +62,12 @@
 </template>
 
 <script>
+import UserInfo from '~/pages/admin/components/UserInfo'
 export default {
   layout: 'admin',
+  components: {
+    UserInfo
+  },
   data() {
     return {
       results: [],
