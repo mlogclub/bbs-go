@@ -2,7 +2,7 @@
   <div class="user-info-component">
     <img :src="user.avatar" class="avatar" />
     <div class="user-info-component-right">
-      <div>ID: {{ user.id }}</div>
+      <div>{{ user.id }}</div>
       <span>{{ user.nickname }}</span>
     </div>
   </div>
