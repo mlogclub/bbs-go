@@ -73,7 +73,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
       <el-table-column prop="avatar" label="头像" width="80">
         <template slot-scope="scope">
@@ -86,6 +85,12 @@
       <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="nickname" label="昵称"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column prop="score" label="积分"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间">
+        <template slot-scope="scope">{{
+          scope.row.createTime | formatDate
+        }}</template>
+      </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
@@ -158,19 +163,15 @@
         label-width="80px"
       >
         <el-input v-model="editForm.id" type="hidden"></el-input>
-
         <el-form-item label="用户名" prop="username">
           <el-input v-model="editForm.username"></el-input>
         </el-form-item>
-
         <el-form-item label="昵称" prop="nickname">
           <el-input v-model="editForm.nickname"></el-input>
         </el-form-item>
-
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="editForm.email"></el-input>
         </el-form-item>
-
         <el-form-item label="角色" prop="roles">
           <el-select
             v-model="editForm.roles"

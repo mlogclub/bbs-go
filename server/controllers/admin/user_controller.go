@@ -6,6 +6,7 @@ import (
 
 	"bbs-go/common"
 	"bbs-go/model"
+	"bbs-go/services/cache"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -112,9 +113,11 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 }
 
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {
+	score := cache.UserCache.GetScore(user.Id)
 	return simple.NewRspBuilder(user).
 		Put("roles", common.GetUserRoles(user.Roles)).
 		Put("username", user.Username.String).
 		Put("email", user.Email.String).
+		Put("score", score).
 		Build()
 }
