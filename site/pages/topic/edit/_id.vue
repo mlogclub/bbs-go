@@ -13,9 +13,7 @@
                   }}</a>
                 </li>
                 <li class="is-active">
-                  <a href="#" aria-current="page"
-                    >主题{{ postForm.nodeId }}xx</a
-                  >
+                  <a href="#" aria-current="page">主题</a>
                 </li>
               </ul>
             </nav>
