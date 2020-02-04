@@ -30,20 +30,21 @@
           scope.row.createTime | formatDate
         }}</template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="创建时间">
+      <el-table-column prop="updateTime" label="更新时间">
         <template slot-scope="scope">{{
           scope.row.updateTime | formatDate
         }}</template>
       </el-table-column>
-      <!--
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
-            >编辑</el-button
+          <el-button
+            @click="showLog(scope.$index, scope.row)"
+            type="success"
+            size="small"
+            >积分记录</el-button
           >
         </template>
       </el-table-column>
-      -->
     </el-table>
 
     <div class="pagebar">
@@ -58,23 +59,25 @@
       >
       </el-pagination>
     </div>
+
+    <score-log ref="scoreLog" />
   </section>
 </template>
 
 <script>
+import ScoreLog from './score-log'
 import UserInfo from '~/pages/admin/components/UserInfo'
 export default {
   layout: 'admin',
-  components: {
-    UserInfo
-  },
+  components: { ScoreLog, UserInfo },
   data() {
     return {
       results: [],
+      scoreLogs: [],
       listLoading: false,
       page: {},
       filters: {},
-      selectedRows: []
+      isShowLog: false
     }
   },
   mounted() {
@@ -97,6 +100,9 @@ export default {
         .finally(() => {
           me.listLoading = false
         })
+    },
+    showLog(index, row) {
+      this.$refs.scoreLog.showLog(row.userId)
     },
     handlePageChange(val) {
       this.page.page = val
