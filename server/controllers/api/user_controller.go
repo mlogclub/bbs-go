@@ -203,3 +203,19 @@ func (c *UserController) GetNewest() *simple.JsonResult {
 	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildUsers(users))
 }
+
+// 用户积分记录
+func (c *UserController) GetScorelogs() *simple.JsonResult {
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	// 用户必须登录
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	logs, paging := services.UserScoreLogService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("user_id", user.Id).
+		Page(page, 20).Desc("id"))
+
+	return simple.JsonPageData(logs, paging)
+}
