@@ -7,7 +7,6 @@
 baseDir=`echo $PWD`
 serverDir=`echo $baseDir/server`
 siteDir=`echo $baseDir/site`
-adminDir=`echo $baseDir/admin`
 distDir=`echo $baseDir/dist`
 
 # go version
@@ -15,7 +14,6 @@ distDir=`echo $baseDir/dist`
 # echo $baseDir
 # echo $serverDir
 # echo $siteDir
-# echo $adminDir
 
 
 funcBuildServer() {
@@ -36,15 +34,6 @@ funcBuildSite() {
     echo 'site module building...finished'
 }
 
-
-funcBuildAdmin() {
-    echo 'admin module building...'
-    cd $adminDir
-    npm install --registry=https://registry.npm.taobao.org
-    npm run build
-    echo 'admin module building...finished'
-}
-
 funcTouchDir() {
     if [ ! -d "$1" ]; then
         mkdir $1
@@ -56,7 +45,6 @@ funcCleanBuild() {
 
     funcTouchDir $distDir/server
     funcTouchDir $distDir/site
-    funcTouchDir $distDir/admin
 
     cp $serverDir/bbs-go $distDir/server/
     
@@ -64,13 +52,10 @@ funcCleanBuild() {
     cp -r $siteDir/static $distDir/site/
     cp -r $siteDir/nuxt.config.js $distDir/site/
     cp -r $siteDir/package.json $distDir/site/
-    
-    cp -r $adminDir/dist/* $distDir/admin/
 }
 
 funcBuildServer
 funcBuildSite
-funcBuildAdmin
 funcCleanBuild
 
 echo 'done!!!'
