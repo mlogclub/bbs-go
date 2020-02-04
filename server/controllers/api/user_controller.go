@@ -31,9 +31,15 @@ func (c *UserController) GetCurrent() *simple.JsonResult {
 func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
 	if user != nil && user.Status != model.StatusDeleted {
-		return simple.JsonData(render.BuildUser(user))
+		return simple.JsonData(render.BuildUserWithScore(user))
 	}
 	return simple.JsonErrorMsg("用户不存在")
+}
+
+// 用户积分
+func (c *UserController) GetScoreBy(userId int64) *simple.JsonResult {
+	score := cache.UserCache.GetScore(userId)
+	return simple.NewEmptyRspBuilder().Put("score", score).JsonResult()
 }
 
 // 修改用户资料

@@ -14,6 +14,7 @@ type UserInfo struct {
 	Roles       []string `json:"roles"`
 	HomePage    string   `json:"homePage"`
 	Description string   `json:"description"`
+	Score       int      `json:"score"`       // 积分
 	PasswordSet bool     `json:"passwordSet"` // 密码已设置
 	Status      int      `json:"status"`
 	CreateTime  int64    `json:"createTime"`
