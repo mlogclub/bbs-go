@@ -29,7 +29,8 @@ func newUserCache() *userCache {
 		),
 		scoreCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, err error) {
-				userScore := repositories.UserScoreRepository.Get(simple.DB(), key2Int64(key))
+				userScore := repositories.UserScoreRepository.FindOne(simple.DB(),
+					simple.NewSqlCnd().Eq("user_id", key2Int64(key)))
 				if userScore == nil {
 					value = 0
 				} else {
