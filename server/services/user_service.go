@@ -83,7 +83,7 @@ func (s *userService) Delete(id int64) {
 	cache.UserCache.Invalidate(id)
 }
 
-// 扫描
+// Scan 扫描
 func (s *userService) Scan(cb ScanUserCallback) {
 	var cursor int64
 	for {
@@ -96,15 +96,17 @@ func (s *userService) Scan(cb ScanUserCallback) {
 	}
 }
 
+// GetByEmail 根据邮箱查找
 func (s *userService) GetByEmail(email string) *model.User {
 	return repositories.UserRepository.GetByEmail(simple.DB(), email)
 }
 
+// GetByUsername 根据用户名查找
 func (s *userService) GetByUsername(username string) *model.User {
 	return repositories.UserRepository.GetByUsername(simple.DB(), username)
 }
 
-// 注册
+// SignUp 注册
 func (s *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
@@ -171,7 +173,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	return user, nil
 }
 
-// 登录
+// SignIn 登录
 func (s *userService) SignIn(username, password string) (*model.User, error) {
 	if len(username) == 0 {
 		return nil, errors.New("用户名/邮箱不能为空")
@@ -194,7 +196,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	return user, nil
 }
 
-// 第三方账号登录
+// SignInByThirdAccount 第三方账号登录
 func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
@@ -237,7 +239,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 	return user, nil
 }
 
-// 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
+// HandleAvatar 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
 // thirdAvatar: 第三方登录带过来的头像
 func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
 	if len(thirdAvatar) > 0 {
@@ -251,7 +253,7 @@ func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, er
 	return oss.PutImage(avatarBytes)
 }
 
-// 邮箱是否存在
+// isEmailExists 邮箱是否存在
 func (s *userService) isEmailExists(email string) bool {
 	if len(email) == 0 { // 如果邮箱为空，那么就认为是不存在
 		return false
@@ -259,12 +261,12 @@ func (s *userService) isEmailExists(email string) bool {
 	return s.GetByEmail(email) != nil
 }
 
-// 用户名是否存在
+// isUsernameExists 用户名是否存在
 func (s *userService) isUsernameExists(username string) bool {
 	return s.GetByUsername(username) != nil
 }
 
-// 设置用户名
+// SetUsername 设置用户名
 func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
 	if err := common.IsValidateUsername(username); err != nil {
@@ -281,7 +283,7 @@ func (s *userService) SetUsername(userId int64, username string) error {
 	return s.UpdateColumn(userId, "username", username)
 }
 
-// 设置密码
+// SetEmail 设置密码
 func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
 	if err := common.IsValidateEmail(email); err != nil {
@@ -293,7 +295,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 	return s.UpdateColumn(userId, "email", email)
 }
 
-// 设置密码
+// SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
@@ -306,7 +308,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 	return s.UpdateColumn(userId, "password", password)
 }
 
-// 修改密码
+// UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
