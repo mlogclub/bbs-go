@@ -1,12 +1,12 @@
 package oss
 
 import (
-	"bytes"
-	"strings"
+	"os"
+	"strconv"
 	"time"
 
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/go-resty/resty/v2"
+	"github.com/minio/minio-go/v6"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -22,18 +22,21 @@ func PutImage(data []byte) (string, error) {
 
 // 上传
 func PutObject(key string, data []byte) (string, error) {
-	bucket, err := getBucket()
+	client, err := getClient()
 	if err != nil {
 		return "", err
 	}
-	err = bucket.PutObject(key, bytes.NewReader(data))
+	tepPath := save(data)
+	defer os.Remove(tepPath)
+	n, err := client.FPutObject("bbs", key, tepPath, minio.PutObjectOptions{})
+	logrus.Info(n)
 	if err != nil {
 		return "", err
 	}
-	return config.Conf.AliyunOss.Host + key, nil
+	return config.Conf.Minio.Host + key, nil
 }
 
-// 将图片copy到oss
+//将图片copy到oss
 func CopyImage(inputUrl string) (string, error) {
 	data, err := download(inputUrl)
 	if err != nil {
@@ -51,32 +54,49 @@ func download(url string) ([]byte, error) {
 	return rsp.Body(), nil
 }
 
-// 图片url签名
-func SignUrl(url string) string {
-	// 非oss资源不进行签名
-	host := config.Conf.AliyunOss.Host
-	if strings.Index(url, host) == -1 {
-		return url
-	}
+func save(data []byte) string {
+	tempFile := strconv.Itoa(time.Now().Nanosecond())
+	file, err := os.OpenFile(tempFile, os.O_RDWR|os.O_APPEND|os.O_CREATE, 066) // For read access.
+	//2、关闭文件
 
-	bucket, err := getBucket()
+	// 3、写入数据
+	count, err := file.Write(data)
+
 	if err != nil {
-		return url
+		logrus.Error(simple.JsonErrorMsg(err.Error()))
+	} else {
+		logrus.Info(count)
 	}
-	key := getObjectKey(url)
-	ret, err := bucket.SignURL(key, oss.HTTPGet, 60*3) // 签名，有效期3分钟
-	if err != nil {
-		logrus.Error(err)
-		return key
-	}
-	urlBuilder := simple.ParseUrl(url)
-	params := simple.ParseUrl(ret).GetQuery()
-	for k := range params {
-		v := params.Get(k)
-		urlBuilder.AddQuery(k, v)
-	}
-	return urlBuilder.BuildStr()
+	defer file.Close()
+	return tempFile
 }
+
+// 图片url签名
+// func SignUrl(url string) string {
+// 	// 非oss资源不进行签名
+// 	host := config.Conf.Minio.Host
+// 	if strings.Index(url, host) == -1 {
+// 		return url
+// 	}
+
+// 	bucket, err := getBucket()
+// 	if err != nil {
+// 		return url
+// 	}
+// 	key := getObjectKey(url)
+// 	ret, err := bucket.SignURL(key, oss.HTTPGet, 60*3) // 签名，有效期3分钟
+// 	if err != nil {
+// 		logrus.Error(err)
+// 		return key
+// 	}
+// 	urlBuilder := simple.ParseUrl(url)
+// 	params := simple.ParseUrl(ret).GetQuery()
+// 	for k := range params {
+// 		v := params.Get(k)
+// 		urlBuilder.AddQuery(k, v)
+// 	}
+// 	return urlBuilder.BuildStr()
+// }
 
 // 根据URL获取ObjectKey
 func getObjectKey(u string) string {
@@ -86,10 +106,11 @@ func getObjectKey(u string) string {
 	return objectKey
 }
 
-func getBucket() (*oss.Bucket, error) {
-	client, err := oss.New(config.Conf.AliyunOss.Endpoint, config.Conf.AliyunOss.AccessId, config.Conf.AliyunOss.AccessSecret)
+func getClient() (*minio.Client, error) {
+	//client,err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
+	client, err := minio.New(config.Conf.Minio.Endpoint, config.Conf.Minio.AccessId, config.Conf.Minio.AccessSecret, false)
 	if err != nil {
 		return nil, err
 	}
-	return client.Bucket(config.Conf.AliyunOss.Bucket)
+	return client, err
 }

@@ -19,7 +19,7 @@ QQConnect:
   AppKey:
 
 # 阿里云oss配置
-AliyunOss:
+Minio:
   Host: 10.0.3.200:31015
   Bucket: bbs
   Endpoint: 10.0.3.200:31015

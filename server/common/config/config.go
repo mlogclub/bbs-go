@@ -32,7 +32,7 @@ type Config struct {
 	} `yaml:"QQConnect"`
 
 	// 阿里云oss配置
-	AliyunOss struct {
+	Minio struct {
 		Host         string `yaml:"Host"`
 		Bucket       string `yaml:"Bucket"`
 		Endpoint     string `yaml:"Endpoint"`

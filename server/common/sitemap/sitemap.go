@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-
-	"bbs-go/common/oss"
 )
 
 type Generator struct {
@@ -74,7 +72,7 @@ func (sm *Generator) WriteIndex(sitemapLocs []IndexURL) string {
 // write sitemap and index to aliyun oss
 func write(path, xml string) (sitemapUrl string) {
 	if len(xml) > 0 {
-		sitemapUrl, _ = oss.PutObject(path, []byte(xml))
+		//sitemapUrl, _ = oss.PutObject(path, []byte(xml))
 		logrus.Info("Upload sitemap success, " + sitemapUrl)
 	}
 	return

@@ -24,9 +24,6 @@ func (c *UploadController) Post() *simple.JsonResult {
 	}
 
 	file, header, err := c.Ctx.FormFile("image")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
 	defer file.Close()
 
 	if header.Size > uploadMaxBytes {
@@ -117,9 +114,7 @@ func (c *UploadController) PostFetch() {
 		_, _ = c.Ctx.JSON(iris.Map{
 			"msg":  "请先登录",
 			"code": 1,
-			"data": iris.Map{
-
-			},
+			"data": iris.Map{},
 		})
 		return
 	}
@@ -132,9 +127,7 @@ func (c *UploadController) PostFetch() {
 		_, _ = c.Ctx.JSON(iris.Map{
 			"msg":  err.Error(),
 			"code": 0,
-			"data": iris.Map{
-
-			},
+			"data": iris.Map{},
 		})
 		return
 	}
