@@ -32,7 +32,10 @@
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <markdown-editor
+                  v-model="postForm.content"
+                  editor-id="articleCreateEditor"
+                />
               </div>
             </div>
 

@@ -1,13 +1,29 @@
 <template>
-  <div id="vditor" :style="{ width: width, height: height }" class="vditor" />
+  <div
+    :id="editorId"
+    :style="{ width: width, height: height }"
+    class="vditor"
+  />
 </template>
 
 <script>
 export default {
   props: {
+    editorId: {
+      type: String,
+      default: 'vditor'
+    },
     value: {
       type: String,
       default: ''
+    },
+    height: {
+      type: String,
+      default: '400px' // normal、mini
+    },
+    placeholder: {
+      type: String,
+      default: '请输入...'
     }
   },
   data() {
@@ -15,7 +31,30 @@ export default {
       isLoading: true,
       vditor: null,
       width: '100%',
-      height: '400px'
+      toolbar: [
+        'emoji',
+        'headings',
+        'bold',
+        'italic',
+        'strike',
+        '|',
+        'line',
+        'quote',
+        'list',
+        'ordered-list',
+        'check',
+        'code',
+        'inline-code',
+        'undo',
+        'redo',
+        'upload',
+        'link',
+        'table',
+        'both',
+        'preview',
+        'format',
+        'fullscreen'
+      ]
     }
   },
   mounted() {
@@ -34,35 +73,13 @@ export default {
       }
       const me = this
       const userToken = this.$cookies.get('userToken')
+
       const options = {
         width: me.width,
         height: me.height,
+        toolbar: me.toolbar,
+        placeholder: me.placeholder,
         cache: true,
-        toolbar: [
-          'emoji',
-          'headings',
-          'bold',
-          'italic',
-          'strike',
-          '|',
-          'line',
-          'quote',
-          'list',
-          'ordered-list',
-          'check',
-          'code',
-          'inline-code',
-          'undo',
-          'redo',
-          'upload',
-          'link',
-          'table',
-          'both',
-          'preview',
-          'format',
-          'fullscreen'
-        ],
-        // placeholder: '请输入...',
         counter: '999999',
         delay: 500,
         mode: 'markdown-show',
@@ -77,6 +94,10 @@ export default {
         input(val) {
           me.$emit('input', val)
         },
+        ctrlEnter(val) {
+          me.$emit('input', val)
+          me.$emit('submit', val)
+        },
         upload: {
           accept: 'image/*',
           url: '/api/upload/editor?userToken=' + userToken,
@@ -86,7 +107,7 @@ export default {
           }
         }
       }
-      this.vditor = new window.Vditor('vditor', options)
+      this.vditor = new window.Vditor(me.editorId, options)
       if (this.value) {
         this.vditor.setValue(this.value)
       }
