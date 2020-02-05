@@ -20,11 +20,11 @@ QQConnect:
 
 # 阿里云oss配置
 AliyunOss:
-  Host: 请配置成你自己的
-  Bucket: 请配置成你自己的
-  Endpoint: 请配置成你自己的
-  AccessId: 请配置成你自己的
-  AccessSecret: 请配置成你自己的
+  Host: 10.0.3.200:31015
+  Bucket: bbs
+  Endpoint: 10.0.3.200:31015
+  AccessId: admin
+  AccessSecret: 12345678
 
 # 邮件服务器配置，用于邮件通知
 Smtp:
