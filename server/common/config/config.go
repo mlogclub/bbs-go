@@ -38,7 +38,7 @@ type Config struct {
 		Endpoint     string `yaml:"Endpoint"`
 		AccessId     string `yaml:"AccessId"`
 		AccessSecret string `yaml:"AccessSecret"`
-	} `yaml:"AliyunOss"`
+	} `yaml:"Minio"`
 
 	// 百度ai
 	BaiduAi struct {
