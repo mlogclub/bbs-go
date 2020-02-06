@@ -212,21 +212,25 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 	}
 
 	var homePage string
+	var description string
 	if thirdAccount.ThirdType == model.ThirdAccountTypeGithub {
 		if blog := gjson.Get(thirdAccount.ExtraData, "blog"); blog.Exists() && len(blog.String()) > 0 {
 			homePage = blog.String()
 		} else if htmlUrl := gjson.Get(thirdAccount.ExtraData, "html_url"); htmlUrl.Exists() && len(htmlUrl.String()) > 0 {
 			homePage = htmlUrl.String()
 		}
+
+		description = gjson.Get(thirdAccount.ExtraData, "bio").String()
 	}
 
 	user = &model.User{
-		Username:   sql.NullString{},
-		Nickname:   thirdAccount.Nickname,
-		Status:     model.StatusOk,
-		HomePage:   homePage,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
+		Username:    sql.NullString{},
+		Nickname:    thirdAccount.Nickname,
+		Status:      model.StatusOk,
+		HomePage:    homePage,
+		Description: description,
+		CreateTime:  simple.NowTimestamp(),
+		UpdateTime:  simple.NowTimestamp(),
 	}
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.Create(tx, user); err != nil {
