@@ -120,7 +120,8 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://vipgz2.idcfengye.com:10071'
+    '/api/': 'http://bbs-server:8082'
+    //'/api/': 'http://vipgz2.idcfengye.com:10071'
     // '/api/': 'https://mlog.club'
   },
   // Doc: https://github.com/shakee93/vue-toasted
