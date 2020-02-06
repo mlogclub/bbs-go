@@ -49,6 +49,7 @@
               <div class="control">
                 <markdown-editor
                   v-model="postForm.content"
+                  ref="mdEditor"
                   editor-id="topicCreateEditor"
                 />
               </div>
@@ -159,6 +160,7 @@ export default {
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
         })
+        this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
           duration: 1000,
           onComplete() {

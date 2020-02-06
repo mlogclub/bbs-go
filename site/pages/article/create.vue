@@ -33,6 +33,7 @@
             <div class="field">
               <div class="control">
                 <markdown-editor
+                  ref="mdEditor"
                   v-model="postForm.content"
                   editor-id="articleCreateEditor"
                 />
@@ -102,13 +103,14 @@ export default {
         return
       }
       me.publishing = true
-
+      debugger
       try {
         const article = await this.$axios.post('/api/article/create', {
           title: me.postForm.title,
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
         })
+        this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
           duration: 1000,
           onComplete() {

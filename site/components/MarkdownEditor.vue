@@ -67,6 +67,9 @@ export default {
     })
   },
   methods: {
+    /**
+     * 初始化编辑器
+     */
     doInit() {
       if (!process.client) {
         return
@@ -112,10 +115,22 @@ export default {
         this.vditor.setValue(this.value)
       }
     },
+    /**
+     * 清空编辑器内容
+     */
     clear() {
       if (this.vditor) {
         this.value = ''
         this.vditor.setValue('')
+        this.clearCache()
+      }
+    },
+    /**
+     * 清理缓存
+     */
+    clearCache() {
+      if (this.vditor) {
+        this.vditor.clearCache()
       }
     }
   },
