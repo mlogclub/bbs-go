@@ -112,12 +112,9 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	email = strings.TrimSpace(email)
 	nickname = strings.TrimSpace(nickname)
 
+	// 验证昵称
 	if len(nickname) == 0 {
 		return nil, errors.New("昵称不能为空")
-	}
-
-	if err := common.IsValidateUsername(username); err != nil {
-		return nil, err
 	}
 
 	// 验证密码
@@ -126,7 +123,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		return nil, err
 	}
 
-	// 如果设置了邮箱，那么需要验证邮箱
+	// 验证邮箱
 	if len(email) > 0 {
 		if err := common.IsValidateEmail(email); err != nil {
 			return nil, err
@@ -134,11 +131,18 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		if s.GetByEmail(email) != nil {
 			return nil, errors.New("邮箱：" + email + " 已被占用")
 		}
+	} else {
+		return nil, errors.New("请输入邮箱")
 	}
 
-	// 验证用户名是否存在
-	if s.isUsernameExists(username) {
-		return nil, errors.New("用户名：" + username + " 已被占用")
+	// 验证用户名
+	if len(username) > 0 {
+		if err := common.IsValidateUsername(username); err != nil {
+			return nil, err
+		}
+		if s.isUsernameExists(username) {
+			return nil, errors.New("用户名：" + username + " 已被占用")
+		}
 	}
 
 	user := &model.User{
