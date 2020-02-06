@@ -120,7 +120,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://www.stonelan.com'
+    '/api/': 'http://bbs-server:8082'
     // '/api/': 'https://mlog.club'
   },
   // Doc: https://github.com/shakee93/vue-toasted
