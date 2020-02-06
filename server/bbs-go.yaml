@@ -17,13 +17,13 @@ Github:
 QQConnect:
   AppId:
   AppKey:
-  
+
 
 # 阿里云oss配置
 Minio:
   Host: http://www.stonelan.com/minio/download/
   Bucket: bbs
-  Endpoint: http://www.stonelan.com
+  Endpoint: www.stonelan.com
   AccessId: admin
   AccessSecret: 12345678
 
