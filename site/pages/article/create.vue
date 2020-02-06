@@ -103,7 +103,6 @@ export default {
         return
       }
       me.publishing = true
-      debugger
       try {
         const article = await this.$axios.post('/api/article/create', {
           title: me.postForm.title,
