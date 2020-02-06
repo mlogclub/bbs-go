@@ -236,3 +236,13 @@ func (c *UserController) GetScorelogs() *simple.JsonResult {
 
 	return simple.JsonPageData(logs, paging)
 }
+
+// 积分排行
+func (c *UserController) GetScoreRank() *simple.JsonResult {
+	userScores := services.UserScoreService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	var results []*model.UserInfo
+	for _, userScore := range userScores {
+		results = append(results, render.BuildUserDefaultIfNull(userScore.UserId))
+	}
+	return simple.JsonData(results)
+}

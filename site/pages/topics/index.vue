@@ -6,7 +6,7 @@
         <topic-list :topics="topicsPage.results" :show-ad="false" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
-      <topic-side />
+      <topic-side :score-rank="scoreRank" />
     </div>
   </section>
 </template>
@@ -26,15 +26,16 @@ export default {
   },
   async asyncData({ $axios, query }) {
     try {
-      const [nodes, topicsPage] = await Promise.all([
+      const [nodes, topicsPage, scoreRank] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics', {
           params: {
             page: query.p || 1
           }
-        })
+        }),
+        $axios.get('/api/user/score/rank')
       ])
-      return { nodes, topicsPage }
+      return { nodes, topicsPage, scoreRank }
     } catch (e) {
       console.error(e)
     }

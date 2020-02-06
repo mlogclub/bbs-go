@@ -2,7 +2,24 @@
   <div class="right-container">
     <post-btns :current-node-id="currentNodeId" />
     <site-notice />
-
+    <div v-if="scoreRank && scoreRank.length" class="widget">
+      <div class="widget-header">积分排行</div>
+      <div class="widget-content">
+        <ul class="score-rank">
+          <li v-for="user in scoreRank" :key="user.id">
+            <a :href="'/user/' + user.id">
+              <img :src="user.avatar" class="avatar" />
+            </a>
+            <div class="score-rank-info">
+              <a :href="'/user/' + user.id">{{ user.nickname }}</a>
+              <div>
+                <i class="iconfont icon-score" /><span>{{ user.score }}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="ad">
       <!-- 展示广告 -->
       <adsbygoogle ad-slot="1742173616" />
@@ -20,9 +37,43 @@ export default {
     currentNodeId: {
       type: Number,
       default: 0
+    },
+    scoreRank: {
+      type: Array,
+      default() {
+        return null
+      }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.score-rank {
+  li {
+    display: flex;
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+    }
+
+    .score-rank-info {
+      margin-left: 5px;
+      line-height: 1.4;
+      font-size: 12px;
+      a:hover {
+        text-decoration: underline;
+      }
+      i {
+        font-size: 12px;
+      }
+      span {
+        margin-left: 3px;
+        font-weight: 700;
+        color: orangered;
+      }
+    }
+  }
+}
+</style>

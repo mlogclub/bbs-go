@@ -9,7 +9,7 @@
           :url-prefix="'/topics/node/' + node.nodeId + '?p='"
         />
       </div>
-      <topic-side :current-node-id="node.nodeId" />
+      <topic-side :current-node-id="node.nodeId" :score-rank="scoreRank" />
     </div>
   </section>
 </template>
@@ -28,7 +28,7 @@ export default {
     Pagination
   },
   async asyncData({ $axios, params, query }) {
-    const [node, nodes, topicsPage] = await Promise.all([
+    const [node, nodes, topicsPage, scoreRank] = await Promise.all([
       $axios.get('/api/topic/node?nodeId=' + params.nodeId),
       $axios.get('/api/topic/nodes'),
       $axios.get('/api/topic/node/topics', {
@@ -36,12 +36,14 @@ export default {
           nodeId: params.nodeId,
           page: query.p || 1
         }
-      })
+      }),
+      $axios.get('/api/user/score/rank')
     ])
     return {
       node,
       nodes,
-      topicsPage
+      topicsPage,
+      scoreRank
     }
   },
   head() {
