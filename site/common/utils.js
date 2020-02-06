@@ -1,6 +1,7 @@
 class Utils {
   linkTo(path) {
     window.location = path
+    // 这里使用$router.push会导致跳转页面之后window.vditor对象undefined，原因未知
     // window.$nuxt.$router.push(path)
   }
 
