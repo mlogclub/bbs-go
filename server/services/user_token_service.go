@@ -72,6 +72,15 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	return user
 }
 
+// CheckLogin 检查登录状态
+func (s *userTokenService) CheckLogin(ctx iris.Context) (*model.User, *simple.CodeError) {
+	user := s.GetCurrent(ctx)
+	if user == nil {
+		return nil, simple.ErrorNotLogin
+	}
+	return user, nil
+}
+
 // 退出登录
 func (s *userTokenService) Signout(ctx iris.Context) error {
 	token := s.GetUserToken(ctx)

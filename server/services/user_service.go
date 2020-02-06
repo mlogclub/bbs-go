@@ -285,6 +285,11 @@ func (s *userService) isUsernameExists(username string) bool {
 	return s.GetByUsername(username) != nil
 }
 
+// SetAvatar 更新头像
+func (s *userService) UpdateAvatar(userId int64, avatar string) error {
+	return s.UpdateColumn(userId, "avatar", avatar)
+}
+
 // SetUsername 设置用户名
 func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)

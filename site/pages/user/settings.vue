@@ -33,6 +33,7 @@
               </div>
             </div>
 
+            <!-- 邮箱 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">邮箱：</label>
@@ -47,6 +48,7 @@
               </div>
             </div>
 
+            <!-- 密码 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">密码：</label>
@@ -64,6 +66,7 @@
               </div>
             </div>
 
+            <!-- 头像 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
@@ -100,6 +103,7 @@
               </div>
             </div>
 
+            <!-- 昵称 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
@@ -110,10 +114,8 @@
                 <div class="field">
                   <div class="control has-icons-left">
                     <input
-                      v-model="user.nickname"
-                      name="nickname"
-                      value=""
-                      class="input is-success"
+                      v-model="form.nickname"
+                      class="input"
                       type="text"
                       autocomplete="off"
                       placeholder="请输入昵称"
@@ -126,6 +128,7 @@
               </div>
             </div>
 
+            <!-- 简介 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">简介：</label>
@@ -134,8 +137,7 @@
                 <div class="field">
                   <div class="control">
                     <textarea
-                      v-model="user.description"
-                      name="description"
+                      v-model="form.description"
                       class="textarea"
                       rows="2"
                       placeholder="一句话介绍你自己"
@@ -145,6 +147,7 @@
               </div>
             </div>
 
+            <!-- 个人主页 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">个人主页：</label>
@@ -153,9 +156,8 @@
                 <div class="field">
                   <div class="control has-icons-left">
                     <input
-                      v-model="user.homePage"
-                      name="homePage"
-                      class="input is-success"
+                      v-model="form.homePage"
+                      class="input"
                       type="text"
                       autocomplete="off"
                       placeholder="请输入个人主页"
@@ -203,7 +205,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="username"
+                  v-model="form.username"
                   @keydown.enter="setUsername"
                   class="input is-success"
                   type="text"
@@ -240,7 +242,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="email"
+                  v-model="form.email"
                   @keydown.enter="setEmail"
                   class="input is-success"
                   type="text"
@@ -277,7 +279,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="password"
+                  v-model="form.password"
                   @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
@@ -291,7 +293,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="rePassword"
+                  v-model="form.rePassword"
                   @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
@@ -328,7 +330,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="oldPassword"
+                  v-model="form.oldPassword"
                   @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
@@ -342,7 +344,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="password"
+                  v-model="form.password"
                   @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
@@ -356,7 +358,7 @@
             <div class="field">
               <div class="control has-icons-left">
                 <input
-                  v-model="rePassword"
+                  v-model="form.rePassword"
                   @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
@@ -386,37 +388,54 @@ export default {
     UserCenterSidebar
   },
   async asyncData({ $axios, params }) {
-    const [user] = await Promise.all([$axios.get('/api/user/current')])
+    const user = await $axios.get('/api/user/current')
+    const form = { ...user }
     return {
-      user
+      user,
+      form
     }
   },
   data() {
     return {
+      form: {
+        username: '',
+        email: '',
+        nickname: '',
+        avatar: '',
+        homePage: '',
+        description: '',
+        password: '',
+        rePassword: '',
+        oldPassword: ''
+      },
+
       showSetUsername: false,
-      username: '',
+      // username: '',
+
       showSetEmail: false,
-      email: '',
+      // email: '',
+
       showSetPassword: false, // 显示设置密码
-      showUpdatePassword: false, // 显示修改密码
-      password: '',
-      rePassword: '',
-      oldPassword: ''
+      showUpdatePassword: false // 显示修改密码
+      // password: '',
+      // rePassword: '',
+      // oldPassword: ''
     }
   },
   methods: {
     async submitForm() {
       try {
         await this.$axios.post('/api/user/edit/' + this.user.id, {
-          nickname: this.user.nickname,
-          avatar: this.user.avatar,
-          homePage: this.user.homePage,
-          description: this.user.description
+          nickname: this.form.nickname,
+          avatar: this.form.avatar,
+          homePage: this.form.homePage,
+          description: this.form.description
         })
-        this.$toast.success('修改成功')
+        await this.reload()
+        this.$toast.success('资料修改成功')
       } catch (e) {
         console.error(e)
-        this.$toast.error('修改失败：' + (e.message || e))
+        this.$toast.error('资料修改失败：' + (e.message || e))
       }
     },
     async uploadAvatar(e) {
@@ -425,13 +444,23 @@ export default {
         return
       }
       try {
+        // 上传头像
         const file = files[0]
         const formData = new FormData()
         formData.append('image', file, file.name)
         const ret = await this.$axios.post('/api/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
-        this.user.avatar = ret.url
+
+        // 设置头像
+        await this.$axios.post('/api/user/update/avatar', {
+          avatar: ret.url
+        })
+
+        // 重新加载数据
+        await this.reload()
+
+        this.$toast.success('头像更新成功')
       } catch (e) {
         console.error(e)
       }
@@ -440,63 +469,62 @@ export default {
       try {
         const me = this
         await this.$axios.post('/api/user/set/username', {
-          username: me.username
+          username: me.form.username
         })
-        this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('设置成功')
-        this.username = ''
+        await this.reload()
+        this.$toast.success('用户名设置成功')
         this.showSetUsername = false
       } catch (err) {
-        this.$toast.error('设置失败：' + (err.message || err))
+        this.$toast.error('用户名设置失败：' + (err.message || err))
       }
     },
     async setEmail() {
       try {
         const me = this
         await this.$axios.post('/api/user/set/email', {
-          email: me.email
+          email: me.form.email
         })
-        this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('设置成功')
-        this.email = ''
+        await this.reload()
+        this.$toast.success('邮箱设置成功')
         this.showSetEmail = false
       } catch (err) {
-        this.$toast.error('设置失败：' + (err.message || err))
+        this.$toast.error('邮箱设置失败：' + (err.message || err))
       }
     },
     async setPassword() {
       try {
         const me = this
         await this.$axios.post('/api/user/set/password', {
-          password: me.password,
-          rePassword: me.rePassword
+          password: me.form.password,
+          rePassword: me.form.rePassword
         })
-        this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('设置成功')
-        this.password = ''
-        this.rePassword = ''
+        await this.reload()
+        this.$toast.success('密码设置成功')
         this.showSetPassword = false
       } catch (err) {
-        this.$toast.error('设置失败：' + (err.message || err))
+        this.$toast.error('密码设置失败：' + (err.message || err))
       }
     },
     async updatePassword() {
       try {
         const me = this
         await this.$axios.post('/api/user/update/password', {
-          oldPassword: me.oldPassword,
-          password: me.password,
-          rePassword: me.rePassword
+          oldPassword: me.form.oldPassword,
+          password: me.form.password,
+          rePassword: me.form.rePassword
         })
-        this.user = await this.$axios.get('/api/user/current')
-        this.$toast.success('修改成功')
-        this.password = ''
-        this.rePassword = ''
-        this.oldPassword = ''
+        await this.reload()
+        this.$toast.success('密码修改成功')
         this.showUpdatePassword = false
       } catch (err) {
-        this.$toast.error('修改失败：' + (err.message || err))
+        this.$toast.error('密码修改失败：' + (err.message || err))
       }
+    },
+    async reload() {
+      this.user = await this.$axios.get('/api/user/current')
+      this.form = { ...this.user }
+      debugger
+      console.log(this.form)
     }
   },
   head() {

@@ -79,6 +79,23 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// 修改头像
+func (c *UserController) PostUpdateAvatar() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	avatar := strings.TrimSpace(simple.FormValue(c.Ctx, "avatar"))
+	if len(avatar) == 0 {
+		return simple.JsonErrorMsg("头像不能为空")
+	}
+	err := services.UserService.UpdateAvatar(user.Id, avatar)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
 // 设置用户名
 func (c *UserController) PostSetUsername() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
