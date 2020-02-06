@@ -18,7 +18,6 @@ QQConnect:
   AppId:
   AppKey:
 
-
 # 阿里云oss配置
 Minio:
   Host: http://www.stonelan.com/minio/download/
