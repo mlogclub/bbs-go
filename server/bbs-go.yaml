@@ -22,7 +22,7 @@ QQConnect:
 Minio:
   Host: http://www.stonelan.com/minio/download/
   Bucket: bbs
-  Endpoint: 10.0.3.200:31015
+  Endpoint: http://www.stonelan.com
   AccessId: admin
   AccessSecret: 12345678
 
