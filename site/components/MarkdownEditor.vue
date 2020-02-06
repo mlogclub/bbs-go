@@ -111,6 +111,12 @@ export default {
       if (this.value) {
         this.vditor.setValue(this.value)
       }
+    },
+    clear() {
+      if (this.vditor) {
+        this.value = ''
+        this.vditor.setValue('')
+      }
     }
   },
   head() {

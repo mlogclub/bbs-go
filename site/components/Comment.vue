@@ -9,6 +9,7 @@
             <i @click="cancelReply" class="iconfont icon-close" />
           </div>
           <markdown-editor
+            ref="mdEditor"
             v-model="content"
             @submit="ctrlEnterCreate"
             editor-id="createEditor"
@@ -183,6 +184,7 @@ export default {
         })
         this.$refs.commentsLoadMore.unshiftResults(data)
         this.content = ''
+        this.$refs.mdEditor.clear()
         this.quote = null
       } catch (e) {
         console.error(e)
