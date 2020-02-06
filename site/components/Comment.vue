@@ -1,6 +1,6 @@
 <template>
   <div class="comment-component main-content">
-    <div class="comment-title">
+    <div ref="commentTitle" class="comment-title">
       回复<span v-if="commentCount > 0">({{ commentCount }})</span>
     </div>
     <div class="comment-form">
@@ -9,7 +9,11 @@
           <div v-if="quote" class="comment-quote-info">
             回复：
             <label v-text="quote.user.nickname" />
-            <i @click="cancelReply" class="iconfont icon-close" />
+            <i
+              @click="cancelReply"
+              class="iconfont icon-close"
+              alt="取消回复"
+            />
           </div>
           <markdown-editor
             ref="mdEditor"
@@ -205,7 +209,7 @@ export default {
         utils.toSignin()
       }
       this.quote = quote
-      this.$refs.commentEditor.scrollIntoView({
+      this.$refs.commentTitle.scrollIntoView({
         block: 'start',
         behavior: 'smooth'
       })
@@ -229,6 +233,7 @@ export default {
 <style lang="scss" scoped>
 .comment-component {
   padding-top: 10px;
+
   .comment-title {
     font-size: 20px;
     font-weight: 700;
@@ -236,6 +241,7 @@ export default {
     margin-bottom: 8px;
     padding-bottom: 4px;
   }
+
   .comment-form {
     .comment-create {
       /*border: 1px solid #f0f0f0;*/
