@@ -1,89 +1,105 @@
 <template>
   <div class="bbs-admin">
-    <el-menu
-      @select="handleSelect"
-      class="el-menu-demo"
-      mode="horizontal"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b"
+    <nav
+      class="navbar is-info admin-navbar"
+      role="navigation"
+      aria-label="main navigation"
     >
-      <el-menu-item index="/">
-        <span slot="title">
-          <el-tooltip effect="dark" content="返回前台" placement="bottom-end">
-            <i class="iconfont icon-home" style="color: #fff;"></i>
-          </el-tooltip>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin">
-        <span slot="title">
-          <i class="iconfont icon-dashboard"></i>
-          <span>后台</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/topics/nodes">
-        <span slot="title">
-          <i class="iconfont icon-tags"></i>
-          <span>节点</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/topics">
-        <span slot="title">
-          <i class="iconfont icon-topic"></i>
-          <span>话题</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/articles">
-        <span slot="title">
-          <i class="iconfont icon-article"></i>
-          <span>文章</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/comments">
-        <span slot="title">
-          <i class="iconfont icon-comment"></i>
-          <span>评论</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/users">
-        <span slot="title">
-          <i class="iconfont icon-username"></i>
-          <span>用户</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/users/score">
-        <span slot="title">
-          <i class="iconfont icon-score"></i>
-          <span>积分</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/links">
-        <span slot="title">
-          <i class="iconfont icon-link"></i>
-          <span>链接</span>
-        </span>
-      </el-menu-item>
-      <el-menu-item index="/admin/settings">
-        <span slot="title">
-          <i class="iconfont icon-setting"></i>
-          <span>设置</span>
-        </span>
-      </el-menu-item>
-    </el-menu>
+      <div class="navbar-brand">
+        <div class="navbar-item">
+          <img src="~/assets/images/logo.png" />
+        </div>
 
+        <a
+          :class="{ 'is-active': navbarActive }"
+          @click="toggleNav"
+          role="button"
+          class="navbar-burger burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasic"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div
+        id="navbarBasic"
+        :class="{ 'is-active': navbarActive }"
+        class="navbar-menu"
+      >
+        <div class="navbar-start">
+          <a class="navbar-item" href="/admin">
+            <i class="iconfont icon-dashboard"></i>
+            <span>后台</span>
+          </a>
+          <a class="navbar-item" href="/admin/topics/nodes">
+            <i class="iconfont icon-tags"></i>
+            <span>节点</span>
+          </a>
+
+          <a class="navbar-item" href="/admin/topics">
+            <i class="iconfont icon-topic"></i>
+            <span>话题</span>
+          </a>
+
+          <a class="navbar-item" href="/admin/articles">
+            <i class="iconfont icon-article"></i>
+            <span>文章</span>
+          </a>
+
+          <a class="navbar-item" href="/admin/comments">
+            <i class="iconfont icon-comment"></i>
+            <span>评论</span>
+          </a>
+          <a class="navbar-item" href="/admin/users">
+            <i class="iconfont icon-username"></i>
+            <span>用户</span>
+          </a>
+          <a class="navbar-item" href="/admin/users/score">
+            <i class="iconfont icon-score"></i>
+            <span>积分</span>
+          </a>
+          <a class="navbar-item" href="/admin/links">
+            <i class="iconfont icon-link"></i>
+            <span>链接</span>
+          </a>
+          <a class="navbar-item" href="/admin/settings">
+            <i class="iconfont icon-setting"></i>
+            <span>设置</span>
+          </a>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-success" href="/" target="_blank">
+                <strong>查看网站</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
     <nuxt />
   </div>
 </template>
 
 <script>
-import utils from '~/common/utils'
 import '~/plugins/element-ui'
 
 export default {
   middleware: ['global', 'authenticated'],
+  data() {
+    return {
+      navbarActive: false
+    }
+  },
   methods: {
-    handleSelect(index, keyPath) {
-      utils.linkTo(index)
+    toggleNav() {
+      this.navbarActive = !this.navbarActive
     }
   },
   head() {
@@ -102,6 +118,14 @@ export default {
 
 <style lang="scss">
 .bbs-admin {
+  .admin-navbar {
+    .navbar-item {
+      font-weight: 700;
+      .iconfont {
+        margin-right: 3px;
+      }
+    }
+  }
   .page-container {
     margin: 10px !important;
     padding: 10px !important;

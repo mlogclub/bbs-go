@@ -4,10 +4,6 @@ import Vue from 'vue'
 import {
   Pagination,
   Dialog,
-  Menu,
-  Submenu,
-  MenuItem,
-  MenuItemGroup,
   Input,
   InputNumber,
   Switch,
@@ -36,10 +32,6 @@ import {
 
 Vue.use(Pagination)
 Vue.use(Dialog)
-Vue.use(Menu)
-Vue.use(Submenu)
-Vue.use(MenuItem)
-Vue.use(MenuItemGroup)
 Vue.use(Input)
 Vue.use(InputNumber)
 Vue.use(Switch)
