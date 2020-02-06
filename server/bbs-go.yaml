@@ -20,7 +20,7 @@ QQConnect:
 
 # 阿里云oss配置
 Minio:
-  Host: www.stonelan.com/minio/download/
+  Host: /minio/download/
   Bucket: bbs
   Endpoint: minio.default.svc:9000
   AccessId: admin
