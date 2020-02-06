@@ -23,6 +23,7 @@ Minio:
   Host: www.stonelan.com/minio/download/
   Bucket: bbs
   Endpoint: minio.default.svc:9000
+  AccessId: admin
   AccessSecret: 12345678
 
 # 邮件服务器配置，用于邮件通知
