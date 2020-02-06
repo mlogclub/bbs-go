@@ -172,8 +172,8 @@ export default {
         const me = this
         this.$toast.success('登录成功！', {
           duration: 1000,
-          fullWidth: true,
-          fitToScreen: true,
+          keepOnHover: false,
+          position: 'top-center',
           onComplete() {
             if (me.ref && !utils.isSigninUrl(me.ref)) {
               utils.linkTo(me.ref)

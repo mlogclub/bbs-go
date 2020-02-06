@@ -76,7 +76,6 @@ export default {
       }
       const me = this
       const userToken = this.$cookies.get('userToken')
-
       const options = {
         width: me.width,
         height: me.height,
@@ -144,8 +143,7 @@ export default {
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js',
-          defer: true
+          src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js'
         }
       ]
     }

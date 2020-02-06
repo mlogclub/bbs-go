@@ -1,8 +1,7 @@
 class Utils {
   linkTo(path) {
-    // debugger
-    // window.location = path
-    window.$nuxt.$router.push(path)
+    window.location = path
+    // window.$nuxt.$router.push(path)
   }
 
   toSignin(ref) {
