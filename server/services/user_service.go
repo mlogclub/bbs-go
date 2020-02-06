@@ -7,6 +7,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/tidwall/gjson"
 
 	"bbs-go/common"
 	"bbs-go/common/avatar"
@@ -210,10 +211,20 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		return user, nil
 	}
 
+	var homePage string
+	if thirdAccount.ThirdType == model.ThirdAccountTypeGithub {
+		if blog := gjson.Get(thirdAccount.ExtraData, "blog"); blog.Exists() && len(blog.String()) > 0 {
+			homePage = blog.String()
+		} else if htmlUrl := gjson.Get(thirdAccount.ExtraData, "html_url"); htmlUrl.Exists() && len(htmlUrl.String()) > 0 {
+			homePage = htmlUrl.String()
+		}
+	}
+
 	user = &model.User{
 		Username:   sql.NullString{},
 		Nickname:   thirdAccount.Nickname,
 		Status:     model.StatusOk,
+		HomePage:   homePage,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
