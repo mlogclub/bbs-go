@@ -48,8 +48,8 @@
             <div class="field">
               <div class="control">
                 <markdown-editor
-                  v-model="postForm.content"
                   ref="mdEditor"
+                  v-model="postForm.content"
                   editor-id="topicCreateEditor"
                 />
               </div>

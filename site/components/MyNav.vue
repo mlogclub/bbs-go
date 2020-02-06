@@ -84,8 +84,9 @@
           </div>
           <div v-else class="navbar-item">
             <div class="buttons">
-              <github-login />
-              <qq-login />
+              <nuxt-link class="button is-success" to="/user/signin"
+                >登录</nuxt-link
+              >
             </div>
           </div>
         </div>
@@ -96,11 +97,12 @@
 
 <script>
 import utils from '~/common/utils'
-import GithubLogin from '~/components/GithubLogin'
-import QqLogin from '~/components/QqLogin'
 import MsgNotice from '~/components/MsgNotice'
+
 export default {
-  components: { GithubLogin, QqLogin, MsgNotice },
+  components: {
+    MsgNotice
+  },
   data() {
     return {
       navbarActive: false

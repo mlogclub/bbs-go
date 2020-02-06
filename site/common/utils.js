@@ -13,6 +13,10 @@ class Utils {
     this.linkTo('/user/signin?ref=' + encodeURIComponent(ref))
   }
 
+  isSigninUrl(ref) {
+    return ref === '/user/signin'
+  }
+
   handleToc(tocDom) {
     if (!window || !window.document || !tocDom) {
       return
