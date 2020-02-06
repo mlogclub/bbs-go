@@ -151,6 +151,7 @@
           <comment
             :entity-id="topic.topicId"
             :comments-page="commentsPage"
+            :comment-count="topic.commentCount"
             :show-ad="false"
             entity-type="topic"
           />
@@ -302,17 +303,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.topic-detail {
-  margin-bottom: 20px;
-
-  .content {
-    padding-top: 10px;
-    font-size: 15px;
-    color: #000;
-    white-space: normal;
-    word-break: break-all;
-    word-wrap: break-word;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

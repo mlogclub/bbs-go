@@ -1,5 +1,8 @@
 <template>
   <div class="comment-component main-content">
+    <div class="comment-title">
+      回复<span v-if="commentCount > 0">({{ commentCount }})</span>
+    </div>
     <div class="comment-form">
       <div v-if="isLogin" class="comment-create">
         <div ref="commentEditor" class="comment-input-wrapper">
@@ -138,6 +141,10 @@ export default {
         return {}
       }
     },
+    commentCount: {
+      type: Number,
+      default: 0
+    },
     showAd: {
       type: Boolean,
       default: false
@@ -222,7 +229,13 @@ export default {
 <style lang="scss" scoped>
 .comment-component {
   padding-top: 10px;
-
+  .comment-title {
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
   .comment-form {
     .comment-create {
       /*border: 1px solid #f0f0f0;*/

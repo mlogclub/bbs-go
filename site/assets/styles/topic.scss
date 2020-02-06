@@ -217,6 +217,17 @@
 }
 
 .topic-detail {
+  margin-bottom: 20px;
+
+  .content {
+    padding-top: 10px;
+    font-size: 15px;
+    color: #000;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+
   .topic-header {
     padding: 10px;
     border-bottom: 1px solid #eee;
