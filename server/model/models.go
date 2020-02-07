@@ -219,18 +219,14 @@ type Project struct {
 	CreateTime  int64  `gorm:"index:idx_project_create_time" json:"createTime" form:"createTime"`
 }
 
-// 好博客导航
+// 友链
 type Link struct {
 	Model
-	UserId     int64  `gorm:"not null" json:"userId" form:"userId"`         // 用户
 	Url        string `gorm:"not null;type:text" json:"url" form:"url"`     // 链接
 	Title      string `gorm:"not null;size:128" json:"title" form:"title"`  // 标题
 	Summary    string `gorm:"size:1024" json:"summary" form:"summary"`      // 站点描述
 	Logo       string `gorm:"type:text" json:"logo" form:"logo"`            // LOGO
-	Category   string `gorm:"type:text" json:"category" form:"category"`    // 分类
 	Status     int    `gorm:"not null" json:"status" form:"status"`         // 状态
-	Score      int    `gorm:"not null" json:"score" form:"score"`           // 评分，0-100分，分数越高越优质
-	Remark     string `gorm:"size:1024" json:"remark" form:"remark"`        // 备注，后台填写的
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
 }
 

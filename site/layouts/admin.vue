@@ -64,7 +64,7 @@
           </a>
           <a class="navbar-item" href="/admin/links">
             <i class="iconfont icon-link"></i>
-            <span>链接</span>
+            <span>友链</span>
           </a>
           <a class="navbar-item" href="/admin/settings">
             <i class="iconfont icon-setting"></i>

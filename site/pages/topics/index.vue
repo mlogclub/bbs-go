@@ -3,10 +3,10 @@
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
+        <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
-      <topic-side :score-rank="scoreRank" />
+      <topic-side :score-rank="scoreRank" :links="links" />
     </div>
   </section>
 </template>
@@ -26,16 +26,17 @@ export default {
   },
   async asyncData({ $axios, query }) {
     try {
-      const [nodes, topicsPage, scoreRank] = await Promise.all([
+      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics', {
           params: {
             page: query.p || 1
           }
         }),
-        $axios.get('/api/user/score/rank')
+        $axios.get('/api/user/score/rank'),
+        $axios.get('/api/link/toplinks')
       ])
-      return { nodes, topicsPage, scoreRank }
+      return { nodes, topicsPage, scoreRank, links }
     } catch (e) {
       console.error(e)
     }

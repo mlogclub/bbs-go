@@ -2,6 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="main-body">
+        <!--
         <div class="notice">
           <h1>什么是好博客导航？</h1>
           <p>
@@ -18,41 +19,41 @@
             后续我们还会对所有收录的博客进行分类、打标签，对优质博客进行推荐。
           </p>
         </div>
+        -->
 
         <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
+        <!--        <adsbygoogle ad-slot="1742173616" />-->
 
-        <div v-if="pendingLinks && pendingLinks.length" class="pending-links">
-          <div class="pending-links-title">待审核：</div>
-          <div v-for="link in pendingLinks" :key="link.linkId" class="link">
-            {{ link.title }}
+        <div class="widget">
+          <div class="widget-header">友情链接</div>
+          <div class="widget-content">
+            <ul class="links">
+              <li
+                v-for="link in linksPage.results"
+                :key="link.linkId"
+                class="link"
+              >
+                <div class="link-logo">
+                  <img v-if="link.logo" :src="link.logo" />
+                  <img v-if="!link.logo" src="~/assets/images/net.png" />
+                </div>
+                <div class="link-content">
+                  <a
+                    :href="'/link/' + link.linkId"
+                    :title="link.title"
+                    class="link-title"
+                    target="_blank"
+                    >{{ link.title }}</a
+                  >
+                  <p class="link-summary">
+                    {{ link.summary }}
+                  </p>
+                </div>
+              </li>
+            </ul>
+            <pagination :page="linksPage.page" url-prefix="/links/" />
           </div>
         </div>
-
-        <ul class="links">
-          <li v-for="link in linksPage.results" :key="link.linkId" class="link">
-            <div class="link-logo">
-              <img v-if="link.logo" :src="link.logo" />
-              <img
-                v-if="!link.logo"
-                src="https://file.mlog.club/mlog.club/blog.png"
-              />
-            </div>
-            <div class="link-content">
-              <a
-                :href="'/link/' + link.linkId"
-                :title="link.title"
-                class="link-title"
-                target="_blank"
-                >{{ link.title }}</a
-              >
-              <p class="link-summary">
-                {{ link.summary }}
-              </p>
-            </div>
-          </li>
-        </ul>
-        <pagination :page="linksPage.page" url-prefix="/links/" />
       </div>
     </div>
   </section>
@@ -65,17 +66,15 @@ export default {
     Pagination
   },
   async asyncData({ $axios, params }) {
-    const [linksPage, pendingLinks] = await Promise.all([
+    const [linksPage] = await Promise.all([
       $axios.get('/api/link/links', {
         params: {
           page: params.page || 1
         }
-      }),
-      $axios.get('/api/link/pending')
+      })
     ])
     return {
-      linksPage,
-      pendingLinks
+      linksPage
     }
   },
   head() {
@@ -94,125 +93,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.notice {
-  padding: 7px 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
-  color: #8a6d3b;
-
-  a {
-    color: #3273dc;
-    cursor: pointer;
-  }
-
-  h1 {
-    font-weight: bold;
-  }
-
-  p:not(:last-child) {
-    margin-bottom: 10px;
-  }
-
-  ul {
-    list-style: disc;
-    margin-left: 20px;
-    margin-top: 10px;
-  }
-}
-.links {
-  padding-bottom: 20px;
-  .link {
-    display: flex;
-    height: 62px;
-    margin: 3px;
-    padding: 5px;
-
-    &:not(:last-child) {
-      border-bottom: 1px solid #eeeeee;
-    }
-
-    &:hover {
-      cursor: pointer;
-      // background-color: #f7f5ee;
-      background-color: #fafafa;
-      border: none;
-    }
-
-    .link-logo {
-      display: inline-block;
-      min-width: 50px;
-      min-width: 50px;
-      img {
-        max-width: 50px;
-        max-height: 50px;
-        border-radius: 50%;
-      }
-    }
-
-    .link-content {
-      display: block;
-      margin-left: 10px;
-
-      .link-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #3273dc;
-
-        overflow: hidden;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-      }
-
-      .link-summary {
-        font-size: 14px;
-        margin-top: 3px;
-        // font-weight: 500;
-
-        overflow: hidden;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-      }
-    }
-  }
-}
-
-.pending-links {
-  display: flex;
-
-  .pending-links-title {
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  .link {
-    &:not(:last-child) {
-      margin-right: 10px;
-      &::after {
-        content: '|';
-        color: #000;
-      }
-    }
-
-    font-size: 15px;
-    font-weight: 600;
-    color: #3273dc;
-
-    overflow: hidden;
-    word-break: break-all;
-    -webkit-line-clamp: 1;
-    text-overflow: ellipsis;
-    -webkit-box-orient: vertical;
-    display: -webkit-box;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

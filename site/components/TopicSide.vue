@@ -20,10 +20,40 @@
         </ul>
       </div>
     </div>
+    <div v-if="links && links.length" class="widget">
+      <div class="widget-header">
+        <span>友情链接</span>
+        <span class="slot"><a href="/links">查看更多&gt;&gt;</a></span>
+      </div>
+      <div class="widget-content">
+        <ul class="links">
+          <li v-for="link in links" :key="link.linkId" class="link">
+            <div class="link-logo">
+              <img v-if="link.logo" :src="link.logo" />
+              <img v-if="!link.logo" src="~/assets/images/net.png" />
+            </div>
+            <div class="link-content">
+              <a
+                :href="'/link/' + link.linkId"
+                :title="link.title"
+                class="link-title"
+                target="_blank"
+                >{{ link.title }}</a
+              >
+              <p class="link-summary">
+                {{ link.summary }}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--
     <div class="ad">
-      <!-- 展示广告 -->
+      展示广告
       <adsbygoogle ad-slot="1742173616" />
     </div>
+    -->
   </div>
 </template>
 
@@ -37,6 +67,12 @@ export default {
     currentNodeId: {
       type: Number,
       default: 0
+    },
+    links: {
+      type: Array,
+      default() {
+        return null
+      }
     },
     scoreRank: {
       type: Array,
