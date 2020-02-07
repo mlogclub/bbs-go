@@ -25,7 +25,7 @@ func init() {
 	for i := 0; i < t.NumField(); i++ {
 		fieldName := t.Field(i).Name
 		if os.Getenv(fieldName) != "" {
-			env := os.Getenv("Env")
+			env := os.Getenv(fieldName)
 			v.Field(i).SetString(env)
 		}
 
