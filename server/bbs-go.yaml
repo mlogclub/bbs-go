@@ -6,7 +6,7 @@ ShowSql: true # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
 # 数据库连接
-MySqlUrl: root:123456@tcp(mysql.default.svc:3306)/bbs_go?charset=utf8mb4&parseTime=True&loc=Local
+MySqlUrl: root:123456@tcp(10.0.3.200:30972)/bbs_go?charset=utf8mb4&parseTime=True&loc=Local
 
 # github登录配置
 Github:
@@ -20,7 +20,7 @@ QQConnect:
 
 # 阿里云oss配置
 Minio:
-  Host: /minio/download/
+  Host: /minio/download/bbs
   Bucket: bbs
   Endpoint: minio.default.svc:9000
   AccessId: admin
