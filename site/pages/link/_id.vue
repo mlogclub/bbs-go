@@ -6,17 +6,14 @@
           <div class="logo" />
           <div class="title">
             <img v-if="link.logo" :src="link.logo" />
-            <img
-              v-if="!link.logo"
-              src="https://file.mlog.club/mlog.club/link.png"
-            />
+            <img v-else src="~/assets/images/net.png" />
             {{ link.title }}
           </div>
           <div class="summary">
             {{ link.summary }}
           </div>
           <div class="link">
-            博客地址：<a :href="link.url" rel="nofollow">{{ link.url }}</a>
+            博客地址：<a :href="link.url">{{ link.url }}</a>
           </div>
         </div>
         <div style="margin-top: 20px;">
