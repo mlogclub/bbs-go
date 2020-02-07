@@ -123,6 +123,7 @@ export default {
    */
   build: {
     optimizeCSS: true,
+    extractCSS: true,
     splitChunks: {
       layouts: true,
       pages: true,

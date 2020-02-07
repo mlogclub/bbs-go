@@ -107,8 +107,8 @@ export default {
   },
 
   proxy: {
-    // '/api/': 'http://localhost:8082'
-    '/api/': 'https://mlog.club'
+    '/api/': 'http://localhost:8082'
+    // '/api/': 'https://mlog.club'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
@@ -125,6 +125,7 @@ export default {
   build: {
     publicPath: 'https://file.mlog.club/static/nuxtclient/',
     optimizeCSS: true,
+    extractCSS: true,
     splitChunks: {
       layouts: true,
       pages: true,
