@@ -100,26 +100,24 @@
           </div>
 
           <div class="article-footer">
-            <blockquote v-if="article.share">
-              <ul>
-                <li>
-                  <strong>免责声明：</strong>
-                  我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
-                  <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
-                  >），我们将在24小时之内删除。
-                </li>
-                <li v-if="article.sourceUrl">
-                  <strong>原文链接：</strong>
-                  <a
-                    :href="article.sourceUrl"
-                    class="source-url"
-                    rel="nofollow"
-                    target="_blank"
-                    >{{ article.sourceUrl }}</a
-                  >
-                </li>
-              </ul>
-            </blockquote>
+            <ul>
+              <li>
+                <strong>免责声明：</strong>
+                我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
+                <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
+                >），我们将在24小时之内删除。
+              </li>
+              <li v-if="article.sourceUrl">
+                <strong>原文链接：</strong>
+                <a
+                  :href="article.sourceUrl"
+                  class="source-url"
+                  rel="nofollow"
+                  target="_blank"
+                  >{{ article.sourceUrl }}</a
+                >
+              </li>
+            </ul>
           </div>
 
           <div class="ad">
@@ -142,7 +140,10 @@
           <adsbygoogle ad-slot="1742173616" />
         </div>
 
-        <div v-if="relatedArticles && relatedArticles.length" class="widget">
+        <div
+          v-if="relatedArticles && relatedArticles.length"
+          class="widget no-margin"
+        >
           <div class="widget-header">相关文章</div>
           <div class="widget-content article-related">
             <ul>
@@ -159,12 +160,15 @@
           </div>
         </div>
 
-        <div class="ad" style="max-height: 360px;">
+        <div style="max-height: 360px;">
           <!-- 展示广告 -->
           <adsbygoogle ad-slot="1742173616" />
         </div>
 
-        <div v-if="newestArticles && newestArticles.length" class="widget">
+        <div
+          v-if="newestArticles && newestArticles.length"
+          class="widget no-margin"
+        >
           <div class="widget-header">最新文章</div>
           <div class="widget-content article-related">
             <ul>

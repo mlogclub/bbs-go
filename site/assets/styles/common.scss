@@ -76,7 +76,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   .main-content {
     background-color: #fff;
     padding: 0 10px 10px 10px;
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
   }
 
   .left-container,
@@ -157,11 +157,11 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   margin-top: 10px;
 
   &:first-child {
-    margin: 0px;
+    margin: 0;
   }
 
   &.no-margin {
-    margin: 0px;
+    margin: 0;
   }
 
   &.no-bg {

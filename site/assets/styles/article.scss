@@ -136,62 +136,14 @@
   }
 
   .article-footer {
-    margin-top: 20px;
     word-break: break-all;
+    background: #fff;
+    padding: 10px;
 
     &,
     a {
       color: #4a4a4a;
       font-size: 14px;
-    }
-
-    blockquote {
-      padding: 10px 15px;
-      margin: 0 0 20px;
-      border: 1px dotted #eeeeee;
-      border-left: 3px solid #eeeeee;
-      background-color: #fbfbfb;
-    }
-
-    blockquote p:last-child,
-    blockquote ul:last-child,
-    blockquote ol:last-child {
-      margin-bottom: 0;
-    }
-
-    blockquote footer,
-    blockquote small,
-    blockquote .small {
-      display: block;
-      font-size: 80%;
-      line-height: 1.42857;
-      color: #777777;
-    }
-
-    blockquote footer:before,
-    blockquote small:before,
-    blockquote .small:before {
-      content: '\2014 \00A0';
-    }
-
-    blockquote.pull-right {
-      padding-right: 15px;
-      padding-left: 0;
-      border-right: 5px solid #eeeeee;
-      border-left: 0;
-      text-align: right;
-    }
-
-    blockquote.pull-right footer:before,
-    blockquote.pull-right small:before,
-    blockquote.pull-right .small:before {
-      content: '';
-    }
-
-    blockquote.pull-right footer:after,
-    blockquote.pull-right small:after,
-    blockquote.pull-right .small:after {
-      content: '\00A0 \2014';
     }
   }
 }
