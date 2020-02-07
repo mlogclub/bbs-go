@@ -17,7 +17,6 @@
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
-            <el-option label="待审核" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -32,69 +31,34 @@
     <el-table
       :data="results"
       v-loading="listLoading"
-      @selection-change="handleSelectionChange"
       highlight-current-row
       stripe
       style="width: 100%;"
     >
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <div class="content-form">
-            <div v-if="scope.row.category" class="form-item">
-              <div class="field-key">分类：</div>
-              <div class="field-value">{{ scope.row.category }}</div>
-            </div>
-          </div>
-          <div class="content-form">
-            <div v-if="scope.row.summary" class="form-item">
-              <div class="field-key">描述：</div>
-              <div class="field-value">{{ scope.row.summary }}</div>
-            </div>
-          </div>
-          <div class="content-form">
-            <div class="form-item">
-              <div class="field-key">创建时间：</div>
-              <div class="field-value">
-                {{ scope.row.createTime | formatDate }}
-              </div>
-            </div>
-          </div>
-          <div class="content-form">
-            <div v-if="scope.row.remark" class="form-item">
-              <div class="field-key">备注：</div>
-              <div class="field-value">{{ scope.row.remark }}</div>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
-      <!-- <el-table-column prop="category" label="分类"></el-table-column> -->
+      <el-table-column prop="title" label="标题"></el-table-column>
       <el-table-column prop="url" label="链接">
         <template slot-scope="scope">
           <a :href="scope.row.url" target="_blank">{{ scope.row.url }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="title" label="标题"></el-table-column>
-      <!-- <el-table-column prop="summary" label="描述"></el-table-column> -->
-      <!-- <el-table-column prop="logo" label="Logo"></el-table-column> -->
+      <el-table-column prop="logo" label="Logo" width="60">
+        <template slot-scope="scope">
+          <img v-if="scope.row.log" :src="scope.row.logo" class="link-logo" />
+          <img v-else src="~/assets/images/net.png" class="link-logo" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="summary" label="描述"></el-table-column>
       <el-table-column prop="status" label="状态" width="50">
         <template slot-scope="scope">{{
-          scope.row.status === 0
-            ? '正常'
-            : scope.row.status === 1
-            ? '删除'
-            : '待审核'
+          scope.row.status === 0 ? '正常' : '删除'
         }}</template>
       </el-table-column>
-      <el-table-column prop="score" label="分数" width="80">
-        <template slot-scope="scope">{{ scope.row.score || 0 }}</template>
-      </el-table-column>
-      <!--
       <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        <template slot-scope="scope">{{
+          scope.row.createTime | formatDate
+        }}</template>
       </el-table-column>
-      -->
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
@@ -126,48 +90,23 @@
           <el-input v-model="addForm.url" style="width: 80%;"></el-input>&nbsp;
           <el-button @click="detect" type="primary">Detect</el-button>
         </el-form-item>
-
         <el-form-item label="标题">
           <el-input v-model="addForm.title"></el-input>
         </el-form-item>
-
         <el-form-item label="描述">
           <el-input
             v-model="addForm.summary"
             :autosize="{ minRows: 2, maxRows: 4 }"
           ></el-input>
         </el-form-item>
-
         <el-form-item label="Logo">
           <el-input v-model="addForm.logo"></el-input>
         </el-form-item>
-
-        <el-form-item label="分类">
-          <el-input v-model="addForm.category"></el-input>
-        </el-form-item>
-
         <el-form-item label="状态" prop="status">
           <el-select v-model="addForm.status" placeholder="请选择">
             <el-option :key="0" :value="0" label="正常"></el-option>
             <el-option :key="1" :value="1" label="删除"></el-option>
-            <el-option :key="2" :value="2" label="待审核"></el-option>
           </el-select>
-        </el-form-item>
-
-        <el-form-item label="分数">
-          <el-input-number
-            v-model="addForm.score"
-            :min="1"
-            :max="100"
-            label="分数越高越优质"
-          ></el-input-number>
-        </el-form-item>
-
-        <el-form-item label="备注">
-          <el-input
-            v-model="addForm.remark"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,52 +132,26 @@
         label-width="80px"
       >
         <el-input v-model="editForm.id" type="hidden"></el-input>
-
         <el-form-item label="链接">
           <el-input v-model="editForm.url"></el-input>
         </el-form-item>
-
         <el-form-item label="标题">
           <el-input v-model="editForm.title"></el-input>
         </el-form-item>
-
         <el-form-item label="描述">
           <el-input
             v-model="editForm.summary"
             :autosize="{ minRows: 2, maxRows: 4 }"
           ></el-input>
         </el-form-item>
-
         <el-form-item label="Logo">
           <el-input v-model="editForm.logo"></el-input>
         </el-form-item>
-
-        <el-form-item label="分类">
-          <el-input v-model="editForm.category"></el-input>
-        </el-form-item>
-
         <el-form-item label="状态" prop="status">
           <el-select v-model="editForm.status" placeholder="请选择">
             <el-option :key="0" :value="0" label="正常"></el-option>
             <el-option :key="1" :value="1" label="删除"></el-option>
-            <el-option :key="2" :value="2" label="待审核"></el-option>
           </el-select>
-        </el-form-item>
-
-        <el-form-item label="分数">
-          <el-input-number
-            v-model="editForm.score"
-            :min="1"
-            :max="100"
-            label="分数越高越优质"
-          ></el-input-number>
-        </el-form-item>
-
-        <el-form-item label="备注">
-          <el-input
-            v-model="editForm.remark"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -263,7 +176,6 @@ export default {
       listLoading: false,
       page: {},
       filters: {},
-      selectedRows: [],
 
       addForm: {},
       addFormVisible: false,
@@ -368,26 +280,14 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    },
-
-    handleSelectionChange(val) {
-      this.selectedRows = val
     }
   }
 }
 </script>
 
 <style scoped>
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
+.link-logo {
+  max-width: 50px;
+  max-height: 50px;
 }
 </style>
