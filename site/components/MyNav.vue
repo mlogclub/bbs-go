@@ -69,7 +69,7 @@
                 <i class="iconfont icon-publish" />&nbsp;发表文章
               </a>
               <a class="navbar-item" href="/user/favorites">
-                <i class="iconfont icon-favorites" />&nbsp;收藏
+                <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </a>
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
@@ -85,8 +85,8 @@
           <div v-else class="navbar-item">
             <div class="buttons">
               <nuxt-link class="button is-success" to="/user/signin"
-                >登录</nuxt-link
-              >
+                >登录
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -149,10 +149,12 @@ export default {
 .navbar {
   opacity: 0.99;
   border-bottom: 1px solid #e7edf3;
+
   .navbar-item {
     font-weight: 700;
   }
 }
+
 .searchFormDiv {
   @media screen and (max-width: 768px) {
     & {
@@ -168,6 +170,7 @@ export default {
       transition: all 0.4s;
       float: right;
       position: relative;
+
       &:focus {
         background-color: #fff;
         border-color: #e7672e;
