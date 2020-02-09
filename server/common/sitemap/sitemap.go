@@ -68,7 +68,9 @@ func (sm *Generator) Finalize() {
 
 func (sm *Generator) WriteIndex(sitemapLocs []IndexURL) string {
 	sitemapPath := sm.opts.SitemapIndexPathInPublic(SitemapXmlExt)
-	return write(sitemapPath, IndexXmlContent(sitemapLocs))
+	sitemapIndexLoc := write(sitemapPath, IndexXmlContent(sitemapLocs))
+	PingSearchEngines(sitemapIndexLoc)
+	return sitemapIndexLoc
 }
 
 // write sitemap and index to aliyun oss
