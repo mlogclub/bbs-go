@@ -33,7 +33,7 @@ func PutObject(key string, data []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return config.Conf.Minio.Host + key, nil
+	return config.Conf.Minio.Host + key + "?token=", nil
 }
 
 //将图片copy到oss
