@@ -51,6 +51,7 @@
                   ref="mdEditor"
                   v-model="postForm.content"
                   editor-id="topicCreateEditor"
+                  placeholder="可空，将图片复制或拖入编辑器和上传"
                 />
               </div>
             </div>
