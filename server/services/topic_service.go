@@ -161,6 +161,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
+	baiduseo.PushUrl(urls.TopicUrl(topic.Id))
 	return simple.FromError(err)
 }
 
