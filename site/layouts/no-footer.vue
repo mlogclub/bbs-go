@@ -9,7 +9,6 @@
 import MyNav from '~/components/MyNav'
 
 export default {
-  middleware: 'global',
   components: {
     MyNav
   }

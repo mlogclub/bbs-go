@@ -22,14 +22,7 @@ export const actions = {
 
   // 获取当前登录用户
   async getCurrentUser(context) {
-    const userToken = this.$cookies.get('userToken')
-    if (!userToken) {
-      return null
-    }
     const user = await this.$axios.get('/api/user/current')
-    if (!user) {
-      return null
-    }
     context.commit('setCurrent', user)
     return user
   },

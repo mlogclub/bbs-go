@@ -91,7 +91,7 @@
 import '~/plugins/element-ui'
 
 export default {
-  middleware: ['global', 'authenticated'],
+  middleware: ['authenticated'],
   data() {
     return {
       navbarActive: false

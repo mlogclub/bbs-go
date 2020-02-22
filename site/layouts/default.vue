@@ -13,7 +13,6 @@ import MyNav from '~/components/MyNav'
 import MyFooter from '~/components/MyFooter'
 
 export default {
-  middleware: 'global',
   components: {
     MyNav,
     MyFooter
