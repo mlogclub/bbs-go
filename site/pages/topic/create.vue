@@ -178,18 +178,6 @@ export default {
   head() {
     return {
       title: this.$siteTitle('发表话题')
-      // link: [
-      //   {
-      //     rel: 'stylesheet',
-      //     href: '//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css'
-      //   }
-      // ],
-      // script: [
-      //   {
-      //     src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js',
-      //     defer: true
-      //   }
-      // ]
     }
   }
 }
