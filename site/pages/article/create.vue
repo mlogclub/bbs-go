@@ -10,7 +10,7 @@
                 <li>
                   <a :href="'/user/' + user.id + '?tab=articles'">{{
                     user.nickname
-                    }}</a>
+                  }}</a>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">文章</a>
@@ -43,7 +43,7 @@
 
             <div class="field">
               <div class="control">
-                <tag-input v-model="postForm.tags"/>
+                <tag-input v-model="postForm.tags" />
               </div>
             </div>
 
@@ -54,7 +54,7 @@
                   :disabled="publishing"
                   @click="submitCreate"
                   class="button is-success"
-                >发表</a
+                  >发表</a
                 >
               </div>
             </div>
@@ -62,73 +62,73 @@
         </div>
       </div>
       <div class="right-container">
-        <markdown-help/>
+        <markdown-help />
       </div>
     </div>
   </section>
 </template>
 
 <script>
-  import utils from '~/common/utils'
-  import TagInput from '~/components/TagInput'
-  import MarkdownHelp from '~/components/MarkdownHelp'
-  import MarkdownEditor from '~/components/MarkdownEditor'
+import utils from '~/common/utils'
+import TagInput from '~/components/TagInput'
+import MarkdownHelp from '~/components/MarkdownHelp'
+import MarkdownEditor from '~/components/MarkdownEditor'
 
-  export default {
-    middleware: 'authenticated',
-    components: {
-      TagInput,
-      MarkdownHelp,
-      MarkdownEditor
-    },
-    data () {
-      return {
-        publishing: false, // 当前是否正处于发布中...
-        postForm: {
-          title: '',
-          tags: [],
-          content: ''
-        }
-      }
-    },
-    computed: {
-      user () {
-        return this.$store.state.user.current
-      }
-    },
-    mounted () {},
-    methods: {
-      async submitCreate () {
-        const me = this
-        if (me.publishing) {
-          return
-        }
-        me.publishing = true
-        try {
-          const article = await this.$axios.post('/api/article/create', {
-            title: me.postForm.title,
-            content: me.postForm.content,
-            tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
-          })
-          this.$refs.mdEditor.clearCache()
-          this.$toast.success('提交成功', {
-            duration: 1000,
-            onComplete () {
-              utils.linkTo('/article/' + article.articleId)
-            }
-          })
-        } catch (e) {
-          me.publishing = false
-          this.$toast.error('提交失败：' + (e.message || e))
-        }
-      }
-    },
-    head () {
-      return {
-        title: this.$siteTitle('发表话题')
+export default {
+  middleware: 'authenticated',
+  components: {
+    TagInput,
+    MarkdownHelp,
+    MarkdownEditor
+  },
+  data() {
+    return {
+      publishing: false, // 当前是否正处于发布中...
+      postForm: {
+        title: '',
+        tags: [],
+        content: ''
       }
     }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.current
+    }
+  },
+  mounted() {},
+  methods: {
+    async submitCreate() {
+      const me = this
+      if (me.publishing) {
+        return
+      }
+      me.publishing = true
+      try {
+        const article = await this.$axios.post('/api/article/create', {
+          title: me.postForm.title,
+          content: me.postForm.content,
+          tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
+        })
+        this.$refs.mdEditor.clearCache()
+        this.$toast.success('提交成功', {
+          duration: 1000,
+          onComplete() {
+            utils.linkTo('/article/' + article.articleId)
+          }
+        })
+      } catch (e) {
+        me.publishing = false
+        this.$toast.error('提交失败：' + (e.message || e))
+      }
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('发表话题')
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped></style>
