@@ -162,7 +162,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 		return nil
 	})
 	baiduseo.PushUrl(urls.TopicUrl(topicId))
-	
+
 	return simple.FromError(err)
 }
 
