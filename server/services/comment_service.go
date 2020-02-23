@@ -115,12 +115,12 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 	return comment, nil
 }
 
-// 统计数量
-func (s *commentService) Count(entityType string, entityId int64) int64 {
-	var count int64 = 0
-	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
-	return count
-}
+// // 统计数量
+// func (s *commentService) Count(entityType string, entityId int64) int64 {
+// 	var count int64 = 0
+// 	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
+// 	return count
+// }
 
 // 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
