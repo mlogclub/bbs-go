@@ -7,14 +7,17 @@
       <div class="widget-content">
         <ul class="score-rank">
           <li v-for="user in scoreRank" :key="user.id">
-            <a :href="'/user/' + user.id">
+            <a :href="'/user/' + user.id" class="score-user-avatar">
               <img :src="user.avatar" class="avatar" />
             </a>
-            <div class="score-rank-info">
+            <div class="score-user-info">
               <a :href="'/user/' + user.id">{{ user.nickname }}</a>
-              <div>
+              <p>{{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论</p>
+            </div>
+            <div class="score-rank-info">
+              <span class="score-user-score">
                 <i class="iconfont icon-score" /><span>{{ user.score }}</span>
-              </div>
+              </span>
             </div>
           </li>
         </ul>
@@ -88,26 +91,52 @@ export default {
 .score-rank {
   li {
     display: flex;
+    list-style: none;
+    margin: 8px;
+    font-size: 13px;
+    position: relative;
 
-    .avatar {
-      width: 30px;
-      height: 30px;
+    &:not(:last-child) {
+      border-bottom: 1px solid #f7f7f7;
     }
 
-    .score-rank-info {
+    .score-user-avatar {
+      min-width: 30px;
+      .avatar {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .score-user-info {
+      width: 100%;
       margin-left: 5px;
       line-height: 1.4;
       font-size: 12px;
-      a:hover {
-        text-decoration: underline;
-      }
-      i {
-        font-size: 12px;
-      }
-      span {
-        margin-left: 3px;
+      a {
         font-weight: 700;
-        color: orangered;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .score-rank-info {
+      width: 120px;
+      .score-user-score {
+        float: right;
+        border-radius: 12px;
+        color: #778087;
+        height: 21px;
+        line-height: 21px;
+        padding: 0 6px;
+        text-shadow: 0 0 1px #fff;
+        background-color: #f5f5f5;
+        font-size: 0.75rem;
+        align-items: center;
+        i {
+          margin-right: 3px;
+        }
       }
     }
   }
