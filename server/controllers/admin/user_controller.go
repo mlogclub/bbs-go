@@ -18,6 +18,13 @@ type UserController struct {
 	Ctx iris.Context
 }
 
+func (c *UserController) GetSynccount() *simple.JsonResult {
+	go func() {
+		services.UserService.SyncUserCount()
+	}()
+	return simple.JsonSuccess()
+}
+
 func (c *UserController) GetBy(id int64) *simple.JsonResult {
 	t := services.UserService.Get(id)
 	if t == nil {

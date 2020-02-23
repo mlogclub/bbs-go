@@ -53,6 +53,10 @@ func (s *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, pa
 	return repositories.TopicRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
+func (s *topicService) Count(cnd *simple.SqlCnd) int {
+	return repositories.TopicRepository.Count(simple.DB(), cnd)
+}
+
 func (s *topicService) Create(t *model.Topic) error {
 	return repositories.TopicRepository.Create(simple.DB(), t)
 }
@@ -126,6 +130,8 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil
 	})
 	if err == nil {
+		// 用户话题计数
+		UserService.IncrTopicCount(userId)
 		// 获得积分
 		UserScoreService.IncrementPostTopicScore(topic)
 		// 百度链接推送

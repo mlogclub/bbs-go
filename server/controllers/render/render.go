@@ -45,18 +45,20 @@ func BuildUser(user *model.User) *model.UserInfo {
 	}
 	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserInfo{
-		Id:          user.Id,
-		Username:    user.Username.String,
-		Nickname:    user.Nickname,
-		Avatar:      a,
-		Email:       user.Email.String,
-		Type:        user.Type,
-		Roles:       roles,
-		HomePage:    user.HomePage,
-		Description: user.Description,
-		PasswordSet: len(user.Password) > 0,
-		Status:      user.Status,
-		CreateTime:  user.CreateTime,
+		Id:           user.Id,
+		Username:     user.Username.String,
+		Nickname:     user.Nickname,
+		Avatar:       a,
+		Email:        user.Email.String,
+		Type:         user.Type,
+		Roles:        roles,
+		HomePage:     user.HomePage,
+		Description:  user.Description,
+		TopicCount:   user.TopicCount,
+		CommentCount: user.CommentCount,
+		PasswordSet:  len(user.Password) > 0,
+		Status:       user.Status,
+		CreateTime:   user.CreateTime,
 	}
 	if user.Status == model.StatusDeleted {
 		ret.Username = "blacklist"

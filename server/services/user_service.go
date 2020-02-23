@@ -7,6 +7,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
 	"bbs-go/common"
@@ -348,4 +349,47 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 	}
 
 	return s.UpdateColumn(userId, "password", simple.EncodePassword(password))
+}
+
+// IncrTopicCount topic_count + 1
+func (s *userService) IncrTopicCount(userId int64) int {
+	t := repositories.UserRepository.Get(simple.DB(), userId)
+	if t == nil {
+		return 0
+	}
+	topicCount := t.TopicCount + 1
+	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "topic_count", topicCount); err != nil {
+		logrus.Error(err)
+	} else {
+		cache.UserCache.Invalidate(userId)
+	}
+	return topicCount
+}
+
+// IncrCommentCount comment_count + 1
+func (s *userService) IncrCommentCount(userId int64) int {
+	t := repositories.UserRepository.Get(simple.DB(), userId)
+	if t == nil {
+		return 0
+	}
+	commentCount := t.CommentCount + 1
+	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "comment_count", commentCount); err != nil {
+		logrus.Error(err)
+	} else {
+		cache.UserCache.Invalidate(userId)
+	}
+	return commentCount
+}
+
+// SyncUserCount 同步用户计数
+func (s *userService) SyncUserCount() {
+	s.Scan(func(users []model.User) {
+		for _, user := range users {
+			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id))
+			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id))
+			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "topic_count", topicCount)
+			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "comment_count", commentCount)
+			cache.UserCache.Invalidate(user.Id)
+		}
+	})
 }

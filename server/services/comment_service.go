@@ -43,6 +43,10 @@ func (s *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment
 	return repositories.CommentRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
+func (s *commentService) Count(cnd *simple.SqlCnd) int {
+	return repositories.CommentRepository.Count(simple.DB(), cnd)
+}
+
 func (s *commentService) Create(t *model.Comment) error {
 	return repositories.CommentRepository.Create(simple.DB(), t)
 }
@@ -101,6 +105,8 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
 	}
 
+	// 用户跟帖计数
+	UserService.IncrCommentCount(userId)
 	// 获得积分
 	UserScoreService.IncrementPostCommentScore(comment)
 	// 发送消息
