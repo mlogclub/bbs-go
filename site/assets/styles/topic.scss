@@ -2,6 +2,12 @@
   .topic-header {
     display: flex;
 
+    @media screen and (max-width: 1024px) {
+      .topic-header-right {
+        display: none;
+      }
+    }
+
     .topic-header-left {
       min-width: 48px;
       min-height: 48px;
