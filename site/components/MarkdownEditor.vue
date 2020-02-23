@@ -32,7 +32,7 @@ export default {
       vditor: null,
       width: '100%',
       toolbar: [
-        'emoji',
+        // 'emoji',
         'headings',
         'bold',
         'italic',
@@ -85,11 +85,15 @@ export default {
         counter: '999999',
         delay: 500,
         mode: 'markdown-show',
+        theme: 'classic',
+        customEmoji: {
+          '1': '😝'
+        },
         preview: {
           mode: 'editor',
           hljs: {
             enable: true,
-            style: 'GitHub',
+            style: 'github',
             lineNumber: true
           }
         },
@@ -138,12 +142,12 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css'
+          href: '//cdn.jsdelivr.net/npm/vditor@2.2.0/dist/index.css'
         }
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js'
+          src: '//cdn.jsdelivr.net/npm/vditor@2.2.0/dist/index.min.js'
         }
       ]
     }
@@ -151,9 +155,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.vditor {
-  border: 1px solid #d1d5da;
-  width: 100%;
-}
-</style>
+<style lang="scss" scoped></style>
