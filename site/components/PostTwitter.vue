@@ -1,32 +1,30 @@
 <template>
   <div class="post-twitter-box">
-    <ul class="ugc-tab-list">
-      <li class="ugc-tab-item current">发表推文</li>
+    <ul class="tab-list">
+      <li class="tab-item current">发表推文</li>
     </ul>
-    <div class="imgBox upload-box">
-      <textarea placeholder="有什么新鲜事想告诉大家" class="title-input" />
-      <p class="words-number">0/2000字</p>
-      <div class="upload-footer">
+    <div class="twitter-box">
+      <textarea
+        v-model="content"
+        @input="onInput"
+        placeholder="有什么新鲜事想告诉大家"
+        class="title-input"
+      />
+      <p class="words-number">{{ wordCount }}/{{ maxWordCount }}字</p>
+      <div class="box-footer">
         <div class="bui-left">
-          <span
-            ga_event="user_ugc_img_open"
-            class="show-image-uploader show-uploader"
-            ><img
-              src="http://sf1-ttcdn-tos.pstatp.com/obj/ttfe/toutiao.com/image-icon.png"
-              class="image-icon"
-            />
-            <span>图片</span></span
-          >
-          <span class="show-emoji show-uploader"
-            ><img
-              src="http://sf1-ttcdn-tos.pstatp.com/obj/ttfe/toutiao.com/emoji-icon.png"
-              class="image-icon"
-            />
-            <span>表情</span></span
-          >
+          <span class="action-btn">
+            <i class="iconfont icon-image" />
+            <span>图片</span>
+          </span>
+          <span class="action-btn">
+            <i class="iconfont icon-emoji" />
+            <span>表情</span>
+          </span>
         </div>
         <div class="bui-right">
-          <span class="msg-tip"></span> <a class="upload-publish">发布</a>
+          <span class="msg-tip"></span>
+          <a :class="{ active: hasContent }" class="upload-publish">发布</a>
         </div>
       </div>
     </div>
@@ -34,7 +32,28 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      content: '',
+      maxWordCount: 2000
+    }
+  },
+  computed: {
+    hasContent() {
+      return this.content && this.content.length > 0
+    },
+    wordCount() {
+      return this.content ? this.content.length : 0
+    },
+    user() {
+      return this.$store.state.user.current
+    }
+  },
+  methods: {
+    onInput() {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -44,13 +63,13 @@ export default {}
   width: 100%;
   margin: 10px 0;
 
-  .ugc-tab-list {
+  .tab-list {
     height: 44px;
     border-bottom: 1px solid #e8e8e8;
     display: block;
     zoom: 1;
 
-    .ugc-tab-item {
+    .tab-item {
       margin-left: 19px;
       font-size: 15px;
       color: #222;
@@ -66,7 +85,7 @@ export default {}
     }
   }
 
-  .upload-box {
+  .twitter-box {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -82,6 +101,7 @@ export default {}
       border: 0;
       outline: 0;
       resize: none;
+      overflow: auto;
       background-color: #f4f5f6;
       transition: all 0.5s;
       animation-duration: 0.8s;
@@ -101,7 +121,7 @@ export default {}
       font-size: 13px;
     }
 
-    .upload-footer {
+    .box-footer {
       border-top: 1px solid #e8e8e8;
       height: 40px;
       display: block;
@@ -110,7 +130,7 @@ export default {}
       .bui-left {
         float: left;
 
-        .show-uploader {
+        .action-btn {
           color: #222;
           font-size: 14px;
           line-height: 39px;
@@ -119,16 +139,11 @@ export default {}
           margin: 0 0 0 20px;
           cursor: pointer;
 
-          .image-icon {
-            width: 20px;
-            height: 20px;
+          .iconfont {
+            font-size: 20px;
+            color: #ed4040;
+            top: 2px;
             position: relative;
-            top: 6px;
-          }
-
-          span {
-            display: inline-block;
-            vertical-align: middle;
           }
         }
       }
