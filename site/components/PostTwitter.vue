@@ -7,6 +7,8 @@
       <textarea
         v-model="content"
         @input="onInput"
+        @keydown.ctrl.enter="doSubmit"
+        @keydown.meta.enter="doSubmit"
         placeholder="有什么新鲜事想告诉大家"
         class="title-input"
       />
@@ -23,8 +25,13 @@
           </span>
         </div>
         <div class="bui-right">
-          <span class="msg-tip"></span>
-          <a :class="{ active: hasContent }" class="upload-publish">发布</a>
+          <span class="msg-tip">{{ message }}</span>
+          <a
+            :class="{ active: hasContent }"
+            @click="doSubmit"
+            class="upload-publish"
+            >发布</a
+          >
         </div>
       </div>
 
@@ -40,10 +47,23 @@
           />
           <div class="upload-box">
             <form style="display: none;">
-              <input type="file" accept="image/*" multiple="multiple" />
+              <input
+                ref="imageInput"
+                @change="handleImageUploadChange"
+                type="file"
+                accept="image/*"
+                multiple="multiple"
+              />
             </form>
             <ul class="upload-img-list">
-              <li class="upload-img-item upload-img-add">
+              <li v-for="image in images" :key="image" class="upload-img-item">
+                <img :src="image" />
+              </li>
+              <li
+                v-if="imageCount < maxImageCount"
+                @click="handleImageUploadClick"
+                class="upload-img-item upload-img-add"
+              >
                 <i class="iconfont icon-add" />
               </li>
             </ul>
@@ -56,10 +76,27 @@
 
 <script>
 export default {
+  props: {
+    nodeId: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       content: '',
-      images: [],
+      images: [
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=2',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=3',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=4',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=5',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=6',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=7',
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=8'
+        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=9'
+      ],
+      message: '',
       maxWordCount: 2000,
       showUploader: false,
       maxImageCount: 9
@@ -80,7 +117,62 @@ export default {
     }
   },
   methods: {
-    onInput() {}
+    onInput() {},
+    async doSubmit() {
+      if (!this.user) {
+        this.message = '发表失败，请登录后重试'
+        return
+      }
+      try {
+        const ret = await this.$axios.post('/api/topic/create', {
+          type: 1,
+          nodeId: this.nodeId,
+          title: this.content,
+          imageList: JSON.stringify(this.images)
+        })
+        this.content = ''
+        this.message = ''
+        this.$emit('created', ret)
+        this.$toast.success('发布成功')
+      } catch (e) {
+        this.message = e.message || e
+      }
+    },
+    handleImageUploadClick() {
+      this.$refs.imageInput.click()
+    },
+    async handleImageUploadChange(ev) {
+      const files = ev.target.files
+      if (!files) return
+
+      await this.uploadFiles(files)
+    },
+    async uploadFiles(files) {
+      if (files.length === 0) {
+        return
+      }
+
+      if (this.imageCount + files.length > this.maxImageCount) {
+        this.message = '图片数量超过上限'
+        return
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        await this.upload(files[i])
+      }
+    },
+    async upload(file) {
+      this.$refs.imageInput.value = null
+      const formData = new FormData()
+      formData.append('image', file, file.name)
+
+      try {
+        const ret = await this.$axios.post('/api/upload', formData)
+        this.images.push(ret.url)
+      } catch (e) {
+        this.message = e.message || e
+      }
+    }
   }
 }
 </script>
@@ -158,6 +250,7 @@ export default {
 
       .bui-left {
         float: left;
+        user-select: none;
 
         .action-btn {
           color: #222;
@@ -181,6 +274,7 @@ export default {
       .bui-right {
         float: right;
         text-align: right;
+        user-select: none;
 
         .msg-tip {
           color: #ed4040;
@@ -197,6 +291,7 @@ export default {
           background-color: #ed4040;
           color: #fff;
           opacity: 0.6;
+          user-select: none;
 
           &.active {
             opacity: 1;

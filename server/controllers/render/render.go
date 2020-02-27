@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
 	"github.com/PuerkitoBio/goquery"
@@ -218,8 +219,10 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
-	node := services.TopicNodeService.Get(topic.NodeId)
-	rsp.Node = BuildNode(node)
+	if topic.NodeId > 0 {
+		node := services.TopicNodeService.Get(topic.NodeId)
+		rsp.Node = BuildNode(node)
+	}
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
@@ -227,6 +230,12 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
+
+	if len(topic.ImageList) > 0 {
+		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
 
 	return rsp
 }
@@ -240,7 +249,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 
 	rsp.TopicId = topic.Id
 	rsp.Title = topic.Title
-	rsp.Summary = common.GetMarkdownSummary(topic.Content)
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
 	rsp.CreateTime = topic.CreateTime
@@ -248,8 +256,16 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
-	node := services.TopicNodeService.Get(topic.NodeId)
-	rsp.Node = BuildNode(node)
+	if len(topic.ImageList) > 0 {
+		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
+
+	if topic.NodeId > 0 {
+		node := services.TopicNodeService.Get(topic.NodeId)
+		rsp.Node = BuildNode(node)
+	}
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)

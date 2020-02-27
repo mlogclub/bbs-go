@@ -46,9 +46,12 @@
                 >
               </span>
               <span class="meta-item">
-                <a :href="'/topics/node/' + topic.node.nodeId" class="node">{{
-                  topic.node.name
-                }}</a>
+                <a
+                  v-if="topic.node"
+                  :href="'/topics/node/' + topic.node.nodeId"
+                  class="node"
+                  >{{ topic.node.name }}</a
+                >
               </span>
               <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">

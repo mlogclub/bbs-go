@@ -50,6 +50,7 @@
                     </span>
                     <span class="meta-item">
                       <a
+                        v-if="topic.node"
                         :href="'/topics/node/' + topic.node.nodeId"
                         class="node"
                         >{{ topic.node.name }}</a

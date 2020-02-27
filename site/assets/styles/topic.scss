@@ -230,14 +230,14 @@
 
   .topic-header {
     .topic-header-center {
-      .topic-title,
-      .topic-title a {
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-      }
+      //.topic-title,
+      //.topic-title a {
+      //  word-break: break-all;
+      //  -webkit-line-clamp: 1;
+      //  text-overflow: ellipsis;
+      //  -webkit-box-orient: vertical;
+      //  display: -webkit-box;
+      //}
     }
   }
 }

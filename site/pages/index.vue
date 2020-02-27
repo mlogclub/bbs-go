@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container is-white left-main">
       <div class="left-container">
-        <post-twitter />
+        <post-twitter @created="twitterCreated" />
         <topics-nav :nodes="nodes" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
@@ -38,6 +38,19 @@ export default {
       return { nodes, topicsPage, scoreRank, links }
     } catch (e) {
       console.error(e)
+    }
+  },
+  methods: {
+    twitterCreated(data) {
+      console.log('--------------------------------')
+      console.log(data)
+      if (this.topicsPage) {
+        if (this.topicsPage.results) {
+          this.topicsPage.results.unshift(data)
+        } else {
+          this.topicsPage.results = [data]
+        }
+      }
     }
   },
   head() {
