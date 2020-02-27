@@ -86,15 +86,7 @@ export default {
     return {
       content: '',
       images: [
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=2',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=3',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=4',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=5',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=6',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=7',
-        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=8'
-        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=9'
+        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1'
       ],
       message: '',
       maxWordCount: 2000,
