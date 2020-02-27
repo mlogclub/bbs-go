@@ -123,6 +123,10 @@ export default {
         this.message = '发表失败，请登录后重试'
         return
       }
+      if (!this.hasContent) {
+        this.message = '发表失败，请输入内容'
+        return
+      }
       try {
         const ret = await this.$axios.post('/api/topic/create', {
           type: 1,

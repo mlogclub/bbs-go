@@ -139,19 +139,56 @@
     }
   }
 
-  .topic-summary a {
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    color: #000;
+  .topic-summary {
+    a {
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 400;
+      color: #000;
 
-    margin-top: 5px;
-    overflow: hidden;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    display: -webkit-box;
+      margin-top: 5px;
+      overflow: hidden;
+      word-break: break-all;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+    }
+  }
+
+  .topic-images {
+    display: inline-block;
+    margin-top: 10px;
+
+    $topic-image-width: 120px; // 侧边栏之间的缝隙
+    li {
+      cursor: pointer;
+      border: 1px dashed #ddd;
+      text-align: center;
+
+      display: inline-block;
+      vertical-align: middle;
+      width: $topic-image-width;
+      height: $topic-image-width;
+      line-height: $topic-image-width;
+      margin: 0 8px 0 0;
+      background-color: #e8e8e8;
+      background-size: 32px 32px;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      position: relative;
+
+      .topic-image-item {
+        min-width: $topic-image-width;
+        min-height: $topic-image-width;
+        width: $topic-image-width;
+        height: $topic-image-width;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+      }
+    }
   }
 
   .topic-content {
@@ -213,15 +250,15 @@
 .topic-list {
   margin: 0 0 10px 0 !important;
 
-  li {
+  li.topic-item {
     padding: 8px 0 8px 8px;
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
 
-    &:hover {
-      background: #f3f6f9;
-    }
+    //&:hover {
+    //  background: #f3f6f9;
+    //}
 
     &:not(:last-child) {
       border-bottom: 1px solid #f2f2f2;
@@ -230,6 +267,7 @@
 
   .topic-header {
     .topic-header-center {
+      // 控制内容只显示一行，多余的折叠，暂时不需要先注释掉
       //.topic-title,
       //.topic-title a {
       //  word-break: break-all;

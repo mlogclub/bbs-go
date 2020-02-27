@@ -1,6 +1,10 @@
 <template>
   <ul class="topic-list topic-wrap">
-    <li v-for="(topic, index) in topics" :key="topic.topicId">
+    <li
+      v-for="(topic, index) in topics"
+      :key="topic.topicId"
+      class="topic-item"
+    >
       <!-- 信息流广告 -->
       <adsbygoogle
         v-if="showAd && (index === 3 || index === 10 || index === 18)"
@@ -78,13 +82,21 @@
             >
           </div>
         </div>
-        <!--
-            <div class="topic-summary" itemprop="description">
-              <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
-                topic.summary
-              }}</a>
-            </div>
-            -->
+        <ul
+          v-if="topic.imageList"
+          v-for="image in topic.imageList"
+          :key="image"
+          class="topic-images"
+        >
+          <li>
+            <div
+              :style="{
+                backgroundImage: 'url(' + image + ')'
+              }"
+              class="topic-image-item"
+            />
+          </li>
+        </ul>
       </article>
     </li>
   </ul>
