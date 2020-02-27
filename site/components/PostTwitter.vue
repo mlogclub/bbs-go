@@ -13,7 +13,7 @@
       <p class="words-number">{{ wordCount }}/{{ maxWordCount }}字</p>
       <div class="box-footer">
         <div class="bui-left">
-          <span class="action-btn">
+          <span @click="showUploader = !showUploader" class="action-btn">
             <i class="iconfont icon-image" />
             <span>图片</span>
           </span>
@@ -27,6 +27,29 @@
           <a :class="{ active: hasContent }" class="upload-publish">发布</a>
         </div>
       </div>
+
+      <div v-show="showUploader" class="uploader-popup">
+        <div class="imgUploadBox">
+          <p class="uploader-title">本地上传</p>
+          <p class="uploader-meta">
+            共 {{ imageCount }} 张，还能上传 {{ maxImageCount }} 张
+          </p>
+          <i
+            @click="showUploader = false"
+            class="close-popup iconfont icon-close"
+          />
+          <div class="upload-box">
+            <form style="display: none;">
+              <input type="file" accept="image/*" multiple="multiple" />
+            </form>
+            <ul class="upload-img-list">
+              <li class="upload-img-item upload-img-add">
+                <i class="iconfont icon-add" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +59,10 @@ export default {
   data() {
     return {
       content: '',
-      maxWordCount: 2000
+      images: [],
+      maxWordCount: 2000,
+      showUploader: false,
+      maxImageCount: 9
     }
   },
   computed: {
@@ -45,6 +71,9 @@ export default {
     },
     wordCount() {
       return this.content ? this.content.length : 0
+    },
+    imageCount() {
+      return this.images ? this.images.length : 0
     },
     user() {
       return this.$store.state.user.current
@@ -138,6 +167,7 @@ export default {
           vertical-align: middle;
           margin: 0 0 0 20px;
           cursor: pointer;
+          user-select: none;
 
           .iconfont {
             font-size: 20px;
@@ -170,6 +200,99 @@ export default {
 
           &.active {
             opacity: 1;
+          }
+        }
+      }
+    }
+
+    .uploader-popup {
+      position: absolute;
+      bottom: -245px;
+      left: -1px;
+      width: 420px;
+      height: 246px;
+      background-color: #fff;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.12);
+      border-radius: 5px;
+      z-index: 300;
+
+      &:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border: 6px solid transparent;
+        border-bottom-color: #fff;
+        position: absolute;
+        top: -12px;
+        left: 36px;
+      }
+
+      .imgUploadBox {
+        padding: 12px;
+
+        .uploader-title {
+          margin-bottom: 5px;
+          font-size: 14px;
+          color: #222;
+        }
+
+        .uploader-meta {
+          color: #999;
+          font-size: 14px;
+          margin-bottom: 10px;
+        }
+
+        .close-popup {
+          position: absolute;
+          top: 8px;
+          right: 6px;
+          color: #cacaca;
+          font-size: 18px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .upload-box {
+          padding: 0;
+          margin: 0;
+          box-sizing: border-box;
+          position: relative;
+          display: block;
+          zoom: 1;
+
+          .upload-img-list {
+            font-size: 0;
+            margin-right: -8px;
+
+            .upload-img-add {
+              background-color: #fff !important;
+              text-align: center;
+
+              i.icon-add {
+                font-size: 30px;
+                color: rgb(221, 221, 221);
+              }
+            }
+
+            .upload-img-item {
+              cursor: pointer;
+              border: 2px dashed #ddd;
+              line-height: 72px;
+              text-align: center;
+
+              display: inline-block;
+              vertical-align: middle;
+              width: 72px;
+              height: 72px;
+              margin: 0 8px 8px 0;
+              background-color: #e8e8e8;
+              background-size: 32px 32px;
+              background-position: 50%;
+              background-repeat: no-repeat;
+              overflow: hidden;
+              position: relative;
+            }
           }
         }
       }
