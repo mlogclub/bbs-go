@@ -139,26 +139,25 @@
     }
   }
 
-  .topic-summary {
-    a {
-      font-size: 13px;
-      font-style: normal;
-      font-weight: 400;
-      color: #000;
-
-      margin-top: 5px;
-      overflow: hidden;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-    }
-  }
+  //.topic-summary {
+  //  a {
+  //    font-size: 13px;
+  //    font-style: normal;
+  //    font-weight: 400;
+  //    color: #000;
+  //
+  //    margin-top: 5px;
+  //    overflow: hidden;
+  //    word-break: break-all;
+  //    text-overflow: ellipsis;
+  //    -webkit-line-clamp: 2;
+  //    -webkit-box-orient: vertical;
+  //    display: -webkit-box;
+  //  }
+  //}
 
   .topic-images {
-    display: inline-block;
-    margin-top: 10px;
+    margin-top: 8px;
 
     $topic-image-width: 120px; // 侧边栏之间的缝隙
     li {
@@ -171,7 +170,7 @@
       width: $topic-image-width;
       height: $topic-image-width;
       line-height: $topic-image-width;
-      margin: 0 8px 0 0;
+      margin: 0 8px 8px 0;
       background-color: #e8e8e8;
       background-size: 32px 32px;
       background-position: 50%;

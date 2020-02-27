@@ -115,6 +115,17 @@
                 itemprop="articleBody"
               ></div>
 
+              <ul v-if="topic.imageList" class="topic-images">
+                <li v-for="image in topic.imageList" :key="image">
+                  <div
+                    :style="{
+                      backgroundImage: 'url(' + image + ')'
+                    }"
+                    class="topic-image-item"
+                  />
+                </li>
+              </ul>
+
               <div class="topic-actions">
                 <div
                   :class="{ active: favorited }"
