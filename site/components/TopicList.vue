@@ -84,13 +84,12 @@
         </div>
         <ul v-if="topic.imageList" class="topic-images">
           <li v-for="image in topic.imageList" :key="image">
-            <a :href="'/topic/' + topic.topicId" :title="topic.title">
-              <div
-                :style="{
-                  backgroundImage: 'url(' + image + ')'
-                }"
-                class="topic-image-item"
-              />
+            <a
+              :href="'/topic/' + topic.topicId"
+              :title="topic.title"
+              class="topic-image-item"
+            >
+              <img v-lazy="image" />
             </a>
           </li>
         </ul>
