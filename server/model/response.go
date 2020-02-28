@@ -70,7 +70,7 @@ type TopicSimpleResponse struct {
 	Node            *NodeResponse  `json:"node"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
-	Summary         string         `json:"summary"`
+	ImageList       *[]string      `json:"imageList"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CommentCount    int64          `json:"commentCount"`

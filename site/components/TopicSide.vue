@@ -1,6 +1,6 @@
 <template>
   <div class="right-container">
-    <post-btns :current-node-id="currentNodeId" />
+    <!--<post-btns :current-node-id="currentNodeId" />-->
     <site-notice />
     <div v-if="scoreRank && scoreRank.length" class="widget">
       <div class="widget-header">积分排行</div>
@@ -61,11 +61,14 @@
 </template>
 
 <script>
-import PostBtns from '~/components/PostBtns'
+// import PostBtns from '~/components/PostBtns'
 import SiteNotice from '~/components/SiteNotice'
 
 export default {
-  components: { PostBtns, SiteNotice },
+  components: {
+    // PostBtns,
+    SiteNotice
+  },
   props: {
     currentNodeId: {
       type: Number,

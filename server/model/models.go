@@ -39,6 +39,9 @@ const (
 
 	ScoreTypeIncr = 0 // 积分+
 	ScoreTypeDecr = 1 // 积分-
+
+	TopicTypeNormal  = 0 // 普通帖子
+	TopicTypeTwitter = 1 // 推文
 )
 
 type User struct {
@@ -150,10 +153,12 @@ type TopicNode struct {
 // 话题节点
 type Topic struct {
 	Model
+	Type            int    `gorm:"not null;index:idx_topic_type" json:"type" form:"type"`                           // 类型
 	NodeId          int64  `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`                         // 节点编号
 	UserId          int64  `gorm:"not null;index:idx_topic_user_id;" json:"userId" form:"userId"`                   // 用户
 	Title           string `gorm:"size:128" json:"title" form:"title"`                                              // 标题
 	Content         string `gorm:"type:longtext" json:"content" form:"content"`                                     // 内容
+	ImageList       string `gorm:"type:longtext" json:"imageList" form:"imageList"`                                 // 图片
 	Recommend       bool   `gorm:"not null;index:idx_recommend" json:"recommend" form:"recommend"`                  // 是否推荐
 	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`                                      // 查看数量
 	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                                // 跟帖数量

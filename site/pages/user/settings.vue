@@ -523,8 +523,6 @@ export default {
     async reload() {
       this.user = await this.$axios.get('/api/user/current')
       this.form = { ...this.user }
-      debugger
-      console.log(this.form)
     }
   },
   head() {
