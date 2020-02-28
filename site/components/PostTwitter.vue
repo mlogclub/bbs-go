@@ -89,6 +89,7 @@ export default {
       content: '',
       images: [
         // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1'
+        // 'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
       maxWordCount: 2000,
@@ -121,6 +122,7 @@ export default {
         this.message = '发表失败，请输入内容'
         return
       }
+      this.showUploader = false // 关闭图片上传框
       try {
         const ret = await this.$axios.post('/api/topic/create', {
           type: 1,
