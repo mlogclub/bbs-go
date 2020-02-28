@@ -109,22 +109,16 @@
                 />
               </div>
 
-              <div
-                v-html="topic.content"
-                class="content topic-content"
-                itemprop="articleBody"
-              ></div>
+              <div class="content topic-content" itemprop="articleBody">
+                <div v-html="topic.content"></div>
 
-              <ul v-if="topic.imageList" class="topic-images">
-                <li v-for="image in topic.imageList" :key="image">
-                  <div
-                    :style="{
-                      backgroundImage: 'url(' + image + ')'
-                    }"
-                    class="topic-image-item"
-                  />
-                </li>
-              </ul>
+                <img
+                  v-if="topic.imageList"
+                  v-for="image in topic.imageList"
+                  :key="image"
+                  :src="image"
+                />
+              </div>
 
               <div class="topic-actions">
                 <div
