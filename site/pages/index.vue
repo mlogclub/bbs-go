@@ -42,8 +42,6 @@ export default {
   },
   methods: {
     twitterCreated(data) {
-      console.log('--------------------------------')
-      console.log(data)
       if (this.topicsPage) {
         if (this.topicsPage.results) {
           this.topicsPage.results.unshift(data)

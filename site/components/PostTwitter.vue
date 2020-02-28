@@ -19,10 +19,12 @@
             <i class="iconfont icon-image" />
             <span>图片</span>
           </span>
+          <!--
           <span class="action-btn">
             <i class="iconfont icon-emoji" />
             <span>表情</span>
           </span>
+          -->
         </div>
         <div class="bui-right">
           <span class="msg-tip">{{ message }}</span>
