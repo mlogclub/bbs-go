@@ -231,7 +231,7 @@
     margin-top: 8px;
     margin-left: 56px;
 
-    $topic-image-width: 120px; // 侧边栏之间的缝隙
+    $topic-image-size: 120px; // 侧边栏之间的缝隙
     li {
       cursor: pointer;
       border: 1px dashed #ddd;
@@ -239,9 +239,9 @@
 
       display: inline-block;
       vertical-align: middle;
-      width: $topic-image-width;
-      height: $topic-image-width;
-      line-height: $topic-image-width;
+      width: $topic-image-size;
+      height: $topic-image-size;
+      line-height: $topic-image-size;
       margin: 0 8px 8px 0;
       background-color: #e8e8e8;
       background-size: 32px 32px;
@@ -251,13 +251,37 @@
       position: relative;
 
       .topic-image-item {
-        min-width: $topic-image-width;
-        min-height: $topic-image-width;
-        width: $topic-image-width;
-        height: $topic-image-width;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        //min-width: $topic-image-width;
+        //min-height: $topic-image-width;
+        //width: $topic-image-width;
+        //height: $topic-image-width;
+        //background-repeat: no-repeat;
+        //background-size: cover;
+        //background-position: center;
+
+        //display: inline-block;
+        //max-width: 100%;
+        //height: auto;
+        //vertical-align: middle;
+        //transition: all .5s ease-out .1s;
+
+        display: block;
+        width: $topic-image-size;
+        height: $topic-image-size;
+        overflow: hidden;
+        transform-style: preserve-3d;
+
+        & > img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: all .5s ease-out .1s;
+
+          &:hover {
+            transform: matrix(1.04,0,0,1.04,0,0);
+            backface-visibility: hidden;
+          }
+        }
       }
     }
   }

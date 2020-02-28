@@ -110,13 +110,16 @@
               </div>
 
               <div class="content topic-content" itemprop="articleBody">
-                <div v-html="topic.content"></div>
+                <div
+                  v-html="topic.content"
+                  v-lazy-container="{ selector: 'img' }"
+                ></div>
 
                 <img
                   v-if="topic.imageList"
                   v-for="image in topic.imageList"
                   :key="image"
-                  :src="image"
+                  v-lazy="image"
                 />
               </div>
 

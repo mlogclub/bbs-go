@@ -25,7 +25,11 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div v-html="project.content" class="content"></div>
+          <div
+            v-lazy-container="{ selector: 'img' }"
+            v-html="project.content"
+            class="content"
+          ></div>
 
           <div class="footer">
             <a
