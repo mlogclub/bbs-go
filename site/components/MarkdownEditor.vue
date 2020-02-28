@@ -50,6 +50,7 @@ export default {
         'upload',
         'link',
         'table',
+        'wysiwyg',
         'both',
         'preview',
         'format',
@@ -142,12 +143,12 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@2.2.0/dist/index.css'
+          href: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.classic.css'
         }
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor@2.2.0/dist/index.min.js'
+          src: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.min.js'
         }
       ]
     }
