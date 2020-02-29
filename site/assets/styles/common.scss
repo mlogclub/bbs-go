@@ -203,11 +203,24 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   }
 }
 
+img[lazy=loading] {
+  background-color: #e8e8e8;
+}
+
+img[lazy=error] {
+  background-color: #e8e8e8;
+}
+
+img[lazy=loaded] {
+  /* your style here */
+}
+
 img.avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  background-color: #e8e8e8;
   transition: all .5s ease-out .1s;
 
   &.has-border {
