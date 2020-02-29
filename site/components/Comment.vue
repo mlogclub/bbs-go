@@ -103,9 +103,16 @@
                   {{ comment.quote.createTime | prettyDate }}
                 </span>
               </div>
-              <div v-html="comment.quote.content" itemprop="text" />
+              <div
+                v-html="comment.quote.content"
+                v-lazy-container="{ selector: 'img' }"
+                itemprop="text"
+              />
             </blockquote>
-            <p v-html="comment.content" />
+            <p
+              v-html="comment.content"
+              v-lazy-container="{ selector: 'img' }"
+            />
           </div>
         </li>
       </ul>
