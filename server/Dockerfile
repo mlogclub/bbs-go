@@ -2,12 +2,12 @@
 FROM golang:1.13-stretch AS builder
 
 # Install build dependencies
-RUN apt-get -qq update && \
-    apt-get -qq install -y --no-install-recommends \
-      build-essential \
-      git \
-      openssh-client \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get -qq update && \
+#    apt-get -qq install -y --no-install-recommends \
+#      build-essential \
+#      git \
+#      openssh-client \
+#    && rm -rf /var/lib/apt/lists/*
 
 # Update timezone
 ENV TZ=Asia/Shanghai
@@ -31,10 +31,10 @@ FROM debian:stretch-slim as application
 WORKDIR /app
 #COPY sources.list  /etc/apt/sources.list
 # Install runtime dependencies
-RUN apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends ca-certificates curl \
-    && apt-get -qq install -y host mysql-client\
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get -qq update \
+#    && apt-get -qq install -y --no-install-recommends ca-certificates curl \
+#    && apt-get -qq install -y host mysql-client\
+#    && rm -rf /var/lib/apt/lists/*
 
 # Update timezone
 ENV TZ=Asia/Shanghai
