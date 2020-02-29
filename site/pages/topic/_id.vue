@@ -15,12 +15,7 @@
                     :href="'/user/' + topic.user.id"
                     :title="topic.user.nickname"
                   >
-                    <div
-                      :style="{
-                        backgroundImage: 'url(' + topic.user.avatar + ')'
-                      }"
-                      class="avatar avatar-size-45 is-rounded"
-                    />
+                    <img v-lazy="topic.user.avatar" class="avatar size-45" />
                   </a>
                 </div>
                 <div class="topic-header-center">
@@ -146,9 +141,9 @@
                     target="_blank"
                   >
                     <img
-                      :src="user.avatar"
+                      v-lazy="user.avatar"
                       :alt="user.nickname"
-                      class="avatar small"
+                      class="avatar size-30"
                     />
                   </a>
                 </div>
@@ -178,7 +173,7 @@
             <div class="base-info">
               <a :href="'/user/' + topic.user.id" :alt="topic.user.nickname">
                 <img
-                  :src="topic.user.avatar"
+                  v-lazy="topic.user.avatar"
                   :alt="topic.user.nickname"
                   class="avatar"
                 />

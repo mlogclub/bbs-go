@@ -77,7 +77,7 @@
                 <div class="field">
                   <div class="control">
                     <img
-                      :src="user.avatar"
+                      v-lazy="user.avatar"
                       style="width: 150px;height:150px;"
                     />
                     <div class="file">

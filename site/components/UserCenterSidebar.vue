@@ -7,7 +7,7 @@
         {{ user.nickname }}
       </div>
       <div class="widget-content">
-        <img :src="user.avatar" class="img-avatar" />
+        <img v-lazy="user.avatar" class="img-avatar" />
         <div v-if="user.description" class="description">
           <p>{{ user.description }}</p>
         </div>

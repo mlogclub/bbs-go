@@ -65,10 +65,7 @@
             ad-layout-key="-ht-19-1m-3j+mu"
           />
           <div class="comment-avatar">
-            <div
-              :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
-              class="avatar has-border is-rounded"
-            />
+            <img v-lazy="comment.user.avatar" class="avatar" />
           </div>
           <div class="comment-meta">
             <span
@@ -97,11 +94,9 @@
           <div class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
-                <div
-                  :style="{
-                    backgroundImage: 'url(' + comment.quote.user.avatar + ')'
-                  }"
-                  class="quote-avatar avatar has-border is-rounded"
+                <img
+                  v-lazy="comment.quote.user.avatar"
+                  class="avatar size-20"
                 />
                 <a class="quote-nickname">{{ comment.quote.user.nickname }}</a>
                 <span class="quote-time">
@@ -382,12 +377,6 @@ export default {
 
         .comment-quote-user {
           display: flex;
-          .quote-avatar {
-            min-width: 20px;
-            min-height: 20px;
-            width: 20px;
-            height: 20px;
-          }
 
           .quote-nickname {
             line-height: 20px;

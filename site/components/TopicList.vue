@@ -16,10 +16,7 @@
         <div class="topic-header">
           <div class="topic-header-left">
             <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
-              <div
-                :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
-                class="avatar avatar-size-45 is-rounded"
-              />
+              <img v-lazy="topic.user.avatar" class="avatar" />
             </a>
           </div>
           <div class="topic-header-center">

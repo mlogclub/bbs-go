@@ -1,7 +1,7 @@
 html,
 body {
   font-family: '-apple-system', 'system-ui', 'Helvetica Neue', 'Luxi Sans',
-    'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti, sans-serif !important;
+  'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti, sans-serif !important;
   // background: #e5e5e5;
   // background: #f7f7f7;
   background: url(../images/bg.gif) repeat;
@@ -207,46 +207,36 @@ img.avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  object-fit: cover;
+  transition: all .5s ease-out .1s;
 
-  &.small {
+  &.has-border {
+    border: 1px solid #e8e8e8;
+  }
+
+  &:hover {
+    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+    backface-visibility: hidden;
+  }
+
+  &.size-20 {
+    width: 20px;
+    height: 20px;
+  }
+
+  &.size-30 {
     width: 30px;
     height: 30px;
   }
-}
 
-div.avatar {
-  min-width: 50px;
-  min-height: 50px;
-  width: 50px;
-  height: 50px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-
-  &.small-avatar {
-    min-width: 40px;
-    min-height: 40px;
+  &.size-40 {
     width: 40px;
     height: 40px;
   }
 
-  &.avatar-size-45 {
-    min-width: 45px;
-    min-height: 45px;
+  &.size-45 {
     width: 45px;
     height: 45px;
-  }
-
-  &.is-rounded {
-    border-radius: 50%;
-  }
-
-  &.radius8 {
-    border-radius: 8px;
-  }
-
-  &.has-border {
-    border: 1px solid #f5f5f5;
   }
 }
 

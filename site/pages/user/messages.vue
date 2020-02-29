@@ -32,12 +32,7 @@
                 class="message-item"
               >
                 <div class="message-item-left">
-                  <div
-                    :style="{
-                      backgroundImage: 'url(' + message.from.avatar + ')'
-                    }"
-                    class="avatar is-rounded has-border"
-                  />
+                  <img v-lazy="message.from.avatar" class="avatar" />
                 </div>
                 <div class="message-item-right">
                   <div class="message-item-meta">

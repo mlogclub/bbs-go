@@ -15,12 +15,7 @@
                   :title="article.user.nickname"
                   target="_blank"
                 >
-                  <div
-                    :style="{
-                      backgroundImage: 'url(' + article.user.avatar + ')'
-                    }"
-                    class="avatar is-rounded"
-                  />
+                  <img v-lazy="article.user.avatar" class="avatar" />
                 </a>
               </div>
               <div class="article-item-right">
