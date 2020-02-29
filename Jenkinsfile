@@ -25,9 +25,9 @@ podTemplate(cloud:'kubernetes',containers: [
                            sh 'docker push '+reg+'bbs-admin:'+sdf                           
                        }
                        stage('update deployment') { 
-                           sh 'kubectl set image deployment bbs-server bbs-server='+reg+'bbs-server:'+sdf+' -n xbc'
-                           sh 'kubectl set image deployment bbs-site bbs-site='+reg+'bbs-site:'+sdf+' -n xbc'
-                           sh 'kubectl set image deployment bbs-admin bbs-admin='+reg+'bbs-admin:'+sdf+' -n xbc'
+                           sh 'kubectl set image deployment bbs-server bbs-server='+reg+'bbs-server:'+sdf+' -n bbs'
+                           sh 'kubectl set image deployment bbs-site bbs-site='+reg+'bbs-site:'+sdf+' -n bbs'
+                           sh 'kubectl set image deployment bbs-admin bbs-admin='+reg+'bbs-admin:'+sdf+' -n bbs'
                        }
        }
       
