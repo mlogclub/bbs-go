@@ -83,8 +83,12 @@
             </div>
 
             <div class="ad">
-              <!-- 展示广告 -->
-              <adsbygoogle ad-slot="1742173616" />
+              <!-- 信息流广告 -->
+              <adsbygoogle
+                ad-slot="4980294904"
+                ad-format="fluid"
+                ad-layout-key="-ht-19-1m-3j+mu"
+              />
             </div>
 
             <div
