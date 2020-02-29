@@ -63,17 +63,17 @@
                 <div class="article-tool">
                   <span v-if="isOwner">
                     <a @click="deleteArticle(article.articleId)">
-                      <i class="iconfont icon-delete" />删除
+                      <i class="iconfont icon-delete" />&nbsp;删除
                     </a>
                   </span>
                   <span v-if="isOwner">
                     <a :href="'/article/edit/' + article.articleId">
-                      <i class="iconfont icon-edit" />修改
+                      <i class="iconfont icon-edit" />&nbsp;修改
                     </a>
                   </span>
                   <span>
                     <a @click="addFavorite(article.articleId)">
-                      <i class="iconfont icon-favorite" />{{
+                      <i class="iconfont icon-favorite" />&nbsp;{{
                         favorited ? '已收藏' : '收藏'
                       }}
                     </a>
@@ -95,6 +95,7 @@
             ></div>
           </div>
 
+          <!--
           <div class="article-footer">
             <ul>
               <li>
@@ -115,6 +116,7 @@
               </li>
             </ul>
           </div>
+          -->
 
           <div class="ad">
             <!-- 展示广告 -->
@@ -131,10 +133,8 @@
         </article>
       </div>
       <div class="right-container">
-        <div style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
 
         <div
           v-if="relatedArticles && relatedArticles.length"
@@ -156,10 +156,8 @@
           </div>
         </div>
 
-        <div style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
 
         <div
           v-if="newestArticles && newestArticles.length"
@@ -181,10 +179,8 @@
           </div>
         </div>
 
-        <div class="ad" style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
       </div>
     </div>
   </section>

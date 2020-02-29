@@ -222,9 +222,10 @@ img.avatar {
   object-fit: cover;
   background-color: #e8e8e8;
   transition: all .5s ease-out .1s;
+  border: 1px solid #e8e8e8;
 
-  &.has-border {
-    border: 1px solid #e8e8e8;
+  &.no-border {
+    border: none;
   }
 
   &:hover {
