@@ -120,7 +120,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://bbs-server.xbc.svc:8082'
+    '/api/': 'http://bbs-server.bbs.svc:8082'
     //'/api/': 'http://vipgz2.idcfengye.com:10071'
     // '/api/': 'https://mlog.club'
   },

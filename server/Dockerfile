@@ -43,7 +43,7 @@ ENV ROOT_DIR=/app
 COPY --from=builder /app/bbs-go-server .
 COPY --from=builder /app/bbs-go.yaml bbs-go.yaml
 
-EXPOSE 8080
+EXPOSE 8082
 
 HEALTHCHECK --start-period=10s \
             --interval=15s \
