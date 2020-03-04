@@ -104,7 +104,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 					Loc:        urls.TopicUrl(topic.Id),
 					Lastmod:    simple.TimeFromTimestamp(topic.LastCommentTime),
 					Changefreq: sitemap.ChangefreqDaily,
-					Priority:   "1.0",
+					Priority:   "0.8",
 				})
 			}
 		}
@@ -118,7 +118,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 					Loc:        urls.ArticleUrl(article.Id),
 					Lastmod:    simple.TimeFromTimestamp(article.UpdateTime),
 					Changefreq: sitemap.ChangefreqWeekly,
-					Priority:   "1.0",
+					Priority:   "0.6",
 				})
 			}
 		}
@@ -131,7 +131,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 				Loc:        urls.ProjectUrl(project.Id),
 				Lastmod:    simple.TimeFromTimestamp(project.CreateTime),
 				Changefreq: sitemap.ChangefreqMonthly,
-				Priority:   "1.0",
+				Priority:   "0.6",
 			})
 		}
 	})
