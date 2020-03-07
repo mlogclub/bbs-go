@@ -91,14 +91,25 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	password := simple.FormValue(c.Ctx, "password")
 	nickname := simple.FormValue(c.Ctx, "nickname")
 	email := simple.FormValue(c.Ctx, "email")
-	roles := simple.FormValueStringArray(c.Ctx, "roles")
 	status := simple.FormValueIntDefault(c.Ctx, "status", -1)
+
+	formValues := c.Ctx.FormValues()
+	var rolesKeys []string
+	for k := range formValues {
+		if strings.HasPrefix(k, "roles") {
+			rolesKeys = append(rolesKeys, k)
+		}
+	}
+	roles := make([]string, len(rolesKeys))
+	for i, v := range rolesKeys {
+		roles[i] = simple.FormValue(c.Ctx, v)
+	}
 
 	if len(username) > 0 {
 		t.Username = simple.SqlNullString(username)
 	}
 	if len(password) > 0 {
-		t.Password = simple.EncodePassword(t.Password)
+		t.Password = simple.EncodePassword(password)
 	}
 	if len(nickname) > 0 {
 		t.Nickname = nickname
