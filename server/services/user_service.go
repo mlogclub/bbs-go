@@ -385,8 +385,8 @@ func (s *userService) IncrCommentCount(userId int64) int {
 func (s *userService) SyncUserCount() {
 	s.Scan(func(users []model.User) {
 		for _, user := range users {
-			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id))
-			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id))
+			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
+			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
 			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "topic_count", topicCount)
 			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "comment_count", commentCount)
 			cache.UserCache.Invalidate(user.Id)
