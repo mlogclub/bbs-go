@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column prop="logo" label="Logo" width="60">
         <template slot-scope="scope">
-          <img v-if="scope.row.log" :src="scope.row.logo" class="link-logo" />
+          <img v-if="scope.row.logo" :src="scope.row.logo" class="link-logo" />
           <img v-else src="~/assets/images/net.png" class="link-logo" />
         </template>
       </el-table-column>
