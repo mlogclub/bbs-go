@@ -50,20 +50,20 @@
       </el-table-column>
       <el-table-column prop="summary" label="描述"></el-table-column>
       <el-table-column prop="status" label="状态" width="50">
-        <template slot-scope="scope">{{
-          scope.row.status === 0 ? '正常' : '删除'
-        }}</template>
+        <template slot-scope="scope"
+          >{{ scope.row.status === 0 ? '正常' : '删除' }}
+        </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{
-          scope.row.createTime | formatDate
-        }}</template>
+        <template slot-scope="scope"
+          >{{ scope.row.createTime | formatDate }}
+        </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
-            >编辑</el-button
-          >
+            >编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,8 +115,8 @@
           @click.native="addSubmit"
           :loading="addLoading"
           type="primary"
-          >提交</el-button
-        >
+          >提交
+        </el-button>
       </div>
     </el-dialog>
 
@@ -160,8 +160,8 @@
           @click.native="editSubmit"
           :loading="editLoading"
           type="primary"
-          >提交</el-button
-        >
+          >提交
+        </el-button>
       </div>
     </el-dialog>
   </section>
