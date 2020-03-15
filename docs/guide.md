@@ -122,7 +122,7 @@ BaiduAi:
 
 ## 快速启动
 
-`bbs-go`总用有两个模块：server、site，接下来我们一步步的启动这三个模块。
+`bbs-go`总用有两个模块：server、site，接下来我们一步步的启动这二个模块。
 
 ### server模块启动
 
