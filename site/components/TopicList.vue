@@ -79,7 +79,10 @@
             >
           </div>
         </div>
-        <ul v-if="topic.imageList" class="topic-images">
+        <ul
+          v-if="topic.imageList && topic.imageList.length > 0"
+          class="topic-images"
+        >
           <li v-for="image in topic.imageList" :key="image">
             <a
               :href="'/topic/' + topic.topicId"

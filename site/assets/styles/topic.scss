@@ -9,13 +9,13 @@
     }
 
     .topic-header-left {
-      min-width: 48px;
-      min-height: 48px;
+      width: 50px;
+      height: 50px;
     }
 
     .topic-header-center {
       width: 100%;
-      margin-left: 8px;
+      margin-left: 10px;
 
       .topic-title,
       .topic-title a {
@@ -30,7 +30,7 @@
         font-size: 12px;
         line-height: 24px;
         color: #70727c;
-        margin-top: 3px;
+        margin-top: 5px;
 
         span.meta-item {
           font-size: 12px;
@@ -225,7 +225,7 @@
 
   .topic-images {
     margin-top: 8px;
-    margin-left: 56px;
+    margin-left: 60px;
 
     $topic-image-size: 120px; // 侧边栏之间的缝隙
     li {
