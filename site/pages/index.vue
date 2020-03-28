@@ -3,6 +3,7 @@
     <div class="container main-container is-white left-main">
       <div class="left-container">
         <topics-nav :nodes="nodes" />
+        <post-twitter @created="twitterCreated" />
         <topic-list :topics="topicsPage.results" :show-ad="true" />
         <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
       </div>
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import PostTwitter from '~/components/PostTwitter'
 import TopicSide from '~/components/TopicSide'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
@@ -19,6 +21,7 @@ import Pagination from '~/components/Pagination'
 
 export default {
   components: {
+    PostTwitter,
     TopicSide,
     TopicsNav,
     TopicList,
@@ -37,7 +40,17 @@ export default {
       console.error(e)
     }
   },
-  methods: {},
+  methods: {
+    twitterCreated(data) {
+      if (this.topicsPage) {
+        if (this.topicsPage.results) {
+          this.topicsPage.results.unshift(data)
+        } else {
+          this.topicsPage.results = [data]
+        }
+      }
+    }
+  },
   head() {
     return {
       meta: [
