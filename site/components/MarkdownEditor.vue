@@ -115,9 +115,7 @@ export default {
         }
       }
       this.vditor = new window.Vditor(me.editorId, options)
-      if (this.value) {
-        this.vditor.setValue(this.value)
-      }
+      this.vditor.setValue(this.value)
     },
     /**
      * 清空编辑器内容
