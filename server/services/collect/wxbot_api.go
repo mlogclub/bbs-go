@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"bbs-go/common/oss"
+	"bbs-go/common/uploader"
 	"bbs-go/services"
 
 	"github.com/mlogclub/simple"
@@ -43,7 +43,7 @@ func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
 		_ = services.UserService.Update(user)
 		return user.Id, nil
 	} else {
-		avatar, err := oss.CopyImage(article.OriHead)
+		avatar, err := uploader.CopyImage(article.OriHead)
 		if err != nil {
 			return 0, err
 		}

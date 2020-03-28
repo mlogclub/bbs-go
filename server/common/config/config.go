@@ -32,13 +32,20 @@ type Config struct {
 	} `yaml:"QQConnect"`
 
 	// 阿里云oss配置
-	AliyunOss struct {
-		Host         string `yaml:"Host"`
-		Bucket       string `yaml:"Bucket"`
-		Endpoint     string `yaml:"Endpoint"`
-		AccessId     string `yaml:"AccessId"`
-		AccessSecret string `yaml:"AccessSecret"`
-	} `yaml:"AliyunOss"`
+	Uploader struct {
+		Enable string `yaml:"Enable"`
+		Oss    struct {
+			Host         string `yaml:"Host"`
+			Bucket       string `yaml:"Bucket"`
+			Endpoint     string `yaml:"Endpoint"`
+			AccessId     string `yaml:"AccessId"`
+			AccessSecret string `yaml:"AccessSecret"`
+		} `yaml:"Oss"`
+		Local struct {
+			Host string `yaml:"Host"`
+			Path string `yaml:"Path"`
+		} `yaml:"Local"`
+	} `yaml:"Uploader"`
 
 	// 百度ai
 	BaiduAi struct {

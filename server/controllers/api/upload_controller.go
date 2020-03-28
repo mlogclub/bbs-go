@@ -7,7 +7,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/oss"
+	"bbs-go/common/uploader"
 	"bbs-go/services"
 )
 
@@ -40,7 +40,7 @@ func (c *UploadController) Post() *simple.JsonResult {
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
-	url, err := oss.PutImage(fileBytes)
+	url, err := uploader.PutImage(fileBytes)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -88,7 +88,7 @@ func (c *UploadController) PostEditor() {
 			errFiles = append(errFiles, file.Filename)
 			continue
 		}
-		url, err := oss.PutImage(fileBytes)
+		url, err := uploader.PutImage(fileBytes)
 		if err != nil {
 			logrus.Error(err)
 			errFiles = append(errFiles, file.Filename)
@@ -140,7 +140,7 @@ func (c *UploadController) PostFetch() {
 	}
 
 	url := data["url"]
-	output, err := oss.CopyImage(url)
+	output, err := uploader.CopyImage(url)
 	if err != nil {
 		_, _ = c.Ctx.JSON(iris.Map{
 			"msg":  err.Error(),

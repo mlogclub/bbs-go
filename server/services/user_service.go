@@ -12,7 +12,7 @@ import (
 
 	"bbs-go/common"
 	"bbs-go/common/avatar"
-	"bbs-go/common/oss"
+	"bbs-go/common/uploader"
 	"bbs-go/services/cache"
 
 	"bbs-go/model"
@@ -263,14 +263,14 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 // thirdAvatar: 第三方登录带过来的头像
 func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
 	if len(thirdAvatar) > 0 {
-		return oss.CopyImage(thirdAvatar)
+		return uploader.CopyImage(thirdAvatar)
 	}
 
 	avatarBytes, err := avatar.Generate(userId)
 	if err != nil {
 		return "", err
 	}
-	return oss.PutImage(avatarBytes)
+	return uploader.PutImage(avatarBytes)
 }
 
 // isEmailExists 邮箱是否存在

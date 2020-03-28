@@ -50,7 +50,7 @@ func InitIris() {
 	})
 
 	app.Any("/", func(i iris.Context) {
-		_, _ = i.HTML("<h1>bbs-go</h1>")
+		_, _ = i.HTML("<h1>Powered by bbs-go</h1>")
 	})
 
 	// api
