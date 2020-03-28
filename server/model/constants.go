@@ -10,6 +10,7 @@ const (
 	SysConfigRecommendTags    = "recommendTags"    // 推荐标签
 	SysConfigUrlRedirect      = "urlRedirect"      // 是否开启链接跳转
 	SysConfigScoreConfig      = "scoreConfig"      // 分数配置
+	SysConfigDefaultNodeId    = "defaultNodeId"    // 发帖默认节点
 )
 
 // 图片样式

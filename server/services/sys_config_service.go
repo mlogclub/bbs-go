@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -123,6 +124,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		recommendTags    = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
 		urlRedirect      = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
 		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
+		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
 	)
 
 	var siteKeywordsArr []string
@@ -145,6 +147,8 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		logrus.Warn("积分配置错误", err)
 	}
 
+	var defaultNodeId, _ = strconv.ParseInt(defaultNodeIdStr, 10, 64)
+
 	return &model.ConfigData{
 		SiteTitle:        siteTitle,
 		SiteDescription:  siteDescription,
@@ -154,5 +158,6 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		RecommendTags:    recommendTagsArr,
 		UrlRedirect:      strings.ToLower(urlRedirect) == "true",
 		ScoreConfig:      scoreConfig,
+		DefaultNodeId:    defaultNodeId,
 	}
 }

@@ -54,6 +54,22 @@
               ></el-select>
             </el-form-item>
 
+            <el-form-item label="默认节点">
+              <el-select
+                v-model="config.defaultNodeId"
+                style="width:100%"
+                placeholder="发帖默认节点"
+              >
+                <el-option
+                  v-for="node in nodes"
+                  :key="node.id"
+                  :label="node.name"
+                  :value="node.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item label="站外链接跳转页面">
               <el-tooltip
                 content="在跳转前需手动确认是否前往该站外链接"
@@ -168,7 +184,8 @@ export default {
       config: {},
       loading: false,
       autocompleteTags: [],
-      autocompleteTagLoading: false
+      autocompleteTagLoading: false,
+      nodes: []
     }
   },
   mounted() {
@@ -179,6 +196,7 @@ export default {
       this.loading = true
       try {
         this.config = await this.$axios.get('/api/admin/sys-config/all')
+        this.nodes = await this.$axios.get('/api/admin/topic-node/nodes')
       } catch (err) {
         this.$notify.error({ title: '错误', message: err.message })
       } finally {

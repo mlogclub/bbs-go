@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="nav"
-    class="navbar is-white"
+    class="navbar is-danger"
     role="navigation"
     aria-label="main navigation"
   >
@@ -33,6 +33,7 @@
         </div>
 
         <div class="navbar-end">
+          <!--
           <div class="navbar-item searchFormDiv">
             <form
               id="searchForm"
@@ -54,6 +55,7 @@
               </div>
             </form>
           </div>
+          -->
 
           <msg-notice />
 
@@ -147,8 +149,8 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  opacity: 0.99;
-  border-bottom: 1px solid #e7edf3;
+  /*opacity: 0.99;*/
+  /*border-bottom: 1px solid #e7edf3;*/
 
   .navbar-item {
     font-weight: 700;

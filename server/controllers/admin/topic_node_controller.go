@@ -62,3 +62,8 @@ func (c *TopicNodeController) PostUpdate() *simple.JsonResult {
 	}
 	return simple.JsonData(t)
 }
+
+func (c *TopicNodeController) GetNodes() *simple.JsonResult {
+	list := services.TopicNodeService.GetNodes()
+	return simple.JsonData(list)
+}

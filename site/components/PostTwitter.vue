@@ -125,7 +125,7 @@ export default {
       this.showUploader = false // 关闭图片上传框
       try {
         const ret = await this.$axios.post('/api/topic/create', {
-          type: 1,
+          type: 1, // 1表示推文
           nodeId: this.nodeId,
           title: this.content,
           imageList: JSON.stringify(this.images)
@@ -182,7 +182,7 @@ export default {
   position: relative;
   border: 1px solid #e8e8e8;
   width: 100%;
-  margin: 10px 0;
+  margin: 5px 0;
 
   .tab-list {
     height: 44px;
