@@ -110,12 +110,13 @@
                   v-lazy-container="{ selector: 'img' }"
                 ></div>
 
-                <img
+                <figure
                   v-if="topic.imageList"
                   v-for="image in topic.imageList"
                   :key="image"
-                  v-lazy="image"
-                />
+                >
+                  <img v-lazy="image" />
+                </figure>
               </div>
 
               <div class="topic-actions">
