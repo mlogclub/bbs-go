@@ -161,7 +161,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle('发表话题')
+      title: this.$siteTitle('修改话题')
     }
   }
 }
