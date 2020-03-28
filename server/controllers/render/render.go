@@ -552,7 +552,7 @@ func BuildHtmlContent(htmlContent string) string {
 		selection.RemoveAttr("src")
 	})
 
-	html, err := doc.Html()
+	html, err := doc.Find("body").Html()
 	if err != nil {
 		return htmlContent
 	}
