@@ -216,8 +216,8 @@ img[lazy=loaded] {
 }
 
 img.avatar {
-  width: 50px;
-  height: 50px;
+  max-width: 50px;
+  max-height: 50px;
   min-width: 50px;
   min-height: 50px;
   border-radius: 50%;
@@ -240,21 +240,29 @@ img.avatar {
   }
 
   &.size-20 {
+    max-width: 20px;
+    max-height: 20px;
     min-width: 20px;
     min-height: 20px;
   }
 
   &.size-30 {
+    max-width: 30px;
+    max-height: 30px;
     min-width: 30px;
     min-height: 30px;
   }
 
   &.size-40 {
+    max-width: 40px;
+    max-height: 40px;
     min-width: 40px;
     min-height: 40px;
   }
 
   &.size-45 {
+    max-width: 45px;
+    max-height: 45px;
     min-width: 45px;
     min-height: 45px;
   }
