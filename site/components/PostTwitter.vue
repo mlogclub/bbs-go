@@ -5,9 +5,10 @@
     </ul>
     <div class="twitter-box">
       <textarea
-        v-paste="handleParse"
         v-model="content"
         @input="onInput"
+        @paste="handleParse"
+        @drop="handleDrag"
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
         placeholder="有什么新鲜事想告诉大家"
@@ -171,11 +172,35 @@ export default {
 
       this.upload(file) // 上传
     },
+    handleDrag(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const files = []
+      const items = e.dataTransfer.items
+      if (items && items.length) {
+        if (items && items.length) {
+          for (let i = 0; i < items.length; i++) {
+            if (items[i].type.includes('image')) {
+              files.push(items[i].getAsFile())
+            }
+          }
+        }
+      }
+
+      if (files && files.length) {
+        this.showUploader = true // 展开上传面板
+        this.uploadFiles(files)
+      }
+    },
     async handleImageUploadChange(ev) {
       const files = ev.target.files
       if (!files) return
 
       await this.uploadFiles(files)
+
+      // 清理文件输入框
+      this.$refs.imageInput.value = null
     },
     async uploadFiles(files) {
       if (files.length === 0) {
@@ -190,9 +215,6 @@ export default {
       for (let i = 0; i < files.length; i++) {
         await this.upload(files[i])
       }
-
-      // 清理文件输入框
-      this.$refs.imageInput.value = null
     },
     async upload(file) {
       try {
