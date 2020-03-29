@@ -160,13 +160,14 @@ export default {
       for (let i = 0; i < files.length; i++) {
         await this.upload(files[i])
       }
+
+      // 清理文件输入框
+      this.$refs.imageInput.value = null
     },
     async upload(file) {
-      this.$refs.imageInput.value = null
-      const formData = new FormData()
-      formData.append('image', file, file.name)
-
       try {
+        const formData = new FormData()
+        formData.append('image', file, file.name)
         const ret = await this.$axios.post('/api/upload', formData)
         this.images.push(ret.url)
       } catch (e) {
