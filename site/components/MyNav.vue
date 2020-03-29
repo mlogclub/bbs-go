@@ -1,10 +1,5 @@
 <template>
-  <nav
-    ref="nav"
-    class="navbar is-black"
-    role="navigation"
-    aria-label="main navigation"
-  >
+  <nav ref="nav" class="navbar" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">

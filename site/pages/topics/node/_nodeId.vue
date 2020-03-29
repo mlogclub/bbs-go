@@ -1,14 +1,18 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
-        <post-twitter @created="twitterCreated" :node-id="node.nodeId" />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
-        <pagination
-          :page="topicsPage.page"
-          :url-prefix="'/topics/node/' + node.nodeId + '?p='"
-        />
+        <div class="main-content" style="padding: 0;">
+          <post-twitter @created="twitterCreated" :node-id="node.nodeId" />
+        </div>
+        <div class="main-content">
+          <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
+          <topic-list :topics="topicsPage.results" :show-ad="true" />
+          <pagination
+            :page="topicsPage.page"
+            :url-prefix="'/topics/node/' + node.nodeId + '?p='"
+          />
+        </div>
       </div>
       <topic-side
         :current-node-id="node.nodeId"

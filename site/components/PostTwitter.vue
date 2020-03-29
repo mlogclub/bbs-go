@@ -180,9 +180,9 @@ export default {
 <style lang="scss" scoped>
 .post-twitter-box {
   position: relative;
-  border: 1px solid #e8e8e8;
+  /*border: 1px solid #e8e8e8;*/
   width: 100%;
-  margin: 5px 0;
+  /*margin: 5px 0;*/
 
   .tab-list {
     height: 44px;
@@ -218,7 +218,7 @@ export default {
       display: block;
       font-size: 14px;
       line-height: 1.4;
-      padding: 13px 19px;
+      padding: 10px;
       border: 0;
       outline: 0;
       resize: none;
