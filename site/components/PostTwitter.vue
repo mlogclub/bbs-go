@@ -1,7 +1,9 @@
 <template>
   <div class="post-twitter-box">
     <ul class="tab-list">
-      <li class="tab-item current">发表推文</li>
+      <li class="tab-item current">
+        <div class="tab-name">发表推文</div>
+      </li>
     </ul>
     <div class="twitter-box">
       <textarea
@@ -244,7 +246,7 @@ export default {
   /*margin: 5px 0;*/
 
   .tab-list {
-    height: 44px;
+    height: 36px;
     border-bottom: 1px solid #e8e8e8;
     display: block;
     zoom: 1;
@@ -253,10 +255,15 @@ export default {
       margin-left: 19px;
       font-size: 15px;
       color: #222;
-      line-height: 42px;
+      line-height: 34px;
       border-bottom: 2px solid transparent;
       cursor: pointer;
       float: left;
+
+      .tab-name {
+        padding: 0 3px;
+        text-align: center;
+      }
 
       &.current {
         border-bottom-color: #ed4040;
@@ -303,7 +310,7 @@ export default {
 
     .box-footer {
       border-top: 1px solid #e8e8e8;
-      height: 40px;
+      height: 36px;
       display: block;
       zoom: 1;
 
@@ -314,7 +321,7 @@ export default {
         .action-btn {
           color: #222;
           font-size: 14px;
-          line-height: 39px;
+          line-height: 32px;
           display: inline-block;
           vertical-align: middle;
           margin: 0 0 0 20px;
@@ -344,9 +351,10 @@ export default {
         .upload-publish {
           display: inline-block;
           width: 120px;
-          line-height: 40px;
+          line-height: 36px;
           text-align: center;
           font-size: 14px;
+          font-weight: 700;
           background-color: #ed4040;
           color: #fff;
           opacity: 0.6;
