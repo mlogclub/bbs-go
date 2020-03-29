@@ -5,6 +5,7 @@
     </ul>
     <div class="twitter-box">
       <textarea
+        v-paste="handleParse"
         v-model="content"
         @input="onInput"
         @keydown.ctrl.enter="doSubmit"
@@ -58,7 +59,7 @@
               />
             </form>
             <ul class="upload-img-list">
-              <li v-for="image in images" :key="image" class="upload-img-item">
+              <li v-for="(image, i) in images" :key="i" class="upload-img-item">
                 <img :src="image" />
                 <i
                   @click="removeImg(image)"
@@ -144,6 +145,31 @@ export default {
     },
     handleImageUploadClick() {
       this.$refs.imageInput.click()
+    },
+    handleParse(e) {
+      const items = e.clipboardData && e.clipboardData.items
+      let file = null
+      if (items && items.length) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.includes('image')) {
+            file = items[i].getAsFile()
+          }
+        }
+      }
+
+      if (!file) {
+        return
+      }
+
+      this.showUploader = true // 展开上传面板
+      e.preventDefault() // 阻止默认行为即不让剪贴板内容在div中显示出来
+
+      if (this.imageCount + 1 > this.maxImageCount) {
+        this.message = '图片数量超过上限'
+        return
+      }
+
+      this.upload(file) // 上传
     },
     async handleImageUploadChange(ev) {
       const files = ev.target.files
