@@ -60,6 +60,10 @@
             <ul class="upload-img-list">
               <li v-for="image in images" :key="image" class="upload-img-item">
                 <img :src="image" />
+                <i
+                  @click="removeImg(image)"
+                  class="iconfont icon-close remove"
+                />
               </li>
               <li
                 v-if="imageCount < maxImageCount"
@@ -88,8 +92,8 @@ export default {
     return {
       content: '',
       images: [
-        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1'
-        // 'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
+        'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
       maxWordCount: 128,
@@ -172,6 +176,12 @@ export default {
         this.images.push(ret.url)
       } catch (e) {
         this.message = e.message || e
+      }
+    },
+    removeImg(img) {
+      const index = this.images.indexOf(img)
+      if (index !== -1) {
+        this.images.splice(index, 1)
       }
     }
   }
@@ -388,6 +398,23 @@ export default {
               background-repeat: no-repeat;
               overflow: hidden;
               position: relative;
+
+              &:hover {
+                i.remove {
+                  font-size: 14px;
+                  font-weight: 700;
+                  color: #fff;
+                  position: absolute;
+                  top: 3px;
+                  right: 3px;
+                  width: 16px;
+                  height: 16px;
+                  line-height: 16px;
+                  text-align: center;
+                  background-color: #ed4040;
+                  border-radius: 50%;
+                }
+              }
             }
           }
         }
