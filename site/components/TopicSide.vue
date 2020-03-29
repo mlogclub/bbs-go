@@ -1,9 +1,10 @@
 <template>
   <div class="right-container">
-    <!--<post-btns :current-node-id="currentNodeId" />-->
     <site-notice />
     <div v-if="scoreRank && scoreRank.length" class="widget">
-      <div class="widget-header">积分排行</div>
+      <div class="widget-header">
+        <span class="widget-title">积分排行</span>
+      </div>
       <div class="widget-content">
         <ul class="score-rank">
           <li v-for="user in scoreRank" :key="user.id">
@@ -61,12 +62,10 @@
 </template>
 
 <script>
-// import PostBtns from '~/components/PostBtns'
 import SiteNotice from '~/components/SiteNotice'
 
 export default {
   components: {
-    // PostBtns,
     SiteNotice
   },
   props: {
@@ -95,7 +94,7 @@ export default {
   li {
     display: flex;
     list-style: none;
-    margin: 8px;
+    margin: 8px 0;
     font-size: 13px;
     position: relative;
 

@@ -1,10 +1,10 @@
 html,
 body {
-  font-family: '-apple-system', 'system-ui', 'Helvetica Neue', 'Luxi Sans',
-  'DejaVu Sans', Tahoma, 'Hiragino Sans GB', STHeiti, sans-serif !important;
+  font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
   // background: #e5e5e5;
   // background: #f7f7f7;
   background: url(../images/bg.gif) repeat;
+  color: #222831;
 }
 
 .column {
@@ -153,8 +153,9 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
 
 .widget {
   background: #fff;
-  padding: 0 6px;
+  padding: 0 12px;
   margin-top: 10px;
+  border-radius: calc(.25rem - 1px);
 
   &:first-child {
     margin: 0;
@@ -169,11 +170,11 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   }
 
   & > .widget-header {
-    // padding-bottom: 8px;
     padding: 8px 0;
     font-size: 16px;
-    font-weight: bold;
-    border-bottom: 1px dashed #ddd;
+    //font-weight: bold;
+    //border-bottom: 1px dashed #ddd;
+    border-bottom: 1px solid #f1f1f1;
 
     .slot {
       float: right;
@@ -186,9 +187,6 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   }
 
   & > .widget-content {
-    // background-color: #fff;
-    // font-size: 12px;
-    // margin-top: 8px;
     padding: 8px 0;
     word-break: break-all;
   }

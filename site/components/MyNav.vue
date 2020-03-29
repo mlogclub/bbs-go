@@ -1,5 +1,10 @@
 <template>
-  <nav ref="nav" class="navbar" role="navigation" aria-label="main navigation">
+  <nav
+    ref="nav"
+    class="navbar has-shadow"
+    role="navigation"
+    aria-label="main navigation"
+  >
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
@@ -51,6 +56,12 @@
             </form>
           </div>
           -->
+
+          <div class="navbar-item dropdown is-hoverable is-right">
+            <a href="/topic/create" title="发表话题" class="publish">
+              <i class="iconfont icon-publish"></i>
+            </a>
+          </div>
 
           <msg-notice />
 
@@ -149,6 +160,13 @@ export default {
 
   .navbar-item {
     font-weight: 700;
+  }
+
+  .publish {
+    color: #448ef6;
+    &:hover {
+      color: #222;
+    }
   }
 }
 
