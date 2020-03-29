@@ -211,6 +211,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp := &model.TopicResponse{}
 
 	rsp.TopicId = topic.Id
+	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -248,6 +249,7 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp := &model.TopicSimpleResponse{}
 
 	rsp.TopicId = topic.Id
+	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime

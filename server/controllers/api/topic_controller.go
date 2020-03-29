@@ -95,6 +95,9 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	if topic.UserId != user.Id {
 		return simple.JsonErrorMsg("无权限")
 	}
+	if topic.Type == model.TopicTypeTwitter {
+		return simple.JsonErrorMsg("推文类型话题不允许修改")
+	}
 
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
