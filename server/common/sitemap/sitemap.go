@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"bbs-go/common/uploader"
 	"fmt"
 	"net/http"
 	"strconv"
