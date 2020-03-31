@@ -21,7 +21,7 @@ func newTagCache() *tagCache {
 	return &tagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.TagRepository.Get(simple.DB(), Key2Int64(key))
+				value = repositories.TagRepository.Get(simple.DB(), key2Int64(key))
 				return
 			},
 			cache.WithMaximumSize(1000),

@@ -4,20 +4,20 @@
       <div class="left-container">
         <div class="tabs">
           <ul>
-            <li :class="{ 'is-active': activeTab === 'articles' }">
-              <a :href="'/user/' + user.id + '?tab=articles'">
-                <span class="icon is-small">
-                  <i class="iconfont icon-article" aria-hidden="true" />
-                </span>
-                <span>文章</span>
-              </a>
-            </li>
             <li :class="{ 'is-active': activeTab === 'topics' }">
               <a :href="'/user/' + user.id + '?tab=topics'">
                 <span class="icon is-small">
                   <i class="iconfont icon-topic" aria-hidden="true" />
                 </span>
                 <span>话题</span>
+              </a>
+            </li>
+            <li :class="{ 'is-active': activeTab === 'articles' }">
+              <a :href="'/user/' + user.id + '?tab=articles'">
+                <span class="icon is-small">
+                  <i class="iconfont icon-article" aria-hidden="true" />
+                </span>
+                <span>文章</span>
               </a>
             </li>
           </ul>
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="user" :current-user="currentUser" />
+      <user-center-sidebar :user="user" />
     </div>
   </section>
 </template>
@@ -57,7 +57,7 @@ import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 
-const defaultTab = 'articles'
+const defaultTab = 'topics'
 
 export default {
   components: {
@@ -76,7 +76,6 @@ export default {
       })
       return
     }
-    const currentUser = await $axios.get('/api/user/current')
 
     const activeTab = query.tab || defaultTab
     let recentTopics = null
@@ -92,7 +91,6 @@ export default {
     }
     return {
       activeTab,
-      currentUser,
       user,
       recentTopics,
       recentArticles
@@ -102,11 +100,12 @@ export default {
     return {}
   },
   computed: {
-    // 是否是主人态
+    currentUser() {
+      return this.$store.state.user.current
+    },
     isOwner() {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     }
   },
   head() {

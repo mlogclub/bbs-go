@@ -1,42 +1,58 @@
 <template>
   <section class="main">
-    <top-notice />
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" />
-        <topic-list :topics="topicsPage.results" :show-ad="false" />
-        <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+        <div class="main-content" style="padding: 0;">
+          <post-twitter @created="twitterCreated" />
+        </div>
+        <div class="main-content">
+          <topics-nav :nodes="nodes" />
+          <topic-list :topics="topicsPage.results" :show-ad="true" />
+          <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+        </div>
       </div>
-      <topic-side :nodes="nodes" />
+      <topic-side :score-rank="scoreRank" :links="links" />
     </div>
   </section>
 </template>
 
 <script>
+import PostTwitter from '~/components/PostTwitter'
 import TopicSide from '~/components/TopicSide'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
-import TopNotice from '~/components/TopNotice'
 
 export default {
   components: {
+    PostTwitter,
     TopicSide,
     TopicsNav,
     TopicList,
-    Pagination,
-    TopNotice
+    Pagination
   },
   async asyncData({ $axios, params }) {
     try {
-      const [user, nodes, topicsPage] = await Promise.all([
-        $axios.get('/api/user/current'),
+      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
         $axios.get('/api/topic/nodes'),
-        $axios.get('/api/topic/topics')
+        $axios.get('/api/topic/topics'),
+        $axios.get('/api/user/score/rank'),
+        $axios.get('/api/link/toplinks')
       ])
-      return { user, nodes, topicsPage }
+      return { nodes, topicsPage, scoreRank, links }
     } catch (e) {
       console.error(e)
+    }
+  },
+  methods: {
+    twitterCreated(data) {
+      if (this.topicsPage) {
+        if (this.topicsPage.results) {
+          this.topicsPage.results.unshift(data)
+        } else {
+          this.topicsPage.results = [data]
+        }
+      }
     }
   },
   head() {

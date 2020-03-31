@@ -53,19 +53,15 @@ git clone https://github.com/mlogclub/mlog.git
 
 ## 项目结构
 
-bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。bbs-go包含三个模块：server、site、admin，三个模块的介绍如下：
+bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。bbs-go包含三个模块：server、site，两个模块的介绍如下：
 
 ### server模块
 
-`server`模块基于Go语言开发，他为整个项目提供接口数据支撑。`site`和`admin`模块的数据都是从该模块获取的。
+`server`模块基于Go语言开发，他为整个项目提供接口数据支撑。`site`模块的数据都是从该模块获取的。
 
 ### site模块
 
 `site`模块使用`nuxt.js`进行搭建，该模块是bbs-go的用户前端网页。`nuxt.js`相关知识可以去它的官网查看：[https://nuxtjs.org](https://nuxtjs.org)
-
-### admin模块
-
-`admin`模块是`bbs-go`的管理后台，他基于`element-ui`搭建，`element-ui`相关知识可以去它的官网查看：[https://element.eleme.cn](https://element.eleme.cn/)
 
 ## 配置详解
 
@@ -124,13 +120,9 @@ BaiduAi:
 1. port：site模块启动端口，默认为3000
 2. proxy：`server`模块的连接地址，通过该地址可以请求`server`模块数据
 
-### admin模块配置
-
-`admin`模块基于`vue`+`element-ui`开发，它是`bbs-go`的管理后台。 `server`模块为`admin`模块提供接口， `admin`模块提供UI界面，所以`admin`模块只需要配置`server`模块的接口地址即可，配置文件在：`admin/src/apis/HttpClient.js`，请将该文件中的`baseURL`配置为你自己的。
-
 ## 快速启动
 
-`bbs-go`总用有三个模块：server、site、admin，接下来我们一步步的启动这三个模块。
+`bbs-go`总用有两个模块：server、site，接下来我们一步步的启动这二个模块。
 
 ### server模块启动
 
@@ -230,24 +222,6 @@ npm run dev
 ```
 
 正常启动后，打开 [http://127.0.0.1:8080](http://127.0.0.1:8080) 访问网站。
-
-### admin模块启动
-
-第一步：进入admin模块模块，执行下面命令安装依赖：
-
-```bash
-npm install
-```
-
-第二步：配置接口链接地址，请参见：[admin模块配置](#admin模块配置)。
-
-第三步：执行下面命令启动admin模块服务：
-
-```bash
-npm run serve
-```
-
-正常启动后，打开 [http://127.0.0.1:8080](http://127.0.0.1:8080) 访问管理后台。
 
 ## Docker启动
 

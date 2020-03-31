@@ -29,7 +29,7 @@ func (c *ArticleTagController) AnyList() *simple.JsonResult {
 
 func (c *ArticleTagController) PostCreate() *simple.JsonResult {
 	t := &model.ArticleTag{}
-	c.Ctx.ReadForm(t)
+	simple.ReadForm(c.Ctx, t)
 
 	err := services.ArticleTagService.Create(t)
 	if err != nil {
@@ -48,7 +48,7 @@ func (c *ArticleTagController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	c.Ctx.ReadForm(t)
+	simple.ReadForm(c.Ctx, t)
 
 	err = services.ArticleTagService.Update(t)
 	if err != nil {

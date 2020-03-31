@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="nav"
-    class="navbar is-white"
+    class="navbar has-shadow"
     role="navigation"
     aria-label="main navigation"
   >
@@ -33,6 +33,7 @@
         </div>
 
         <div class="navbar-end">
+          <!--
           <div class="navbar-item searchFormDiv">
             <form
               id="searchForm"
@@ -54,6 +55,13 @@
               </div>
             </form>
           </div>
+          -->
+
+          <div class="navbar-item dropdown is-hoverable is-right">
+            <a href="/topic/create" title="发表话题" class="publish">
+              <i class="iconfont icon-publish"></i>
+            </a>
+          </div>
 
           <msg-notice />
 
@@ -69,10 +77,13 @@
                 <i class="iconfont icon-publish" />&nbsp;发表文章
               </a>
               <a class="navbar-item" href="/user/favorites">
-                <i class="iconfont icon-favorites" />&nbsp;收藏
+                <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </a>
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
+              </a>
+              <a v-if="isAdmin" class="navbar-item" href="/admin">
+                <i class="iconfont icon-dashboard" />&nbsp;后台管理
               </a>
               <a @click="signout" class="navbar-item">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
@@ -81,8 +92,9 @@
           </div>
           <div v-else class="navbar-item">
             <div class="buttons">
-              <github-login />
-              <qq-login />
+              <nuxt-link class="button is-success" to="/user/signin"
+                >登录
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -93,11 +105,12 @@
 
 <script>
 import utils from '~/common/utils'
-import GithubLogin from '~/components/GithubLogin'
-import QqLogin from '~/components/QqLogin'
 import MsgNotice from '~/components/MsgNotice'
+
 export default {
-  components: { GithubLogin, QqLogin, MsgNotice },
+  components: {
+    MsgNotice
+  },
   data() {
     return {
       navbarActive: false
@@ -106,6 +119,19 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    isAdmin() {
+      const user = this.$store.state.user.current
+      if (!user || !user.roles || user.roles.length === 0) {
+        return false
+      }
+      for (let i = 0; i < user.roles.length; i++) {
+        const role = user.roles[i]
+        if (role === '管理员') {
+          return true
+        }
+      }
+      return false
     },
     config() {
       return this.$store.state.config.config
@@ -129,12 +155,21 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  opacity: 0.99;
-  border-bottom: 1px solid #e7edf3;
+  /*opacity: 0.99;*/
+  /*border-bottom: 1px solid #e7edf3;*/
+
   .navbar-item {
     font-weight: 700;
   }
+
+  .publish {
+    color: #448ef6;
+    &:hover {
+      color: #222;
+    }
+  }
 }
+
 .searchFormDiv {
   @media screen and (max-width: 768px) {
     & {
@@ -150,6 +185,7 @@ export default {
       transition: all 0.4s;
       float: right;
       position: relative;
+
       &:focus {
         background-color: #fff;
         border-color: #e7672e;

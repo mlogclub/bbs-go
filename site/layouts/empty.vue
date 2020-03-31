@@ -3,7 +3,5 @@
 </template>
 
 <script>
-export default {
-  middleware: 'global'
-}
+export default {}
 </script>

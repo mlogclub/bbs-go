@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
 	"github.com/PuerkitoBio/goquery"
@@ -45,23 +46,30 @@ func BuildUser(user *model.User) *model.UserInfo {
 	}
 	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserInfo{
-		Id:          user.Id,
-		Username:    user.Username.String,
-		Nickname:    user.Nickname,
-		Avatar:      a,
-		Email:       user.Email.String,
-		Type:        user.Type,
-		Roles:       roles,
-		Description: user.Description,
-		PasswordSet: len(user.Password) > 0,
-		Status:      user.Status,
-		CreateTime:  user.CreateTime,
+		Id:           user.Id,
+		Username:     user.Username.String,
+		Nickname:     user.Nickname,
+		Avatar:       a,
+		Email:        user.Email.String,
+		Type:         user.Type,
+		Roles:        roles,
+		HomePage:     user.HomePage,
+		Description:  user.Description,
+		TopicCount:   user.TopicCount,
+		CommentCount: user.CommentCount,
+		PasswordSet:  len(user.Password) > 0,
+		Status:       user.Status,
+		CreateTime:   user.CreateTime,
 	}
 	if user.Status == model.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.Nickname = "黑名单用户"
 		ret.Avatar = avatar.DefaultAvatar
 		ret.Email = ""
+		ret.HomePage = ""
+		ret.Description = ""
+	} else {
+		ret.Score = cache.UserCache.GetScore(user.Id)
 	}
 	return ret
 }
@@ -203,6 +211,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp := &model.TopicResponse{}
 
 	rsp.TopicId = topic.Id
+	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -211,8 +220,10 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
-	node := services.TopicNodeService.Get(topic.NodeId)
-	rsp.Node = BuildNode(node)
+	if topic.NodeId > 0 {
+		node := services.TopicNodeService.Get(topic.NodeId)
+		rsp.Node = BuildNode(node)
+	}
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
@@ -220,6 +231,12 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
+
+	if len(topic.ImageList) > 0 {
+		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
 
 	return rsp
 }
@@ -232,8 +249,8 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp := &model.TopicSimpleResponse{}
 
 	rsp.TopicId = topic.Id
+	rsp.Type = topic.Type
 	rsp.Title = topic.Title
-	rsp.Summary = common.GetMarkdownSummary(topic.Content)
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
 	rsp.CreateTime = topic.CreateTime
@@ -241,8 +258,16 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
-	node := services.TopicNodeService.Get(topic.NodeId)
-	rsp.Node = BuildNode(node)
+	if len(topic.ImageList) > 0 {
+		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
+
+	if topic.NodeId > 0 {
+		node := services.TopicNodeService.Get(topic.NodeId)
+		rsp.Node = BuildNode(node)
+	}
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
@@ -496,7 +521,7 @@ func BuildHtmlContent(htmlContent string) string {
 			selection.SetAttr("target", "_blank")
 			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
 
-			config := services.SysConfigService.GetConfigResponse()
+			config := services.SysConfigService.GetConfig()
 			if config.UrlRedirect { // 开启非内部链接跳转
 				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 				selection.SetAttr("href", newHref)
@@ -518,13 +543,18 @@ func BuildHtmlContent(htmlContent string) string {
 	// 处理图片
 	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
 		src := selection.AttrOr("src", "")
+		// 处理第三方图片
 		if strings.Contains(src, "qpic.cn") {
-			newSrc := simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
-			selection.SetAttr("src", newSrc)
+			src = simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
+			// selection.SetAttr("src", src)
 		}
+
+		// 处理lazyload
+		selection.SetAttr("data-src", src)
+		selection.RemoveAttr("src")
 	})
 
-	html, err := doc.Html()
+	html, err := doc.Find("body").Html()
 	if err != nil {
 		return htmlContent
 	}

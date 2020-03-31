@@ -18,7 +18,7 @@ func startSchedule() {
 	})
 
 	// Generate sitemap
-	addCronFunc(c, "@every 1h", func() {
+	addCronFunc(c, "@every 30m", func() {
 		services.SitemapService.GenerateToday()
 	})
 

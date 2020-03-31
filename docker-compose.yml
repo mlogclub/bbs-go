@@ -19,17 +19,6 @@ services:
       - db
     command: db:3306
 
-  bbs-go-admin:
-    build:
-      target: application
-      context: admin
-    image: mlogclub/bbs-go-admin
-    depends_on:
-      - bbs-go-server
-    environment:
-      - APP_ENV
-    restart: on-failure
-
   bbs-go-site:
     build:
       target: application

@@ -32,7 +32,12 @@
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <markdown-editor
+                  ref="mdEditor"
+                  v-model="postForm.content"
+                  editor-id="articleCreateEditor"
+                  placeholder="请输入内容，将图片复制或拖入编辑器可上传"
+                />
               </div>
             </div>
 
@@ -99,13 +104,13 @@ export default {
         return
       }
       me.publishing = true
-
       try {
         const article = await this.$axios.post('/api/article/create', {
           title: me.postForm.title,
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
         })
+        this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
           duration: 1000,
           onComplete() {

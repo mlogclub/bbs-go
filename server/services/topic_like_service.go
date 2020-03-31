@@ -70,6 +70,11 @@ func (s *topicLikeService) Count(topicId int64) int64 {
 	return count
 }
 
+// 最近点赞
+func (s *topicLikeService) Recent(topicId int64, count int) []model.TopicLike {
+	return s.Find(simple.NewSqlCnd().Eq("topic_id", topicId).Desc("id").Limit(count))
+}
+
 func (s *topicLikeService) Like(userId int64, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil || topic.Status != model.StatusOk {

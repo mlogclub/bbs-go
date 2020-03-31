@@ -46,7 +46,6 @@ export default {
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
-        console.log(e)
         this.$toast.error('登录失败：' + (e.message || e), {
           onComplete() {
             utils.linkTo('/user/signin')

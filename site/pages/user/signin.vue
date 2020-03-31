@@ -106,7 +106,18 @@ export default {
       captchaCode: ''
     }
   },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
+    },
+    isLogin() {
+      return !!this.currentUser
+    }
+  },
   mounted() {
+    if (this.redirectIfLogined()) {
+      return
+    }
     this.showCaptcha()
   },
   methods: {
@@ -151,6 +162,29 @@ export default {
       } catch (e) {
         this.$toast.error(e.message || e)
       }
+    },
+    /**
+     * 如果已经登录了，那么直接跳转
+     * @returns {boolean}
+     */
+    redirectIfLogined() {
+      if (this.isLogin) {
+        const me = this
+        this.$toast.success('登录成功！', {
+          duration: 1000,
+          keepOnHover: false,
+          position: 'top-center',
+          onComplete() {
+            if (me.ref && !utils.isSigninUrl(me.ref)) {
+              utils.linkTo(me.ref)
+            } else {
+              utils.linkTo('/')
+            }
+          }
+        })
+        return true
+      }
+      return false
     }
   },
   head() {

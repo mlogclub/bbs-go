@@ -7,6 +7,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/common"
 	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
@@ -35,6 +36,12 @@ func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	return simple.JsonErrorMsg("用户不存在")
 }
 
+// 用户积分
+func (c *UserController) GetScoreBy(userId int64) *simple.JsonResult {
+	score := cache.UserCache.GetScore(userId)
+	return simple.NewEmptyRspBuilder().Put("score", score).JsonResult()
+}
+
 // 修改用户资料
 func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
@@ -46,6 +53,7 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	}
 	nickname := strings.TrimSpace(simple.FormValue(c.Ctx, "nickname"))
 	avatar := strings.TrimSpace(simple.FormValue(c.Ctx, "avatar"))
+	homePage := simple.FormValue(c.Ctx, "homePage")
 	description := simple.FormValue(c.Ctx, "description")
 
 	if len(nickname) == 0 {
@@ -55,11 +63,33 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("头像不能为空")
 	}
 
+	if len(homePage) > 0 && common.IsValidateUrl(homePage) != nil {
+		return simple.JsonErrorMsg("个人主页地址错误")
+	}
+
 	err := services.UserService.Updates(user.Id, map[string]interface{}{
 		"nickname":    nickname,
 		"avatar":      avatar,
+		"home_page":   homePage,
 		"description": description,
 	})
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+// 修改头像
+func (c *UserController) PostUpdateAvatar() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	avatar := strings.TrimSpace(simple.FormValue(c.Ctx, "avatar"))
+	if len(avatar) == 0 {
+		return simple.JsonErrorMsg("头像不能为空")
+	}
+	err := services.UserService.UpdateAvatar(user.Id, avatar)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -189,4 +219,30 @@ func (c *UserController) GetMessages() *simple.JsonResult {
 func (c *UserController) GetNewest() *simple.JsonResult {
 	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildUsers(users))
+}
+
+// 用户积分记录
+func (c *UserController) GetScorelogs() *simple.JsonResult {
+	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	// 用户必须登录
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+
+	logs, paging := services.UserScoreLogService.FindPageByCnd(simple.NewSqlCnd().
+		Eq("user_id", user.Id).
+		Page(page, 20).Desc("id"))
+
+	return simple.JsonPageData(logs, paging)
+}
+
+// 积分排行
+func (c *UserController) GetScoreRank() *simple.JsonResult {
+	userScores := services.UserScoreService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	var results []*model.UserInfo
+	for _, userScore := range userScores {
+		results = append(results, render.BuildUserDefaultIfNull(userScore.UserId))
+	}
+	return simple.JsonData(results)
 }

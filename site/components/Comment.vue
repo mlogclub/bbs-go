@@ -1,41 +1,30 @@
 <template>
-  <div class="comment-component">
+  <div class="comment-component main-content">
+    <div ref="commentTitle" class="comment-title">
+      回复<span v-if="commentCount > 0">({{ commentCount }})</span>
+    </div>
     <div class="comment-form">
       <div v-if="isLogin" class="comment-create">
-        <div class="comment-input-wrapper">
+        <div ref="commentEditor" class="comment-input-wrapper">
           <div v-if="quote" class="comment-quote-info">
             回复：
             <label v-text="quote.user.nickname" />
-            <i @click="cancelReply" class="iconfont icon-close" />
+            <i
+              @click="cancelReply"
+              class="iconfont icon-close"
+              alt="取消回复"
+            />
           </div>
-          <textarea
-            ref="commentEditor"
+          <markdown-editor
+            ref="mdEditor"
             v-model="content"
-            @keydown.ctrl.enter="ctrlEnterCreate"
-            @keydown.meta.enter="ctrlEnterCreate"
-            @input="autoHeight"
-            class="comment-input"
-            placeholder="发表你的观点..."
+            @submit="ctrlEnterCreate"
+            editor-id="createEditor"
+            height="200px"
+            placeholder="请发表你的观点..."
           />
         </div>
         <div class="comment-button-wrapper">
-          <div class="comment-help" title="Markdown is supported">
-            <a href="https://mlog.club/article/5522" target="_blank">
-              <svg
-                class="markdown"
-                viewBox="0 0 16 16"
-                version="1.1"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M14.85 3H1.15C.52 3 0 3.52 0 4.15v7.69C0 12.48.52 13 1.15 13h13.69c.64 0 1.15-.52 1.15-1.15v-7.7C16 3.52 15.48 3 14.85 3zM9 11H7V8L5.5 9.92 4 8v3H2V5h2l1.5 2L7 5h2v6zm2.99.5L9.5 8H11V5h2v3h1.5l-2.51 3.5z"
-                />
-              </svg>
-            </a>
-          </div>
           <button @click="create" v-text="btnName" class="button is-light" />
         </div>
       </div>
@@ -76,10 +65,7 @@
             ad-layout-key="-ht-19-1m-3j+mu"
           />
           <div class="comment-avatar">
-            <div
-              :style="{ backgroundImage: 'url(' + comment.user.avatar + ')' }"
-              class="avatar has-border is-rounded"
-            />
+            <img v-lazy="comment.user.avatar" class="avatar" />
           </div>
           <div class="comment-meta">
             <span
@@ -108,20 +94,25 @@
           <div class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
-                <div
-                  :style="{
-                    backgroundImage: 'url(' + comment.quote.user.avatar + ')'
-                  }"
-                  class="quote-avatar avatar has-border is-rounded"
+                <img
+                  v-lazy="comment.quote.user.avatar"
+                  class="avatar size-20"
                 />
                 <a class="quote-nickname">{{ comment.quote.user.nickname }}</a>
                 <span class="quote-time">
                   {{ comment.quote.createTime | prettyDate }}
                 </span>
               </div>
-              <div v-html="comment.quote.content" itemprop="text" />
+              <div
+                v-html="comment.quote.content"
+                v-lazy-container="{ selector: 'img' }"
+                itemprop="text"
+              />
             </blockquote>
-            <p v-html="comment.content" />
+            <p
+              v-html="comment.content"
+              v-lazy-container="{ selector: 'img' }"
+            />
           </div>
         </li>
       </ul>
@@ -132,10 +123,12 @@
 <script>
 import utils from '~/common/utils'
 import LoadMore from '~/components/LoadMore'
+import MarkdownEditor from '~/components/MarkdownEditor'
 export default {
   name: 'Comment',
   components: {
-    LoadMore
+    LoadMore,
+    MarkdownEditor
   },
   props: {
     entityType: {
@@ -153,6 +146,10 @@ export default {
       default() {
         return {}
       }
+    },
+    commentCount: {
+      type: Number,
+      default: 0
     },
     showAd: {
       type: Boolean,
@@ -178,9 +175,7 @@ export default {
     }
   },
   methods: {
-    ctrlEnterCreate(event) {
-      event.stopPropagation()
-      event.preventDefault()
+    ctrlEnterCreate() {
       this.create()
     },
     async create() {
@@ -202,6 +197,7 @@ export default {
         })
         this.$refs.commentsLoadMore.unshiftResults(data)
         this.content = ''
+        this.$refs.mdEditor.clear()
         this.quote = null
       } catch (e) {
         console.error(e)
@@ -215,7 +211,7 @@ export default {
         utils.toSignin()
       }
       this.quote = quote
-      this.$refs.commentEditor.scrollIntoView({
+      this.$refs.commentTitle.scrollIntoView({
         block: 'start',
         behavior: 'smooth'
       })
@@ -238,14 +234,24 @@ export default {
 
 <style lang="scss" scoped>
 .comment-component {
+  padding-top: 10px;
+
+  .comment-title {
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
+
   .comment-form {
     .comment-create {
-      border: 1px solid #f0f0f0;
+      /*border: 1px solid #f0f0f0;*/
       border-radius: 4px;
       margin-bottom: 10px;
       overflow: hidden;
       position: relative;
-      padding: 10px;
+      padding: 0;
       box-sizing: border-box;
 
       .comment-quote-info {
@@ -263,29 +269,11 @@ export default {
         }
       }
 
-      .comment-input {
-        width: 100%;
-        min-height: 8.75rem;
-        font-size: 0.875rem;
-        background: transparent;
-        resize: vertical;
-        -webkit-transition: all 0.25s ease;
-        transition: all 0.25s ease;
-        border: none;
-        outline: none;
-        padding: 10px 5px;
-        max-width: 100%;
-        margin-top: 0;
-        margin-bottom: 0;
-        overflow: hidden;
+      .comment-input-wrapper {
+        margin-bottom: 10px;
       }
 
       .comment-button-wrapper {
-        .comment-help {
-          float: left;
-          margin-top: 5px;
-        }
-
         button {
           float: right;
         }
@@ -396,12 +384,6 @@ export default {
 
         .comment-quote-user {
           display: flex;
-          .quote-avatar {
-            min-width: 20px;
-            min-height: 20px;
-            width: 20px;
-            height: 20px;
-          }
 
           .quote-nickname {
             line-height: 20px;

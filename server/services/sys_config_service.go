@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -82,7 +83,7 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	if len(key) == 0 {
 		return errors.New("sys config key is null")
 	}
-	sysConfig := repositories.SysConfigRepository.GetByKey(simple.DB(), key)
+	sysConfig := repositories.SysConfigRepository.GetByKey(db, key)
 	if sysConfig == nil {
 		sysConfig = &model.SysConfig{
 			CreateTime: simple.NowTimestamp(),
@@ -101,9 +102,9 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 
 	var err error
 	if sysConfig.Id > 0 {
-		err = repositories.SysConfigRepository.Update(simple.DB(), sysConfig)
+		err = repositories.SysConfigRepository.Update(db, sysConfig)
 	} else {
-		err = repositories.SysConfigRepository.Create(simple.DB(), sysConfig)
+		err = repositories.SysConfigRepository.Create(db, sysConfig)
 	}
 	if err != nil {
 		return err
@@ -113,7 +114,7 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	}
 }
 
-func (s *sysConfigService) GetConfigResponse() *model.ConfigResponse {
+func (s *sysConfigService) GetConfig() *model.ConfigData {
 	var (
 		siteTitle        = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
 		siteDescription  = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
@@ -122,6 +123,8 @@ func (s *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		siteNotification = cache.SysConfigCache.GetValue(model.SysConfigSiteNotification)
 		recommendTags    = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
 		urlRedirect      = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
+		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
+		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
 	)
 
 	var siteKeywordsArr []string
@@ -139,7 +142,14 @@ func (s *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		logrus.Warn("推荐标签数据错误", err)
 	}
 
-	return &model.ConfigResponse{
+	var scoreConfig model.ScoreConfig
+	if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
+		logrus.Warn("积分配置错误", err)
+	}
+
+	var defaultNodeId, _ = strconv.ParseInt(defaultNodeIdStr, 10, 64)
+
+	return &model.ConfigData{
 		SiteTitle:        siteTitle,
 		SiteDescription:  siteDescription,
 		SiteKeywords:     siteKeywordsArr,
@@ -147,5 +157,7 @@ func (s *sysConfigService) GetConfigResponse() *model.ConfigResponse {
 		SiteNotification: siteNotification,
 		RecommendTags:    recommendTagsArr,
 		UrlRedirect:      strings.ToLower(urlRedirect) == "true",
+		ScoreConfig:      scoreConfig,
+		DefaultNodeId:    defaultNodeId,
 	}
 }

@@ -6,6 +6,7 @@ import (
 
 	"bbs-go/common"
 	"bbs-go/model"
+	"bbs-go/services/cache"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -15,6 +16,13 @@ import (
 
 type UserController struct {
 	Ctx iris.Context
+}
+
+func (c *UserController) GetSynccount() *simple.JsonResult {
+	go func() {
+		services.UserService.SyncUserCount()
+	}()
+	return simple.JsonSuccess()
 }
 
 func (c *UserController) GetBy(id int64) *simple.JsonResult {
@@ -83,14 +91,25 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	password := simple.FormValue(c.Ctx, "password")
 	nickname := simple.FormValue(c.Ctx, "nickname")
 	email := simple.FormValue(c.Ctx, "email")
-	roles := simple.FormValueStringArray(c.Ctx, "roles")
 	status := simple.FormValueIntDefault(c.Ctx, "status", -1)
+
+	formValues := c.Ctx.FormValues()
+	var rolesKeys []string
+	for k := range formValues {
+		if strings.HasPrefix(k, "roles") {
+			rolesKeys = append(rolesKeys, k)
+		}
+	}
+	roles := make([]string, len(rolesKeys))
+	for i, v := range rolesKeys {
+		roles[i] = simple.FormValue(c.Ctx, v)
+	}
 
 	if len(username) > 0 {
 		t.Username = simple.SqlNullString(username)
 	}
 	if len(password) > 0 {
-		t.Password = simple.EncodePassword(t.Password)
+		t.Password = simple.EncodePassword(password)
 	}
 	if len(nickname) > 0 {
 		t.Nickname = nickname
@@ -112,9 +131,11 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 }
 
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {
+	score := cache.UserCache.GetScore(user.Id)
 	return simple.NewRspBuilder(user).
 		Put("roles", common.GetUserRoles(user.Roles)).
 		Put("username", user.Username.String).
 		Put("email", user.Email.String).
+		Put("score", score).
 		Build()
 }

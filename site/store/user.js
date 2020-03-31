@@ -22,14 +22,7 @@ export const actions = {
 
   // 获取当前登录用户
   async getCurrentUser(context) {
-    const userToken = this.$cookies.get('userToken')
-    if (!userToken) {
-      return null
-    }
     const user = await this.$axios.get('/api/user/current')
-    if (!user) {
-      return null
-    }
     context.commit('setCurrent', user)
     return user
   },
@@ -72,13 +65,14 @@ export const actions = {
 
   async signup(
     context,
-    { captchaId, captchaCode, nickname, username, password, rePassword }
+    { captchaId, captchaCode, nickname, username, email, password, rePassword }
   ) {
     const ret = await this.$axios.post('/api/login/signup', {
       captchaId,
       captchaCode,
       nickname,
       username,
+      email,
       password,
       rePassword
     })

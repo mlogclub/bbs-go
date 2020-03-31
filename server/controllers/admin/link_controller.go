@@ -33,7 +33,7 @@ func (c *LinkController) AnyList() *simple.JsonResult {
 
 func (c *LinkController) PostCreate() *simple.JsonResult {
 	t := &model.Link{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -55,7 +55,7 @@ func (c *LinkController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

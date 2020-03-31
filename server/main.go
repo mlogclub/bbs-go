@@ -11,7 +11,6 @@ import (
 	"bbs-go/app"
 	"bbs-go/common/config"
 	"bbs-go/model"
-	"reflect"
 )
 
 var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
@@ -19,18 +18,8 @@ var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
 func init() {
 	flag.Parse()
 
-	config.InitConfig(*configFile)
-	v := reflect.ValueOf(config.Conf).Elem()
-	t := reflect.TypeOf(*config.Conf)
-	for i := 0; i < t.NumField(); i++ {
-		fieldName := t.Field(i).Name
-		if os.Getenv(fieldName) != "" {
-			env := os.Getenv(fieldName)
-			v.Field(i).SetString(env)
-		}
-
-	} // 初始化配置
-	// 初始化日志
+	config.InitConfig(*configFile)                                                              // 初始化配置
+	initLogrus()                                                                                // 初始化日志
 	err := simple.OpenMySql(config.Conf.MySqlUrl, 10, 20, config.Conf.ShowSql, model.Models...) // 连接数据库
 	if err != nil {
 		logrus.Error(err)

@@ -92,7 +92,7 @@ func (s *sitemapService) GenerateToday() {
 
 func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	sitemapName := "sitemap-" + simple.TimeFormat(simple.TimeFromTimestamp(dateFrom), simple.FMT_DATE)
-	sm := sitemap.NewGenerator(config.Conf.Minio.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
 		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 
@@ -104,7 +104,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 					Loc:        urls.TopicUrl(topic.Id),
 					Lastmod:    simple.TimeFromTimestamp(topic.LastCommentTime),
 					Changefreq: sitemap.ChangefreqDaily,
-					Priority:   "1.0",
+					Priority:   "0.8",
 				})
 			}
 		}
@@ -118,7 +118,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 					Loc:        urls.ArticleUrl(article.Id),
 					Lastmod:    simple.TimeFromTimestamp(article.UpdateTime),
 					Changefreq: sitemap.ChangefreqWeekly,
-					Priority:   "1.0",
+					Priority:   "0.6",
 				})
 			}
 		}
@@ -131,7 +131,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 				Loc:        urls.ProjectUrl(project.Id),
 				Lastmod:    simple.TimeFromTimestamp(project.CreateTime),
 				Changefreq: sitemap.ChangefreqMonthly,
-				Priority:   "1.0",
+				Priority:   "0.6",
 			})
 		}
 	})
@@ -140,7 +140,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 }
 
 func (s *sitemapService) GenerateMisc() {
-	sm := sitemap.NewGenerator(config.Conf.Minio.Host, sitemapPath, "sitemap-misc", func(sm *sitemap.Generator, sitemapLoc string) {
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, "sitemap-misc", func(sm *sitemap.Generator, sitemapLoc string) {
 		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 	sm.AddURL(sitemap.URL{
@@ -186,7 +186,7 @@ func (s *sitemapService) GenerateMisc() {
 }
 
 func (s *sitemapService) GenerateUser() {
-	sm := sitemap.NewGenerator(config.Conf.Minio.Host, sitemapPath, "sitemap-user", func(sm *sitemap.Generator, sitemapLoc string) {
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, "sitemap-user", func(sm *sitemap.Generator, sitemapLoc string) {
 		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 	UserService.Scan(func(users []model.User) {

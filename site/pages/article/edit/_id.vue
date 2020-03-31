@@ -32,7 +32,11 @@
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <markdown-editor
+                  v-model="postForm.content"
+                  editor-id="articleEditEditor"
+                  placeholder="请输入内容，将图片复制或拖入编辑器可上传"
+                />
               </div>
             </div>
 

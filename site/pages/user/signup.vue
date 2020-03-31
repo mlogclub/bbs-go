@@ -24,17 +24,17 @@
             </div>
 
             <div class="field">
-              <label class="label">用户名</label>
+              <label class="label">邮箱</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="username"
+                  v-model="email"
                   @keyup.enter="signup"
                   class="input is-success"
                   type="text"
-                  placeholder="请输入用户名"
+                  placeholder="请输入邮箱"
                 />
                 <span class="icon is-small is-left">
-                  <i class="iconfont icon-username" />
+                  <i class="iconfont icon-email" />
                 </span>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default {
   data() {
     return {
       nickname: '',
-      username: '',
+      email: '',
       password: '',
       rePassword: '',
       captchaId: '',
@@ -150,7 +150,7 @@ export default {
           captchaId: this.captchaId,
           captchaCode: this.captchaCode,
           nickname: this.nickname,
-          username: this.username,
+          email: this.email,
           password: this.password,
           rePassword: this.rePassword,
           ref: this.ref
@@ -172,6 +172,7 @@ export default {
         const ret = await this.$axios.get('/api/captcha/request')
         this.captchaId = ret.captchaId
         this.captchaUrl = ret.captchaUrl
+        this.captchaCode = ''
       } catch (e) {
         this.$toast.error(e.message || e)
       }

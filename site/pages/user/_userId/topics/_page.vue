@@ -22,7 +22,7 @@
           :url-prefix="'/user/' + user.id + '/topics/'"
         />
       </div>
-      <user-center-sidebar :user="user" :current-user="currentUser" />
+      <user-center-sidebar :user="user" />
     </div>
   </section>
 </template>
@@ -49,8 +49,7 @@ export default {
       return
     }
 
-    const [currentUser, topicsPage] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [topicsPage] = await Promise.all([
       $axios.get('/api/topic/user/topics', {
         params: {
           userId: params.userId,
@@ -60,17 +59,18 @@ export default {
     ])
 
     return {
-      currentUser,
       user,
       topicsPage
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.user.current
+    },
     // 是否是主人态
     isOwner() {
-      return (
-        this.user && this.currentUser && this.user.id === this.currentUser.id
-      )
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     }
   },
   head() {

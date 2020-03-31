@@ -1,7 +1,10 @@
 export default {
   server: {
-    port: 8080,
-    host: '0.0.0.0'
+    port: 3000,
+    host: '0.0.0.0',
+    timing: {
+      total: true
+    }
   },
   mode: 'universal',
   /*
@@ -12,23 +15,17 @@ export default {
       lang: 'zh-cmn-Hans'
     },
     title: '',
-    meta: [{
-        charset: 'utf-8'
-      },
+    meta: [
+      { charset: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
+        content:
+          'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
       },
-      {
-        name: 'window-target',
-        content: '_top'
-      }
+      { name: 'window-target', content: '_top' }
     ],
-    link: [{
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico'
-      },
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
@@ -53,34 +50,27 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_gaoe30cisdn.css'
+        href: '//at.alicdn.com/t/font_1142441_zup8j5co1q.css'
       }
     ]
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: {
-    color: '#FFB90F'
-  },
+  loading: { color: '#FFB90F' },
   /*
    ** Global CSS
    */
-  css: [{
-    src: '~/assets/styles/main.scss',
-    lang: 'scss'
-  }],
+  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
     '~/plugins/filters',
     '~/plugins/axios',
-    '~/plugins/mlog',
-    {
-      src: '~/plugins/infinite-scroll',
-      ssr: false
-    }
+    '~/plugins/bbs-go',
+    { src: '~/plugins/infinite-scroll', ssr: false },
+    { src: '~/plugins/vue-lazyload', ssr: false }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -99,9 +89,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/eslint-module',
     '@nuxtjs/toast',
-    ['cookie-universal-nuxt', {
-      alias: 'cookies'
-    }],
+    ['cookie-universal-nuxt', { alias: 'cookies' }],
     [
       '@nuxtjs/google-adsense',
       {
@@ -120,10 +108,10 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://bbs-server.bbs.svc:8082'
-    //'/api/': 'http://vipgz2.idcfengye.com:10071'
+    '/api/': 'http://localhost:8082'
     // '/api/': 'https://mlog.club'
   },
+
   // Doc: https://github.com/shakee93/vue-toasted
   // Doc: https://github.com/nuxt-community/modules/tree/master/packages/toast
   toast: {
@@ -136,6 +124,14 @@ export default {
    ** Build configuration
    */
   build: {
+    // publicPath: 'https://file.mlog.club/static/nuxtclient/',
+    optimizeCSS: true,
+    extractCSS: true,
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true
+    },
     postcss: {
       preset: {
         features: {

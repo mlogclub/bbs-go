@@ -50,7 +50,7 @@ func InitIris() {
 	})
 
 	app.Any("/", func(i iris.Context) {
-		_, _ = i.HTML("<h1>bbs-go</h1>")
+		_, _ = i.HTML("<h1>Powered by bbs-go</h1>")
 	})
 
 	// api
@@ -73,6 +73,7 @@ func InitIris() {
 	// admin
 	mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 		m.Router.Use(middleware.AdminAuth)
+		m.Party("/common").Handle(new(admin.CommonController))
 		m.Party("/user").Handle(new(admin.UserController))
 		m.Party("/third-account").Handle(new(admin.ThirdAccountController))
 		m.Party("/tag").Handle(new(admin.TagController))
@@ -84,6 +85,8 @@ func InitIris() {
 		m.Party("/topic-node").Handle(new(admin.TopicNodeController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		m.Party("/link").Handle(new(admin.LinkController))
+		m.Party("/user-score").Handle(new(admin.UserScoreController))
+		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {

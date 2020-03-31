@@ -1,52 +1,73 @@
 <template>
   <section class="main">
-    <top-notice />
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
-        <pagination
-          :page="topicsPage.page"
-          :url-prefix="'/topics/node/' + node.nodeId + '?p='"
-        />
+        <div class="main-content" style="padding: 0;">
+          <post-twitter @created="twitterCreated" :node-id="node.nodeId" />
+        </div>
+        <div class="main-content">
+          <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
+          <topic-list :topics="topicsPage.results" :show-ad="true" />
+          <pagination
+            :page="topicsPage.page"
+            :url-prefix="'/topics/node/' + node.nodeId + '?p='"
+          />
+        </div>
       </div>
-      <topic-side :current-node-id="node.nodeId" />
+      <topic-side
+        :current-node-id="node.nodeId"
+        :score-rank="scoreRank"
+        :links="links"
+      />
     </div>
   </section>
 </template>
 
 <script>
+import PostTwitter from '~/components/PostTwitter'
 import TopicSide from '~/components/TopicSide'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
-import TopNotice from '~/components/TopNotice'
 
 export default {
   components: {
+    PostTwitter,
     TopicSide,
     TopicsNav,
     TopicList,
-    Pagination,
-    TopNotice
+    Pagination
   },
   async asyncData({ $axios, params, query }) {
-    const [node, user, nodes, topicsPage] = await Promise.all([
+    const [node, nodes, topicsPage, scoreRank, links] = await Promise.all([
       $axios.get('/api/topic/node?nodeId=' + params.nodeId),
-      $axios.get('/api/user/current'),
       $axios.get('/api/topic/nodes'),
       $axios.get('/api/topic/node/topics', {
         params: {
           nodeId: params.nodeId,
           page: query.p || 1
         }
-      })
+      }),
+      $axios.get('/api/user/score/rank'),
+      $axios.get('/api/link/toplinks')
     ])
     return {
       node,
-      user,
       nodes,
-      topicsPage
+      topicsPage,
+      scoreRank,
+      links
+    }
+  },
+  methods: {
+    twitterCreated(data) {
+      if (this.topicsPage) {
+        if (this.topicsPage.results) {
+          this.topicsPage.results.unshift(data)
+        } else {
+          this.topicsPage.results = [data]
+        }
+      }
     }
   },
   head() {

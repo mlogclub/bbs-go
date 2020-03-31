@@ -13,9 +13,7 @@
                   }}</a>
                 </li>
                 <li class="is-active">
-                  <a href="#" aria-current="page"
-                    >主题{{ postForm.nodeId }}xx</a
-                  >
+                  <a href="#" aria-current="page">主题</a>
                 </li>
               </ul>
             </nav>
@@ -49,7 +47,11 @@
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <markdown-editor
+                  v-model="postForm.content"
+                  editor-id="topicEditEditor"
+                  placeholder="可空，将图片复制或拖入编辑器可上传"
+                />
               </div>
             </div>
 
@@ -94,13 +96,11 @@ export default {
     MarkdownEditor
   },
   async asyncData({ $axios, params }) {
-    const [currentUser, topic, nodes] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [topic, nodes] = await Promise.all([
       $axios.get('/api/topic/edit/' + params.id),
       $axios.get('/api/topic/nodes')
     ])
     return {
-      currentUser,
       topic,
       nodes,
       postForm: {
@@ -120,6 +120,11 @@ export default {
         tags: [],
         content: ''
       }
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
     }
   },
   mounted() {},
@@ -156,7 +161,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle('发表话题')
+      title: this.$siteTitle('修改话题')
     }
   }
 }

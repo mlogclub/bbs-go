@@ -1,8 +1,8 @@
 class Utils {
   linkTo(path) {
-    // debugger
-    // window.location = path
-    window.$nuxt.$router.push(path)
+    window.location = path
+    // 这里使用$router.push会导致跳转页面之后window.vditor对象undefined，原因未知
+    // window.$nuxt.$router.push(path)
   }
 
   toSignin(ref) {
@@ -11,6 +11,10 @@ class Utils {
       ref = window.location.pathname
     }
     this.linkTo('/user/signin?ref=' + encodeURIComponent(ref))
+  }
+
+  isSigninUrl(ref) {
+    return ref === '/user/signin'
   }
 
   handleToc(tocDom) {

@@ -1,126 +1,126 @@
 <template>
   <section class="main">
-    <div class="container main-container size-360 is-white left-main">
+    <div class="container main-container size-360 left-main">
       <div class="left-container">
         <article
           class="article-item article-detail"
           itemscope
           itemtype="http://schema.org/BlogPosting"
         >
-          <div class="article-header">
-            <div class="article-item-left">
-              <a
-                :href="'/user/' + article.user.id"
-                :title="article.user.nickname"
-                target="_blank"
-              >
-                <div
-                  :style="{
-                    backgroundImage: 'url(' + article.user.avatar + ')'
-                  }"
-                  class="avatar is-rounded"
-                />
-              </a>
-            </div>
-            <div class="article-item-right">
-              <h1 class="article-title" itemprop="headline">
-                {{ article.title }}
-              </h1>
-              <div class="article-meta">
-                <span class="article-meta-item">
-                  由
-                  <a
-                    :href="'/user/' + article.user.id"
-                    class="article-author"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
-                    ><span itemprop="name">{{ article.user.nickname }}</span></a
-                  >发布于
-                  <time
-                    :datetime="
-                      article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
-                    "
-                    itemprop="datePublished"
-                    >{{ article.createTime | prettyDate }}</time
-                  >
-                </span>
-
-                <span
-                  v-if="article.tags && article.tags.length > 0"
-                  class="article-meta-item"
+          <div class="main-content">
+            <div class="article-header">
+              <div class="article-item-left">
+                <a
+                  :href="'/user/' + article.user.id"
+                  :title="article.user.nickname"
+                  target="_blank"
                 >
-                  <span
-                    v-for="tag in article.tags"
-                    :key="tag.tagId"
-                    class="article-tag tag"
-                  >
-                    <a :href="'/articles/' + tag.tagId" class>{{
-                      tag.tagName
-                    }}</a>
-                  </span>
-                </span>
+                  <img v-lazy="article.user.avatar" class="avatar" />
+                </a>
               </div>
+              <div class="article-item-right">
+                <h1 class="article-title" itemprop="headline">
+                  {{ article.title }}
+                </h1>
+                <div class="article-meta">
+                  <span class="article-meta-item">
+                    由
+                    <a
+                      :href="'/user/' + article.user.id"
+                      class="article-author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="http://schema.org/Person"
+                      ><span itemprop="name">{{
+                        article.user.nickname
+                      }}</span></a
+                    >发布于
+                    <time
+                      :datetime="
+                        article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                      "
+                      itemprop="datePublished"
+                      >{{ article.createTime | prettyDate }}</time
+                    >
+                  </span>
 
-              <div class="article-tool">
-                <span v-if="isOwner">
-                  <a @click="deleteArticle(article.articleId)">
-                    <i class="iconfont icon-delete" />删除
-                  </a>
-                </span>
-                <span v-if="isOwner">
-                  <a :href="'/article/edit/' + article.articleId">
-                    <i class="iconfont icon-edit" />修改
-                  </a>
-                </span>
-                <span>
-                  <a @click="addFavorite(article.articleId)">
-                    <i class="iconfont icon-favorite" />{{
-                      favorited ? '已收藏' : '收藏'
-                    }}
-                  </a>
-                </span>
+                  <span
+                    v-if="article.tags && article.tags.length > 0"
+                    class="article-meta-item"
+                  >
+                    <span
+                      v-for="tag in article.tags"
+                      :key="tag.tagId"
+                      class="article-tag tag"
+                    >
+                      <a :href="'/articles/' + tag.tagId" class>{{
+                        tag.tagName
+                      }}</a>
+                    </span>
+                  </span>
+                </div>
+
+                <div class="article-tool">
+                  <span v-if="isOwner">
+                    <a @click="deleteArticle(article.articleId)">
+                      <i class="iconfont icon-delete" />&nbsp;删除
+                    </a>
+                  </span>
+                  <span v-if="isOwner">
+                    <a :href="'/article/edit/' + article.articleId">
+                      <i class="iconfont icon-edit" />&nbsp;修改
+                    </a>
+                  </span>
+                  <span>
+                    <a @click="addFavorite(article.articleId)">
+                      <i class="iconfont icon-favorite" />&nbsp;{{
+                        favorited ? '已收藏' : '收藏'
+                      }}
+                    </a>
+                  </span>
+                </div>
               </div>
             </div>
+
+            <div class="ad">
+              <!-- 信息流广告 -->
+              <adsbygoogle
+                ad-slot="4980294904"
+                ad-format="fluid"
+                ad-layout-key="-ht-19-1m-3j+mu"
+              />
+            </div>
+
+            <div
+              v-html="article.content"
+              v-lazy-container="{ selector: 'img' }"
+              class="article-content content"
+              itemprop="articleBody"
+            ></div>
           </div>
 
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
-
-          <div
-            v-html="article.content"
-            class="article-content content"
-            itemprop="articleBody"
-          ></div>
-
+          <!--
           <div class="article-footer">
-            <blockquote v-if="article.share">
-              <ul>
-                <li v-if="article.user.type == 1">
-                  <strong>转载自公众号：</strong>
-                  <a href="javascript:void(0)">{{ article.user.nickname }}</a>
-                </li>
-                <li>
-                  <strong>免责声明：</strong>
-                  我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
-                  <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
-                  >），我们将在24小时之内删除。
-                </li>
-                <li v-if="article.sourceUrl">
-                  <strong>原文链接：</strong>
-                  <a
-                    :href="article.sourceUrl"
-                    class="source-url"
-                    rel="nofollow"
-                    target="_blank"
-                    >{{ article.sourceUrl }}</a
-                  >
-                </li>
-              </ul>
-            </blockquote>
+            <ul>
+              <li>
+                <strong>免责声明：</strong>
+                我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
+                <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
+                >），我们将在24小时之内删除。
+              </li>
+              <li v-if="article.sourceUrl">
+                <strong>原文链接：</strong>
+                <a
+                  :href="article.sourceUrl"
+                  class="source-url"
+                  rel="nofollow"
+                  target="_blank"
+                  >{{ article.sourceUrl }}</a
+                >
+              </li>
+            </ul>
           </div>
+          -->
 
           <div class="ad">
             <!-- 展示广告 -->
@@ -137,12 +137,13 @@
         </article>
       </div>
       <div class="right-container">
-        <div style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
 
-        <div v-if="relatedArticles && relatedArticles.length" class="widget">
+        <div
+          v-if="relatedArticles && relatedArticles.length"
+          class="widget no-margin"
+        >
           <div class="widget-header">相关文章</div>
           <div class="widget-content article-related">
             <ul>
@@ -159,12 +160,13 @@
           </div>
         </div>
 
-        <div class="ad" style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
 
-        <div v-if="newestArticles && newestArticles.length" class="widget">
+        <div
+          v-if="newestArticles && newestArticles.length"
+          class="widget no-margin"
+        >
           <div class="widget-header">最新文章</div>
           <div class="widget-content article-related">
             <ul>
@@ -181,10 +183,8 @@
           </div>
         </div>
 
-        <div class="ad" style="max-height: 360px;">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
+        <!-- 展示广告 -->
+        <adsbygoogle ad-slot="1742173616" />
       </div>
     </div>
   </section>

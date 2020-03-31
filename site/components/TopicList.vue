@@ -1,9 +1,13 @@
 <template>
   <ul class="topic-list topic-wrap">
-    <li v-for="(topic, index) in topics" :key="index">
+    <li
+      v-for="(topic, index) in topics"
+      :key="topic.topicId"
+      class="topic-item"
+    >
       <!-- 信息流广告 -->
       <adsbygoogle
-        v-if="showAd && (index === 2 || index === 10 || index === 18)"
+        v-if="showAd && (index === 3 || index === 10 || index === 18)"
         ad-slot="4980294904"
         ad-format="fluid"
         ad-layout-key="-ht-19-1m-3j+mu"
@@ -12,10 +16,7 @@
         <div class="topic-header">
           <div class="topic-header-left">
             <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
-              <div
-                :style="{ backgroundImage: 'url(' + topic.user.avatar + ')' }"
-                class="avatar avatar-size-45 is-rounded"
-              />
+              <img v-lazy="topic.user.avatar" class="avatar" />
             </a>
           </div>
           <div class="topic-header-center">
@@ -46,9 +47,12 @@
                 >
               </span>
               <span class="meta-item">
-                <a :href="'/topics/node/' + topic.node.nodeId" class="node">{{
-                  topic.node.name
-                }}</a>
+                <a
+                  v-if="topic.node"
+                  :href="'/topics/node/' + topic.node.nodeId"
+                  class="node"
+                  >{{ topic.node.name }}</a
+                >
               </span>
               <span class="meta-item">
                 <span v-for="tag in topic.tags" :key="tag.tagId" class="tag">
@@ -75,13 +79,20 @@
             >
           </div>
         </div>
-        <!--
-          <div class="topic-summary" itemprop="description">
-            <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
-              topic.summary
-            }}</a>
-          </div>
-          -->
+        <ul
+          v-if="topic.imageList && topic.imageList.length > 0"
+          class="topic-images"
+        >
+          <li v-for="image in topic.imageList" :key="image">
+            <a
+              :href="'/topic/' + topic.topicId"
+              :title="topic.title"
+              class="topic-image-item"
+            >
+              <img v-lazy="image" />
+            </a>
+          </li>
+        </ul>
       </article>
     </li>
   </ul>
@@ -106,7 +117,7 @@ export default {
   methods: {
     async like(topic) {
       try {
-        await this.$axios.get('/api/topic/like/' + topic.topicId)
+        await this.$axios.post('/api/topic/like/' + topic.topicId)
         topic.liked = true
         topic.likeCount++
       } catch (e) {

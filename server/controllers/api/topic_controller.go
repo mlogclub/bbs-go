@@ -37,10 +37,12 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
+	topicType := simple.FormValueIntDefault(c.Ctx, "type", model.TopicTypeNormal)
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
+	imageList := simple.FormValue(c.Ctx, "imageList")
 	tags := simple.FormValueStringArray(c.Ctx, "tags")
-	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
+	topic, err := services.TopicService.Publish(topicType, user.Id, nodeId, tags, title, content, imageList)
 	if err != nil {
 		return simple.JsonError(err)
 	}
@@ -93,6 +95,9 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	if topic.UserId != user.Id {
 		return simple.JsonErrorMsg("无权限")
 	}
+	if topic.Type == model.TopicTypeTwitter {
+		return simple.JsonErrorMsg("推文类型话题不允许修改")
+	}
 
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
@@ -137,7 +142,7 @@ func (c *TopicController) GetBy(topicId int64) *simple.JsonResult {
 }
 
 // 点赞
-func (c *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
+func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
@@ -147,6 +152,19 @@ func (c *TopicController) GetLikeBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
+}
+
+// 点赞用户
+func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
+	topicLikes := services.TopicLikeService.Recent(topicId, 10)
+	var users []model.UserInfo
+	for _, topicLike := range topicLikes {
+		userInfo := render.BuildUserById(topicLike.UserId)
+		if userInfo != nil {
+			users = append(users, *userInfo)
+		}
+	}
+	return simple.JsonData(users)
 }
 
 // 最新帖子

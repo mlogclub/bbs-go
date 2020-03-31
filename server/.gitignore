@@ -14,7 +14,8 @@
 
 bbs-go
 
-
+bbs-go.yaml
+bbs-go.prod.yaml
 
 .idea/*
 build/*

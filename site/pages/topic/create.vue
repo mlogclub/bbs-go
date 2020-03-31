@@ -47,7 +47,12 @@
 
             <div class="field">
               <div class="control">
-                <markdown-editor v-model="postForm.content" />
+                <markdown-editor
+                  ref="mdEditor"
+                  v-model="postForm.content"
+                  editor-id="topicCreateEditor"
+                  placeholder="可空，将图片复制或拖入编辑器可上传"
+                />
               </div>
             </div>
 
@@ -91,15 +96,17 @@ export default {
     MarkdownHelp,
     MarkdownEditor
   },
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, store }) {
     // 节点
     const nodes = await $axios.get('/api/topic/nodes')
 
     // 发帖标签
+    const config = store.state.config.config || {}
+    const nodeId = query.nodeId || config.defaultNodeId
     let currentNode = null
-    if (query.nodeId) {
+    if (nodeId) {
       try {
-        currentNode = await $axios.get('/api/topic/node?nodeId=' + query.nodeId)
+        currentNode = await $axios.get('/api/topic/node?nodeId=' + nodeId)
       } catch (e) {
         console.error(e)
       }
@@ -156,6 +163,7 @@ export default {
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
         })
+        this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
           duration: 1000,
           onComplete() {
@@ -172,18 +180,6 @@ export default {
   head() {
     return {
       title: this.$siteTitle('发表话题')
-      // link: [
-      //   {
-      //     rel: 'stylesheet',
-      //     href: '//cdn.jsdelivr.net/npm/vditor/dist/index.classic.css'
-      //   }
-      // ],
-      // script: [
-      //   {
-      //     src: '//cdn.jsdelivr.net/npm/vditor/dist/index.min.js',
-      //     defer: true
-      //   }
-      // ]
     }
   }
 }

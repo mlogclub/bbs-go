@@ -5,12 +5,17 @@
     </div>
     <div class="widget-content content">
       <ol>
-        <li><tt>### 单行的标题</tt></li>
-        <li><tt>**粗体**</tt></li>
-        <li><tt>`console.log('行内代码')`</tt></li>
-        <li><tt>```js\n code \n```</tt> 标记代码块</li>
-        <li><tt>[内容](链接)</tt></li>
-        <li><tt>![文字说明](图片链接)</tt></li>
+        <li>
+          <span style="font-weight: 700; color: red;"
+            >将图片复制或拖入编辑器可上传</span
+          >
+        </li>
+        <li>## 单行的标题</li>
+        <li>**粗体**</li>
+        <li>`console.log('行内代码')`</li>
+        <li>```js\n code \n``` 标记代码块</li>
+        <li>[内容](链接)</li>
+        <li>![文字说明](图片链接)</li>
       </ol>
       <span>
         <a href="https://mlog.club/article/5522" target="_blank"

@@ -53,6 +53,10 @@ func (s *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, pa
 	return repositories.TopicRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
+func (s *topicService) Count(cnd *simple.SqlCnd) int {
+	return repositories.TopicRepository.Count(simple.DB(), cnd)
+}
+
 func (s *topicService) Create(t *model.Topic) error {
 	return repositories.TopicRepository.Create(simple.DB(), t)
 }
@@ -90,7 +94,7 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
+func (s *topicService) Publish(topicType int, userId, nodeId int64, tags []string, title, content, imageList string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -99,6 +103,12 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil, simple.NewErrorMsg("标题长度不能超过128")
 	}
 
+	if nodeId <= 0 {
+		nodeId = SysConfigService.GetConfig().DefaultNodeId
+		if nodeId <= 0 {
+			return nil, simple.NewErrorMsg("请配置默认节点")
+		}
+	}
 	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
 	if node == nil || node.Status != model.StatusOk {
 		return nil, simple.NewErrorMsg("节点不存在")
@@ -106,10 +116,12 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 
 	now := simple.NowTimestamp()
 	topic := &model.Topic{
+		Type:            topicType,
 		UserId:          userId,
 		NodeId:          nodeId,
 		Title:           title,
 		Content:         content,
+		ImageList:       imageList,
 		Status:          model.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
@@ -117,7 +129,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
-		err := repositories.TopicRepository.Create(simple.DB(), topic)
+		err := repositories.TopicRepository.Create(tx, topic)
 		if err != nil {
 			return err
 		}
@@ -126,6 +138,11 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil
 	})
 	if err == nil {
+		// 用户话题计数
+		UserService.IncrTopicCount(userId)
+		// 获得积分
+		UserScoreService.IncrementPostTopicScore(topic)
+		// 百度链接推送
 		baiduseo.PushUrl(urls.TopicUrl(topic.Id))
 	}
 	return topic, simple.FromError(err)
@@ -161,8 +178,6 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
 	})
-	baiduseo.PushUrl(urls.TopicUrl(topicId))
-
 	return simple.FromError(err)
 }
 

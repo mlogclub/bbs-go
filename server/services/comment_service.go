@@ -43,6 +43,10 @@ func (s *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment
 	return repositories.CommentRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
+func (s *commentService) Count(cnd *simple.SqlCnd) int {
+	return repositories.CommentRepository.Count(simple.DB(), cnd)
+}
+
 func (s *commentService) Create(t *model.Comment) error {
 	return repositories.CommentRepository.Create(simple.DB(), t)
 }
@@ -101,18 +105,22 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
 	}
 
+	// 用户跟帖计数
+	UserService.IncrCommentCount(userId)
+	// 获得积分
+	UserScoreService.IncrementPostCommentScore(comment)
 	// 发送消息
 	MessageService.SendCommentMsg(comment)
 
 	return comment, nil
 }
 
-// 统计数量
-func (s *commentService) Count(entityType string, entityId int64) int64 {
-	var count int64 = 0
-	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
-	return count
-}
+// // 统计数量
+// func (s *commentService) Count(entityType string, entityId int64) int64 {
+// 	var count int64 = 0
+// 	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
+// 	return count
+// }
 
 // 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {

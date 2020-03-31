@@ -61,6 +61,10 @@ func (r *commentRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
+func (r *commentRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+	return cnd.Count(db, &model.Comment{})
+}
+
 func (r *commentRepository) Create(db *gorm.DB, t *model.Comment) (err error) {
 	err = db.Create(t).Error
 	return

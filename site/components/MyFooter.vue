@@ -5,6 +5,7 @@
         <div>
           <a href="/about">关于</a>
           <a href="/tags">标签</a>
+          <a href="/links">友链</a>
         </div>
         <div>
           © 2019 Powered by

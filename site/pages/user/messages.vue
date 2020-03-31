@@ -32,12 +32,7 @@
                 class="message-item"
               >
                 <div class="message-item-left">
-                  <div
-                    :style="{
-                      backgroundImage: 'url(' + message.from.avatar + ')'
-                    }"
-                    class="avatar is-rounded has-border"
-                  />
+                  <img v-lazy="message.from.avatar" class="avatar" />
                 </div>
                 <div class="message-item-right">
                   <div class="message-item-meta">
@@ -87,7 +82,7 @@
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="currentUser" :current-user="currentUser" />
+      <user-center-sidebar :user="currentUser" />
     </div>
   </section>
 </template>
@@ -99,12 +94,10 @@ export default {
   middleware: 'authenticated',
   components: { UserCenterSidebar, Pagination },
   async asyncData({ $axios, query }) {
-    const [currentUser, messagesPage] = await Promise.all([
-      $axios.get('/api/user/current'),
+    const [messagesPage] = await Promise.all([
       $axios.get('/api/user/messages?page=' + (query.p || 1))
     ])
     return {
-      currentUser,
       messagesPage
     }
   },
@@ -113,6 +106,11 @@ export default {
       messages: [],
       cursor: 0,
       hasMore: true
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
     }
   }
 }

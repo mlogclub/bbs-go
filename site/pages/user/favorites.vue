@@ -30,7 +30,7 @@
                 <article v-else class="article-item">
                   <div class="article-item-left">
                     <a :href="'/user/' + favorite.user.id" target="_blank">
-                      <img :src="favorite.user.avatar" class="avatar" />
+                      <img v-lazy="favorite.user.avatar" class="avatar" />
                     </a>
                   </div>
 
@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="currentUser" :current-user="currentUser" />
+      <user-center-sidebar :user="currentUser" />
     </div>
   </section>
 </template>
@@ -77,17 +77,17 @@ export default {
   components: {
     UserCenterSidebar
   },
-  async asyncData({ $axios, params }) {
-    const [currentUser] = await Promise.all([$axios.get('/api/user/current')])
-    return {
-      currentUser
-    }
-  },
+  async asyncData({ $axios, params }) {},
   data() {
     return {
       favorites: [],
       cursor: 0,
       hasMore: true
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.current
     }
   },
   mounted() {

@@ -7,10 +7,12 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 
 	"bbs-go/common"
 	"bbs-go/common/avatar"
-	"bbs-go/common/oss"
+	"bbs-go/common/uploader"
 	"bbs-go/services/cache"
 
 	"bbs-go/model"
@@ -83,7 +85,7 @@ func (s *userService) Delete(id int64) {
 	cache.UserCache.Invalidate(id)
 }
 
-// 扫描
+// Scan 扫描
 func (s *userService) Scan(cb ScanUserCallback) {
 	var cursor int64
 	for {
@@ -96,26 +98,25 @@ func (s *userService) Scan(cb ScanUserCallback) {
 	}
 }
 
+// GetByEmail 根据邮箱查找
 func (s *userService) GetByEmail(email string) *model.User {
 	return repositories.UserRepository.GetByEmail(simple.DB(), email)
 }
 
+// GetByUsername 根据用户名查找
 func (s *userService) GetByUsername(username string) *model.User {
 	return repositories.UserRepository.GetByUsername(simple.DB(), username)
 }
 
-// 注册
+// SignUp 注册
 func (s *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 	nickname = strings.TrimSpace(nickname)
 
+	// 验证昵称
 	if len(nickname) == 0 {
 		return nil, errors.New("昵称不能为空")
-	}
-
-	if err := common.IsValidateUsername(username); err != nil {
-		return nil, err
 	}
 
 	// 验证密码
@@ -124,7 +125,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		return nil, err
 	}
 
-	// 如果设置了邮箱，那么需要验证邮箱
+	// 验证邮箱
 	if len(email) > 0 {
 		if err := common.IsValidateEmail(email); err != nil {
 			return nil, err
@@ -132,11 +133,18 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		if s.GetByEmail(email) != nil {
 			return nil, errors.New("邮箱：" + email + " 已被占用")
 		}
+	} else {
+		return nil, errors.New("请输入邮箱")
 	}
 
-	// 验证用户名是否存在
-	if s.isUsernameExists(username) {
-		return nil, errors.New("用户名：" + username + " 已被占用")
+	// 验证用户名
+	if len(username) > 0 {
+		if err := common.IsValidateUsername(username); err != nil {
+			return nil, err
+		}
+		if s.isUsernameExists(username) {
+			return nil, errors.New("用户名：" + username + " 已被占用")
+		}
 	}
 
 	user := &model.User{
@@ -171,7 +179,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	return user, nil
 }
 
-// 登录
+// SignIn 登录
 func (s *userService) SignIn(username, password string) (*model.User, error) {
 	if len(username) == 0 {
 		return nil, errors.New("用户名/邮箱不能为空")
@@ -194,7 +202,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	return user, nil
 }
 
-// 第三方账号登录
+// SignInByThirdAccount 第三方账号登录
 func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
@@ -204,12 +212,26 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		return user, nil
 	}
 
+	var homePage string
+	var description string
+	if thirdAccount.ThirdType == model.ThirdAccountTypeGithub {
+		if blog := gjson.Get(thirdAccount.ExtraData, "blog"); blog.Exists() && len(blog.String()) > 0 {
+			homePage = blog.String()
+		} else if htmlUrl := gjson.Get(thirdAccount.ExtraData, "html_url"); htmlUrl.Exists() && len(htmlUrl.String()) > 0 {
+			homePage = htmlUrl.String()
+		}
+
+		description = gjson.Get(thirdAccount.ExtraData, "bio").String()
+	}
+
 	user = &model.User{
-		Username:   sql.NullString{},
-		Nickname:   thirdAccount.Nickname,
-		Status:     model.StatusOk,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
+		Username:    sql.NullString{},
+		Nickname:    thirdAccount.Nickname,
+		Status:      model.StatusOk,
+		HomePage:    homePage,
+		Description: description,
+		CreateTime:  simple.NowTimestamp(),
+		UpdateTime:  simple.NowTimestamp(),
 	}
 	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.Create(tx, user); err != nil {
@@ -237,21 +259,21 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 	return user, nil
 }
 
-// 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
+// HandleAvatar 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
 // thirdAvatar: 第三方登录带过来的头像
 func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
 	if len(thirdAvatar) > 0 {
-		return oss.CopyImage(thirdAvatar)
+		return uploader.CopyImage(thirdAvatar)
 	}
 
 	avatarBytes, err := avatar.Generate(userId)
 	if err != nil {
 		return "", err
 	}
-	return oss.PutImage(avatarBytes)
+	return uploader.PutImage(avatarBytes)
 }
 
-// 邮箱是否存在
+// isEmailExists 邮箱是否存在
 func (s *userService) isEmailExists(email string) bool {
 	if len(email) == 0 { // 如果邮箱为空，那么就认为是不存在
 		return false
@@ -259,12 +281,17 @@ func (s *userService) isEmailExists(email string) bool {
 	return s.GetByEmail(email) != nil
 }
 
-// 用户名是否存在
+// isUsernameExists 用户名是否存在
 func (s *userService) isUsernameExists(username string) bool {
 	return s.GetByUsername(username) != nil
 }
 
-// 设置用户名
+// SetAvatar 更新头像
+func (s *userService) UpdateAvatar(userId int64, avatar string) error {
+	return s.UpdateColumn(userId, "avatar", avatar)
+}
+
+// SetUsername 设置用户名
 func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
 	if err := common.IsValidateUsername(username); err != nil {
@@ -281,7 +308,7 @@ func (s *userService) SetUsername(userId int64, username string) error {
 	return s.UpdateColumn(userId, "username", username)
 }
 
-// 设置密码
+// SetEmail 设置密码
 func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
 	if err := common.IsValidateEmail(email); err != nil {
@@ -293,7 +320,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 	return s.UpdateColumn(userId, "email", email)
 }
 
-// 设置密码
+// SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
@@ -306,7 +333,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 	return s.UpdateColumn(userId, "password", password)
 }
 
-// 修改密码
+// UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
 	if err := common.IsValidatePassword(password, rePassword); err != nil {
 		return err
@@ -322,4 +349,47 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 	}
 
 	return s.UpdateColumn(userId, "password", simple.EncodePassword(password))
+}
+
+// IncrTopicCount topic_count + 1
+func (s *userService) IncrTopicCount(userId int64) int {
+	t := repositories.UserRepository.Get(simple.DB(), userId)
+	if t == nil {
+		return 0
+	}
+	topicCount := t.TopicCount + 1
+	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "topic_count", topicCount); err != nil {
+		logrus.Error(err)
+	} else {
+		cache.UserCache.Invalidate(userId)
+	}
+	return topicCount
+}
+
+// IncrCommentCount comment_count + 1
+func (s *userService) IncrCommentCount(userId int64) int {
+	t := repositories.UserRepository.Get(simple.DB(), userId)
+	if t == nil {
+		return 0
+	}
+	commentCount := t.CommentCount + 1
+	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "comment_count", commentCount); err != nil {
+		logrus.Error(err)
+	} else {
+		cache.UserCache.Invalidate(userId)
+	}
+	return commentCount
+}
+
+// SyncUserCount 同步用户计数
+func (s *userService) SyncUserCount() {
+	s.Scan(func(users []model.User) {
+		for _, user := range users {
+			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
+			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
+			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "topic_count", topicCount)
+			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "comment_count", commentCount)
+			cache.UserCache.Invalidate(user.Id)
+		}
+	})
 }

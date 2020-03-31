@@ -29,7 +29,7 @@ func (c *SitemapController) AnyList() *simple.JsonResult {
 
 func (c *SitemapController) PostCreate() *simple.JsonResult {
 	t := &model.Sitemap{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *SitemapController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

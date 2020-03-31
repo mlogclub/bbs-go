@@ -29,7 +29,7 @@ func (c *ThirdAccountController) AnyList() *simple.JsonResult {
 
 func (c *ThirdAccountController) PostCreate() *simple.JsonResult {
 	t := &model.ThirdAccount{}
-	err := c.Ctx.ReadForm(t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *ThirdAccountController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = c.Ctx.ReadForm(t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

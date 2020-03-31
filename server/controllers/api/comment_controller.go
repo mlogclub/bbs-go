@@ -42,7 +42,7 @@ func (c *CommentController) PostCreate() *simple.JsonResult {
 	}
 
 	form := &model.CreateCommentForm{}
-	err := c.Ctx.ReadForm(form)
+	err := simple.ReadForm(c.Ctx, form)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

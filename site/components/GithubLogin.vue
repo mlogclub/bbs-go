@@ -11,7 +11,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '登录'
+      default: 'Github 登录'
     },
     refUrl: {
       // 登录来源地址，控制登录成功之后要跳到该地址
