@@ -108,7 +108,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://localhost:8082'
+    '/api/': 'http://www.stonelan.com'
     // '/api/': 'https://mlog.club'
   },
 
