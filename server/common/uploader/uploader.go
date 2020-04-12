@@ -23,7 +23,7 @@ var (
 )
 
 func PutImage(data []byte) (string, error) {
-	if config.Conf.Uploader.Enable == "aliyun" {
+	if config.Conf.Uploader.Enable == "aliyun" || config.Conf.Uploader.Enable == "Oss" {
 		return aliyun.PutImage(data)
 	} else {
 		return local.PutImage(data)
