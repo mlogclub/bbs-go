@@ -92,10 +92,10 @@
             </div>
 
             <div
-              v-html="article.content"
               v-lazy-container="{ selector: 'img' }"
               class="article-content content"
               itemprop="articleBody"
+              v-html="article.content"
             ></div>
           </div>
 

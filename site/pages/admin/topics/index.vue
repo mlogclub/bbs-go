@@ -14,9 +14,9 @@
         <el-form-item>
           <el-select
             v-model="filters.recommend"
-            @change="list"
             clearable
             placeholder="是否推荐"
+            @change="list"
           >
             <el-option label="推荐" value="1"></el-option>
             <el-option label="未推荐" value="0"></el-option>
@@ -25,16 +25,16 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
-            @change="list"
             clearable
             placeholder="请选择状态"
+            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -70,15 +70,15 @@
           <span v-if="item.status === 1" class="danger">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
 
-          <a v-if="item.status === 0" @click="deleteSubmit(item)" class="btn"
+          <a v-if="item.status === 0" class="btn" @click="deleteSubmit(item)"
             >删除</a
           >
-          <a v-else @click="undeleteSubmit(item)" class="btn">取消删除</a>
+          <a v-else class="btn" @click="undeleteSubmit(item)">取消删除</a>
 
-          <a v-if="!item.recommend" @click="recommend(item.id)" class="btn"
+          <a v-if="!item.recommend" class="btn" @click="recommend(item.id)"
             >推荐</a
           >
-          <a v-else @click="cancelRecommend(item.id)" class="btn">取消推荐</a>
+          <a v-else class="btn" @click="cancelRecommend(item.id)">取消推荐</a>
         </div>
       </div>
     </div>
@@ -86,12 +86,12 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
         layout="total, sizes, prev, pager, next, jumper"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
       >
       </el-pagination>
     </div>
@@ -130,9 +130,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          @click.native="addSubmit"
           :loading="addLoading"
           type="primary"
+          @click.native="addSubmit"
           >提交</el-button
         >
       </div>
@@ -178,9 +178,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          @click.native="editSubmit"
           :loading="editLoading"
           type="primary"
+          @click.native="editSubmit"
           >提交</el-button
         >
       </div>

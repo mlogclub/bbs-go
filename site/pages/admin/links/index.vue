@@ -11,26 +11,26 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
-            @change="list"
             clearable
             placeholder="请选择状态"
+            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleAdd" type="primary">新增</el-button>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <el-table
-      :data="results"
       v-loading="listLoading"
+      :data="results"
       highlight-current-row
       stripe
       style="width: 100%;"
@@ -61,7 +61,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑
           </el-button>
         </template>
@@ -71,12 +71,12 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
         layout="total, sizes, prev, pager, next, jumper"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
       ></el-pagination>
     </div>
 
@@ -88,7 +88,7 @@
       <el-form ref="addForm" :model="addForm" label-width="80px">
         <el-form-item label="链接">
           <el-input v-model="addForm.url" style="width: 80%;"></el-input>&nbsp;
-          <el-button @click="detect" type="primary">Detect</el-button>
+          <el-button type="primary" @click="detect">Detect</el-button>
         </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="addForm.title"></el-input>
@@ -112,9 +112,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          @click.native="addSubmit"
           :loading="addLoading"
           type="primary"
+          @click.native="addSubmit"
           >提交
         </el-button>
       </div>
@@ -157,9 +157,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          @click.native="editSubmit"
           :loading="editLoading"
           type="primary"
+          @click.native="editSubmit"
           >提交
         </el-button>
       </div>

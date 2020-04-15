@@ -82,8 +82,8 @@
                   <div class="like">
                     <span
                       :class="{ liked: topic.liked }"
-                      @click="like(topic)"
                       class="like-btn"
+                      @click="like(topic)"
                     >
                       <i class="iconfont icon-like" />
                     </span>
@@ -110,32 +110,30 @@
 
               <div class="content topic-content" itemprop="articleBody">
                 <div
-                  v-html="topic.content"
                   v-lazy-container="{ selector: 'img' }"
+                  v-html="topic.content"
                 ></div>
 
-                <figure
-                  v-if="topic.imageList"
-                  v-for="image in topic.imageList"
-                  :key="image"
-                >
-                  <img v-lazy="image" />
-                </figure>
+                <template v-if="topic.imageList">
+                  <figure v-for="image in topic.imageList" :key="image">
+                    <img v-lazy="image" />
+                  </figure>
+                </template>
               </div>
 
               <div class="topic-actions">
                 <div
                   :class="{ active: favorited }"
-                  @click="addFavorite(topic.topicId)"
                   class="action favorite"
+                  @click="addFavorite(topic.topicId)"
                 >
                   <i class="iconfont icon-favorite" />
                 </div>
                 <span class="split"></span>
                 <div
                   :class="{ active: topic.liked }"
-                  @click="like(topic)"
                   class="action like"
+                  @click="like(topic)"
                 >
                   <i class="iconfont icon-like" />
                 </div>
@@ -213,11 +211,11 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
+          <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
             <div class="widget-header">
               目录
             </div>
-            <div v-html="topic.toc" class="widget-content" />
+            <div class="widget-content" v-html="topic.toc" />
           </div>
         </div>
       </div>

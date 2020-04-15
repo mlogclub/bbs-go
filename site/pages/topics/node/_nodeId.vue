@@ -3,7 +3,7 @@
     <div class="container main-container left-main">
       <div class="left-container">
         <div class="main-content" style="padding: 0;">
-          <post-twitter @created="twitterCreated" :node-id="node.nodeId" />
+          <post-twitter :node-id="node.nodeId" @created="twitterCreated" />
         </div>
         <div class="main-content">
           <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
