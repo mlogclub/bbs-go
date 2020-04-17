@@ -15,16 +15,16 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
-            @change="list"
             clearable
             placeholder="请选择状态"
+            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -55,7 +55,7 @@
         <div class="article-footer">
           <span v-if="item.status === 1" class="danger">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
-          <a @click="deleteSubmit(item)" class="btn">删除</a>
+          <a class="btn" @click="deleteSubmit(item)">删除</a>
         </div>
       </div>
     </div>
@@ -67,9 +67,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-        layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
   </section>

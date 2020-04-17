@@ -52,8 +52,8 @@
                 <a
                   :class="{ 'is-loading': publishing }"
                   :disabled="publishing"
-                  @click="submitCreate"
                   class="button is-success"
+                  @click="submitCreate"
                   >发表</a
                 >
               </div>

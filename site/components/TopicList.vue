@@ -65,8 +65,8 @@
             <div class="like">
               <span
                 :class="{ liked: topic.liked }"
-                @click="like(topic)"
                 class="like-btn"
+                @click="like(topic)"
               >
                 <i class="iconfont icon-like" />
               </span>

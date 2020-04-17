@@ -1,25 +1,25 @@
 <template>
-  <div class="post-twitter-box">
+  <div class="post-tweets-wrapper">
     <ul class="tab-list">
       <li class="tab-item current">
         <div class="tab-name">发表推文</div>
       </li>
     </ul>
-    <div class="twitter-box">
+    <div class="tweets-box">
       <textarea
         v-model="content"
+        placeholder="有什么新鲜事想告诉大家"
+        class="title-input"
         @input="onInput"
         @paste="handleParse"
         @drop="handleDrag"
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
-        placeholder="有什么新鲜事想告诉大家"
-        class="title-input"
       />
       <p class="words-number">{{ wordCount }}/{{ maxWordCount }}字</p>
       <div class="box-footer">
         <div class="bui-left">
-          <span @click="showUploader = !showUploader" class="action-btn">
+          <span class="action-btn" @click="showUploader = !showUploader">
             <i class="iconfont icon-image" />
             <span>图片</span>
           </span>
@@ -34,8 +34,8 @@
           <span class="msg-tip">{{ message }}</span>
           <a
             :class="{ active: hasContent }"
-            @click="doSubmit"
             class="upload-publish"
+            @click="doSubmit"
             >发布</a
           >
         </div>
@@ -48,31 +48,31 @@
             共 {{ imageCount }} 张，还能上传 {{ maxImageCount }} 张
           </p>
           <i
-            @click="showUploader = false"
             class="close-popup iconfont icon-close"
+            @click="showUploader = false"
           />
           <div class="upload-box">
             <form style="display: none;">
               <input
                 ref="imageInput"
-                @change="handleImageUploadChange"
                 type="file"
                 accept="image/*"
                 multiple="multiple"
+                @change="handleImageUploadChange"
               />
             </form>
             <ul class="upload-img-list">
               <li v-for="(image, i) in images" :key="i" class="upload-img-item">
                 <img :src="image" />
                 <i
-                  @click="removeImg(image)"
                   class="iconfont icon-close remove"
+                  @click="removeImg(image)"
                 />
               </li>
               <li
                 v-if="imageCount < maxImageCount"
-                @click="handleImageUploadClick"
                 class="upload-img-item upload-img-add"
+                @click="handleImageUploadClick"
               >
                 <i class="iconfont icon-add" />
               </li>
@@ -239,11 +239,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.post-twitter-box {
+.post-tweets-wrapper {
   position: relative;
   /*border: 1px solid #e8e8e8;*/
   width: 100%;
-  /*margin: 5px 0;*/
 
   .tab-list {
     height: 36px;
@@ -272,7 +271,7 @@ export default {
     }
   }
 
-  .twitter-box {
+  .tweets-box {
     padding: 0;
     margin: 0;
     box-sizing: border-box;

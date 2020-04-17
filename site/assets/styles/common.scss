@@ -77,6 +77,10 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     background-color: #fff;
     padding: 0 10px 10px 10px;
     margin-bottom: 10px;
+
+    &.no-padding {
+      padding: 0;
+    }
   }
 
   .left-container,

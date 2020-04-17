@@ -10,28 +10,28 @@
             回复：
             <label v-text="quote.user.nickname" />
             <i
-              @click="cancelReply"
               class="iconfont icon-close"
               alt="取消回复"
+              @click="cancelReply"
             />
           </div>
           <markdown-editor
             ref="mdEditor"
             v-model="content"
-            @submit="ctrlEnterCreate"
             editor-id="createEditor"
             height="200px"
             placeholder="请发表你的观点..."
+            @submit="ctrlEnterCreate"
           />
         </div>
         <div class="comment-button-wrapper">
-          <button @click="create" v-text="btnName" class="button is-light" />
+          <button class="button is-light" @click="create" v-text="btnName" />
         </div>
       </div>
       <div v-else class="comment-not-login">
         <div class="comment-login-div">
           请
-          <a @click="toLogin" style="font-weight: 700;">登录</a>后发表观点
+          <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
         </div>
       </div>
     </div>
@@ -42,8 +42,8 @@
     </div>
 
     <load-more
-      ref="commentsLoadMore"
       v-if="commentsPage"
+      ref="commentsLoadMore"
       v-slot="{ results }"
       :init-data="commentsPage"
       :params="{ entityType: entityType, entityId: entityId }"
@@ -105,8 +105,8 @@
               </div>
               <div
                 v-lazy-container="{ selector: 'img' }"
-                v-html="comment.quote.content"
                 itemprop="text"
+                v-html="comment.quote.content"
               />
             </blockquote>
             <p

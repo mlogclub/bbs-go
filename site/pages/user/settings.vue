@@ -83,9 +83,9 @@
                     <div class="file">
                       <label class="file-label">
                         <input
-                          @change="uploadAvatar"
                           class="file-input"
                           type="file"
+                          @change="uploadAvatar"
                         />
                         <span class="file-cta">
                           <span class="file-icon">
@@ -175,7 +175,7 @@
               <div class="field-body">
                 <div class="field">
                   <div class="control">
-                    <a @click="submitForm" class="button is-success"
+                    <a class="button is-success" @click="submitForm"
                       >提交修改</a
                     >
                   </div>
@@ -196,9 +196,9 @@
           <div class="widget-header">
             设置用户名
             <button
-              @click="showSetUsername = false"
               class="delete"
               aria-label="close"
+              @click="showSetUsername = false"
             />
           </div>
           <div class="widget-content">
@@ -206,10 +206,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.username"
-                  @keydown.enter="setUsername"
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名"
+                  @keydown.enter="setUsername"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
@@ -218,8 +218,8 @@
             </div>
           </div>
           <div class="widget-footer is-right">
-            <a @click="setUsername" class="button is-success">确定</a>
-            <a @click="showSetUsername = false" class="button">取消</a>
+            <a class="button is-success" @click="setUsername">确定</a>
+            <a class="button" @click="showSetUsername = false">取消</a>
           </div>
         </div>
       </div>
@@ -233,9 +233,9 @@
           <div class="widget-header">
             设置邮箱
             <button
-              @click="showSetEmail = false"
               class="delete"
               aria-label="close"
+              @click="showSetEmail = false"
             />
           </div>
           <div class="widget-content">
@@ -243,10 +243,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.email"
-                  @keydown.enter="setEmail"
                   class="input is-success"
                   type="text"
                   placeholder="请输入邮箱"
+                  @keydown.enter="setEmail"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-email" />
@@ -255,8 +255,8 @@
             </div>
           </div>
           <div class="widget-footer is-right">
-            <a @click="setEmail" class="button is-success">确定</a>
-            <a @click="showSetEmail = false" class="button">取消</a>
+            <a class="button is-success" @click="setEmail">确定</a>
+            <a class="button" @click="showSetEmail = false">取消</a>
           </div>
         </div>
       </div>
@@ -270,9 +270,9 @@
           <div class="widget-header">
             设置密码
             <button
-              @click="showSetPassword = false"
               class="delete"
               aria-label="close"
+              @click="showSetPassword = false"
             />
           </div>
           <div class="widget-content">
@@ -280,10 +280,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.password"
-                  @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入密码"
+                  @keydown.enter="setPassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -294,10 +294,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.rePassword"
-                  @keydown.enter="setPassword"
                   class="input is-success"
                   type="password"
                   placeholder="请再次确认密码"
+                  @keydown.enter="setPassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -306,8 +306,8 @@
             </div>
           </div>
           <div class="widget-footer is-right">
-            <a @click="setPassword" class="button is-success">确定</a>
-            <a @click="showSetPassword = false" class="button">取消</a>
+            <a class="button is-success" @click="setPassword">确定</a>
+            <a class="button" @click="showSetPassword = false">取消</a>
           </div>
         </div>
       </div>
@@ -321,9 +321,9 @@
           <div class="widget-header">
             修改密码
             <button
-              @click="showUpdatePassword = false"
               class="delete"
               aria-label="close"
+              @click="showUpdatePassword = false"
             />
           </div>
           <div class="widget-content">
@@ -331,10 +331,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.oldPassword"
-                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入当前密码"
+                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -345,10 +345,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.password"
-                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请输入密码"
+                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -359,10 +359,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="form.rePassword"
-                  @keydown.enter="updatePassword"
                   class="input is-success"
                   type="password"
                   placeholder="请再次确认密码"
+                  @keydown.enter="updatePassword"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -371,8 +371,8 @@
             </div>
           </div>
           <div class="widget-footer is-right">
-            <a @click="updatePassword" class="button is-success">确定</a>
-            <a @click="showUpdatePassword = false" class="button">取消</a>
+            <a class="button is-success" @click="updatePassword">确定</a>
+            <a class="button" @click="showUpdatePassword = false">取消</a>
           </div>
         </div>
       </div>
