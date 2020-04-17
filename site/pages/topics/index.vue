@@ -2,9 +2,6 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <div class="main-content" style="padding: 0;">
-          <post-twitter @created="twitterCreated" />
-        </div>
         <div class="main-content">
           <topics-nav :nodes="nodes" />
           <topic-list :topics="topicsPage.results" :show-ad="true" />
@@ -17,7 +14,6 @@
 </template>
 
 <script>
-import PostTwitter from '~/components/PostTwitter'
 import TopicSide from '~/components/TopicSide'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
@@ -25,7 +21,6 @@ import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    PostTwitter,
     TopicSide,
     TopicsNav,
     TopicList,
