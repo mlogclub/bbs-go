@@ -93,9 +93,9 @@
 
             <div
               v-lazy-container="{ selector: 'img' }"
+              v-html="article.content"
               class="article-content content"
               itemprop="articleBody"
-              v-html="article.content"
             ></div>
           </div>
 

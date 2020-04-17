@@ -23,11 +23,11 @@
               <div class="control">
                 <input
                   v-model="url"
+                  @blur="detect"
+                  @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
                   placeholder="博客链接 必填 以 http(s):// 开头"
-                  @blur="detect"
-                  @keyup.enter="submitLink"
                 />
               </div>
             </div>
@@ -37,10 +37,10 @@
               <div class="control">
                 <input
                   v-model="title"
+                  @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
                   placeholder="博客标题 必填"
-                  @keyup.enter="submitLink"
                 />
               </div>
             </div>
@@ -50,10 +50,10 @@
               <div class="control">
                 <input
                   v-model="summary"
+                  @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
                   placeholder="博客简介 必填"
-                  @keyup.enter="submitLink"
                 />
               </div>
             </div>
@@ -63,10 +63,10 @@
               <div class="control">
                 <input
                   v-model="logo"
+                  @keyup.enter="submitLink"
                   class="input is-success"
                   type="text"
                   placeholder="博客Logo（非必填请填写Logo链接）"
-                  @keyup.enter="submitLink"
                 />
               </div>
             </div>
@@ -76,8 +76,8 @@
                 <button
                   :class="{ 'is-loading': publishing }"
                   :disabled="publishing"
-                  class="button is-success"
                   @click="submitLink"
+                  class="button is-success"
                 >
                   提交
                 </button>
