@@ -3,8 +3,18 @@
     <div class="container main-container left-main">
       <div class="left-container">
         <div class="main-content no-padding">
-          <post-tweets />
+          <post-tweets @created="tweetsCreated" />
         </div>
+
+        <load-more
+          ref="tweetsLoadMore"
+          v-if="tweetsPage"
+          v-slot="{ results }"
+          :init-data="tweetsPage"
+          url="/api/tweets/list"
+        >
+          <tweets-list :tweets="results" />
+        </load-more>
       </div>
       <topic-side :score-rank="scoreRank" :links="links" />
     </div>
@@ -14,24 +24,33 @@
 <script>
 import TopicSide from '~/components/TopicSide'
 import PostTweets from '~/components/PostTweets'
+import TweetsList from '~/components/TweetsList'
+import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
     TopicSide,
-    PostTweets
+    PostTweets,
+    TweetsList,
+    LoadMore
   },
   async asyncData({ $axios, query }) {
     try {
-      const [scoreRank, links] = await Promise.all([
+      const [tweetsPage, scoreRank, links] = await Promise.all([
+        $axios.get('/api/tweets/list'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks')
       ])
-      return { scoreRank, links }
+      return { tweetsPage, scoreRank, links }
     } catch (e) {
       console.error(e)
     }
   },
-  methods: {},
+  methods: {
+    tweetsCreated(item) {
+      this.$refs.tweetsLoadMore.unshiftResults(item)
+    }
+  },
   head() {
     return {
       title: this.$siteTitle('动态'),

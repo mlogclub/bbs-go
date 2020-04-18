@@ -285,6 +285,34 @@ func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
 	return responses
 }
 
+func BuildTweets(tweets *model.Tweets) *model.TweetsResponse {
+	if tweets == nil {
+		return nil
+	}
+
+	rsp := &model.TweetsResponse{
+		TweetsId:     tweets.Id,
+		Content:      tweets.Content,
+		CommentCount: tweets.CommentCount,
+		LikeCount:    tweets.LikeCount,
+		CreateTime:   tweets.CreateTime,
+	}
+	if len(tweets.ImageList) > 0 {
+		if err := simple.ParseJson(tweets.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
+	return rsp
+}
+
+func BuildTweetsList(tweets []model.Tweets) []model.TweetsResponse {
+	var ret []model.TweetsResponse
+	for _, tweet := range tweets {
+		ret = append(ret, *BuildTweets(&tweet))
+	}
+	return ret
+}
+
 func BuildProject(project *model.Project) *model.ProjectResponse {
 	if project == nil {
 		return nil

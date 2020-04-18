@@ -87,6 +87,16 @@ type TopicResponse struct {
 	Toc     template.HTML `json:"toc"`
 }
 
+// 帖子列表返回实体
+type TweetsResponse struct {
+	TweetsId     int64     `json:"tweetsId"`
+	Content      string    `json:"content"`
+	ImageList    *[]string `json:"imageList"`
+	CommentCount int64     `json:"commentCount"`
+	LikeCount    int64     `json:"likeCount"`
+	CreateTime   int64     `json:"createTime"`
+}
+
 // 项目简单返回
 type ProjectSimpleResponse struct {
 	ProjectId   int64     `json:"projectId"`

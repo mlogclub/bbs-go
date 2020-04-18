@@ -1,15 +1,16 @@
 package services
 
 import (
+	"github.com/mlogclub/simple"
+
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var TweetsService = newTweetsService()
 
 func newTweetsService() *tweetsService {
-	return &tweetsService {}
+	return &tweetsService{}
 }
 
 type tweetsService struct {
@@ -43,6 +44,34 @@ func (s *tweetsService) Count(cnd *simple.SqlCnd) int {
 	return repositories.TweetsRepository.Count(simple.DB(), cnd)
 }
 
+func (s *tweetsService) GetTweets(cursor int64) (tweets []model.Tweets, nextCursor int64) {
+	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(50)
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	tweets = repositories.TweetsRepository.Find(simple.DB(), cnd)
+	if len(tweets) > 0 {
+		nextCursor = tweets[len(tweets)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
+func (s *tweetsService) Publish(userId int64, content, imageList string) (*model.Tweets, error) {
+	tweets := &model.Tweets{
+		UserId:     userId,
+		Content:    content,
+		ImageList:  imageList,
+		Status:     model.StatusOk,
+		CreateTime: simple.NowTimestamp(),
+	}
+	if err := repositories.TweetsRepository.Create(simple.DB(), tweets); err != nil {
+		return nil, err
+	}
+	return tweets, nil
+}
+
 func (s *tweetsService) Create(t *model.Tweets) error {
 	return repositories.TweetsRepository.Create(simple.DB(), t)
 }
@@ -62,4 +91,3 @@ func (s *tweetsService) UpdateColumn(id int64, name string, value interface{}) e
 func (s *tweetsService) Delete(id int64) {
 	repositories.TweetsRepository.Delete(simple.DB(), id)
 }
-
