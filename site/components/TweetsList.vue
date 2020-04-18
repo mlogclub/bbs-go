@@ -61,12 +61,15 @@
               </div>
             </div>
             <div class="comment-action action">
-              <div class="action-title-box">
+              <a
+                :href="'/tweet/' + tweet.tweetId + '#comments'"
+                class="action-title-box"
+              >
                 <i class="iconfont icon-comment" />
                 <span class="action-title">{{
                   tweet.commentCount > 0 ? tweet.commentCount : '评论'
                 }}</span>
-              </div>
+              </a>
             </div>
           </div>
         </div>

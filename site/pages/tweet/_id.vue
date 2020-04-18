@@ -97,33 +97,17 @@ export default {
     Comment
   },
   async asyncData({ $axios, params, error }) {
-    let tweet
-    try {
-      tweet = await $axios.get('/api/tweet/' + params.id)
-    } catch (e) {
-      error({
-        statusCode: 404,
-        message: '动态不存在或被删除'
-      })
-      return
-    }
-
-    let commentsPage, scoreRank, links
-    try {
-      ;[commentsPage, scoreRank, links] = await Promise.all([
-        $axios.get('/api/comment/list', {
-          params: {
-            entityType: 'tweet',
-            entityId: params.id
-          }
-        }),
-        $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks')
-      ])
-      return { tweet, scoreRank, links }
-    } catch (e) {
-      console.error(e)
-    }
+    const [tweet, commentsPage, scoreRank, links] = await Promise.all([
+      $axios.get('/api/tweet/' + params.id),
+      $axios.get('/api/comment/list', {
+        params: {
+          entityType: 'tweet',
+          entityId: params.id
+        }
+      }),
+      $axios.get('/api/user/score/rank'),
+      $axios.get('/api/link/toplinks')
+    ])
     return { tweet, commentsPage, scoreRank, links }
   },
   methods: {
