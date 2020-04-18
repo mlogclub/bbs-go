@@ -32,6 +32,7 @@
         </div>
         <div class="bui-right">
           <span class="msg-tip">{{ message }}</span>
+          <span class="tweets-help">Ctrl or ⌘ + Enter</span>
           <a
             :class="{ active: hasContent }"
             @click="doSubmit"
@@ -96,8 +97,8 @@ export default {
     return {
       content: '',
       images: [
-        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
-        // 'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
+        'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
+        'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
       maxWordCount: 128,
@@ -343,6 +344,12 @@ export default {
           color: #ed4040;
           font-size: 12px;
           margin-right: 10px;
+        }
+
+        .tweets-help {
+          color: #c2c2c2;
+          font-size: 13px;
+          user-select: none;
         }
 
         .upload-publish {

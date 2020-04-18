@@ -292,6 +292,7 @@ func BuildTweets(tweets *model.Tweets) *model.TweetsResponse {
 
 	rsp := &model.TweetsResponse{
 		TweetsId:     tweets.Id,
+		User:         BuildUserDefaultIfNull(tweets.UserId),
 		Content:      tweets.Content,
 		CommentCount: tweets.CommentCount,
 		LikeCount:    tweets.LikeCount,
