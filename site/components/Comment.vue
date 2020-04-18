@@ -165,7 +165,7 @@ export default {
   },
   computed: {
     btnName() {
-      return this.sending ? '正在发表...' : '发表 (Ctrl/Cmd + Enter)'
+      return this.sending ? '正在发表...' : '发表 (Ctrl/⌘ + Enter)'
     },
     user() {
       return this.$store.state.user.current

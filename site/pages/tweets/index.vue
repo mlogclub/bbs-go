@@ -41,7 +41,6 @@ export default {
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks')
       ])
-      console.log(tweetsPage)
       return { tweetsPage, scoreRank, links }
     } catch (e) {
       console.error(e)

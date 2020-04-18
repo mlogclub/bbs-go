@@ -2,19 +2,83 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <div class="main-content no-padding">
-          <post-tweets @created="tweetsCreated" />
+        <div class="tweet">
+          <div class="pin-header-row">
+            <div class="account-group">
+              <div>
+                <a
+                  :href="'/user/' + tweet.user.id"
+                  :title="tweet.user.nickname"
+                >
+                  <img v-lazy="tweet.user.avatar" class="avatar size-45" />
+                </a>
+              </div>
+              <div class="pin-header-content">
+                <div>
+                  <a
+                    :href="'/user/' + tweet.user.id"
+                    :title="tweet.user.nickname"
+                    target="_blank"
+                    class="nickname"
+                    >{{ tweet.user.nickname }}</a
+                  >
+                </div>
+                <div class="meta-box">
+                  <div class="position ellipsis">
+                    {{
+                      tweet.user.description
+                        ? tweet.user.description
+                        : '这家伙很懒，什么都没留下'
+                    }}
+                  </div>
+                  <div class="dot">·</div>
+                  <time
+                    datetime="2020-04-17T17:26:43.760Z"
+                    title="Sat Apr 18 2020 01:26:43 GMT+0800 (中国标准时间)"
+                    class="time"
+                    >12小时前
+                  </time>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pin-content-row">
+            <div class="content-box">{{ tweet.content }}</div>
+          </div>
+          <ul
+            v-if="tweet.imageList && tweet.imageList.length > 0"
+            class="pin-image-row"
+          >
+            <li v-for="image in tweet.imageList" :key="image">
+              <div class="image-item">
+                <img v-lazy="image" />
+              </div>
+            </li>
+          </ul>
+          <div class="pin-action-row">
+            <div class="action-box">
+              <div class="like-action action">
+                <div class="action-title-box">
+                  <i class="iconfont icon-like" />
+                  <span class="action-title">7</span>
+                </div>
+              </div>
+              <div class="comment-action action">
+                <div class="action-title-box">
+                  <i class="iconfont icon-comment" />
+                  <span class="action-title">21</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <load-more
-          ref="tweetsLoadMore"
-          v-if="tweetsPage"
-          v-slot="{ results }"
-          :init-data="tweetsPage"
-          url="/api/tweet/list"
-        >
-          <tweets-list :tweets="results" />
-        </load-more>
+        <!-- 评论 -->
+        <comment
+          :entity-id="tweet.tweetId"
+          :comments-page="commentsPage"
+          entity-type="tweet"
+        />
       </div>
       <topic-side :score-rank="scoreRank" :links="links" />
     </div>
@@ -23,35 +87,44 @@
 
 <script>
 import TopicSide from '~/components/TopicSide'
-import PostTweets from '~/components/PostTweets'
-import TweetsList from '~/components/TweetsList'
-import LoadMore from '~/components/LoadMore'
+import Comment from '~/components/Comment'
 
 export default {
   components: {
     TopicSide,
-    PostTweets,
-    TweetsList,
-    LoadMore
+    Comment
   },
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, params, error }) {
+    let tweet
     try {
-      const [tweetsPage, scoreRank, links] = await Promise.all([
-        $axios.get('/api/tweet/list'),
+      tweet = await $axios.get('/api/tweet/' + params.id)
+    } catch (e) {
+      error({
+        statusCode: 404,
+        message: '动态不存在或被删除'
+      })
+      return
+    }
+
+    let commentsPage, scoreRank, links
+    try {
+      ;[commentsPage, scoreRank, links] = await Promise.all([
+        $axios.get('/api/comment/list', {
+          params: {
+            entityType: 'tweet',
+            entityId: params.id
+          }
+        }),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks')
       ])
-      console.log(tweetsPage)
-      return { tweetsPage, scoreRank, links }
+      return { tweet, scoreRank, links }
     } catch (e) {
       console.error(e)
     }
+    return { tweet, commentsPage, scoreRank, links }
   },
-  methods: {
-    tweetsCreated(item) {
-      this.$refs.tweetsLoadMore.unshiftResults(item)
-    }
-  },
+  methods: {},
   head() {
     return {
       title: this.$siteTitle('动态'),

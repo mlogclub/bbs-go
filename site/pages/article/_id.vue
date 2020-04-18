@@ -205,7 +205,7 @@ export default {
     } catch (e) {
       error({
         statusCode: 404,
-        message: '文章不存在，或已被删除'
+        message: '文章不存在或被删除'
       })
       return
     }
