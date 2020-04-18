@@ -285,31 +285,31 @@ func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
 	return responses
 }
 
-func BuildTweets(tweets *model.Tweets) *model.TweetsResponse {
-	if tweets == nil {
+func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
+	if tweet == nil {
 		return nil
 	}
 
-	rsp := &model.TweetsResponse{
-		TweetsId:     tweets.Id,
-		User:         BuildUserDefaultIfNull(tweets.UserId),
-		Content:      tweets.Content,
-		CommentCount: tweets.CommentCount,
-		LikeCount:    tweets.LikeCount,
-		CreateTime:   tweets.CreateTime,
+	rsp := &model.TweetResponse{
+		TweetsId:     tweet.Id,
+		User:         BuildUserDefaultIfNull(tweet.UserId),
+		Content:      tweet.Content,
+		CommentCount: tweet.CommentCount,
+		LikeCount:    tweet.LikeCount,
+		CreateTime:   tweet.CreateTime,
 	}
-	if len(tweets.ImageList) > 0 {
-		if err := simple.ParseJson(tweets.ImageList, &rsp.ImageList); err != nil {
+	if len(tweet.ImageList) > 0 {
+		if err := simple.ParseJson(tweet.ImageList, &rsp.ImageList); err != nil {
 			logrus.Error(err)
 		}
 	}
 	return rsp
 }
 
-func BuildTweetsList(tweets []model.Tweets) []model.TweetsResponse {
-	var ret []model.TweetsResponse
+func BuildTweets(tweets []model.Tweet) []model.TweetResponse {
+	var ret []model.TweetResponse
 	for _, tweet := range tweets {
-		ret = append(ret, *BuildTweets(&tweet))
+		ret = append(ret, *BuildTweet(&tweet))
 	}
 	return ret
 }

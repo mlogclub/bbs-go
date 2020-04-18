@@ -88,7 +88,7 @@ type TopicResponse struct {
 }
 
 // 帖子列表返回实体
-type TweetsResponse struct {
+type TweetResponse struct {
 	TweetsId     int64     `json:"tweetsId"`
 	User         *UserInfo `json:"user"`
 	Content      string    `json:"content"`

@@ -133,7 +133,7 @@ export default {
       }
       this.showUploader = false // 关闭图片上传框
       try {
-        const ret = await this.$axios.post('/api/tweets/create', {
+        const ret = await this.$axios.post('/api/tweet/create', {
           content: this.content,
           imageList: JSON.stringify(this.images)
         })

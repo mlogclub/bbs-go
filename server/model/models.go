@@ -6,7 +6,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &TopicLike{}, &Tweets{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
+	&TopicTag{}, &TopicLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
 	&UserScore{}, &UserScoreLog{},
 }
 
@@ -188,7 +188,7 @@ type TopicLike struct {
 }
 
 // 动态
-type Tweets struct {
+type Tweet struct {
 	Model
 	UserId       int64  `gorm:"not null;index:idx_topic_like_user_id;" json:"userId" form:"userId"` // 用户
 	Content      string `gorm:"type:text;not null;" json:"content" form:"content"`                  // 内容

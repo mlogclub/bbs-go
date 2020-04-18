@@ -160,11 +160,13 @@ export default {
       .pin-image-row {
         margin: 5px 4rem 5px 75px;
 
-        $topic-image-size: 120px; // 侧边栏之间的缝隙
         li {
           cursor: pointer;
           border: 1px dashed #ddd;
           text-align: center;
+
+          // 图片尺寸
+          $topic-image-size: 120px;
 
           display: inline-block;
           vertical-align: middle;
@@ -180,20 +182,6 @@ export default {
           position: relative;
 
           .topic-image-item {
-            //min-width: $topic-image-width;
-            //min-height: $topic-image-width;
-            //width: $topic-image-width;
-            //height: $topic-image-width;
-            //background-repeat: no-repeat;
-            //background-size: cover;
-            //background-position: center;
-
-            //display: inline-block;
-            //max-width: 100%;
-            //height: auto;
-            //vertical-align: middle;
-            //transition: all .5s ease-out .1s;
-
             display: block;
             width: $topic-image-size;
             height: $topic-image-size;

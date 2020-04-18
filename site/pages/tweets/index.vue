@@ -11,7 +11,7 @@
           v-if="tweetsPage"
           v-slot="{ results }"
           :init-data="tweetsPage"
-          url="/api/tweets/list"
+          url="/api/tweet/list"
         >
           <tweets-list :tweets="results" />
         </load-more>
@@ -37,10 +37,11 @@ export default {
   async asyncData({ $axios, query }) {
     try {
       const [tweetsPage, scoreRank, links] = await Promise.all([
-        $axios.get('/api/tweets/list'),
+        $axios.get('/api/tweet/list'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks')
       ])
+      console.log(tweetsPage)
       return { tweetsPage, scoreRank, links }
     } catch (e) {
       console.error(e)

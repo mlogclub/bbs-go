@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.Tweets{}))
+	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.Tweet{}))
 }
