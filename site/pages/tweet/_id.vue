@@ -25,11 +25,7 @@
                 </div>
                 <div class="meta-box">
                   <div class="position ellipsis">
-                    {{
-                      tweet.user.description
-                        ? tweet.user.description
-                        : '这家伙很懒，什么都没留下'
-                    }}
+                    {{ tweet.user.description }}
                   </div>
                   <div class="dot">·</div>
                   <time
@@ -60,13 +56,17 @@
               <div class="like-action action">
                 <div class="action-title-box">
                   <i class="iconfont icon-like" />
-                  <span class="action-title">7</span>
+                  <span class="action-title">{{
+                    tweet.likeCount > 0 ? tweet.likeCount : '赞'
+                  }}</span>
                 </div>
               </div>
               <div class="comment-action action">
                 <div class="action-title-box">
                   <i class="iconfont icon-comment" />
-                  <span class="action-title">21</span>
+                  <span class="action-title">{{
+                    tweet.commentCount > 0 ? tweet.commentCount : '评论'
+                  }}</span>
                 </div>
               </div>
             </div>

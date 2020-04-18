@@ -1,31 +1,27 @@
 <template>
   <ul class="tweets">
-    <li v-for="item in tweets" :key="item.tweetId">
+    <li v-for="tweet in tweets" :key="tweet.tweetId">
       <div class="tweet">
         <div class="pin-header-row">
           <div class="account-group">
             <div>
-              <a :href="'/user/' + item.user.id" :title="item.user.nickname">
-                <img v-lazy="item.user.avatar" class="avatar size-45" />
+              <a :href="'/user/' + tweet.user.id" :title="tweet.user.nickname">
+                <img v-lazy="tweet.user.avatar" class="avatar size-45" />
               </a>
             </div>
             <div class="pin-header-content">
               <div>
                 <a
-                  :href="'/user/' + item.user.id"
-                  :title="item.user.nickname"
+                  :href="'/user/' + tweet.user.id"
+                  :title="tweet.user.nickname"
                   target="_blank"
                   class="nickname"
-                  >{{ item.user.nickname }}</a
+                  >{{ tweet.user.nickname }}</a
                 >
               </div>
               <div class="meta-box">
                 <div class="position ellipsis">
-                  {{
-                    item.user.description
-                      ? item.user.description
-                      : '这家伙很懒，什么都没留下'
-                  }}
+                  {{ tweet.user.description }}
                 </div>
                 <div class="dot">·</div>
                 <time
@@ -39,16 +35,16 @@
           </div>
         </div>
         <div class="pin-content-row">
-          <a :href="'/tweet/' + item.tweetId" class="content-box">{{
-            item.content
+          <a :href="'/tweet/' + tweet.tweetId" class="content-box">{{
+            tweet.content
           }}</a>
         </div>
         <ul
-          v-if="item.imageList && item.imageList.length > 0"
+          v-if="tweet.imageList && tweet.imageList.length > 0"
           class="pin-image-row"
         >
-          <li v-for="image in item.imageList" :key="image">
-            <a :href="'/tweet/' + item.tweetId" class="image-item">
+          <li v-for="image in tweet.imageList" :key="image">
+            <a :href="'/tweet/' + tweet.tweetId" class="image-item">
               <img v-lazy="image" />
             </a>
           </li>
@@ -58,13 +54,17 @@
             <div class="like-action action">
               <div class="action-title-box">
                 <i class="iconfont icon-like" />
-                <span class="action-title">7</span>
+                <span class="action-title">{{
+                  tweet.likeCount > 0 ? tweet.likeCount : '赞'
+                }}</span>
               </div>
             </div>
             <div class="comment-action action">
               <div class="action-title-box">
                 <i class="iconfont icon-comment" />
-                <span class="action-title">21</span>
+                <span class="action-title">{{
+                  tweet.commentCount > 0 ? tweet.commentCount : '评论'
+                }}</span>
               </div>
             </div>
           </div>

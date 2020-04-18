@@ -1,7 +1,7 @@
 <template>
   <div class="comment-component main-content">
     <div ref="commentTitle" class="comment-title">
-      回复<span v-if="commentCount > 0">({{ commentCount }})</span>
+      评论<span v-if="commentCount > 0">({{ commentCount }})</span>
     </div>
     <div class="comment-form">
       <div v-if="isLogin" class="comment-create">

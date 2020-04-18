@@ -2,7 +2,7 @@
   <div class="post-tweets-wrapper">
     <ul class="tab-list">
       <li class="tab-item current">
-        <div class="tab-name">发表推文</div>
+        <div class="tab-name">发表动态</div>
       </li>
     </ul>
     <div class="tweets-box">
