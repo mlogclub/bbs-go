@@ -34,3 +34,8 @@ func (c *TweetController) GetList() *simple.JsonResult {
 	tweets, cursor := services.TweetService.GetTweets(cursor)
 	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }
+
+func (c *TweetController) GetBy(id int64) *simple.JsonResult {
+	tweet := services.TweetService.Get(id)
+	return simple.JsonData(render.BuildTweet(tweet))
+}

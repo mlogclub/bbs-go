@@ -65,14 +65,14 @@
                 <span class="action-title">21</span>
               </div>
             </div>
-            <div class="share-action action">
-              <div class="action-title-box">
-                <i class="iconfont icon-share" />
-                <span class="action-title">分享</span>
-              </div>
-              <!---->
+            <!--
+          <div class="share-action action">
+            <div class="action-title-box">
+              <i class="iconfont icon-share" />
+              <span class="action-title">分享</span>
             </div>
           </div>
+          --></div>
         </div>
       </div>
     </li>

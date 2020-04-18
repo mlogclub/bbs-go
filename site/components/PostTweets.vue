@@ -101,7 +101,7 @@ export default {
         'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
-      maxWordCount: 128,
+      maxWordCount: 1000,
       showUploader: false,
       maxImageCount: 9
     }
