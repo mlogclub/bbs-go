@@ -25,11 +25,12 @@
                 </div>
                 <div class="dot">·</div>
                 <time
-                  datetime="2020-04-17T17:26:43.760Z"
-                  title="Sat Apr 18 2020 01:26:43 GMT+0800 (中国标准时间)"
-                  class="time"
-                  >12小时前
-                </time>
+                  :datetime="
+                    tweet.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                  "
+                  itemprop="datePublished"
+                  >{{ tweet.createTime | prettyDate }}</time
+                >
               </div>
             </div>
           </div>
