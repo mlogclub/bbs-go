@@ -214,7 +214,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp := &model.TopicResponse{}
 
 	rsp.TopicId = topic.Id
-	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -235,12 +234,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
 
-	if len(topic.ImageList) > 0 {
-		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
-			logrus.Error(err)
-		}
-	}
-
 	return rsp
 }
 
@@ -252,7 +245,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp := &model.TopicSimpleResponse{}
 
 	rsp.TopicId = topic.Id
-	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -260,12 +252,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
-
-	if len(topic.ImageList) > 0 {
-		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
-			logrus.Error(err)
-		}
-	}
 
 	if topic.NodeId > 0 {
 		node := services.TopicNodeService.Get(topic.NodeId)

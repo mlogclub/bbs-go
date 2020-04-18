@@ -7,3 +7,7 @@ alter table t_user_like
     drop index idx_topic_like_topic_id;
 
 update t_user_like set entity_type = 'topic';
+
+alter table t_topic
+    drop column type,
+    drop column image_list;

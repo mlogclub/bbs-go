@@ -37,12 +37,10 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	topicType := simple.FormValueIntDefault(c.Ctx, "type", model.TopicTypeNormal)
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
-	imageList := simple.FormValue(c.Ctx, "imageList")
 	tags := simple.FormValueStringArray(c.Ctx, "tags")
-	topic, err := services.TopicService.Publish(topicType, user.Id, nodeId, tags, title, content, imageList)
+	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
 	if err != nil {
 		return simple.JsonError(err)
 	}
@@ -94,9 +92,6 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	}
 	if topic.UserId != user.Id {
 		return simple.JsonErrorMsg("无权限")
-	}
-	if topic.Type == model.TopicTypeTwitter {
-		return simple.JsonErrorMsg("推文类型话题不允许修改")
 	}
 
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)

@@ -66,12 +66,10 @@ type NodeResponse struct {
 // 帖子列表返回实体
 type TopicSimpleResponse struct {
 	TopicId         int64          `json:"topicId"`
-	Type            int            `json:"type"`
 	User            *UserInfo      `json:"user"`
 	Node            *NodeResponse  `json:"node"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
-	ImageList       *[]string      `json:"imageList"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CommentCount    int64          `json:"commentCount"`

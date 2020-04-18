@@ -69,7 +69,7 @@
                     </span>
                     <!-- 话题类型为普通时才可以修改 -->
                     <span
-                      v-if="isOwner && topic.type === 0"
+                      v-if="isOwner"
                       class="meta-item act"
                     >
                       <a :href="'/topic/edit/' + topic.topicId">
@@ -113,12 +113,6 @@
                   v-lazy-container="{ selector: 'img' }"
                   v-html="topic.content"
                 ></div>
-
-                <template v-if="topic.imageList">
-                  <figure v-for="image in topic.imageList" :key="image">
-                    <img v-lazy="image" />
-                  </figure>
-                </template>
               </div>
 
               <div class="topic-actions">

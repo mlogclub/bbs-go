@@ -96,7 +96,7 @@ export default {
     TopicSide,
     Comment
   },
-  async asyncData({ $axios, params, error }) {
+  async asyncData({ $axios, params }) {
     const [tweet, commentsPage, scoreRank, links] = await Promise.all([
       $axios.get('/api/tweet/' + params.id),
       $axios.get('/api/comment/list', {
