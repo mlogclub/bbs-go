@@ -6,7 +6,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &TopicLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
+	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
 	&UserScore{}, &UserScoreLog{},
 }
 
@@ -180,12 +180,13 @@ type TopicTag struct {
 	CreateTime      int64 `json:"createTime" form:"createTime"`                                                        // 创建时间
 }
 
-// 话题点赞
-type TopicLike struct {
+// 用户点赞
+type UserLike struct {
 	Model
-	UserId     int64 `gorm:"not null;index:idx_topic_like_user_id;" json:"userId" form:"userId"`    // 用户
-	TopicId    int64 `gorm:"not null;index:idx_topic_like_topic_id;" json:"topicId" form:"topicId"` // 主题编号
-	CreateTime int64 `json:"createTime" form:"createTime"`                                          // 创建时间
+	UserId     int64  `gorm:"not null;unique_index:idx_user_like_unique;" json:"userId" form:"userId"`                                            // 用户
+	EntityType string `gorm:"not null;size:32;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"entityType" form:"entityType"` // 实体类型
+	EntityId   int64  `gorm:"not null;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"topicId" form:"topicId"`               // 实体编号
+	CreateTime int64  `json:"createTime" form:"createTime"`                                                                                       // 创建时间
 }
 
 // 动态

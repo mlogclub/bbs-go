@@ -54,7 +54,7 @@
           <div class="pin-action-row">
             <div class="action-box">
               <div class="like-action action">
-                <div class="action-title-box">
+                <div @click="like(tweet)" class="action-title-box">
                   <i class="iconfont icon-like" />
                   <span class="action-title">{{
                     tweet.likeCount > 0 ? tweet.likeCount : '赞'
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import utils from '~/common/utils'
 import TopicSide from '~/components/TopicSide'
 import Comment from '~/components/Comment'
 
@@ -124,7 +125,28 @@ export default {
     }
     return { tweet, commentsPage, scoreRank, links }
   },
-  methods: {},
+  methods: {
+    async like(tweet) {
+      try {
+        await this.$axios.post('/api/tweet/like/' + tweet.tweetId)
+        tweet.liked = true
+        tweet.likeCount++
+      } catch (e) {
+        if (e.errorCode === 1) {
+          this.$toast.info('请登录后点赞！！！', {
+            action: {
+              text: '去登录',
+              onClick: (e, toastObject) => {
+                utils.toSignin()
+              }
+            }
+          })
+        } else {
+          this.$toast.error(e.message || e)
+        }
+      }
+    }
+  },
   head() {
     return {
       title: this.$siteTitle('动态'),

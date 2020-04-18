@@ -35,7 +35,19 @@ func (c *TweetController) GetList() *simple.JsonResult {
 	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }
 
-func (c *TweetController) GetBy(id int64) *simple.JsonResult {
-	tweet := services.TweetService.Get(id)
+func (c *TweetController) GetBy(tweetId int64) *simple.JsonResult {
+	tweet := services.TweetService.Get(tweetId)
 	return simple.JsonData(render.BuildTweet(tweet))
+}
+
+func (c *TweetController) PostLikeBy(tweetId int64) *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	err := services.UserLikeService.TweetLike(user.Id, tweetId)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
 }
