@@ -94,7 +94,7 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(topicType int, userId, nodeId int64, tags []string, title, content, imageList string) (*model.Topic, *simple.CodeError) {
+func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
@@ -116,12 +116,10 @@ func (s *topicService) Publish(topicType int, userId, nodeId int64, tags []strin
 
 	now := simple.NowTimestamp()
 	topic := &model.Topic{
-		Type:            topicType,
 		UserId:          userId,
 		NodeId:          nodeId,
 		Title:           title,
 		Content:         content,
-		ImageList:       imageList,
 		Status:          model.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,

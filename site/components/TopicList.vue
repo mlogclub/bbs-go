@@ -65,8 +65,8 @@
             <div class="like">
               <span
                 :class="{ liked: topic.liked }"
-                class="like-btn"
                 @click="like(topic)"
+                class="like-btn"
               >
                 <i class="iconfont icon-like" />
               </span>
@@ -79,20 +79,6 @@
             >
           </div>
         </div>
-        <ul
-          v-if="topic.imageList && topic.imageList.length > 0"
-          class="topic-images"
-        >
-          <li v-for="image in topic.imageList" :key="image">
-            <a
-              :href="'/topic/' + topic.topicId"
-              :title="topic.title"
-              class="topic-image-item"
-            >
-              <img v-lazy="image" />
-            </a>
-          </li>
-        </ul>
       </article>
     </li>
   </ul>

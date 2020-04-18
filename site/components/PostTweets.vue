@@ -2,24 +2,24 @@
   <div class="post-tweets-wrapper">
     <ul class="tab-list">
       <li class="tab-item current">
-        <div class="tab-name">发表推文</div>
+        <div class="tab-name">发表动态</div>
       </li>
     </ul>
     <div class="tweets-box">
       <textarea
         v-model="content"
-        placeholder="有什么新鲜事想告诉大家"
-        class="title-input"
         @input="onInput"
         @paste="handleParse"
         @drop="handleDrag"
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
+        placeholder="有什么新鲜事想告诉大家"
+        class="title-input"
       />
       <p class="words-number">{{ wordCount }}/{{ maxWordCount }}字</p>
       <div class="box-footer">
         <div class="bui-left">
-          <span class="action-btn" @click="showUploader = !showUploader">
+          <span @click="showUploader = !showUploader" class="action-btn">
             <i class="iconfont icon-image" />
             <span>图片</span>
           </span>
@@ -32,10 +32,11 @@
         </div>
         <div class="bui-right">
           <span class="msg-tip">{{ message }}</span>
+          <span class="tweets-help">Ctrl or ⌘ + Enter</span>
           <a
             :class="{ active: hasContent }"
-            class="upload-publish"
             @click="doSubmit"
+            class="upload-publish"
             >发布</a
           >
         </div>
@@ -48,31 +49,31 @@
             共 {{ imageCount }} 张，还能上传 {{ maxImageCount }} 张
           </p>
           <i
-            class="close-popup iconfont icon-close"
             @click="showUploader = false"
+            class="close-popup iconfont icon-close"
           />
           <div class="upload-box">
             <form style="display: none;">
               <input
                 ref="imageInput"
+                @change="handleImageUploadChange"
                 type="file"
                 accept="image/*"
                 multiple="multiple"
-                @change="handleImageUploadChange"
               />
             </form>
             <ul class="upload-img-list">
               <li v-for="(image, i) in images" :key="i" class="upload-img-item">
                 <img :src="image" />
                 <i
-                  class="iconfont icon-close remove"
                   @click="removeImg(image)"
+                  class="iconfont icon-close remove"
                 />
               </li>
               <li
                 v-if="imageCount < maxImageCount"
-                class="upload-img-item upload-img-add"
                 @click="handleImageUploadClick"
+                class="upload-img-item upload-img-add"
               >
                 <i class="iconfont icon-add" />
               </li>
@@ -96,11 +97,11 @@ export default {
     return {
       content: '',
       images: [
-        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1',
+        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg',
         // 'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
-      maxWordCount: 128,
+      maxWordCount: 1000,
       showUploader: false,
       maxImageCount: 9
     }
@@ -132,10 +133,8 @@ export default {
       }
       this.showUploader = false // 关闭图片上传框
       try {
-        const ret = await this.$axios.post('/api/topic/create', {
-          type: 1, // 1表示推文
-          nodeId: this.nodeId,
-          title: this.content,
+        const ret = await this.$axios.post('/api/tweet/create', {
+          content: this.content,
           imageList: JSON.stringify(this.images)
         })
         this.content = ''
@@ -345,6 +344,12 @@ export default {
           color: #ed4040;
           font-size: 12px;
           margin-right: 10px;
+        }
+
+        .tweets-help {
+          color: #c2c2c2;
+          font-size: 13px;
+          user-select: none;
         }
 
         .upload-publish {

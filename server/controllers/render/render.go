@@ -61,6 +61,9 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Status:       user.Status,
 		CreateTime:   user.CreateTime,
 	}
+	if len(ret.Description) == 0 {
+		ret.Description = "这家伙很懒，什么都没留下"
+	}
 	if user.Status == model.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.Nickname = "黑名单用户"
@@ -211,7 +214,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp := &model.TopicResponse{}
 
 	rsp.TopicId = topic.Id
-	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -232,12 +234,6 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
 	rsp.Toc = template.HTML(mr.TocHtml)
 
-	if len(topic.ImageList) > 0 {
-		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
-			logrus.Error(err)
-		}
-	}
-
 	return rsp
 }
 
@@ -249,7 +245,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp := &model.TopicSimpleResponse{}
 
 	rsp.TopicId = topic.Id
-	rsp.Type = topic.Type
 	rsp.Title = topic.Title
 	rsp.User = BuildUserDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -257,12 +252,6 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
-
-	if len(topic.ImageList) > 0 {
-		if err := simple.ParseJson(topic.ImageList, &rsp.ImageList); err != nil {
-			logrus.Error(err)
-		}
-	}
 
 	if topic.NodeId > 0 {
 		node := services.TopicNodeService.Get(topic.NodeId)
@@ -283,6 +272,35 @@ func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
 		responses = append(responses, *BuildSimpleTopic(&topic))
 	}
 	return responses
+}
+
+func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
+	if tweet == nil {
+		return nil
+	}
+
+	rsp := &model.TweetResponse{
+		TweetId:      tweet.Id,
+		User:         BuildUserDefaultIfNull(tweet.UserId),
+		Content:      tweet.Content,
+		CommentCount: tweet.CommentCount,
+		LikeCount:    tweet.LikeCount,
+		CreateTime:   tweet.CreateTime,
+	}
+	if len(tweet.ImageList) > 0 {
+		if err := simple.ParseJson(tweet.ImageList, &rsp.ImageList); err != nil {
+			logrus.Error(err)
+		}
+	}
+	return rsp
+}
+
+func BuildTweets(tweets []model.Tweet) []model.TweetResponse {
+	var ret []model.TweetResponse
+	for _, tweet := range tweets {
+		ret = append(ret, *BuildTweet(&tweet))
+	}
+	return ret
 }
 
 func BuildProject(project *model.Project) *model.ProjectResponse {

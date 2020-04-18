@@ -66,12 +66,10 @@ type NodeResponse struct {
 // 帖子列表返回实体
 type TopicSimpleResponse struct {
 	TopicId         int64          `json:"topicId"`
-	Type            int            `json:"type"`
 	User            *UserInfo      `json:"user"`
 	Node            *NodeResponse  `json:"node"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
-	ImageList       *[]string      `json:"imageList"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CommentCount    int64          `json:"commentCount"`
@@ -85,6 +83,17 @@ type TopicResponse struct {
 	TopicSimpleResponse
 	Content template.HTML `json:"content"`
 	Toc     template.HTML `json:"toc"`
+}
+
+// 帖子列表返回实体
+type TweetResponse struct {
+	TweetId      int64     `json:"tweetId"`
+	User         *UserInfo `json:"user"`
+	Content      string    `json:"content"`
+	ImageList    *[]string `json:"imageList"`
+	CommentCount int64     `json:"commentCount"`
+	LikeCount    int64     `json:"likeCount"`
+	CreateTime   int64     `json:"createTime"`
 }
 
 // 项目简单返回

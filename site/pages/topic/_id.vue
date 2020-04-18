@@ -69,7 +69,7 @@
                     </span>
                     <!-- 话题类型为普通时才可以修改 -->
                     <span
-                      v-if="isOwner && topic.type === 0"
+                      v-if="isOwner"
                       class="meta-item act"
                     >
                       <a :href="'/topic/edit/' + topic.topicId">
@@ -82,8 +82,8 @@
                   <div class="like">
                     <span
                       :class="{ liked: topic.liked }"
-                      class="like-btn"
                       @click="like(topic)"
+                      class="like-btn"
                     >
                       <i class="iconfont icon-like" />
                     </span>
@@ -113,27 +113,21 @@
                   v-lazy-container="{ selector: 'img' }"
                   v-html="topic.content"
                 ></div>
-
-                <template v-if="topic.imageList">
-                  <figure v-for="image in topic.imageList" :key="image">
-                    <img v-lazy="image" />
-                  </figure>
-                </template>
               </div>
 
               <div class="topic-actions">
                 <div
                   :class="{ active: favorited }"
-                  class="action favorite"
                   @click="addFavorite(topic.topicId)"
+                  class="action favorite"
                 >
                   <i class="iconfont icon-favorite" />
                 </div>
                 <span class="split"></span>
                 <div
                   :class="{ active: topic.liked }"
-                  class="action like"
                   @click="like(topic)"
+                  class="action like"
                 >
                   <i class="iconfont icon-like" />
                 </div>
@@ -211,11 +205,11 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
+          <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
             <div class="widget-header">
               目录
             </div>
-            <div class="widget-content" v-html="topic.toc" />
+            <div v-html="topic.toc" class="widget-content" />
           </div>
         </div>
       </div>

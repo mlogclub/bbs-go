@@ -12,10 +12,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="nickname"
+                  @keyup.enter="signup"
                   class="input is-success"
                   type="text"
                   placeholder="请输入昵称"
-                  @keyup.enter="signup"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-username" />
@@ -28,10 +28,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="email"
+                  @keyup.enter="signup"
                   class="input is-success"
                   type="text"
                   placeholder="请输入邮箱"
-                  @keyup.enter="signup"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-email" />
@@ -44,10 +44,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keyup.enter="signup"
                   class="input"
                   type="password"
                   placeholder="请输入密码"
-                  @keyup.enter="signup"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -60,10 +60,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="rePassword"
+                  @keyup.enter="signup"
                   class="input"
                   type="password"
                   placeholder="请再次输入密码"
-                  @keyup.enter="signup"
                 />
                 <span class="icon is-small is-left">
                   <i class="iconfont icon-password" />
@@ -78,10 +78,10 @@
                   <div class="field" style="width:100%;">
                     <input
                       v-model="captchaCode"
+                      @keyup.enter="signup"
                       class="input"
                       type="text"
                       placeholder="验证码"
-                      @keyup.enter="signup"
                     />
                     <span class="icon is-small is-left"
                       ><i class="iconfont icon-captcha"
@@ -98,7 +98,7 @@
 
             <div class="field">
               <div class="control">
-                <button class="button is-success" @click="signup">
+                <button @click="signup" class="button is-success">
                   注册
                 </button>
                 <github-login :ref-url="ref" />
