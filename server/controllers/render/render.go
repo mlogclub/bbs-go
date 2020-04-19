@@ -13,6 +13,7 @@ import (
 
 	"bbs-go/common"
 	"bbs-go/common/avatar"
+	"bbs-go/common/config"
 	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/services"
@@ -577,4 +578,15 @@ func BuildHtmlContent(htmlContent string) string {
 		return htmlContent
 	}
 	return html
+}
+
+func HandleOssImageStyle(url string) string {
+	config.Conf.Uploader.Oss
+}
+
+func HandleImageStyle(url, style string) string {
+	if simple.IsBlank(style) || simple.IsBlank(url) {
+		return url
+	}
+	return strings.Join([]string{url, style}, "!")
 }

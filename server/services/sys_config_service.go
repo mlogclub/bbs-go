@@ -128,28 +128,28 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 	)
 
 	var siteKeywordsArr []string
-	if len(siteKeywords) > 0 {
+	if simple.IsNotBlank(siteKeywords) {
 		if err := simple.ParseJson(siteKeywords, &siteKeywordsArr); err != nil {
 			logrus.Warn("站点关键词数据错误", err)
 		}
 	}
 
 	var siteNavsArr []model.SiteNav
-	if len(siteNavs)> 0 {
+	if simple.IsNotBlank(siteNavs) {
 		if err := simple.ParseJson(siteNavs, &siteNavsArr); err != nil {
 			logrus.Warn("站点导航数据错误", err)
 		}
 	}
 
 	var recommendTagsArr []string
-	if len(recommendTags)> 0 {
+	if simple.IsNotBlank(recommendTags) {
 		if err := simple.ParseJson(recommendTags, &recommendTagsArr); err != nil {
 			logrus.Warn("推荐标签数据错误", err)
 		}
 	}
 
 	var scoreConfig model.ScoreConfig
-	if len(scoreConfigStr)>0 {
+	if simple.IsNotBlank(scoreConfigStr) {
 		if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
 			logrus.Warn("积分配置错误", err)
 		}
