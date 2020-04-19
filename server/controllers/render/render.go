@@ -625,6 +625,9 @@ func HandleOssImageStyle(url, style string) string {
 		return url
 	}
 	sep := config.Conf.Uploader.AliyunOss.StyleSplitter
+	if simple.IsBlank(sep) {
+		return url
+	}
 	return strings.Join([]string{url, style}, sep)
 }
 
