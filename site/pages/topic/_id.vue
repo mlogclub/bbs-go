@@ -68,10 +68,7 @@
                       </a>
                     </span>
                     <!-- 话题类型为普通时才可以修改 -->
-                    <span
-                      v-if="isOwner"
-                      class="meta-item act"
-                    >
+                    <span v-if="isOwner" class="meta-item act">
                       <a :href="'/topic/edit/' + topic.topicId">
                         <i class="iconfont icon-edit" />&nbsp;修改
                       </a>

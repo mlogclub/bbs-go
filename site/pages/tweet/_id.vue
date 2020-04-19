@@ -44,11 +44,12 @@
           </div>
           <ul
             v-if="tweet.imageList && tweet.imageList.length > 0"
+            v-viewer
             class="pin-image-row"
           >
             <li v-for="image in tweet.imageList" :key="image">
               <div class="image-item">
-                <img v-lazy="image" />
+                <img :src="image" />
               </div>
             </li>
           </ul>
@@ -87,9 +88,23 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
+import Vue from 'vue'
+import Viewer from 'v-viewer'
 import TopicSide from '~/components/TopicSide'
 import Comment from '~/components/Comment'
+import utils from '~/common/utils'
+import 'viewerjs/dist/viewer.css'
+
+Vue.use(Viewer, {
+  defaultOptions: {
+    zIndex: 9999,
+    navbar: false,
+    title: false,
+    tooltip: false,
+    movable: false,
+    scalable: false
+  }
+})
 
 export default {
   components: {
