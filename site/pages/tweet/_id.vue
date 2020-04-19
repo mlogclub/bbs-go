@@ -10,7 +10,7 @@
                   :href="'/user/' + tweet.user.id"
                   :title="tweet.user.nickname"
                 >
-                  <img v-lazy="tweet.user.avatar" class="avatar size-45" />
+                  <img v-lazy="tweet.user.smallAvatar" class="avatar size-45" />
                 </a>
               </div>
               <div class="pin-header-content">
@@ -49,7 +49,7 @@
           >
             <li v-for="image in tweet.imageList" :key="image">
               <div class="image-item">
-                <img :src="image" />
+                <img :src="image.preview" :data-src="image.url" />
               </div>
             </li>
           </ul>
@@ -102,7 +102,8 @@ Vue.use(Viewer, {
     title: false,
     tooltip: false,
     movable: false,
-    scalable: false
+    scalable: false,
+    url: 'data-src'
   }
 })
 

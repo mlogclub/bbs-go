@@ -3,6 +3,8 @@ package uploader
 import (
 	"sync"
 
+	"github.com/mlogclub/simple"
+
 	"bbs-go/common/config"
 )
 
@@ -33,7 +35,9 @@ func CopyImage(originUrl string) (string, error) {
 }
 
 func getUploader() uploader {
-	if config.Conf.Uploader.Enable == "aliyun" || config.Conf.Uploader.Enable == "Oss" {
+	enable := config.Conf.Uploader.Enable
+	if simple.EqualsIgnoreCase(enable, "aliyun") || simple.EqualsIgnoreCase(enable, "oss") ||
+		simple.EqualsIgnoreCase(enable, "aliyunOss") {
 		return aliyun
 	} else {
 		return local

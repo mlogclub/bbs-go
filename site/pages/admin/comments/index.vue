@@ -5,7 +5,7 @@
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
             <div
-              :style="{ backgroundImage: 'url(' + item.user.avatar + ')' }"
+              :style="{ backgroundImage: 'url(' + item.user.smallAvatar + ')' }"
               class="avatar"
             ></div>
             <div class="content">

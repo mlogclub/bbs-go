@@ -65,7 +65,7 @@
             ad-layout-key="-ht-19-1m-3j+mu"
           />
           <div class="comment-avatar">
-            <img v-lazy="comment.user.avatar" class="avatar" />
+            <img v-lazy="comment.user.smallAvatar" class="avatar" />
           </div>
           <div class="comment-meta">
             <span
@@ -95,7 +95,7 @@
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
                 <img
-                  v-lazy="comment.quote.user.avatar"
+                  v-lazy="comment.quote.user.smallAvatar"
                   class="avatar size-20"
                 />
                 <a class="quote-nickname">{{ comment.quote.user.nickname }}</a>

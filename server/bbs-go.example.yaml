@@ -23,12 +23,16 @@ Uploader:
   # 启用上传方式
   Enable: Oss
   # 阿里云oss配置
-  Oss:
+  AliyunOss:
     Host: 请配置成你自己的
     Bucket: 请配置成你自己的
     Endpoint: 请配置成你自己的
     AccessId: 请配置成你自己的
     AccessSecret: 请配置成你自己的
+    StyleSplitter: 阿里云oss图片样式分隔符
+    StyleAvatar: 头像图片样式名称
+    StylePreview: 预览图片样式名称
+    StyleDetail: 详情图片样式名称
   # 本地文件上传
   Local:
     Host: https://st.mlog.club/ # 上传文件域名

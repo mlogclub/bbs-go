@@ -51,6 +51,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Username:     user.Username.String,
 		Nickname:     user.Nickname,
 		Avatar:       a,
+		SmallAvatar:  HandleOssImageStyleAvatar(a),
 		Email:        user.Email.String,
 		Type:         user.Type,
 		Roles:        roles,
@@ -288,8 +289,20 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 		LikeCount:    tweet.LikeCount,
 		CreateTime:   tweet.CreateTime,
 	}
-	if len(tweet.ImageList) > 0 {
-		if err := simple.ParseJson(tweet.ImageList, &rsp.ImageList); err != nil {
+	if simple.IsNotBlank(tweet.ImageList) {
+		var images []string
+		if err := simple.ParseJson(tweet.ImageList, &images); err == nil {
+			if len(images) > 0 {
+				var imageList []model.ImageInfo
+				for _, image := range images {
+					imageList = append(imageList, model.ImageInfo{
+						Url:     image,
+						Preview: HandleOssImageStylePreview(image),
+					})
+				}
+				rsp.ImageList = imageList
+			}
+		} else {
 			logrus.Error(err)
 		}
 	}
@@ -568,6 +581,9 @@ func BuildHtmlContent(htmlContent string) string {
 			// selection.SetAttr("src", src)
 		}
 
+		// 处理图片样式
+		HandleOssImageStyleDetail(src)
+
 		// 处理lazyload
 		selection.SetAttr("data-src", src)
 		selection.RemoveAttr("src")
@@ -580,13 +596,39 @@ func BuildHtmlContent(htmlContent string) string {
 	return html
 }
 
-func HandleOssImageStyle(url string) string {
-	config.Conf.Uploader.Oss
+func HandleOssImageStyleAvatar(url string) string {
+	if config.Conf.Uploader.Enable != "aliyunOss" {
+		return url
+	}
+	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StyleAvatar)
 }
 
-func HandleImageStyle(url, style string) string {
+func HandleOssImageStyleDetail(url string) string {
+	if config.Conf.Uploader.Enable != "aliyunOss" {
+		return url
+	}
+	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StyleDetail)
+}
+
+func HandleOssImageStylePreview(url string) string {
+	if !simple.EqualsIgnoreCase(config.Conf.Uploader.Enable, "aliyunOss") {
+		return url
+	}
+	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StylePreview)
+}
+
+func HandleOssImageStyle(url, style string) string {
 	if simple.IsBlank(style) || simple.IsBlank(url) {
 		return url
 	}
-	return strings.Join([]string{url, style}, "!")
+	if !IsOssImageUrl(url) {
+		return url
+	}
+	sep := config.Conf.Uploader.AliyunOss.StyleSplitter
+	return strings.Join([]string{url, style}, sep)
+}
+
+func IsOssImageUrl(url string) bool {
+	host := simple.ParseUrl(config.Conf.Uploader.AliyunOss.Host).GetURL().Host
+	return strings.Contains(url, host)
 }

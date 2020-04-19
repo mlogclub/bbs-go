@@ -42,7 +42,7 @@
     <div class="topics main-content">
       <div v-for="item in results" :key="item.id" class="topic">
         <div class="topic-header">
-          <img :src="item.user.avatar" class="avatar" />
+          <img :src="item.user.smallAvatar" class="avatar" />
           <div class="topic-right">
             <div class="topic-title">
               <a :href="'/topic/' + item.id" target="_blank">{{

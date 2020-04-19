@@ -10,6 +10,7 @@ type UserInfo struct {
 	Email        string   `json:"email"`
 	Nickname     string   `json:"nickname"`
 	Avatar       string   `json:"avatar"`
+	SmallAvatar  string   `json:"smallAvatar"`
 	Type         int      `json:"type"`
 	Roles        []string `json:"roles"`
 	HomePage     string   `json:"homePage"`
@@ -87,13 +88,13 @@ type TopicResponse struct {
 
 // 帖子列表返回实体
 type TweetResponse struct {
-	TweetId      int64     `json:"tweetId"`
-	User         *UserInfo `json:"user"`
-	Content      string    `json:"content"`
-	ImageList    *[]string `json:"imageList"`
-	CommentCount int64     `json:"commentCount"`
-	LikeCount    int64     `json:"likeCount"`
-	CreateTime   int64     `json:"createTime"`
+	TweetId      int64       `json:"tweetId"`
+	User         *UserInfo   `json:"user"`
+	Content      string      `json:"content"`
+	ImageList    []ImageInfo `json:"imageList"`
+	CommentCount int64       `json:"commentCount"`
+	LikeCount    int64       `json:"likeCount"`
+	CreateTime   int64       `json:"createTime"`
 }
 
 // 项目简单返回
@@ -153,4 +154,9 @@ type MessageResponse struct {
 	ExtraData    string    `json:"extraData"`
 	Status       int       `json:"status"`
 	CreateTime   int64     `json:"createTime"`
+}
+
+type ImageInfo struct {
+	Url     string `json:"url"`
+	Preview string `json:"preview"`
 }

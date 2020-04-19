@@ -33,7 +33,7 @@
     <div class="articles main-content">
       <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
-          <img :src="item.user.avatar" class="avatar" />
+          <img :src="item.user.smallAvatar" class="avatar" />
           <div class="article-right">
             <div class="article-title">
               <a :href="'/article/' + item.id" target="_blank">{{

@@ -6,7 +6,7 @@
           <div class="account-group">
             <div>
               <a :href="'/user/' + tweet.user.id" :title="tweet.user.nickname">
-                <img v-lazy="tweet.user.avatar" class="avatar size-45" />
+                <img v-lazy="tweet.user.smallAvatar" class="avatar size-45" />
               </a>
             </div>
             <div class="pin-header-content">
@@ -46,7 +46,7 @@
         >
           <li v-for="image in tweet.imageList" :key="image">
             <a :href="'/tweet/' + tweet.tweetId" class="image-item">
-              <img v-lazy="image" />
+              <img v-lazy="image.preview" />
             </a>
           </li>
         </ul>
