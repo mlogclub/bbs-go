@@ -71,19 +71,14 @@ func (s *commentService) Delete(id int64) error {
 func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
 
-	if len(form.EntityType) == 0 {
+	if simple.IsBlank(form.EntityType) {
 		return nil, errors.New("参数非法")
 	}
 	if form.EntityId <= 0 {
 		return nil, errors.New("参数非法")
 	}
-	if len(form.Content) == 0 {
+	if simple.IsBlank(form.Content) {
 		return nil, errors.New("请输入评论内容")
-	}
-
-	contentType := form.ContentType
-	if contentType == "" {
-		contentType = model.ContentTypeMarkdown
 	}
 
 	comment := &model.Comment{
@@ -91,7 +86,7 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		EntityType:  form.EntityType,
 		EntityId:    form.EntityId,
 		Content:     form.Content,
-		ContentType: contentType,
+		ContentType: simple.DefaultIfBlank(form.ContentType, model.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
 		Status:      model.StatusOk,
 		CreateTime:  simple.NowTimestamp(),
@@ -100,17 +95,15 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		return nil, err
 	}
 
-	// 更新帖子最后回复时间
 	if form.EntityType == model.EntityTypeTopic {
 		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
+	} else if form.EntityType == model.EntityTypeTweet {
+		TweetService.OnComment(form.EntityId)
 	}
 
-	// 用户跟帖计数
-	UserService.IncrCommentCount(userId)
-	// 获得积分
-	UserScoreService.IncrementPostCommentScore(comment)
-	// 发送消息
-	MessageService.SendCommentMsg(comment)
+	UserService.IncrCommentCount(userId)                // 用户跟帖计数
+	UserScoreService.IncrementPostCommentScore(comment) // 获得积分
+	MessageService.SendCommentMsg(comment)              // 发送消息
 
 	return comment, nil
 }

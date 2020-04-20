@@ -72,6 +72,10 @@ func (s *tweetService) Publish(userId int64, content, imageList string) (*model.
 	return tweet, nil
 }
 
+func (s *tweetService) OnComment(tweetId int64) {
+	simple.DB().Exec("update t_tweet set comment_count = comment_count + 1 where id = ?", tweetId)
+}
+
 func (s *tweetService) Create(t *model.Tweet) error {
 	return repositories.TweetRepository.Create(simple.DB(), t)
 }
