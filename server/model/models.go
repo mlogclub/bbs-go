@@ -24,6 +24,7 @@ const (
 
 	ContentTypeHtml     = "html"
 	ContentTypeMarkdown = "markdown"
+	ContentTypeText     = "text"
 
 	EntityTypeArticle = "article"
 	EntityTypeTopic   = "topic"

@@ -120,7 +120,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = mr.SummaryText
 		}
-	} else {
+	} else if article.ContentType == model.ContentTypeHtml {
 		rsp.Content = template.HTML(BuildHtmlContent(article.Content))
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = simple.GetSummary(article.Content, 256)
@@ -166,7 +166,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 			mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
 			rsp.Summary = mr.SummaryText
 		}
-	} else {
+	} else if article.ContentType == model.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), 256)
 		}
@@ -408,9 +408,11 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 
 	if comment.ContentType == model.ContentTypeMarkdown {
 		markdownResult := simple.NewMd().Run(comment.Content)
-		ret.Content = template.HTML(BuildHtmlContent(markdownResult.ContentHtml))
+		ret.Content = BuildHtmlContent(markdownResult.ContentHtml)
+	} else if comment.ContentType == model.ContentTypeHtml {
+		ret.Content = BuildHtmlContent(comment.Content)
 	} else {
-		ret.Content = template.HTML(BuildHtmlContent(comment.Content))
+		ret.Content = comment.Content
 	}
 
 	if buildQuote && comment.QuoteId > 0 {
@@ -457,7 +459,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 			rsp.Title = article.Title
 			if article.ContentType == model.ContentTypeMarkdown {
 				rsp.Content = common.GetMarkdownSummary(article.Content)
-			} else {
+			} else if article.ContentType == model.ContentTypeHtml {
 				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
 				if err == nil {
 					text := doc.Text()

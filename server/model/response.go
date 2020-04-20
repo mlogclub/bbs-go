@@ -122,10 +122,10 @@ type CommentResponse struct {
 	User         *UserInfo        `json:"user"`
 	EntityType   string           `json:"entityType"`
 	EntityId     int64            `json:"entityId"`
-	Content      template.HTML    `json:"content"`
+	Content      string           `json:"content"`
 	QuoteId      int64            `json:"quoteId"`
 	Quote        *CommentResponse `json:"quote"`
-	QuoteContent template.HTML    `json:"quoteContent"`
+	QuoteContent string           `json:"quoteContent"`
 	Status       int              `json:"status"`
 	CreateTime   int64            `json:"createTime"`
 }

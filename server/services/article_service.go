@@ -272,12 +272,7 @@ func (s *articleService) GenerateRss() {
 		if user == nil {
 			continue
 		}
-		description := ""
-		if article.ContentType == model.ContentTypeMarkdown {
-			description = common.GetMarkdownSummary(article.Content)
-		} else {
-			description = common.GetHtmlSummary(article.Content)
-		}
+		description := common.GetSummary(article.ContentType, article.Content)
 		item := &feeds.Item{
 			Title:       article.Title,
 			Link:        &feeds.Link{Href: articleUrl},

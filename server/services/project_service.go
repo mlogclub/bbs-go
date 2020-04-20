@@ -119,12 +119,7 @@ func (s *projectService) GenerateRss() {
 		if user == nil {
 			continue
 		}
-		description := ""
-		if project.ContentType == model.ContentTypeMarkdown {
-			description = common.GetMarkdownSummary(project.Content)
-		} else {
-			description = common.GetHtmlSummary(project.Content)
-		}
+		description := common.GetSummary(project.ContentType, project.Content)
 		item := &feeds.Item{
 			Title:       project.Name + " - " + project.Title,
 			Link:        &feeds.Link{Href: projectUrl},

@@ -2,15 +2,12 @@ package admin
 
 import (
 	"strconv"
-	"strings"
-
-	"github.com/PuerkitoBio/goquery"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/common"
 	"bbs-go/controllers/render"
-	"bbs-go/model"
 	"bbs-go/services"
 	"bbs-go/services/cache"
 )
@@ -39,19 +36,7 @@ func (c *ArticleController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(article.UserId))
 
 		// 简介
-		if article.ContentType == model.ContentTypeMarkdown {
-			mr := simple.NewMd().Run(article.Content)
-			if len(article.Summary) == 0 {
-				builder.Put("summary", mr.SummaryText)
-			}
-		} else {
-			if len(article.Summary) == 0 {
-				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
-				if err != nil {
-					builder.Put("summary", simple.GetSummary(doc.Text(), 256))
-				}
-			}
-		}
+		builder.Put("summary", common.GetSummary(article.ContentType, article.Content))
 
 		// 标签
 		tagIds := cache.ArticleTagCache.Get(article.Id)

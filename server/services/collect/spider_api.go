@@ -63,7 +63,7 @@ func (api *SpiderApi) AnalyzeTags(article *Article) []string {
 	var analyzeRet *baiduai.AiAnalyzeRet
 	if article.ContentType == model.ContentTypeMarkdown {
 		analyzeRet, _ = baiduai.GetAi().AnalyzeMarkdown(article.Title, article.Content)
-	} else {
+	} else if article.ContentType == model.ContentTypeHtml {
 		analyzeRet, _ = baiduai.GetAi().AnalyzeHtml(article.Title, article.Content)
 	}
 	var tags []string
