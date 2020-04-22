@@ -55,8 +55,8 @@
           </ul>
           <div class="pin-action-row">
             <div class="action-box">
-              <div class="like-action action">
-                <div @click="like(tweet)" class="action-title-box">
+              <div @click="like(tweet)" class="like-action action">
+                <div class="action-title-box">
                   <i class="iconfont icon-like" />
                   <span class="action-title">{{
                     tweet.likeCount > 0 ? tweet.likeCount : '赞'
@@ -74,11 +74,10 @@
             </div>
           </div>
         </div>
-
-        <!-- 评论 -->
         <comment
           :entity-id="tweet.tweetId"
           :comments-page="commentsPage"
+          mode="text"
           entity-type="tweet"
         />
       </div>

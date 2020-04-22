@@ -1,9 +1,5 @@
 package model
 
-import (
-	"html/template"
-)
-
 type UserInfo struct {
 	Id           int64    `json:"id"`
 	Username     string   `json:"username"`
@@ -54,8 +50,8 @@ type ArticleSimpleResponse struct {
 
 type ArticleResponse struct {
 	ArticleSimpleResponse
-	Content template.HTML `json:"content"`
-	Toc     template.HTML `json:"toc"`
+	Content string `json:"content"`
+	Toc     string `json:"toc"`
 }
 
 type NodeResponse struct {
@@ -82,8 +78,8 @@ type TopicSimpleResponse struct {
 // 帖子详情返回实体
 type TopicResponse struct {
 	TopicSimpleResponse
-	Content template.HTML `json:"content"`
-	Toc     template.HTML `json:"toc"`
+	Content string `json:"content"`
+	Toc     string `json:"toc"`
 }
 
 // 帖子列表返回实体
@@ -114,7 +110,7 @@ type ProjectSimpleResponse struct {
 // 项目详情
 type ProjectResponse struct {
 	ProjectSimpleResponse
-	Content template.HTML `json:"content"`
+	Content string `json:"content"`
 }
 
 type CommentResponse struct {
