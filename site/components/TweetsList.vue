@@ -52,25 +52,22 @@
         </ul>
         <div class="pin-action-row">
           <div class="action-box">
-            <div class="like-action action">
-              <div @click="like(tweet)" class="action-title-box">
+            <div @click="like(tweet)" class="like-action action">
+              <div class="action-title-box">
                 <i class="iconfont icon-like" />
                 <span class="action-title">{{
                   tweet.likeCount > 0 ? tweet.likeCount : '赞'
                 }}</span>
               </div>
             </div>
-            <div class="comment-action action">
-              <a
-                :href="'/tweet/' + tweet.tweetId + '#comments'"
-                class="action-title-box"
-              >
+            <a :href="'/tweet/' + tweet.tweetId" class="comment-action action">
+              <div class="action-title-box">
                 <i class="iconfont icon-comment" />
                 <span class="action-title">{{
                   tweet.commentCount > 0 ? tweet.commentCount : '评论'
                 }}</span>
-              </a>
-            </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
