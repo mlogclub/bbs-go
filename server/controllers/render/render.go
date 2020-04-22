@@ -504,6 +504,8 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 			detailUrl = urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == model.EntityTypeTopic {
 			detailUrl = urls.TopicUrl(entityId.Int())
+		} else if entityType.String() == model.EntityTypeTweet {
+			detailUrl = urls.TweetUrl(entityId.Int())
 		}
 	}
 	from := BuildUserDefaultIfNull(message.FromId)
