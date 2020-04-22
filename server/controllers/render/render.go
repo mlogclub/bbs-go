@@ -1,7 +1,6 @@
 package render
 
 import (
-	"html/template"
 	"strconv"
 	"strings"
 
@@ -115,13 +114,13 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 
 	if article.ContentType == model.ContentTypeMarkdown {
 		mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
-		rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
-		rsp.Toc = template.HTML(mr.TocHtml)
+		rsp.Content = BuildHtmlContent(mr.ContentHtml)
+		rsp.Toc = mr.TocHtml
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = mr.SummaryText
 		}
 	} else if article.ContentType == model.ContentTypeHtml {
-		rsp.Content = template.HTML(BuildHtmlContent(article.Content))
+		rsp.Content = BuildHtmlContent(article.Content)
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = simple.GetSummary(article.Content, 256)
 		}
@@ -233,8 +232,8 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	rsp.Tags = BuildTags(tags)
 
 	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
-	rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
-	rsp.Toc = template.HTML(mr.TocHtml)
+	rsp.Content = BuildHtmlContent(mr.ContentHtml)
+	rsp.Toc = mr.TocHtml
 
 	return rsp
 }
@@ -333,11 +332,11 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	rsp.CreateTime = project.CreateTime
 
 	if project.ContentType == model.ContentTypeHtml {
-		rsp.Content = template.HTML(BuildHtmlContent(project.Content))
+		rsp.Content = BuildHtmlContent(project.Content)
 		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
 	} else {
 		mr := simple.NewMd().Run(project.Content)
-		rsp.Content = template.HTML(BuildHtmlContent(mr.ContentHtml))
+		rsp.Content = BuildHtmlContent(mr.ContentHtml)
 		rsp.Summary = mr.SummaryText
 	}
 
@@ -419,7 +418,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 		quote := _buildComment(services.CommentService.Get(comment.QuoteId), false)
 		if quote != nil {
 			ret.Quote = quote
-			ret.QuoteContent = template.HTML(quote.User.Nickname+"：") + quote.Content
+			ret.QuoteContent = quote.User.Nickname + "：" + quote.Content
 		}
 	}
 	return ret

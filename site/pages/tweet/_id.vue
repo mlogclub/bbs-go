@@ -76,9 +76,22 @@
         </div>
 
         <!-- 评论 -->
+        <!--
+      <comment-input
+          :entity-id="tweet.tweetId"
+          @created="commentCreated"
+          entity-type="tweet"
+        />
+        <comment-list
+          :entity-id="tweet.tweetId"
+          :comments-page="commentsPage"
+          entity-type="tweet"
+        />
+      -->
         <comment
           :entity-id="tweet.tweetId"
           :comments-page="commentsPage"
+          mode="text"
           entity-type="tweet"
         />
       </div>
