@@ -38,7 +38,7 @@
             </div>
             <div class="link-content">
               <a
-                :href="'/link/' + link.linkId"
+                :href="link.url"
                 :title="link.title"
                 class="link-title"
                 target="_blank"
