@@ -9,76 +9,62 @@
         >
           <div class="main-content">
             <div class="article-header">
-              <div class="article-item-left">
-                <a
-                  :href="'/user/' + article.user.id"
-                  :title="article.user.nickname"
-                  target="_blank"
-                >
-                  <img v-lazy="article.user.smallAvatar" class="avatar" />
-                </a>
-              </div>
-              <div class="article-item-right">
-                <h1 class="article-title" itemprop="headline">
-                  {{ article.title }}
-                </h1>
-                <div class="article-meta">
-                  <span class="article-meta-item">
-                    由
-                    <a
-                      :href="'/user/' + article.user.id"
-                      class="article-author"
-                      itemprop="author"
-                      itemscope
-                      itemtype="http://schema.org/Person"
-                      ><span itemprop="name">{{
-                        article.user.nickname
-                      }}</span></a
-                    >发布于
-                    <time
-                      :datetime="
-                        article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
-                      "
-                      itemprop="datePublished"
-                      >{{ article.createTime | prettyDate }}</time
-                    >
-                  </span>
-
-                  <span
-                    v-if="article.tags && article.tags.length > 0"
-                    class="article-meta-item"
+              <h1 class="article-title" itemprop="headline">
+                {{ article.title }}
+              </h1>
+              <div class="article-meta">
+                <span class="article-meta-item">
+                  由
+                  <a
+                    :href="'/user/' + article.user.id"
+                    class="article-author"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                    ><span itemprop="name">{{ article.user.nickname }}</span></a
+                  >发布于
+                  <time
+                    :datetime="
+                      article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                    "
+                    itemprop="datePublished"
+                    >{{ article.createTime | prettyDate }}</time
                   >
-                    <span
-                      v-for="tag in article.tags"
-                      :key="tag.tagId"
-                      class="article-tag tag"
-                    >
-                      <a :href="'/articles/' + tag.tagId" class>{{
-                        tag.tagName
-                      }}</a>
-                    </span>
-                  </span>
-                </div>
+                </span>
 
-                <div class="article-tool">
-                  <span v-if="isOwner">
-                    <a @click="deleteArticle(article.articleId)">
-                      <i class="iconfont icon-delete" />&nbsp;删除
-                    </a>
+                <span
+                  v-if="article.tags && article.tags.length > 0"
+                  class="article-meta-item"
+                >
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag.tagId"
+                    class="article-tag tag"
+                  >
+                    <a :href="'/articles/' + tag.tagId" class>{{
+                      tag.tagName
+                    }}</a>
                   </span>
-                  <span v-if="isOwner">
-                    <a :href="'/article/edit/' + article.articleId">
-                      <i class="iconfont icon-edit" />&nbsp;修改
-                    </a>
-                  </span>
-                  <span>
-                    <a @click="addFavorite(article.articleId)">
-                      <i class="iconfont icon-favorite" />&nbsp;{{
-                        favorited ? '已收藏' : '收藏'
-                      }}
-                    </a>
-                  </span>
-                </div>
+                </span>
+              </div>
+              <div class="article-tool">
+                <span v-if="isOwner">
+                  <a @click="deleteArticle(article.articleId)">
+                    <i class="iconfont icon-delete" />&nbsp;删除
+                  </a>
+                </span>
+                <span v-if="isOwner">
+                  <a :href="'/article/edit/' + article.articleId">
+                    <i class="iconfont icon-edit" />&nbsp;修改
+                  </a>
+                </span>
+                <span>
+                  <a @click="addFavorite(article.articleId)">
+                    <i class="iconfont icon-favorite" />&nbsp;{{
+                      favorited ? '已收藏' : '收藏'
+                    }}
+                  </a>
+                </span>
               </div>
             </div>
 
