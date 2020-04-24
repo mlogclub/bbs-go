@@ -322,9 +322,15 @@ export default {
         })
     },
     editSubmit() {
+      const params = { ...this.editForm }
+      if (params.roles && params.roles.length) {
+        params.roles = params.roles.join(',')
+      } else {
+        params.roles = ''
+      }
       const me = this
       this.$axios
-        .post('/api/admin/user/update', me.editForm)
+        .post('/api/admin/user/update', params)
         .then((data) => {
           me.list()
           me.editFormVisible = false
