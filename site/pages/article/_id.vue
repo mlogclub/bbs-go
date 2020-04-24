@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container size-360 left-main">
+    <div class="container main-container size-320 left-main">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -163,10 +163,7 @@
         <!-- 展示广告 -->
         <adsbygoogle ad-slot="1742173616" />
 
-        <div
-          v-if="newestArticles && newestArticles.length"
-          class="widget no-margin"
-        >
+        <div v-if="newestArticles && newestArticles.length" class="widget">
           <div class="widget-header">最新文章</div>
           <div class="widget-content article-related">
             <ul>
