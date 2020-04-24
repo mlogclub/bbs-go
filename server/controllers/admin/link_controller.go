@@ -37,6 +37,7 @@ func (c *LinkController) PostCreate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	t.CreateTime = simple.NowTimestamp()
 
 	err = services.LinkService.Create(t)
 	if err != nil {

@@ -102,12 +102,6 @@
         <el-form-item label="Logo">
           <el-input v-model="addForm.logo"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="addForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
