@@ -60,8 +60,8 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.UserService.Get(id)
-	if t == nil {
+	user := services.UserService.Get(id)
+	if user == nil {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
@@ -72,21 +72,21 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	roles := simple.FormValueStringArray(c.Ctx, "roles")
 	status := simple.FormValueIntDefault(c.Ctx, "status", -1)
 
-	t.Username = simple.SqlNullString(username)
-	t.Nickname = nickname
-	t.Email = simple.SqlNullString(email)
-	t.Roles = strings.Join(roles, ",")
-	t.Status = status
+	user.Username = simple.SqlNullString(username)
+	user.Nickname = nickname
+	user.Email = simple.SqlNullString(email)
+	user.Roles = strings.Join(roles, ",")
+	user.Status = status
 
 	if len(password) > 0 {
-		t.Password = simple.EncodePassword(password)
+		user.Password = simple.EncodePassword(password)
 	}
 
-	err = services.UserService.Update(t)
+	err = services.UserService.Update(user)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonData(t)
+	return simple.JsonData(c.buildUserItem(user))
 }
 
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {
