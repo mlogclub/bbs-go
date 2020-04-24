@@ -65,7 +65,7 @@
               </div>
               <div class="comment-action action">
                 <div class="action-title-box">
-                  <i class="iconfont icon-comment" />
+                  <i class="iconfont icon-comments" />
                   <span class="action-title">{{
                     tweet.commentCount > 0 ? tweet.commentCount : '评论'
                   }}</span>

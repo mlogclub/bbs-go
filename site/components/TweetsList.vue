@@ -44,7 +44,7 @@
           v-if="tweet.imageList && tweet.imageList.length > 0"
           class="pin-image-row"
         >
-          <li v-for="image in tweet.imageList" :key="image">
+          <li v-for="(image, index) in tweet.imageList" :key="image + index">
             <a :href="'/tweet/' + tweet.tweetId" class="image-item">
               <img v-lazy="image.preview" />
             </a>
@@ -62,7 +62,7 @@
             </div>
             <a :href="'/tweet/' + tweet.tweetId" class="comment-action action">
               <div class="action-title-box">
-                <i class="iconfont icon-comment" />
+                <i class="iconfont icon-comments" />
                 <span class="action-title">{{
                   tweet.commentCount > 0 ? tweet.commentCount : '评论'
                 }}</span>
