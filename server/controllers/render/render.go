@@ -105,6 +105,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.SourceUrl = article.SourceUrl
 	rsp.ViewCount = article.ViewCount
 	rsp.CreateTime = article.CreateTime
+	rsp.Status = article.Status
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
 
@@ -153,6 +154,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	rsp.SourceUrl = article.SourceUrl
 	rsp.ViewCount = article.ViewCount
 	rsp.CreateTime = article.CreateTime
+	rsp.Status = article.Status
 
 	rsp.User = BuildUserDefaultIfNull(article.UserId)
 

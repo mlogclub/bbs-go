@@ -46,6 +46,7 @@ type ArticleSimpleResponse struct {
 	SourceUrl  string         `json:"sourceUrl"`
 	ViewCount  int64          `json:"viewCount"`
 	CreateTime int64          `json:"createTime"`
+	Status     int            `json:"status"`
 }
 
 type ArticleResponse struct {

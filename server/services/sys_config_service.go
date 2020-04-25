@@ -125,6 +125,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		urlRedirect      = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
 		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
 		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
+		articlePending   = cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
 	)
 
 	var siteKeywordsArr []string
@@ -167,5 +168,6 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		UrlRedirect:      strings.ToLower(urlRedirect) == "true",
 		ScoreConfig:      scoreConfig,
 		DefaultNodeId:    defaultNodeId,
+		ArticlePending:   strings.ToLower(articlePending) == "true",
 	}
 }
