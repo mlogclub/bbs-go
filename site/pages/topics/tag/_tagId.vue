@@ -9,20 +9,28 @@
           :url-prefix="'/topics/' + tag.tagId + '?p='"
         />
       </div>
-      <topic-side :score-rank="scoreRank" :links="links" />
+      <div class="right-container">
+        <site-notice />
+        <score-rank :score-rank="scoreRank" />
+        <friend-links :links="links" />
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import TopicSide from '~/components/TopicSide'
+import SiteNotice from '~/components/SiteNotice'
+import ScoreRank from '~/components/ScoreRank'
+import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    TopicSide,
+    SiteNotice,
+    ScoreRank,
+    FriendLinks,
     TopicsNav,
     TopicList,
     Pagination
