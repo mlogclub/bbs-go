@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container size-320 left-main">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <article
           class="article-item article-detail"

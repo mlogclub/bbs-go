@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container is-white left-main size-320">
       <div class="left-container">
         <load-more
           v-slot="{ results }"
