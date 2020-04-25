@@ -52,6 +52,15 @@
               <a :href="'/articles/' + tag.tagId" class>{{ tag.tagName }}</a>
             </span>
           </span>
+
+          <span v-if="article.status === 2" class="article-meta-item">
+            <a
+              href="javascript:void(0)"
+              style="cursor: default; text-decoration: none; color: green; font-size: 12px"
+            >
+              <i class="iconfont icon-shenhe" />&nbsp;审核中</a
+            >
+          </span>
         </div>
       </article>
     </li>

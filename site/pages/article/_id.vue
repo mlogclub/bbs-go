@@ -78,6 +78,14 @@
                       }}
                     </a>
                   </span>
+                  <span v-if="isPending">
+                    <a
+                      href="javascript:void(0)"
+                      style="cursor: default; text-decoration: none"
+                    >
+                      <i class="iconfont icon-shenhe" />&nbsp;审核中
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,8 +212,8 @@ export default {
       article = await $axios.get('/api/article/' + params.id)
     } catch (e) {
       error({
-        statusCode: 404,
-        message: '文章不存在或被删除'
+        statusCode: e.errorCode,
+        message: e.message
       })
       return
     }
@@ -265,10 +273,19 @@ export default {
   computed: {
     isOwner() {
       return (
-        this.$store.state.user.current &&
-        this.article &&
-        this.$store.state.user.current.id === this.article.user.id
+        (this.$store.state.user.current &&
+          this.article &&
+          this.$store.state.user.current.id === this.article.user.id) ||
+        (this.article.status === 2 &&
+          this.article.user.roles.includes('管理员'))
       )
+    },
+    isPending() {
+      if (this.article.status === 2) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {

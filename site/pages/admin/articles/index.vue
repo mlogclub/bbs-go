@@ -21,6 +21,7 @@
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
+            <el-option label="待审核" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -55,7 +56,18 @@
         <div class="article-footer">
           <span v-if="item.status === 1" class="danger">已删除</span>
           <span class="info">编号：{{ item.id }}</span>
-          <a @click="deleteSubmit(item)" class="btn">删除</a>
+          <a v-if="item.status !== 1" @click="deleteSubmit(item)" class="btn"
+            >删除</a
+          >
+          <a
+            v-if="item.status === 2"
+            :href="'/article/edit/' + item.id"
+            class="btn"
+            >修改</a
+          >
+          <a v-if="item.status === 2" @click="PendingSubmit(item)" class="btn"
+            >审核</a
+          >
         </div>
       </div>
     </div>
@@ -121,14 +133,52 @@ export default {
     },
     deleteSubmit(row) {
       const me = this
-      this.$axios
-        .post('/api/admin/article/delete', { id: row.id })
-        .then((data) => {
-          me.$message({ message: '删除成功', type: 'success' })
-          me.list()
+      this.$confirm('确认要删除文章？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$axios
+            .post('/api/admin/article/delete', { id: row.id })
+            .then((data) => {
+              me.$message({ message: '删除成功', type: 'success' })
+              me.list()
+            })
+            .catch((rsp) => {
+              me.$notify.error({ title: '错误', message: rsp.message })
+            })
         })
-        .catch((rsp) => {
-          me.$notify.error({ title: '错误', message: rsp.message })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    PendingSubmit(row) {
+      const me = this
+      this.$confirm('确认要过审文章？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$axios
+            .post('/api/admin/article/pending', { id: row.id })
+            .then((data) => {
+              me.$message({ message: '审核成功', type: 'success' })
+              me.list()
+            })
+            .catch((rsp) => {
+              me.$notify.error({ title: '错误', message: rsp.message })
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消审核'
+          })
         })
     }
   }
