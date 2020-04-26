@@ -13,6 +13,7 @@
       </div>
       <div class="right-container">
         <site-notice />
+        <tweets-widget :tweets="newestTweets" />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
       </div>
@@ -26,6 +27,7 @@ import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
+import TweetsWidget from '~/components/TweetsWidget'
 import Pagination from '~/components/Pagination'
 
 export default {
@@ -35,11 +37,18 @@ export default {
     FriendLinks,
     TopicsNav,
     TopicList,
+    TweetsWidget,
     Pagination
   },
   async asyncData({ $axios, query }) {
     try {
-      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
+      const [
+        nodes,
+        topicsPage,
+        scoreRank,
+        links,
+        newestTweets
+      ] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/recommend/topics', {
           params: {
@@ -47,9 +56,10 @@ export default {
           }
         }),
         $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks')
+        $axios.get('/api/link/toplinks'),
+        $axios.get('/api/tweet/newest')
       ])
-      return { nodes, topicsPage, scoreRank, links }
+      return { nodes, topicsPage, scoreRank, links, newestTweets }
     } catch (e) {
       console.error(e)
     }

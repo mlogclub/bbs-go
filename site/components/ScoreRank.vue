@@ -7,7 +7,7 @@
       <ul class="score-rank">
         <li v-for="user in scoreRank" :key="user.id">
           <a :href="'/user/' + user.id" class="score-user-avatar">
-            <img v-lazy="user.smallAvatar" class="avatar size-30" />
+            <img :src="user.smallAvatar" class="avatar size-30" />
           </a>
           <div class="score-user-info">
             <a :href="'/user/' + user.id">{{ user.nickname }}</a>

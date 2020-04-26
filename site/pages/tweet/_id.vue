@@ -10,7 +10,7 @@
                   :href="'/user/' + tweet.user.id"
                   :title="tweet.user.nickname"
                 >
-                  <img v-lazy="tweet.user.smallAvatar" class="avatar size-45" />
+                  <img :src="tweet.user.smallAvatar" class="avatar size-45" />
                 </a>
               </div>
               <div class="pin-header-content">

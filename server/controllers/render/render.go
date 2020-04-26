@@ -295,7 +295,7 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 				var imageList []model.ImageInfo
 				for _, image := range images {
 					imageList = append(imageList, model.ImageInfo{
-						Url:     image,
+						Url:     HandleOssImageStyleDetail(image),
 						Preview: HandleOssImageStylePreview(image),
 					})
 				}

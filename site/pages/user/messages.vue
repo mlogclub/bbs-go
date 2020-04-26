@@ -32,7 +32,7 @@
                 class="message-item"
               >
                 <div class="message-item-left">
-                  <img v-lazy="message.from.smallAvatar" class="avatar" />
+                  <img :src="message.from.smallAvatar" class="avatar" />
                 </div>
                 <div class="message-item-right">
                   <div class="message-item-meta">
