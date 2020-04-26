@@ -297,7 +297,7 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 				var imageList []model.ImageInfo
 				for _, image := range images {
 					imageList = append(imageList, model.ImageInfo{
-						Url:     image,
+						Url:     HandleOssImageStyleDetail(image),
 						Preview: HandleOssImageStylePreview(image),
 					})
 				}
@@ -506,6 +506,8 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 			detailUrl = urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == model.EntityTypeTopic {
 			detailUrl = urls.TopicUrl(entityId.Int())
+		} else if entityType.String() == model.EntityTypeTweet {
+			detailUrl = urls.TweetUrl(entityId.Int())
 		}
 	}
 	from := BuildUserDefaultIfNull(message.FromId)

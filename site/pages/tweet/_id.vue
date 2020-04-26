@@ -10,7 +10,7 @@
                   :href="'/user/' + tweet.user.id"
                   :title="tweet.user.nickname"
                 >
-                  <img v-lazy="tweet.user.smallAvatar" class="avatar size-45" />
+                  <img :src="tweet.user.smallAvatar" class="avatar size-45" />
                 </a>
               </div>
               <div class="pin-header-content">
@@ -65,7 +65,7 @@
               </div>
               <div class="comment-action action">
                 <div class="action-title-box">
-                  <i class="iconfont icon-comment" />
+                  <i class="iconfont icon-comments" />
                   <span class="action-title">{{
                     tweet.commentCount > 0 ? tweet.commentCount : '评论'
                   }}</span>
@@ -81,7 +81,10 @@
           entity-type="tweet"
         />
       </div>
-      <topic-side :score-rank="scoreRank" :links="links" />
+      <div class="right-container">
+        <site-notice />
+        <score-rank :score-rank="scoreRank" />
+      </div>
     </div>
   </section>
 </template>
@@ -89,7 +92,8 @@
 <script>
 import Vue from 'vue'
 import Viewer from 'v-viewer'
-import TopicSide from '~/components/TopicSide'
+import SiteNotice from '~/components/SiteNotice'
+import ScoreRank from '~/components/ScoreRank'
 import Comment from '~/components/Comment'
 import utils from '~/common/utils'
 import 'viewerjs/dist/viewer.css'
@@ -108,11 +112,12 @@ Vue.use(Viewer, {
 
 export default {
   components: {
-    TopicSide,
+    SiteNotice,
+    ScoreRank,
     Comment
   },
   async asyncData({ $axios, params }) {
-    const [tweet, commentsPage, scoreRank, links] = await Promise.all([
+    const [tweet, commentsPage, scoreRank] = await Promise.all([
       $axios.get('/api/tweet/' + params.id),
       $axios.get('/api/comment/list', {
         params: {
@@ -120,10 +125,9 @@ export default {
           entityId: params.id
         }
       }),
-      $axios.get('/api/user/score/rank'),
-      $axios.get('/api/link/toplinks')
+      $axios.get('/api/user/score/rank')
     ])
-    return { tweet, commentsPage, scoreRank, links }
+    return { tweet, commentsPage, scoreRank }
   },
   methods: {
     async like(tweet) {

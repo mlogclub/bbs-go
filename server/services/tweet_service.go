@@ -45,7 +45,7 @@ func (s *tweetService) Count(cnd *simple.SqlCnd) int {
 }
 
 func (s *tweetService) GetTweets(cursor int64) (tweets []model.Tweet, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(50)
+	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(20)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -55,6 +55,12 @@ func (s *tweetService) GetTweets(cursor int64) (tweets []model.Tweet, nextCursor
 	} else {
 		nextCursor = cursor
 	}
+	return
+}
+
+func (s *tweetService) GetNewest() (tweets []model.Tweet) {
+	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(6)
+	tweets = repositories.TweetRepository.Find(simple.DB(), cnd)
 	return
 }
 

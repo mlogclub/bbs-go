@@ -51,3 +51,8 @@ func (c *TweetController) PostLikeBy(tweetId int64) *simple.JsonResult {
 	}
 	return simple.JsonSuccess()
 }
+
+func (c *TweetController) GetNewest() *simple.JsonResult {
+	tweets := services.TweetService.GetNewest()
+	return simple.JsonData(render.BuildTweets(tweets))
+}

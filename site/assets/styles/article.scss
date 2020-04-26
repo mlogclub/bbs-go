@@ -13,19 +13,6 @@
   }
 }
 
-.article-item-left {
-  width: 50px;
-  height: 50px;
-  float: left;
-  vertical-align: middle;
-}
-
-.article-item-right {
-  margin-left: 50px;
-  padding-left: 10px;
-  vertical-align: middle;
-}
-
 .article-item {
   overflow: hidden;
   zoom: 1;
@@ -100,16 +87,12 @@
         }
       }
     }
-
-    // span {
-    //   // color: #999;
-    //   color: #8a93a0;
-    // }
   }
 
   .article-tool {
     display: inline-block;
     margin-right: 5px;
+    line-height: 32px;
 
     & > span {
       margin-left: 5px;

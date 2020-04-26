@@ -1,35 +1,22 @@
 <template>
   <div class="topics-nav">
-    <a :href="createTopicUrl" class="button is-primary post">
-      <i class="iconfont icon-topic" />&nbsp;
-      <strong>发表主题</strong>
-    </a>
-    <ul>
-      <li>
-        <a :class="{ active: currentNodeId === 0 }" href="/topics/node/newest">
-          <i class="iconfont icon-topic" />
-          <span>最新</span>
-        </a>
-      </li>
-      <li>
-        <a
-          :class="{ active: currentNodeId === -1 }"
-          href="/topics/node/recommend"
+    <nav class="dock-nav">
+      <ul>
+        <li :class="{ active: currentNodeId === 0 }">
+          <a href="/topics/node/newest">最新</a>
+        </li>
+        <li :class="{ active: currentNodeId === -1 }">
+          <a href="/topics/node/recommend">推荐</a>
+        </li>
+        <li
+          v-for="node in nodes"
+          :key="node.nodeId"
+          :class="{ active: currentNodeId === node.nodeId }"
         >
-          <i class="iconfont icon-topic" />
-          <span>推荐</span>
-        </a>
-      </li>
-      <li v-for="node in nodes" :key="node.nodeId" class="topics-nav-item">
-        <a
-          :class="{ active: currentNodeId == node.nodeId }"
-          :href="'/topics/node/' + node.nodeId"
-        >
-          <i class="iconfont icon-topic" />
-          <span>{{ node.name }}</span>
-        </a>
-      </li>
-    </ul>
+          <a :href="'/topics/node/' + node.nodeId">{{ node.name }}</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -52,32 +39,56 @@ export default {
 
 <style lang="scss" scoped>
 .topics-nav {
-  min-width: 150px;
   margin-right: 10px;
-  padding: 5px;
+  width: 112px;
+  min-height: 100px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
-  ul {
-    li {
-      a {
-        display: block;
-        width: 100%;
-        padding: 8px 0;
-        color: #667d99;
+  .dock-nav {
+    width: 112px;
+    border-radius: 2px;
+    background-color: #fff;
+    transition: all 0.2s linear;
+
+    ul {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      li {
+        position: relative;
+        cursor: pointer;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #2e3135;
+        padding: 0 12px;
+        border-radius: 3px;
+        transition: background-color 0.2s, color 0.2s;
         font-weight: 500;
-        font-size: 15px;
 
-        i {
-          margin-right: 8px;
-        }
-
-        &:hover {
-          color: #f36322;
-          text-decoration: none;
+        &:not(:first-child) {
+          margin-top: 10px;
         }
 
         &.active {
-          color: rgb(75, 147, 209);
-          font-weight: 900;
+          background-color: #ea6f5a;
+          color: #fff;
+          a {
+            color: #fff;
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: hsla(0, 0%, 94.9%, 0.6);
+        }
+
+        a {
+          text-decoration: none;
+          cursor: pointer;
+          color: #909090;
         }
       }
     }

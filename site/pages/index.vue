@@ -8,37 +8,56 @@
           <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
         </div>
       </div>
-      <topic-side :score-rank="scoreRank" :links="links" />
+      <div class="right-container">
+        <site-notice />
+        <tweets-widget :tweets="newestTweets" />
+        <score-rank :score-rank="scoreRank" />
+        <friend-links :links="links" />
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import TopicSide from '~/components/TopicSide'
+import SiteNotice from '~/components/SiteNotice'
+import ScoreRank from '~/components/ScoreRank'
+import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
+import TweetsWidget from '~/components/TweetsWidget'
 import Pagination from '~/components/Pagination'
 
 export default {
   components: {
-    TopicSide,
+    SiteNotice,
+    ScoreRank,
+    FriendLinks,
     TopicsNav,
     TopicList,
+    TweetsWidget,
     Pagination
   },
   async asyncData({ $axios, params }) {
     try {
-      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
+      const [
+        nodes,
+        topicsPage,
+        scoreRank,
+        links,
+        newestTweets
+      ] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics'),
         $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks')
+        $axios.get('/api/link/toplinks'),
+        $axios.get('/api/tweet/newest')
       ])
-      return { nodes, topicsPage, scoreRank, links }
+      return { nodes, topicsPage, scoreRank, links, newestTweets }
     } catch (e) {
       console.error(e)
     }
   },
+  data() {},
   methods: {
     twitterCreated(data) {
       if (this.topicsPage) {

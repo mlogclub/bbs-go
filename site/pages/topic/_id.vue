@@ -15,10 +15,7 @@
                     :href="'/user/' + topic.user.id"
                     :title="topic.user.nickname"
                   >
-                    <img
-                      v-lazy="topic.user.smallAvatar"
-                      class="avatar size-45"
-                    />
+                    <img :src="topic.user.smallAvatar" class="avatar size-45" />
                   </a>
                 </div>
                 <div class="topic-header-center">
@@ -70,10 +67,16 @@
                         <i class="iconfont icon-delete" />&nbsp;删除
                       </a>
                     </span>
-                    <!-- 话题类型为普通时才可以修改 -->
                     <span v-if="isOwner" class="meta-item act">
                       <a :href="'/topic/edit/' + topic.topicId">
                         <i class="iconfont icon-edit" />&nbsp;修改
+                      </a>
+                    </span>
+                    <span class="meta-item act">
+                      <a @click="addFavorite(topic.topicId)">
+                        <i class="iconfont icon-favorite" />&nbsp;{{
+                          favorited ? '已收藏' : '收藏'
+                        }}
                       </a>
                     </span>
                   </div>
@@ -138,7 +141,7 @@
                     target="_blank"
                   >
                     <img
-                      v-lazy="user.smallAvatar"
+                      :src="user.smallAvatar"
                       :alt="user.nickname"
                       class="avatar size-30"
                     />
@@ -170,7 +173,7 @@
             <div class="base-info">
               <a :href="'/user/' + topic.user.id" :alt="topic.user.nickname">
                 <img
-                  v-lazy="topic.user.smallAvatar"
+                  :src="topic.user.smallAvatar"
                   :alt="topic.user.nickname"
                   class="avatar"
                 />
