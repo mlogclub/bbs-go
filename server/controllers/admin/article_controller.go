@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bbs-go/model"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -91,6 +92,18 @@ func (c *ArticleController) PostDelete() *simple.JsonResult {
 		return simple.JsonErrorMsg("id is required")
 	}
 	err := services.ArticleService.Delete(id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+func (c *ArticleController) PostPending() *simple.JsonResult {
+	id := c.Ctx.PostValueInt64Default("id", 0)
+	if id <= 0 {
+		return simple.JsonErrorMsg("id is required")
+	}
+	err := services.ArticleService.UpdateColumn(id, "status", model.StatusOk)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

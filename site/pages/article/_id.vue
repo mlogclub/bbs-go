@@ -45,26 +45,35 @@
                       tag.tagName
                     }}</a>
                   </span>
-                </span>
-              </div>
-              <div class="article-tool">
-                <span v-if="isOwner">
-                  <a @click="deleteArticle(article.articleId)">
-                    <i class="iconfont icon-delete" />&nbsp;删除
-                  </a>
-                </span>
-                <span v-if="isOwner">
-                  <a :href="'/article/edit/' + article.articleId">
-                    <i class="iconfont icon-edit" />&nbsp;修改
-                  </a>
-                </span>
-                <span>
-                  <a @click="addFavorite(article.articleId)">
-                    <i class="iconfont icon-favorite" />&nbsp;{{
-                      favorited ? '已收藏' : '收藏'
-                    }}
-                  </a>
-                </span>
+                </div>
+
+                <div class="article-tool">
+                  <span v-if="isOwner">
+                    <a @click="deleteArticle(article.articleId)">
+                      <i class="iconfont icon-delete" />&nbsp;删除
+                    </a>
+                  </span>
+                  <span v-if="isOwner">
+                    <a :href="'/article/edit/' + article.articleId">
+                      <i class="iconfont icon-edit" />&nbsp;修改
+                    </a>
+                  </span>
+                  <span>
+                    <a @click="addFavorite(article.articleId)">
+                      <i class="iconfont icon-favorite" />&nbsp;{{
+                        favorited ? '已收藏' : '收藏'
+                      }}
+                    </a>
+                  </span>
+                  <span v-if="isPending">
+                    <a
+                      href="javascript:void(0)"
+                      style="cursor: default; text-decoration: none"
+                    >
+                      <i class="iconfont icon-shenhe" />&nbsp;审核中
+                    </a>
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -187,8 +196,8 @@ export default {
       article = await $axios.get('/api/article/' + params.id)
     } catch (e) {
       error({
-        statusCode: 404,
-        message: '文章不存在或被删除'
+        statusCode: e.errorCode,
+        message: e.message
       })
       return
     }
@@ -248,10 +257,19 @@ export default {
   computed: {
     isOwner() {
       return (
-        this.$store.state.user.current &&
-        this.article &&
-        this.$store.state.user.current.id === this.article.user.id
+        (this.$store.state.user.current &&
+          this.article &&
+          this.$store.state.user.current.id === this.article.user.id) ||
+        (this.article.status === 2 &&
+          this.article.user.roles.includes('管理员'))
       )
+    },
+    isPending() {
+      if (this.article.status === 2) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {

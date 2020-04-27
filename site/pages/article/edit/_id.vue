@@ -80,17 +80,24 @@ export default {
     MarkdownHelp,
     MarkdownEditor
   },
-  async asyncData({ $axios, params }) {
-    const [article] = await Promise.all([
-      $axios.get('/api/article/edit/' + params.id)
-    ])
-    return {
-      article,
-      postForm: {
-        title: article.title,
-        tags: article.tags,
-        content: article.content
+  async asyncData({ $axios, params, error }) {
+    try {
+      const [article] = await Promise.all([
+        $axios.get('/api/article/edit/' + params.id)
+      ])
+      return {
+        article,
+        postForm: {
+          title: article.title,
+          tags: article.tags,
+          content: article.content
+        }
       }
+    } catch (e) {
+      error({
+        statusCode: 403,
+        message: e.message || '403'
+      })
     }
   },
   data() {
