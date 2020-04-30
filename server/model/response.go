@@ -124,6 +124,7 @@ type CommentResponse struct {
 	Quote        *CommentResponse `json:"quote"`
 	QuoteContent string           `json:"quoteContent"`
 	Status       int              `json:"status"`
+	ContentType  string           `json:"content_type"`
 	CreateTime   int64            `json:"createTime"`
 }
 

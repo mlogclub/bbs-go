@@ -398,13 +398,14 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	}
 
 	ret := &model.CommentResponse{
-		CommentId:  comment.Id,
-		User:       BuildUserDefaultIfNull(comment.UserId),
-		EntityType: comment.EntityType,
-		EntityId:   comment.EntityId,
-		QuoteId:    comment.QuoteId,
-		Status:     comment.Status,
-		CreateTime: comment.CreateTime,
+		CommentId:   comment.Id,
+		User:        BuildUserDefaultIfNull(comment.UserId),
+		EntityType:  comment.EntityType,
+		EntityId:    comment.EntityId,
+		QuoteId:     comment.QuoteId,
+		Status:      comment.Status,
+		ContentType: comment.ContentType,
+		CreateTime:  comment.CreateTime,
 	}
 
 	if comment.ContentType == model.ContentTypeMarkdown {

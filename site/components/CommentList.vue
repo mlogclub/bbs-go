@@ -64,13 +64,26 @@
               </div>
               <div
                 v-lazy-container="{ selector: 'img' }"
+                v-if="comment.content_type === 'markdown'"
                 v-html="comment.quote.content"
+                itemprop="text"
+              />
+              <div
+                v-lazy-container="{ selector: 'img' }"
+                v-else-if="comment.content_type === 'text'"
+                v-text="comment.quote.content"
                 itemprop="text"
               />
             </blockquote>
             <p
               v-lazy-container="{ selector: 'img' }"
+              v-if="comment.content_type === 'markdown'"
               v-html="comment.content"
+            />
+            <p
+              v-lazy-container="{ selector: 'img' }"
+              v-else-if="comment.content_type === 'text'"
+              v-text="comment.content"
             />
           </div>
         </li>
