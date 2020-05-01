@@ -45,7 +45,7 @@
                       tag.tagName
                     }}</a>
                   </span>
-                </div>
+                </span>
 
                 <div class="article-tool">
                   <span v-if="isOwner">
