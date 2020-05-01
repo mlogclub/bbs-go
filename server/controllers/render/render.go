@@ -1,6 +1,7 @@
 package render
 
 import (
+	"html"
 	"strconv"
 	"strings"
 
@@ -413,7 +414,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	} else if comment.ContentType == model.ContentTypeHtml {
 		ret.Content = BuildHtmlContent(comment.Content)
 	} else {
-		ret.Content = comment.Content
+		ret.Content = html.EscapeString(comment.Content)
 	}
 
 	if buildQuote && comment.QuoteId > 0 {
