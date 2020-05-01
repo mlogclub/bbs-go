@@ -17,7 +17,21 @@ Github:
 QQConnect:
   AppId:
   AppKey:
-
+# 上传配置
+Uploader:
+  # 启用上传方式
+  Enable: Local
+  # 阿里云oss配置
+  Oss:
+    Host: 请配置成你自己的
+    Bucket: 请配置成你自己的
+    Endpoint: 请配置成你自己的
+    AccessId: 请配置成你自己的
+    AccessSecret: 请配置成你自己的
+  # 本地文件上传
+  Local:
+    Host: http://www.stonelan.com/ # 上传文件域名
+    Path: /data/file # 上传目录
 # 阿里云oss配置
 Minio:
   Host: /minio/download/bbs/
