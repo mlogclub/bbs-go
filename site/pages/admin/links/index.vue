@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button @click="handleAdd" type="primary">新增</el-button>
@@ -29,8 +29,8 @@
     </div>
 
     <el-table
-      :data="results"
       v-loading="listLoading"
+      :data="results"
       highlight-current-row
       stripe
       style="width: 100%;"
@@ -71,11 +71,11 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
@@ -102,18 +102,12 @@
         <el-form-item label="Logo">
           <el-input v-model="addForm.logo"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="addForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          @click.native="addSubmit"
           :loading="addLoading"
+          @click.native="addSubmit"
           type="primary"
           >提交
         </el-button>
@@ -157,8 +151,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          @click.native="editSubmit"
           :loading="editLoading"
+          @click.native="editSubmit"
           type="primary"
           >提交
         </el-button>

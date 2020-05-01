@@ -37,7 +37,6 @@ func (c *UploadController) Post() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 

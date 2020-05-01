@@ -159,13 +159,21 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 			return nil, errors.New("内容不能为空")
 		}
 	}
+
+	// 获取后台配置 否是开启发表文章审核
+	status := model.StatusOk
+	sysConfigArticlePending := cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
+	if strings.ToLower(sysConfigArticlePending) == "true" {
+		status = model.StatusPending
+	}
+
 	article = &model.Article{
 		UserId:      userId,
 		Title:       title,
 		Summary:     summary,
 		Content:     content,
 		ContentType: contentType,
-		Status:      model.StatusOk,
+		Status:      status,
 		Share:       share,
 		SourceUrl:   sourceUrl,
 		CreateTime:  simple.NowTimestamp(),
@@ -272,12 +280,7 @@ func (s *articleService) GenerateRss() {
 		if user == nil {
 			continue
 		}
-		description := ""
-		if article.ContentType == model.ContentTypeMarkdown {
-			description = common.GetMarkdownSummary(article.Content)
-		} else {
-			description = common.GetHtmlSummary(article.Content)
-		}
+		description := common.GetSummary(article.ContentType, article.Content)
 		item := &feeds.Item{
 			Title:       article.Title,
 			Link:        &feeds.Link{Href: articleUrl},

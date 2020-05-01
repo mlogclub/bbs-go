@@ -44,7 +44,7 @@ var ctxCache = cache.New(cache.WithMaximumSize(1000), cache.WithExpireAfterAcces
 // 接口：https://graph.qq.com/oauth2.0/authorize
 func AuthorizeUrl(params map[string]string) string {
 	// 将跳转地址写入上线文
-	state := simple.Uuid()
+	state := simple.UUID()
 	redirectUrl := getRedirectUrl(params)
 	ctxCache.Put(state, redirectUrl)
 

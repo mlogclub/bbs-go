@@ -51,7 +51,7 @@
           </a>
 
           <a class="navbar-item" href="/admin/comments">
-            <i class="iconfont icon-comment"></i>
+            <i class="iconfont icon-comments"></i>
             <span>评论</span>
           </a>
           <a class="navbar-item" href="/admin/users">

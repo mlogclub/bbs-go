@@ -55,35 +55,13 @@ func (c *UserController) PostCreate() *simple.JsonResult {
 	return simple.JsonData(c.buildUserItem(user))
 }
 
-func (c *UserController) PostCreate2() *simple.JsonResult {
-	username := simple.FormValue(c.Ctx, "username")
-	email := simple.FormValue(c.Ctx, "email")
-	nickname := simple.FormValue(c.Ctx, "nickname")
-	password := simple.FormValue(c.Ctx, "password")
-
-	user, err := services.UserService.SignUp(username, email, nickname, password, password)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	token, err := services.UserTokenService.Generate(user.Id)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	ret := c.buildUserItem(user)
-	ret["token"] = token
-
-	return simple.JsonData(ret)
-}
-
 func (c *UserController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.UserService.Get(id)
-	if t == nil {
+	user := services.UserService.Get(id)
+	if user == nil {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
@@ -91,43 +69,24 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	password := simple.FormValue(c.Ctx, "password")
 	nickname := simple.FormValue(c.Ctx, "nickname")
 	email := simple.FormValue(c.Ctx, "email")
+	roles := simple.FormValueStringArray(c.Ctx, "roles")
 	status := simple.FormValueIntDefault(c.Ctx, "status", -1)
 
-	formValues := c.Ctx.FormValues()
-	var rolesKeys []string
-	for k := range formValues {
-		if strings.HasPrefix(k, "roles") {
-			rolesKeys = append(rolesKeys, k)
-		}
-	}
-	roles := make([]string, len(rolesKeys))
-	for i, v := range rolesKeys {
-		roles[i] = simple.FormValue(c.Ctx, v)
-	}
+	user.Username = simple.SqlNullString(username)
+	user.Nickname = nickname
+	user.Email = simple.SqlNullString(email)
+	user.Roles = strings.Join(roles, ",")
+	user.Status = status
 
-	if len(username) > 0 {
-		t.Username = simple.SqlNullString(username)
-	}
 	if len(password) > 0 {
-		t.Password = simple.EncodePassword(password)
-	}
-	if len(nickname) > 0 {
-		t.Nickname = nickname
-	}
-	if len(email) > 0 {
-		t.Email = simple.SqlNullString(email)
-	}
-	if status != -1 {
-		t.Status = status
+		user.Password = simple.EncodePassword(password)
 	}
 
-	t.Roles = strings.Join(roles, ",")
-
-	err = services.UserService.Update(t)
+	err = services.UserService.Update(user)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonData(t)
+	return simple.JsonData(c.buildUserItem(user))
 }
 
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {

@@ -78,6 +78,15 @@
                 <el-switch v-model="config.urlRedirect"></el-switch>
               </el-tooltip>
             </el-form-item>
+
+            <el-form-item label="发表文章审核">
+              <el-tooltip
+                content="发布文章后是否开启管理员审核"
+                placement="top"
+              >
+                <el-switch v-model="config.articlePending"></el-switch>
+              </el-tooltip>
+            </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>

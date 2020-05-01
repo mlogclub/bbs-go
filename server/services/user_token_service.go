@@ -1,6 +1,7 @@
 package services
 
 import (
+	"strings"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -72,6 +73,14 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	return user
 }
 
+// 判断当前用户是否是管理员
+func (s *userTokenService) IsAdmin(user *model.User) bool {
+	if user != nil {
+		return strings.Contains(user.Roles,"管理员")
+	}
+	return false
+}
+
 // CheckLogin 检查登录状态
 func (s *userTokenService) CheckLogin(ctx iris.Context) (*model.User, *simple.CodeError) {
 	user := s.GetCurrent(ctx)
@@ -102,7 +111,7 @@ func (s *userTokenService) GetUserToken(ctx iris.Context) string {
 
 // 生成
 func (s *userTokenService) Generate(userId int64) (string, error) {
-	token := simple.Uuid()
+	token := simple.UUID()
 	expiredAt := time.Now().Add(time.Hour * 24 * 7) // 7天后过期
 	userToken := &model.UserToken{
 		Token:      token,

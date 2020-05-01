@@ -22,6 +22,7 @@
     "element-ui": "^2.13.0",
     "nuxt": "^2.11.0",
     "qs": "^6.9.0",
+    "v-viewer": "^1.5.1",
     "vue-infinite-scroll": "^2.0.2",
     "vuedraggable": "^2.23.2"
   },

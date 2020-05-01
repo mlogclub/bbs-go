@@ -12,7 +12,7 @@
           <el-input v-model="filters.nickname" placeholder="昵称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button @click="handleAdd" type="primary">新增</el-button>
@@ -21,8 +21,8 @@
     </div>
 
     <el-table
-      :data="results"
       v-loading="listLoading"
+      :data="results"
       @selection-change="handleSelectionChange"
       highlight-current-row
       stripe
@@ -103,11 +103,11 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
@@ -143,8 +143,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          @click.native="addSubmit"
           :loading="addLoading"
+          @click.native="addSubmit"
           type="primary"
           >提交</el-button
         >
@@ -208,8 +208,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          @click.native="editSubmit"
           :loading="editLoading"
+          @click.native="editSubmit"
           type="primary"
           >提交</el-button
         >
@@ -322,9 +322,15 @@ export default {
         })
     },
     editSubmit() {
+      const params = { ...this.editForm }
+      if (params.roles && params.roles.length) {
+        params.roles = params.roles.join(',')
+      } else {
+        params.roles = ''
+      }
       const me = this
       this.$axios
-        .post('/api/admin/user/update', me.editForm)
+        .post('/api/admin/user/update', params)
         .then((data) => {
           me.list()
           me.editFormVisible = false

@@ -1,6 +1,6 @@
 <template>
   <div class="user-info-component">
-    <img :src="user.avatar" class="avatar" />
+    <img :src="user.smallAvatar" class="avatar" />
     <div class="user-info-component-right">
       <div>{{ user.id }}</div>
       <span>{{ user.nickname }}</span>

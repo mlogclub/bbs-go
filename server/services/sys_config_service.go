@@ -125,26 +125,35 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		urlRedirect      = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
 		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
 		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
+		articlePending   = cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
 	)
 
 	var siteKeywordsArr []string
-	if err := simple.ParseJson(siteKeywords, &siteKeywordsArr); err != nil {
-		logrus.Warn("站点关键词数据错误", err)
+	if simple.IsNotBlank(siteKeywords) {
+		if err := simple.ParseJson(siteKeywords, &siteKeywordsArr); err != nil {
+			logrus.Warn("站点关键词数据错误", err)
+		}
 	}
 
 	var siteNavsArr []model.SiteNav
-	if err := simple.ParseJson(siteNavs, &siteNavsArr); err != nil {
-		logrus.Warn("站点导航数据错误", err)
+	if simple.IsNotBlank(siteNavs) {
+		if err := simple.ParseJson(siteNavs, &siteNavsArr); err != nil {
+			logrus.Warn("站点导航数据错误", err)
+		}
 	}
 
 	var recommendTagsArr []string
-	if err := simple.ParseJson(recommendTags, &recommendTagsArr); err != nil {
-		logrus.Warn("推荐标签数据错误", err)
+	if simple.IsNotBlank(recommendTags) {
+		if err := simple.ParseJson(recommendTags, &recommendTagsArr); err != nil {
+			logrus.Warn("推荐标签数据错误", err)
+		}
 	}
 
 	var scoreConfig model.ScoreConfig
-	if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
-		logrus.Warn("积分配置错误", err)
+	if simple.IsNotBlank(scoreConfigStr) {
+		if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
+			logrus.Warn("积分配置错误", err)
+		}
 	}
 
 	var defaultNodeId, _ = strconv.ParseInt(defaultNodeIdStr, 10, 64)
@@ -159,5 +168,6 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		UrlRedirect:      strings.ToLower(urlRedirect) == "true",
 		ScoreConfig:      scoreConfig,
 		DefaultNodeId:    defaultNodeId,
+		ArticlePending:   strings.ToLower(articlePending) == "true",
 	}
 }

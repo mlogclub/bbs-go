@@ -10,43 +10,43 @@ import (
 	"bbs-go/services"
 )
 
-type TopicLikeController struct {
+type TweetController struct {
 	Ctx iris.Context
 }
 
-func (c *TopicLikeController) GetBy(id int64) *simple.JsonResult {
-	t := services.TopicLikeService.Get(id)
+func (c *TweetController) GetBy(id int64) *simple.JsonResult {
+	t := services.TweetService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
 
-func (c *TopicLikeController) AnyList() *simple.JsonResult {
-	list, paging := services.TopicLikeService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
+func (c *TweetController) AnyList() *simple.JsonResult {
+	list, paging := services.TweetService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (c *TopicLikeController) PostCreate() *simple.JsonResult {
-	t := &model.TopicLike{}
+func (c *TweetController) PostCreate() *simple.JsonResult {
+	t := &model.Tweet{}
 	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.TopicLikeService.Create(t)
+	err = services.TweetService.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
 
-func (c *TopicLikeController) PostUpdate() *simple.JsonResult {
+func (c *TweetController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.TopicLikeService.Get(id)
+	t := services.TweetService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("entity not found")
 	}
@@ -56,7 +56,7 @@ func (c *TopicLikeController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.TopicLikeService.Update(t)
+	err = services.TweetService.Update(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

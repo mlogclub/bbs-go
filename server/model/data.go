@@ -23,4 +23,5 @@ type ConfigData struct {
 	UrlRedirect      bool        `json:"urlRedirect"`
 	ScoreConfig      ScoreConfig `json:"scoreConfig"`
 	DefaultNodeId    int64       `json:"defaultNodeId"`
+	ArticlePending   bool        `json:"articlePending"`
 }

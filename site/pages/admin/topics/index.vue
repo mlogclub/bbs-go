@@ -34,7 +34,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,7 +42,7 @@
     <div class="topics main-content">
       <div v-for="item in results" :key="item.id" class="topic">
         <div class="topic-header">
-          <img :src="item.user.avatar" class="avatar" />
+          <img :src="item.user.smallAvatar" class="avatar" />
           <div class="topic-right">
             <div class="topic-title">
               <a :href="'/topic/' + item.id" target="_blank">{{
@@ -86,11 +86,11 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
@@ -130,8 +130,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
-          @click.native="addSubmit"
           :loading="addLoading"
+          @click.native="addSubmit"
           type="primary"
           >提交</el-button
         >
@@ -178,8 +178,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
-          @click.native="editSubmit"
           :loading="editLoading"
+          @click.native="editSubmit"
           type="primary"
           >提交</el-button
         >

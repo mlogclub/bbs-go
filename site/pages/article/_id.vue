@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container size-360 left-main">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -9,54 +9,41 @@
         >
           <div class="main-content">
             <div class="article-header">
-              <div class="article-item-left">
-                <a
-                  :href="'/user/' + article.user.id"
-                  :title="article.user.nickname"
-                  target="_blank"
-                >
-                  <img v-lazy="article.user.avatar" class="avatar" />
-                </a>
-              </div>
-              <div class="article-item-right">
-                <h1 class="article-title" itemprop="headline">
-                  {{ article.title }}
-                </h1>
-                <div class="article-meta">
-                  <span class="article-meta-item">
-                    由
-                    <a
-                      :href="'/user/' + article.user.id"
-                      class="article-author"
-                      itemprop="author"
-                      itemscope
-                      itemtype="http://schema.org/Person"
-                      ><span itemprop="name">{{
-                        article.user.nickname
-                      }}</span></a
-                    >发布于
-                    <time
-                      :datetime="
-                        article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
-                      "
-                      itemprop="datePublished"
-                      >{{ article.createTime | prettyDate }}</time
-                    >
-                  </span>
-
-                  <span
-                    v-if="article.tags && article.tags.length > 0"
-                    class="article-meta-item"
+              <h1 class="article-title" itemprop="headline">
+                {{ article.title }}
+              </h1>
+              <div class="article-meta">
+                <span class="article-meta-item">
+                  由
+                  <a
+                    :href="'/user/' + article.user.id"
+                    class="article-author"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                    ><span itemprop="name">{{ article.user.nickname }}</span></a
+                  >发布于
+                  <time
+                    :datetime="
+                      article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                    "
+                    itemprop="datePublished"
+                    >{{ article.createTime | prettyDate }}</time
                   >
-                    <span
-                      v-for="tag in article.tags"
-                      :key="tag.tagId"
-                      class="article-tag tag"
-                    >
-                      <a :href="'/articles/' + tag.tagId" class>{{
-                        tag.tagName
-                      }}</a>
-                    </span>
+                </span>
+
+                <span
+                  v-if="article.tags && article.tags.length > 0"
+                  class="article-meta-item"
+                >
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag.tagId"
+                    class="article-tag tag"
+                  >
+                    <a :href="'/articles/' + tag.tagId" class>{{
+                      tag.tagName
+                    }}</a>
                   </span>
                 </div>
 
@@ -78,6 +65,14 @@
                       }}
                     </a>
                   </span>
+                  <span v-if="isPending">
+                    <a
+                      href="javascript:void(0)"
+                      style="cursor: default; text-decoration: none"
+                    >
+                      <i class="iconfont icon-shenhe" />&nbsp;审核中
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
@@ -92,8 +87,8 @@
             </div>
 
             <div
-              v-html="article.content"
               v-lazy-container="{ selector: 'img' }"
+              v-html="article.content"
               class="article-content content"
               itemprop="articleBody"
             ></div>
@@ -163,10 +158,7 @@
         <!-- 展示广告 -->
         <adsbygoogle ad-slot="1742173616" />
 
-        <div
-          v-if="newestArticles && newestArticles.length"
-          class="widget no-margin"
-        >
+        <div v-if="newestArticles && newestArticles.length" class="widget">
           <div class="widget-header">最新文章</div>
           <div class="widget-content article-related">
             <ul>
@@ -204,8 +196,8 @@ export default {
       article = await $axios.get('/api/article/' + params.id)
     } catch (e) {
       error({
-        statusCode: 404,
-        message: '文章不存在，或已被删除'
+        statusCode: e.errorCode,
+        message: e.message
       })
       return
     }
@@ -265,10 +257,19 @@ export default {
   computed: {
     isOwner() {
       return (
-        this.$store.state.user.current &&
-        this.article &&
-        this.$store.state.user.current.id === this.article.user.id
+        (this.$store.state.user.current &&
+          this.article &&
+          this.$store.state.user.current.id === this.article.user.id) ||
+        (this.article.status === 2 &&
+          this.article.user.roles.includes('管理员'))
       )
+    },
+    isPending() {
+      if (this.article.status === 2) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
