@@ -3,6 +3,8 @@ package admin
 import (
 	"strconv"
 
+	"github.com/mlogclub/simple/markdown"
+
 	"bbs-go/controllers/render"
 
 	"github.com/kataras/iris/v12"
@@ -34,8 +36,8 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(comment.UserId))
 
 		// 简介
-		mr := simple.NewMd().Run(comment.Content)
-		builder.Put("content", mr.ContentHtml)
+		content, _ := markdown.New().Run(comment.Content)
+		builder.Put("content", content)
 
 		results = append(results, builder.Build())
 	}

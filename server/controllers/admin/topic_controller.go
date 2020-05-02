@@ -5,6 +5,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/markdown"
 
 	"bbs-go/controllers/render"
 	"bbs-go/model"
@@ -39,8 +40,8 @@ func (c *TopicController) AnyList() *simple.JsonResult {
 		builder.Put("node", node)
 
 		// 简介
-		mr := simple.NewMd().Run(topic.Content)
-		builder.Put("summary", mr.SummaryText)
+		_, summary := markdown.New().Run(topic.Content)
+		builder.Put("summary", summary)
 
 		// 标签
 		tags := services.TopicService.GetTopicTags(topic.Id)
