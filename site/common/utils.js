@@ -17,60 +17,6 @@ class Utils {
     return ref === '/user/signin'
   }
 
-  handleToc(tocDom) {
-    if (!window || !window.document || !tocDom) {
-      return
-    }
-    const tocSelector = '.toc'
-    window.addEventListener('scroll', (event) => {
-      const fromTop = window.scrollY
-      const mainNavLinks = document.querySelectorAll(tocSelector + ' a')
-      mainNavLinks.forEach((link, index) => {
-        const section = document.getElementById(
-          decodeURI(link.hash).substring(1)
-        )
-        if (!section) {
-          return
-        }
-        let nextSection = null
-        if (mainNavLinks[index + 1]) {
-          nextSection = document.getElementById(
-            decodeURI(mainNavLinks[index + 1].hash).substring(1)
-          )
-        }
-        if (section.offsetTop <= fromTop) {
-          if (nextSection) {
-            if (nextSection.offsetTop > fromTop) {
-              link.classList.add('active')
-            } else {
-              link.classList.remove('active')
-            }
-          } else {
-            link.classList.add('active')
-          }
-        } else {
-          link.classList.remove('active')
-        }
-      })
-    })
-
-    // 滚动的时候控制toc位置
-    const oldTop = tocDom.offsetTop
-    window.addEventListener('scroll', (event) => {
-      // 更改toc位置
-      const scrollTop = Math.max(
-        document.body.scrollTop || document.documentElement.scrollTop
-      )
-      if (scrollTop < oldTop) {
-        tocDom.style.position = 'relative'
-        tocDom.style.top = 'unset'
-      } else {
-        tocDom.style.position = 'fixed'
-        tocDom.style.top = '52px'
-      }
-    })
-  }
-
   isArray(sources) {
     return Object.prototype.toString.call(sources) === '[object Array]'
   }
