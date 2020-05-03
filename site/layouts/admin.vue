@@ -136,6 +136,10 @@ export default {
     /*padding: 10px !important;*/
     /*background: #fff;*/
 
+    .page-section {
+      background-color: #fff;
+    }
+
     .toolbar {
       border-bottom: 1px solid #e9ecf0;
       margin: 0 0 5px 0;
