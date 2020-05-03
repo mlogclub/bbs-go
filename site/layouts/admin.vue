@@ -45,6 +45,11 @@
             <span>话题</span>
           </a>
 
+          <a class="navbar-item" href="/admin/tweets">
+            <i class="iconfont icon-tweet"></i>
+            <span>动态</span>
+          </a>
+
           <a class="navbar-item" href="/admin/articles">
             <i class="iconfont icon-article"></i>
             <span>文章</span>
@@ -127,14 +132,15 @@ export default {
     }
   }
   .page-container {
-    margin: 10px !important;
-    padding: 10px !important;
-    background: #fff;
+    /*margin: 10px !important;*/
+    /*padding: 10px !important;*/
+    /*background: #fff;*/
 
     .toolbar {
       border-bottom: 1px solid #e9ecf0;
       margin: 0 0 5px 0;
       padding: 10px 10px 0 10px;
+      background: #fff;
 
       .el-form-item {
         margin-bottom: 10px;
@@ -142,8 +148,10 @@ export default {
     }
 
     .pagebar {
+      background: #fff;
       text-align: right;
       margin-top: 5px;
+      padding: 3px 0;
     }
   }
 }
