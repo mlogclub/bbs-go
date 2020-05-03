@@ -45,7 +45,7 @@
                       tag.tagName
                     }}</a>
                   </span>
-                </div>
+                </span>
 
                 <div class="article-tool">
                   <span v-if="isOwner">
@@ -93,29 +93,6 @@
               itemprop="articleBody"
             ></div>
           </div>
-
-          <!--
-          <div class="article-footer">
-            <ul>
-              <li>
-                <strong>免责声明：</strong>
-                我们尊重原创，也注重分享。版权原作者所有，如有侵犯您的权益请及时联系（
-                <a href="mailto:mlog1@qq.com">mlog1@qq.com</a
-                >），我们将在24小时之内删除。
-              </li>
-              <li v-if="article.sourceUrl">
-                <strong>原文链接：</strong>
-                <a
-                  :href="article.sourceUrl"
-                  class="source-url"
-                  rel="nofollow"
-                  target="_blank"
-                  >{{ article.sourceUrl }}</a
-                >
-              </li>
-            </ul>
-          </div>
-          -->
 
           <div class="ad">
             <!-- 展示广告 -->

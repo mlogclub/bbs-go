@@ -35,14 +35,32 @@
             <i class="iconfont icon-dashboard"></i>
             <span>后台</span>
           </a>
-          <a class="navbar-item" href="/admin/topics/nodes">
-            <i class="iconfont icon-tags"></i>
-            <span>节点</span>
-          </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <i class="iconfont icon-tags"></i>
+              <span>节点</span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="/admin/topics/nodes">
+                <i class="iconfont icon-tag"></i>
+                <span>节点管理</span>
+              </a>
+              <a class="navbar-item" href="/admin/tags">
+                <i class="iconfont icon-tags"></i>
+                <span>标签管理</span>
+              </a>
+            </div>
+          </div>
 
           <a class="navbar-item" href="/admin/topics">
             <i class="iconfont icon-topic"></i>
             <span>话题</span>
+          </a>
+
+          <a class="navbar-item" href="/admin/tweets">
+            <i class="iconfont icon-tweet"></i>
+            <span>动态</span>
           </a>
 
           <a class="navbar-item" href="/admin/articles">
@@ -127,14 +145,19 @@ export default {
     }
   }
   .page-container {
-    margin: 10px !important;
-    padding: 10px !important;
-    background: #fff;
+    /*margin: 10px !important;*/
+    /*padding: 10px !important;*/
+    /*background: #fff;*/
+
+    .page-section {
+      background-color: #fff;
+    }
 
     .toolbar {
       border-bottom: 1px solid #e9ecf0;
       margin: 0 0 5px 0;
       padding: 10px 10px 0 10px;
+      background: #fff;
 
       .el-form-item {
         margin-bottom: 10px;
@@ -142,8 +165,10 @@ export default {
     }
 
     .pagebar {
+      background: #fff;
       text-align: right;
       margin-top: 5px;
+      padding: 3px 0;
     }
   }
 }

@@ -3,6 +3,8 @@ package admin
 import (
 	"strconv"
 
+	"github.com/mlogclub/simple/markdown"
+
 	"bbs-go/controllers/render"
 
 	"github.com/kataras/iris/v12"
@@ -24,7 +26,13 @@ func (c *CommentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *CommentController) AnyList() *simple.JsonResult {
-	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).EqByReq("status").PageByReq().Desc("id"))
+	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).
+		EqByReq("id").
+		EqByReq("user_id").
+		EqByReq("entity_type").
+		EqByReq("entity_id").
+		EqByReq("status").
+		PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, comment := range list {
@@ -34,8 +42,8 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(comment.UserId))
 
 		// 简介
-		mr := simple.NewMd().Run(comment.Content)
-		builder.Put("content", mr.ContentHtml)
+		content, _ := markdown.New().Run(comment.Content)
+		builder.Put("content", content)
 
 		results = append(results, builder.Build())
 	}

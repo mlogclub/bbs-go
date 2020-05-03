@@ -89,7 +89,7 @@ func (s *articleService) GetArticleInIds(articleIds []int64) []model.Article {
 		return nil
 	}
 	var articles []model.Article
-	simple.DB().Where("id in (?)", articleIds).Find(&articles)
+	simple.DB().Where("id in (?)", articleIds).Order("id desc").Find(&articles)
 	return articles
 }
 

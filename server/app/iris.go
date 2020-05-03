@@ -83,6 +83,7 @@ func InitIris() {
 		m.Party("/favorite").Handle(new(admin.FavoriteController))
 		m.Party("/article-tag").Handle(new(admin.ArticleTagController))
 		m.Party("/topic").Handle(new(admin.TopicController))
+		m.Party("/tweet").Handle(new(admin.TweetController))
 		m.Party("/topic-node").Handle(new(admin.TopicNodeController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		m.Party("/link").Handle(new(admin.LinkController))

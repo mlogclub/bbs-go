@@ -234,6 +234,19 @@
     white-space: normal;
     word-break: break-all;
     word-wrap: break-word;
+
+    nav {
+      background-color: #fdfdfd;
+      border: 1px solid #f6f6f6;
+      padding: 10px 0;
+      font-size: 14px;
+
+      ul {
+        list-style: disc outside;
+        margin-left: 2em;
+        margin-top: 0;
+      }
+    }
   }
 
   .topic-header {
