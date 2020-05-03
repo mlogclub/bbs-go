@@ -28,33 +28,21 @@
                   </div>
                 </article>
                 <article v-else class="article-item">
-                  <div class="article-item-left">
-                    <a :href="'/user/' + favorite.user.id" target="_blank">
-                      <img v-lazy="favorite.user.avatar" class="avatar" />
-                    </a>
+                  <div class="article-title">
+                    <a :href="favorite.url">{{ favorite.title }}</a>
                   </div>
-
-                  <div class="article-item-right">
-                    <div class="article-title">
-                      <a :href="favorite.url">{{ favorite.title }}</a>
-                    </div>
-
-                    <div class="article-summary">
-                      {{ favorite.content }}
-                    </div>
-
-                    <div class="article-meta">
-                      <span class="article-meta-item"
-                        ><a :href="'/user/' + favorite.user.id">{{
-                          favorite.user.nickname
-                        }}</a></span
-                      >
-                      <span class="article-meta-item"
-                        ><time>{{
-                          favorite.createTime | prettyDate
-                        }}</time></span
-                      >
-                    </div>
+                  <div class="article-summary">
+                    {{ favorite.content }}
+                  </div>
+                  <div class="article-meta">
+                    <span class="article-meta-item"
+                      ><a :href="'/user/' + favorite.user.id">{{
+                        favorite.user.nickname
+                      }}</a></span
+                    >
+                    <span class="article-meta-item"
+                      ><time>{{ favorite.createTime | prettyDate }}</time></span
+                    >
                   </div>
                 </article>
               </li>
@@ -140,19 +128,6 @@ export default {
     zoom: 1;
     line-height: 24px;
   }
-}
-
-.article-item-left {
-  width: 50px;
-  height: 50px;
-  float: left;
-  vertical-align: middle;
-}
-
-.article-item-right {
-  margin-left: 50px;
-  padding-left: 10px;
-  vertical-align: middle;
 }
 
 article {

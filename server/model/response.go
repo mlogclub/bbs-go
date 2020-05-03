@@ -1,15 +1,12 @@
 package model
 
-import (
-	"html/template"
-)
-
 type UserInfo struct {
 	Id           int64    `json:"id"`
 	Username     string   `json:"username"`
 	Email        string   `json:"email"`
 	Nickname     string   `json:"nickname"`
 	Avatar       string   `json:"avatar"`
+	SmallAvatar  string   `json:"smallAvatar"`
 	Type         int      `json:"type"`
 	Roles        []string `json:"roles"`
 	HomePage     string   `json:"homePage"`
@@ -49,12 +46,13 @@ type ArticleSimpleResponse struct {
 	SourceUrl  string         `json:"sourceUrl"`
 	ViewCount  int64          `json:"viewCount"`
 	CreateTime int64          `json:"createTime"`
+	Status     int            `json:"status"`
 }
 
 type ArticleResponse struct {
 	ArticleSimpleResponse
-	Content template.HTML `json:"content"`
-	Toc     template.HTML `json:"toc"`
+	Content string `json:"content"`
+	Toc     string `json:"toc"`
 }
 
 type NodeResponse struct {
@@ -70,7 +68,6 @@ type TopicSimpleResponse struct {
 	Node            *NodeResponse  `json:"node"`
 	Tags            *[]TagResponse `json:"tags"`
 	Title           string         `json:"title"`
-	ImageList       *[]string      `json:"imageList"`
 	LastCommentTime int64          `json:"lastCommentTime"`
 	ViewCount       int64          `json:"viewCount"`
 	CommentCount    int64          `json:"commentCount"`
@@ -82,8 +79,19 @@ type TopicSimpleResponse struct {
 // 帖子详情返回实体
 type TopicResponse struct {
 	TopicSimpleResponse
-	Content template.HTML `json:"content"`
-	Toc     template.HTML `json:"toc"`
+	Content string `json:"content"`
+	Toc     string `json:"toc"`
+}
+
+// 帖子列表返回实体
+type TweetResponse struct {
+	TweetId      int64       `json:"tweetId"`
+	User         *UserInfo   `json:"user"`
+	Content      string      `json:"content"`
+	ImageList    []ImageInfo `json:"imageList"`
+	CommentCount int64       `json:"commentCount"`
+	LikeCount    int64       `json:"likeCount"`
+	CreateTime   int64       `json:"createTime"`
 }
 
 // 项目简单返回
@@ -103,7 +111,7 @@ type ProjectSimpleResponse struct {
 // 项目详情
 type ProjectResponse struct {
 	ProjectSimpleResponse
-	Content template.HTML `json:"content"`
+	Content string `json:"content"`
 }
 
 type CommentResponse struct {
@@ -111,10 +119,10 @@ type CommentResponse struct {
 	User         *UserInfo        `json:"user"`
 	EntityType   string           `json:"entityType"`
 	EntityId     int64            `json:"entityId"`
-	Content      template.HTML    `json:"content"`
+	Content      string           `json:"content"`
 	QuoteId      int64            `json:"quoteId"`
 	Quote        *CommentResponse `json:"quote"`
-	QuoteContent template.HTML    `json:"quoteContent"`
+	QuoteContent string           `json:"quoteContent"`
 	Status       int              `json:"status"`
 	CreateTime   int64            `json:"createTime"`
 }
@@ -143,4 +151,9 @@ type MessageResponse struct {
 	ExtraData    string    `json:"extraData"`
 	Status       int       `json:"status"`
 	CreateTime   int64     `json:"createTime"`
+}
+
+type ImageInfo struct {
+	Url     string `json:"url"`
+	Preview string `json:"preview"`
 }

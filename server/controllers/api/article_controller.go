@@ -21,9 +21,21 @@ type ArticleController struct {
 // 文章详情
 func (c *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.StatusOk {
-		return simple.JsonErrorMsg("文章不存在")
+	if article == nil || article.Status == model.StatusDeleted {
+		return simple.JsonErrorCode(404, "文章不存在")
 	}
+
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user != nil {
+		if article.UserId != user.Id && article.Status == model.StatusPending {
+			return simple.JsonErrorCode(403, "文章审核中")
+		}
+	} else {
+		if article.Status == model.StatusPending {
+			return simple.JsonErrorCode(403, "文章审核中")
+		}
+	}
+
 	services.ArticleService.IncrViewCount(articleId) // 增加浏览量
 	return simple.JsonData(render.BuildArticle(article))
 }
@@ -57,11 +69,18 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.StatusOk {
+	if article == nil || article.Status == model.StatusDeleted {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
+
 	if article.UserId != user.Id {
-		return simple.JsonErrorMsg("无权限")
+		 if render.BuildUser(user).HasRole("管理员") {
+			 if article.Status != model.StatusPending {
+				 return simple.JsonErrorMsg("无权限")
+			 }
+		 } else {
+			 return simple.JsonErrorMsg("无权限")
+		 }
 	}
 
 	tags := services.ArticleService.GetArticleTags(articleId)
@@ -99,7 +118,13 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	if article.UserId != user.Id {
-		return simple.JsonErrorMsg("无权限")
+		if render.BuildUser(user).HasRole("管理员") {
+			if article.Status != model.StatusPending {
+				return simple.JsonErrorMsg("无权限")
+			}
+		} else {
+			return simple.JsonErrorMsg("无权限")
+		}
 	}
 
 	err := services.ArticleService.Edit(articleId, tags, title, content)
@@ -170,8 +195,8 @@ func (c *ArticleController) GetUserRecent() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.StatusOk).Desc("id").Limit(10))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and (status = ? or status = ?)",
+		userId, model.StatusOk, model.StatusPending).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 

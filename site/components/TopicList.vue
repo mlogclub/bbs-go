@@ -16,7 +16,7 @@
         <div class="topic-header">
           <div class="topic-header-left">
             <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
-              <img v-lazy="topic.user.avatar" class="avatar" />
+              <img :src="topic.user.smallAvatar" class="avatar" />
             </a>
           </div>
           <div class="topic-header-center">
@@ -79,17 +79,6 @@
             >
           </div>
         </div>
-        <ul v-if="topic.imageList" class="topic-images">
-          <li v-for="image in topic.imageList" :key="image">
-            <a
-              :href="'/topic/' + topic.topicId"
-              :title="topic.title"
-              class="topic-image-item"
-            >
-              <img v-lazy="image" />
-            </a>
-          </li>
-        </ul>
       </article>
     </li>
   </ul>

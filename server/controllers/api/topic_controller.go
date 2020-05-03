@@ -37,12 +37,10 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	topicType := simple.FormValueIntDefault(c.Ctx, "type", model.TopicTypeNormal)
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
-	imageList := simple.FormValue(c.Ctx, "imageList")
 	tags := simple.FormValueStringArray(c.Ctx, "tags")
-	topic, err := services.TopicService.Publish(topicType, user.Id, nodeId, tags, title, content, imageList)
+	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
 	if err != nil {
 		return simple.JsonError(err)
 	}
@@ -144,7 +142,7 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	err := services.TopicLikeService.Like(user.Id, topicId)
+	err := services.UserLikeService.TopicLike(user.Id, topicId)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -153,10 +151,10 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 
 // 点赞用户
 func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
-	topicLikes := services.TopicLikeService.Recent(topicId, 10)
+	likes := services.UserLikeService.Recent(model.EntityTypeTopic, topicId, 10)
 	var users []model.UserInfo
-	for _, topicLike := range topicLikes {
-		userInfo := render.BuildUserById(topicLike.UserId)
+	for _, like := range likes {
+		userInfo := render.BuildUserById(like.UserId)
 		if userInfo != nil {
 			users = append(users, *userInfo)
 		}

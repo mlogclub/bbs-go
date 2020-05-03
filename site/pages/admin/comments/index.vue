@@ -5,7 +5,7 @@
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
             <div
-              :style="{ backgroundImage: 'url(' + item.user.avatar + ')' }"
+              :style="{ backgroundImage: 'url(' + item.user.smallAvatar + ')' }"
               class="avatar"
             ></div>
             <div class="content">
@@ -44,11 +44,11 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>

@@ -33,8 +33,10 @@ func GetSummary(contentType string, content string) (summary string) {
 	if contentType == model.ContentTypeMarkdown {
 		mr := simple.NewMd().Run(content)
 		summary = mr.SummaryText
-	} else {
+	} else if contentType == model.ContentTypeHtml {
 		summary = simple.GetSummary(simple.GetHtmlText(content), 256)
+	} else {
+		summary = simple.GetSummary(content, 256)
 	}
 	return
 }

@@ -6,14 +6,14 @@
           <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button v-on:click="list" type="primary">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <el-table
-      :data="results"
       v-loading="listLoading"
+      :data="results"
       highlight-current-row
       border
       style="width: 100%;"
@@ -50,11 +50,11 @@
     <div class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>

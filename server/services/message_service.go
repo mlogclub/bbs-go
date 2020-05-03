@@ -91,7 +91,7 @@ func (s *messageService) MarkRead(userId int64) {
 func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	user := cache.UserCache.Get(comment.UserId)
 	quote := s.getQuoteComment(comment.QuoteId)
-	summary := common.GetMarkdownSummary(comment.Content)
+	summary := common.GetSummary(comment.ContentType, comment.Content)
 
 	var (
 		fromId       = comment.UserId // 消息发送人
@@ -113,6 +113,13 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 			authorId = topic.UserId
 			content = user.Nickname + " 回复了你的话题：" + summary
 			quoteContent = "《" + topic.Title + "》"
+		}
+	} else if comment.EntityType == model.EntityTypeTweet { // 动态被评论
+		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
+		if tweet != nil {
+			authorId = tweet.UserId
+			content = user.Nickname + " 回复了你的话题：" + summary
+			quoteContent = tweet.Content
 		}
 	}
 

@@ -11,7 +11,7 @@
               }}</a>
             </li>
             <li class="is-active">
-              <a href="#" aria-current="page">话题列表</a>
+              <a href="#" aria-current="page">文章列表</a>
             </li>
           </ul>
         </nav>

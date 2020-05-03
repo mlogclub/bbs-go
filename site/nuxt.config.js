@@ -50,7 +50,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_zup8j5co1q.css'
+        href: '//at.alicdn.com/t/font_1142441_z0jqg455g7.css'
       }
     ]
   },
@@ -108,8 +108,8 @@ export default {
   },
 
   proxy: {
-    // '/api/': 'http://localhost:8082'
-    '/api/': 'https://mlog.club'
+    '/api/': 'http://localhost:8082'
+    // '/api/': 'https://mlog.club'
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
@@ -124,7 +124,7 @@ export default {
    ** Build configuration
    */
   build: {
-    publicPath: 'https://file.mlog.club/static/nuxtclient/',
+    // publicPath: 'https://file.mlog.club/static/nuxtclient/',
     optimizeCSS: true,
     extractCSS: true,
     splitChunks: {

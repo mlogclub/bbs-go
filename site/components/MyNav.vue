@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="nav"
-    class="navbar is-white"
+    class="navbar has-shadow"
     role="navigation"
     aria-label="main navigation"
   >
@@ -33,6 +33,7 @@
         </div>
 
         <div class="navbar-end">
+          <!--
           <div class="navbar-item searchFormDiv">
             <form
               id="searchForm"
@@ -53,6 +54,13 @@
                 </span>
               </div>
             </form>
+          </div>
+          -->
+
+          <div class="navbar-item dropdown is-hoverable is-right">
+            <a href="/topic/create" title="发表话题" class="publish">
+              <i class="iconfont icon-publish"></i>
+            </a>
           </div>
 
           <msg-notice />
@@ -147,11 +155,18 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  opacity: 0.99;
-  border-bottom: 1px solid #e7edf3;
+  /*opacity: 0.99;*/
+  /*border-bottom: 1px solid #e7edf3;*/
 
   .navbar-item {
     font-weight: 700;
+  }
+
+  .publish {
+    color: #448ef6;
+    &:hover {
+      color: #222;
+    }
   }
 }
 

@@ -5,9 +5,9 @@ import (
 )
 
 var Models = []interface{}{
-	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{},
-	&Topic{}, &TopicNode{}, &TopicTag{}, &TopicLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{},
-	&ThirdAccount{}, &Sitemap{}, &UserScore{}, &UserScoreLog{},
+	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
+	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
+	&UserScore{}, &UserScoreLog{},
 }
 
 type Model struct {
@@ -24,10 +24,12 @@ const (
 
 	ContentTypeHtml     = "html"
 	ContentTypeMarkdown = "markdown"
+	ContentTypeText     = "text"
 
 	EntityTypeArticle = "article"
 	EntityTypeTopic   = "topic"
 	EntityTypeComment = "comment"
+	EntityTypeTweet   = "tweet"
 
 	MsgStatusUnread = 0 // 消息未读
 	MsgStatusReaded = 1 // 消息已读
@@ -39,9 +41,6 @@ const (
 
 	ScoreTypeIncr = 0 // 积分+
 	ScoreTypeDecr = 1 // 积分-
-
-	TopicTypeNormal  = 0 // 普通帖子
-	TopicTypeTwitter = 1 // 推文
 )
 
 type User struct {
@@ -153,12 +152,10 @@ type TopicNode struct {
 // 话题节点
 type Topic struct {
 	Model
-	Type            int    `gorm:"not null;index:idx_topic_type" json:"type" form:"type"`                           // 类型
 	NodeId          int64  `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`                         // 节点编号
 	UserId          int64  `gorm:"not null;index:idx_topic_user_id;" json:"userId" form:"userId"`                   // 用户
 	Title           string `gorm:"size:128" json:"title" form:"title"`                                              // 标题
 	Content         string `gorm:"type:longtext" json:"content" form:"content"`                                     // 内容
-	ImageList       string `gorm:"type:longtext" json:"imageList" form:"imageList"`                                 // 图片
 	Recommend       bool   `gorm:"not null;index:idx_recommend" json:"recommend" form:"recommend"`                  // 是否推荐
 	ViewCount       int64  `gorm:"not null" json:"viewCount" form:"viewCount"`                                      // 查看数量
 	CommentCount    int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                                // 跟帖数量
@@ -179,12 +176,25 @@ type TopicTag struct {
 	CreateTime      int64 `json:"createTime" form:"createTime"`                                                        // 创建时间
 }
 
-// 话题点赞
-type TopicLike struct {
+// 用户点赞
+type UserLike struct {
 	Model
-	UserId     int64 `gorm:"not null;index:idx_topic_like_user_id;" json:"userId" form:"userId"`    // 用户
-	TopicId    int64 `gorm:"not null;index:idx_topic_like_topic_id;" json:"topicId" form:"topicId"` // 主题编号
-	CreateTime int64 `json:"createTime" form:"createTime"`                                          // 创建时间
+	UserId     int64  `gorm:"not null;unique_index:idx_user_like_unique;" json:"userId" form:"userId"`                                            // 用户
+	EntityType string `gorm:"not null;size:32;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"entityType" form:"entityType"` // 实体类型
+	EntityId   int64  `gorm:"not null;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"topicId" form:"topicId"`               // 实体编号
+	CreateTime int64  `json:"createTime" form:"createTime"`                                                                                       // 创建时间
+}
+
+// 动态
+type Tweet struct {
+	Model
+	UserId       int64  `gorm:"not null;index:idx_topic_like_user_id;" json:"userId" form:"userId"` // 用户
+	Content      string `gorm:"type:text;not null;" json:"content" form:"content"`                  // 内容
+	ImageList    string `gorm:"type:longtext" json:"imageList" form:"imageList"`                    // 图片
+	CommentCount int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                   // 跟帖数量
+	LikeCount    int64  `gorm:"not null" json:"likeCount" form:"likeCount"`                         // 点赞数量
+	Status       int    `gorm:"index:idx_topic_status;" json:"status" form:"status"`                // 状态：0：正常、1：删除
+	CreateTime   int64  `json:"createTime" form:"createTime"`                                       // 创建时间
 }
 
 // 消息

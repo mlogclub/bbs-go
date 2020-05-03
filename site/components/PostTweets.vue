@@ -1,12 +1,16 @@
 <template>
-  <div class="post-twitter-box">
+  <div class="post-tweets-wrapper">
     <ul class="tab-list">
-      <li class="tab-item current">发表推文</li>
+      <li class="tab-item current">
+        <div class="tab-name">发表动态</div>
+      </li>
     </ul>
-    <div class="twitter-box">
+    <div class="tweets-box">
       <textarea
         v-model="content"
         @input="onInput"
+        @paste="handleParse"
+        @drop="handleDrag"
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
         placeholder="有什么新鲜事想告诉大家"
@@ -28,6 +32,7 @@
         </div>
         <div class="bui-right">
           <span class="msg-tip">{{ message }}</span>
+          <span class="tweets-help">Ctrl or ⌘ + Enter</span>
           <a
             :class="{ active: hasContent }"
             @click="doSubmit"
@@ -58,8 +63,12 @@
               />
             </form>
             <ul class="upload-img-list">
-              <li v-for="image in images" :key="image" class="upload-img-item">
+              <li v-for="(image, i) in images" :key="i" class="upload-img-item">
                 <img :src="image" />
+                <i
+                  @click="removeImg(image)"
+                  class="iconfont icon-close remove"
+                />
               </li>
               <li
                 v-if="imageCount < maxImageCount"
@@ -88,11 +97,11 @@ export default {
     return {
       content: '',
       images: [
-        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg?id=1'
+        // 'https://file.mlog.club/images/2020/02/27/0aadf3d7c46dba756f4e228e8e8f8ed6.jpg',
         // 'https://file.mlog.club/images/2020/02/28/6819d3e0afb535594fb55c1108e1ad37.jpg'
       ],
       message: '',
-      maxWordCount: 128,
+      maxWordCount: 1000,
       showUploader: false,
       maxImageCount: 9
     }
@@ -124,10 +133,8 @@ export default {
       }
       this.showUploader = false // 关闭图片上传框
       try {
-        const ret = await this.$axios.post('/api/topic/create', {
-          type: 1,
-          nodeId: this.nodeId,
-          title: this.content,
+        const ret = await this.$axios.post('/api/tweet/create', {
+          content: this.content,
           imageList: JSON.stringify(this.images)
         })
         this.content = ''
@@ -141,11 +148,60 @@ export default {
     handleImageUploadClick() {
       this.$refs.imageInput.click()
     },
+    handleParse(e) {
+      const items = e.clipboardData && e.clipboardData.items
+      let file = null
+      if (items && items.length) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.includes('image')) {
+            file = items[i].getAsFile()
+          }
+        }
+      }
+
+      if (!file) {
+        return
+      }
+
+      this.showUploader = true // 展开上传面板
+      e.preventDefault() // 阻止默认行为即不让剪贴板内容在div中显示出来
+
+      if (this.imageCount + 1 > this.maxImageCount) {
+        this.message = '图片数量超过上限'
+        return
+      }
+
+      this.upload(file) // 上传
+    },
+    handleDrag(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const files = []
+      const items = e.dataTransfer.items
+      if (items && items.length) {
+        if (items && items.length) {
+          for (let i = 0; i < items.length; i++) {
+            if (items[i].type.includes('image')) {
+              files.push(items[i].getAsFile())
+            }
+          }
+        }
+      }
+
+      if (files && files.length) {
+        this.showUploader = true // 展开上传面板
+        this.uploadFiles(files)
+      }
+    },
     async handleImageUploadChange(ev) {
       const files = ev.target.files
       if (!files) return
 
       await this.uploadFiles(files)
+
+      // 清理文件输入框
+      this.$refs.imageInput.value = null
     },
     async uploadFiles(files) {
       if (files.length === 0) {
@@ -162,15 +218,19 @@ export default {
       }
     },
     async upload(file) {
-      this.$refs.imageInput.value = null
-      const formData = new FormData()
-      formData.append('image', file, file.name)
-
       try {
+        const formData = new FormData()
+        formData.append('image', file, file.name)
         const ret = await this.$axios.post('/api/upload', formData)
         this.images.push(ret.url)
       } catch (e) {
         this.message = e.message || e
+      }
+    },
+    removeImg(img) {
+      const index = this.images.indexOf(img)
+      if (index !== -1) {
+        this.images.splice(index, 1)
       }
     }
   }
@@ -178,14 +238,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.post-twitter-box {
+.post-tweets-wrapper {
   position: relative;
-  border: 1px solid #e8e8e8;
+  /*border: 1px solid #e8e8e8;*/
   width: 100%;
-  margin: 10px 0;
 
   .tab-list {
-    height: 44px;
+    height: 36px;
     border-bottom: 1px solid #e8e8e8;
     display: block;
     zoom: 1;
@@ -194,10 +253,15 @@ export default {
       margin-left: 19px;
       font-size: 15px;
       color: #222;
-      line-height: 42px;
+      line-height: 34px;
       border-bottom: 2px solid transparent;
       cursor: pointer;
       float: left;
+
+      .tab-name {
+        padding: 0 3px;
+        text-align: center;
+      }
 
       &.current {
         border-bottom-color: #ed4040;
@@ -206,7 +270,7 @@ export default {
     }
   }
 
-  .twitter-box {
+  .tweets-box {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -218,7 +282,7 @@ export default {
       display: block;
       font-size: 14px;
       line-height: 1.4;
-      padding: 13px 19px;
+      padding: 10px;
       border: 0;
       outline: 0;
       resize: none;
@@ -244,7 +308,7 @@ export default {
 
     .box-footer {
       border-top: 1px solid #e8e8e8;
-      height: 40px;
+      height: 36px;
       display: block;
       zoom: 1;
 
@@ -255,7 +319,7 @@ export default {
         .action-btn {
           color: #222;
           font-size: 14px;
-          line-height: 39px;
+          line-height: 32px;
           display: inline-block;
           vertical-align: middle;
           margin: 0 0 0 20px;
@@ -282,12 +346,19 @@ export default {
           margin-right: 10px;
         }
 
+        .tweets-help {
+          color: #c2c2c2;
+          font-size: 13px;
+          user-select: none;
+        }
+
         .upload-publish {
           display: inline-block;
           width: 120px;
-          line-height: 40px;
+          line-height: 36px;
           text-align: center;
           font-size: 14px;
+          font-weight: 700;
           background-color: #ed4040;
           color: #fff;
           opacity: 0.6;
@@ -387,6 +458,23 @@ export default {
               background-repeat: no-repeat;
               overflow: hidden;
               position: relative;
+
+              &:hover {
+                i.remove {
+                  font-size: 14px;
+                  font-weight: 700;
+                  color: #fff;
+                  position: absolute;
+                  top: 3px;
+                  right: 3px;
+                  width: 16px;
+                  height: 16px;
+                  line-height: 16px;
+                  text-align: center;
+                  background-color: #ed4040;
+                  border-radius: 50%;
+                }
+              }
             }
           }
         }

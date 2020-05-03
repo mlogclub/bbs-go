@@ -15,7 +15,7 @@
                     :href="'/user/' + topic.user.id"
                     :title="topic.user.nickname"
                   >
-                    <img v-lazy="topic.user.avatar" class="avatar size-45" />
+                    <img :src="topic.user.smallAvatar" class="avatar size-45" />
                   </a>
                 </div>
                 <div class="topic-header-center">
@@ -72,6 +72,13 @@
                         <i class="iconfont icon-edit" />&nbsp;修改
                       </a>
                     </span>
+                    <span class="meta-item act">
+                      <a @click="addFavorite(topic.topicId)">
+                        <i class="iconfont icon-favorite" />&nbsp;{{
+                          favorited ? '已收藏' : '收藏'
+                        }}
+                      </a>
+                    </span>
                   </div>
                 </div>
                 <div class="topic-header-right">
@@ -106,16 +113,9 @@
 
               <div class="content topic-content" itemprop="articleBody">
                 <div
-                  v-html="topic.content"
                   v-lazy-container="{ selector: 'img' }"
+                  v-html="topic.content"
                 ></div>
-
-                <img
-                  v-if="topic.imageList"
-                  v-for="image in topic.imageList"
-                  :key="image"
-                  v-lazy="image"
-                />
               </div>
 
               <div class="topic-actions">
@@ -141,7 +141,7 @@
                     target="_blank"
                   >
                     <img
-                      v-lazy="user.avatar"
+                      :src="user.smallAvatar"
                       :alt="user.nickname"
                       class="avatar size-30"
                     />
@@ -173,7 +173,7 @@
             <div class="base-info">
               <a :href="'/user/' + topic.user.id" :alt="topic.user.nickname">
                 <img
-                  v-lazy="topic.user.avatar"
+                  :src="topic.user.smallAvatar"
                   :alt="topic.user.nickname"
                   class="avatar"
                 />
