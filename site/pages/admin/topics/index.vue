@@ -67,7 +67,7 @@
                 <a
                   v-if="item.status === 0"
                   @click="deleteSubmit(item)"
-                  class="btn"
+                  class="action-item btn"
                   >删除</a
                 >
                 <a v-else @click="undeleteSubmit(item)" class="action-item btn"
@@ -76,7 +76,7 @@
                 <a
                   v-if="!item.recommend"
                   @click="recommend(item.id)"
-                  class="btn"
+                  class="action-item btn"
                   >推荐</a
                 >
                 <a
@@ -407,7 +407,7 @@ export default {
           font-size: 12px;
 
           label:not(:last-child) {
-            margin-right: 5px;
+            margin-right: 8px;
           }
 
           label {
@@ -439,6 +439,7 @@ export default {
           .actions {
             margin-left: 20px;
             text-align: right;
+
             .action-item {
               margin-right: 9px;
             }
