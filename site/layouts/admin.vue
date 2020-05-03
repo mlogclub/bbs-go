@@ -35,10 +35,23 @@
             <i class="iconfont icon-dashboard"></i>
             <span>后台</span>
           </a>
-          <a class="navbar-item" href="/admin/topics/nodes">
-            <i class="iconfont icon-tags"></i>
-            <span>节点</span>
-          </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <i class="iconfont icon-tags"></i>
+              <span>节点</span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="/admin/topics/nodes">
+                <i class="iconfont icon-tag"></i>
+                <span>节点管理</span>
+              </a>
+              <a class="navbar-item" href="/admin/tags">
+                <i class="iconfont icon-tags"></i>
+                <span>标签管理</span>
+              </a>
+            </div>
+          </div>
 
           <a class="navbar-item" href="/admin/topics">
             <i class="iconfont icon-topic"></i>
