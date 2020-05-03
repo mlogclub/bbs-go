@@ -1,6 +1,6 @@
 module bbs-go
 
-go 1.13
+go 1.14
 
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
@@ -17,7 +17,6 @@ require (
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/feeds v1.1.1
 	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/iris-contrib/blackfriday v2.0.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a
 	github.com/issue9/identicon v1.0.1
 	github.com/jinzhu/gorm v1.9.11
