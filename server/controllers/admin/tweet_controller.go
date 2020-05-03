@@ -44,3 +44,16 @@ func (c *TweetController) PostDelete() *simple.JsonResult {
 	}
 	return simple.JsonSuccess()
 }
+
+func (c *TweetController) PostUndelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	err = services.TweetService.UpdateColumn(id, "status", model.StatusOk)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}

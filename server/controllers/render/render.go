@@ -270,6 +270,7 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 		Content:      tweet.Content,
 		CommentCount: tweet.CommentCount,
 		LikeCount:    tweet.LikeCount,
+		Status:       tweet.Status,
 		CreateTime:   tweet.CreateTime,
 	}
 	if simple.IsNotBlank(tweet.ImageList) {

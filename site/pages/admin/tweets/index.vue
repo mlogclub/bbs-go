@@ -25,10 +25,123 @@
       </el-form>
     </div>
 
-    <div class="main-content">
-      <div v-for="item in results" :key="item.id">
-        {{ item.content }}
-      </div>
+    <div class="tweets">
+      <ul>
+        <li v-for="tweet in results" :key="tweet.tweetId">
+          <div class="tweet">
+            <div class="pin-header-row">
+              <div class="account-group">
+                <div>
+                  <a
+                    :href="'/user/' + tweet.user.id"
+                    :title="tweet.user.nickname"
+                  >
+                    <img :src="tweet.user.smallAvatar" class="avatar size-45" />
+                  </a>
+                </div>
+                <div class="pin-header-content">
+                  <div>
+                    <a
+                      :href="'/user/' + tweet.user.id"
+                      :title="tweet.user.nickname"
+                      target="_blank"
+                      class="nickname"
+                      >{{ tweet.user.nickname }}</a
+                    >
+                  </div>
+                  <div class="meta-box">
+                    <div class="position ellipsis">
+                      {{ tweet.user.description }}
+                    </div>
+                    <div class="dot">·</div>
+                    <div>ID: {{ tweet.tweetId }}</div>
+                    <div class="dot">·</div>
+                    <time
+                      :datetime="
+                        tweet.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                      "
+                      itemprop="datePublished"
+                      >{{
+                        tweet.createTime | formatDate('yyyy-MM-dd HH:mm:ss')
+                      }}</time
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pin-content-row">
+              <a
+                :href="'/tweet/' + tweet.tweetId"
+                target="_blank"
+                class="content-box"
+                >{{ tweet.content }}</a
+              >
+            </div>
+            <ul
+              v-if="tweet.imageList && tweet.imageList.length > 0"
+              class="pin-image-row"
+            >
+              <li
+                v-for="(image, index) in tweet.imageList"
+                :key="image + index"
+              >
+                <a
+                  :href="'/tweet/' + tweet.tweetId"
+                  target="_blank"
+                  class="image-item"
+                >
+                  <img :src="image.preview" />
+                </a>
+              </li>
+            </ul>
+
+            <div class="pin-action-row">
+              <div class="action-box">
+                <div @click="like(tweet)" class="like-action action">
+                  <div class="action-title-box">
+                    <i class="iconfont icon-like" />
+                    <span class="action-title">{{
+                      tweet.likeCount > 0 ? tweet.likeCount : '赞'
+                    }}</span>
+                  </div>
+                </div>
+                <a
+                  :href="'/tweet/' + tweet.tweetId"
+                  target="_blank"
+                  class="comment-action action"
+                >
+                  <div class="action-title-box">
+                    <i class="iconfont icon-comments" />
+                    <span class="action-title">{{
+                      tweet.commentCount > 0 ? tweet.commentCount : '评论'
+                    }}</span>
+                  </div>
+                </a>
+                <div
+                  v-if="tweet.status === 0"
+                  @click="deleteSubmit(tweet)"
+                  class="like-action action"
+                >
+                  <div class="action-title-box">
+                    <i class="iconfont icon-delete" />
+                    <span class="action-title">删除</span>
+                  </div>
+                </div>
+                <div
+                  @click="undeleteSubmit(tweet)"
+                  v-if="tweet.status === 1"
+                  class="like-action action"
+                >
+                  <div class="action-title-box">
+                    <i class="iconfont icon-delete" />
+                    <span class="action-title danger">已删除</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
 
     <div class="pagebar">
@@ -47,6 +160,8 @@
 </template>
 
 <script>
+import utils from '~/common/utils'
+
 export default {
   layout: 'admin',
   data() {
@@ -89,26 +204,72 @@ export default {
       this.page.limit = val
       this.list()
     },
-    async deleteSubmit(row) {
-      await this.$confirm('是否确认删除该话题?', '提示', {
+    handleSelectionChange(val) {
+      this.selectedRows = val
+    },
+    deleteSubmit(tweet) {
+      const me = this
+      this.$confirm('是否确认删除该动态?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-
-      try {
-        await this.$axios.post('/api/admin/tweet/delete', { id: row.id })
-        this.$message({ message: '删除成功', type: 'success' })
-        this.list()
-      } catch (err) {
-        this.$notify.error({ title: '错误', message: err.message || err })
-      }
+        .then(function() {
+          me.$axios
+            .post('/api/admin/tweet/delete', { id: tweet.tweetId })
+            .then(function() {
+              me.$message({ message: '删除成功', type: 'success' })
+              me.list()
+            })
+            .catch(function(err) {
+              me.$notify.error({ title: '错误', message: err.message || err })
+            })
+        })
+        .catch(function() {
+          me.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
-    handleSelectionChange(val) {
-      this.selectedRows = val
+    undeleteSubmit(tweet) {
+      const me = this
+      me.$axios
+        .post('/api/admin/tweet/undelete', { id: tweet.tweetId })
+        .then(function() {
+          me.$message({ message: '已取消删除', type: 'success' })
+          me.list()
+        })
+        .catch(function(err) {
+          me.$notify.error({ title: '错误', message: err.message || err })
+        })
+    },
+    async like(tweet) {
+      try {
+        await this.$axios.post('/api/tweet/like/' + tweet.tweetId)
+        tweet.liked = true
+        tweet.likeCount++
+      } catch (e) {
+        if (e.errorCode === 1) {
+          this.$toast.info('请登录后点赞！！！', {
+            action: {
+              text: '去登录',
+              onClick: (e, toastObject) => {
+                utils.toSignin()
+              }
+            }
+          })
+        } else {
+          this.$toast.error(e.message || e)
+        }
+      }
     }
   }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.action-title.danger {
+  color: red !important;
+}
+</style>

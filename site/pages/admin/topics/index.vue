@@ -312,20 +312,30 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    async deleteSubmit(row) {
-      await this.$confirm('是否确认删除该话题?', '提示', {
+    deleteSubmit(row) {
+      const me = this
+      this.$confirm('是否确认删除该话题?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-
-      try {
-        await this.$axios.post('/api/admin/topic/delete', { id: row.id })
-        this.$message({ message: '删除成功', type: 'success' })
-        this.list()
-      } catch (err) {
-        this.$notify.error({ title: '错误', message: err.message || err })
-      }
+        .then(function() {
+          me.$axios
+            .post('/api/admin/topic/delete', { id: row.id })
+            .then(function() {
+              me.$message({ message: '删除成功', type: 'success' })
+              me.list()
+            })
+            .catch(function(err) {
+              me.$notify.error({ title: '错误', message: err.message || err })
+            })
+        })
+        .catch(function() {
+          me.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     async undeleteSubmit(row) {
       try {

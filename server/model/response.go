@@ -89,6 +89,7 @@ type TweetResponse struct {
 	ImageList    []ImageInfo `json:"imageList"`
 	CommentCount int64       `json:"commentCount"`
 	LikeCount    int64       `json:"likeCount"`
+	Status       int         `json:"status"`
 	CreateTime   int64       `json:"createTime"`
 }
 
