@@ -116,7 +116,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if article.ContentType == model.ContentTypeMarkdown {
-		content, _ := markdown.New(markdown.EnableTOC(), markdown.SummaryLen(0)).Run(article.Content)
+		content, _ := markdown.New(markdown.SummaryLen(0)).Run(article.Content)
 		rsp.Content = BuildHtmlContent(content)
 	} else if article.ContentType == model.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(article.Content)
@@ -216,7 +216,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
-	content, _ := markdown.New(markdown.EnableTOC(), markdown.SummaryLen(0)).Run(topic.Content)
+	content, _ := markdown.New(markdown.SummaryLen(0)).Run(topic.Content)
 	rsp.Content = BuildHtmlContent(content)
 
 	return rsp
