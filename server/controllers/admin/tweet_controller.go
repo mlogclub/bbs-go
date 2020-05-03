@@ -26,7 +26,7 @@ func (c *TweetController) GetBy(id int64) *simple.JsonResult {
 func (c *TweetController) AnyList() *simple.JsonResult {
 	list, paging := services.TweetService.FindPageByParams(simple.NewQueryParams(c.Ctx).
 		EqByReq("id").
-		EqByReq("userId").
+		EqByReq("user_id").
 		EqByReq("status").
 		PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: render.BuildTweets(list), Page: paging})

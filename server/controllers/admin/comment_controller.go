@@ -26,7 +26,13 @@ func (c *CommentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *CommentController) AnyList() *simple.JsonResult {
-	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).EqByReq("status").PageByReq().Desc("id"))
+	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).
+		EqByReq("id").
+		EqByReq("user_id").
+		EqByReq("entity_type").
+		EqByReq("entity_id").
+		EqByReq("status").
+		PageByReq().Desc("id"))
 
 	var results []map[string]interface{}
 	for _, comment := range list {

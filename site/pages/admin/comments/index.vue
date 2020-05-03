@@ -1,6 +1,46 @@
 <template>
   <section v-loading="listLoading" class="page-container">
-    <div class="main-content">
+    <!--工具条-->
+    <div class="toolbar">
+      <el-form :inline="true" :model="filters">
+        <el-form-item>
+          <el-input v-model="filters.id" placeholder="编号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="filters.entityType"
+            clearable
+            placeholder="实体类型"
+          >
+            <el-option label="话题" value="topic"></el-option>
+            <el-option label="文章" value="article"></el-option>
+            <el-option label="动态" value="tweet"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input
+            v-model="filters.entityId"
+            placeholder="实体编号"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="filters.status"
+            @change="list"
+            clearable
+            placeholder="请选择状态"
+          >
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="删除" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="list" type="primary">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="page-section">
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
@@ -15,6 +55,9 @@
                     item.user.nickname
                   }}</a></span
                 >
+
+                <span>ID: {{ item.id }}</span>
+
                 <span class="create-time"
                   >@{{ item.createTime | formatDate }}</span
                 >
@@ -26,15 +69,16 @@
 
                 <span v-if="item.entityType === 'topic'">
                   <a :href="'/topic/' + item.entityId" target="_blank"
-                    >文章：{{ item.entityId }}</a
+                    >话题：{{ item.entityId }}</a
                   >
                 </span>
+
+                <div class="tools">
+                  <span v-if="item.status === 1" class="item info">已删除</span>
+                  <a @click="handleDelete(item)" class="item">删除</a>
+                </div>
               </div>
               <div v-html="item.content" class="summary"></div>
-              <div class="tools">
-                <span v-if="item.status === 1" class="item info">已删除</span>
-                <a @click="handleDelete(item)" class="item">删除</a>
-              </div>
             </div>
           </div>
         </li>
@@ -147,15 +191,16 @@ export default {
 
 <style scoped lang="scss">
 .comments {
+  width: 100%;
   list-style: none;
-  padding: 0px;
 
   li {
+    width: 100%;
     border-bottom: 1px solid #f2f2f2;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
 
     .comment-item {
+      width: 100%;
       display: flex;
 
       .avatar {
@@ -194,26 +239,27 @@ export default {
               font-weight: normal;
             }
           }
+
+          .tools {
+            float: right;
+            font-size: 13px;
+            .item {
+              color: blue;
+              cursor: pointer;
+              &:not(:last-child) {
+                margin-right: 10px;
+              }
+
+              &.info {
+                color: red;
+              }
+            }
+          }
         }
 
         .summary {
           font-size: 15px;
           color: #555;
-        }
-
-        .tools {
-          float: right;
-          .item {
-            color: blue;
-            cursor: pointer;
-            &:not(:last-child) {
-              margin-right: 10px;
-            }
-
-            &.info {
-              color: red;
-            }
-          }
         }
       }
     }
