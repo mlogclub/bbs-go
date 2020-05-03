@@ -460,7 +460,6 @@ export default {
     }
 
     .summary {
-      margin-top: 10px;
       margin-left: 60px;
       word-break: break-all;
       -webkit-line-clamp: 2;
