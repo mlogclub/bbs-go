@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"bbs-go/model"
 	"strconv"
+
+	"bbs-go/model"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -51,7 +52,7 @@ func (c *ArticleController) AnyList() *simple.JsonResult {
 }
 
 func (c *ArticleController) PostCreate() *simple.JsonResult {
-	return simple.JsonErrorMsg("为实现")
+	return simple.JsonErrorMsg("未实现")
 }
 
 func (c *ArticleController) PostUpdate() *simple.JsonResult {
@@ -64,7 +65,9 @@ func (c *ArticleController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	simple.ReadForm(c.Ctx, t)
+	if err := simple.ReadForm(c.Ctx, t); err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
 
 	// 数据校验
 	if len(t.Title) == 0 {
