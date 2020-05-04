@@ -1,16 +1,10 @@
 ## 项目地址
 
+- 交流站：[码农俱乐部](https://mlog.club)
+- 文档地址：[http://docs.bbs-go.com/](http://docs.bbs-go.com/)
+- 问题反馈: [https://mlog.club/topics/node/3](https://mlog.club/topics/node/3)
 - Github: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
-- 官方交流演示站：[https://mlog.club](https://mlog.club)
-- 官方文档：[http://docs.bbs-go.com/](http://docs.bbs-go.com/)
-- 问题反馈: [https://mlog.club/topics](https://mlog.club/topics)
-
-## 公众号
-
-> 欢迎关注公众号`码农俱乐部`获取更多干货资源。
-
-![码农俱乐部](https://open.weixin.qq.com/qr/code?username=gh_950827012b8d)
 
 ## 课程
 
@@ -31,11 +25,24 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 
 > 基于`Golang`搭建，提供接口数据支撑。
 
+*技术栈*
+- iris (https://github.com/kataras/iris) Go 语言 mvc 框架
+- gorm (http://gorm.io/) Go 语言 orm 框架
+- resty (https://github.com/go-resty/resty) Go 语言好用的 http-client
+- cron (https://github.com/robfig/cron) 定时任务
+- goquery（https://github.com/PuerkitoBio/goquery）html dom 元素解析
+
 ### site
 
-> 前端页面服务，基于`nuxt.js`搭建。
+> 前端页面渲染服务，基于`nuxt.js`搭建。
+
+*技术栈*
+- Nuxt.js (https://nuxtjs.org) 基于 Vue 的服务端渲染框架
+- Element-UI (https://element.eleme.cn) 饿了么开源的基于 vue.js 的前端库
+- Vditor (https://github.com/b3log/vditor) Markdown 编辑器
 
 ## 功能预览
 
-![前台页面.png](https://i.loli.net/2019/09/12/EfPJDwKpgjrM1CW.png)
-![后台页面.png](https://i.loli.net/2019/11/19/li5nfdabGmSygIC.png)
+![首页.png](https://file.mlog.club/images/2020/04/24/7cbc6cb4384dcdd5ec6651efe76b2e3d.jpg)
+![动态.png](https://file.mlog.club/images/2020/04/24/9bf5fe021f6bd468399842e02e4daa08.jpg)
+![后台.png](https://file.mlog.club/images/2020/04/24/74b9873dc4b8856e455bf2ad2d3a6c59.jpg)
