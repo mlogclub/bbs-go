@@ -19,6 +19,13 @@ func (builder *UrlBuilder) AddQuery(name, value string) *UrlBuilder {
 	return builder
 }
 
+func (builder *UrlBuilder) AddQueries(queries map[string]string) *UrlBuilder {
+	for name, value := range queries {
+		builder.AddQuery(name, value)
+	}
+	return builder
+}
+
 func (builder *UrlBuilder) GetQuery() url.Values {
 	return builder.query
 }

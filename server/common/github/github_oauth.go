@@ -47,7 +47,7 @@ func newOauthConfig(redirectUrl string) *oauth2.Config {
 
 func AuthCodeURL(params map[string]string) string {
 	// 将跳转地址写入上线文
-	state := simple.UUID()
+	state := simple.Uuid()
 	redirectUrl := getRedirectUrl(params)
 	ctxCache.Put(state, redirectUrl)
 

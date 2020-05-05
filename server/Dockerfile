@@ -1,5 +1,5 @@
 # builder stage
-FROM golang:1.13-stretch AS builder
+FROM golang:1.14-stretch AS builder
 
 
 

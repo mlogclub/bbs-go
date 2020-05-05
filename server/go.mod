@@ -1,6 +1,6 @@
 module bbs-go
 
-go 1.13
+go 1.14
 
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
@@ -25,7 +25,7 @@ require (
 	github.com/kataras/iris/v12 v12.0.1
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/minio/minio-go/v6 v6.0.55
-	github.com/mlogclub/simple v1.0.55
+	github.com/mlogclub/simple v1.0.63
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/robfig/cron v1.2.0
