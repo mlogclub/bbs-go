@@ -135,9 +135,9 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 }
 
 func (a *ai) AnalyzeMarkdown(title, markdown string) (*AiAnalyzeRet, error) {
-	//mdResult := simple.NewMd().Run(markdown)
-	//return a.AnalyzeHtml(title, mdResult.ContentHtml)
-	return a.AnalyzeText(title,markdown)
+	mdResult := simple.NewMd().Run(markdown)
+	return a.AnalyzeHtml(title, mdResult.ContentHtml)
+	
 }
 
 func (a *ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {
