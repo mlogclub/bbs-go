@@ -242,11 +242,7 @@ export default {
       )
     },
     isPending() {
-      if (this.article.status === 2) {
-        return true
-      } else {
-        return false
-      }
+      return this.article.status === 2
     }
   },
   methods: {
