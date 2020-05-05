@@ -121,6 +121,19 @@
     a.article-share-summary {
       color: #4a4a4a;
     }
+
+    nav {
+      background-color: #fdfdfd;
+      border: 1px solid #f6f6f6;
+      padding: 10px 0;
+      font-size: 14px;
+
+      ul {
+        list-style: disc outside;
+        margin-left: 2em;
+        margin-top: 0;
+      }
+    }
   }
 
   .article-footer {
@@ -158,6 +171,7 @@
 
     color: rgba(0, 0, 0, 0.7);
     font-size: 14px;
+
     &:hover {
       color: #3273dc;
     }

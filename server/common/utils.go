@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/markdown"
 
 	"bbs-go/common/config"
 	"bbs-go/model"
@@ -31,8 +32,7 @@ func IndexOf(userIds []int64, userId int64) int {
 
 func GetSummary(contentType string, content string) (summary string) {
 	if contentType == model.ContentTypeMarkdown {
-		mr := simple.NewMd().Run(content)
-		summary = mr.SummaryText
+		summary = markdown.GetSummary(content, 256)
 	} else if contentType == model.ContentTypeHtml {
 		summary = simple.GetSummary(simple.GetHtmlText(content), 256)
 	} else {
@@ -42,12 +42,8 @@ func GetSummary(contentType string, content string) (summary string) {
 }
 
 // 截取markdown摘要
-func GetMarkdownSummary(markdown string) string {
-	if len(markdown) == 0 {
-		return ""
-	}
-	mdResult := simple.NewMd().Run(markdown)
-	return mdResult.SummaryText
+func GetMarkdownSummary(markdownStr string) string {
+	return markdown.GetSummary(markdownStr, 256)
 }
 
 // 获取html内容摘要

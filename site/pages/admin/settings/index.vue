@@ -1,181 +1,187 @@
 <template>
   <section v-loading="loading" class="page-container">
-    <el-tabs value="commonConfigTab">
-      <el-tab-pane label="通用配置" name="commonConfigTab">
-        <div class="config">
-          <el-form label-width="160px">
-            <el-form-item label="网站名称">
-              <el-input
-                v-model="config.siteTitle"
-                type="text"
-                placeholder="网站名称"
-              ></el-input>
-            </el-form-item>
+    <div class="page-section config-panel">
+      <el-tabs value="commonConfigTab">
+        <el-tab-pane label="通用配置" name="commonConfigTab">
+          <div class="config">
+            <el-form label-width="160px">
+              <el-form-item label="网站名称">
+                <el-input
+                  v-model="config.siteTitle"
+                  type="text"
+                  placeholder="网站名称"
+                ></el-input>
+              </el-form-item>
 
-            <el-form-item label="网站描述">
-              <el-input
-                v-model="config.siteDescription"
-                type="textarea"
-                autosize
-                placeholder="网站描述"
-              ></el-input>
-            </el-form-item>
+              <el-form-item label="网站描述">
+                <el-input
+                  v-model="config.siteDescription"
+                  type="textarea"
+                  autosize
+                  placeholder="网站描述"
+                ></el-input>
+              </el-form-item>
 
-            <el-form-item label="网站关键字">
-              <el-select
-                v-model="config.siteKeywords"
-                style="width:100%"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="网站关键字"
-              ></el-select>
-            </el-form-item>
+              <el-form-item label="网站关键字">
+                <el-select
+                  v-model="config.siteKeywords"
+                  style="width:100%"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="网站关键字"
+                ></el-select>
+              </el-form-item>
 
-            <el-form-item label="网站公告">
-              <el-input
-                v-model="config.siteNotification"
-                type="textarea"
-                autosize
-                placeholder="网站公告（支持输入HTML）"
-              ></el-input>
-            </el-form-item>
+              <el-form-item label="网站公告">
+                <el-input
+                  v-model="config.siteNotification"
+                  type="textarea"
+                  autosize
+                  placeholder="网站公告（支持输入HTML）"
+                ></el-input>
+              </el-form-item>
 
-            <el-form-item label="推荐标签">
-              <el-select
-                v-model="config.recommendTags"
-                style="width:100%"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="推荐标签"
-              ></el-select>
-            </el-form-item>
+              <el-form-item label="推荐标签">
+                <el-select
+                  v-model="config.recommendTags"
+                  style="width:100%"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="推荐标签"
+                ></el-select>
+              </el-form-item>
 
-            <el-form-item label="默认节点">
-              <el-select
-                v-model="config.defaultNodeId"
-                style="width:100%"
-                placeholder="发帖默认节点"
-              >
-                <el-option
-                  v-for="node in nodes"
-                  :key="node.id"
-                  :label="node.name"
-                  :value="node.id"
+              <el-form-item label="默认节点">
+                <el-select
+                  v-model="config.defaultNodeId"
+                  style="width:100%"
+                  placeholder="发帖默认节点"
                 >
-                </el-option>
-              </el-select>
-            </el-form-item>
+                  <el-option
+                    v-for="node in nodes"
+                    :key="node.id"
+                    :label="node.name"
+                    :value="node.id"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-            <el-form-item label="站外链接跳转页面">
-              <el-tooltip
-                content="在跳转前需手动确认是否前往该站外链接"
-                placement="top"
-              >
-                <el-switch v-model="config.urlRedirect"></el-switch>
-              </el-tooltip>
-            </el-form-item>
+              <el-form-item label="站外链接跳转页面">
+                <el-tooltip
+                  content="在跳转前需手动确认是否前往该站外链接"
+                  placement="top"
+                >
+                  <el-switch v-model="config.urlRedirect"></el-switch>
+                </el-tooltip>
+              </el-form-item>
 
-            <el-form-item label="发表文章审核">
-              <el-tooltip
-                content="发布文章后是否开启管理员审核"
-                placement="top"
-              >
-                <el-switch v-model="config.articlePending"></el-switch>
-              </el-tooltip>
+              <el-form-item label="发表文章审核">
+                <el-tooltip
+                  content="发布文章后是否开启管理员审核"
+                  placement="top"
+                >
+                  <el-switch v-model="config.articlePending"></el-switch>
+                </el-tooltip>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="导航配置" name="navConfigTab" class="nav-panel">
+          <draggable
+            v-model="config.siteNavs"
+            draggable=".nav"
+            handle=".nav-sort-btn"
+            class="navs"
+          >
+            <div
+              v-for="(nav, index) in config.siteNavs"
+              :key="index"
+              class="nav"
+            >
+              <el-row :gutter="20">
+                <el-col :span="1">
+                  <i class="iconfont icon-sort nav-sort-btn" />
+                </el-col>
+                <el-col :span="10">
+                  <el-input
+                    v-model="nav.title"
+                    type="text"
+                    size="small"
+                    placeholder="标题"
+                  ></el-input>
+                </el-col>
+                <el-col :span="11">
+                  <el-input
+                    v-model="nav.url"
+                    type="text"
+                    size="small"
+                    placeholder="链接"
+                  ></el-input>
+                </el-col>
+                <el-col :span="2">
+                  <el-button
+                    @click="delNav(index)"
+                    type="danger"
+                    icon="el-icon-delete"
+                    circle
+                    size="small"
+                  ></el-button>
+                </el-col>
+              </el-row>
+            </div>
+          </draggable>
+          <div class="add-nav">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="点击按钮添加导航"
+              placement="top"
+            >
+              <el-button
+                @click="addNav"
+                type="primary"
+                icon="el-icon-plus"
+                circle
+              ></el-button>
+            </el-tooltip>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane
+          v-if="config.scoreConfig"
+          label="积分配置"
+          name="scoreConfigTab"
+        >
+          <el-form label-width="160px">
+            <el-form-item label="发帖获得积分">
+              <el-input-number
+                v-model="config.scoreConfig.postTopicScore"
+                :min="1"
+                type="text"
+                placeholder="发帖获得积分"
+              ></el-input-number>
+            </el-form-item>
+            <el-form-item label="跟帖获得积分">
+              <el-input-number
+                v-model="config.scoreConfig.postCommentScore"
+                :min="1"
+                type="text"
+                placeholder="跟帖获得积分"
+              ></el-input-number>
             </el-form-item>
           </el-form>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="导航配置" name="navConfigTab" class="nav-panel">
-        <draggable
-          v-model="config.siteNavs"
-          draggable=".nav"
-          handle=".nav-sort-btn"
-          class="navs"
-        >
-          <div v-for="(nav, index) in config.siteNavs" :key="index" class="nav">
-            <el-row :gutter="20">
-              <el-col :span="1">
-                <i class="iconfont icon-sort nav-sort-btn" />
-              </el-col>
-              <el-col :span="10">
-                <el-input
-                  v-model="nav.title"
-                  type="text"
-                  size="small"
-                  placeholder="标题"
-                ></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input
-                  v-model="nav.url"
-                  type="text"
-                  size="small"
-                  placeholder="链接"
-                ></el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-button
-                  @click="delNav(index)"
-                  type="danger"
-                  icon="el-icon-delete"
-                  circle
-                  size="small"
-                ></el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </draggable>
-        <div class="add-nav">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="点击按钮添加导航"
-            placement="top"
-          >
-            <el-button
-              @click="addNav"
-              type="primary"
-              icon="el-icon-plus"
-              circle
-            ></el-button>
-          </el-tooltip>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane
-        v-if="config.scoreConfig"
-        label="积分配置"
-        name="scoreConfigTab"
-      >
-        <el-form label-width="160px">
-          <el-form-item label="发帖获得积分">
-            <el-input-number
-              v-model="config.scoreConfig.postTopicScore"
-              :min="1"
-              type="text"
-              placeholder="发帖获得积分"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item label="跟帖获得积分">
-            <el-input-number
-              v-model="config.scoreConfig.postCommentScore"
-              :min="1"
-              type="text"
-              placeholder="跟帖获得积分"
-            ></el-input-number>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-    </el-tabs>
+        </el-tab-pane>
+      </el-tabs>
 
-    <div style="margin-top: 20px;">
-      <el-button :loading="loading" @click="save" type="primary"
-        >保存</el-button
-      >
+      <div style="text-align: right;">
+        <el-button :loading="loading" @click="save" type="primary"
+          >保存配置</el-button
+        >
+      </div>
     </div>
   </section>
 </template>
@@ -246,6 +252,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.config-panel {
+  margin: 20px;
+  padding: 10px;
+}
 .config {
   padding: 10px 0;
 }

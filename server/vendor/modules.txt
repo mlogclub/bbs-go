@@ -170,6 +170,7 @@ github.com/mitchellh/go-homedir
 # github.com/mlogclub/simple v1.0.63
 ## explicit
 github.com/mlogclub/simple
+github.com/mlogclub/simple/markdown
 github.com/mlogclub/simple/strcase
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent

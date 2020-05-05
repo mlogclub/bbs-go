@@ -31,7 +31,7 @@
     </div>
 
     <!--列表-->
-    <div class="articles main-content">
+    <div class="page-section articles">
       <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
           <img :src="item.user.smallAvatar" class="avatar" />
@@ -42,6 +42,7 @@
               }}</a>
             </div>
             <div class="article-meta">
+              <label class="action-item info">ID: {{ item.id }}</label>
               <label v-if="item.user" class="author">{{
                 item.user.nickname
               }}</label>
@@ -49,26 +50,34 @@
               <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
                 tag.tagName
               }}</label>
+
+              <div class="actions">
+                <span v-if="item.status === 1" class="action-item danger"
+                  >已删除</span
+                >
+                <a
+                  v-if="item.status !== 1"
+                  @click="deleteSubmit(item)"
+                  class="action-item btn"
+                  >删除</a
+                >
+                <a
+                  v-if="item.status === 2"
+                  :href="'/article/edit/' + item.id"
+                  class="action-item btn"
+                  >修改</a
+                >
+                <a
+                  v-if="item.status === 2"
+                  @click="PendingSubmit(item)"
+                  class="action-item btn"
+                  >审核</a
+                >
+              </div>
             </div>
           </div>
         </div>
         <div class="summary">{{ item.summary }}</div>
-        <div class="article-footer">
-          <span v-if="item.status === 1" class="danger">已删除</span>
-          <span class="info">编号：{{ item.id }}</span>
-          <a v-if="item.status !== 1" @click="deleteSubmit(item)" class="btn"
-            >删除</a
-          >
-          <a
-            v-if="item.status === 2"
-            :href="'/article/edit/' + item.id"
-            class="btn"
-            >修改</a
-          >
-          <a v-if="item.status === 2" @click="PendingSubmit(item)" class="btn"
-            >审核</a
-          >
-        </div>
       </div>
     </div>
 
@@ -188,14 +197,15 @@ export default {
 <style scoped lang="scss">
 .articles {
   display: table;
+  width: 100%;
 
   .article:not(:last-child) {
     border-bottom: solid 1px rgba(140, 147, 157, 0.14);
   }
 
   .article {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    width: 100%;
+    padding: 10px;
 
     .article-header {
       display: flex;
@@ -221,10 +231,11 @@ export default {
         }
 
         .article-meta {
-          margin-top: 8px;
+          display: flex;
+          font-size: 12px;
 
           label:not(:last-child) {
-            margin-right: 5px;
+            margin-right: 8px;
           }
 
           label {
@@ -244,12 +255,31 @@ export default {
             padding-right: 5px;
             white-space: nowrap;
           }
+
+          .actions {
+            margin-left: 20px;
+            text-align: right;
+
+            .action-item {
+              margin-right: 9px;
+            }
+
+            span.danger {
+              background: #eee;
+              color: red;
+              padding: 2px 5px 2px 5px;
+            }
+
+            a.btn {
+              color: blue;
+              cursor: pointer;
+            }
+          }
         }
       }
     }
 
     .summary {
-      margin-top: 10px;
       margin-left: 60px;
       word-break: break-all;
       -webkit-line-clamp: 2;
@@ -261,32 +291,6 @@ export default {
       font-size: 12px;
       font-weight: 400;
       line-height: 1.5;
-    }
-
-    .article-footer {
-      text-align: right;
-
-      span.info {
-        font-size: 12px;
-        margin-right: 10px;
-        background: #eee;
-        padding: 2px 5px 2px 5px;
-      }
-
-      span.danger {
-        font-size: 12px;
-        margin-right: 10px;
-        background: #eee;
-        color: red;
-        padding: 2px 5px 2px 5px;
-      }
-
-      a.btn {
-        font-size: 12px;
-        margin-right: 10px;
-        color: blue;
-        cursor: pointer;
-      }
     }
   }
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
 )
@@ -23,42 +24,36 @@ func (c *TweetController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *TweetController) AnyList() *simple.JsonResult {
-	list, paging := services.TweetService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
-	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
+	list, paging := services.TweetService.FindPageByParams(simple.NewQueryParams(c.Ctx).
+		EqByReq("id").
+		EqByReq("user_id").
+		EqByReq("status").
+		PageByReq().Desc("id"))
+	return simple.JsonData(&simple.PageResult{Results: render.BuildTweets(list), Page: paging})
 }
 
-func (c *TweetController) PostCreate() *simple.JsonResult {
-	t := &model.Tweet{}
-	err := simple.ReadForm(c.Ctx, t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	err = services.TweetService.Create(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
-}
-
-func (c *TweetController) PostUpdate() *simple.JsonResult {
+func (c *TweetController) PostDelete() *simple.JsonResult {
 	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.TweetService.Get(id)
-	if t == nil {
-		return simple.JsonErrorMsg("entity not found")
-	}
 
-	err = simple.ReadForm(c.Ctx, t)
+	err = services.TweetService.UpdateColumn(id, "status", model.StatusDeleted)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+func (c *TweetController) PostUndelete() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.TweetService.Update(t)
+	err = services.TweetService.UpdateColumn(id, "status", model.StatusOk)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonData(t)
+	return simple.JsonSuccess()
 }

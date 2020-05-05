@@ -39,7 +39,7 @@
       </el-form>
     </div>
 
-    <div class="topics main-content">
+    <div class="page-section topics">
       <div v-for="item in results" :key="item.id" class="topic">
         <div class="topic-header">
           <img :src="item.user.smallAvatar" class="avatar" />
@@ -50,6 +50,7 @@
               }}</a>
             </div>
             <div class="topic-meta">
+              <label>ID: {{ item.id }}</label>
               <label v-if="item.user" class="author">{{
                 item.user.nickname
               }}</label>
@@ -58,27 +59,39 @@
               <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
                 tag.tagName
               }}</label>
+
+              <div class="actions">
+                <span v-if="item.status === 1" class="action-item danger"
+                  >已删除</span
+                >
+                <a
+                  v-if="item.status === 0"
+                  @click="deleteSubmit(item)"
+                  class="action-item btn"
+                  >删除</a
+                >
+                <a v-else @click="undeleteSubmit(item)" class="action-item btn"
+                  >取消删除</a
+                >
+                <a
+                  v-if="!item.recommend"
+                  @click="recommend(item.id)"
+                  class="action-item btn"
+                  >推荐</a
+                >
+                <a
+                  v-else
+                  @click="cancelRecommend(item.id)"
+                  class="action-item btn"
+                  >取消推荐</a
+                >
+              </div>
             </div>
           </div>
         </div>
 
         <div class="summary">
           {{ item.summary }}
-        </div>
-
-        <div class="topic-footer">
-          <span v-if="item.status === 1" class="danger">已删除</span>
-          <span class="info">编号：{{ item.id }}</span>
-
-          <a v-if="item.status === 0" @click="deleteSubmit(item)" class="btn"
-            >删除</a
-          >
-          <a v-else @click="undeleteSubmit(item)" class="btn">取消删除</a>
-
-          <a v-if="!item.recommend" @click="recommend(item.id)" class="btn"
-            >推荐</a
-          >
-          <a v-else @click="cancelRecommend(item.id)" class="btn">取消推荐</a>
         </div>
       </div>
     </div>
@@ -299,20 +312,30 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    async deleteSubmit(row) {
-      await this.$confirm('是否确认删除该话题?', '提示', {
+    deleteSubmit(row) {
+      const me = this
+      this.$confirm('是否确认删除该话题?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-
-      try {
-        await this.$axios.post('/api/admin/topic/delete', { id: row.id })
-        this.$message({ message: '删除成功', type: 'success' })
-        this.list()
-      } catch (err) {
-        this.$notify.error({ title: '错误', message: err.message || err })
-      }
+        .then(function() {
+          me.$axios
+            .post('/api/admin/topic/delete', { id: row.id })
+            .then(function() {
+              me.$message({ message: '删除成功', type: 'success' })
+              me.list()
+            })
+            .catch(function(err) {
+              me.$notify.error({ title: '错误', message: err.message || err })
+            })
+        })
+        .catch(function() {
+          me.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     async undeleteSubmit(row) {
       try {
@@ -337,7 +360,9 @@ export default {
     async cancelRecommend(id) {
       try {
         await this.$axios.delete('/api/admin/topic/recommend', {
-          id
+          params: {
+            id
+          }
         })
         this.$message({ message: '取消推荐成功', type: 'success' })
         this.list()
@@ -354,15 +379,15 @@ export default {
 
 <style scoped lang="scss">
 .topics {
-  display: table;
+  width: 100%;
 
   .topic:not(:last-child) {
     border-bottom: solid 1px rgba(140, 147, 157, 0.14);
   }
 
   .topic {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    width: 100%;
+    padding: 10px;
 
     .topic-header {
       display: flex;
@@ -388,19 +413,18 @@ export default {
         }
 
         .topic-meta {
-          margin-top: 8px;
+          display: flex;
+          font-size: 12px;
 
           label:not(:last-child) {
-            margin-right: 5px;
+            margin-right: 8px;
           }
 
           label {
             color: #999;
-            font-size: 12px;
           }
 
           label.author {
-            /*color: #dc2323;*/
             font-weight: bold;
           }
 
@@ -421,12 +445,31 @@ export default {
             padding-right: 5px;
             white-space: nowrap;
           }
+
+          .actions {
+            margin-left: 20px;
+            text-align: right;
+
+            .action-item {
+              margin-right: 9px;
+            }
+
+            span.danger {
+              background: #eee;
+              color: red;
+              padding: 2px 5px 2px 5px;
+            }
+
+            a.btn {
+              color: blue;
+              cursor: pointer;
+            }
+          }
         }
       }
     }
 
     .summary {
-      margin-top: 10px;
       margin-left: 60px;
       word-break: break-all;
       -webkit-line-clamp: 2;
@@ -438,32 +481,6 @@ export default {
       font-size: 12px;
       font-weight: 400;
       line-height: 1.5;
-    }
-
-    .topic-footer {
-      text-align: right;
-
-      span.info {
-        font-size: 12px;
-        margin-right: 10px;
-        background: #eee;
-        padding: 2px 5px 2px 5px;
-      }
-
-      span.danger {
-        font-size: 12px;
-        margin-right: 10px;
-        background: #eee;
-        color: red;
-        padding: 2px 5px 2px 5px;
-      }
-
-      a.btn {
-        font-size: 12px;
-        margin-right: 10px;
-        color: blue;
-        cursor: pointer;
-      }
     }
   }
 }

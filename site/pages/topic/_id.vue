@@ -272,9 +272,7 @@ export default {
       )
     }
   },
-  mounted() {
-    utils.handleToc(this.$refs.toc)
-  },
+  mounted() {},
   methods: {
     async addFavorite(topicId) {
       try {

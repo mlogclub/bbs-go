@@ -52,7 +52,6 @@ type ArticleSimpleResponse struct {
 type ArticleResponse struct {
 	ArticleSimpleResponse
 	Content string `json:"content"`
-	Toc     string `json:"toc"`
 }
 
 type NodeResponse struct {
@@ -80,7 +79,6 @@ type TopicSimpleResponse struct {
 type TopicResponse struct {
 	TopicSimpleResponse
 	Content string `json:"content"`
-	Toc     string `json:"toc"`
 }
 
 // 帖子列表返回实体
@@ -91,6 +89,7 @@ type TweetResponse struct {
 	ImageList    []ImageInfo `json:"imageList"`
 	CommentCount int64       `json:"commentCount"`
 	LikeCount    int64       `json:"likeCount"`
+	Status       int         `json:"status"`
 	CreateTime   int64       `json:"createTime"`
 }
 

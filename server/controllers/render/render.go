@@ -1,9 +1,11 @@
 package render
 
 import (
+	"html"
 	"strconv"
 	"strings"
 
+	"github.com/mlogclub/simple/markdown"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -114,31 +116,13 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if article.ContentType == model.ContentTypeMarkdown {
-		mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
-		rsp.Content = BuildHtmlContent(mr.ContentHtml)
-		rsp.Toc = mr.TocHtml
-		if len(rsp.Summary) == 0 {
-			rsp.Summary = mr.SummaryText
-		}
+		content, _ := markdown.New(markdown.SummaryLen(0)).Run(article.Content)
+		rsp.Content = BuildHtmlContent(content)
 	} else if article.ContentType == model.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(article.Content)
-		if len(rsp.Summary) == 0 {
-			rsp.Summary = simple.GetSummary(article.Content, 256)
-		}
 	}
 
 	return rsp
-}
-
-func BuildArticles(articles []model.Article) []model.ArticleResponse {
-	if articles == nil || len(articles) == 0 {
-		return nil
-	}
-	var responses []model.ArticleResponse
-	for _, article := range articles {
-		responses = append(responses, *BuildArticle(&article))
-	}
-	return responses
 }
 
 func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
@@ -164,8 +148,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 
 	if article.ContentType == model.ContentTypeMarkdown {
 		if len(rsp.Summary) == 0 {
-			mr := simple.NewMd(simple.MdWithTOC()).Run(article.Content)
-			rsp.Summary = mr.SummaryText
+			_, rsp.Summary = markdown.New().Run(article.Content)
 		}
 	} else if article.ContentType == model.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {
@@ -233,9 +216,8 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
-	mr := simple.NewMd(simple.MdWithTOC()).Run(topic.Content)
-	rsp.Content = BuildHtmlContent(mr.ContentHtml)
-	rsp.Toc = mr.TocHtml
+	content, _ := markdown.New(markdown.SummaryLen(0)).Run(topic.Content)
+	rsp.Content = BuildHtmlContent(content)
 
 	return rsp
 }
@@ -288,6 +270,7 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 		Content:      tweet.Content,
 		CommentCount: tweet.CommentCount,
 		LikeCount:    tweet.LikeCount,
+		Status:       tweet.Status,
 		CreateTime:   tweet.CreateTime,
 	}
 	if simple.IsNotBlank(tweet.ImageList) {
@@ -337,9 +320,9 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 		rsp.Content = BuildHtmlContent(project.Content)
 		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
 	} else {
-		mr := simple.NewMd().Run(project.Content)
-		rsp.Content = BuildHtmlContent(mr.ContentHtml)
-		rsp.Summary = mr.SummaryText
+		content, summary := markdown.New().Run(project.Content)
+		rsp.Content = BuildHtmlContent(content)
+		rsp.Summary = summary
 	}
 
 	return rsp
@@ -408,12 +391,12 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	}
 
 	if comment.ContentType == model.ContentTypeMarkdown {
-		markdownResult := simple.NewMd().Run(comment.Content)
-		ret.Content = BuildHtmlContent(markdownResult.ContentHtml)
+		content, _ := markdown.New().Run(comment.Content)
+		ret.Content = BuildHtmlContent(content)
 	} else if comment.ContentType == model.ContentTypeHtml {
 		ret.Content = BuildHtmlContent(comment.Content)
 	} else {
-		ret.Content = comment.Content
+		ret.Content = html.EscapeString(comment.Content)
 	}
 
 	if buildQuote && comment.QuoteId > 0 {
@@ -549,7 +532,7 @@ func BuildHtmlContent(htmlContent string) string {
 	doc.Find("a").Each(func(i int, selection *goquery.Selection) {
 		href := selection.AttrOr("href", "")
 
-		if len(href) == 0 {
+		if simple.IsBlank(href) {
 			return
 		}
 
@@ -558,16 +541,11 @@ func BuildHtmlContent(htmlContent string) string {
 			selection.SetAttr("target", "_blank")
 			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
 
-			config := services.SysConfigService.GetConfig()
-			if config.UrlRedirect { // 开启非内部链接跳转
+			_config := services.SysConfigService.GetConfig()
+			if _config.UrlRedirect { // 开启非内部链接跳转
 				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 				selection.SetAttr("href", newHref)
 			}
-		}
-
-		// 如果是锚链接
-		if urls.IsAnchor(href) {
-			selection.ReplaceWithHtml(selection.Text())
 		}
 
 		// 如果a标签没有title，那么设置title
@@ -594,11 +572,10 @@ func BuildHtmlContent(htmlContent string) string {
 		selection.RemoveAttr("src")
 	})
 
-	html, err := doc.Find("body").Html()
-	if err != nil {
-		return htmlContent
+	if htmlStr, err := doc.Find("body").Html(); err == nil {
+		return htmlStr
 	}
-	return html
+	return htmlContent
 }
 
 func HandleOssImageStyleAvatar(url string) string {
