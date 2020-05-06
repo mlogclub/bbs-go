@@ -26,7 +26,7 @@ func (*minioUploader) PutImage(data []byte) (string, error) {
 
 // 上传
 func (miu *minioUploader) PutObject(key string, d []byte) (string, error) {
-	client, err := getClient()
+	client, err := miu.getClient()
 	if err != nil {
 		return "", err
 	}
@@ -110,11 +110,12 @@ func getObjectKey(u string) string {
 	return objectKey
 }
 
-func getClient() (*minio.Client, error) {
+func (mi *minioUploader) getClient() (*minio.Client, error) {
 	//client,err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 	client, err := minio.New(config.Conf.Uploader.Minio.Endpoint, config.Conf.Uploader.Minio.AccessId, config.Conf.Uploader.Minio.AccessSecret, false)
 	if err != nil {
 		return nil, err
 	}
+	mi.Bucket=config.Conf.Uploader.Minio.Bucket
 	return client, err
 }
