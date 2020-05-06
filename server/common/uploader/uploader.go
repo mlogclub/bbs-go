@@ -35,12 +35,13 @@ func CopyImage(originUrl string) (string, error) {
 }
 
 func getUploader() uploader {
+	print("使用minio")
+	logrus.Debug("使用minio")
 	enable := config.Conf.Uploader.Enable
 	if (enable=="Aliyun") {
 		return aliyun
 	}else if (enable=="Minio"){
-		print("使用minio")
-		logrus.Debug("使用minio")
+
 		return  miuploader
 	}	else {
 		return local
