@@ -20,7 +20,7 @@ QQConnect:
 # 上传配置
 Uploader:
   # 启用上传方式
-  Enable: Local
+  Enable: Minio
   # 阿里云oss配置
   Oss:
     Host: /minio/download/bbs/
