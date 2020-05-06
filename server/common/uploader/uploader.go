@@ -35,9 +35,9 @@ func CopyImage(originUrl string) (string, error) {
 
 func getUploader() uploader {
 	enable := config.Conf.Uploader.Enable
-	if (enable=="aliyun") {
+	if (enable=="Aliyun") {
 		return aliyun
-	}else if (enable=="minio"){
+	}else if (enable=="Minio"){
 		return  miuploader
 	}	else {
 		return local
