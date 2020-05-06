@@ -92,7 +92,7 @@ func (s *sitemapService) GenerateToday() {
 
 func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	sitemapName := "sitemap-" + simple.TimeFormat(simple.TimeFromTimestamp(dateFrom), simple.FMT_DATE)
-	sm := sitemap.NewGenerator(config.Conf.Uploader.AliyunOss.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, sitemapName, func(sm *sitemap.Generator, sitemapLoc string) {
 		s.AddSitemapIndex(sm, sitemapLoc)
 	})
 
@@ -140,7 +140,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 }
 
 func (s *sitemapService) GenerateMisc() {
-	sm := sitemap.NewGenerator(config.Conf.Uploader.AliyunOss.Host, sitemapPath, "sitemap-misc",
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, "sitemap-misc",
 		func(sm *sitemap.Generator, sitemapLoc string) {
 			s.AddSitemapIndex(sm, sitemapLoc)
 		})
@@ -187,7 +187,7 @@ func (s *sitemapService) GenerateMisc() {
 }
 
 func (s *sitemapService) GenerateUser() {
-	sm := sitemap.NewGenerator(config.Conf.Uploader.AliyunOss.Host, sitemapPath, "sitemap-user",
+	sm := sitemap.NewGenerator(config.Conf.Uploader.Oss.Host, sitemapPath, "sitemap-user",
 		func(sm *sitemap.Generator, sitemapLoc string) {
 			s.AddSitemapIndex(sm, sitemapLoc)
 		})
