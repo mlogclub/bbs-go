@@ -1,6 +1,7 @@
 package uploader
 
 import (
+	"github.com/sirupsen/logrus"
 	"sync"
 
 	"bbs-go/common/config"
@@ -38,6 +39,8 @@ func getUploader() uploader {
 	if (enable=="Aliyun") {
 		return aliyun
 	}else if (enable=="Minio"){
+		print("使用minio")
+		logrus.Debug("使用minio")
 		return  miuploader
 	}	else {
 		return local
