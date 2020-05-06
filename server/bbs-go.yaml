@@ -36,7 +36,7 @@ Uploader:
   Minio:
     Host: /minio/download/bbs/
     Bucket: bbs
-    Endpoint: http://minio.default.svc:9000
+    Endpoint: minio.default.svc:9000
     AccessId: admin
     AccessSecret: 12345678
   # 本地文件上传

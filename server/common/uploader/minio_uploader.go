@@ -42,7 +42,9 @@ func (miu *minioUploader) PutObject(key string, d []byte) (string, error) {
 
 //将图片copy到oss
 func (*minioUploader) CopyImage(inputUrl string) (string, error) {
+
 	data, err := download(inputUrl)
+	logrus.Debug("download image")
 	if err != nil {
 		return "", err
 	}
@@ -111,10 +113,12 @@ func getObjectKey(u string) string {
 }
 
 func (mi *minioUploader) getClient() (*minio.Client, error) {
-	//client,err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
+
 	client, err := minio.New(config.Conf.Uploader.Minio.Endpoint, config.Conf.Uploader.Minio.AccessId, config.Conf.Uploader.Minio.AccessSecret, false)
+	println(config.Conf.Uploader.Minio.Endpoint)
 	if err != nil {
-		print(err)
+
+
 		return nil, err
 	}
 	mi.Bucket=config.Conf.Uploader.Minio.Bucket

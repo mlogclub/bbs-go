@@ -52,7 +52,7 @@ type Config struct {
 			Endpoint      string `yaml:"Endpoint"`
 			AccessId      string `yaml:"AccessId"`
 			AccessSecret  string `yaml:"AccessSecret"`
-		}
+		} `yaml:"Minio"`
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`
@@ -85,13 +85,16 @@ type Config struct {
 func InitConfig(filename string) {
 	yamlFile, err := ioutil.ReadFile(filename)
 	if err != nil {
-		logrus.Error(err)
+
+		println(err.Error())
 		return
 	}
 
 	Conf = &Config{}
 	err = yaml.Unmarshal(yamlFile, Conf)
+	println(Conf.Uploader.Minio.Host)
 	if err != nil {
+		println(err.Error())
 		logrus.Error(err)
 	}
 }
