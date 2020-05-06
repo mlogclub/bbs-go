@@ -1,7 +1,6 @@
 package uploader
 
 import (
-
 	"os"
 	"strconv"
 
@@ -11,37 +10,37 @@ import (
 	"github.com/minio/minio-go/v6"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
-
-	"bbs-go/common/config"
 )
-type minioUploader struct {
 
+type minioUploader struct {
+	Bucket string `bucket`
 }
+
 // 上传图片
-func (* minioUploader) PutImage(data []byte) (string, error) {
+func (*minioUploader) PutImage(data []byte) (string, error) {
 	md5 := simple.MD5Bytes(data)
 	key := "images/" + simple.TimeFormat(time.Now(), "2006/01/02/") + md5 + ".jpg"
 	return PutObject(key, data)
 }
 
 // 上传
-func (* minioUploader) PutObject(key string, d []byte) (string, error) {
+func (miu *minioUploader) PutObject(key string, d []byte) (string, error) {
 	client, err := getClient()
 	if err != nil {
 		return "", err
 	}
 	tepPath := Save(d)
 	defer os.Remove(tepPath)
-	n, err := client.FPutObject("bbs", key, tepPath, minio.PutObjectOptions{})
+	n, err := client.FPutObject(miu.Bucket, key, tepPath, minio.PutObjectOptions{})
 	logrus.Info(n)
 	if err != nil {
 		return "", err
 	}
-	return config.Conf.Minio.Host + key + "?token=", nil
+	return config.Uploader.Oss.Host + key + "?token=", nil
 }
 
 //将图片copy到oss
-func (* minioUploader)CopyImage(inputUrl string) (string, error) {
+func (*minioUploader) CopyImage(inputUrl string) (string, error) {
 	data, err := download(inputUrl)
 	if err != nil {
 		return "", err
@@ -50,7 +49,7 @@ func (* minioUploader)CopyImage(inputUrl string) (string, error) {
 }
 
 // 下载
-func (* minioUploader)download(url string) ([]byte, error) {
+func (*minioUploader) download(url string) ([]byte, error) {
 	rsp, err := resty.New().R().Get(url)
 	if err != nil {
 		return nil, err
@@ -112,7 +111,7 @@ func getObjectKey(u string) string {
 
 func getClient() (*minio.Client, error) {
 	//client,err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
-	client, err := minio.New(config.Conf.Minio.Endpoint, config.Conf.Minio.AccessId, config.Conf.Minio.AccessSecret, false)
+	client, err := minio.New(config.Uploader.Oss.Endpoint, config.Uploader.Oss.AccessId, config.Uploader.Oss.AccessSecret, false)
 	if err != nil {
 		return nil, err
 	}

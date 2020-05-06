@@ -33,17 +33,9 @@ type Config struct {
 
 	// 阿里云oss配置
 
-	Minio struct {
-		Host         string `yaml:"Host"`
-		Bucket       string `yaml:"Bucket"`
-		Endpoint     string `yaml:"Endpoint"`
-		AccessId     string `yaml:"AccessId"`
-		AccessSecret string `yaml:"AccessSecret"`
-	} `yaml:"Minio"`
-
 	Uploader struct {
-		Enable    string `yaml:"Enable"`
-		AliyunOss struct {
+		Enable string `yaml:"Enable"`
+		Oss    struct {
 			Host          string `yaml:"Host"`
 			Bucket        string `yaml:"Bucket"`
 			Endpoint      string `yaml:"Endpoint"`
@@ -53,13 +45,12 @@ type Config struct {
 			StyleAvatar   string `yaml:"StyleAvatar"`
 			StylePreview  string `yaml:"StylePreview"`
 			StyleDetail   string `yaml:"StyleDetail"`
-		} `yaml:"AliyunOss"`
+		} `yaml:"Oss"`
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`
 		} `yaml:"Local"`
 	} `yaml:"Uploader"`
-
 
 	// 百度ai
 	BaiduAi struct {
