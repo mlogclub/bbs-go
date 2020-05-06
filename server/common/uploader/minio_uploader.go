@@ -114,7 +114,7 @@ func (mi *minioUploader) getClient() (*minio.Client, error) {
 	//client,err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 	client, err := minio.New(config.Conf.Uploader.Minio.Endpoint, config.Conf.Uploader.Minio.AccessId, config.Conf.Uploader.Minio.AccessSecret, false)
 	if err != nil {
-		print(nil)
+		print(err)
 		return nil, err
 	}
 	mi.Bucket=config.Conf.Uploader.Minio.Bucket
