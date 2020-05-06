@@ -35,7 +35,7 @@ type Config struct {
 
 	Uploader struct {
 		Enable string `yaml:"Enable"`
-		Oss    struct {
+		AliyunOss    struct {
 			Host          string `yaml:"Host"`
 			Bucket        string `yaml:"Bucket"`
 			Endpoint      string `yaml:"Endpoint"`
@@ -45,7 +45,14 @@ type Config struct {
 			StyleAvatar   string `yaml:"StyleAvatar"`
 			StylePreview  string `yaml:"StylePreview"`
 			StyleDetail   string `yaml:"StyleDetail"`
-		} `yaml:"Oss"`
+		} `yaml:"AliyunOss"`
+		Minio struct{
+			Host          string `yaml:"Host"`
+			Bucket        string `yaml:"Bucket"`
+			Endpoint      string `yaml:"Endpoint"`
+			AccessId      string `yaml:"AccessId"`
+			AccessSecret  string `yaml:"AccessSecret"`
+		}
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`
