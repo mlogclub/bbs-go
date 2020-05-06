@@ -1,4 +1,4 @@
-Env: prod # 环境，线上环境：prod、测试环境：dev
+Env: dev # 环境，线上环境：prod、测试环境：dev
 BaseUrl: http://www.stonelan.com
 Port: 8082 # 端口
 LogFile: /data/bbs-go.log # 日志文件
