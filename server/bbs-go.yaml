@@ -2,7 +2,7 @@ Env: dev # 环境，线上环境：prod、测试环境：dev
 BaseUrl: http://www.stonelan.com
 Port: 8082 # 端口
 LogFile: /data/bbs-go.log # 日志文件
-ShowSql: true # 是否打印sql
+ShowSql: false # 是否打印sql
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 
 # 数据库连接
