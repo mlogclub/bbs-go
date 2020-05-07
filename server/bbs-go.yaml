@@ -34,7 +34,7 @@ Uploader:
     StyleDetail: 详情图片样式名称
   # minio 对象存储
   Minio:
-    Host: /minio/download/bbs/
+    Host: http://minio.ngrok.stonelan.com:8080/minio/download/bbs/
     Bucket: bbs
     Endpoint: minio.default.svc:9000
     AccessId: admin
