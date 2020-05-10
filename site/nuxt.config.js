@@ -108,7 +108,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://localhost:8082'
+    '/api/': 'http://bbs-server.bbs.svc:8082'
     // '/api/': 'https://mlog.club'
   },
 

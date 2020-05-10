@@ -1,0 +1,225 @@
+.content {
+  pre {
+    margin: 10px 0;
+    padding: 0 !important;
+    overflow: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    // background: #272822;
+    // color: #ddd;
+    // code {
+    //   display: block;
+    //   overflow-x: auto;
+    //   padding: 0.5em;
+    //   background: #272822;
+    //   color: #ddd;
+    // }
+  }
+}
+
+// .hljs {
+//   overflow-x: none;
+// }
+
+// pre, .highlight {
+//   background: #23241f;
+//   margin: 10px 0;
+//   padding: 2px 10px;
+//   overflow: auto;
+//   font-size: 13px;
+//   color: #4d4d4c;
+//   line-height: 1.5;
+// }
+
+// pre {
+//   code {
+//     background: none;
+//     text-shadow: none;
+//     padding: 0;
+//   }
+// }
+
+// blockquote {
+//   padding: 10px 15px;
+//   margin: 0 0 20px;
+//   border: 1px dotted #eeeeee;
+//   border-left: 3px solid #eeeeee;
+//   background-color: #fbfbfb;
+// }
+
+// blockquote p:last-child,
+// blockquote ul:last-child,
+// blockquote ol:last-child {
+//   margin-bottom: 0;
+// }
+
+// blockquote footer,
+// blockquote small,
+// blockquote .small {
+//   display: block;
+//   font-size: 80%;
+//   line-height: 1.42857;
+//   color: #777777;
+// }
+
+// blockquote footer:before,
+// blockquote small:before,
+// blockquote .small:before {
+//   content: '\2014 \00A0';
+// }
+
+// .blockquote-reverse,
+// blockquote.pull-right {
+//   padding-right: 15px;
+//   padding-left: 0;
+//   border-right: 5px solid #eeeeee;
+//   border-left: 0;
+//   text-align: right;
+// }
+
+// .blockquote-reverse footer:before,
+// .blockquote-reverse small:before,
+// .blockquote-reverse .small:before,
+// blockquote.pull-right footer:before,
+// blockquote.pull-right small:before,
+// blockquote.pull-right .small:before {
+//   content: '';
+// }
+
+// .blockquote-reverse footer:after,
+// .blockquote-reverse small:after,
+// .blockquote-reverse .small:after,
+// blockquote.pull-right footer:after,
+// blockquote.pull-right small:after,
+// blockquote.pull-right .small:after {
+//   content: '\00A0 \2014';
+// }
+
+// .markdown-body h1,
+// .markdown-body h2,
+// .markdown-body h3,
+// .markdown-body h4,
+// .markdown-body h5,
+// .markdown-body h6 {
+//   margin-top: 24px;
+//   margin-bottom: 16px;
+//   font-weight: 600;
+//   line-height: 1.25;
+// }
+
+// .markdown-body {
+//   h1 {
+//     padding-bottom: 0.3em;
+//     font-size: 2em;
+//     border-bottom: 1px solid #f2f2f2;
+//   }
+
+//   h2 {
+//     padding-bottom: 0.3em;
+//     font-size: 1.5em;
+//     border-bottom: 1px solid #f2f2f2;
+//   }
+
+//   a {
+//     color: #2196f3;
+//     text-decoration: none;
+//   }
+// }
+
+// .markdown-body a:focus,
+// .markdown-body a:hover {
+//   color: #0a6ebd;
+//   text-decoration: none;
+// }
+
+// .markdown-body ul,
+// .markdown-body ol {
+//   padding-left: 0;
+//   margin-left: 20px;
+// }
+
+pre .deletion {
+  background: #800000;
+}
+
+pre .addition {
+  background: #008000;
+}
+
+pre .meta {
+  color: #c9c;
+}
+
+pre .comment {
+  color: #999;
+}
+
+pre .variable,
+pre .attribute,
+pre .tag,
+pre .name,
+pre .regexp,
+pre .ruby .constant,
+pre .xml .tag .title,
+pre .xml .pi,
+pre .xml .doctype,
+pre .html .doctype,
+pre .css .id,
+pre .css .class,
+pre .css .pseudo {
+  color: #f2777a;
+}
+
+pre .number,
+pre .preprocessor,
+pre .built_in,
+pre .builtin-name,
+pre .literal,
+pre .params,
+pre .constant,
+pre .command {
+  color: #f99157;
+  background-color: unset;
+  border-radius: unset;
+  font-size: unset;
+  padding: unset;
+  margin: unset;
+  height: unset;
+  min-width: unset;
+}
+
+pre .ruby .class .title,
+pre .css .rules .attribute,
+pre .string,
+pre .symbol,
+pre .value,
+pre .inheritance,
+pre .header,
+pre .ruby .symbol,
+pre .xml .cdata,
+pre .special,
+pre .formula {
+  color: #9c9;
+}
+
+pre .title,
+pre .css .hexcolor {
+  color: #6cc;
+  font-size: unset;
+}
+
+pre .function,
+pre .python .decorator,
+pre .python .title,
+pre .ruby .function .title,
+pre .ruby .title .keyword,
+pre .perl .sub,
+pre .javascript .title,
+pre .coffeescript .title {
+  color: #69c;
+}
+
+pre .keyword,
+pre .javascript .function {
+  color: #c9c;
+}

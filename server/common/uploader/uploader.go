@@ -3,8 +3,6 @@ package uploader
 import (
 	"sync"
 
-	"github.com/mlogclub/simple"
-
 	"bbs-go/common/config"
 )
 
@@ -20,6 +18,7 @@ var (
 		bucket: nil,
 	}
 	local = &localUploader{}
+	miuploader= &minioUploader{}
 )
 
 func PutImage(data []byte) (string, error) {
@@ -35,11 +34,15 @@ func CopyImage(originUrl string) (string, error) {
 }
 
 func getUploader() uploader {
+
+
 	enable := config.Conf.Uploader.Enable
-	if simple.EqualsIgnoreCase(enable, "aliyun") || simple.EqualsIgnoreCase(enable, "oss") ||
-		simple.EqualsIgnoreCase(enable, "aliyunOss") {
+	if (enable=="Aliyun") {
 		return aliyun
-	} else {
+	}else if (enable=="Minio"){
+println("get uploader minio")
+		return  miuploader
+	}	else {
 		return local
 	}
 }

@@ -32,9 +32,10 @@ type Config struct {
 	} `yaml:"QQConnect"`
 
 	// 阿里云oss配置
+
 	Uploader struct {
-		Enable    string `yaml:"Enable"`
-		AliyunOss struct {
+		Enable string `yaml:"Enable"`
+		AliyunOss    struct {
 			Host          string `yaml:"Host"`
 			Bucket        string `yaml:"Bucket"`
 			Endpoint      string `yaml:"Endpoint"`
@@ -45,6 +46,13 @@ type Config struct {
 			StylePreview  string `yaml:"StylePreview"`
 			StyleDetail   string `yaml:"StyleDetail"`
 		} `yaml:"AliyunOss"`
+		Minio struct{
+			Host          string `yaml:"Host"`
+			Bucket        string `yaml:"Bucket"`
+			Endpoint      string `yaml:"Endpoint"`
+			AccessId      string `yaml:"AccessId"`
+			AccessSecret  string `yaml:"AccessSecret"`
+		} `yaml:"Minio"`
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`
@@ -77,13 +85,16 @@ type Config struct {
 func InitConfig(filename string) {
 	yamlFile, err := ioutil.ReadFile(filename)
 	if err != nil {
-		logrus.Error(err)
+
+		println(err.Error())
 		return
 	}
 
 	Conf = &Config{}
 	err = yaml.Unmarshal(yamlFile, Conf)
+	println(Conf.Uploader.Minio.Host)
 	if err != nil {
+		println(err.Error())
 		logrus.Error(err)
 	}
 }

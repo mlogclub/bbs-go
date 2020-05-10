@@ -10,7 +10,9 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
+
 	"github.com/mlogclub/simple/markdown"
+
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -135,9 +137,11 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 	return ret.String(), nil
 }
 
+
 func (a *ai) AnalyzeMarkdown(title, markdownStr string) (*AiAnalyzeRet, error) {
 	content, _ := markdown.New(markdown.SummaryLen(0)).Run(markdownStr)
 	return a.AnalyzeHtml(title, content)
+
 }
 
 func (a *ai) AnalyzeHtml(title, html string) (*AiAnalyzeRet, error) {

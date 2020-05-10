@@ -11,7 +11,7 @@ import (
 	"github.com/issue9/identicon"
 )
 
-const DefaultAvatar = "https://file.mlog.club/images/default-avatar/default.png"
+const DefaultAvatar = "http://minio.ngrok.stonelan.com:8080/minio/download/bbs/images/05a6270811c89f96726bc4f25c3db0f8.jpeg?token="
 
 var (
 	err                   error

@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"bbs-go/common/uploader"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/uploader"
 )
 
 type Generator struct {
@@ -68,15 +68,19 @@ func (sm *Generator) Finalize() {
 
 func (sm *Generator) WriteIndex(sitemapLocs []IndexURL) string {
 	sitemapPath := sm.opts.SitemapIndexPathInPublic(SitemapXmlExt)
+
 	sitemapIndexLoc := write(sitemapPath, IndexXmlContent(sitemapLocs))
 	PingSearchEngines(sitemapIndexLoc)
 	return sitemapIndexLoc
+
 }
 
 // write sitemap and index to aliyun oss
 func write(path, xml string) (sitemapUrl string) {
 	if len(xml) > 0 {
+
 		sitemapUrl, _ = uploader.PutObject(path, []byte(xml))
+
 		logrus.Info("Upload sitemap success, " + sitemapUrl)
 	}
 	return
