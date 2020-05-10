@@ -94,13 +94,24 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
+func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string, pollOptions []string, question string) (*model.Topic, *simple.CodeError) {
 	if len(title) == 0 {
 		return nil, simple.NewErrorMsg("标题不能为空")
 	}
 
 	if simple.RuneLen(title) > 128 {
 		return nil, simple.NewErrorMsg("标题长度不能超过128")
+	}
+
+	if pollOptions != nil {
+		if len(question) == 0 {
+			return nil, simple.NewErrorMsg("投票选项不能为空")
+		}
+		for _, option := range pollOptions {
+			if option == "" {
+				return nil, simple.NewErrorMsg("投票选项不能为空")
+			}
+		}
 	}
 
 	if nodeId <= 0 {
@@ -131,7 +142,18 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		if err != nil {
 			return err
 		}
-
+		if pollOptions != nil {
+			for index, option := range pollOptions {
+				pollOptionsToWrite := &model.PollOption{
+					TopicId:       topic.Id,
+					OptionId:      int16(index),
+					OptionContent: option,
+					Question:      question,
+					CreateTime:    now,
+				}
+				repositories.PollOptionRepository.Create(tx, pollOptionsToWrite)
+			}
+		}
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})

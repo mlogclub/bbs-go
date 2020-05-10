@@ -40,7 +40,9 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
 	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
 	tags := simple.FormValueStringArray(c.Ctx, "tags")
-	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
+	polls := simple.FormValueStringArray(c.Ctx, "polls")
+	question := simple.FormValue(c.Ctx, "question")
+	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content, polls, question)
 	if err != nil {
 		return simple.JsonError(err)
 	}
