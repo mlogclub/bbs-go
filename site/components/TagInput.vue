@@ -7,8 +7,8 @@
           >{{ tag
           }}<i
             :data-name="tag"
-            @click="clickRemoveTag"
             class="iconfont icon-close"
+            @click="clickRemoveTag"
         /></span>
       </span>
     </div>
@@ -22,7 +22,9 @@
       "
       @input="autocomplete"
       @keydown.delete="removeTag"
+      class="input"
       @keydown.enter="addTag"
+      type="text"
       @keydown.32="addTag"
       @keydown.186="addTag"
       @keydown.188="addTag"
@@ -32,8 +34,6 @@
       @focus="openRecommendTags"
       @blur="closeRecommendTags"
       @click="openRecommendTags"
-      class="input"
-      type="text"
     />
     <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
       <div class="tags-container">
@@ -42,9 +42,9 @@
             v-for="(item, index) in autocompleteTags"
             :key="item"
             :class="{ active: index === selectIndex }"
+            class="tag-item"
             @click="selectTag(index)"
             v-text="item"
-            class="tag-item"
           />
         </section>
       </div>
@@ -54,15 +54,15 @@
         <div class="header">
           <span>推荐标签</span>
           <span class="close-recommend"
-            ><i @click="closeRecommendTags" class="iconfont icon-close"
+            ><i class="iconfont icon-close" @click="closeRecommendTags"
           /></span>
         </div>
         <a
           v-for="tag in recommendTags"
           :key="tag"
+          class="tag-item"
           @click="addRecommendTag(tag)"
           v-text="tag"
-          class="tag-item"
         />
       </div>
     </div>

@@ -15,9 +15,9 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
-            @change="list"
             clearable
             placeholder="请选择状态"
+            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
@@ -25,7 +25,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -57,8 +57,8 @@
                 >
                 <a
                   v-if="item.status !== 1"
-                  @click="deleteSubmit(item)"
                   class="action-item btn"
+                  @click="deleteSubmit(item)"
                   >删除</a
                 >
                 <a
@@ -69,8 +69,8 @@
                 >
                 <a
                   v-if="item.status === 2"
-                  @click="PendingSubmit(item)"
                   class="action-item btn"
+                  @click="PendingSubmit(item)"
                   >审核</a
                 >
               </div>
@@ -88,9 +88,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-        layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
   </section>
