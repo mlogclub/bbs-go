@@ -1,8 +1,0 @@
-# Generated test captchas
-capgen/*.png
-capgen/*.wav
-
-# Programs
-capgen/capgen
-cangensounds/cangensounds
-capexample/capexample
