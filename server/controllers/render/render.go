@@ -565,7 +565,7 @@ func BuildHtmlContent(htmlContent string) string {
 		}
 
 		// 处理图片样式
-		HandleOssImageStyleDetail(src)
+		src = HandleOssImageStyleDetail(src)
 
 		// 处理lazyload
 		selection.SetAttr("data-src", src)
