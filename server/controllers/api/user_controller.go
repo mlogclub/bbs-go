@@ -18,6 +18,18 @@ type UserController struct {
 	Ctx iris.Context
 }
 
+// func (c *UserController) GetFuck() *simple.JsonResult {
+// 	go func() {
+// 		dateFrom := simple.WithTimeAsStartOfDay(time.Now())
+// 		dateTo := dateFrom.Add(time.Hour * 24)
+//
+// 		services.SitemapService.GenerateMisc()
+// 		services.SitemapService.GenerateUser()
+// 		services.SitemapService.Generate(simple.Timestamp(dateFrom), simple.Timestamp(dateTo))
+// 	}()
+// 	return simple.JsonSuccess()
+// }
+
 // 获取当前登录用户
 func (c *UserController) GetCurrent() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)

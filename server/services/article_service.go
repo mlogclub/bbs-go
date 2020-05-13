@@ -255,7 +255,21 @@ func (s *articleService) GetUserNewestArticles(userId int64) []model.Article {
 }
 
 // 倒序扫描
-func (s *articleService) ScanDesc(dateFrom, dateTo int64, cb ScanArticleCallback) {
+func (s *articleService) ScanDesc(cb ScanArticleCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+			Lt("id", cursor).Desc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		cb(list)
+	}
+}
+
+// 倒序扫描
+func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").

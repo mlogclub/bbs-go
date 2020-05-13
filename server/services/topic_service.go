@@ -299,7 +299,21 @@ func (s *topicService) GenerateRss() {
 }
 
 // 倒序扫描
-func (s *topicService) ScanDesc(dateFrom, dateTo int64, cb ScanTopicCallback) {
+func (s *topicService) ScanDesc(cb ScanTopicCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+			Desc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		cb(list)
+	}
+}
+
+// 倒序扫描
+func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, cb ScanTopicCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).

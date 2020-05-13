@@ -97,7 +97,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	})
 
 	// topics
-	TopicService.ScanDesc(dateFrom, dateTo, func(topics []model.Topic) {
+	TopicService.ScanDescWithDate(dateFrom, dateTo, func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == model.StatusOk {
 				sm.AddURL(sitemap.URL{
@@ -111,7 +111,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	})
 
 	// articles
-	ArticleService.ScanDesc(dateFrom, dateTo, func(articles []model.Article) {
+	ArticleService.ScanDescWithDate(dateFrom, dateTo, func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == model.StatusOk {
 				sm.AddURL(sitemap.URL{
@@ -125,7 +125,7 @@ func (s *sitemapService) Generate(dateFrom, dateTo int64) {
 	})
 
 	// projects
-	ProjectService.ScanDesc(dateFrom, dateTo, func(projects []model.Project) {
+	ProjectService.ScanDescWithDate(dateFrom, dateTo, func(projects []model.Project) {
 		for _, project := range projects {
 			sm.AddURL(sitemap.URL{
 				Loc:        urls.ProjectUrl(project.Id),

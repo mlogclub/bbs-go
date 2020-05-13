@@ -94,7 +94,20 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 	return project, nil
 }
 
-func (s *projectService) ScanDesc(dateFrom, dateTo int64, callback ProjectScanCallback) {
+func (s *projectService) ScanDesc(callback ProjectScanCallback) {
+	var cursor int64 = math.MaxInt64
+	for {
+		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+			Desc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		callback(list)
+	}
+}
+
+func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback ProjectScanCallback) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
