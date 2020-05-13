@@ -102,11 +102,11 @@ func InitIris() {
 		}
 	})
 
-	//if uploader is set to local, then we should start a static file server
-	if config.Conf.Uploader.Enable == "local"{
+	// if uploader is set to local, then we should start a static file server
+	if config.Conf.Uploader.Enable == "local" {
 		fileServer := iris.FileServer(config.Conf.Uploader.Local.Path)
 		h := iris.StripPrefix("", fileServer)
-		app.Get(  "/images/{f:path}", h)
+		app.Get("/images/{f:path}", h)
 	}
 
 	server := &http.Server{Addr: ":" + config.Conf.Port}
