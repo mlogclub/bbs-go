@@ -146,7 +146,7 @@ go mod download
 配置好数据库链接后，`bbs-go`在启动的时候会自动建表，所以我们无需手动建表，但是有些数据是需要提前初始化的，例如：管理员用户，基本配置，所以我们需要执行下面sql脚本进行数据初始化：
 
 ```sql
-​```sql
+
 -- 初始化用户表
 CREATE TABLE IF NOT EXISTS `t_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -170,7 +170,6 @@ CREATE TABLE IF NOT EXISTS `t_user` (
 -- 初始化用户数据（用户名：admin、密码：123456）
 INSERT INTO `t_user`(`id`, `username`, `nickname`, `avatar`, `email`, `password`, `status`, `create_time`, `update_time`, `roles`, `type`, `description`) VALUES (1, 'admin', '管理员', '', '', '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS', 0, 1555419028975, 1555419028975, '管理员', 0, '轻轻地我走了，正如我轻轻的来。');
 
-
 -- 初始化系统配置表
 CREATE TABLE IF NOT EXISTS `t_sys_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -190,7 +189,6 @@ insert into t_sys_config(`key`, `value`, `name`, `description`, `create_time`, `
     ('siteDescription', 'bbs-go，基于Go语言的开源社区系统', '站点描述', '站点描述', 1555419028975, 1555419028975),
     ('siteKeywords', 'bbs-go', '站点关键字', '站点关键字', 1555419028975, 1555419028975),
     ('siteNavs', '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]', '站点导航', '站点导航', 1555419028975, 1555419028975);
-​```
 ```
 
 #### 配置server模块
