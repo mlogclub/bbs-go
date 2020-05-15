@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{}, &Sitemap{},
-	&UserScore{}, &UserScoreLog{},
+	&UserScore{}, &UserScoreLog{}, &PollOption{}, &PollAnswer{},
 }
 
 type Model struct {
@@ -275,4 +275,23 @@ type UserScoreLog struct {
 	Type        int    `json:"type" form:"type"`                                                        // 类型(增加、减少)
 	Score       int    `json:"score" form:"score"`                                                      // 积分
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                            // 创建时间
+}
+
+// 投票选项
+type PollOption struct {
+	Model
+	TopicId       int64  `gorm:"not null;index:idx_topic_id;" json:"topicId" form:"topicId"`    // 附属话题编号
+	OptionId      int16  `gorm:"not null;index:idx_option_id;" json:"optionId" form:"optionId"` // 投票选项编号
+	OptionContent string `gorm:"type:text;not null" json:"optionContent" form:"optionContent"`  // 投票内容
+	Question      string `gorm:"type:text;not null" json:"question" form:"question"`            // 投票内容
+	CreateTime    int64  `gorm:"not null" json:"createTime" form:"createTime"`                  // 创建时间
+}
+
+// 投票回答
+type PollAnswer struct {
+	Model
+	TopicId      int64 `gorm:"not null;index:idx_topic_id;" json:"topicId" form:"topicId"`                  // 附属话题编号
+	PollUserId   int64 `gorm:"not null;index:idx_poll_user_id;" json:"pollUserId" form:"pollUserId"`        // 投票用户编号
+	PollOptionId int16 `gorm:"not null;index:idx_Poll_option_id;" json:"optionContent" form:"pollOptionId"` // 投票内容
+	CreateTime   int64 `gorm:"not null" json:"createTime" form:"createTime"`                                // 创建时间
 }

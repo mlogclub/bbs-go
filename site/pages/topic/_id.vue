@@ -85,8 +85,8 @@
                   <div class="like">
                     <span
                       :class="{ liked: topic.liked }"
-                      @click="like(topic)"
                       class="like-btn"
+                      @click="like(topic)"
                     >
                       <i class="iconfont icon-like" />
                     </span>
@@ -117,20 +117,28 @@
                   v-html="topic.content"
                 ></div>
               </div>
-
+              <!-- 投票 -->
+              <div v-if="showPoll">
+                <vue-poll
+                  :is="vuePollCom"
+                  v-bind="options"
+                  :final-results="voted"
+                  @addvote="addVote"
+                />
+              </div>
               <div class="topic-actions">
                 <div
                   :class="{ active: favorited }"
-                  @click="addFavorite(topic.topicId)"
                   class="action favorite"
+                  @click="addFavorite(topic.topicId)"
                 >
                   <i class="iconfont icon-favorite" />
                 </div>
                 <span class="split"></span>
                 <div
                   :class="{ active: topic.liked }"
-                  @click="like(topic)"
                   class="action like"
+                  @click="like(topic)"
                 >
                   <i class="iconfont icon-like" />
                 </div>
@@ -208,11 +216,11 @@
             <adsbygoogle ad-slot="1742173616" />
           </div>
 
-          <div ref="toc" v-if="topic.toc" class="widget no-bg toc">
+          <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
             <div class="widget-header">
               目录
             </div>
-            <div v-html="topic.toc" class="widget-content" />
+            <div class="widget-content" v-html="topic.toc" />
           </div>
         </div>
       </div>
@@ -226,7 +234,9 @@ import Comment from '~/components/Comment'
 
 export default {
   components: {
-    Comment
+    Comment,
+    // eslint-disable-next-line vue/no-unused-components
+    Vuepoll: () => import('vue-poll')
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -240,7 +250,7 @@ export default {
       return
     }
 
-    const [favorited, commentsPage, likeUsers] = await Promise.all([
+    const [favorited, commentsPage, likeUsers, polls] = await Promise.all([
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
@@ -253,14 +263,28 @@ export default {
           entityId: params.id
         }
       }),
-      $axios.get('/api/topic/recentlikes/' + params.id)
+      $axios.get('/api/topic/recentlikes/' + params.id),
+      $axios.get('/api/poll/' + params.id)
     ])
 
     return {
       topic,
       commentsPage,
       favorited: favorited.favorited,
-      likeUsers
+      likeUsers,
+      polls
+    }
+  },
+  data() {
+    return {
+      postForm: {},
+      options: {
+        question: '',
+        answers: []
+      },
+      vuePollCom: '',
+      showPoll: false,
+      voted: false
     }
   },
   computed: {
@@ -272,8 +296,58 @@ export default {
       )
     }
   },
-  mounted() {},
+  beforeCreate() {
+    this.$nextTick(function() {
+      this.vuePollCom = 'Vuepoll'
+    })
+  },
+  mounted() {
+    this.loadPollOptions()
+  },
   methods: {
+    async addVote(obj) {
+      try {
+        await this.$axios.post('/api/poll-answer/create', {
+          topicId: this.topic.topicId,
+          pollUserId: this.$store.state.user.current.id,
+          pollOptionId: obj.value
+        })
+      } catch (e) {
+        console.error(e)
+        this.$toast.error('投票失败：' + (e.message || e))
+      }
+    },
+    async loadPollOptions() {
+      if (this.polls.length > 0) {
+        try {
+          const voted = await this.$axios.get('/api/poll-answer/voted', {
+            params: {
+              topicId: this.topic.topicId,
+              pollUserId: this.$store.state.user.current.id
+            }
+          })
+          if (voted) {
+            this.voted = true
+          }
+          this.createPollOptions()
+          this.showPoll = true
+        } catch (e) {
+          // handle error
+          console.error(e)
+          this.$toast.error('加载投票失败：' + (e.message || e))
+        }
+      }
+    },
+    createPollOptions() {
+      this.options.question = this.polls[0].question
+      for (const poll of this.polls) {
+        this.options.answers.push({
+          value: poll.optionId,
+          text: poll.optionContent,
+          votes: poll.voteNumber
+        })
+      }
+    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {

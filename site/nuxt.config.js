@@ -70,7 +70,8 @@ export default {
     '~/plugins/axios',
     '~/plugins/bbs-go',
     { src: '~/plugins/infinite-scroll', ssr: false },
-    { src: '~/plugins/vue-lazyload', ssr: false }
+    { src: '~/plugins/vue-lazyload', ssr: false },
+    { src: '~/plugins/vue-poll.js', mode: 'client', ssr: false }
   ],
   /*
    ** Nuxt.js dev-modules

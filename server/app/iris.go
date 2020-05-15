@@ -69,6 +69,8 @@ func InitIris() {
 		m.Party("/link").Handle(new(api.LinkController))
 		m.Party("/captcha").Handle(new(api.CaptchaController))
 		m.Party("/spider").Handle(new(api.SpiderController))
+		m.Party("/poll").Handle(new(api.PollOptionController))
+		m.Party("/poll-answer").Handle(new(api.PollAnswerController))
 	})
 
 	// admin

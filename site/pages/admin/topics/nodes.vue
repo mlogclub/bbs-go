@@ -6,10 +6,10 @@
           <el-input v-model="filters.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleAdd" type="primary">新增</el-button>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -17,10 +17,10 @@
     <el-table
       v-loading="listLoading"
       :data="results"
-      @selection-change="handleSelectionChange"
       highlight-current-row
       border
       style="width: 100%;"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="编号"></el-table-column>
@@ -41,7 +41,7 @@
 
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
           >
         </template>
@@ -54,9 +54,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-        layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
     </div>
@@ -85,8 +85,8 @@
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
           :loading="addLoading"
-          @click.native="addSubmit"
           type="primary"
+          @click.native="addSubmit"
           >提交</el-button
         >
       </div>
@@ -127,8 +127,8 @@
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
           :loading="editLoading"
-          @click.native="editSubmit"
           type="primary"
+          @click.native="editSubmit"
           >提交</el-button
         >
       </div>

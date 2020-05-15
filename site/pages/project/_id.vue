@@ -27,8 +27,8 @@
 
           <div
             v-lazy-container="{ selector: 'img' }"
-            v-html="project.content"
             class="content"
+            v-html="project.content"
           ></div>
 
           <div class="footer">

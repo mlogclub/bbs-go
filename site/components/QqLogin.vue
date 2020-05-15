@@ -1,5 +1,5 @@
 <template>
-  <a :class="{ button: isButton }" @click="qqLogin" class="is-info">
+  <a :class="{ button: isButton }" class="is-info" @click="qqLogin">
     <i class="iconfont icon-qq" />&nbsp;
     <strong>{{ title }}</strong>
   </a>
