@@ -19,8 +19,6 @@ import (
 	"bbs-go/repositories"
 )
 
-type ScanUserCallback func(users []model.User)
-
 var UserService = newUserService()
 
 func newUserService() *userService {
@@ -86,7 +84,7 @@ func (s *userService) Delete(id int64) {
 }
 
 // Scan 扫描
-func (s *userService) Scan(cb ScanUserCallback) {
+func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
 	for {
 		list := repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
@@ -94,7 +92,7 @@ func (s *userService) Scan(cb ScanUserCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		callback(list)
 	}
 }
 

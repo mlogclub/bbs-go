@@ -19,8 +19,6 @@ import (
 	"bbs-go/services/cache"
 )
 
-type ScanTopicCallback func(topics []model.Topic)
-
 var TopicService = newTopicService()
 
 func newTopicService() *topicService {
@@ -299,29 +297,29 @@ func (s *topicService) GenerateRss() {
 }
 
 // 倒序扫描
-func (s *topicService) ScanDesc(cb ScanTopicCallback) {
+func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
-			Desc("id").Limit(1000))
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+			Lt("id", cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		callback(list)
 	}
 }
 
 // 倒序扫描
-func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, cb ScanTopicCallback) {
+func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
-			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		callback(list)
 	}
 }

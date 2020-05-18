@@ -24,8 +24,6 @@ import (
 	"bbs-go/model"
 )
 
-type ScanArticleCallback func(articles []model.Article)
-
 var ArticleService = newArticleService()
 
 func newArticleService() *articleService {
@@ -255,7 +253,7 @@ func (s *articleService) GetUserNewestArticles(userId int64) []model.Article {
 }
 
 // 倒序扫描
-func (s *articleService) ScanDesc(cb ScanArticleCallback) {
+func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
@@ -264,12 +262,12 @@ func (s *articleService) ScanDesc(cb ScanArticleCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		callback(list)
 	}
 }
 
 // 倒序扫描
-func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, cb ScanArticleCallback) {
+func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
@@ -278,7 +276,7 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, cb ScanArticle
 			break
 		}
 		cursor = list[len(list)-1].Id
-		cb(list)
+		callback(list)
 	}
 }
 

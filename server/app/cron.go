@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/services"
+	"bbs-go/services/sitemap"
 )
 
 func startSchedule() {
@@ -18,8 +19,8 @@ func startSchedule() {
 	})
 
 	// Generate sitemap
-	addCronFunc(c, "@every 30m", func() {
-		services.SitemapService.GenerateToday()
+	addCronFunc(c, "@every 2h", func() {
+		sitemap.Generate()
 	})
 
 	c.Start()

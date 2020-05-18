@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"bbs-go/model"
+	"bbs-go/services/sitemap"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -16,6 +17,13 @@ import (
 
 type ArticleController struct {
 	Ctx iris.Context
+}
+
+func (c *ArticleController) GetSitemap() *simple.JsonResult {
+	go func() {
+		sitemap.Generate()
+	}()
+	return simple.JsonSuccess()
 }
 
 func (c *ArticleController) GetBy(id int64) *simple.JsonResult {

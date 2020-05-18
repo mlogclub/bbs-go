@@ -5,6 +5,7 @@ go 1.14
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
 require (
+    github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.3+incompatible

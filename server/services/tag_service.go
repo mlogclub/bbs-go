@@ -10,8 +10,6 @@ import (
 	"bbs-go/services/cache"
 )
 
-type ScanTagCallback func(tags []model.Tag) bool
-
 var TagService = newTagService()
 
 func newTagService() *tagService {
@@ -102,7 +100,7 @@ func (s *tagService) GetTagInIds(tagIds []int64) []model.Tag {
 }
 
 // 扫描
-func (s *tagService) Scan(cb ScanTagCallback) {
+func (s *tagService) Scan(callback func(tags []model.Tag)) {
 	var cursor int64
 	for {
 		list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
@@ -110,8 +108,6 @@ func (s *tagService) Scan(cb ScanTagCallback) {
 			break
 		}
 		cursor = list[len(list)-1].Id
-		if !cb(list) {
-			break
-		}
+		callback(list)
 	}
 }

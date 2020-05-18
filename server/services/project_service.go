@@ -19,8 +19,6 @@ import (
 
 var ProjectService = newProjectService()
 
-type ProjectScanCallback func(projects []model.Project)
-
 func newProjectService() *projectService {
 	return &projectService{}
 }
@@ -94,7 +92,7 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 	return project, nil
 }
 
-func (s *projectService) ScanDesc(callback ProjectScanCallback) {
+func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
@@ -107,7 +105,7 @@ func (s *projectService) ScanDesc(callback ProjectScanCallback) {
 	}
 }
 
-func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback ProjectScanCallback) {
+func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
