@@ -39,7 +39,7 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 *技术栈*
 - Nuxt.js (https://nuxtjs.org) 基于 Vue 的服务端渲染框架
 - Element-UI (https://element.eleme.cn) 饿了么开源的基于 vue.js 的前端库
-- Vditor (https://github.com/b3log/vditor) Markdown 编辑器
+- Vditor (https://github.com/Vanessa219/vditor) Markdown 编辑器
 
 ## 功能预览
 
