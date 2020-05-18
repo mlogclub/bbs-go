@@ -579,24 +579,24 @@ func BuildHtmlContent(htmlContent string) string {
 }
 
 func HandleOssImageStyleAvatar(url string) string {
-	if config.Conf.Uploader.Enable != "aliyunOss" {
+	if config.Instance.Uploader.Enable != "aliyunOss" {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StyleAvatar)
+	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleAvatar)
 }
 
 func HandleOssImageStyleDetail(url string) string {
-	if config.Conf.Uploader.Enable != "aliyunOss" {
+	if config.Instance.Uploader.Enable != "aliyunOss" {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StyleDetail)
+	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleDetail)
 }
 
 func HandleOssImageStylePreview(url string) string {
-	if !simple.EqualsIgnoreCase(config.Conf.Uploader.Enable, "aliyunOss") {
+	if !simple.EqualsIgnoreCase(config.Instance.Uploader.Enable, "aliyunOss") {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Conf.Uploader.AliyunOss.StylePreview)
+	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StylePreview)
 }
 
 func HandleOssImageStyle(url, style string) string {
@@ -606,7 +606,7 @@ func HandleOssImageStyle(url, style string) string {
 	if !IsOssImageUrl(url) {
 		return url
 	}
-	sep := config.Conf.Uploader.AliyunOss.StyleSplitter
+	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
 	if simple.IsBlank(sep) {
 		return url
 	}
@@ -614,6 +614,6 @@ func HandleOssImageStyle(url, style string) string {
 }
 
 func IsOssImageUrl(url string) bool {
-	host := simple.ParseUrl(config.Conf.Uploader.AliyunOss.Host).GetURL().Host
+	host := simple.ParseUrl(config.Instance.Uploader.AliyunOss.Host).GetURL().Host
 	return strings.Contains(url, host)
 }

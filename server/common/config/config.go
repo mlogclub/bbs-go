@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var Conf *Config
+var Instance *Config
 
 type Config struct {
 	Env        string `yaml:"Env"`        // 环境：prod、dev
@@ -74,16 +74,11 @@ type Config struct {
 	} `yaml:"Smtp"`
 }
 
-func InitConfig(filename string) {
-	yamlFile, err := ioutil.ReadFile(filename)
-	if err != nil {
+func Init(filename string) {
+	Instance = &Config{}
+	if yamlFile, err := ioutil.ReadFile(filename); err != nil {
 		logrus.Error(err)
-		return
-	}
-
-	Conf = &Config{}
-	err = yaml.Unmarshal(yamlFile, Conf)
-	if err != nil {
+	} else if err = yaml.Unmarshal(yamlFile, Instance); err != nil {
 		logrus.Error(err)
 	}
 }

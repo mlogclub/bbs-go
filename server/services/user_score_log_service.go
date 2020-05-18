@@ -1,15 +1,16 @@
 package services
 
 import (
+	"github.com/mlogclub/simple"
+
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
 )
 
 var UserScoreLogService = newUserScoreLogService()
 
 func newUserScoreLogService() *userScoreLogService {
-	return &userScoreLogService {}
+	return &userScoreLogService{}
 }
 
 type userScoreLogService struct {
@@ -58,4 +59,3 @@ func (s *userScoreLogService) UpdateColumn(id int64, name string, value interfac
 func (s *userScoreLogService) Delete(id int64) {
 	repositories.UserScoreLogRepository.Delete(simple.DB(), id)
 }
-

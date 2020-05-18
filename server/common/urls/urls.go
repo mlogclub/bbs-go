@@ -15,7 +15,7 @@ func IsInternalUrl(href string) bool {
 	if IsAnchor(href) {
 		return true
 	}
-	u, err := url.Parse(config.Conf.BaseUrl)
+	u, err := url.Parse(config.Instance.BaseUrl)
 	if err != nil {
 		logrus.Error(err)
 		return false
@@ -29,7 +29,7 @@ func IsAnchor(href string) bool {
 }
 
 func AbsUrl(path string) string {
-	return config.Conf.BaseUrl + path
+	return config.Instance.BaseUrl + path
 }
 
 // 用户主页

@@ -34,8 +34,8 @@ type UserInfo struct {
 // params callback携带的参数
 func newOauthConfig(redirectUrl string) *oauth2.Config {
 	return &oauth2.Config{
-		ClientID:     config.Conf.Github.ClientID,
-		ClientSecret: config.Conf.Github.ClientSecret,
+		ClientID:     config.Instance.Github.ClientID,
+		ClientSecret: config.Instance.Github.ClientSecret,
 		RedirectURL:  redirectUrl,
 		Scopes:       []string{},
 		Endpoint: oauth2.Endpoint{
@@ -90,7 +90,7 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
-	redirectUrl := config.Conf.BaseUrl + "/user/github/callback"
+	redirectUrl := config.Instance.BaseUrl + "/user/github/callback"
 	if !common.IsProd() {
 		redirectUrl = "http://localhost:3000/user/github/callback"
 	}

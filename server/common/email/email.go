@@ -66,11 +66,11 @@ func SendTemplateEmail(to, subject, title, content, quoteContent, url string) {
 // 发送邮件
 func SendEmail(to string, subject, html string) {
 	var (
-		host      = config.Conf.Smtp.Host
-		port      = config.Conf.Smtp.Port
-		username  = config.Conf.Smtp.Username
-		password  = config.Conf.Smtp.Password
-		ssl       = config.Conf.Smtp.SSL
+		host      = config.Instance.Smtp.Host
+		port      = config.Instance.Smtp.Port
+		username  = config.Instance.Smtp.Username
+		password  = config.Instance.Smtp.Password
+		ssl       = config.Instance.Smtp.SSL
 		addr      = net.JoinHostPort(host, port)
 		auth      = smtp.PlainAuth("", username, password, host)
 		tlsConfig = &tls.Config{
@@ -80,7 +80,7 @@ func SendEmail(to string, subject, html string) {
 	)
 
 	e := email.NewEmail()
-	e.From = config.Conf.Smtp.Username
+	e.From = config.Instance.Smtp.Username
 	e.To = []string{to}
 	e.Subject = subject
 	e.HTML = []byte(html)

@@ -1,9 +1,10 @@
 package repositories
 
 import (
-	"bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
+
+	"bbs-go/model"
 )
 
 var TweetRepository = newTweetRepository()
@@ -87,4 +88,3 @@ func (r *tweetRepository) UpdateColumn(db *gorm.DB, id int64, name string, value
 func (r *tweetRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.Tweet{}, "id = ?", id)
 }
-

@@ -18,10 +18,10 @@ func PushUrls(urls []string) {
 	if urls == nil || len(urls) == 0 {
 		return
 	}
-	if len(config.Conf.BaiduSEO.Site) == 0 || len(config.Conf.BaiduSEO.Token) == 0 {
+	if len(config.Instance.BaiduSEO.Site) == 0 || len(config.Instance.BaiduSEO.Token) == 0 {
 		return
 	}
-	api := "http://data.zz.baidu.com/urls?site=" + config.Conf.BaiduSEO.Site + "&token=" + config.Conf.BaiduSEO.Token
+	api := "http://data.zz.baidu.com/urls?site=" + config.Instance.BaiduSEO.Site + "&token=" + config.Instance.BaiduSEO.Token
 	body := strings.Join(urls, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(api); err != nil {
 		logrus.Error(err)

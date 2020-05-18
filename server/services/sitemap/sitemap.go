@@ -30,7 +30,7 @@ var building = false
 
 // Generate
 func Generate() {
-	if config.Conf.Env != "prod" {
+	if config.Instance.Env != "prod" {
 		return
 	}
 	if building {
@@ -43,9 +43,9 @@ func Generate() {
 	}()
 
 	sm := stm.NewSitemap(0)
-	sm.SetDefaultHost(config.Conf.BaseUrl)                  // 网站host
-	sm.SetSitemapsHost(config.Conf.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
-	sm.SetSitemapsPath("sitemap")                           // sitemap存放目录
+	sm.SetDefaultHost(config.Instance.BaseUrl)                  // 网站host
+	sm.SetSitemapsHost(config.Instance.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	sm.SetSitemapsPath("sitemap")                               // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
 	sm.SetCompress(true)

@@ -31,8 +31,8 @@ var instance *ai
 func GetAi() *ai {
 	once.Do(func() {
 		instance = &ai{
-			ApiKey:    config.Conf.BaiduAi.ApiKey,
-			SecretKey: config.Conf.BaiduAi.SecretKey,
+			ApiKey:    config.Instance.BaiduAi.ApiKey,
+			SecretKey: config.Instance.BaiduAi.SecretKey,
 		}
 	})
 	return instance

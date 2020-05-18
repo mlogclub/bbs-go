@@ -21,7 +21,7 @@ func (local *localUploader) PutObject(key string, data []byte) (string, error) {
 	if err := os.MkdirAll("/", os.ModeDir); err != nil {
 		return "", err
 	}
-	c := config.Conf.Uploader.Local
+	c := config.Instance.Uploader.Local
 	filename := filepath.Join(c.Path, key)
 	if err := os.MkdirAll(filepath.Dir(filename), os.ModePerm); err != nil {
 		return "", err

@@ -275,7 +275,7 @@ func (s *topicService) GenerateRss() {
 	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
-		Link:        &feeds.Link{Href: config.Conf.BaseUrl},
+		Link:        &feeds.Link{Href: config.Instance.BaseUrl},
 		Description: siteDescription,
 		Author:      &feeds.Author{Name: siteTitle},
 		Created:     time.Now(),
@@ -285,14 +285,14 @@ func (s *topicService) GenerateRss() {
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_atom.xml"), atom, false)
+		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "topic_atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Conf.StaticPath, "topic_rss.xml"), rss, false)
+		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "topic_rss.xml"), rss, false)
 	}
 }
 

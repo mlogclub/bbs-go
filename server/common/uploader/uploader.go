@@ -35,7 +35,7 @@ func CopyImage(originUrl string) (string, error) {
 }
 
 func getUploader() uploader {
-	enable := config.Conf.Uploader.Enable
+	enable := config.Instance.Uploader.Enable
 	if simple.EqualsIgnoreCase(enable, "aliyun") || simple.EqualsIgnoreCase(enable, "oss") ||
 		simple.EqualsIgnoreCase(enable, "aliyunOss") {
 		return aliyun

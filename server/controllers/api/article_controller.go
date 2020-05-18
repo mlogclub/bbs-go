@@ -74,13 +74,13 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	if article.UserId != user.Id {
-		 if render.BuildUser(user).HasRole("管理员") {
-			 if article.Status != model.StatusPending {
-				 return simple.JsonErrorMsg("无权限")
-			 }
-		 } else {
-			 return simple.JsonErrorMsg("无权限")
-		 }
+		if render.BuildUser(user).HasRole("管理员") {
+			if article.Status != model.StatusPending {
+				return simple.JsonErrorMsg("无权限")
+			}
+		} else {
+			return simple.JsonErrorMsg("无权限")
+		}
 	}
 
 	tags := services.ArticleService.GetArticleTags(articleId)

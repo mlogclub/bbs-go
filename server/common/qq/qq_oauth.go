@@ -50,7 +50,7 @@ func AuthorizeUrl(params map[string]string) string {
 
 	return simple.ParseUrl("https://graph.qq.com/oauth2.0/authorize").
 		AddQuery("response_type", "code").
-		AddQuery("client_id", config.Conf.QQConnect.AppId).
+		AddQuery("client_id", config.Instance.QQConnect.AppId).
 		AddQuery("redirect_uri", redirectUrl).
 		AddQuery("state", state).
 		AddQuery("scope", "get_user_info").
@@ -70,8 +70,8 @@ func AuthorizationCode(code, state string) (*AccessToken, error) {
 
 	resp, err := resty.New().R().
 		SetQueryParam("grant_type", "authorization_code").
-		SetQueryParam("client_id", config.Conf.QQConnect.AppId).
-		SetQueryParam("client_secret", config.Conf.QQConnect.AppKey).
+		SetQueryParam("client_id", config.Instance.QQConnect.AppId).
+		SetQueryParam("client_secret", config.Instance.QQConnect.AppKey).
 		SetQueryParam("code", code).
 		SetQueryParam("redirect_uri", redirectUrl).
 		Get("https://graph.qq.com/oauth2.0/token")
@@ -125,7 +125,7 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	}
 	resp, err := resty.New().R().
 		SetQueryParam("access_token", accessToken).
-		SetQueryParam("oauth_consumer_key", config.Conf.QQConnect.AppId).
+		SetQueryParam("oauth_consumer_key", config.Instance.QQConnect.AppId).
 		SetQueryParam("openid", openid).
 		Get("https://graph.qq.com/user/get_user_info")
 	if err != nil {
@@ -165,7 +165,7 @@ func GetUserInfoByCode(code, state string) (*UserInfo, error) {
 
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
-	redirectUrl := config.Conf.BaseUrl + "/user/qq/callback"
+	redirectUrl := config.Instance.BaseUrl + "/user/qq/callback"
 	if !common.IsProd() {
 		redirectUrl = "http://localhost:3000/user/qq/callback"
 	}

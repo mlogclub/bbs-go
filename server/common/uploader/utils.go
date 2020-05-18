@@ -21,4 +21,3 @@ func download(url string) ([]byte, error) {
 	}
 	return rsp.Body(), nil
 }
-

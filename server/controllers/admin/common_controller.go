@@ -12,11 +12,11 @@ type CommonController struct {
 }
 
 func (c *CommonController) GetSysteminfo() *simple.JsonResult {
-    return simple.NewEmptyRspBuilder().
-    	Put("os", runtime.GOOS).
+	return simple.NewEmptyRspBuilder().
+		Put("os", runtime.GOOS).
 		Put("arch", runtime.GOARCH).
-    	Put("numCpu", runtime.NumCPU()).
+		Put("numCpu", runtime.NumCPU()).
 		Put("goroot", runtime.GOROOT()).
 		Put("goversion", runtime.Version()).
-    	JsonResult()
+		JsonResult()
 }
