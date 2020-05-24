@@ -81,7 +81,7 @@ func Generate() {
 	})
 
 	var (
-		dateFrom = simple.Timestamp(time.Now().Add(-time.Hour * 24 * 7))
+		dateFrom = simple.Timestamp(time.Now().AddDate(0, -1, 0))
 		dateTo   = simple.NowTimestamp()
 	)
 
