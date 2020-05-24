@@ -45,7 +45,7 @@ func Generate() {
 	sm := stm.NewSitemap(0)
 	sm.SetDefaultHost(config.Instance.BaseUrl)                  // 网站host
 	sm.SetSitemapsHost(config.Instance.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
-	sm.SetSitemapsPath("sitemap")                               // sitemap存放目录
+	sm.SetSitemapsPath("sitemap2")                              // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
 	sm.SetCompress(true)
@@ -80,7 +80,12 @@ func Generate() {
 		{"priority", 1.0},
 	})
 
-	services.ArticleService.ScanDesc(func(articles []model.Article) {
+	var (
+		dateFrom = simple.Timestamp(time.Now().Add(-time.Hour * 24 * 7))
+		dateTo   = simple.NowTimestamp()
+	)
+
+	services.ArticleService.ScanDescWithDate(dateFrom, dateTo, func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == model.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
@@ -88,12 +93,13 @@ func Generate() {
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
 					{"changefreq", changefreqDaily},
+					{"priority", 0.9},
 				})
 			}
 		}
 	})
 
-	services.TopicService.ScanDesc(func(topics []model.Topic) {
+	services.TopicService.ScanDescWithDate(dateFrom, dateTo, func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == model.StatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
@@ -101,12 +107,13 @@ func Generate() {
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.LastCommentTime)},
 					{"changefreq", changefreqDaily},
+					{"priority", 0.9},
 				})
 			}
 		}
 	})
 
-	services.ProjectService.ScanDesc(func(projects []model.Project) {
+	services.ProjectService.ScanDescWithDate(dateFrom, dateTo, func(projects []model.Project) {
 		for _, project := range projects {
 			sm.Add(stm.URL{
 				{"loc", urls.ProjectUrl(project.Id)},
