@@ -43,13 +43,14 @@
               <label class="label">验证码</label>
               <div class="control has-icons-left">
                 <div class="field is-horizontal">
-                  <div class="field" style="width:100%;">
+                  <div class="field">
                     <input
                       v-model="captchaCode"
                       @keyup.enter="submitLogin"
                       class="input"
                       type="text"
                       placeholder="验证码"
+                      style="max-width: 150px; margin-right: 20px;"
                     />
                     <span class="icon is-small is-left"
                       ><i class="iconfont icon-captcha"
@@ -156,7 +157,11 @@ export default {
     },
     async showCaptcha() {
       try {
-        const ret = await this.$axios.get('/api/captcha/request')
+        const ret = await this.$axios.get('/api/captcha/request', {
+          params: {
+            captchaId: this.captchaId || ''
+          }
+        })
         this.captchaId = ret.captchaId
         this.captchaUrl = ret.captchaUrl
       } catch (e) {

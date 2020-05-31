@@ -48,7 +48,7 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 		tags        = simple.FormValueStringArray(c.Ctx, "tags")
 	)
 
-	if !captcha.VerifyString(captchaId, captchaCode) {
+	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}
 

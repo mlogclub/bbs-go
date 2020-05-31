@@ -14,8 +14,16 @@ type CaptchaController struct {
 }
 
 func (c *CaptchaController) GetRequest() *simple.JsonResult {
-	captchaId := captcha.NewLen(4)
-	captchaUrl := urls.AbsUrl("/api/captcha/show?captchaId=" + captchaId)
+	captchaId := c.Ctx.FormValue("captchaId")
+	if simple.IsNotBlank(captchaId) { // reload
+		if !captcha.Reload(captchaId) {
+			// reload 失败，重新加载验证码
+			captchaId = captcha.NewLen(4)
+		}
+	} else {
+		captchaId = captcha.NewLen(4)
+	}
+	captchaUrl := urls.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + simple.UUID())
 	return simple.NewEmptyRspBuilder().
 		Put("captchaId", captchaId).
 		Put("captchaUrl", captchaUrl).

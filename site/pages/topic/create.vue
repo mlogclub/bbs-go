@@ -76,7 +76,9 @@
                 </span>
               </div>
               <div class="field">
-                <img :src="captchaUrl" style="height: 40px;" />
+                <a @click="showCaptcha">
+                  <img :src="captchaUrl" style="height: 40px;" />
+                </a>
               </div>
             </div>
 
@@ -87,7 +89,7 @@
                   :disabled="publishing"
                   @click="submitCreate"
                   class="button is-success"
-                  >发表主题</a
+                  >发表话题</a
                 >
               </div>
             </div>
@@ -154,6 +156,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    config() {
+      return this.$store.state.config.config
     }
   },
   mounted() {
@@ -194,18 +199,24 @@ export default {
           }
         })
       } catch (e) {
-        console.error(e)
+        await this.showCaptcha()
         this.publishing = false
         this.$toast.error('提交失败：' + (e.message || e))
       }
     },
     async showCaptcha() {
-      try {
-        const ret = await this.$axios.get('/api/captcha/request')
-        this.captchaId = ret.captchaId
-        this.captchaUrl = ret.captchaUrl
-      } catch (e) {
-        this.$toast.error(e.message || e)
+      if (this.config.topicCaptcha) {
+        try {
+          const ret = await this.$axios.get('/api/captcha/request', {
+            params: {
+              captchaId: this.captchaId || ''
+            }
+          })
+          this.captchaId = ret.captchaId
+          this.captchaUrl = ret.captchaUrl
+        } catch (e) {
+          this.$toast.error(e.message || e)
+        }
       }
     }
   },

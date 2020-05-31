@@ -126,6 +126,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
 		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
 		articlePending   = cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
+		topicCaptcha     = cache.SysConfigCache.GetValue(model.SysConfigTopicCaptcha)
 	)
 
 	var siteKeywordsArr []string
@@ -169,5 +170,6 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		ScoreConfig:      scoreConfig,
 		DefaultNodeId:    defaultNodeId,
 		ArticlePending:   strings.ToLower(articlePending) == "true",
+		TopicCaptcha:     strings.ToLower(topicCaptcha) == "true",
 	}
 }
