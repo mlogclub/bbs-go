@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bbs-go/common"
+	"github.com/dchest/captcha"
 	"math/rand"
 	"strings"
 
@@ -36,10 +38,20 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	title := strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
-	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
-	tags := simple.FormValueStringArray(c.Ctx, "tags")
+
+	var (
+		captchaId   = simple.FormValue(c.Ctx, "captchaId")
+		captchaCode = simple.FormValue(c.Ctx, "captchaCode")
+		nodeId      = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		title       = strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
+		content     = strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
+		tags        = simple.FormValueStringArray(c.Ctx, "tags")
+	)
+
+	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(captchaId, captchaCode) {
+		return simple.JsonError(common.CaptchaError)
+	}
+
 	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
 	if err != nil {
 		return simple.JsonError(err)

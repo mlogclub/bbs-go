@@ -24,4 +24,5 @@ type ConfigData struct {
 	ScoreConfig      ScoreConfig `json:"scoreConfig"`
 	DefaultNodeId    int64       `json:"defaultNodeId"`
 	ArticlePending   bool        `json:"articlePending"`
+	TopicCaptcha     bool        `json:"topicCaptcha"`
 }

@@ -12,10 +12,5 @@ const (
 	SysConfigScoreConfig      = "scoreConfig"      // 分数配置
 	SysConfigDefaultNodeId    = "defaultNodeId"    // 发帖默认节点
 	SysConfigArticlePending   = "articlePending"   // 是否开启文章审核
-)
-
-// 图片样式
-const (
-	ImageStyleAvatar = "avatar" // 头像样式
-	ImageStyleDetail = "detail" // 图片详情样式
+	SysConfigTopicCaptcha     = "topicCaptcha"     // 是否开启发帖验证码
 )

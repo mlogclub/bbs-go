@@ -37,8 +37,8 @@
                         v-for="node in nodes"
                         :key="node.nodeId"
                         :value="node.nodeId"
-                        >{{ node.name }}</option
-                      >
+                        >{{ node.name }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -62,6 +62,26 @@
               </div>
             </div>
 
+            <div v-if="captchaUrl" class="field is-horizontal">
+              <div class="field control has-icons-left">
+                <input
+                  v-model="captchaCode"
+                  class="input"
+                  type="text"
+                  placeholder="验证码"
+                  style="max-width: 150px; margin-right: 20px;"
+                />
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-captcha" />
+                </span>
+              </div>
+              <div class="field">
+                <a @click="showCaptcha">
+                  <img :src="captchaUrl" style="height: 40px;" />
+                </a>
+              </div>
+            </div>
+
             <div class="field is-grouped">
               <div class="control">
                 <a
@@ -69,7 +89,7 @@
                   :disabled="publishing"
                   @click="submitCreate"
                   class="button is-success"
-                  >发表主题</a
+                  >发表话题</a
                 >
               </div>
             </div>
@@ -122,6 +142,9 @@ export default {
   data() {
     return {
       publishing: false, // 当前是否正处于发布中...
+      captchaId: '',
+      captchaUrl: '',
+      captchaCode: '',
       postForm: {
         nodeId: 0,
         title: '',
@@ -133,35 +156,40 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    config() {
+      return this.$store.state.config.config
     }
   },
-  mounted() {},
+  mounted() {
+    this.showCaptcha()
+  },
   methods: {
     async submitCreate() {
-      const me = this
-      if (me.publishing) {
+      if (this.publishing) {
         return
       }
 
-      if (!me.postForm.title) {
+      if (!this.postForm.title) {
         this.$toast.error('请输入标题')
         return
       }
 
-      if (!me.postForm.nodeId) {
+      if (!this.postForm.nodeId) {
         this.$toast.error('请选择节点')
         return
       }
 
-      me.publishing = true
+      this.publishing = true
 
       try {
-        const me = this
         const topic = await this.$axios.post('/api/topic/create', {
-          nodeId: me.postForm.nodeId,
-          title: me.postForm.title,
-          content: me.postForm.content,
-          tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
+          captchaId: this.captchaId,
+          captchaCode: this.captchaCode,
+          nodeId: this.postForm.nodeId,
+          title: this.postForm.title,
+          content: this.postForm.content,
+          tags: this.postForm.tags ? this.postForm.tags.join(',') : ''
         })
         this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
@@ -171,9 +199,24 @@ export default {
           }
         })
       } catch (e) {
-        console.error(e)
-        me.publishing = false
+        await this.showCaptcha()
+        this.publishing = false
         this.$toast.error('提交失败：' + (e.message || e))
+      }
+    },
+    async showCaptcha() {
+      if (this.config.topicCaptcha) {
+        try {
+          const ret = await this.$axios.get('/api/captcha/request', {
+            params: {
+              captchaId: this.captchaId || ''
+            }
+          })
+          this.captchaId = ret.captchaId
+          this.captchaUrl = ret.captchaUrl
+        } catch (e) {
+          this.$toast.error(e.message || e)
+        }
       }
     }
   },
