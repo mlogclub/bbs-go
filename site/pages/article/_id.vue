@@ -135,11 +135,11 @@
         <!-- 展示广告 -->
         <adsbygoogle ad-slot="1742173616" />
 
-        <div v-if="newestArticles && newestArticles.length" class="widget">
-          <div class="widget-header">最新文章</div>
+        <div v-if="nearlyArticles && nearlyArticles.length" class="widget">
+          <div class="widget-header">近期文章</div>
           <div class="widget-content article-related">
             <ul>
-              <li v-for="a in newestArticles" :key="a.articleId">
+              <li v-for="a in nearlyArticles" :key="a.articleId">
                 <a
                   :href="'/article/' + a.articleId"
                   :title="a.title"
@@ -181,7 +181,7 @@ export default {
     const [
       commentsPage,
       favorited,
-      newestArticles,
+      nearlyArticles,
       relatedArticles
     ] = await Promise.all([
       $axios.get('/api/comment/list', {
@@ -196,7 +196,7 @@ export default {
           entityId: params.id
         }
       }),
-      $axios.get('/api/article/user/newest/' + article.user.id),
+      $axios.get('/api/article/nearly/' + article.articleId),
       $axios.get('/api/article/related/' + article.articleId)
     ])
 
@@ -224,7 +224,7 @@ export default {
     return {
       article,
       favorited: favorited.favorited,
-      newestArticles,
+      nearlyArticles,
       relatedArticles,
       commentsPage,
       keywords,

@@ -233,8 +233,14 @@ func (c *ArticleController) GetTagArticles() *simple.JsonResult {
 
 // 用户最新的文章
 func (c *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult {
-	newestArticles := services.ArticleService.GetUserNewestArticles(userId)
-	return simple.JsonData(render.BuildSimpleArticles(newestArticles))
+	articles := services.ArticleService.GetUserNewestArticles(userId)
+	return simple.JsonData(render.BuildSimpleArticles(articles))
+}
+
+// 近期文章
+func (c *ArticleController) GetNearlyBy(articleId int64) *simple.JsonResult {
+	articles := services.ArticleService.GetNearlyArticles(articleId)
+	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
 // 相关文章

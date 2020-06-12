@@ -246,10 +246,22 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 	return s.GetArticleInIds(articleIds)
 }
 
-// 最新文章
+// 用户最新文章
 func (s *articleService) GetUserNewestArticles(userId int64) []model.Article {
 	return repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
 		userId, model.StatusOk).Desc("id").Limit(10))
+}
+
+// 近期文章
+func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
+	articles := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))
+	var ret []model.Article
+	for _, article := range articles {
+		if article.Status == model.StatusOk {
+			ret = append(ret, article)
+		}
+	}
+	return ret
 }
 
 // 倒序扫描
