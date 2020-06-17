@@ -49,10 +49,10 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 
 ## Contributors
 
-<!-- ### Code Contributors
+### Code Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/mlogclub/bbs-go/graphs/contributors"><img src="https://opencollective.com/bbs-go/contributors.svg?width=890&button=false" /></a> -->
+<a href="https://github.com/mlogclub/bbs-go/graphs/contributors"><img src="https://opencollective.com/bbs-go/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors
 
