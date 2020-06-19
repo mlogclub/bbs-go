@@ -26,7 +26,7 @@ func (api *SpiderApi) Publish(article *Article) (articleId int64, err error) {
 	}
 
 	t, err := services.ArticleService.Publish(article.UserId, article.Title, article.Summary, article.Content,
-		article.ContentType, article.Tags, article.SourceUrl, true)
+		article.ContentType, article.Tags, article.SourceUrl)
 	if err == nil {
 		articleId = t.Id
 

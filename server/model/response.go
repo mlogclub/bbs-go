@@ -42,7 +42,6 @@ type ArticleSimpleResponse struct {
 	Tags       *[]TagResponse `json:"tags"`
 	Title      string         `json:"title"`
 	Summary    string         `json:"summary"`
-	Share      bool           `json:"share"`
 	SourceUrl  string         `json:"sourceUrl"`
 	ViewCount  int64          `json:"viewCount"`
 	CreateTime int64          `json:"createTime"`

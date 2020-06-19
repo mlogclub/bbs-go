@@ -137,7 +137,7 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 
 // 发布文章
 func (s *articleService) Publish(userId int64, title, summary, content, contentType string, tags []string,
-	sourceUrl string, share bool) (article *model.Article, err error) {
+	sourceUrl string) (article *model.Article, err error) {
 	title = strings.TrimSpace(title)
 	summary = strings.TrimSpace(summary)
 	content = strings.TrimSpace(content)
@@ -145,17 +145,8 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 	if len(title) == 0 {
 		return nil, errors.New("标题不能为空")
 	}
-	if share { // 如果是分享的内容，必须有Summary和SourceUrl
-		if len(summary) == 0 {
-			return nil, errors.New("分享内容摘要不能为空")
-		}
-		if len(sourceUrl) == 0 {
-			return nil, errors.New("分享内容原文链接不能为空")
-		}
-	} else {
-		if len(content) == 0 {
-			return nil, errors.New("内容不能为空")
-		}
+	if len(content) == 0 {
+		return nil, errors.New("内容不能为空")
 	}
 
 	// 获取后台配置 否是开启发表文章审核
@@ -172,7 +163,6 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 		Content:     content,
 		ContentType: contentType,
 		Status:      status,
-		Share:       share,
 		SourceUrl:   sourceUrl,
 		CreateTime:  simple.NowTimestamp(),
 		UpdateTime:  simple.NowTimestamp(),

@@ -31,8 +31,8 @@ func (api *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 		summary = simple.GetSummary(article.TextContent, 256)
 	}
 
-	return services.ArticleService.Publish(userId, article.Title, summary,
-		article.HtmlContent, model.ContentTypeHtml, tags, article.Url, true)
+	return services.ArticleService.Publish(userId, article.Title, summary, article.HtmlContent, model.ContentTypeHtml,
+		tags, article.Url)
 }
 
 func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
