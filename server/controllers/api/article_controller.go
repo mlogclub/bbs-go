@@ -74,7 +74,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	if article.UserId != user.Id {
-		if render.BuildUser(user).HasRole("管理员") {
+		if render.BuildUser(user).HasRole(model.ROLE_ADMIN) {
 			if article.Status != model.StatusPending {
 				return simple.JsonErrorMsg("无权限")
 			}
@@ -118,7 +118,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	if article.UserId != user.Id {
-		if render.BuildUser(user).HasRole("管理员") {
+		if render.BuildUser(user).HasRole(model.ROLE_ADMIN) {
 			if article.Status != model.StatusPending {
 				return simple.JsonErrorMsg("无权限")
 			}

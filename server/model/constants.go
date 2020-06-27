@@ -14,3 +14,9 @@ const (
 	SysConfigArticlePending   = "articlePending"   // 是否开启文章审核
 	SysConfigTopicCaptcha     = "topicCaptcha"     // 是否开启发帖验证码
 )
+
+const (
+	ROLE_USER    = "用户"
+	ROLE_ADMIN   = "管理员"
+	ROLE_MANAGER = "副站长"
+)

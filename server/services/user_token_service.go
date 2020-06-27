@@ -76,7 +76,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 // 判断当前用户是否是管理员
 func (s *userTokenService) IsAdmin(user *model.User) bool {
 	if user != nil {
-		return strings.Contains(user.Roles, "管理员")
+		return strings.Contains(user.Roles, model.ROLE_ADMIN)
 	}
 	return false
 }
