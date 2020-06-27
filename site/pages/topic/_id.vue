@@ -62,12 +62,12 @@
                         }}</a>
                       </span>
                     </span>
-                    <span v-if="isOwner" class="meta-item act">
+                    <span v-if="hasPermission" class="meta-item act">
                       <a @click="deleteTopic(topic.topicId)">
                         <i class="iconfont icon-delete" />&nbsp;删除
                       </a>
                     </span>
-                    <span v-if="isOwner" class="meta-item act">
+                    <span v-if="hasPermission" class="meta-item act">
                       <a :href="'/topic/edit/' + topic.topicId">
                         <i class="iconfont icon-edit" />&nbsp;修改
                       </a>
@@ -223,6 +223,7 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import UserHelper from '~/common/UserHelper'
 
 export default {
   components: {
@@ -264,12 +265,21 @@ export default {
     }
   },
   computed: {
-    isOwner() {
+    hasPermission() {
       return (
-        this.$store.state.user.current &&
-        this.topic &&
-        this.$store.state.user.current.id === this.topic.user.id
+        this.isOwner ||
+        UserHelper.isAdmin(this.user) ||
+        UserHelper.isManager(this.user)
       )
+    },
+    isOwner() {
+      if (!this.user || !this.topic) {
+        return false
+      }
+      return this.user.id === this.topic.user.id
+    },
+    user() {
+      return this.$store.state.user.current
     }
   },
   mounted() {},
