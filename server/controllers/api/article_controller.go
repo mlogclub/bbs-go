@@ -117,10 +117,12 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 
-	err := services.ArticleService.Edit(articleId, tags, title, content)
-	if err != nil {
+	if err := services.ArticleService.Edit(articleId, tags, title, content); err != nil {
 		return simple.JsonError(err)
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeUpdate, model.EntityTypeArticle, articleId,
+		"", c.Ctx.Request())
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }
 
@@ -144,6 +146,9 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	if err := services.ArticleService.Delete(articleId); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeDelete, model.EntityTypeArticle, articleId,
+		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
 

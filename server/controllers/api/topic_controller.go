@@ -119,6 +119,9 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	if err != nil {
 		return simple.JsonError(err)
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeUpdate, model.EntityTypeTopic, topicId,
+		"", c.Ctx.Request())
 	return simple.JsonData(render.BuildSimpleTopic(topic))
 }
 
@@ -142,6 +145,9 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	if err := services.TopicService.Delete(topicId); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeDelete, model.EntityTypeTopic, topicId,
+		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
 

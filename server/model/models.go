@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScore{}, &UserScoreLog{},
+	&UserScore{}, &UserScoreLog{}, &OperateLog{},
 }
 
 type Model struct {
@@ -266,4 +266,18 @@ type UserScoreLog struct {
 	Type        int    `json:"type" form:"type"`                                                        // 类型(增加、减少)
 	Score       int    `json:"score" form:"score"`                                                      // 积分
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                            // 创建时间
+}
+
+// 操作日志
+type OperateLog struct {
+	Model
+	UserId      int64  `gorm:"not null;index:idx_operate_log_user_id" json:"userId" form:"userId"`            // 用户编号
+	OpType      string `gorm:"not null;index:idx_op_type;size:32" json:"opType" form:"opType"`                // 操作类型
+	DataType    string `gorm:"not null;index:idx_operate_log_data" json:"dataType" form:"dataType"`           // 数据类型
+	DataId      int64  `gorm:"not null;index:idx_operate_log_data" json:"operateDataId" form:"operateDataId"` // 数据编号
+	Description string `gorm:"not null;size:1024" json:"description" form:"description"`                      // 描述
+	Ip          string `gorm:"size:128" json:"ip" form:"ip"`                                                  // ip地址
+	UserAgent   string `gorm:"type:text" json:"userAgent" form:"userAgent"`                                   // UserAgent
+	Referer     string `gorm:"type:text" json:"referer" form:"referer"`                                       // Referer
+	CreateTime  int64  `json:"createTime" form:"createTime"`                                                  // 创建时间
 }
