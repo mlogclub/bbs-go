@@ -1,7 +1,6 @@
 package services
 
 import (
-	"strings"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -71,14 +70,6 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 		return nil
 	}
 	return user
-}
-
-// 判断当前用户是否是管理员
-func (s *userTokenService) IsAdmin(user *model.User) bool {
-	if user != nil {
-		return strings.Contains(user.Roles, model.ROLE_ADMIN)
-	}
-	return false
 }
 
 // CheckLogin 检查登录状态

@@ -1,3 +1,5 @@
+import UserHelper from '~/common/UserHelper'
+
 export default function(context) {
   const user = context.store.state.user.current
   if (!user) {
@@ -5,7 +7,7 @@ export default function(context) {
     return
   }
   if (isAdminUrl(context)) {
-    if (!isAdminUser(user)) {
+    if (!UserHelper.isAdmin(user)) {
       context.error({
         statusCode: 403,
         message: '403 forbidden'
@@ -17,23 +19,6 @@ export default function(context) {
 // 当前访问URL是否是管理后台
 function isAdminUrl(context) {
   return context.route.path.indexOf('/admin') === 0
-}
-
-// 当前用户是否是管理员
-function isAdminUser(user) {
-  if (!user) {
-    return false
-  }
-  if (!user.roles || !user.roles.length) {
-    return false
-  }
-  for (let i = 0; i < user.roles.length; i++) {
-    const role = user.roles[i]
-    if (role === '管理员') {
-      return true
-    }
-  }
-  return false
 }
 
 // 前往登录地址

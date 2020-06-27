@@ -70,7 +70,9 @@ func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
-	if topic.UserId != user.Id {
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -102,7 +104,9 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
-	if topic.UserId != user.Id {
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -124,15 +128,18 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != model.StatusOk {
 		return simple.JsonSuccess()
 	}
-	if topic.UserId != user.Id {
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
 		return simple.JsonErrorMsg("无权限")
 	}
-	err := services.TopicService.Delete(topicId)
-	if err != nil {
+
+	if err := services.TopicService.Delete(topicId); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()

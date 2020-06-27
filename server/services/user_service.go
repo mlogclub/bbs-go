@@ -83,6 +83,31 @@ func (s *userService) Delete(id int64) {
 	cache.UserCache.Invalidate(id)
 }
 
+// HasAnyRole 是否有指定的任意角色
+func (s *userService) HasAnyRole(user *model.User, roles ...string) bool {
+	if len(roles) == 0 {
+		return false
+	}
+	for _, role := range roles {
+		if s.HasRole(user, role) {
+			return true
+		}
+	}
+	return false
+}
+
+// HasRole 是否有指定角色
+func (s *userService) HasRole(user *model.User, role string) bool {
+	if user == nil {
+		return false
+	}
+	roles := strings.Split(user.Roles, ",")
+	if len(roles) == 0 {
+		return false
+	}
+	return simple.Contains(role, roles)
+}
+
 // Scan 扫描
 func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
