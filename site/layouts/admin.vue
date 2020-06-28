@@ -12,12 +12,12 @@
 
         <a
           :class="{ 'is-active': navbarActive }"
-          @click="toggleNav"
           role="button"
           class="navbar-burger burger"
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarBasic"
+          @click="toggleNav"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>

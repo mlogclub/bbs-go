@@ -7,8 +7,8 @@
         </div>
 
         <load-more
-          ref="tweetsLoadMore"
           v-if="tweetsPage"
+          ref="tweetsLoadMore"
           v-slot="{ results }"
           :init-data="tweetsPage"
           url="/api/tweet/list"

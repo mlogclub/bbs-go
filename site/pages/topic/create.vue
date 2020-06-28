@@ -87,8 +87,8 @@
                 <a
                   :class="{ 'is-loading': publishing }"
                   :disabled="publishing"
-                  @click="submitCreate"
                   class="button is-success"
+                  @click="submitCreate"
                   >发表话题</a
                 >
               </div>
