@@ -27,7 +27,7 @@ func AdminAuth(ctx iris.Context) {
 
 	user := cache.UserCache.Get(userToken.UserId)
 	userInfo := render.BuildUser(user)
-	if userInfo == nil || !userInfo.HasRole("管理员") {
+	if userInfo == nil || !userInfo.HasRole(model.ROLE_ADMIN) {
 		_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
 		ctx.StopExecution()
 		return

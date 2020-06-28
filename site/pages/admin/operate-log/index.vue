@@ -6,6 +6,18 @@
           <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
         </el-form-item>
         <el-form-item>
+          <el-select
+            v-model="filters.opType"
+            clearable
+            placeholder="操作类型"
+            @change="list"
+          >
+            <el-option label="添加" value="create"></el-option>
+            <el-option label="删除" value="delete"></el-option>
+            <el-option label="修改" value="update"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
       </el-form>
@@ -15,34 +27,24 @@
       v-loading="listLoading"
       :data="results"
       highlight-current-row
-      border
+      stripe
       style="width: 100%;"
     >
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="userId" label="用户">
+      <el-table-column type="expand">
         <template slot-scope="scope">
-          <user-info :user="scope.row.user" />
+          <div>{{ scope.row.ip }}</div>
+          <div>{{ scope.row.userAgent }}</div>
+          <div>{{ scope.row.referer }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="score" label="积分"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{
-          scope.row.createTime | formatDate
-        }}</template>
-      </el-table-column>
-      <el-table-column prop="updateTime" label="更新时间">
-        <template slot-scope="scope">{{
-          scope.row.updateTime | formatDate
-        }}</template>
-      </el-table-column>
-      <el-table-column label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button
-            type="success"
-            size="small"
-            @click="showLog(scope.$index, scope.row)"
-            >积分记录</el-button
-          >
+      <el-table-column prop="id" label="编号" width="100"></el-table-column>
+      <el-table-column prop="userId" label="用户编号"></el-table-column>
+      <el-table-column prop="opType" label="操作类型"></el-table-column>
+      <el-table-column prop="dataType" label="数据类型"></el-table-column>
+      <el-table-column prop="dataId" label="数据编号"></el-table-column>
+      <el-table-column prop="createTime" label="操作时间">
+        <template slot-scope="scope"
+          >{{ scope.row.createTime | formatDate }}
         </template>
       </el-table-column>
     </el-table>
@@ -56,28 +58,20 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
-
-    <score-log ref="scoreLog" />
   </section>
 </template>
 
 <script>
-import ScoreLog from './score-log'
-import UserInfo from '~/pages/admin/components/UserInfo'
 export default {
   layout: 'admin',
-  components: { ScoreLog, UserInfo },
   data() {
     return {
       results: [],
-      scoreLogs: [],
       listLoading: false,
       page: {},
-      filters: {},
-      isShowLog: false
+      filters: {}
     }
   },
   mounted() {
@@ -92,7 +86,7 @@ export default {
         limit: me.page.limit
       })
       this.$axios
-        .post('/api/admin/user-score/list', params)
+        .post('/api/admin/operate-log/list', params)
         .then((data) => {
           me.results = data.results
           me.page = data.page
@@ -100,9 +94,6 @@ export default {
         .finally(() => {
           me.listLoading = false
         })
-    },
-    showLog(index, row) {
-      this.$refs.scoreLog.showLog(row.userId)
     },
     handlePageChange(val) {
       this.page.page = val
@@ -116,4 +107,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.link-logo {
+  max-width: 50px;
+  max-height: 50px;
+}
+</style>

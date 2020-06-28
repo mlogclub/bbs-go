@@ -48,12 +48,12 @@
                 </span>
 
                 <div class="article-tool">
-                  <span v-if="isOwner">
+                  <span v-if="hasPermission">
                     <a @click="deleteArticle(article.articleId)">
                       <i class="iconfont icon-delete" />&nbsp;删除
                     </a>
                   </span>
-                  <span v-if="isOwner">
+                  <span v-if="hasPermission">
                     <a :href="'/article/edit/' + article.articleId">
                       <i class="iconfont icon-edit" />&nbsp;修改
                     </a>
@@ -88,9 +88,9 @@
 
             <div
               v-lazy-container="{ selector: 'img' }"
-              v-html="article.content"
               class="article-content content"
               itemprop="articleBody"
+              v-html="article.content"
             ></div>
           </div>
 
@@ -161,6 +161,7 @@
 
 <script>
 import utils from '~/common/utils'
+import UserHelper from '~/common/UserHelper'
 import Comment from '~/components/Comment'
 
 export default {
@@ -232,17 +233,24 @@ export default {
     }
   },
   computed: {
-    isOwner() {
+    hasPermission() {
       return (
-        (this.$store.state.user.current &&
-          this.article &&
-          this.$store.state.user.current.id === this.article.user.id) ||
-        (this.article.status === 2 &&
-          this.article.user.roles.includes('管理员'))
+        this.isOwner ||
+        UserHelper.isAdmin(this.user) ||
+        UserHelper.isManager(this.user)
       )
+    },
+    isOwner() {
+      if (!this.user || !this.article) {
+        return false
+      }
+      return this.user.id === this.article.user.id
     },
     isPending() {
       return this.article.status === 2
+    },
+    user() {
+      return this.$store.state.user.current
     }
   },
   methods: {

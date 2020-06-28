@@ -73,14 +73,9 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 
-	if article.UserId != user.Id {
-		if render.BuildUser(user).HasRole("管理员") {
-			if article.Status != model.StatusPending {
-				return simple.JsonErrorMsg("无权限")
-			}
-		} else {
-			return simple.JsonErrorMsg("无权限")
-		}
+	// 非作者、且非管理员
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+		return simple.JsonErrorMsg("无权限")
 	}
 
 	tags := services.ArticleService.GetArticleTags(articleId)
@@ -117,20 +112,17 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
-	if article.UserId != user.Id {
-		if render.BuildUser(user).HasRole("管理员") {
-			if article.Status != model.StatusPending {
-				return simple.JsonErrorMsg("无权限")
-			}
-		} else {
-			return simple.JsonErrorMsg("无权限")
-		}
+	// 非作者、且非管理员
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+		return simple.JsonErrorMsg("无权限")
 	}
 
-	err := services.ArticleService.Edit(articleId, tags, title, content)
-	if err != nil {
+	if err := services.ArticleService.Edit(articleId, tags, title, content); err != nil {
 		return simple.JsonError(err)
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeUpdate, model.EntityTypeArticle, articleId,
+		"", c.Ctx.Request())
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }
 
@@ -146,14 +138,17 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
-	if article.UserId != user.Id {
+	// 非作者、且非管理员
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
-	err := services.ArticleService.Delete(articleId)
-	if err != nil {
+	if err := services.ArticleService.Delete(articleId); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	// 操作日志
+	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeDelete, model.EntityTypeArticle, articleId,
+		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
 

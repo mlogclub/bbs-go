@@ -12,12 +12,12 @@
 
         <a
           :class="{ 'is-active': navbarActive }"
-          @click="toggleNav"
           role="button"
           class="navbar-burger burger"
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarBasic"
+          @click="toggleNav"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -38,40 +38,49 @@
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
+              <i class="iconfont icon-topic"></i>
+              <span>内容</span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="/admin/topics">
+                <i class="iconfont icon-topic"></i>
+                <span>话题</span>
+              </a>
+
+              <a class="navbar-item" href="/admin/tweets">
+                <i class="iconfont icon-tweet"></i>
+                <span>动态</span>
+              </a>
+
+              <a class="navbar-item" href="/admin/articles">
+                <i class="iconfont icon-article"></i>
+                <span>文章</span>
+              </a>
+
+              <a class="navbar-item" href="/admin/comments">
+                <i class="iconfont icon-comments"></i>
+                <span>评论</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
               <i class="iconfont icon-tags"></i>
               <span>节点</span>
             </a>
             <div class="navbar-dropdown">
               <a class="navbar-item" href="/admin/topics/nodes">
                 <i class="iconfont icon-tag"></i>
-                <span>节点管理</span>
+                <span>节点</span>
               </a>
               <a class="navbar-item" href="/admin/tags">
                 <i class="iconfont icon-tags"></i>
-                <span>标签管理</span>
+                <span>标签</span>
               </a>
             </div>
           </div>
 
-          <a class="navbar-item" href="/admin/topics">
-            <i class="iconfont icon-topic"></i>
-            <span>话题</span>
-          </a>
-
-          <a class="navbar-item" href="/admin/tweets">
-            <i class="iconfont icon-tweet"></i>
-            <span>动态</span>
-          </a>
-
-          <a class="navbar-item" href="/admin/articles">
-            <i class="iconfont icon-article"></i>
-            <span>文章</span>
-          </a>
-
-          <a class="navbar-item" href="/admin/comments">
-            <i class="iconfont icon-comments"></i>
-            <span>评论</span>
-          </a>
           <a class="navbar-item" href="/admin/users">
             <i class="iconfont icon-username"></i>
             <span>用户</span>
@@ -87,6 +96,10 @@
           <a class="navbar-item" href="/admin/settings">
             <i class="iconfont icon-setting"></i>
             <span>设置</span>
+          </a>
+          <a class="navbar-item" href="/admin/operate-log">
+            <i class="iconfont icon-log"></i>
+            <span>操作日志</span>
           </a>
         </div>
 

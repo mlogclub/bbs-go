@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScore{}, &UserScoreLog{},
+	&UserScore{}, &UserScoreLog{}, &OperateLog{},
 }
 
 type Model struct {
@@ -101,6 +101,7 @@ type Article struct {
 	Content     string `gorm:"type:longtext;not null;" json:"content" form:"content"`             // 内容
 	ContentType string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`   // 内容类型：markdown、html
 	Status      int    `gorm:"int;not null;index:idx_article_status" json:"status" form:"status"` // 状态
+	Share       bool   `gorm:"not null" json:"share" form:"share"`                                // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                       // 原文链接
 	ViewCount   int64  `gorm:"not null;index:idx_view_count;" json:"viewCount" form:"viewCount"`  // 查看数量
 	CreateTime  int64  `gorm:"index:idx_article_create_time" json:"createTime" form:"createTime"` // 创建时间
@@ -265,4 +266,18 @@ type UserScoreLog struct {
 	Type        int    `json:"type" form:"type"`                                                        // 类型(增加、减少)
 	Score       int    `json:"score" form:"score"`                                                      // 积分
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                            // 创建时间
+}
+
+// 操作日志
+type OperateLog struct {
+	Model
+	UserId      int64  `gorm:"not null;index:idx_operate_log_user_id" json:"userId" form:"userId"`  // 用户编号
+	OpType      string `gorm:"not null;index:idx_op_type;size:32" json:"opType" form:"opType"`      // 操作类型
+	DataType    string `gorm:"not null;index:idx_operate_log_data" json:"dataType" form:"dataType"` // 数据类型
+	DataId      int64  `gorm:"not null;index:idx_operate_log_data" json:"dataId" form:"dataId" `    // 数据编号
+	Description string `gorm:"not null;size:1024" json:"description" form:"description"`            // 描述
+	Ip          string `gorm:"size:128" json:"ip" form:"ip"`                                        // ip地址
+	UserAgent   string `gorm:"type:text" json:"userAgent" form:"userAgent"`                         // UserAgent
+	Referer     string `gorm:"type:text" json:"referer" form:"referer"`                             // Referer
+	CreateTime  int64  `json:"createTime" form:"createTime"`                                        // 创建时间
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="comments">
     <load-more
-      ref="commentsLoadMore"
       v-if="commentsPage"
+      ref="commentsLoadMore"
       v-slot="{ results }"
       :init-data="commentsPage"
       :params="{ entityType: entityType, entityId: entityId }"
@@ -64,8 +64,8 @@
               </div>
               <div
                 v-lazy-container="{ selector: 'img' }"
-                v-html="comment.quote.content"
                 itemprop="text"
+                v-html="comment.quote.content"
               />
             </blockquote>
             <p
