@@ -97,6 +97,10 @@
             <i class="iconfont icon-setting"></i>
             <span>设置</span>
           </a>
+          <a class="navbar-item" href="/admin/operate-log">
+            <i class="iconfont icon-log"></i>
+            <span>操作日志</span>
+          </a>
         </div>
 
         <div class="navbar-end">

@@ -73,7 +73,7 @@ func (s *operateLogService) AddOperateLog(userId int64, opType, dataType string,
 	operateLog := &model.OperateLog{
 		UserId:      userId,
 		OpType:      opType,
-		DataType:    "",
+		DataType:    dataType,
 		DataId:      dataId,
 		Description: description,
 		CreateTime:  simple.NowTimestamp(),

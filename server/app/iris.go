@@ -89,6 +89,7 @@ func InitIris() {
 		m.Party("/link").Handle(new(admin.LinkController))
 		m.Party("/user-score").Handle(new(admin.UserScoreController))
 		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
+		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {
