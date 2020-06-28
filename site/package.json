@@ -20,7 +20,7 @@
     "@nuxtjs/toast": "^3.2.1",
     "cookie-universal-nuxt": "^2.0.18",
     "element-ui": "^2.13.0",
-    "nuxt": "^2.11.0",
+    "nuxt": "^2.13.2",
     "qs": "^6.9.0",
     "v-viewer": "^1.5.1",
     "vue-infinite-scroll": "^2.0.2",
