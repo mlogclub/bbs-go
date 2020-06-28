@@ -31,7 +31,7 @@
     </div>
 
     <!--列表-->
-    <div class="page-section articles">
+    <div v-if="results && results.length > 0" class="page-section articles">
       <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
           <img :src="item.user.smallAvatar" class="avatar" />
@@ -80,9 +80,14 @@
         <div class="summary">{{ item.summary }}</div>
       </div>
     </div>
+    <div v-else class="page-section articles">
+      <div class="notification is-primary">
+        <strong>无数据</strong>
+      </div>
+    </div>
 
     <!--工具条-->
-    <div class="pagebar">
+    <div v-if="page.total > 0" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -104,33 +109,39 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {
-        title: '',
-        status: ''
-      },
+      filters: {},
       tagOptions: []
     }
   },
   mounted() {
-    this.list()
+    this.recent()
   },
   methods: {
-    list() {
-      const me = this
-      me.listLoading = true
-      const params = Object.assign(me.filters, {
-        page: me.page.page,
-        limit: me.page.limit
+    async list() {
+      this.listLoading = true
+      const params = Object.assign(this.filters, {
+        page: this.page.page,
+        limit: this.page.limit
       })
-      this.$axios
-        .post('/api/admin/article/list', params)
-        .then((data) => {
-          me.results = data.results
-          me.page = data.page
-        })
-        .finally(() => {
-          me.listLoading = false
-        })
+      try {
+        const data = await this.$axios.post('/api/admin/article/list', params)
+        this.results = data.results
+        this.page = data.page
+      } catch (err) {
+        this.$message.error(err.message)
+      } finally {
+        this.listLoading = false
+      }
+    },
+    async recent() {
+      this.listLoading = true
+      try {
+        this.results = await this.$axios.get('/api/admin/article/recent')
+      } catch (err) {
+        this.$message.error(err.message)
+      } finally {
+        this.listLoading = false
+      }
     },
     handlePageChange(val) {
       this.page.page = val
@@ -198,6 +209,11 @@ export default {
 .articles {
   display: table;
   width: 100%;
+
+  .notification {
+    margin: 20px;
+    text-align: center;
+  }
 
   .article:not(:last-child) {
     border-bottom: solid 1px rgba(140, 147, 157, 0.14);

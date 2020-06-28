@@ -35,11 +35,39 @@ func (c *ArticleController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *ArticleController) AnyList() *simple.JsonResult {
-	list, paging := services.ArticleService.FindPageByParams(simple.NewQueryParams(c.Ctx).
-		EqByReq("id").EqByReq("user_id").EqByReq("status").LikeByReq("title").PageByReq().Desc("id"))
+	var (
+		id     = simple.FormValueInt64Default(c.Ctx, "id", 0)
+		userId = simple.FormValueInt64Default(c.Ctx, "userId", 0)
+	)
+	params := simple.NewQueryParams(c.Ctx)
+	if id > 0 {
+		params.Eq("id", id)
+	}
+	if userId > 0 {
+		params.Eq("user_id", userId)
+	}
+	params.EqByReq("status").EqByReq("title").PageByReq().Desc("id")
 
+	if id <= 0 && userId <= 0 {
+		return simple.JsonErrorMsg("请指定查询的【文章编号】或【作者编号】")
+	}
+	list, paging := services.ArticleService.FindPageByParams(params)
+	results := c.buildArticles(list)
+	return simple.JsonPageData(results, paging)
+}
+
+// GetRecent 展示最近一页数据
+func (c *ArticleController) GetRecent() *simple.JsonResult {
+	params := simple.NewQueryParams(c.Ctx).EqByReq("id").EqByReq("user_id").EqByReq("status").Desc("id")
+	list := services.ArticleService.Find(&params.SqlCnd)
+	results := c.buildArticles(list)
+	return simple.JsonData(results)
+}
+
+// 构建文章列表返回数据
+func (c *ArticleController) buildArticles(articles []model.Article) []map[string]interface{} {
 	var results []map[string]interface{}
-	for _, article := range list {
+	for _, article := range articles {
 		builder := simple.NewRspBuilderExcludes(article, "content")
 
 		// 用户
@@ -55,12 +83,7 @@ func (c *ArticleController) AnyList() *simple.JsonResult {
 
 		results = append(results, builder.Build())
 	}
-
-	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
-}
-
-func (c *ArticleController) PostCreate() *simple.JsonResult {
-	return simple.JsonErrorMsg("未实现")
+	return results
 }
 
 func (c *ArticleController) PostUpdate() *simple.JsonResult {
