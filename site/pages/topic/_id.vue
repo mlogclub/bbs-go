@@ -134,15 +134,15 @@
                 >
                   <i class="iconfont icon-like" />
                 </div>
-                <div v-for="user in likeUsers" :key="user.id">
+                <div v-for="likeUser in likeUsers" :key="likeUser.id">
                   <a
-                    :href="'/user/' + user.id"
-                    :alt="user.nickname"
+                    :href="'/user/' + likeUser.id"
+                    :alt="likeUser.nickname"
                     target="_blank"
                   >
                     <img
-                      :src="user.smallAvatar"
-                      :alt="user.nickname"
+                      :src="likeUser.smallAvatar"
+                      :alt="likeUser.nickname"
                       class="avatar size-30"
                     />
                   </a>
