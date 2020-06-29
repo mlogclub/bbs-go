@@ -17,9 +17,9 @@ const (
 
 // 用户角色
 const (
-	ROLE_USER    = "用户"
-	ROLE_ADMIN   = "管理员"
-	ROLE_MANAGER = "副站长"
+	RoleOwner = "owner" // 站长
+	RoleAdmin = "admin" // 管理员
+	RoleUser  = "user"  // 用户
 )
 
 // 操作类型

@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services/cache"
 )
@@ -26,8 +26,7 @@ func AdminAuth(ctx iris.Context) {
 	}
 
 	user := cache.UserCache.Get(userToken.UserId)
-	userInfo := render.BuildUser(user)
-	if userInfo == nil || !userInfo.HasRole(model.ROLE_ADMIN) {
+	if user == nil || !services.UserService.HasRole(user, model.RoleOwner) {
 		_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
 		ctx.StopExecution()
 		return

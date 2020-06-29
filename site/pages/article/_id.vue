@@ -236,8 +236,8 @@ export default {
     hasPermission() {
       return (
         this.isOwner ||
-        UserHelper.isAdmin(this.user) ||
-        UserHelper.isManager(this.user)
+        UserHelper.isOwner(this.user) ||
+        UserHelper.isAdmin(this.user)
       )
     },
     isOwner() {

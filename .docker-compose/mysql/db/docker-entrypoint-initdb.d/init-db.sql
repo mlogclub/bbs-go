@@ -40,14 +40,14 @@ INSERT INTO t_user (
 ) SELECT
     1,
     'admin',
-    '管理员',
+    '站长',
     '',
     'a@example.com',
     '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS',
     0,
     1555419028975,
     1555419028975,
-    '管理员',
+    'owner',
     0,
     '轻轻地我走了，正如我轻轻的来。'
 FROM

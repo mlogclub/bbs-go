@@ -23,12 +23,12 @@ class UserHelper {
     return false
   }
 
-  isAdmin(user) {
-    return this.hasRole(user, '管理员')
+  isOwner(user) {
+    return this.hasRole(user, 'owner')
   }
 
-  isManager(user) {
-    return this.hasRole(user, '副站长')
+  isAdmin(user) {
+    return this.hasRole(user, 'admin')
   }
 }
 

@@ -7,7 +7,7 @@ export default function(context) {
     return
   }
   if (isAdminUrl(context)) {
-    if (!UserHelper.isAdmin(user)) {
+    if (!UserHelper.isOwner(user)) {
       context.error({
         statusCode: 403,
         message: '403 forbidden'

@@ -82,7 +82,7 @@
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </a>
-              <a v-if="isAdmin" class="navbar-item" href="/admin">
+              <a v-if="isOwner" class="navbar-item" href="/admin">
                 <i class="iconfont icon-dashboard" />&nbsp;后台管理
               </a>
               <a class="navbar-item" @click="signout">
@@ -105,6 +105,7 @@
 
 <script>
 import utils from '~/common/utils'
+import UserHelper from '~/common/UserHelper'
 import MsgNotice from '~/components/MsgNotice'
 
 export default {
@@ -120,18 +121,8 @@ export default {
     user() {
       return this.$store.state.user.current
     },
-    isAdmin() {
-      const user = this.$store.state.user.current
-      if (!user || !user.roles || user.roles.length === 0) {
-        return false
-      }
-      for (let i = 0; i < user.roles.length; i++) {
-        const role = user.roles[i]
-        if (role === '管理员') {
-          return true
-        }
-      }
-      return false
+    isOwner() {
+      return UserHelper.isOwner(this.user)
     },
     config() {
       return this.$store.state.config.config

@@ -74,7 +74,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -113,7 +113,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -139,7 +139,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 

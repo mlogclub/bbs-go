@@ -72,7 +72,7 @@ func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -106,7 +106,7 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -138,7 +138,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.ROLE_ADMIN, model.ROLE_MANAGER) {
+	if topic.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
