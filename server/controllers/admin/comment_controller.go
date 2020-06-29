@@ -26,13 +26,32 @@ func (c *CommentController) GetBy(id int64) *simple.JsonResult {
 }
 
 func (c *CommentController) AnyList() *simple.JsonResult {
-	list, paging := services.CommentService.FindPageByParams(simple.NewQueryParams(c.Ctx).
-		EqByReq("id").
-		EqByReq("user_id").
-		EqByReq("entity_type").
-		EqByReq("entity_id").
+	var (
+		id         = simple.FormValueInt64Default(c.Ctx, "id", 0)
+		userId     = simple.FormValueInt64Default(c.Ctx, "userId", 0)
+		entityType = simple.FormValueDefault(c.Ctx, "entityType", "")
+		entityId   = simple.FormValueInt64Default(c.Ctx, "entityId", 0)
+	)
+	params := simple.NewQueryParams(c.Ctx).
 		EqByReq("status").
-		PageByReq().Desc("id"))
+		PageByReq().Desc("id")
+
+	if id > 0 {
+		params.Eq("id", id)
+	}
+	if userId > 0 {
+		params.Eq("user_id", userId)
+	}
+	if simple.IsNotBlank(entityType) && entityId > 0 {
+		params.Eq("entity_type", entityType).Eq("entity_id", entityId)
+	}
+
+	if id <= 0 && userId <= 0 && (simple.IsBlank(entityType) || entityId <= 0) {
+		// return simple.JsonErrorMsg("请输入必要的查询参数。")
+		return simple.JsonSuccess()
+	}
+
+	list, paging := services.CommentService.FindPageByParams(params)
 
 	var results []map[string]interface{}
 	for _, comment := range list {
@@ -48,12 +67,11 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		results = append(results, builder.Build())
 	}
 
-	return simple.JsonData(&simple.PageResult{Results: results, Page: paging})
+	return simple.JsonPageData(results, paging)
 }
 
 func (c *CommentController) PostDeleteBy(id int64) *simple.JsonResult {
-	err := services.CommentService.Delete(id)
-	if err != nil {
+	if err := services.CommentService.Delete(id); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	} else {
 		return simple.JsonSuccess()

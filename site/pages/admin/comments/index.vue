@@ -7,10 +7,13 @@
           <el-input v-model="filters.id" placeholder="编号"></el-input>
         </el-form-item>
         <el-form-item>
+          <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
+        </el-form-item>
+        <el-form-item>
           <el-select
             v-model="filters.entityType"
             clearable
-            placeholder="实体类型"
+            placeholder="评论对象"
           >
             <el-option label="话题" value="topic"></el-option>
             <el-option label="文章" value="article"></el-option>
@@ -20,7 +23,7 @@
         <el-form-item>
           <el-input
             v-model="filters.entityId"
-            placeholder="实体编号"
+            placeholder="对象编号"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -40,7 +43,7 @@
       </el-form>
     </div>
 
-    <div class="page-section">
+    <div v-if="results && results.length > 0" class="page-section comments-div">
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
@@ -84,8 +87,13 @@
         </li>
       </ul>
     </div>
+    <div v-else class="page-section comments-div">
+      <div class="notification is-primary">
+        <strong>无数据 或 输入相应参数进行查询</strong>
+      </div>
+    </div>
 
-    <div class="pagebar">
+    <div v-if="page.total > 0" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -107,60 +115,28 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {
-        userId: '',
-        status: ''
-      },
-      selectedRows: [],
-
-      addForm: {
-        userId: '',
-        entityType: '',
-        entityId: '',
-        content: '',
-        quoteId: '',
-        status: '',
-        createTime: ''
-      },
-      addFormVisible: false,
-      addFormRules: {},
-      addLoading: false,
-
-      editForm: {
-        id: '',
-        userId: '',
-        entityType: '',
-        entityId: '',
-        content: '',
-        quoteId: '',
-        status: '',
-        createTime: ''
-      },
-      editFormVisible: false,
-      editFormRules: {},
-      editLoading: false
+      filters: {},
+      selectedRows: []
     }
   },
   mounted() {
-    this.list()
+    // this.list()
   },
   methods: {
-    list() {
-      const me = this
-      me.listLoading = true
-      const params = Object.assign(me.filters, {
-        page: me.page.page,
-        limit: me.page.limit
+    async list() {
+      this.listLoading = true
+      const params = Object.assign(this.filters, {
+        page: this.page.page,
+        limit: this.page.limit
       })
-      this.$axios
-        .post('/api/admin/comment/list', params)
-        .then((data) => {
-          me.results = data.results
-          me.page = data.page
-        })
-        .finally(() => {
-          me.listLoading = false
-        })
+      try {
+        let data = await this.$axios.post('/api/admin/comment/list', params)
+        data = data || {}
+        this.results = data.results || []
+        this.page = data.page || {}
+      } finally {
+        this.listLoading = false
+      }
     },
     handlePageChange(val) {
       this.page.page = val
@@ -190,76 +166,91 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.comments {
-  width: 100%;
-  list-style: none;
+.comments-div {
+  padding: 10px 20px;
 
-  li {
+  .notification {
+    margin: 10px;
+    text-align: center;
+  }
+
+  .comments {
     width: 100%;
-    border-bottom: 1px solid #f2f2f2;
-    padding: 10px;
+    list-style: none;
 
-    .comment-item {
+    li {
       width: 100%;
-      display: flex;
+      padding: 10px;
 
-      .avatar {
-        min-width: 40px;
-        min-height: 40px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
+      &:not(:last-child) {
+        border-bottom: 1px solid #f2f2f2;
       }
 
-      .content {
+      .comment-item {
         width: 100%;
-        .meta {
-          span {
-            &:not(:last-child) {
-              margin-right: 5px;
-            }
+        display: flex;
 
-            font-size: 13px;
-            color: #999;
-            font-weight: bold;
-
-            &.nickname {
-              color: #1a1a1a;
-              font-size: 14px;
-              font-weight: bold;
-            }
-
-            &.create-time {
-              color: #999;
-              font-size: 13px;
-              font-weight: normal;
-            }
-          }
-
-          .tools {
-            float: right;
-            font-size: 13px;
-            .item {
-              color: blue;
-              cursor: pointer;
-              &:not(:last-child) {
-                margin-right: 10px;
-              }
-
-              &.info {
-                color: red;
-              }
-            }
-          }
+        .avatar {
+          min-width: 40px;
+          min-height: 40px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-right: 10px;
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-position: center;
         }
 
-        .summary {
-          font-size: 15px;
-          color: #555;
+        .content {
+          width: 100%;
+
+          .meta {
+            span {
+              &:not(:last-child) {
+                margin-right: 5px;
+              }
+
+              font-size: 13px;
+              color: #999;
+              font-weight: bold;
+
+              &.nickname {
+                color: #1a1a1a;
+                font-size: 14px;
+                font-weight: bold;
+              }
+
+              &.create-time {
+                color: #999;
+                font-size: 13px;
+                font-weight: normal;
+              }
+            }
+
+            .tools {
+              float: right;
+              font-size: 13px;
+
+              .item {
+                color: blue;
+                cursor: pointer;
+
+                &:not(:last-child) {
+                  margin-right: 10px;
+                }
+
+                &.info {
+                  color: red;
+                }
+              }
+            }
+          }
+
+          .summary {
+            font-size: 15px;
+            color: #555;
+          }
         }
       }
     }

@@ -70,7 +70,7 @@
                 <a
                   v-if="item.status === 2"
                   class="action-item btn"
-                  @click="PendingSubmit(item)"
+                  @click="pendingSubmit(item)"
                   >审核</a
                 >
               </div>
@@ -176,7 +176,7 @@ export default {
           })
         })
     },
-    PendingSubmit(row) {
+    pendingSubmit(row) {
       const me = this
       this.$confirm('确认要过审文章？', '提示', {
         confirmButtonText: '确定',
