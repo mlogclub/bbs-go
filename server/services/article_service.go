@@ -11,8 +11,8 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/common/baiduseo"
-	"bbs-go/config"
 	"bbs-go/common/urls"
+	"bbs-go/config"
 	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"

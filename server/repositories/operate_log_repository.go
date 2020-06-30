@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"bbs-go/model"
-	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
 )
 
 var OperateLogRepository = newOperateLogRepository()
@@ -87,4 +87,3 @@ func (r *operateLogRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (r *operateLogRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.OperateLog{}, "id = ?", id)
 }
-

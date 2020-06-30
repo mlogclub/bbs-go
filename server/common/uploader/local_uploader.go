@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"bbs-go/config"
 	"bbs-go/common/urls"
+	"bbs-go/config"
 )
 
 // 本地文件系统
