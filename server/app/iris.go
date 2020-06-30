@@ -17,7 +17,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/controllers/api"
 
 	"bbs-go/controllers/admin"

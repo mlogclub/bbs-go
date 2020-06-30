@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/app"
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/model"
 )
 

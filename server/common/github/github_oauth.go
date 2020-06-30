@@ -11,7 +11,7 @@ import (
 	"golang.org/x/oauth2"
 
 	"bbs-go/common"
-	"bbs-go/common/config"
+	"bbs-go/config"
 )
 
 var ctxCache = cache.New(cache.WithMaximumSize(1000), cache.WithExpireAfterAccess(10*time.Minute))

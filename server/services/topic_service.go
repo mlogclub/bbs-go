@@ -13,7 +13,7 @@ import (
 	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/common/baiduseo"
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/repositories"

@@ -8,7 +8,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/markdown"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/model"
 )
 

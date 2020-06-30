@@ -14,7 +14,7 @@ import (
 	"github.com/tidwall/gjson"
 
 	"bbs-go/common"
-	"bbs-go/common/config"
+	"bbs-go/config"
 )
 
 type UserInfo struct {

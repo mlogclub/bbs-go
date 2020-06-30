@@ -10,7 +10,7 @@ import (
 	"github.com/jordan-wright/email"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 )
 
 var emailTemplate = `

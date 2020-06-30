@@ -9,7 +9,7 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/common/uploader"
 	"bbs-go/common/urls"
 	"bbs-go/model"

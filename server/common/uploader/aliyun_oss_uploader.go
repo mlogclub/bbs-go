@@ -7,7 +7,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/common/urls"
 )
 

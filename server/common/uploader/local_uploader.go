@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"bbs-go/common/config"
+	"bbs-go/config"
 	"bbs-go/common/urls"
 )
 
