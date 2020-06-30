@@ -9,11 +9,11 @@ import (
 
 	"github.com/emirpasic/gods/sets/hashset"
 
+	"bbs-go/cache"
 	"bbs-go/common/baiduseo"
 	"bbs-go/common/config"
 	"bbs-go/common/urls"
 	"bbs-go/repositories"
-	"bbs-go/services/cache"
 
 	"github.com/gorilla/feeds"
 	"github.com/jinzhu/gorm"

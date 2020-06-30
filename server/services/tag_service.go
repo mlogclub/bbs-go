@@ -5,9 +5,9 @@ import (
 
 	"github.com/mlogclub/simple"
 
+	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"bbs-go/services/cache"
 )
 
 var TagService = newTagService()

@@ -4,10 +4,10 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/cache"
 	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
-	"bbs-go/services/cache"
 )
 
 type TagController struct {

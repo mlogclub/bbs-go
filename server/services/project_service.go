@@ -9,12 +9,12 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/common/config"
 	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"bbs-go/services/cache"
 )
 
 var ProjectService = newProjectService()

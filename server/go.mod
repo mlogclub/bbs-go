@@ -5,7 +5,6 @@ go 1.14
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
 require (
-	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.3+incompatible
@@ -17,6 +16,7 @@ require (
 	github.com/goburrow/cache v0.1.0
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/feeds v1.1.1
+	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a
 	github.com/issue9/identicon v1.0.1

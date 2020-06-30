@@ -7,9 +7,9 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
+	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"bbs-go/services/cache"
 )
 
 var UserScoreService = newUserScoreService()

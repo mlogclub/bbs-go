@@ -12,13 +12,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/common/avatar"
 	"bbs-go/common/config"
 	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/services"
-	"bbs-go/services/cache"
 )
 
 func BuildUserDefaultIfNull(id int64) *model.UserInfo {

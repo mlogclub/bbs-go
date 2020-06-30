@@ -10,9 +10,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
+	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"bbs-go/services/cache"
 )
 
 var SysConfigService = newSysConfigService()

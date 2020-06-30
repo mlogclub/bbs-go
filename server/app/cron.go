@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/services"
-	"bbs-go/services/sitemap"
+	"bbs-go/sitemap"
 )
 
 func startSchedule() {

@@ -10,10 +10,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
+	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/common/avatar"
 	"bbs-go/common/uploader"
-	"bbs-go/services/cache"
 
 	"bbs-go/model"
 	"bbs-go/repositories"

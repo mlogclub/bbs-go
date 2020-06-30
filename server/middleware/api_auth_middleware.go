@@ -5,8 +5,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
+	"bbs-go/cache"
 	"bbs-go/model"
-	"bbs-go/services/cache"
 )
 
 // AdminAuth 后台权限

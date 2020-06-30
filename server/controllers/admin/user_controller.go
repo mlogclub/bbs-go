@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
+	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/model"
-	"bbs-go/services/cache"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
