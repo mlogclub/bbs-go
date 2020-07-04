@@ -7,8 +7,8 @@
         <div>OS: {{ systeminfo.os }}</div>
         <div>Arch: {{ systeminfo.arch }}</div>
         <div>Cpu: {{ systeminfo.numCpu }}</div>
-        <div>GOROOT: {{ systeminfo.goroot }}</div>
         <div>Go version: {{ systeminfo.goversion }}</div>
+        <div>Hostname: {{ systeminfo.hostname }}</div>
       </div>
     </div>
     <div class="widget">
