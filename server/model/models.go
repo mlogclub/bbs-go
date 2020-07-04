@@ -277,14 +277,3 @@ type OperateLog struct {
 	Referer     string `gorm:"type:text" json:"referer" form:"referer"`                             // Referer
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                        // 创建时间
 }
-
-// 用户封禁
-type UserForbidden struct {
-	Model
-	UserId     int64  `gorm:"not null;unique" json:"userId" form:"userId"`  // 用户编号
-	StartTime  int64  `gorm:"not null" json:"startTime" form:"startTime"`   // 开始时间
-	EndTime    int64  `gorm:"not null" json:"endTime" form:"endTime"`       // 结束时间
-	Reason     string `gorm:"size:32" json:"reason" form:"reason"`          // 禁言原因
-	OperatorId int64  `gorm:"not null" json:"operatorId" form:"operatorId"` // 操作人
-	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 操作时间
-}
