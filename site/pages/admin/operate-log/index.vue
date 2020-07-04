@@ -8,9 +8,9 @@
         <el-form-item>
           <el-select
             v-model="filters.opType"
+            @change="list"
             clearable
             placeholder="操作类型"
-            @change="list"
           >
             <el-option label="添加" value="create"></el-option>
             <el-option label="删除" value="delete"></el-option>
@@ -18,7 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -55,9 +55,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
-        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
+        layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
   </section>

@@ -7,8 +7,8 @@
           >{{ tag
           }}<i
             :data-name="tag"
-            class="iconfont icon-close"
             @click="clickRemoveTag"
+            class="iconfont icon-close"
         /></span>
       </span>
     </div>
@@ -20,8 +20,6 @@
           maxTagCount +
           '个，每个最长15字符）'
       "
-      class="input"
-      type="text"
       @input="autocomplete"
       @keydown.delete="removeTag"
       @keydown.enter="addTag"
@@ -31,7 +29,9 @@
       @keydown.38="selectUp"
       @keydown.40="selectDown"
       @keydown.esc="close"
+      class="input"
       @focus="openRecommendTags"
+      type="text"
       @blur="closeRecommendTags"
       @click="openRecommendTags"
     />
@@ -42,9 +42,9 @@
             v-for="(item, index) in autocompleteTags"
             :key="item"
             :class="{ active: index === selectIndex }"
-            class="tag-item"
             @click="selectTag(index)"
             v-text="item"
+            class="tag-item"
           />
         </section>
       </div>
@@ -54,15 +54,15 @@
         <div class="header">
           <span>推荐标签</span>
           <span class="close-recommend"
-            ><i class="iconfont icon-close" @click="closeRecommendTags"
+            ><i @click="closeRecommendTags" class="iconfont icon-close"
           /></span>
         </div>
         <a
           v-for="tag in recommendTags"
           :key="tag"
-          class="tag-item"
           @click="addRecommendTag(tag)"
           v-text="tag"
+          class="tag-item"
         />
       </div>
     </div>

@@ -106,10 +106,12 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 	if userId < 0 {
 		return simple.JsonErrorMsg("请传入：userId")
 	}
-	if days <= 0 {
+	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
 	} else {
-		services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request())
+		if err := services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request()); err != nil {
+			return simple.JsonErrorMsg(err.Error())
+		}
 	}
 	return simple.JsonSuccess()
 }

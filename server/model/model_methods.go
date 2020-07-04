@@ -10,6 +10,11 @@ func (u *User) IsForbidden() bool {
 	if u.ForbiddenEndTime == 0 {
 		return false
 	}
+	// 永久禁言
+	if u.ForbiddenEndTime == -1 {
+		return true
+	}
+	// 判断禁言时间
 	return u.ForbiddenEndTime > simple.NowTimestamp()
 }
 

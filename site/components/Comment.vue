@@ -1,15 +1,15 @@
 <template>
   <div>
     <comment-input
-      v-if="mode === 'markdown'"
       ref="input"
+      v-if="mode === 'markdown'"
       :entity-id="entityId"
       :entity-type="entityType"
       @created="commentCreated"
     />
     <comment-text-input
-      v-else
       ref="input"
+      v-else
       :entity-id="entityId"
       :entity-type="entityType"
       @created="commentCreated"

@@ -5,30 +5,30 @@
         <div v-if="quote" class="comment-quote-info">
           回复：
           <label v-text="quote.user.nickname" />
-          <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
+          <i @click="cancelReply" class="iconfont icon-close" alt="取消回复" />
         </div>
         <markdown-editor
           ref="mdEditor"
           v-model="content"
+          @submit="create"
           editor-id="createEditor"
           height="200px"
           placeholder="请发表你的观点..."
-          @submit="create"
         />
       </div>
       <div class="comment-button-wrapper">
         <span>Ctrl or ⌘ + Enter</span>
         <button
-          class="button is-small is-success"
           @click="create"
           v-text="btnName"
+          class="button is-small is-success"
         />
       </div>
     </div>
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
         请
-        <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
+        <a @click="toLogin" style="font-weight: 700;">登录</a>后发表观点
       </div>
     </div>
   </div>

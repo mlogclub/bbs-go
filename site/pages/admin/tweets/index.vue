@@ -11,16 +11,16 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
+            @change="list"
             clearable
             placeholder="请选择状态"
-            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -97,7 +97,7 @@
 
             <div class="pin-action-row">
               <div class="action-box">
-                <div class="like-action action" @click="like(tweet)">
+                <div @click="like(tweet)" class="like-action action">
                   <div class="action-title-box">
                     <i class="iconfont icon-like" />
                     <span class="action-title">{{
@@ -119,8 +119,8 @@
                 </a>
                 <div
                   v-if="tweet.status === 0"
-                  class="like-action action"
                   @click="deleteSubmit(tweet)"
+                  class="like-action action"
                 >
                   <div class="action-title-box">
                     <i class="iconfont icon-delete" />
@@ -129,8 +129,8 @@
                 </div>
                 <div
                   v-if="tweet.status === 1"
-                  class="like-action action"
                   @click="undeleteSubmit(tweet)"
+                  class="like-action action"
                 >
                   <div class="action-title-box">
                     <i class="iconfont icon-delete" />
@@ -150,9 +150,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
-        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
+        layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
     </div>

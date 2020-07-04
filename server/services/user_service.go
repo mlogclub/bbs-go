@@ -3,14 +3,13 @@ package services
 import (
 	"database/sql"
 	"errors"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+	"net/http"
+	"strings"
+	"time"
 
 	"bbs-go/cache"
 	"bbs-go/common"
@@ -99,8 +98,15 @@ func (s *userService) Scan(callback func(users []model.User)) {
 }
 
 // Forbidden 禁言
-func (s *userService) Forbidden(operatorId, userId int64, days int, reason string, r *http.Request) {
-	forbiddenEndTime := simple.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
+func (s *userService) Forbidden(operatorId, userId int64, days int, reason string, r *http.Request) error {
+	var forbiddenEndTime int64
+	if days == -1 { // 永久禁言
+		forbiddenEndTime = -1
+	} else if days > 0 {
+		forbiddenEndTime = simple.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
+	} else {
+		return errors.New("禁言时间错误")
+	}
 	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
 		description := ""
 		if simple.IsNotBlank(reason) {
@@ -109,6 +115,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 		OperateLogService.AddOperateLog(operatorId, model.OpTypeForbidden, model.EntityTypeArticle, userId,
 			description, r)
 	}
+	return nil
 }
 
 // RemoveForbidden 移除禁言

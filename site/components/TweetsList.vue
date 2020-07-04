@@ -52,7 +52,7 @@
         </ul>
         <div class="pin-action-row">
           <div class="action-box">
-            <div class="like-action action" @click="like(tweet)">
+            <div @click="like(tweet)" class="like-action action">
               <div class="action-title-box">
                 <i class="iconfont icon-like" />
                 <span class="action-title">{{

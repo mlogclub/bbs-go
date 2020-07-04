@@ -12,9 +12,9 @@
         </a>
         <a
           :class="{ 'is-active': navbarActive }"
+          @click="toggleNav"
           class="navbar-burger burger"
           data-target="navbarBasic"
-          @click="toggleNav"
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
@@ -85,7 +85,7 @@
               <a v-if="isOwnerOrAdmin" class="navbar-item" href="/admin">
                 <i class="iconfont icon-dashboard" />&nbsp;后台管理
               </a>
-              <a class="navbar-item" @click="signout">
+              <a @click="signout" class="navbar-item">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>
             </div>

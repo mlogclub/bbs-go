@@ -29,16 +29,16 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
+            @change="list"
             clearable
             placeholder="请选择状态"
-            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button @click="list" type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -78,10 +78,10 @@
 
                 <div class="tools">
                   <span v-if="item.status === 1" class="item info">已删除</span>
-                  <a class="item" @click="handleDelete(item)">删除</a>
+                  <a @click="handleDelete(item)" class="item">删除</a>
                 </div>
               </div>
-              <div class="summary" v-html="item.content"></div>
+              <div v-html="item.content" class="summary"></div>
             </div>
           </div>
         </li>
@@ -99,9 +99,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
-        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
+        layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
   </section>

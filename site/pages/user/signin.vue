@@ -12,10 +12,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="username"
+                  @keyup.enter="submitLogin"
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名或邮箱"
-                  @keyup.enter="submitLogin"
                 />
                 <span class="icon is-small is-left"
                   ><i class="iconfont icon-username"
@@ -28,10 +28,10 @@
               <div class="control has-icons-left">
                 <input
                   v-model="password"
+                  @keyup.enter="submitLogin"
                   class="input"
                   type="password"
                   placeholder="请输入密码"
-                  @keyup.enter="submitLogin"
                 />
                 <span class="icon is-small is-left"
                   ><i class="iconfont icon-password"
@@ -46,11 +46,11 @@
                   <div class="field">
                     <input
                       v-model="captchaCode"
+                      @keyup.enter="submitLogin"
                       class="input"
                       type="text"
                       placeholder="验证码"
                       style="max-width: 150px; margin-right: 20px;"
-                      @keyup.enter="submitLogin"
                     />
                     <span class="icon is-small is-left"
                       ><i class="iconfont icon-captcha"
@@ -67,7 +67,7 @@
 
             <div class="field">
               <div class="control">
-                <button class="button is-success" @click="submitLogin">
+                <button @click="submitLogin" class="button is-success">
                   登录
                 </button>
                 <github-login :ref-url="ref" />
