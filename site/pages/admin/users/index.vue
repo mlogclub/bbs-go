@@ -30,6 +30,11 @@
     >
       <el-table-column type="expand">
         <template slot-scope="scope">
+          <div v-if="scope.row.forbidden" style="font-weight: 600; color: red;">
+            <span>已禁言至</span>
+            <span v-if="scope.row.forbiddenEndTime === -1">永久</span>
+            <span v-else>{{ scope.row.forbiddenEndTime | formatDate }}</span>
+          </div>
           <div v-if="scope.row.roles && scope.row.roles.length">
             <div>
               <span>角色：</span>
@@ -45,9 +50,6 @@
           <div>
             <span>状态：</span>
             {{ scope.row.status === 0 ? '正常' : '删除' }}
-          </div>
-          <div v-if="scope.row.forbidden">
-            <span>已禁言至 {{ scope.row.forbiddenEndTime | formatDate }}</span>
           </div>
           <div>
             <span>注册时间：</span>
@@ -236,6 +238,7 @@
             <el-option label="7天" value="7" />
             <el-option label="15天" value="15" />
             <el-option label="30天" value="30" />
+            <el-option label="永久" value="-1" />
           </el-select>
         </el-form-item>
         <el-form-item label="禁言原因" prop="reason">
