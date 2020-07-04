@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/model/constants"
 	"strconv"
 	"strings"
 
@@ -30,7 +31,7 @@ func (c *UserController) GetCurrent() *simple.JsonResult {
 // 用户详情
 func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
-	if user != nil && user.Status != model.StatusDeleted {
+	if user != nil && user.Status != constants.StatusDeleted {
 		return simple.JsonData(render.BuildUser(user))
 	}
 	return simple.JsonErrorMsg("用户不存在")
@@ -190,7 +191,8 @@ func (c *UserController) GetMsgrecent() *simple.JsonResult {
 	var messages []model.Message
 	if user != nil {
 		count = services.MessageService.GetUnReadCount(user.Id)
-		messages = services.MessageService.Find(simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.MsgStatusUnread).Limit(3).Desc("id"))
+		messages = services.MessageService.Find(simple.NewSqlCnd().Eq("user_id", user.Id).
+			Eq("status", constants.MsgStatusUnread).Limit(3).Desc("id"))
 	}
 	return simple.NewEmptyRspBuilder().Put("count", count).Put("messages", render.BuildMessages(messages)).JsonResult()
 }
@@ -217,7 +219,7 @@ func (c *UserController) GetMessages() *simple.JsonResult {
 
 // 最新用户
 func (c *UserController) GetNewest() *simple.JsonResult {
-	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", model.UserTypeNormal).Desc("id").Limit(10))
+	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", constants.UserTypeNormal).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildUsers(users))
 }
 
@@ -253,7 +255,7 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
-	if !user.HasAnyRole(model.RoleOwner, model.RoleAdmin) {
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
 		return simple.JsonErrorMsg("无权限")
 	}
 	var (

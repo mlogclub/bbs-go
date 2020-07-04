@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"strconv"
 	"strings"
@@ -116,17 +117,17 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 
 func (s *sysConfigService) GetConfig() *model.ConfigData {
 	var (
-		siteTitle        = cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
-		siteDescription  = cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
-		siteKeywords     = cache.SysConfigCache.GetValue(model.SysConfigSiteKeywords)
-		siteNavs         = cache.SysConfigCache.GetValue(model.SysConfigSiteNavs)
-		siteNotification = cache.SysConfigCache.GetValue(model.SysConfigSiteNotification)
-		recommendTags    = cache.SysConfigCache.GetValue(model.SysConfigRecommendTags)
-		urlRedirect      = cache.SysConfigCache.GetValue(model.SysConfigUrlRedirect)
-		scoreConfigStr   = cache.SysConfigCache.GetValue(model.SysConfigScoreConfig)
-		defaultNodeIdStr = cache.SysConfigCache.GetValue(model.SysConfigDefaultNodeId)
-		articlePending   = cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
-		topicCaptcha     = cache.SysConfigCache.GetValue(model.SysConfigTopicCaptcha)
+		siteTitle        = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		siteDescription  = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
+		siteKeywords     = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
+		siteNavs         = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
+		siteNotification = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
+		recommendTags    = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
+		urlRedirect      = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
+		scoreConfigStr   = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
+		defaultNodeIdStr = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
+		articlePending   = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
+		topicCaptcha     = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 	)
 
 	var siteKeywordsArr []string

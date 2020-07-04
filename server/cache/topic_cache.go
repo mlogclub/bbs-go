@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/model/constants"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -25,7 +26,7 @@ func newTopicCache() *topicCache {
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TopicRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(50))
+					simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
 				return
 			},
 			cache.WithMaximumSize(10),

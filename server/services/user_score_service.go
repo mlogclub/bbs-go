@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"strconv"
 
@@ -84,7 +85,7 @@ func (s *userScoreService) IncrementPostTopicScore(topic *model.Topic) {
 		logrus.Info("请配置发帖积分")
 		return
 	}
-	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, model.EntityTypeTopic,
+	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, constants.EntityTopic,
 		strconv.FormatInt(topic.Id, 10), "发表话题")
 	if err != nil {
 		logrus.Error(err)
@@ -94,7 +95,7 @@ func (s *userScoreService) IncrementPostTopicScore(topic *model.Topic) {
 // IncrementPostCommentScore 跟帖获积分
 func (s *userScoreService) IncrementPostCommentScore(comment *model.Comment) {
 	// 非话题跟帖，跳过
-	if comment.EntityType != model.EntityTypeTopic {
+	if comment.EntityType != constants.EntityTopic {
 		return
 	}
 	config := SysConfigService.GetConfig()
@@ -102,7 +103,7 @@ func (s *userScoreService) IncrementPostCommentScore(comment *model.Comment) {
 		logrus.Info("请配置跟帖积分")
 		return
 	}
-	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, model.EntityTypeComment,
+	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, constants.EntityComment,
 		strconv.FormatInt(comment.Id, 10), "发表跟帖")
 	if err != nil {
 		logrus.Error(err)
@@ -143,9 +144,9 @@ func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceI
 		return err
 	}
 
-	scoreType := model.ScoreTypeIncr
+	scoreType := constants.ScoreTypeIncr
 	if score < 0 {
-		scoreType = model.ScoreTypeDecr
+		scoreType = constants.ScoreTypeDecr
 	}
 	err := UserScoreLogService.Create(&model.UserScoreLog{
 		UserId:      userId,

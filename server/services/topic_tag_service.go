@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"github.com/mlogclub/simple"
 
 	"bbs-go/model"
@@ -57,9 +58,9 @@ func (s *topicTagService) UpdateColumn(id int64, name string, value interface{})
 }
 
 func (s *topicTagService) DeleteByTopicId(topicId int64) {
-	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusDeleted)
+	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusDeleted)
 }
 
 func (s *topicTagService) UndeleteByTopicId(topicId int64) {
-	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", model.StatusOk)
+	simple.DB().Model(model.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusOk)
 }

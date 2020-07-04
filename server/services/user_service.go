@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"database/sql"
 	"errors"
 	"github.com/jinzhu/gorm"
@@ -112,7 +113,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 		if simple.IsNotBlank(reason) {
 			description = "禁言原因：" + reason
 		}
-		OperateLogService.AddOperateLog(operatorId, model.OpTypeForbidden, model.EntityTypeUser, userId,
+		OperateLogService.AddOperateLog(operatorId, constants.OpTypeForbidden, constants.EntityUser, userId,
 			description, r)
 	}
 	return nil
@@ -125,7 +126,7 @@ func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request)
 		return
 	}
 	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", 0) == nil {
-		OperateLogService.AddOperateLog(operatorId, model.OpTypeRemoveForbidden, model.EntityTypeUser, userId, "", r)
+		OperateLogService.AddOperateLog(operatorId, constants.OpTypeRemoveForbidden, constants.EntityUser, userId, "", r)
 	}
 }
 
@@ -183,7 +184,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		Email:      simple.SqlNullString(email),
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
-		Status:     model.StatusOk,
+		Status:     constants.StatusOk,
 		CreateTime: simple.NowTimestamp(),
 		UpdateTime: simple.NowTimestamp(),
 	}
@@ -224,7 +225,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	} else {
 		user = s.GetByUsername(username)
 	}
-	if user == nil || user.Status != model.StatusOk {
+	if user == nil || user.Status != constants.StatusOk {
 		return nil, errors.New("用户不存在或被禁用")
 	}
 	if !simple.ValidatePassword(user.Password, password) {
@@ -237,7 +238,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
-		if user.Status != model.StatusOk {
+		if user.Status != constants.StatusOk {
 			return nil, simple.NewErrorMsg("用户已被禁用")
 		}
 		return user, nil
@@ -245,7 +246,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 
 	var homePage string
 	var description string
-	if thirdAccount.ThirdType == model.ThirdAccountTypeGithub {
+	if thirdAccount.ThirdType == constants.ThirdAccountTypeGithub {
 		if blog := gjson.Get(thirdAccount.ExtraData, "blog"); blog.Exists() && len(blog.String()) > 0 {
 			homePage = blog.String()
 		} else if htmlUrl := gjson.Get(thirdAccount.ExtraData, "html_url"); htmlUrl.Exists() && len(htmlUrl.String()) > 0 {
@@ -258,7 +259,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 	user = &model.User{
 		Username:    sql.NullString{},
 		Nickname:    thirdAccount.Nickname,
-		Status:      model.StatusOk,
+		Status:      constants.StatusOk,
 		HomePage:    homePage,
 		Description: description,
 		CreateTime:  simple.NowTimestamp(),
@@ -416,8 +417,8 @@ func (s *userService) IncrCommentCount(userId int64) int {
 func (s *userService) SyncUserCount() {
 	s.Scan(func(users []model.User) {
 		for _, user := range users {
-			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
-			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", model.StatusOk))
+			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
 			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "topic_count", topicCount)
 			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "comment_count", commentCount)
 			cache.UserCache.Invalidate(user.Id)

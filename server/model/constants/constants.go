@@ -1,4 +1,4 @@
-package model
+package constants
 
 // 系统配置
 const (
@@ -17,11 +17,11 @@ const (
 
 // EntityType
 const (
-	EntityTypeArticle = "article"
-	EntityTypeTopic   = "topic"
-	EntityTypeComment = "comment"
-	EntityTypeTweet   = "tweet"
-	EntityTypeUser    = "user"
+	EntityArticle = "article"
+	EntityTopic   = "topic"
+	EntityComment = "comment"
+	EntityTweet   = "tweet"
+	EntityUser    = "user"
 )
 
 // 用户角色
@@ -38,4 +38,47 @@ const (
 	OpTypeUpdate          = "update"
 	OpTypeForbidden       = "forbidden"
 	OpTypeRemoveForbidden = "removeForbidden"
+)
+
+// 状态
+const (
+	StatusOk      = 0 // 正常
+	StatusDeleted = 1 // 删除
+	StatusPending = 2 // 待审核
+)
+
+// 用户类型
+const (
+	UserTypeNormal = 0 // 普通用户
+	UserTypeGzh    = 1 // 公众号用户
+)
+
+// 内容类型
+const (
+	ContentTypeHtml     = "html"
+	ContentTypeMarkdown = "markdown"
+	ContentTypeText     = "text"
+)
+
+// 消息状态
+const (
+	MsgStatusUnread = 0 // 消息未读
+	MsgStatusReaded = 1 // 消息已读
+)
+
+// 消息类型
+const (
+	MsgTypeComment = 0 // 回复消息
+)
+
+// 第三方账号类型
+const (
+	ThirdAccountTypeGithub = "github"
+	ThirdAccountTypeQQ     = "qq"
+)
+
+// 积分操作类型
+const (
+	ScoreTypeIncr = 0 // 积分+
+	ScoreTypeDecr = 1 // 积分-
 )

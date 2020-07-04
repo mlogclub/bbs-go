@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"math"
 	"path"
 	"time"
@@ -140,8 +141,8 @@ func (s *projectService) GenerateRss() {
 		}
 		items = append(items, item)
 	}
-	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
-	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Instance.BaseUrl},

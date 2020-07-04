@@ -1,6 +1,7 @@
 package render
 
 import (
+	"bbs-go/model/constants"
 	"html"
 	"strconv"
 	"strings"
@@ -68,7 +69,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if len(ret.Description) == 0 {
 		ret.Description = "这家伙很懒，什么都没留下"
 	}
-	if user.Status == model.StatusDeleted {
+	if user.Status == constants.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.Nickname = "黑名单用户"
 		ret.Avatar = avatar.DefaultAvatar
@@ -116,10 +117,10 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	tags := cache.TagCache.GetList(tagIds)
 	rsp.Tags = BuildTags(tags)
 
-	if article.ContentType == model.ContentTypeMarkdown {
+	if article.ContentType == constants.ContentTypeMarkdown {
 		content, _ := markdown.New(markdown.SummaryLen(0)).Run(article.Content)
 		rsp.Content = BuildHtmlContent(content)
-	} else if article.ContentType == model.ContentTypeHtml {
+	} else if article.ContentType == constants.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(article.Content)
 	}
 
@@ -146,11 +147,11 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	tags := cache.TagCache.GetList(tagIds)
 	rsp.Tags = BuildTags(tags)
 
-	if article.ContentType == model.ContentTypeMarkdown {
+	if article.ContentType == constants.ContentTypeMarkdown {
 		if len(rsp.Summary) == 0 {
 			_, rsp.Summary = markdown.New().Run(article.Content)
 		}
-	} else if article.ContentType == model.ContentTypeHtml {
+	} else if article.ContentType == constants.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {
 			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), 256)
 		}
@@ -316,7 +317,7 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	rsp.DocUrl = project.DocUrl
 	rsp.CreateTime = project.CreateTime
 
-	if project.ContentType == model.ContentTypeHtml {
+	if project.ContentType == constants.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(project.Content)
 		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
 	} else {
@@ -354,7 +355,7 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	rsp.DownloadUrl = project.DownloadUrl
 	rsp.CreateTime = project.CreateTime
 
-	if project.ContentType == model.ContentTypeHtml {
+	if project.ContentType == constants.ContentTypeHtml {
 		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
 	} else {
 		rsp.Summary = common.GetMarkdownSummary(project.Content)
@@ -390,10 +391,10 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 		CreateTime: comment.CreateTime,
 	}
 
-	if comment.ContentType == model.ContentTypeMarkdown {
+	if comment.ContentType == constants.ContentTypeMarkdown {
 		content, _ := markdown.New().Run(comment.Content)
 		ret.Content = BuildHtmlContent(content)
-	} else if comment.ContentType == model.ContentTypeHtml {
+	} else if comment.ContentType == constants.ContentTypeHtml {
 		ret.Content = BuildHtmlContent(comment.Content)
 	} else {
 		ret.Content = html.EscapeString(comment.Content)
@@ -433,17 +434,17 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 	rsp.EntityType = favorite.EntityType
 	rsp.CreateTime = favorite.CreateTime
 
-	if favorite.EntityType == model.EntityTypeArticle {
+	if favorite.EntityType == constants.EntityArticle {
 		article := services.ArticleService.Get(favorite.EntityId)
-		if article == nil || article.Status != model.StatusOk {
+		if article == nil || article.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.ArticleUrl(article.Id)
 			rsp.User = BuildUserById(article.UserId)
 			rsp.Title = article.Title
-			if article.ContentType == model.ContentTypeMarkdown {
+			if article.ContentType == constants.ContentTypeMarkdown {
 				rsp.Content = common.GetMarkdownSummary(article.Content)
-			} else if article.ContentType == model.ContentTypeHtml {
+			} else if article.ContentType == constants.ContentTypeHtml {
 				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
 				if err == nil {
 					text := doc.Text()
@@ -453,7 +454,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		}
 	} else {
 		topic := services.TopicService.Get(favorite.EntityId)
-		if topic == nil || topic.Status != model.StatusOk {
+		if topic == nil || topic.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.TopicUrl(topic.Id)
@@ -482,14 +483,14 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 	}
 
 	detailUrl := ""
-	if message.Type == model.MsgTypeComment {
+	if message.Type == constants.MsgTypeComment {
 		entityType := gjson.Get(message.ExtraData, "entityType")
 		entityId := gjson.Get(message.ExtraData, "entityId")
-		if entityType.String() == model.EntityTypeArticle {
+		if entityType.String() == constants.EntityArticle {
 			detailUrl = urls.ArticleUrl(entityId.Int())
-		} else if entityType.String() == model.EntityTypeTopic {
+		} else if entityType.String() == constants.EntityTopic {
 			detailUrl = urls.TopicUrl(entityId.Int())
-		} else if entityType.String() == model.EntityTypeTweet {
+		} else if entityType.String() == constants.EntityTweet {
 			detailUrl = urls.TweetUrl(entityId.Int())
 		}
 	}

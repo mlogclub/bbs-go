@@ -1,12 +1,12 @@
 package api
 
 import (
+	"bbs-go/model/constants"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"bbs-go/cache"
 	"bbs-go/controllers/render"
-	"bbs-go/model"
 	"bbs-go/services"
 )
 
@@ -27,7 +27,7 @@ func (c *TagController) GetBy(tagId int64) *simple.JsonResult {
 func (c *TagController) GetTags() *simple.JsonResult {
 	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 	tags, paging := services.TagService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 200).Desc("id"))
 
 	return simple.JsonPageData(render.BuildTags(tags), paging)

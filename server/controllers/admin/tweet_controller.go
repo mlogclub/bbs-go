@@ -1,13 +1,13 @@
 package admin
 
 import (
+	"bbs-go/model/constants"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"bbs-go/controllers/render"
-	"bbs-go/model"
 	"bbs-go/services"
 )
 
@@ -38,7 +38,7 @@ func (c *TweetController) PostDelete() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.TweetService.UpdateColumn(id, "status", model.StatusDeleted)
+	err = services.TweetService.UpdateColumn(id, "status", constants.StatusDeleted)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *TweetController) PostUndelete() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.TweetService.UpdateColumn(id, "status", model.StatusOk)
+	err = services.TweetService.UpdateColumn(id, "status", constants.StatusOk)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

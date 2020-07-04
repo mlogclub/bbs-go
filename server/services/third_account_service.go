@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"database/sql"
 	"strconv"
 	"strings"
@@ -76,7 +77,7 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		return nil, err
 	}
 
-	account := s.GetThirdAccount(model.ThirdAccountTypeGithub, strconv.FormatInt(userInfo.Id, 10))
+	account := s.GetThirdAccount(constants.ThirdAccountTypeGithub, strconv.FormatInt(userInfo.Id, 10))
 	if account != nil {
 		return account, nil
 	}
@@ -91,7 +92,7 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.AvatarUrl,
 		Nickname:   nickname,
-		ThirdType:  model.ThirdAccountTypeGithub,
+		ThirdType:  constants.ThirdAccountTypeGithub,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
 		ExtraData:  userInfoJson,
 		CreateTime: simple.NowTimestamp(),
@@ -110,7 +111,7 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		return nil, err
 	}
 
-	account := s.GetThirdAccount(model.ThirdAccountTypeQQ, userInfo.Unionid)
+	account := s.GetThirdAccount(constants.ThirdAccountTypeQQ, userInfo.Unionid)
 	if account != nil {
 		return account, nil
 	}
@@ -120,7 +121,7 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.FigureurlQQ1,
 		Nickname:   strings.TrimSpace(userInfo.Nickname),
-		ThirdType:  model.ThirdAccountTypeQQ,
+		ThirdType:  constants.ThirdAccountTypeQQ,
 		ThirdId:    userInfo.Unionid,
 		ExtraData:  userInfoJson,
 		CreateTime: simple.NowTimestamp(),

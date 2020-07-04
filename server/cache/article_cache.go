@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/model/constants"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -27,7 +28,7 @@ func newArticleCache() *articleCache {
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.ArticleRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(50))
+					simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(50))
 				return
 			},
 			cache.WithMaximumSize(1),
@@ -37,7 +38,7 @@ func newArticleCache() *articleCache {
 			func(key cache.Key) (value cache.Value, err error) {
 				createTime := simple.Timestamp(time.Now().AddDate(0, 0, -3))
 				value = repositories.ArticleRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Gt("create_time", createTime).Eq("status", model.StatusOk).Desc("view_count").Limit(5))
+					simple.NewSqlCnd().Gt("create_time", createTime).Eq("status", constants.StatusOk).Desc("view_count").Limit(5))
 				return
 			},
 			cache.WithMaximumSize(1),

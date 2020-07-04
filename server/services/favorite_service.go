@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 
 	"github.com/mlogclub/simple"
@@ -71,19 +72,19 @@ func (s *favoriteService) GetBy(userId int64, entityType string, entityId int64)
 // 收藏文章
 func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 	article := repositories.ArticleRepository.Get(simple.DB(), articleId)
-	if article == nil || article.Status != model.StatusOk {
+	if article == nil || article.Status != constants.StatusOk {
 		return errors.New("收藏的文章不存在")
 	}
-	return s.addFavorite(userId, model.EntityTypeArticle, articleId)
+	return s.addFavorite(userId, constants.EntityArticle, articleId)
 }
 
 // 收藏主题
 func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("收藏的话题不存在")
 	}
-	return s.addFavorite(userId, model.EntityTypeTopic, topicId)
+	return s.addFavorite(userId, constants.EntityTopic, topicId)
 }
 
 func (s *favoriteService) addFavorite(userId int64, entityType string, entityId int64) error {

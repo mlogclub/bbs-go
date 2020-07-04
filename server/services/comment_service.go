@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"strings"
 
@@ -64,7 +65,7 @@ func (s *commentService) UpdateColumn(id int64, name string, value interface{}) 
 }
 
 func (s *commentService) Delete(id int64) error {
-	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
+	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 }
 
 // 发表评论
@@ -86,18 +87,18 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		EntityType:  form.EntityType,
 		EntityId:    form.EntityId,
 		Content:     form.Content,
-		ContentType: simple.DefaultIfBlank(form.ContentType, model.ContentTypeMarkdown),
+		ContentType: simple.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
-		Status:      model.StatusOk,
+		Status:      constants.StatusOk,
 		CreateTime:  simple.NowTimestamp(),
 	}
 	if err := s.Create(comment); err != nil {
 		return nil, err
 	}
 
-	if form.EntityType == model.EntityTypeTopic {
+	if form.EntityType == constants.EntityTopic {
 		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
-	} else if form.EntityType == model.EntityTypeTweet {
+	} else if form.EntityType == constants.EntityTweet {
 		TweetService.OnComment(form.EntityId)
 	}
 
@@ -117,7 +118,7 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 
 // 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", model.StatusOk).Desc("id").Limit(50)
+	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(50)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}

@@ -1,6 +1,7 @@
 package collect
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 
 	"bbs-go/common"
@@ -47,7 +48,7 @@ func (api *SpiderApi) PublishComment(comment *Comment) (commentId int64, err err
 		EntityType:  comment.EntityType,
 		EntityId:    comment.EntityId,
 		Content:     comment.Content,
-		ContentType: model.ContentTypeHtml,
+		ContentType: constants.ContentTypeHtml,
 	})
 	if err == nil {
 		commentId = c.Id
@@ -61,9 +62,9 @@ func (api *SpiderApi) PublishComment(comment *Comment) (commentId int64, err err
 
 func (api *SpiderApi) AnalyzeTags(article *Article) []string {
 	var analyzeRet *baiduai.AiAnalyzeRet
-	if article.ContentType == model.ContentTypeMarkdown {
+	if article.ContentType == constants.ContentTypeMarkdown {
 		analyzeRet, _ = baiduai.GetAi().AnalyzeMarkdown(article.Title, article.Content)
-	} else if article.ContentType == model.ContentTypeHtml {
+	} else if article.ContentType == constants.ContentTypeHtml {
 		analyzeRet, _ = baiduai.GetAi().AnalyzeHtml(article.Title, article.Content)
 	}
 	var tags []string

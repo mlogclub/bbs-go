@@ -1,6 +1,7 @@
 package collect
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"strings"
 
@@ -31,7 +32,7 @@ func (api *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 		summary = simple.GetSummary(article.TextContent, 256)
 	}
 
-	return services.ArticleService.Publish(userId, article.Title, summary, article.HtmlContent, model.ContentTypeHtml,
+	return services.ArticleService.Publish(userId, article.Title, summary, article.HtmlContent, constants.ContentTypeHtml,
 		tags, article.Url)
 }
 
@@ -52,8 +53,8 @@ func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
 			Nickname:    article.AppName,
 			Description: article.WxIntro,
 			Avatar:      avatar,
-			Status:      model.StatusOk,
-			Type:        model.UserTypeGzh,
+			Status:      constants.StatusOk,
+			Type:        constants.UserTypeGzh,
 			CreateTime:  simple.NowTimestamp(),
 			UpdateTime:  simple.NowTimestamp(),
 		}

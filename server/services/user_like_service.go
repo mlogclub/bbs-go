@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 
 	"github.com/jinzhu/gorm"
@@ -84,12 +85,12 @@ func (s *userLikeService) Exists(userId int64, entityType string, entityId int64
 // 话题点赞
 func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("话题不存在")
 	}
 
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		if err := s.like(tx, userId, model.EntityTypeTopic, topicId); err != nil {
+		if err := s.like(tx, userId, constants.EntityTopic, topicId); err != nil {
 			return err
 		}
 		// 更新点赞数
@@ -100,11 +101,11 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 // 动态点赞
 func (s *userLikeService) TweetLike(userId int64, tweetId int64) error {
 	tweet := repositories.TweetRepository.Get(simple.DB(), tweetId)
-	if tweet == nil || tweet.Status != model.StatusOk {
+	if tweet == nil || tweet.Status != constants.StatusOk {
 		return errors.New("动态不存在")
 	}
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
-		if err := s.like(tx, userId, model.EntityTypeTweet, tweetId); err != nil {
+		if err := s.like(tx, userId, constants.EntityTweet, tweetId); err != nil {
 			return err
 		}
 		// 更新点赞数

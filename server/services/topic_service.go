@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"math"
 	"path"
 	"time"
@@ -73,7 +74,7 @@ func (s *topicService) UpdateColumn(id int64, name string, value interface{}) er
 
 // 删除
 func (s *topicService) Delete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(id)
@@ -83,7 +84,7 @@ func (s *topicService) Delete(id int64) error {
 
 // 取消删除
 func (s *topicService) Undelete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", model.StatusOk)
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusOk)
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.UndeleteByTopicId(id)
@@ -108,7 +109,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		}
 	}
 	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
-	if node == nil || node.Status != model.StatusOk {
+	if node == nil || node.Status != constants.StatusOk {
 		return nil, simple.NewErrorMsg("节点不存在")
 	}
 
@@ -118,7 +119,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		NodeId:          nodeId,
 		Title:           title,
 		Content:         content,
-		Status:          model.StatusOk,
+		Status:          constants.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
 	}
@@ -155,7 +156,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 	}
 
 	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
-	if node == nil || node.Status != model.StatusOk {
+	if node == nil || node.Status != constants.StatusOk {
 		return simple.NewErrorMsg("节点不存在")
 	}
 
@@ -197,7 +198,7 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 	if len(topicTags) > 0 {
 		var topicIds []int64
@@ -253,7 +254,7 @@ func (s *topicService) OnComment(topicId, lastCommentTime int64) {
 // rss
 func (s *topicService) GenerateRss() {
 	topics := repositories.TopicRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(1000))
 
 	var items []*feeds.Item
 	for _, topic := range topics {
@@ -271,8 +272,8 @@ func (s *topicService) GenerateRss() {
 		}
 		items = append(items, item)
 	}
-	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
-	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Instance.BaseUrl},

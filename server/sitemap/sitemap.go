@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"bbs-go/model/constants"
 	"bytes"
 	"compress/gzip"
 	"time"
@@ -87,7 +88,7 @@ func Generate() {
 
 	services.ArticleService.ScanDescWithDate(dateFrom, dateTo, func(articles []model.Article) {
 		for _, article := range articles {
-			if article.Status == model.StatusOk {
+			if article.Status == constants.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
@@ -101,7 +102,7 @@ func Generate() {
 
 	services.TopicService.ScanDescWithDate(dateFrom, dateTo, func(topics []model.Topic) {
 		for _, topic := range topics {
-			if topic.Status == model.StatusOk {
+			if topic.Status == constants.StatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},

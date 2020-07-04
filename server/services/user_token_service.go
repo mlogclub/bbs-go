@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -58,7 +59,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 	token := s.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
-	if userToken == nil || userToken.Status == model.StatusDeleted {
+	if userToken == nil || userToken.Status == constants.StatusDeleted {
 		return nil
 	}
 	// 授权过期
@@ -66,7 +67,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 		return nil
 	}
 	user := cache.UserCache.Get(userToken.UserId)
-	if user == nil || user.Status != model.StatusOk {
+	if user == nil || user.Status != constants.StatusOk {
 		return nil
 	}
 	return user
@@ -88,7 +89,7 @@ func (s *userTokenService) Signout(ctx iris.Context) error {
 	if userToken == nil {
 		return nil
 	}
-	return repositories.UserTokenRepository.UpdateColumn(simple.DB(), userToken.Id, "status", model.StatusDeleted)
+	return repositories.UserTokenRepository.UpdateColumn(simple.DB(), userToken.Id, "status", constants.StatusDeleted)
 }
 
 // 从请求体中获取UserToken
@@ -108,7 +109,7 @@ func (s *userTokenService) Generate(userId int64) (string, error) {
 		Token:      token,
 		UserId:     userId,
 		ExpiredAt:  simple.Timestamp(expiredAt),
-		Status:     model.StatusOk,
+		Status:     constants.StatusOk,
 		CreateTime: simple.NowTimestamp(),
 	}
 	err := repositories.UserTokenRepository.Create(simple.DB(), userToken)
@@ -124,7 +125,7 @@ func (s *userTokenService) Disable(token string) error {
 	if t == nil {
 		return nil
 	}
-	err := repositories.UserTokenRepository.UpdateColumn(simple.DB(), t.Id, "status", model.StatusDeleted)
+	err := repositories.UserTokenRepository.UpdateColumn(simple.DB(), t.Id, "status", constants.StatusDeleted)
 	if err != nil {
 		cache.UserTokenCache.Invalidate(token)
 	}

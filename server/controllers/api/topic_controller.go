@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/common"
+	"bbs-go/model/constants"
 	"github.com/dchest/captcha"
 	"math/rand"
 	"strings"
@@ -73,12 +74,12 @@ func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -110,12 +111,12 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	}
 
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -129,7 +130,7 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 		return simple.JsonError(err)
 	}
 	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeUpdate, model.EntityTypeTopic, topicId,
+	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeUpdate, constants.EntityTopic, topicId,
 		"", c.Ctx.Request())
 	return simple.JsonData(render.BuildSimpleTopic(topic))
 }
@@ -145,12 +146,12 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	}
 
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return simple.JsonSuccess()
 	}
 
 	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -158,7 +159,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeDelete, model.EntityTypeTopic, topicId,
+	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeDelete, constants.EntityTopic, topicId,
 		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
@@ -166,7 +167,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 // 帖子详情
 func (c *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != model.StatusOk {
+	if topic == nil || topic.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("主题不存在")
 	}
 	services.TopicService.IncrViewCount(topicId) // 增加浏览量
@@ -188,7 +189,7 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 
 // 点赞用户
 func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
-	likes := services.UserLikeService.Recent(model.EntityTypeTopic, topicId, 10)
+	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 10)
 	var users []model.UserInfo
 	for _, like := range likes {
 		userInfo := render.BuildUserById(like.UserId)
@@ -201,7 +202,7 @@ func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (c *TopicController) GetRecent() *simple.JsonResult {
-	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
+	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
@@ -212,7 +213,7 @@ func (c *TopicController) GetUserRecent() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	topics := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.StatusOk).Desc("id").Limit(10))
+		userId, constants.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
@@ -226,7 +227,7 @@ func (c *TopicController) GetUserTopics() *simple.JsonResult {
 
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -237,7 +238,7 @@ func (c *TopicController) GetTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -249,7 +250,7 @@ func (c *TopicController) GetNodeTopics() *simple.JsonResult {
 	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("node_id", nodeId).
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -271,7 +272,7 @@ func (c *TopicController) GetRecommendTopics() *simple.JsonResult {
 	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("recommend", true).
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("last_comment_time"))
 
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
@@ -312,6 +313,6 @@ func (c *TopicController) GetRecommend() *simple.JsonResult {
 
 // 最新话题
 func (c *TopicController) GetNewest() *simple.JsonResult {
-	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(6))
+	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }

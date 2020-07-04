@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"sync"
 
 	"github.com/mlogclub/simple"
@@ -77,14 +78,14 @@ func (s *messageService) Delete(id int64) {
 
 // 获取未读消息数量
 func (s *messageService) GetUnReadCount(userId int64) (count int64) {
-	simple.DB().Where("user_id = ? and status = ?", userId, model.MsgStatusUnread).Model(&model.Message{}).Count(&count)
+	simple.DB().Where("user_id = ? and status = ?", userId, constants.MsgStatusUnread).Model(&model.Message{}).Count(&count)
 	return
 }
 
 // 将所有消息标记为已读
 func (s *messageService) MarkRead(userId int64) {
-	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", model.MsgStatusReaded,
-		userId, model.MsgStatusUnread)
+	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", constants.MsgStatusReaded,
+		userId, constants.MsgStatusUnread)
 }
 
 // 评论被回复消息
@@ -100,21 +101,21 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		quoteContent string           // 引用内容
 	)
 
-	if comment.EntityType == model.EntityTypeArticle { // 文章被评论
+	if comment.EntityType == constants.EntityArticle { // 文章被评论
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 		if article != nil {
 			authorId = article.UserId
 			content = user.Nickname + " 回复了你的文章：" + summary
 			quoteContent = "《" + article.Title + "》"
 		}
-	} else if comment.EntityType == model.EntityTypeTopic { // 话题被评论
+	} else if comment.EntityType == constants.EntityTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 		if topic != nil {
 			authorId = topic.UserId
 			content = user.Nickname + " 回复了你的话题：" + summary
 			quoteContent = "《" + topic.Title + "》"
 		}
-	} else if comment.EntityType == model.EntityTypeTweet { // 动态被评论
+	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
 		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
 		if tweet != nil {
 			authorId = tweet.UserId
@@ -130,7 +131,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	if quote != nil { // 回复跟帖
 		if comment.UserId != authorId && quote.UserId != authorId { // 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
 			// 给帖子作者发消息
-			s.Produce(fromId, authorId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
+			s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeComment, map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
@@ -139,15 +140,16 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		}
 
 		// 给被引用的人发消息
-		s.Produce(fromId, quote.UserId, user.Nickname+" 回复了你的评论："+summary, common.GetMarkdownSummary(quote.Content), model.MsgTypeComment, map[string]interface{}{
-			"entityType": comment.EntityType,
-			"entityId":   comment.EntityId,
-			"commentId":  comment.Id,
-			"quoteId":    comment.QuoteId,
-		})
+		s.Produce(fromId, quote.UserId, user.Nickname+" 回复了你的评论："+summary,
+			common.GetMarkdownSummary(quote.Content), constants.MsgTypeComment, map[string]interface{}{
+				"entityType": comment.EntityType,
+				"entityId":   comment.EntityId,
+				"commentId":  comment.Id,
+				"quoteId":    comment.QuoteId,
+			})
 	} else if comment.UserId != authorId { // 回复主贴，并且不是自己回复自己
 		// 给帖子作者发消息
-		s.Produce(fromId, authorId, content, quoteContent, model.MsgTypeComment, map[string]interface{}{
+		s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeComment, map[string]interface{}{
 			"entityType": comment.EntityType,
 			"entityId":   comment.EntityId,
 			"commentId":  comment.Id,
@@ -164,9 +166,10 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 }
 
 // 生产，将消息数据放入chan
-func (s *messageService) Produce(fromId, toId int64, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
+func (s *messageService) Produce(fromId, toId int64, content, quoteContent string, msgType int,
+	extraDataMap map[string]interface{}) {
 	to := cache.UserCache.Get(toId)
-	if to == nil || to.Type != model.UserTypeNormal {
+	if to == nil || to.Type != constants.UserTypeNormal {
 		return
 	}
 
@@ -186,7 +189,7 @@ func (s *messageService) Produce(fromId, toId int64, content, quoteContent strin
 		QuoteContent: quoteContent,
 		Type:         msgType,
 		ExtraData:    extraData,
-		Status:       model.MsgStatusUnread,
+		Status:       constants.MsgStatusUnread,
 		CreateTime:   simple.NowTimestamp(),
 	}
 }
@@ -214,7 +217,7 @@ func (s *messageService) Consume() {
 func (s *messageService) SendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
 	if user != nil && len(user.Email.String) > 0 {
-		siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
+		siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		emailTitle := siteTitle + " 新消息提醒"
 
 		email.SendTemplateEmail(user.Email.String, emailTitle, emailTitle, message.Content,

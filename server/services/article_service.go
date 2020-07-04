@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"math"
 	"path"
@@ -73,7 +74,7 @@ func (s *articleService) UpdateColumn(id int64, name string, value interface{}) 
 }
 
 func (s *articleService) Delete(id int64) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", model.StatusDeleted)
+	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		ArticleTagService.DeleteByArticleId(id)
@@ -103,7 +104,7 @@ func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
 
 // 文章列表
 func (s *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(20)
+	cnd := simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(20)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -118,7 +119,7 @@ func (s *articleService) GetArticles(cursor int64) (articles []model.Article, ne
 
 // 标签文章列表
 func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", model.StatusOk).Desc("id").Limit(20)
+	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(20)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -150,10 +151,10 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 	}
 
 	// 获取后台配置 否是开启发表文章审核
-	status := model.StatusOk
-	sysConfigArticlePending := cache.SysConfigCache.GetValue(model.SysConfigArticlePending)
+	status := constants.StatusOk
+	sysConfigArticlePending := cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
 	if strings.ToLower(sysConfigArticlePending) == "true" {
-		status = model.StatusPending
+		status = constants.StatusPending
 	}
 
 	article = &model.Article{
@@ -239,7 +240,7 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 // 用户最新文章
 func (s *articleService) GetUserNewestArticles(userId int64) []model.Article {
 	return repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, model.StatusOk).Desc("id").Limit(10))
+		userId, constants.StatusOk).Desc("id").Limit(10))
 }
 
 // 近期文章
@@ -247,7 +248,7 @@ func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
 	articles := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))
 	var ret []model.Article
 	for _, article := range articles {
-		if article.Status == model.StatusOk {
+		if article.Status == constants.StatusOk {
 			ret = append(ret, article)
 		}
 	}
@@ -285,7 +286,7 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 // rss
 func (s *articleService) GenerateRss() {
 	articles := repositories.ArticleRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(1000))
 
 	var items []*feeds.Item
 	for _, article := range articles {
@@ -305,8 +306,8 @@ func (s *articleService) GenerateRss() {
 		items = append(items, item)
 	}
 
-	siteTitle := cache.SysConfigCache.GetValue(model.SysConfigSiteTitle)
-	siteDescription := cache.SysConfigCache.GetValue(model.SysConfigSiteDescription)
+	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+	siteDescription := cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
 	feed := &feeds.Feed{
 		Title:       siteTitle,
 		Link:        &feeds.Link{Href: config.Instance.BaseUrl},

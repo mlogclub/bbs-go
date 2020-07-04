@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/model/constants"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
@@ -14,7 +15,7 @@ type LinkController struct {
 
 func (c *LinkController) GetBy(id int64) *simple.JsonResult {
 	link := services.LinkService.Get(id)
-	if link == nil || link.Status == model.StatusDeleted {
+	if link == nil || link.Status == constants.StatusDeleted {
 		return simple.JsonErrorMsg("数据不存在")
 	}
 	return simple.JsonData(c.buildLink(*link))
@@ -25,7 +26,7 @@ func (c *LinkController) GetLinks() *simple.JsonResult {
 	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
 
 	links, paging := services.LinkService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", model.StatusOk).Page(page, 20).Asc("id"))
+		Eq("status", constants.StatusOk).Page(page, 20).Asc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range links {
@@ -37,7 +38,7 @@ func (c *LinkController) GetLinks() *simple.JsonResult {
 // 前10个链接
 func (c *LinkController) GetToplinks() *simple.JsonResult {
 	links := services.LinkService.Find(simple.NewSqlCnd().
-		Eq("status", model.StatusOk).Limit(10).Asc("id"))
+		Eq("status", constants.StatusOk).Limit(10).Asc("id"))
 
 	var itemList []map[string]interface{}
 	for _, v := range links {

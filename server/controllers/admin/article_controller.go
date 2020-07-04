@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bbs-go/model/constants"
 	"strconv"
 
 	"bbs-go/model"
@@ -137,7 +138,7 @@ func (c *ArticleController) PostPending() *simple.JsonResult {
 	if id <= 0 {
 		return simple.JsonErrorMsg("id is required")
 	}
-	err := services.ArticleService.UpdateColumn(id, "status", model.StatusOk)
+	err := services.ArticleService.UpdateColumn(id, "status", constants.StatusOk)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

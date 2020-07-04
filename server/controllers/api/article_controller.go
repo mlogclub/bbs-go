@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/common"
+	"bbs-go/model/constants"
 	"math/rand"
 	"strconv"
 
@@ -22,17 +23,17 @@ type ArticleController struct {
 // 文章详情
 func (c *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.StatusDeleted {
+	if article == nil || article.Status == constants.StatusDeleted {
 		return simple.JsonErrorCode(404, "文章不存在")
 	}
 
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user != nil {
-		if article.UserId != user.Id && article.Status == model.StatusPending {
+		if article.UserId != user.Id && article.Status == constants.StatusPending {
 			return simple.JsonErrorCode(403, "文章审核中")
 		}
 	} else {
-		if article.Status == model.StatusPending {
+		if article.Status == constants.StatusPending {
 			return simple.JsonErrorCode(403, "文章审核中")
 		}
 	}
@@ -58,7 +59,7 @@ func (c *ArticleController) PostCreate() *simple.JsonResult {
 	)
 
 	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
-		model.ContentTypeMarkdown, tags, "")
+		constants.ContentTypeMarkdown, tags, "")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -76,12 +77,12 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.StatusDeleted {
+	if article == nil || article.Status == constants.StatusDeleted {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -118,12 +119,12 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	)
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.StatusDeleted {
+	if article == nil || article.Status == constants.StatusDeleted {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -131,7 +132,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 		return simple.JsonError(err)
 	}
 	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeUpdate, model.EntityTypeArticle, articleId,
+	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeUpdate, constants.EntityArticle, articleId,
 		"", c.Ctx.Request())
 	return simple.NewEmptyRspBuilder().Put("articleId", article.Id).JsonResult()
 }
@@ -147,12 +148,12 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	}
 
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status == model.StatusDeleted {
+	if article == nil || article.Status == constants.StatusDeleted {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -160,7 +161,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, model.OpTypeDelete, model.EntityTypeArticle, articleId,
+	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeDelete, constants.EntityArticle, articleId,
 		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
@@ -181,7 +182,7 @@ func (c *ArticleController) PostFavoriteBy(articleId int64) *simple.JsonResult {
 // 文章跳转链接
 func (c *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 	article := services.ArticleService.Get(articleId)
-	if article == nil || article.Status != model.StatusOk {
+	if article == nil || article.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
 	}
 	return simple.NewEmptyRspBuilder().Put("url", urls.ArticleUrl(articleId)).JsonResult()
@@ -189,7 +190,7 @@ func (c *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 
 // 最近文章
 func (c *ArticleController) GetRecent() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", model.StatusOk).Desc("id").Limit(10))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
@@ -200,7 +201,7 @@ func (c *ArticleController) GetUserRecent() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and (status = ? or status = ?)",
-		userId, model.StatusOk, model.StatusPending).Desc("id").Limit(10))
+		userId, constants.StatusOk, constants.StatusPending).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
@@ -214,7 +215,7 @@ func (c *ArticleController) GetUserArticles() *simple.JsonResult {
 
 	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
 		Eq("user_id", userId).
-		Eq("status", model.StatusOk).
+		Eq("status", constants.StatusOk).
 		Page(page, 20).Desc("id"))
 
 	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
@@ -275,7 +276,7 @@ func (c *ArticleController) GetRecommend() *simple.JsonResult {
 
 // 最新文章
 func (c *ArticleController) GetNewest() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", model.StatusOk).Desc("id").Limit(5))
+	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(5))
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 

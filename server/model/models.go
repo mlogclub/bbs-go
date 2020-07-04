@@ -14,30 +14,6 @@ type Model struct {
 	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
 }
 
-const (
-	StatusOk      = 0 // 正常
-	StatusDeleted = 1 // 删除
-	StatusPending = 2 // 待审核
-
-	UserTypeNormal = 0 // 普通用户
-	UserTypeGzh    = 1 // 公众号用户
-
-	ContentTypeHtml     = "html"
-	ContentTypeMarkdown = "markdown"
-	ContentTypeText     = "text"
-
-	MsgStatusUnread = 0 // 消息未读
-	MsgStatusReaded = 1 // 消息已读
-
-	MsgTypeComment = 0 // 回复消息
-
-	ThirdAccountTypeGithub = "github"
-	ThirdAccountTypeQQ     = "qq"
-
-	ScoreTypeIncr = 0 // 积分+
-	ScoreTypeDecr = 1 // 积分-
-)
-
 type User struct {
 	Model
 	Username         sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`                    // 用户名

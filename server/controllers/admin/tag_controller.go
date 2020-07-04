@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bbs-go/model/constants"
 	"strconv"
 	"strings"
 
@@ -47,7 +48,7 @@ func (c *TagController) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
-	t.Status = model.StatusOk
+	t.Status = constants.StatusOk
 	t.CreateTime = simple.NowTimestamp()
 	t.UpdateTime = simple.NowTimestamp()
 

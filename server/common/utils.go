@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"regexp"
 	"strings"
@@ -9,7 +10,6 @@ import (
 	"github.com/mlogclub/simple/markdown"
 
 	"bbs-go/config"
-	"bbs-go/model"
 )
 
 // 是否是正式环境
@@ -31,9 +31,9 @@ func IndexOf(userIds []int64, userId int64) int {
 }
 
 func GetSummary(contentType string, content string) (summary string) {
-	if contentType == model.ContentTypeMarkdown {
+	if contentType == constants.ContentTypeMarkdown {
 		summary = markdown.GetSummary(content, 256)
-	} else if contentType == model.ContentTypeHtml {
+	} else if contentType == constants.ContentTypeHtml {
 		summary = simple.GetSummary(simple.GetHtmlText(content), 256)
 	} else {
 		summary = simple.GetSummary(content, 256)

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/model/constants"
 	"errors"
 	"io/ioutil"
 	"strconv"
@@ -10,7 +11,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"bbs-go/collect"
-	"bbs-go/model"
 	"bbs-go/services"
 )
 
@@ -103,7 +103,7 @@ func (c *SpiderController) PostProjectPublish() *simple.JsonResult {
 	}
 
 	p, err := services.ProjectService.Publish(userId, name, title, logo, url, docUrl, downloadUrl,
-		model.ContentTypeHtml, content)
+		constants.ContentTypeHtml, content)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

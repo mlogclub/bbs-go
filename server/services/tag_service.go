@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"strings"
 
 	"github.com/mlogclub/simple"
@@ -74,7 +75,7 @@ func (s *tagService) Autocomplete(input string) []model.Tag {
 		return nil
 	}
 	return repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ? and name like ?",
-		model.StatusOk, "%"+input+"%").Limit(6))
+		constants.StatusOk, "%"+input+"%").Limit(6))
 }
 
 func (s *tagService) GetOrCreate(name string) (*model.Tag, error) {
@@ -86,7 +87,7 @@ func (s *tagService) GetByName(name string) *model.Tag {
 }
 
 func (s *tagService) GetTags() []model.TagResponse {
-	list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", model.StatusOk))
+	list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("status = ?", constants.StatusOk))
 
 	var tags []model.TagResponse
 	for _, tag := range list {

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"bbs-go/common/urls"
-	"bbs-go/model"
+	"bbs-go/model/constants"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -10,14 +10,14 @@ import (
 
 var (
 	config = []PathRole{
-		{Pattern: "/api/admin/sys-config/**", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/user/create", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/user/update", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/topic-node/create", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/topic-node/update", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/tag/create", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/tag/update", Roles: []string{model.RoleOwner}},
-		{Pattern: "/api/admin/**", Roles: []string{model.RoleOwner, model.RoleAdmin}},
+		{Pattern: "/api/admin/sys-config/**", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/user/create", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/user/update", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/topic-node/create", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/topic-node/update", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/tag/create", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/tag/update", Roles: []string{constants.RoleOwner}},
+		{Pattern: "/api/admin/**", Roles: []string{constants.RoleOwner, constants.RoleAdmin}},
 	}
 	antPathMatcher = urls.NewAntPathMatcher()
 )
