@@ -58,7 +58,7 @@ func (c *ArticleController) AnyList() *simple.JsonResult {
 
 // GetRecent 展示最近一页数据
 func (c *ArticleController) GetRecent() *simple.JsonResult {
-	params := simple.NewQueryParams(c.Ctx).EqByReq("id").EqByReq("user_id").EqByReq("status").Desc("id")
+	params := simple.NewQueryParams(c.Ctx).EqByReq("id").EqByReq("user_id").EqByReq("status").Desc("id").Limit(20)
 	list := services.ArticleService.Find(&params.SqlCnd)
 	results := c.buildArticles(list)
 	return simple.JsonData(results)
