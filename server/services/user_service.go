@@ -112,7 +112,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 		if simple.IsNotBlank(reason) {
 			description = "禁言原因：" + reason
 		}
-		OperateLogService.AddOperateLog(operatorId, model.OpTypeForbidden, model.EntityTypeArticle, userId,
+		OperateLogService.AddOperateLog(operatorId, model.OpTypeForbidden, model.EntityTypeUser, userId,
 			description, r)
 	}
 	return nil
@@ -125,7 +125,7 @@ func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request)
 		return
 	}
 	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", 0) == nil {
-		OperateLogService.AddOperateLog(operatorId, model.OpTypeRemoveForbidden, model.EntityTypeArticle, userId, "", r)
+		OperateLogService.AddOperateLog(operatorId, model.OpTypeRemoveForbidden, model.EntityTypeUser, userId, "", r)
 	}
 }
 
