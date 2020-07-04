@@ -15,6 +15,15 @@ const (
 	SysConfigTopicCaptcha     = "topicCaptcha"     // 是否开启发帖验证码
 )
 
+// EntityType
+const (
+	EntityTypeArticle = "article"
+	EntityTypeTopic   = "topic"
+	EntityTypeComment = "comment"
+	EntityTypeTweet   = "tweet"
+	EntityTypeUser    = "user"
+)
+
 // 用户角色
 const (
 	RoleOwner = "owner" // 站长
@@ -24,7 +33,9 @@ const (
 
 // 操作类型
 const (
-	OpTypeCreate = "create"
-	OpTypeDelete = "delete"
-	OpTypeUpdate = "update"
+	OpTypeCreate          = "create"
+	OpTypeDelete          = "delete"
+	OpTypeUpdate          = "update"
+	OpTypeForbidden       = "forbidden"
+	OpTypeRemoveForbidden = "removeForbidden"
 )

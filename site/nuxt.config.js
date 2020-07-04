@@ -50,7 +50,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_3iqc2fj3mz.css'
+        href: '//at.alicdn.com/t/font_1142441_bu6x3hdokz.css'
       }
     ]
   },

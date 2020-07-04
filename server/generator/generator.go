@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.OperateLog{}))
+	simple.Generate("./", "bbs-go", simple.GetGenerateStruct(&model.UserForbidden{}))
 }

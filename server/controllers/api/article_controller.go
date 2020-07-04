@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/common"
 	"math/rand"
 	"strconv"
 
@@ -46,6 +47,9 @@ func (c *ArticleController) PostCreate() *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+	if user.IsForbidden() {
+		return simple.JsonError(common.ForbiddenError)
+	}
 	var (
 		tags    = simple.FormValueStringArray(c.Ctx, "tags")
 		title   = c.Ctx.PostValue("title")
@@ -67,6 +71,9 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+	if user.IsForbidden() {
+		return simple.JsonError(common.ForbiddenError)
+	}
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.StatusDeleted {
@@ -74,7 +81,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -100,6 +107,9 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+	if user.IsForbidden() {
+		return simple.JsonError(common.ForbiddenError)
+	}
 
 	var (
 		tags    = simple.FormValueStringArray(c.Ctx, "tags")
@@ -113,7 +123,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 
@@ -132,6 +142,9 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
 	}
+	if user.IsForbidden() {
+		return simple.JsonError(common.ForbiddenError)
+	}
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == model.StatusDeleted {
@@ -139,7 +152,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	}
 
 	// 非作者、且非管理员
-	if article.UserId != user.Id && !services.UserService.HasAnyRole(user, model.RoleAdmin, model.RoleOwner) {
+	if article.UserId != user.Id && !user.HasAnyRole(model.RoleAdmin, model.RoleOwner) {
 		return simple.JsonErrorMsg("无权限")
 	}
 

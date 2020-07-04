@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/common"
 	"strconv"
 	"strings"
 
@@ -19,6 +20,9 @@ func (c *TweetController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	if user.IsForbidden() {
+		return simple.JsonError(common.ForbiddenError)
 	}
 	content := strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
 	imageList := simple.FormValue(c.Ctx, "imageList")

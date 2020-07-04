@@ -15,20 +15,9 @@ type UserInfo struct {
 	TopicCount   int      `json:"topicCount"`   // 话题数量
 	CommentCount int      `json:"commentCount"` // 跟帖数量
 	PasswordSet  bool     `json:"passwordSet"`  // 密码已设置
+	Forbidden    bool     `json:"forbidden"`    // 是否禁言
 	Status       int      `json:"status"`
 	CreateTime   int64    `json:"createTime"`
-}
-
-func (info *UserInfo) HasRole(role string) bool {
-	if len(info.Roles) == 0 {
-		return false
-	}
-	for _, r := range info.Roles {
-		if r == role {
-			return true
-		}
-	}
-	return false
 }
 
 type TagResponse struct {

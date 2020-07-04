@@ -61,6 +61,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		TopicCount:   user.TopicCount,
 		CommentCount: user.CommentCount,
 		PasswordSet:  len(user.Password) > 0,
+		Forbidden:    user.IsForbidden(),
 		Status:       user.Status,
 		CreateTime:   user.CreateTime,
 	}
@@ -74,6 +75,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		ret.Email = ""
 		ret.HomePage = ""
 		ret.Description = ""
+		ret.Forbidden = true
 	} else {
 		ret.Score = cache.UserCache.GetScore(user.Id)
 	}

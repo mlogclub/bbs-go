@@ -3,7 +3,9 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"net/http"
 	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
@@ -83,31 +85,6 @@ func (s *userService) Delete(id int64) {
 	cache.UserCache.Invalidate(id)
 }
 
-// HasAnyRole 是否有指定的任意角色
-func (s *userService) HasAnyRole(user *model.User, roles ...string) bool {
-	if len(roles) == 0 {
-		return false
-	}
-	for _, role := range roles {
-		if s.HasRole(user, role) {
-			return true
-		}
-	}
-	return false
-}
-
-// HasRole 是否有指定角色
-func (s *userService) HasRole(user *model.User, role string) bool {
-	if user == nil {
-		return false
-	}
-	roles := strings.Split(user.Roles, ",")
-	if len(roles) == 0 {
-		return false
-	}
-	return simple.Contains(role, roles)
-}
-
 // Scan 扫描
 func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
@@ -118,6 +95,30 @@ func (s *userService) Scan(callback func(users []model.User)) {
 		}
 		cursor = list[len(list)-1].Id
 		callback(list)
+	}
+}
+
+// Forbidden 禁言
+func (s *userService) Forbidden(operatorId, userId int64, days int, reason string, r *http.Request) {
+	forbiddenEndTime := simple.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
+	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
+		description := ""
+		if simple.IsNotBlank(reason) {
+			description = "禁言原因：" + reason
+		}
+		OperateLogService.AddOperateLog(operatorId, model.OpTypeForbidden, model.EntityTypeArticle, userId,
+			description, r)
+	}
+}
+
+// RemoveForbidden 移除禁言
+func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request) {
+	user := s.Get(userId)
+	if user == nil || !user.IsForbidden() {
+		return
+	}
+	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", 0) == nil {
+		OperateLogService.AddOperateLog(operatorId, model.OpTypeRemoveForbidden, model.EntityTypeArticle, userId, "", r)
 	}
 }
 

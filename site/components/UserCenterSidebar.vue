@@ -36,6 +36,16 @@
             <a href="/user/favorites">&nbsp;收藏</a>
           </li>
         </ul>
+        <ul v-if="isAdmin" class="operations">
+          <li v-if="user.forbidden">
+            <i class="iconfont icon-forbidden" />
+            <a @click="removeForbidden">&nbsp;取消禁言</a>
+          </li>
+          <li v-else>
+            <i class="iconfont icon-forbidden" />
+            <a @click="forbidden">&nbsp;禁言</a>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -48,6 +58,7 @@
 
 <script>
 import PostBtns from '~/components/PostBtns'
+import UserHelper from '~/common/UserHelper'
 export default {
   components: { PostBtns },
   props: {
@@ -55,6 +66,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {}
   },
   computed: {
     currentUser() {
@@ -64,6 +78,38 @@ export default {
     isOwner() {
       const current = this.$store.state.user.current
       return this.user && current && this.user.id === current.id
+    },
+    isAdmin() {
+      return (
+        UserHelper.isOwner(this.currentUser) ||
+        UserHelper.isAdmin(this.currentUser)
+      )
+    }
+  },
+  methods: {
+    async forbidden() {
+      try {
+        await this.$axios.post('/api/user/forbidden', {
+          userId: this.user.id,
+          days: 7
+        })
+        this.user.forbidden = true
+        this.$toast.success('禁言成功')
+      } catch (e) {
+        this.$toast.error('禁言失败')
+      }
+    },
+    async removeForbidden() {
+      try {
+        await this.$axios.post('/api/user/forbidden', {
+          userId: this.user.id,
+          days: 0
+        })
+        this.user.forbidden = false
+        this.$toast.success('取消禁言成功')
+      } catch (e) {
+        this.$toast.error('取消禁言失败')
+      }
     }
   }
 }

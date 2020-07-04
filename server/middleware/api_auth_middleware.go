@@ -1,50 +1,73 @@
 package middleware
 
 import (
+	"bbs-go/common/urls"
+	"bbs-go/model"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
+)
 
-	"bbs-go/cache"
-	"bbs-go/model"
+var (
+	config = []PathRole{
+		{Pattern: "/api/admin/sys-config/**", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/user/create", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/user/update", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/topic-node/create", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/topic-node/update", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/tag/create", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/tag/update", Roles: []string{model.RoleOwner}},
+		{Pattern: "/api/admin/**", Roles: []string{model.RoleOwner, model.RoleAdmin}},
+	}
+	antPathMatcher = urls.NewAntPathMatcher()
 )
 
 // AdminAuth 后台权限
 func AdminAuth(ctx iris.Context) {
-	token := getUserToken(ctx)
-	userToken := cache.UserTokenCache.Get(token)
+	roles := getPathRoles(ctx)
 
-	// 没找到授权
-	if userToken == nil || userToken.Status == model.StatusDeleted {
-		notLogin(ctx)
-		return
-	}
-	// 授权过期
-	if userToken.ExpiredAt <= simple.NowTimestamp() {
-		notLogin(ctx)
+	// 不需要任何角色既能访问
+	if len(roles) == 0 {
 		return
 	}
 
-	user := cache.UserCache.Get(userToken.UserId)
-	if user == nil || !services.UserService.HasRole(user, model.RoleOwner) {
-		_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
-		ctx.StopExecution()
+	user := services.UserTokenService.GetCurrent(ctx)
+	if user == nil {
+		notLogin(ctx)
+		return
+	}
+	if !user.HasAnyRole(roles...) {
+		noPermission(ctx)
 		return
 	}
 
 	ctx.Next()
 }
 
-// 从请求体中获取UserToken
-func getUserToken(ctx iris.Context) string {
-	userToken := ctx.FormValue("userToken")
-	if len(userToken) > 0 {
-		return userToken
+// getPathRoles 获取请求该路径所需的角色
+func getPathRoles(ctx iris.Context) []string {
+	p := ctx.Path()
+	for _, pathRole := range config {
+		if antPathMatcher.Match(pathRole.Pattern, p) {
+			return pathRole.Roles
+		}
 	}
-	return ctx.GetHeader("X-User-Token")
+	return nil
 }
 
+// notLogin 未登录返回
 func notLogin(ctx iris.Context) {
 	_, _ = ctx.JSON(simple.JsonError(simple.ErrorNotLogin))
 	ctx.StopExecution()
+}
+
+// noPermission 无权限返回
+func noPermission(ctx iris.Context) {
+	_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
+	ctx.StopExecution()
+}
+
+type PathRole struct {
+	Pattern string   // path pattern
+	Roles   []string // roles
 }

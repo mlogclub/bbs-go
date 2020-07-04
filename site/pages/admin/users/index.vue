@@ -30,46 +30,32 @@
     >
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <div
-            v-if="scope.row.roles && scope.row.roles.length"
-            class="content-form"
-          >
-            <div class="form-item">
-              <div class="field-key">角色：</div>
-              <div class="field-value">
-                <el-tag
-                  v-for="role in scope.row.roles"
-                  :key="role"
-                  size="mini"
-                  style="margin-right:3px;"
-                  >{{ role }}
-                </el-tag>
-              </div>
+          <div v-if="scope.row.roles && scope.row.roles.length">
+            <div>
+              <span>角色：</span>
+              <el-tag
+                v-for="role in scope.row.roles"
+                :key="role"
+                size="mini"
+                style="margin-right:3px;"
+                >{{ role }}
+              </el-tag>
             </div>
           </div>
-          <div class="content-form">
-            <div class="form-item">
-              <div class="field-key">状态：</div>
-              <div class="field-value">
-                {{ scope.row.status === 0 ? '正常' : '删除' }}
-              </div>
-            </div>
+          <div>
+            <span>状态：</span>
+            {{ scope.row.status === 0 ? '正常' : '删除' }}
           </div>
-          <div class="content-form">
-            <div class="form-item">
-              <div class="field-key">注册时间：</div>
-              <div class="field-value">
-                {{ scope.row.createTime | formatDate }}
-              </div>
-            </div>
+          <div v-if="scope.row.forbidden">
+            <span>已禁言至 {{ scope.row.forbiddenEndTime | formatDate }}</span>
           </div>
-          <div class="content-form">
-            <div class="form-item">
-              <div class="field-key">更新时间：</div>
-              <div class="field-value">
-                {{ scope.row.updateTime | formatDate }}
-              </div>
-            </div>
+          <div>
+            <span>注册时间：</span>
+            {{ scope.row.createTime | formatDate }}
+          </div>
+          <div>
+            <span>更新时间：</span>
+            {{ scope.row.updateTime | formatDate }}
           </div>
         </template>
       </el-table-column>
@@ -86,15 +72,35 @@
       <el-table-column prop="nickname" label="昵称"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="score" label="积分"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
+      <el-table-column prop="forbidden" label="是否禁言">
+        <template slot-scope="scope">
+          <span v-if="scope.row.forbidden" class="tag is-warning">已禁言</span>
+          <span v-else class="tag is-success">正常</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="注册时间">
         <template slot-scope="scope">{{
           scope.row.createTime | formatDate
         }}</template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
+          >
+          <el-button
+            v-if="scope.row.forbidden"
+            size="small"
+            type="warning"
+            @click="removeForbidden(scope.$index, scope.row)"
+            >取消禁言
+          </el-button>
+          <el-button
+            v-else
+            size="small"
+            type="warning"
+            @click="showForbiddenDialog(scope.$index, scope.row)"
+            >禁言</el-button
           >
         </template>
       </el-table-column>
@@ -215,6 +221,43 @@
         >
       </div>
     </el-dialog>
+
+    <el-dialog
+      :visible.sync="forbiddenFormVisible"
+      :close-on-click-modal="false"
+      title="禁言"
+    >
+      <el-form ref="forbiddenForm" :model="forbiddenForm" label-width="80px">
+        <el-input v-model="forbiddenForm.userId" type="hidden"></el-input>
+        <el-form-item label="禁言时间" prop="reason">
+          <el-select v-model="forbiddenForm.days">
+            <el-option label="3天" value="3" />
+            <el-option label="5天" value="3" />
+            <el-option label="7天" value="7" />
+            <el-option label="15天" value="15" />
+            <el-option label="30天" value="30" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="禁言原因" prop="reason">
+          <el-select v-model="forbiddenForm.reason">
+            <el-option value="广告" />
+            <el-option value="灌水" />
+            <el-option value="涉黄" />
+            <el-option value="涉政" />
+            <el-option value="其他" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="forbiddenFormVisible = false">取消</el-button>
+        <el-button
+          :loading="forbiddenLoading"
+          type="primary"
+          @click.native="forbidden"
+          >禁言</el-button
+        >
+      </div>
+    </el-dialog>
   </section>
 </template>
 
@@ -256,7 +299,15 @@ export default {
       },
       editFormVisible: false,
       editFormRules: {},
-      editLoading: false
+      editLoading: false,
+
+      forbiddenForm: {
+        userId: '',
+        days: 0,
+        reason: ''
+      },
+      forbiddenFormVisible: false,
+      forbiddenLoading: false
     }
   },
   mounted() {
@@ -339,9 +390,42 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-
     handleSelectionChange(val) {
       this.selectedRows = val
+    },
+    showForbiddenDialog(index, row) {
+      this.forbiddenForm = {
+        userId: row.id,
+        days: 7,
+        reason: '广告'
+      }
+      this.forbiddenFormVisible = true
+    },
+    async forbidden() {
+      this.forbiddenLoading = true
+      try {
+        await this.$axios.post('/api/admin/user/forbidden', this.forbiddenForm)
+        this.forbiddenForm = {}
+        this.forbiddenFormVisible = false
+        this.$message.success('禁言成功')
+        this.list()
+      } catch (e) {
+        this.$message.success('禁言失败 ' + (e.message || e))
+      } finally {
+        this.forbiddenLoading = false
+      }
+    },
+    async removeForbidden(index, row) {
+      try {
+        await this.$axios.post('/api/admin/user/forbidden', {
+          userId: row.id,
+          days: 0
+        })
+        this.$message.success('取消禁言成功')
+        this.list()
+      } catch (e) {
+        this.$message.success('取消禁言失败 ' + (e.message || e))
+      }
     }
   }
 }

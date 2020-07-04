@@ -82,7 +82,7 @@
               <a class="navbar-item" href="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </a>
-              <a v-if="isOwner" class="navbar-item" href="/admin">
+              <a v-if="isOwnerOrAdmin" class="navbar-item" href="/admin">
                 <i class="iconfont icon-dashboard" />&nbsp;后台管理
               </a>
               <a class="navbar-item" @click="signout">
@@ -121,8 +121,8 @@ export default {
     user() {
       return this.$store.state.user.current
     },
-    isOwner() {
-      return UserHelper.isOwner(this.user)
+    isOwnerOrAdmin() {
+      return UserHelper.isOwner(this.user) || UserHelper.isAdmin(this.user)
     },
     config() {
       return this.$store.state.config.config

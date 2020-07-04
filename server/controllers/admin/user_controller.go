@@ -89,6 +89,31 @@ func (c *UserController) PostUpdate() *simple.JsonResult {
 	return simple.JsonData(c.buildUserItem(user))
 }
 
+// 禁言
+func (c *UserController) PostForbidden() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	if !user.HasAnyRole(model.RoleOwner, model.RoleAdmin) {
+		return simple.JsonErrorMsg("无权限")
+	}
+	var (
+		userId = simple.FormValueInt64Default(c.Ctx, "userId", 0)
+		days   = simple.FormValueIntDefault(c.Ctx, "days", 0)
+		reason = simple.FormValue(c.Ctx, "reason")
+	)
+	if userId < 0 {
+		return simple.JsonErrorMsg("请传入：userId")
+	}
+	if days <= 0 {
+		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
+	} else {
+		services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request())
+	}
+	return simple.JsonSuccess()
+}
+
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {
 	score := cache.UserCache.GetScore(user.Id)
 	return simple.NewRspBuilder(user).
@@ -96,5 +121,6 @@ func (c *UserController) buildUserItem(user *model.User) map[string]interface{} 
 		Put("username", user.Username.String).
 		Put("email", user.Email.String).
 		Put("score", score).
+		Put("forbidden", user.IsForbidden()).
 		Build()
 }
