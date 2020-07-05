@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScore{}, &UserScoreLog{}, &OperateLog{},
+	&UserScore{}, &UserScoreLog{}, &OperateLog{}, &EmailCode{},
 }
 
 type Model struct {
@@ -18,6 +18,7 @@ type User struct {
 	Model
 	Username         sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`                    // 用户名
 	Email            sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`                         // 邮箱
+	EmailVerified    bool           `gorm:"not null;default:false" json:"emailVerified" form:"emailVerified"`   // 邮箱是否验证
 	Nickname         string         `gorm:"size:16;" json:"nickname" form:"nickname"`                           // 昵称
 	Avatar           string         `gorm:"type:text" json:"avatar" form:"avatar"`                              // 头像
 	Password         string         `gorm:"size:512" json:"password" form:"password"`                           // 密码
@@ -252,4 +253,17 @@ type OperateLog struct {
 	UserAgent   string `gorm:"type:text" json:"userAgent" form:"userAgent"`                         // UserAgent
 	Referer     string `gorm:"type:text" json:"referer" form:"referer"`                             // Referer
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                        // 创建时间
+}
+
+// 邮箱验证码
+type EmailCode struct {
+	Model
+	UserId     int64  `gorm:"not null;index:idx_user_score_log_user_id" json:"userId" form:"userId"` // 用户编号
+	Email      string `gorm:"not null;size:128" json:"email" form:"email"`                           // 邮箱
+	Code       string `gorm:"not null;size:8" json:"code" form:"code"`                               // 验证码
+	Token      string `gorm:"not null;size:32;unique" json:"token" form:"token"`                     // 验证码token
+	Title      string `gorm:"size:1024" json:"title" form:"title"`                                   // 标题
+	Content    string `gorm:"type:text" json:"content" form:"content"`                               // 内容
+	Used       bool   `gorm:"not null" json:"used" form:"used"`                                      // 是否使用
+	CreateTime int64  `json:"createTime" form:"createTime"`                                          // 创建时间
 }

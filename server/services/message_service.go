@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/common/urls"
 	"bbs-go/model/constants"
 	"sync"
 
@@ -10,7 +11,6 @@ import (
 	"bbs-go/cache"
 	"bbs-go/common"
 	"bbs-go/common/email"
-	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/repositories"
 )
@@ -217,11 +217,16 @@ func (s *messageService) Consume() {
 func (s *messageService) SendEmailNotice(message *model.Message) {
 	user := cache.UserCache.Get(message.UserId)
 	if user != nil && len(user.Email.String) > 0 {
-		siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-		emailTitle := siteTitle + " 新消息提醒"
+		var (
+			siteTitle  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+			emailTitle = "新消息提醒 - " + siteTitle
+		)
 
-		email.SendTemplateEmail(user.Email.String, emailTitle, emailTitle, message.Content,
-			message.QuoteContent, urls.AbsUrl("/user/messages"))
+		_ = email.SendTemplateEmail(user.Email.String, emailTitle, emailTitle, message.Content,
+			message.QuoteContent, &model.ActionLink{
+				Title: "点击查看详情",
+				Url:   urls.AbsUrl("/user/messages"),
+			})
 		messageLog.Info("发送邮件...email=", user.Email)
 	} else {
 		messageLog.Info("邮件未发送，没设置邮箱...")

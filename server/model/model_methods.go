@@ -39,3 +39,22 @@ func (u *User) HasAnyRole(roles ...string) bool {
 	}
 	return false
 }
+
+// GetRoles 获取角色
+func (u *User) GetRoles() []string {
+	if simple.IsBlank(u.Roles) {
+		return nil
+	}
+	ss := strings.Split(u.Roles, ",")
+	if len(ss) == 0 {
+		return nil
+	}
+	var roles []string
+	for _, s := range ss {
+		s = strings.TrimSpace(s)
+		if simple.IsNotBlank(s) {
+			roles = append(roles, s)
+		}
+	}
+	return roles
+}

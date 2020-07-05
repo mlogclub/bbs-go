@@ -1,7 +1,7 @@
 package model
 
 // 站点导航
-type SiteNav struct {
+type ActionLink struct {
 	Title string `json:"title"`
 	Url   string `json:"url"`
 }
@@ -14,15 +14,15 @@ type ScoreConfig struct {
 
 // 配置返回结构体
 type ConfigData struct {
-	SiteTitle        string      `json:"siteTitle"`
-	SiteDescription  string      `json:"siteDescription"`
-	SiteKeywords     []string    `json:"siteKeywords"`
-	SiteNavs         []SiteNav   `json:"siteNavs"`
-	SiteNotification string      `json:"siteNotification"`
-	RecommendTags    []string    `json:"recommendTags"`
-	UrlRedirect      bool        `json:"urlRedirect"`
-	ScoreConfig      ScoreConfig `json:"scoreConfig"`
-	DefaultNodeId    int64       `json:"defaultNodeId"`
-	ArticlePending   bool        `json:"articlePending"`
-	TopicCaptcha     bool        `json:"topicCaptcha"`
+	SiteTitle        string       `json:"siteTitle"`
+	SiteDescription  string       `json:"siteDescription"`
+	SiteKeywords     []string     `json:"siteKeywords"`
+	SiteNavs         []ActionLink `json:"siteNavs"`
+	SiteNotification string       `json:"siteNotification"`
+	RecommendTags    []string     `json:"recommendTags"`
+	UrlRedirect      bool         `json:"urlRedirect"`
+	ScoreConfig      ScoreConfig  `json:"scoreConfig"`
+	DefaultNodeId    int64        `json:"defaultNodeId"`
+	ArticlePending   bool         `json:"articlePending"`
+	TopicCaptcha     bool         `json:"topicCaptcha"`
 }
