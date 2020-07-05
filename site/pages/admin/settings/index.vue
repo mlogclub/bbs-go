@@ -91,6 +91,20 @@
                   <el-switch v-model="config.articlePending"></el-switch>
                 </el-tooltip>
               </el-form-item>
+
+              <el-form-item label="用户观察期">
+                <el-tooltip
+                  content="观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。"
+                  placement="top"
+                >
+                  <el-input-number
+                    v-model="userObserveHour"
+                    :min="0"
+                    :max="720"
+                    label="用户观察期(小时)"
+                  ></el-input-number>
+                </el-tooltip>
+              </el-form-item>
             </el-form>
           </div>
         </el-tab-pane>
@@ -182,8 +196,8 @@
 
       <div style="text-align: right;">
         <el-button :loading="loading" @click="save" type="primary"
-          >保存配置</el-button
-        >
+          >保存配置
+        </el-button>
       </div>
     </div>
   </section>
@@ -259,13 +273,16 @@ export default {
   margin: 20px;
   padding: 10px;
 }
+
 .config {
   padding: 10px 0;
 }
+
 .nav-panel {
   .navs {
     border: 1px solid #ddd;
     border-radius: 5px;
+
     .nav {
       padding: 5px 5px;
       margin: 0;
