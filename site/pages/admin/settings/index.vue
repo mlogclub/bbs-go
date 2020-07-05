@@ -98,7 +98,7 @@
                   placement="top"
                 >
                   <el-input-number
-                    v-model="userObserveHour"
+                    v-model="config.userObserveHour"
                     :min="0"
                     :max="720"
                     label="用户观察期(小时)"
