@@ -1,6 +1,8 @@
 package services
 
 import (
+	"bbs-go/common/email"
+	"bbs-go/common/urls"
 	"bbs-go/common/validate"
 	"bbs-go/model/constants"
 	"database/sql"
@@ -10,6 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -20,6 +23,9 @@ import (
 	"bbs-go/model"
 	"bbs-go/repositories"
 )
+
+// 邮箱验证邮件有效期（小时）
+const emailVerifyExpireHour = 24
 
 var UserService = newUserService()
 
@@ -426,8 +432,8 @@ func (s *userService) SyncUserCount() {
 	})
 }
 
-// SendEmailVerifyEmailCode 发送邮箱验证邮件
-func (s *userService) SendEmailVerifyEmailCode(userId int64, emailStr, title, content string) error {
+// SendEmailVerifyEmail 发送邮箱验证邮件
+func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	user := s.Get(userId)
 	if user == nil {
 		return errors.New("用户不存在")
@@ -438,7 +444,53 @@ func (s *userService) SendEmailVerifyEmailCode(userId int64, emailStr, title, co
 	if err := validate.IsEmail(user.Email.String); err != nil {
 		return err
 	}
-	// TODO 发送验证码
-	// EmailCodeService.SendVerifyEmail(userId)
-	return nil
+	var (
+		token     = simple.UUID()
+		url       = urls.AbsUrl("/user/email/verify?token=" + token)
+		link      = &model.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
+		siteTitle = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		subject   = "邮箱验证 - " + siteTitle
+		title     = "邮箱验证 - " + siteTitle
+		content   = "该邮件用于验证你在 " + siteTitle + " 中设置邮箱的正确性，请在" + strconv.Itoa(emailVerifyExpireHour) + "小时内完成验证。验证链接：" + url
+	)
+	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+		if err := repositories.EmailCodeRepository.Create(tx, &model.EmailCode{
+			Model:      model.Model{},
+			UserId:     userId,
+			Email:      user.Email.String,
+			Code:       "",
+			Token:      token,
+			Title:      title,
+			Content:    content,
+			Used:       false,
+			CreateTime: simple.NowTimestamp(),
+		}); err != nil {
+			return nil
+		}
+		if err := email.SendTemplateEmail(user.Email.String, subject, title, content, "", link); err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+// VerifyEmail 验证邮箱
+func (s *userService) VerifyEmail(userId int64, token string) error {
+	emailCode := EmailCodeService.FindOne(simple.NewSqlCnd().Eq("token", token))
+	if emailCode == nil || emailCode.Used {
+		return errors.New("非法请求")
+	}
+	if emailCode.UserId != userId {
+		return errors.New("非法验证码")
+	}
+	if emailCode.CreateTime+int64(time.Hour*emailVerifyExpireHour) < simple.NowTimestamp() {
+		return errors.New("验证邮件已过期")
+	}
+	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+		if err := repositories.UserRepository.UpdateColumn(tx, emailCode.UserId, "email_verified", true); err != nil {
+			return err
+		}
+		cache.UserCache.Invalidate(emailCode.UserId)
+		return repositories.EmailCodeRepository.UpdateColumn(tx, emailCode.Id, "used", true)
+	})
 }

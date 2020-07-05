@@ -41,8 +41,21 @@
               <div class="field-body">
                 <div class="field">
                   <div class="control has-icons-left">
-                    <label v-if="user.email">{{ user.email }}</label>
-                    <a v-else @click="showSetEmail = true">点击设置</a>
+                    <template v-if="user.email">
+                      <label>{{ user.email }}</label>
+                      <span v-if="user.emailVerfied" class="has-text-success"
+                        >已验证</span
+                      >
+                      <a
+                        v-else
+                        @click="requestEmailVerify"
+                        class="has-text-danger"
+                        >点击验证&gt;&gt;</a
+                      >
+                    </template>
+                    <template v-else>
+                      <a @click="showSetEmail = true">点击设置</a>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -523,6 +536,19 @@ export default {
     async reload() {
       this.user = await this.$axios.get('/api/user/current')
       this.form = { ...this.user }
+    },
+    async requestEmailVerify() {
+      this.$nuxt.$loading.start()
+      try {
+        await this.$axios.post('/api/user/email/verify')
+        this.$toast.success(
+          '邮件已经发送到你的邮箱：' + this.user.email + '，请注意查收。'
+        )
+      } catch (err) {
+        this.$toast.error('请求验证失败：' + (err.message || err))
+      } finally {
+        this.$nuxt.$loading.finish()
+      }
     }
   },
   head() {

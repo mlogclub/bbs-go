@@ -1,6 +1,7 @@
 package email
 
 import (
+	"bbs-go/model"
 	"bytes"
 	"crypto/tls"
 	"html/template"
@@ -32,39 +33,37 @@ var emailTemplate = `
         </div>
 		{{end}}
        
-		{{if .Url}}
+		{{if .link}}
         <p>
-            <a style="text-decoration:none; color:#12addb" href="{{.Url}}" target="_blank" rel="noopener">点击查看详情</a>
+            <a style="text-decoration:none; color:#12addb" href="{{.link.Url}}" target="_blank" rel="noopener">{{.link.Title}}</a>
         </p>
 		{{end}}
     </div>
 </div>
 `
 
-// 发送模版邮件
-func SendTemplateEmail(to, subject, title, content, quoteContent, url string) {
+// SendTemplateEmail 发送模版邮件
+func SendTemplateEmail(to, subject, title, content, quote string, link *model.ActionLink) error {
 	tpl, err := template.New("emailTemplate").Parse(emailTemplate)
 	if err != nil {
-		logrus.Error(err)
-		return
+		return err
 	}
 	var b bytes.Buffer
 	err = tpl.Execute(&b, map[string]interface{}{
 		"Title":        title,
 		"Content":      content,
-		"QuoteContent": quoteContent,
-		"Url":          url,
+		"QuoteContent": quote,
+		"link":         link,
 	})
 	if err != nil {
-		logrus.Error(err)
-		return
+		return err
 	}
 	html := b.String()
-	SendEmail(to, subject, html)
+	return SendEmail(to, subject, html)
 }
 
-// 发送邮件
-func SendEmail(to string, subject, html string) {
+// SendEmail 发送邮件
+func SendEmail(to string, subject, html string) error {
 	var (
 		host      = config.Instance.Smtp.Host
 		port      = config.Instance.Smtp.Port
@@ -88,10 +87,13 @@ func SendEmail(to string, subject, html string) {
 	if ssl {
 		if err := e.SendWithTLS(addr, auth, tlsConfig); err != nil {
 			logrus.Error("发送邮件异常", err)
+			return err
 		}
 	} else {
 		if err := e.Send(addr, auth); err != nil {
 			logrus.Error("发送邮件异常", err)
+			return err
 		}
 	}
+	return nil
 }

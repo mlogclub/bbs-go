@@ -275,3 +275,31 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 	}
 	return simple.JsonSuccess()
 }
+
+// PostEmailVerify 请求邮箱验证邮件S
+func (c *UserController) PostEmailVerify() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	if err := services.UserService.SendEmailVerifyEmail(user.Id); err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+// GetEmailVerify 获取邮箱验证码
+func (c *UserController) GetEmailVerify() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	token := simple.FormValue(c.Ctx, "token")
+	if simple.IsBlank(token) {
+		return simple.JsonErrorMsg("非法请求")
+	}
+	if err := services.UserService.VerifyEmail(user.Id, token); err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}

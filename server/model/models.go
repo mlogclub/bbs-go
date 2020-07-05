@@ -255,23 +255,13 @@ type OperateLog struct {
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                        // 创建时间
 }
 
-// 用户封禁
-type UserForbidden struct {
-	Model
-	UserId     int64  `gorm:"not null;unique" json:"userId" form:"userId"`  // 用户编号
-	StartTime  int64  `gorm:"not null" json:"startTime" form:"startTime"`   // 开始时间
-	EndTime    int64  `gorm:"not null" json:"endTime" form:"endTime"`       // 结束时间
-	Reason     string `gorm:"size:32" json:"reason" form:"reason"`          // 禁言原因
-	OperatorId int64  `gorm:"not null" json:"operatorId" form:"operatorId"` // 操作人
-	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 操作时间
-}
-
 // 邮箱验证码
 type EmailCode struct {
 	Model
 	UserId     int64  `gorm:"not null;index:idx_user_score_log_user_id" json:"userId" form:"userId"` // 用户编号
 	Email      string `gorm:"not null;size:128" json:"email" form:"email"`                           // 邮箱
 	Code       string `gorm:"not null;size:8" json:"code" form:"code"`                               // 验证码
+	Token      string `gorm:"not null;size:32;unique" json:"token" form:"token"`                     // 验证码token
 	Title      string `gorm:"size:1024" json:"title" form:"title"`                                   // 标题
 	Content    string `gorm:"type:text" json:"content" form:"content"`                               // 内容
 	Used       bool   `gorm:"not null" json:"used" form:"used"`                                      // 是否使用
