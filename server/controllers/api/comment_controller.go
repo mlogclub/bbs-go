@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bbs-go/common"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -38,11 +37,8 @@ func (c *CommentController) GetList() *simple.JsonResult {
 
 func (c *CommentController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	form := &model.CreateCommentForm{}

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bbs-go/common"
 	"bbs-go/model/constants"
 	"math/rand"
 	"strconv"
@@ -45,11 +44,8 @@ func (c *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 // 发表文章
 func (c *ArticleController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 	var (
 		tags    = simple.FormValueStringArray(c.Ctx, "tags")
@@ -69,11 +65,8 @@ func (c *ArticleController) PostCreate() *simple.JsonResult {
 // 编辑时获取详情
 func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	article := services.ArticleService.Get(articleId)
@@ -105,11 +98,8 @@ func (c *ArticleController) GetEditBy(articleId int64) *simple.JsonResult {
 // 编辑文章
 func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	var (
@@ -140,11 +130,8 @@ func (c *ArticleController) PostEditBy(articleId int64) *simple.JsonResult {
 // 删除文章
 func (c *ArticleController) PostDeleteBy(articleId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	article := services.ArticleService.Get(articleId)

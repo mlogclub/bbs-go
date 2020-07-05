@@ -25,4 +25,5 @@ type ConfigData struct {
 	DefaultNodeId    int64        `json:"defaultNodeId"`
 	ArticlePending   bool         `json:"articlePending"`
 	TopicCaptcha     bool         `json:"topicCaptcha"`
+	UserObserveHour  int          `json:"userObserveHour"`
 }

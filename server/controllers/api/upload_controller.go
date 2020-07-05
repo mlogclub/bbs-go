@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bbs-go/common"
 	"io/ioutil"
 
 	"github.com/kataras/iris/v12"
@@ -20,11 +19,8 @@ type UploadController struct {
 
 func (c *UploadController) Post() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	file, header, err := c.Ctx.FormFile("image")
@@ -57,21 +53,10 @@ func (c *UploadController) PostEditor() {
 	succMap := make(map[string]string)
 
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
+	if err := services.UserService.CheckPostStatus(user); err != nil {
 		_, _ = c.Ctx.JSON(iris.Map{
-			"msg":  "请先登录",
-			"code": simple.ErrorNotLogin.Code,
-			"data": iris.Map{
-				"errFiles": errFiles,
-				"succMap":  succMap,
-			},
-		})
-		return
-	}
-	if user.IsForbidden() {
-		_, _ = c.Ctx.JSON(iris.Map{
-			"msg":  "已被禁言",
-			"code": common.ForbiddenError.Code,
+			"msg":  err.Message,
+			"code": err.Code,
 			"data": iris.Map{
 				"errFiles": errFiles,
 				"succMap":  succMap,
@@ -128,18 +113,10 @@ func (c *UploadController) PostEditor() {
 // vditor 拷贝第三方图片
 func (c *UploadController) PostFetch() {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
+	if err := services.UserService.CheckPostStatus(user); err != nil {
 		_, _ = c.Ctx.JSON(iris.Map{
-			"msg":  "请先登录",
-			"code": 1,
-			"data": iris.Map{},
-		})
-		return
-	}
-	if user.IsForbidden() {
-		_, _ = c.Ctx.JSON(iris.Map{
-			"msg":  "已被禁言",
-			"code": common.ForbiddenError.Code,
+			"msg":  err.Message,
+			"code": err.Code,
 			"data": iris.Map{},
 		})
 		return

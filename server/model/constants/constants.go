@@ -13,6 +13,7 @@ const (
 	SysConfigDefaultNodeId    = "defaultNodeId"    // 发帖默认节点
 	SysConfigArticlePending   = "articlePending"   // 是否开启文章审核
 	SysConfigTopicCaptcha     = "topicCaptcha"     // 是否开启发帖验证码
+	SysConfigUserObserveHour  = "userObserveHour"  // 新用户观察期
 )
 
 // EntityType

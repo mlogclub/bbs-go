@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/common"
 	"bbs-go/common/email"
 	"bbs-go/common/urls"
 	"bbs-go/common/validate"
@@ -483,7 +484,8 @@ func (s *userService) VerifyEmail(userId int64, token string) error {
 	if emailCode.UserId != userId {
 		return errors.New("非法验证码")
 	}
-	if emailCode.CreateTime+int64(time.Hour*emailVerifyExpireHour) < simple.NowTimestamp() {
+
+	if simple.TimeFromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
 		return errors.New("验证邮件已过期")
 	}
 	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
@@ -493,4 +495,21 @@ func (s *userService) VerifyEmail(userId int64, token string) error {
 		cache.UserCache.Invalidate(emailCode.UserId)
 		return repositories.EmailCodeRepository.UpdateColumn(tx, emailCode.Id, "used", true)
 	})
+}
+
+// CheckPostStatus 用于在发表内容时检查用户状态
+func (s *userService) CheckPostStatus(user *model.User) *simple.CodeError {
+	if user == nil {
+		return simple.ErrorNotLogin
+	}
+	if user.Status != constants.StatusOk {
+		return common.UserDisabled
+	}
+	if user.IsForbidden() {
+		return common.ForbiddenError
+	}
+	if user.InObservationPeriod(SysConfigService.GetInt(constants.SysConfigUserObserveHour)) {
+		return common.InObservationPeriod
+	}
+	return nil
 }

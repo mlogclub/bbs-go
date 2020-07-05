@@ -36,11 +36,8 @@ func (c *TopicController) GetNode() *simple.JsonResult {
 // 发表帖子
 func (c *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	var (
@@ -66,11 +63,8 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 // 编辑时获取详情
 func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	topic := services.TopicService.Get(topicId)
@@ -103,11 +97,8 @@ func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 // 编辑帖子
 func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	topic := services.TopicService.Get(topicId)
@@ -138,11 +129,8 @@ func (c *TopicController) PostEditBy(topicId int64) *simple.JsonResult {
 // 删除帖子
 func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
-	if user.IsForbidden() {
-		return simple.JsonError(common.ForbiddenError)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
 	}
 
 	topic := services.TopicService.Get(topicId)

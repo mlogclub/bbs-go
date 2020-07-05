@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/mlogclub/simple"
 	"strings"
+	"time"
 )
 
 // IsForbidden 是否禁言
@@ -57,4 +58,12 @@ func (u *User) GetRoles() []string {
 		}
 	}
 	return roles
+}
+
+// InObservationPeriod 是否在观察期，observeHour观察时长
+func (u *User) InObservationPeriod(observeHour int) bool {
+	if observeHour <= 0 {
+		return false
+	}
+	return simple.TimeFromTimestamp(u.CreateTime).Add(time.Hour * time.Duration(observeHour)).After(time.Now())
 }
