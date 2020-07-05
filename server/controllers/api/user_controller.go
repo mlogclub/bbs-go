@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/common/validate"
 	"bbs-go/model/constants"
 	"strconv"
 	"strings"
@@ -9,7 +10,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"bbs-go/cache"
-	"bbs-go/common"
 	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
@@ -64,7 +64,7 @@ func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("头像不能为空")
 	}
 
-	if len(homePage) > 0 && common.IsValidateUrl(homePage) != nil {
+	if len(homePage) > 0 && validate.IsURL(homePage) != nil {
 		return simple.JsonErrorMsg("个人主页地址错误")
 	}
 

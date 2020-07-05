@@ -4,12 +4,14 @@ import (
 	"bbs-go/model"
 	"bbs-go/repositories"
 	"github.com/mlogclub/simple"
+	"math/rand"
+	"strconv"
 )
 
 var EmailCodeService = newEmailCodeService()
 
 func newEmailCodeService() *emailCodeService {
-	return &emailCodeService {}
+	return &emailCodeService{}
 }
 
 type emailCodeService struct {
@@ -63,3 +65,15 @@ func (s *emailCodeService) Delete(id int64) {
 	repositories.EmailCodeRepository.Delete(simple.DB(), id)
 }
 
+// 发送邮箱验证码
+func (s *emailCodeService) SendVerifyEmail(userId int64, emailStr, title, template string) error {
+	var code string
+	for i := 0; i < 6; i++ {
+		code += strconv.Itoa(rand.Intn(10))
+	}
+	// email.SendTemplateEmail()
+	// email.SendTemplateEmail(email, , "邮箱验证", "邮件内容:"+code, "", "https://mlog.club")
+	// TODO 发送验证码
+	// TODO 插入EmailCode记录
+	return nil
+}

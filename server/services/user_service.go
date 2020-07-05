@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/common/validate"
 	"bbs-go/model/constants"
 	"database/sql"
 	"errors"
@@ -13,7 +14,6 @@ import (
 	"time"
 
 	"bbs-go/cache"
-	"bbs-go/common"
 	"bbs-go/common/avatar"
 	"bbs-go/common/uploader"
 
@@ -152,14 +152,14 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	}
 
 	// 验证密码
-	err := common.IsValidatePassword(password, rePassword)
+	err := validate.IsPassword(password, rePassword)
 	if err != nil {
 		return nil, err
 	}
 
 	// 验证邮箱
 	if len(email) > 0 {
-		if err := common.IsValidateEmail(email); err != nil {
+		if err := validate.IsEmail(email); err != nil {
 			return nil, err
 		}
 		if s.GetByEmail(email) != nil {
@@ -171,7 +171,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 
 	// 验证用户名
 	if len(username) > 0 {
-		if err := common.IsValidateUsername(username); err != nil {
+		if err := validate.IsUsername(username); err != nil {
 			return nil, err
 		}
 		if s.isUsernameExists(username) {
@@ -220,7 +220,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 		return nil, errors.New("密码不能为空")
 	}
 	var user *model.User = nil
-	if err := common.IsValidateEmail(username); err == nil { // 如果用户输入的是邮箱
+	if err := validate.IsEmail(username); err == nil { // 如果用户输入的是邮箱
 		user = s.GetByEmail(username)
 	} else {
 		user = s.GetByUsername(username)
@@ -326,7 +326,7 @@ func (s *userService) UpdateAvatar(userId int64, avatar string) error {
 // SetUsername 设置用户名
 func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
-	if err := common.IsValidateUsername(username); err != nil {
+	if err := validate.IsUsername(username); err != nil {
 		return err
 	}
 
@@ -343,7 +343,7 @@ func (s *userService) SetUsername(userId int64, username string) error {
 // SetEmail 设置密码
 func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
-	if err := common.IsValidateEmail(email); err != nil {
+	if err := validate.IsEmail(email); err != nil {
 		return err
 	}
 	if s.isEmailExists(email) {
@@ -354,7 +354,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 
 // SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
-	if err := common.IsValidatePassword(password, rePassword); err != nil {
+	if err := validate.IsPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -367,7 +367,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 
 // UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
-	if err := common.IsValidatePassword(password, rePassword); err != nil {
+	if err := validate.IsPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -424,4 +424,21 @@ func (s *userService) SyncUserCount() {
 			cache.UserCache.Invalidate(user.Id)
 		}
 	})
+}
+
+// SendEmailVerifyEmailCode 发送邮箱验证邮件
+func (s *userService) SendEmailVerifyEmailCode(userId int64, emailStr, title, content string) error {
+	user := s.Get(userId)
+	if user == nil {
+		return errors.New("用户不存在")
+	}
+	if user.EmailVerified {
+		return errors.New("用户邮箱已验证")
+	}
+	if err := validate.IsEmail(user.Email.String); err != nil {
+		return err
+	}
+	// TODO 发送验证码
+	// EmailCodeService.SendVerifyEmail(userId)
+	return nil
 }
