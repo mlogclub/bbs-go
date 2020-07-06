@@ -7,7 +7,7 @@
           <div class="widget-content">
             <div v-if="success">
               恭喜，邮箱验证成功。你的邮箱为：{{ currentUser.email }}，<a
-                href="/users/settings"
+                href="/user/settings"
                 >点击前往资料页</a
               >
             </div>
