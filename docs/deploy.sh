@@ -1,8 +1,3 @@
-#!/usr/bin/env sh
-
-# 确保脚本抛出遇到的错误
-set -e
-
 # 生成静态文件
 vuepress build
 
@@ -18,4 +13,4 @@ git config user.name 'mlogclub'
 git config user.email 'mlog1@qq.com'
 git commit -m 'deploy docs'
 
-git push -f git@github_mlog.com:mlogclub/bbs-go-home-page.git master
+git push -f git@github.com:mlogclub/bbs-go-docs.git master
