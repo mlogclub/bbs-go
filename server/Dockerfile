@@ -1,5 +1,5 @@
 # builder stage
-FROM golang:1.13-stretch AS builder
+FROM golang:1.14-buster AS builder
 
 # Install build dependencies
 RUN apt-get -qq update && \
