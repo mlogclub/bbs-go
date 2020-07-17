@@ -121,6 +121,21 @@ func (c *ArticleController) PostUpdate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
+func (c *ArticleController) GetTags() *simple.JsonResult {
+	articleId := simple.FormValueInt64Default(c.Ctx, "articleId", 0)
+	tags := services.ArticleService.GetArticleTags(articleId)
+	return simple.JsonData(render.BuildTags(tags))
+}
+
+func (c *ArticleController) PutTags() *simple.JsonResult {
+	var (
+		articleId = simple.FormValueInt64Default(c.Ctx, "articleId", 0)
+		tags      = simple.FormValueStringArray(c.Ctx, "tags")
+	)
+	services.ArticleService.PutTags(articleId, tags)
+	return simple.JsonData(render.BuildTags(services.ArticleService.GetArticleTags(articleId)))
+}
+
 func (c *ArticleController) PostDelete() *simple.JsonResult {
 	id := c.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {

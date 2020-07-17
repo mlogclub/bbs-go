@@ -211,6 +211,13 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 	return simple.FromError(err)
 }
 
+func (s *articleService) PutTags(articleId int64, tags []string) {
+	tagIds := repositories.TagRepository.GetOrCreates(simple.DB(), tags)             // 创建文章对应标签
+	repositories.ArticleTagRepository.DeleteArticleTags(simple.DB(), articleId)      // 先删掉所有的标签
+	repositories.ArticleTagRepository.AddArticleTags(simple.DB(), articleId, tagIds) // 然后重新添加标签
+	cache.ArticleTagCache.Invalidate(articleId)
+}
+
 // 相关文章
 func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 	tagIds := cache.ArticleTagCache.Get(articleId)

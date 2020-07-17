@@ -12,10 +12,10 @@
           <el-input v-model="filters.nickname" placeholder="昵称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleAdd" type="primary">新增</el-button>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -23,10 +23,10 @@
     <el-table
       v-loading="listLoading"
       :data="results"
-      @selection-change="handleSelectionChange"
       highlight-current-row
       stripe
       style="width: 100%;"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -87,21 +87,21 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.$index, scope.row)" size="small"
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
           >
           <el-button
             v-if="scope.row.forbidden"
-            @click="removeForbidden(scope.$index, scope.row)"
             size="small"
             type="warning"
+            @click="removeForbidden(scope.$index, scope.row)"
             >取消禁言
           </el-button>
           <el-button
             v-else
-            @click="showForbiddenDialog(scope.$index, scope.row)"
             size="small"
             type="warning"
+            @click="showForbiddenDialog(scope.$index, scope.row)"
             >禁言</el-button
           >
         </template>
@@ -114,9 +114,9 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-        layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
     </div>
@@ -152,8 +152,8 @@
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button
           :loading="addLoading"
-          @click.native="addSubmit"
           type="primary"
+          @click.native="addSubmit"
           >提交</el-button
         >
       </div>
@@ -217,8 +217,8 @@
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button
           :loading="editLoading"
-          @click.native="editSubmit"
           type="primary"
+          @click.native="editSubmit"
           >提交</el-button
         >
       </div>
@@ -255,8 +255,8 @@
         <el-button @click.native="forbiddenFormVisible = false">取消</el-button>
         <el-button
           :loading="forbiddenLoading"
-          @click.native="forbidden"
           type="primary"
+          @click.native="forbidden"
           >禁言</el-button
         >
       </div>

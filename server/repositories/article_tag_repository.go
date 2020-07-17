@@ -106,6 +106,13 @@ func (r *articleTagRepository) DeleteArticleTags(db *gorm.DB, articleId int64) {
 	db.Where("article_id = ?", articleId).Delete(model.ArticleTag{})
 }
 
+func (r *articleTagRepository) DeleteArticleTag(db *gorm.DB, articleId, tagId int64) {
+	if articleId <= 0 {
+		return
+	}
+	db.Where("article_id = ? and tag_id = ?", articleId, tagId).Delete(model.ArticleTag{})
+}
+
 func (r *articleTagRepository) FindByArticleId(db *gorm.DB, articleId int64) []model.ArticleTag {
 	return r.Find(db, simple.NewSqlCnd().Where("article_id = ?", articleId))
 }

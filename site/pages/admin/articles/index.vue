@@ -15,9 +15,9 @@
         <el-form-item>
           <el-select
             v-model="filters.status"
-            @change="list"
             clearable
             placeholder="请选择状态"
+            @change="list"
           >
             <el-option label="正常" value="0"></el-option>
             <el-option label="删除" value="1"></el-option>
@@ -25,7 +25,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="list" type="primary">查询</el-button>
+          <el-button type="primary" @click="list">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -47,37 +47,45 @@
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
-              <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
-                tag.tagName
-              }}</label>
 
-              <div class="actions">
-                <span v-if="item.status === 1" class="action-item danger"
-                  >已删除</span
+              <div class="article-tags">
+                <el-tag
+                  v-for="tag in item.tags"
+                  :key="tag.tagId"
+                  type="info"
+                  size="mini"
                 >
-                <a
-                  v-if="item.status !== 1"
-                  @click="deleteSubmit(item)"
-                  class="action-item btn"
-                  >删除</a
-                >
-                <a
-                  v-if="item.status === 2"
-                  :href="'/article/edit/' + item.id"
-                  class="action-item btn"
-                  >修改</a
-                >
-                <a
-                  v-if="item.status === 2"
-                  @click="pendingSubmit(item)"
-                  class="action-item btn"
-                  >审核</a
-                >
+                  {{ tag.tagName }}
+                </el-tag>
               </div>
             </div>
           </div>
         </div>
         <div class="summary">{{ item.summary }}</div>
+        <div class="actions">
+          <a class="action-item btn" @click="showUpdateTags(item)">修改标签</a>
+          <span v-if="item.status === 1" class="action-item danger"
+            >已删除</span
+          >
+          <a
+            v-if="item.status !== 1"
+            class="action-item btn"
+            @click="deleteSubmit(item)"
+            >删除</a
+          >
+          <a
+            v-if="item.status === 2"
+            :href="'/article/edit/' + item.id"
+            class="action-item btn"
+            >修改</a
+          >
+          <a
+            v-if="item.status === 2"
+            class="action-item btn"
+            @click="pendingSubmit(item)"
+            >审核</a
+          >
+        </div>
       </div>
     </div>
     <div v-else class="page-section articles">
@@ -93,11 +101,37 @@
         :current-page="page.page"
         :page-size="page.limit"
         :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-        layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
     </div>
+
+    <el-dialog
+      :visible.sync="updateTagsDialogVisible"
+      :close-on-click-modal="false"
+      title="添加标签"
+    >
+      <el-form label-width="80px">
+        <el-form-item label="标签">
+          <el-select
+            v-model="updateTagForm.tags"
+            style="width:100%"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            placeholder="标签"
+          ></el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="updateTagsDialogVisible = false"
+          >取消</el-button
+        >
+        <el-button type="primary" @click.native="updateTags">提交 </el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
@@ -110,7 +144,12 @@ export default {
       listLoading: false,
       page: {},
       filters: {},
-      tagOptions: []
+      tagOptions: [],
+      updateTagsDialogVisible: false,
+      updateTagForm: {
+        articleId: 0,
+        tags: []
+      }
     }
   },
   mounted() {
@@ -200,6 +239,49 @@ export default {
             message: '已取消审核'
           })
         })
+    },
+    async showUpdateTags(article) {
+      const tags = []
+      try {
+        const tagObjs = await this.$axios.get(
+          '/api/admin/article/tags?articleId=' + article.id
+        )
+        if (tagObjs && tagObjs.length) {
+          for (let i = 0; i < tagObjs.length; i++) {
+            tags.push(tagObjs[i].tagName)
+          }
+        }
+      } catch (e) {
+        this.$message({
+          type: 'error',
+          message: e.message || e
+        })
+      }
+
+      this.updateTagForm.articleId = article.id
+      this.updateTagForm.tags = tags
+      this.updateTagsDialogVisible = true
+    },
+    async updateTags() {
+      try {
+        const nowTags = await this.$axios.put('/api/admin/article/tags', {
+          articleId: this.updateTagForm.articleId,
+          tags: (this.updateTagForm.tags || []).join(',')
+        })
+        if (this.results && this.results.length) {
+          for (let i = 0; i < this.results.length; i++) {
+            if (this.results[i].id === this.updateTagForm.articleId) {
+              this.results[i].tags = nowTags
+            }
+          }
+        }
+        this.updateTagsDialogVisible = false
+      } catch (e) {
+        this.$message({
+          type: 'error',
+          message: e.message || e
+        })
+      }
     }
   }
 }
@@ -259,36 +341,23 @@ export default {
             font-size: 12px;
           }
 
-          label.tag {
-            align-items: center;
-            background-color: #f5f5f5;
-            border-radius: 4px;
-            color: #4a4a4a;
-            display: inline-flex;
-            justify-content: center;
-            line-height: 1.5;
-            padding-left: 5px;
-            padding-right: 5px;
-            white-space: nowrap;
-          }
-
-          .actions {
-            margin-left: 20px;
-            text-align: right;
-
-            .action-item {
-              margin-right: 9px;
+          .article-tags {
+            .el-tag + .el-tag {
+              margin-left: 5px;
             }
 
-            span.danger {
-              background: #eee;
-              color: red;
-              padding: 2px 5px 2px 5px;
+            .button-new-tag {
+              margin-left: 10px;
+              height: 32px;
+              line-height: 30px;
+              padding-top: 0;
+              padding-bottom: 0;
             }
 
-            a.btn {
-              color: blue;
-              cursor: pointer;
+            .input-new-tag {
+              width: 90px;
+              margin-left: 10px;
+              vertical-align: bottom;
             }
           }
         }
@@ -307,6 +376,27 @@ export default {
       font-size: 12px;
       font-weight: 400;
       line-height: 1.5;
+    }
+
+    .actions {
+      text-align: right;
+      font-size: 12px;
+      font-weight: 400;
+
+      .action-item {
+        margin-right: 9px;
+      }
+
+      span.danger {
+        background: #eee;
+        color: red;
+        padding: 2px 5px 2px 5px;
+      }
+
+      a.btn {
+        color: blue;
+        cursor: pointer;
+      }
     }
   }
 }
