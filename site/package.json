@@ -15,29 +15,29 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.8.0",
+    "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/google-adsense": "^1.1.3",
-    "@nuxtjs/toast": "^3.2.1",
-    "cookie-universal-nuxt": "^2.0.18",
-    "element-ui": "^2.13.0",
-    "nuxt": "^2.13.2",
-    "qs": "^6.9.0",
+    "@nuxtjs/toast": "^3.3.1",
+    "cookie-universal-nuxt": "^2.1.4",
+    "element-ui": "^2.13.2",
+    "nuxt": "^2.14.1",
+    "qs": "^6.9.4",
     "v-viewer": "^1.5.1",
     "vue-infinite-scroll": "^2.0.2",
-    "vuedraggable": "^2.23.2"
+    "vuedraggable": "^2.24.0"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config": "^1.0.1",
-    "@nuxtjs/eslint-module": "^1.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-plugin-nuxt": ">=0.4.2",
-    "eslint-plugin-prettier": "^3.0.1",
-    "eslint-plugin-vue": "^6.0.1",
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.14.1",
-    "prettier": "^1.16.4",
-    "sass-loader": "^7.3.1",
+    "prettier": "^2.0.5",
+    "sass-loader": "^9.0.3",
     "vue-lazyload": "^1.3.3"
   }
 }
