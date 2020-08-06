@@ -12,7 +12,7 @@ const filters = {
       'm+': date.getMinutes(),
       's+': date.getSeconds(),
       'q+': Math.floor((date.getMonth() + 3) / 3),
-      S: date.getMilliseconds()
+      S: date.getMilliseconds(),
     }
     if (/(y+)/.test(fmt)) {
       fmt = fmt.replace(
@@ -48,9 +48,9 @@ const filters = {
       return parseInt(diffValue / day) + '天前'
     }
     return filters.formatDate(timestamp, 'yyyy-MM-dd HH:mm:ss')
-  }
+  },
 }
 
-Object.keys(filters).forEach(function(key) {
+Object.keys(filters).forEach(function (key) {
   Vue.filter(key, filters[key])
 })

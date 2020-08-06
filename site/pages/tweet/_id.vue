@@ -106,15 +106,15 @@ Vue.use(Viewer, {
     tooltip: false,
     movable: false,
     scalable: false,
-    url: 'data-src'
-  }
+    url: 'data-src',
+  },
 })
 
 export default {
   components: {
     SiteNotice,
     ScoreRank,
-    Comment
+    Comment,
   },
   async asyncData({ $axios, params }) {
     const [tweet, commentsPage, scoreRank] = await Promise.all([
@@ -122,10 +122,10 @@ export default {
       $axios.get('/api/comment/list', {
         params: {
           entityType: 'tweet',
-          entityId: params.id
-        }
+          entityId: params.id,
+        },
       }),
-      $axios.get('/api/user/score/rank')
+      $axios.get('/api/user/score/rank'),
     ])
     return { tweet, commentsPage, scoreRank }
   },
@@ -142,14 +142,14 @@ export default {
               text: '去登录',
               onClick: (e, toastObject) => {
                 utils.toSignin()
-              }
-            }
+              },
+            },
           })
         } else {
           this.$toast.error(e.message || e)
         }
       }
-    }
+    },
   },
   head() {
     return {
@@ -158,12 +158,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

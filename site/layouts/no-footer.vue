@@ -10,7 +10,7 @@ import MyNav from '~/components/MyNav'
 
 export default {
   components: {
-    MyNav
-  }
+    MyNav,
+  },
 }
 </script>

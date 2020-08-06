@@ -35,7 +35,7 @@ export default {
   components: {
     TopicList,
     Pagination,
-    UserCenterSidebar
+    UserCenterSidebar,
   },
   async asyncData({ $axios, params, error }) {
     let user
@@ -44,7 +44,7 @@ export default {
     } catch (err) {
       error({
         statusCode: 404,
-        message: err.message || '系统错误'
+        message: err.message || '系统错误',
       })
       return
     }
@@ -53,14 +53,14 @@ export default {
       $axios.get('/api/topic/user/topics', {
         params: {
           userId: params.userId,
-          page: params.page
-        }
-      })
+          page: params.page,
+        },
+      }),
     ])
 
     return {
       user,
-      topicsPage
+      topicsPage,
     }
   },
   computed: {
@@ -71,13 +71,13 @@ export default {
     isOwner() {
       const current = this.$store.state.user.current
       return this.user && current && this.user.id === current.id
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle(this.user.nickname + ' - 话题')
+      title: this.$siteTitle(this.user.nickname + ' - 话题'),
     }
-  }
+  },
 }
 </script>
 

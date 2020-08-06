@@ -11,17 +11,17 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'QQ 登录'
+      default: 'QQ 登录',
     },
     refUrl: {
       // 登录来源地址，控制登录成功之后要跳到该地址
       type: String,
-      default: ''
+      default: '',
     },
     isButton: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   methods: {
     async qqLogin() {
@@ -32,16 +32,16 @@ export default {
         }
         const ret = await this.$axios.get('/api/login/qq/authorize', {
           params: {
-            ref: this.refUrlValue
-          }
+            ref: this.refUrlValue,
+          },
         })
         window.location = ret.url
       } catch (e) {
         console.error(e)
         this.$toast.error('登录失败：' + (e.message || e))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

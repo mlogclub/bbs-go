@@ -84,8 +84,8 @@ export default {
       default() {
         return []
       },
-      required: false
-    }
+      required: false,
+    },
   },
   methods: {
     async like(tweet) {
@@ -100,15 +100,15 @@ export default {
               text: '去登录',
               onClick: (e, toastObject) => {
                 utils.toSignin()
-              }
-            }
+              },
+            },
           })
         } else {
           this.$toast.error(e.message || e)
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

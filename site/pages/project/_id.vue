@@ -84,7 +84,7 @@ import SiteNotice from '~/components/SiteNotice'
 export default {
   components: {
     Comment,
-    SiteNotice
+    SiteNotice,
   },
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
@@ -92,9 +92,9 @@ export default {
       $axios.get('/api/comment/list', {
         params: {
           entityType: 'project',
-          entityId: params.id
-        }
-      })
+          entityId: params.id,
+        },
+      }),
     ])
     // 构建url，如果登录了直接跳转到原地址，如果没登陆那么跳转到登录
     function buildUrl(url) {
@@ -114,7 +114,7 @@ export default {
       commentsPage,
       projectUrl: buildUrl(project.url),
       docUrl: buildUrl(project.docUrl),
-      downloadUrl: buildUrl(project.downloadUrl)
+      downloadUrl: buildUrl(project.downloadUrl),
     }
   },
   head() {
@@ -124,9 +124,9 @@ export default {
     }
     return {
       title: this.$siteTitle(siteTitle),
-      meta: [{ hid: 'description', name: 'description', content: siteTitle }]
+      meta: [{ hid: 'description', name: 'description', content: siteTitle }],
     }
-  }
+  },
 }
 </script>
 

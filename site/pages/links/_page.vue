@@ -41,18 +41,18 @@
 import Pagination from '~/components/Pagination'
 export default {
   components: {
-    Pagination
+    Pagination,
   },
   async asyncData({ $axios, params }) {
     const [linksPage] = await Promise.all([
       $axios.get('/api/link/links', {
         params: {
-          page: params.page || 1
-        }
-      })
+          page: params.page || 1,
+        },
+      }),
     ])
     return {
-      linksPage
+      linksPage,
     }
   },
   head() {
@@ -62,12 +62,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

@@ -40,14 +40,14 @@ export default {
     FriendLinks,
     PostTweets,
     TweetsList,
-    LoadMore
+    LoadMore,
   },
   async asyncData({ $axios, query }) {
     try {
       const [tweetsPage, scoreRank, links] = await Promise.all([
         $axios.get('/api/tweet/list'),
         $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks')
+        $axios.get('/api/link/toplinks'),
       ])
       return { tweetsPage, scoreRank, links }
     } catch (e) {
@@ -57,7 +57,7 @@ export default {
   methods: {
     tweetsCreated(item) {
       this.$refs.tweetsLoadMore.unshiftResults(item)
-    }
+    },
   },
   head() {
     return {
@@ -66,12 +66,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

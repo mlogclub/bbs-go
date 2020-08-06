@@ -30,7 +30,7 @@ export default {
   async asyncData({ $axios, params }) {
     const link = await $axios.get('/api/link/' + params.id)
     return {
-      link
+      link,
     }
   },
   head() {
@@ -41,12 +41,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

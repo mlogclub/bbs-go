@@ -38,7 +38,7 @@ export default {
     TopicsNav,
     TopicList,
     TweetsWidget,
-    Pagination
+    Pagination,
   },
   async asyncData({ $axios, params, query }) {
     const [
@@ -47,19 +47,19 @@ export default {
       topicsPage,
       scoreRank,
       links,
-      newestTweets
+      newestTweets,
     ] = await Promise.all([
       $axios.get('/api/topic/node?nodeId=' + params.nodeId),
       $axios.get('/api/topic/nodes'),
       $axios.get('/api/topic/node/topics', {
         params: {
           nodeId: params.nodeId,
-          page: query.p || 1
-        }
+          page: query.p || 1,
+        },
       }),
       $axios.get('/api/user/score/rank'),
       $axios.get('/api/link/toplinks'),
-      $axios.get('/api/tweet/newest')
+      $axios.get('/api/tweet/newest'),
     ])
     return {
       node,
@@ -67,7 +67,7 @@ export default {
       topicsPage,
       scoreRank,
       links,
-      newestTweets
+      newestTweets,
     }
   },
   methods: {
@@ -79,7 +79,7 @@ export default {
           this.topicsPage.results = [data]
         }
       }
-    }
+    },
   },
   head() {
     return {
@@ -88,12 +88,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

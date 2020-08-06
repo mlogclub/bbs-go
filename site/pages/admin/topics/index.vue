@@ -210,7 +210,7 @@ export default {
       listLoading: false,
       page: {},
       filters: {
-        status: '0'
+        status: '0',
       },
       selectedRows: [],
       addForm: {
@@ -219,7 +219,7 @@ export default {
         title: '',
         content: '',
         status: '',
-        createTime: ''
+        createTime: '',
       },
       addFormVisible: false,
       addFormRules: {},
@@ -232,11 +232,11 @@ export default {
         title: '',
         content: '',
         status: '',
-        createTime: ''
+        createTime: '',
       },
       editFormVisible: false,
       editFormRules: {},
-      editLoading: false
+      editLoading: false,
     }
   },
   mounted() {
@@ -248,7 +248,7 @@ export default {
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
+        limit: me.page.limit,
       })
       this.$axios
         .post('/api/admin/topic/list', params)
@@ -271,7 +271,7 @@ export default {
     handleAdd() {
       this.addForm = {
         name: '',
-        description: ''
+        description: '',
       }
       this.addFormVisible = true
     },
@@ -317,23 +317,23 @@ export default {
       this.$confirm('是否确认删除该话题?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
-        .then(function() {
+        .then(function () {
           me.$axios
             .post('/api/admin/topic/delete', { id: row.id })
-            .then(function() {
+            .then(function () {
               me.$message({ message: '删除成功', type: 'success' })
               me.list()
             })
-            .catch(function(err) {
+            .catch(function (err) {
               me.$notify.error({ title: '错误', message: err.message || err })
             })
         })
-        .catch(function() {
+        .catch(function () {
           me.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
         })
     },
@@ -349,7 +349,7 @@ export default {
     async recommend(id) {
       try {
         await this.$axios.post('/api/admin/topic/recommend', {
-          id
+          id,
         })
         this.$message({ message: '推荐成功', type: 'success' })
         this.list()
@@ -361,8 +361,8 @@ export default {
       try {
         await this.$axios.delete('/api/admin/topic/recommend', {
           params: {
-            id
-          }
+            id,
+          },
         })
         this.$message({ message: '取消推荐成功', type: 'success' })
         this.list()
@@ -372,8 +372,8 @@ export default {
     },
     handleSelectionChange(val) {
       this.selectedRows = val
-    }
-  }
+    },
+  },
 }
 </script>
 

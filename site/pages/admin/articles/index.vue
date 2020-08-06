@@ -116,7 +116,7 @@
         <el-form-item label="标签">
           <el-select
             v-model="updateTagForm.tags"
-            style="width:100%"
+            style="width: 100%;"
             multiple
             filterable
             allow-create
@@ -148,8 +148,8 @@ export default {
       updateTagsDialogVisible: false,
       updateTagForm: {
         articleId: 0,
-        tags: []
-      }
+        tags: [],
+      },
     }
   },
   mounted() {
@@ -160,7 +160,7 @@ export default {
       this.listLoading = true
       const params = Object.assign(this.filters, {
         page: this.page.page,
-        limit: this.page.limit
+        limit: this.page.limit,
       })
       try {
         const data = await this.$axios.post('/api/admin/article/list', params)
@@ -195,7 +195,7 @@ export default {
       this.$confirm('确认要删除文章？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           this.$axios
@@ -211,7 +211,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
         })
     },
@@ -220,7 +220,7 @@ export default {
       this.$confirm('确认要过审文章？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           this.$axios
@@ -236,7 +236,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消审核'
+            message: '已取消审核',
           })
         })
     },
@@ -254,7 +254,7 @@ export default {
       } catch (e) {
         this.$message({
           type: 'error',
-          message: e.message || e
+          message: e.message || e,
         })
       }
 
@@ -266,7 +266,7 @@ export default {
       try {
         const nowTags = await this.$axios.put('/api/admin/article/tags', {
           articleId: this.updateTagForm.articleId,
-          tags: (this.updateTagForm.tags || []).join(',')
+          tags: (this.updateTagForm.tags || []).join(','),
         })
         if (this.results && this.results.length) {
           for (let i = 0; i < this.results.length; i++) {
@@ -279,11 +279,11 @@ export default {
       } catch (e) {
         this.$message({
           type: 'error',
-          message: e.message || e
+          message: e.message || e,
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

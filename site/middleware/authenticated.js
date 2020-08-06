@@ -1,6 +1,6 @@
 import UserHelper from '~/common/UserHelper'
 
-export default function(context) {
+export default function (context) {
   const user = context.store.state.user.current
   if (!user) {
     toSignIn(context)
@@ -10,7 +10,7 @@ export default function(context) {
     if (!UserHelper.isOwner(user) && !UserHelper.isAdmin(user)) {
       context.error({
         statusCode: 403,
-        message: '403 forbidden'
+        message: '403 forbidden',
       })
     }
   }

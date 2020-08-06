@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-export default function({ $axios, $toast, app }) {
+export default function ({ $axios, $toast, app }) {
   $axios.onRequest((config) => {
     config.headers.common['X-Client'] = 'bbs-go-site'
     config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -9,14 +9,14 @@ export default function({ $axios, $toast, app }) {
       config.headers.common['X-User-Token'] = userToken
     }
     config.transformRequest = [
-      function(data) {
+      function (data) {
         if (process.client && data instanceof FormData) {
           // 如果是FormData就不转换
           return data
         }
         data = qs.stringify(data)
         return data
-      }
+      },
     ]
   })
 

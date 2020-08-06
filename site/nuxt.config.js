@@ -3,8 +3,8 @@ export default {
     port: 3000,
     host: '0.0.0.0',
     timing: {
-      total: true
-    }
+      total: true,
+    },
   },
   mode: 'universal',
   /*
@@ -12,7 +12,7 @@ export default {
    */
   head: {
     htmlAttrs: {
-      lang: 'zh-cmn-Hans'
+      lang: 'zh-cmn-Hans',
     },
     title: '',
     meta: [
@@ -20,9 +20,9 @@ export default {
       {
         name: 'viewport',
         content:
-          'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
+          'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui',
       },
-      { name: 'window-target', content: '_top' }
+      { name: 'window-target', content: '_top' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -30,29 +30,29 @@ export default {
         rel: 'alternate',
         type: 'application/atom+xml',
         title: '最新文章',
-        href: '/atom.xml'
+        href: '/atom.xml',
       },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
         title: '最新话题',
-        href: '/topic_atom.xml'
+        href: '/topic_atom.xml',
       },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
         title: '最新开源项目',
-        href: '/project_atom.xml'
+        href: '/project_atom.xml',
       },
       {
         rel: 'stylesheet',
-        href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css'
+        href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css',
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_bu6x3hdokz.css'
-      }
-    ]
+        href: '//at.alicdn.com/t/font_1142441_bu6x3hdokz.css',
+      },
+    ],
   },
   /*
    ** Customize the progress-bar color
@@ -70,14 +70,14 @@ export default {
     '~/plugins/axios',
     '~/plugins/bbs-go',
     { src: '~/plugins/infinite-scroll', ssr: false },
-    { src: '~/plugins/vue-lazyload', ssr: false }
+    { src: '~/plugins/vue-lazyload', ssr: false },
   ],
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
   ],
   /*
    ** Nuxt.js modules
@@ -94,9 +94,9 @@ export default {
       '@nuxtjs/google-adsense',
       {
         id: 'ca-pub-5683711753850351',
-        pageLevelAds: true
-      }
-    ]
+        pageLevelAds: true,
+      },
+    ],
   ],
   /*
    ** Axios module configuration
@@ -104,11 +104,11 @@ export default {
    */
   axios: {
     proxy: true,
-    credentials: true
+    credentials: true,
   },
 
   proxy: {
-    '/api/': 'http://127.0.0.1:8082'
+    '/api/': 'http://127.0.0.1:8082',
     // '/api/': 'https://mlog.club'
   },
 
@@ -117,7 +117,7 @@ export default {
   toast: {
     position: 'top-right',
     duration: 2000, // Display time of the toast in millisecond
-    keepOnHover: true // When mouse is over a toast's element, the corresponding duration timer is paused until the cursor leaves the element
+    keepOnHover: true, // When mouse is over a toast's element, the corresponding duration timer is paused until the cursor leaves the element
   },
 
   /*
@@ -130,18 +130,18 @@ export default {
     splitChunks: {
       layouts: true,
       pages: true,
-      commons: true
+      commons: true,
     },
     postcss: {
       preset: {
         features: {
-          customProperties: false
-        }
-      }
+          customProperties: false,
+        },
+      },
     },
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
-  }
+    extend(config, ctx) {},
+  },
 }

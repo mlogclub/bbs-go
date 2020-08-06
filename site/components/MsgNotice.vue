@@ -33,13 +33,13 @@ export default {
   data() {
     return {
       msgcount: 0,
-      messages: []
+      messages: [],
     }
   },
   computed: {
     user() {
       return this.$store.state.user.current
-    }
+    },
   },
   mounted() {
     this.getMsgcount()
@@ -51,8 +51,8 @@ export default {
         this.msgcount = ret.count
         this.messages = ret.messages
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

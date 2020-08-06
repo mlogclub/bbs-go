@@ -95,24 +95,24 @@ export default {
   components: { UserCenterSidebar, Pagination },
   async asyncData({ $axios, query }) {
     const [messagesPage] = await Promise.all([
-      $axios.get('/api/user/messages?page=' + (query.p || 1))
+      $axios.get('/api/user/messages?page=' + (query.p || 1)),
     ])
     return {
-      messagesPage
+      messagesPage,
     }
   },
   data() {
     return {
       messages: [],
       cursor: 0,
-      hasMore: true
+      hasMore: true,
     }
   },
   computed: {
     currentUser() {
       return this.$store.state.user.current
-    }
-  }
+    },
+  },
 }
 </script>
 

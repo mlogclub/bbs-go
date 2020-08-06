@@ -17,8 +17,8 @@
       v-model="inputTag"
       :placeholder="
         '标签（请用逗号分隔每个标签，最多' +
-          maxTagCount +
-          '个，每个最长15字符）'
+        maxTagCount +
+        '个，每个最长15字符）'
       "
       class="input"
       type="text"
@@ -76,8 +76,8 @@ export default {
       type: Array,
       default() {
         return []
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -87,14 +87,14 @@ export default {
       showRecommendTags: false, // 是否显示推荐
       inputTag: '',
       autocompleteTags: [],
-      selectIndex: -1
+      selectIndex: -1,
     }
   },
   computed: {
     // 推荐标签
     recommendTags() {
       return this.$store.state.config.config.recommendTags
-    }
+    },
   },
   methods: {
     removeTag(event, tag) {
@@ -195,7 +195,7 @@ export default {
         this.autocompleteTags = []
       } else {
         const ret = await this.$axios.post('/api/tag/autocomplete', {
-          input: this.inputTag
+          input: this.inputTag,
         })
         this.autocompleteTags = []
         if (ret.length > 0) {
@@ -249,8 +249,8 @@ export default {
         this.selectIndex = -1
       }
       this.closeRecommendTags()
-    }
-  }
+    },
+  },
 }
 </script>
 

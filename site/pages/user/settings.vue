@@ -83,7 +83,7 @@
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
-                  <span style="color:red;">*&nbsp;</span>头像：
+                  <span style="color: red;">*&nbsp;</span>头像：
                 </label>
               </div>
               <div class="field-body">
@@ -91,7 +91,7 @@
                   <div class="control">
                     <img
                       :src="user.avatar"
-                      style="width: 150px;height:150px;"
+                      style="width: 150px; height: 150px;"
                     />
                     <div class="file">
                       <label class="file-label">
@@ -108,7 +108,7 @@
                         </span>
                       </label>
                     </div>
-                    <span style="font-weight: bold; color:red;"
+                    <span style="font-weight: bold; color: red;"
                       >*图像必须为正方形，大小不要超过1M。</span
                     >
                   </div>
@@ -120,7 +120,7 @@
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
-                  <span style="color:red;">*&nbsp;</span>昵称：
+                  <span style="color: red;">*&nbsp;</span>昵称：
                 </label>
               </div>
               <div class="field-body">
@@ -398,14 +398,14 @@ import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
   components: {
-    UserCenterSidebar
+    UserCenterSidebar,
   },
   async asyncData({ $axios, params }) {
     const user = await $axios.get('/api/user/current')
     const form = { ...user }
     return {
       user,
-      form
+      form,
     }
   },
   data() {
@@ -419,7 +419,7 @@ export default {
         description: '',
         password: '',
         rePassword: '',
-        oldPassword: ''
+        oldPassword: '',
       },
 
       showSetUsername: false,
@@ -429,7 +429,7 @@ export default {
       // email: '',
 
       showSetPassword: false, // 显示设置密码
-      showUpdatePassword: false // 显示修改密码
+      showUpdatePassword: false, // 显示修改密码
       // password: '',
       // rePassword: '',
       // oldPassword: ''
@@ -442,7 +442,7 @@ export default {
           nickname: this.form.nickname,
           avatar: this.form.avatar,
           homePage: this.form.homePage,
-          description: this.form.description
+          description: this.form.description,
         })
         await this.reload()
         this.$toast.success('资料修改成功')
@@ -462,12 +462,12 @@ export default {
         const formData = new FormData()
         formData.append('image', file, file.name)
         const ret = await this.$axios.post('/api/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
 
         // 设置头像
         await this.$axios.post('/api/user/update/avatar', {
-          avatar: ret.url
+          avatar: ret.url,
         })
 
         // 重新加载数据
@@ -482,7 +482,7 @@ export default {
       try {
         const me = this
         await this.$axios.post('/api/user/set/username', {
-          username: me.form.username
+          username: me.form.username,
         })
         await this.reload()
         this.$toast.success('用户名设置成功')
@@ -495,7 +495,7 @@ export default {
       try {
         const me = this
         await this.$axios.post('/api/user/set/email', {
-          email: me.form.email
+          email: me.form.email,
         })
         await this.reload()
         this.$toast.success('邮箱设置成功')
@@ -509,7 +509,7 @@ export default {
         const me = this
         await this.$axios.post('/api/user/set/password', {
           password: me.form.password,
-          rePassword: me.form.rePassword
+          rePassword: me.form.rePassword,
         })
         await this.reload()
         this.$toast.success('密码设置成功')
@@ -524,7 +524,7 @@ export default {
         await this.$axios.post('/api/user/update/password', {
           oldPassword: me.form.oldPassword,
           password: me.form.password,
-          rePassword: me.form.rePassword
+          rePassword: me.form.rePassword,
         })
         await this.reload()
         this.$toast.success('密码修改成功')
@@ -549,13 +549,13 @@ export default {
       } finally {
         this.$nuxt.$loading.finish()
       }
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle(this.user.nickname + ' - 编辑资料')
+      title: this.$siteTitle(this.user.nickname + ' - 编辑资料'),
     }
-  }
+  },
 }
 </script>
 

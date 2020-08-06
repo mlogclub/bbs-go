@@ -39,25 +39,25 @@ import MarkdownEditor from '~/components/MarkdownEditor'
 import utils from '~/common/utils'
 export default {
   components: {
-    MarkdownEditor
+    MarkdownEditor,
   },
   props: {
     entityType: {
       type: String,
       default: '',
-      required: true
+      required: true,
     },
     entityId: {
       type: Number,
       default: 0,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       content: '', // 内容
       sending: false, // 发送中
-      quote: null // 引用的对象
+      quote: null, // 引用的对象
     }
   },
   computed: {
@@ -69,7 +69,7 @@ export default {
     },
     isLogin() {
       return this.$store.state.user.current != null
-    }
+    },
   },
   methods: {
     async create() {
@@ -87,7 +87,7 @@ export default {
           entityType: this.entityType,
           entityId: this.entityId,
           content: this.content,
-          quoteId: this.quote ? this.quote.commentId : ''
+          quoteId: this.quote ? this.quote.commentId : '',
         })
         this.$emit('created', data)
         this.content = ''
@@ -104,7 +104,7 @@ export default {
       this.quote = quote
       this.$refs.commentEditor.scrollIntoView({
         block: 'start',
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     },
     cancelReply() {
@@ -112,8 +112,8 @@ export default {
     },
     toLogin() {
       utils.toSignin()
-    }
-  }
+    },
+  },
 }
 </script>
 

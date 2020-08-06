@@ -72,14 +72,14 @@ export default {
   async asyncData({ $axios, query }) {
     const [recommendArticles, recommendTopics] = await Promise.all([
       $axios.get('/api/article/recommend'),
-      $axios.get('/api/topic/recommend')
+      $axios.get('/api/topic/recommend'),
     ])
     return {
       url: query.url,
       recommendArticles,
-      recommendTopics
+      recommendTopics,
     }
-  }
+  },
 }
 </script>
 

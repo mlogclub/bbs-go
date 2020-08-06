@@ -179,7 +179,7 @@ export default {
       editForm: {},
       editFormVisible: false,
       editFormRules: {},
-      editLoading: false
+      editLoading: false,
     }
   },
   mounted() {
@@ -191,7 +191,7 @@ export default {
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
+        limit: me.page.limit,
       })
       this.$axios
         .post('/api/admin/link/list', params)
@@ -240,7 +240,7 @@ export default {
         )
         if (flag) {
           const data = await this.$axios.get('/api/admin/link/detect', {
-            url: this.addForm.url
+            url: this.addForm.url,
           })
           if (data) {
             this.addForm.title = data.title
@@ -274,8 +274,8 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

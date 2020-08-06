@@ -78,25 +78,25 @@ export default {
   components: {
     TagInput,
     MarkdownHelp,
-    MarkdownEditor
+    MarkdownEditor,
   },
   async asyncData({ $axios, params, error }) {
     try {
       const [article] = await Promise.all([
-        $axios.get('/api/article/edit/' + params.id)
+        $axios.get('/api/article/edit/' + params.id),
       ])
       return {
         article,
         postForm: {
           title: article.title,
           tags: article.tags,
-          content: article.content
-        }
+          content: article.content,
+        },
       }
     } catch (e) {
       error({
         statusCode: 403,
-        message: e.message || '403'
+        message: e.message || '403',
       })
     }
   },
@@ -106,14 +106,14 @@ export default {
       postForm: {
         title: '',
         tags: [],
-        content: ''
-      }
+        content: '',
+      },
     }
   },
   computed: {
     currentUser() {
       return this.$store.state.user.current
-    }
+    },
   },
   methods: {
     async submitCreate() {
@@ -129,27 +129,27 @@ export default {
           {
             title: this.postForm.title,
             content: this.postForm.content,
-            tags: this.postForm.tags ? this.postForm.tags.join(',') : ''
+            tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )
         this.$toast.success('修改成功', {
           duration: 2000,
           onComplete() {
             utils.linkTo('/article/' + article.articleId)
-          }
+          },
         })
       } catch (e) {
         console.error(e)
         me.publishing = false
         this.$toast.error('提交失败：' + (e.message || e))
       }
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle('修改文章')
+      title: this.$siteTitle('修改文章'),
     }
-  }
+  },
 }
 </script>
 

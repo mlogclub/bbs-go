@@ -85,29 +85,29 @@ import utils from '~/common/utils'
 
 export default {
   components: {
-    LoadMore
+    LoadMore,
   },
   props: {
     entityType: {
       type: String,
       default: '',
-      required: true
+      required: true,
     },
     entityId: {
       type: Number,
       default: 0,
-      required: true
+      required: true,
     },
     commentsPage: {
       type: Object,
       default() {
         return {}
-      }
+      },
     },
     showAd: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     user() {
@@ -115,7 +115,7 @@ export default {
     },
     isLogin() {
       return this.$store.state.user.current != null
-    }
+    },
   },
   methods: {
     append(data) {
@@ -131,8 +131,8 @@ export default {
     },
     cancelReply() {
       this.quote = null
-    }
-  }
+    },
+  },
 }
 </script>
 

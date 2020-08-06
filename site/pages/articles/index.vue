@@ -36,15 +36,15 @@ export default {
   components: {
     ArticleList,
     SiteNotice,
-    LoadMore
+    LoadMore,
   },
   async asyncData({ $axios }) {
     try {
       const [articlesPage] = await Promise.all([
-        $axios.get('/api/article/articles')
+        $axios.get('/api/article/articles'),
       ])
       return {
-        articlesPage
+        articlesPage,
       }
     } catch (e) {
       console.error(e)
@@ -57,12 +57,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

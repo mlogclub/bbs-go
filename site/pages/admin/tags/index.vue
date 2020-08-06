@@ -143,7 +143,7 @@ export default {
         name: '',
         description: '',
         status: '',
-        createTime: ''
+        createTime: '',
       },
       addFormVisible: false,
       addLoading: false,
@@ -153,10 +153,10 @@ export default {
         name: '',
         description: '',
         status: '',
-        createTime: ''
+        createTime: '',
       },
       editFormVisible: false,
-      editLoading: false
+      editLoading: false,
     }
   },
   mounted() {
@@ -168,7 +168,7 @@ export default {
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
+        limit: me.page.limit,
       })
       this.$axios
         .post('/api/admin/tag/list', params)
@@ -194,7 +194,7 @@ export default {
     handleAdd() {
       this.addForm = {
         name: '',
-        description: ''
+        description: '',
       }
       this.addFormVisible = true
     },
@@ -234,8 +234,8 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

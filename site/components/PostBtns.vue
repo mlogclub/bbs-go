@@ -39,8 +39,8 @@ export default {
   props: {
     currentNodeId: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   computed: {
     createTopicUrl() {
@@ -49,8 +49,8 @@ export default {
         url += '?nodeId=' + this.currentNodeId
       }
       return url
-    }
-  }
+    },
+  },
 }
 </script>
 

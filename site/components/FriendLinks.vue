@@ -37,9 +37,9 @@ export default {
       type: Array,
       default() {
         return null
-      }
-    }
-  }
+      },
+    },
+  },
 }
 </script>
 

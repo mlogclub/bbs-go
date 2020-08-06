@@ -53,7 +53,7 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {}
+      filters: {},
     }
   },
   mounted() {},
@@ -67,7 +67,7 @@ export default {
       this.listLoading = true
       const params = Object.assign(this.filters, {
         page: this.page.page,
-        limit: this.page.limit
+        limit: this.page.limit,
       })
       params.userId = this.userId
       try {
@@ -90,8 +90,8 @@ export default {
     handleLimitChange(val) {
       this.page.limit = val
       this.list()
-    }
-  }
+    },
+  },
 }
 </script>
 

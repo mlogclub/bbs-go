@@ -170,9 +170,9 @@ export default {
       listLoading: false,
       page: {},
       filters: {
-        status: '0'
+        status: '0',
       },
-      selectedRows: []
+      selectedRows: [],
     }
   },
   mounted() {
@@ -184,7 +184,7 @@ export default {
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
+        limit: me.page.limit,
       })
       this.$axios
         .post('/api/admin/tweet/list', params)
@@ -212,23 +212,23 @@ export default {
       this.$confirm('是否确认删除该动态?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
-        .then(function() {
+        .then(function () {
           me.$axios
             .post('/api/admin/tweet/delete', { id: tweet.tweetId })
-            .then(function() {
+            .then(function () {
               me.$message({ message: '删除成功', type: 'success' })
               me.list()
             })
-            .catch(function(err) {
+            .catch(function (err) {
               me.$notify.error({ title: '错误', message: err.message || err })
             })
         })
-        .catch(function() {
+        .catch(function () {
           me.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
         })
     },
@@ -236,11 +236,11 @@ export default {
       const me = this
       me.$axios
         .post('/api/admin/tweet/undelete', { id: tweet.tweetId })
-        .then(function() {
+        .then(function () {
           me.$message({ message: '已取消删除', type: 'success' })
           me.list()
         })
-        .catch(function(err) {
+        .catch(function (err) {
           me.$notify.error({ title: '错误', message: err.message || err })
         })
     },
@@ -256,15 +256,15 @@ export default {
               text: '去登录',
               onClick: (e, toastObject) => {
                 utils.toSignin()
-              }
-            }
+              },
+            },
           })
         } else {
           this.$toast.error(e.message || e)
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

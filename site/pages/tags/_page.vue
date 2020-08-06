@@ -50,25 +50,25 @@ import SiteNotice from '~/components/SiteNotice'
 export default {
   components: {
     Pagination,
-    SiteNotice
+    SiteNotice,
   },
   async asyncData({ $axios, params }) {
     const [tagsPage] = await Promise.all([
       $axios.get('/api/tag/tags', {
         params: {
-          page: params.page
-        }
-      })
+          page: params.page,
+        },
+      }),
     ])
     return {
-      tagsPage
+      tagsPage,
     }
   },
   head() {
     return {
-      title: this.$siteTitle('标签')
+      title: this.$siteTitle('标签'),
     }
-  }
+  },
 }
 </script>
 

@@ -11,9 +11,9 @@ export default {
     } catch (e) {
       error({
         statusCode: 404,
-        message: e.message || '404'
+        message: e.message || '404',
       })
     }
-  }
+  },
 }
 </script>

@@ -13,7 +13,7 @@ export const actions = {
     app.head.title = config.siteTitle
 
     await dispatch('user/getCurrentUser')
-  }
+  },
 }
 
 export const getters = {}

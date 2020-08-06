@@ -47,9 +47,9 @@
 export default {
   head() {
     return {
-      title: this.$siteTitle('关于')
+      title: this.$siteTitle('关于'),
     }
-  }
+  },
 }
 </script>
 

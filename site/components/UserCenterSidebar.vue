@@ -64,8 +64,8 @@ export default {
   props: {
     user: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {}
@@ -84,14 +84,14 @@ export default {
         UserHelper.isOwner(this.currentUser) ||
         UserHelper.isAdmin(this.currentUser)
       )
-    }
+    },
   },
   methods: {
     async forbidden() {
       try {
         await this.$axios.post('/api/user/forbidden', {
           userId: this.user.id,
-          days: 7
+          days: 7,
         })
         this.user.forbidden = true
         this.$toast.success('禁言成功')
@@ -103,15 +103,15 @@ export default {
       try {
         await this.$axios.post('/api/user/forbidden', {
           userId: this.user.id,
-          days: 0
+          days: 0,
         })
         this.user.forbidden = false
         this.$toast.success('取消禁言成功')
       } catch (e) {
         this.$toast.error('取消禁言失败')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

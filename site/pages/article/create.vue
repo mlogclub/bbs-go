@@ -79,7 +79,7 @@ export default {
   components: {
     TagInput,
     MarkdownHelp,
-    MarkdownEditor
+    MarkdownEditor,
   },
   data() {
     return {
@@ -87,14 +87,14 @@ export default {
       postForm: {
         title: '',
         tags: [],
-        content: ''
-      }
+        content: '',
+      },
     }
   },
   computed: {
     user() {
       return this.$store.state.user.current
-    }
+    },
   },
   mounted() {},
   methods: {
@@ -108,26 +108,26 @@ export default {
         const article = await this.$axios.post('/api/article/create', {
           title: me.postForm.title,
           content: me.postForm.content,
-          tags: me.postForm.tags ? me.postForm.tags.join(',') : ''
+          tags: me.postForm.tags ? me.postForm.tags.join(',') : '',
         })
         this.$refs.mdEditor.clearCache()
         this.$toast.success('提交成功', {
           duration: 1000,
           onComplete() {
             utils.linkTo('/article/' + article.articleId)
-          }
+          },
         })
       } catch (e) {
         me.publishing = false
         this.$toast.error('提交失败：' + (e.message || e))
       }
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle('发表文章')
+      title: this.$siteTitle('发表文章'),
     }
-  }
+  },
 }
 </script>
 

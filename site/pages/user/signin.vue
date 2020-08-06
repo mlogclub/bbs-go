@@ -91,11 +91,11 @@ import QqLogin from '~/components/QqLogin'
 export default {
   components: {
     GithubLogin,
-    QqLogin
+    QqLogin,
   },
   asyncData({ params, query }) {
     return {
-      ref: query.ref
+      ref: query.ref,
     }
   },
   data() {
@@ -104,7 +104,7 @@ export default {
       password: '',
       captchaId: '',
       captchaUrl: '',
-      captchaCode: ''
+      captchaCode: '',
     }
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
     },
     isLogin() {
       return !!this.currentUser
-    }
+    },
   },
   mounted() {
     if (this.redirectIfLogined()) {
@@ -141,7 +141,7 @@ export default {
           captchaCode: this.captchaCode,
           username: this.username,
           password: this.password,
-          ref: this.ref
+          ref: this.ref,
         })
         if (this.ref) {
           // 跳到登录前
@@ -159,8 +159,8 @@ export default {
       try {
         const ret = await this.$axios.get('/api/captcha/request', {
           params: {
-            captchaId: this.captchaId || ''
-          }
+            captchaId: this.captchaId || '',
+          },
         })
         this.captchaId = ret.captchaId
         this.captchaUrl = ret.captchaUrl
@@ -185,17 +185,17 @@ export default {
             } else {
               utils.linkTo('/')
             }
-          }
+          },
         })
         return true
       }
       return false
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle('登录')
+      title: this.$siteTitle('登录'),
     }
-  }
+  },
 }
 </script>

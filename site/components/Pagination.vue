@@ -40,14 +40,14 @@ export default {
       default() {
         return { page: 1, total: 0, limit: 20 }
       },
-      required: true
+      required: true,
     },
     urlPrefix: {
       // 分页url前缀
       type: String,
       default: '/',
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     pageList() {
@@ -73,7 +73,7 @@ export default {
           this.page.page - 1,
           this.page.page,
           this.page.page + 1,
-          this.page.page + 2
+          this.page.page + 2,
         ]
       }
     },
@@ -82,7 +82,7 @@ export default {
     },
     nextPageUrl() {
       return this.getNextPageUrl()
-    }
+    },
   },
   methods: {
     getNextPageUrl() {
@@ -109,8 +109,8 @@ export default {
       return this.page.total % this.page.limit > 0
         ? parseInt(this.page.total / this.page.limit) + 1
         : this.page.total / this.page.limit
-    }
-  }
+    },
+  },
 }
 </script>
 

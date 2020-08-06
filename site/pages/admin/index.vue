@@ -45,9 +45,9 @@ export default {
   async asyncData({ $axios }) {
     const systeminfo = await $axios.get('/api/admin/common/systeminfo')
     return {
-      systeminfo
+      systeminfo,
     }
-  }
+  },
 }
 </script>
 

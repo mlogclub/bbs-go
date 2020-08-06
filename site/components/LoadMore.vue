@@ -19,14 +19,14 @@ export default {
     // 请求URL
     url: {
       type: String,
-      required: true
+      required: true,
     },
     // 请求参数
     params: {
       type: Object,
       default() {
         return {}
-      }
+      },
     },
     // 初始化数据
     initData: {
@@ -34,34 +34,34 @@ export default {
       default() {
         return {
           results: [],
-          cursor: ''
+          cursor: '',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       cursor: this.initData.cursor, // 分页标识
       results: this.initData.results || [], // 列表数据
       hasMore: true, // 是否有更多数据
-      loading: false // 是否正在加载中
+      loading: false, // 是否正在加载中
     }
   },
   computed: {
     // 是否禁言自动加载
     disabled() {
       return this.loading || !this.hasMore
-    }
+    },
   },
   methods: {
     async loadMore() {
       this.loading = true
       try {
         const _params = Object.assign(this.params || {}, {
-          cursor: this.cursor
+          cursor: this.cursor,
         })
         const ret = await this.$axios.get(this.url, {
-          params: _params
+          params: _params,
         })
         this.cursor = ret.cursor
         if (ret.results && ret.results.length) {
@@ -93,8 +93,8 @@ export default {
       if (item) {
         this.results.push(item)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

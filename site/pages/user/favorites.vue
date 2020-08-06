@@ -63,20 +63,20 @@ import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
   components: {
-    UserCenterSidebar
+    UserCenterSidebar,
   },
   async asyncData({ $axios, params }) {},
   data() {
     return {
       favorites: [],
       cursor: 0,
-      hasMore: true
+      hasMore: true,
     }
   },
   computed: {
     currentUser() {
       return this.$store.state.user.current
-    }
+    },
   },
   mounted() {
     this.list()
@@ -85,8 +85,8 @@ export default {
     async list() {
       const ret = await this.$axios.get('/api/user/favorites', {
         params: {
-          cursor: this.cursor
-        }
+          cursor: this.cursor,
+        },
       })
       if (ret.results && ret.results.length) {
         this.favorites = this.favorites.concat(ret.results)
@@ -94,8 +94,8 @@ export default {
         this.hasMore = false
       }
       this.cursor = ret.cursor
-    }
-  }
+    },
+  },
 }
 </script>
 

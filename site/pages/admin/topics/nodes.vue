@@ -152,7 +152,7 @@ export default {
         description: '',
         status: '',
         sortNo: '',
-        createTime: ''
+        createTime: '',
       },
       addFormVisible: false,
       addLoading: false,
@@ -163,10 +163,10 @@ export default {
         description: '',
         status: '',
         sortNo: '',
-        createTime: ''
+        createTime: '',
       },
       editFormVisible: false,
-      editLoading: false
+      editLoading: false,
     }
   },
   mounted() {
@@ -178,7 +178,7 @@ export default {
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
+        limit: me.page.limit,
       })
       this.$axios
         .post('/api/admin/topic-node/list', params)
@@ -201,7 +201,7 @@ export default {
     handleAdd() {
       this.addForm = {
         name: '',
-        description: ''
+        description: '',
       }
       this.addFormVisible = true
     },
@@ -245,8 +245,8 @@ export default {
 
     handleSelectionChange(val) {
       this.selectedRows = val
-    }
-  }
+    },
+  },
 }
 </script>
 

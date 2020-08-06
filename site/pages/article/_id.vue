@@ -68,7 +68,7 @@
                   <span v-if="isPending">
                     <a
                       href="javascript:void(0)"
-                      style="cursor: default; text-decoration: none"
+                      style="cursor: default; text-decoration: none;"
                     >
                       <i class="iconfont icon-shenhe" />&nbsp;审核中
                     </a>
@@ -166,7 +166,7 @@ import Comment from '~/components/Comment'
 
 export default {
   components: {
-    Comment
+    Comment,
   },
   async asyncData({ $axios, params, error }) {
     let article
@@ -175,7 +175,7 @@ export default {
     } catch (e) {
       error({
         statusCode: e.errorCode,
-        message: e.message
+        message: e.message,
       })
       return
     }
@@ -183,22 +183,22 @@ export default {
       commentsPage,
       favorited,
       nearlyArticles,
-      relatedArticles
+      relatedArticles,
     ] = await Promise.all([
       $axios.get('/api/comment/list', {
         params: {
           entityType: 'article',
-          entityId: article.articleId
-        }
+          entityId: article.articleId,
+        },
       }),
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'article',
-          entityId: params.id
-        }
+          entityId: params.id,
+        },
       }),
       $axios.get('/api/article/nearly/' + article.articleId),
-      $axios.get('/api/article/related/' + article.articleId)
+      $axios.get('/api/article/related/' + article.articleId),
     ])
 
     // 文章关键字
@@ -229,7 +229,7 @@ export default {
       relatedArticles,
       commentsPage,
       keywords,
-      description
+      description,
     }
   },
   computed: {
@@ -251,7 +251,7 @@ export default {
     },
     user() {
       return this.$store.state.user.current
-    }
+    },
   },
   methods: {
     async deleteArticle(articleId) {
@@ -264,7 +264,7 @@ export default {
           duration: 1000,
           onComplete() {
             utils.linkTo('/articles')
-          }
+          },
         })
       } catch (e) {
         this.$toast.error('删除失败：' + (e.message || e))
@@ -276,8 +276,8 @@ export default {
           await this.$axios.get('/api/favorite/delete', {
             params: {
               entityType: 'article',
-              entityId: articleId
-            }
+              entityId: articleId,
+            },
           })
           this.favorited = false
           this.$toast.success('已取消收藏！')
@@ -290,17 +290,17 @@ export default {
         console.error(e)
         this.$toast.error('收藏失败：' + (e.message || e))
       }
-    }
+    },
   },
   head() {
     return {
       title: this.$siteTitle(this.article.title),
       meta: [
         { hid: 'description', name: 'description', content: this.description },
-        { hid: 'keywords', name: 'keywords', content: this.keywords }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.keywords },
+      ],
     }
-  }
+  },
 }
 </script>
 

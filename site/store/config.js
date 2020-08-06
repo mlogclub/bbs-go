@@ -1,11 +1,11 @@
 export const state = () => ({
-  config: {}
+  config: {},
 })
 
 export const mutations = {
   setConfig(state, config) {
     state.config = config
-  }
+  },
 }
 
 export const actions = {
@@ -14,7 +14,7 @@ export const actions = {
     const ret = await this.$axios.get('/api/config/configs')
     context.commit('setConfig', ret)
     return ret
-  }
+  },
 }
 
 export const getters = {
@@ -26,5 +26,5 @@ export const getters = {
   },
   siteKeywords(state) {
     return state.config.siteKeywords || ''
-  }
+  },
 }

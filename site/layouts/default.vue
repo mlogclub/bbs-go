@@ -15,7 +15,7 @@ import MyFooter from '~/components/MyFooter'
 export default {
   components: {
     MyNav,
-    MyFooter
-  }
+    MyFooter,
+  },
 }
 </script>

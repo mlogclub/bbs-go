@@ -3,7 +3,7 @@
     <div class="item">
       <div class="icon">
         <a href="/topics"
-          ><i class="iconfont icon-topic" style="color:#ef7853;"></i
+          ><i class="iconfont icon-topic" style="color: #ef7853;"></i
         ></a>
       </div>
       <div class="text">
@@ -27,7 +27,7 @@
     <div class="item">
       <div class="icon">
         <a href="/topic/40"
-          ><i class="iconfont icon-book" style="color:#fee83c;"></i
+          ><i class="iconfont icon-book" style="color: #fee83c;"></i
         ></a>
       </div>
       <div class="text">
@@ -39,7 +39,7 @@
     <div class="item">
       <div class="icon">
         <a href="/projects"
-          ><i class="iconfont icon-open-source" style="color:#4c90e3;"></i
+          ><i class="iconfont icon-open-source" style="color: #4c90e3;"></i
         ></a>
       </div>
       <div class="text">
@@ -51,7 +51,7 @@
     <div class="item">
       <div class="icon">
         <a href="/links"
-          ><i class="iconfont icon-blog" style="color:#21d503;"></i
+          ><i class="iconfont icon-blog" style="color: #21d503;"></i
         ></a>
       </div>
       <div class="text">

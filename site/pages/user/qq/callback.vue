@@ -18,12 +18,12 @@ export default {
     return {
       code: query.code,
       state: query.state,
-      ref: query.ref
+      ref: query.ref,
     }
   },
   data() {
     return {
-      loading: false
+      loading: false,
     }
   },
   mounted() {
@@ -35,7 +35,7 @@ export default {
       try {
         const user = await this.$store.dispatch('user/signinByQQ', {
           code: this.code,
-          state: this.state
+          state: this.state,
         })
 
         if (this.ref) {
@@ -50,18 +50,18 @@ export default {
         this.$toast.error('登录失败：' + (e.message || e), {
           onComplete() {
             utils.linkTo('/user/signin')
-          }
+          },
         })
       } finally {
         this.loading = false
       }
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle('登录处理中...')
+      title: this.$siteTitle('登录处理中...'),
     }
-  }
+  },
 }
 </script>
 

@@ -25,15 +25,15 @@ export default {
   props: {
     currentNodeId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     nodes: {
       type: Array,
       default() {
         return []
-      }
-    }
-  }
+      },
+    },
+  },
 }
 </script>
 

@@ -90,8 +90,8 @@ export default {
   props: {
     nodeId: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
@@ -103,7 +103,7 @@ export default {
       message: '',
       maxWordCount: 1000,
       showUploader: false,
-      maxImageCount: 9
+      maxImageCount: 9,
     }
   },
   computed: {
@@ -118,7 +118,7 @@ export default {
     },
     user() {
       return this.$store.state.user.current
-    }
+    },
   },
   methods: {
     onInput() {},
@@ -135,7 +135,7 @@ export default {
       try {
         const ret = await this.$axios.post('/api/tweet/create', {
           content: this.content,
-          imageList: JSON.stringify(this.images)
+          imageList: JSON.stringify(this.images),
         })
         this.content = ''
         this.message = ''
@@ -232,8 +232,8 @@ export default {
       if (index !== -1) {
         this.images.splice(index, 1)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -31,9 +31,9 @@ export default {
       default() {
         return []
       },
-      required: false
-    }
-  }
+      required: false,
+    },
+  },
 }
 </script>
 

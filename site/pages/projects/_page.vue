@@ -30,18 +30,18 @@ export default {
   components: {
     ProjectList,
     Pagination,
-    SiteNotice
+    SiteNotice,
   },
   async asyncData({ $axios, params }) {
     const [projectPage] = await Promise.all([
       $axios.get('/api/project/projects', {
         params: {
-          page: params.page || 1
-        }
-      })
+          page: params.page || 1,
+        },
+      }),
     ])
     return {
-      projectPage
+      projectPage,
     }
   },
   head() {
@@ -51,12 +51,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

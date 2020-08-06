@@ -75,7 +75,7 @@
               <label class="label">验证码</label>
               <div class="control has-icons-left">
                 <div class="field is-horizontal">
-                  <div class="field" style="width:100%;">
+                  <div class="field" style="width: 100%;">
                     <input
                       v-model="captchaCode"
                       class="input"
@@ -122,11 +122,11 @@ import QqLogin from '~/components/QqLogin'
 export default {
   components: {
     GithubLogin,
-    QqLogin
+    QqLogin,
   },
   asyncData({ params, query }) {
     return {
-      ref: query.ref
+      ref: query.ref,
     }
   },
   data() {
@@ -137,7 +137,7 @@ export default {
       rePassword: '',
       captchaId: '',
       captchaUrl: '',
-      captchaCode: ''
+      captchaCode: '',
     }
   },
   mounted() {
@@ -153,7 +153,7 @@ export default {
           email: this.email,
           password: this.password,
           rePassword: this.rePassword,
-          ref: this.ref
+          ref: this.ref,
         })
         if (this.ref) {
           // 跳到登录前
@@ -176,13 +176,13 @@ export default {
       } catch (e) {
         this.$toast.error(e.message || e)
       }
-    }
+    },
   },
   head() {
     return {
-      title: this.$siteTitle('注册')
+      title: this.$siteTitle('注册'),
     }
-  }
+  },
 }
 </script>
 

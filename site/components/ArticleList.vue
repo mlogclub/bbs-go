@@ -56,7 +56,12 @@
           <span v-if="article.status === 2" class="article-meta-item">
             <a
               href="javascript:void(0)"
-              style="cursor: default; text-decoration: none; color: green; font-size: 12px"
+              style="
+                cursor: default;
+                text-decoration: none;
+                color: green;
+                font-size: 12px;
+              "
             >
               <i class="iconfont icon-shenhe" />&nbsp;审核中</a
             >
@@ -75,13 +80,13 @@ export default {
       default() {
         return []
       },
-      required: false
+      required: false,
     },
     showAd: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 }
 </script>
 

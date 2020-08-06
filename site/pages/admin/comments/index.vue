@@ -116,7 +116,7 @@ export default {
       listLoading: false,
       page: {},
       filters: {},
-      selectedRows: []
+      selectedRows: [],
     }
   },
   mounted() {
@@ -127,7 +127,7 @@ export default {
       this.listLoading = true
       const params = Object.assign(this.filters, {
         page: this.page.page,
-        limit: this.page.limit
+        limit: this.page.limit,
       })
       try {
         let data = await this.$axios.post('/api/admin/comment/list', params)
@@ -160,8 +160,8 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

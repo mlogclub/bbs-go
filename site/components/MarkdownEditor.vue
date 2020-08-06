@@ -11,20 +11,20 @@ export default {
   props: {
     editorId: {
       type: String,
-      default: 'vditor'
+      default: 'vditor',
     },
     value: {
       type: String,
-      default: ''
+      default: '',
     },
     height: {
       type: String,
-      default: '400px' // normal、mini
+      default: '400px', // normal、mini
     },
     placeholder: {
       type: String,
-      default: '请输入...'
-    }
+      default: '请输入...',
+    },
   },
   data() {
     return {
@@ -54,8 +54,8 @@ export default {
         'both',
         'preview',
         'format',
-        'fullscreen'
-      ]
+        'fullscreen',
+      ],
     }
   },
   mounted() {
@@ -88,15 +88,15 @@ export default {
         mode: 'markdown-show',
         theme: 'classic',
         customEmoji: {
-          '1': '😝'
+          '1': '😝',
         },
         preview: {
           mode: 'editor',
           hljs: {
             enable: true,
             style: 'github',
-            lineNumber: true
-          }
+            lineNumber: true,
+          },
         },
         input(val) {
           me.$emit('input', val)
@@ -111,8 +111,8 @@ export default {
           linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
           filename(name) {
             return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
-          }
-        }
+          },
+        },
       }
       this.vditor = new window.Vditor(me.editorId, options)
       this.vditor.setValue(this.value)
@@ -134,23 +134,23 @@ export default {
       if (this.vditor) {
         this.vditor.clearCache()
       }
-    }
+    },
   },
   head() {
     return {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.classic.css'
-        }
+          href: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.classic.css',
+        },
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.min.js'
-        }
-      ]
+          src: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.min.js',
+        },
+      ],
     }
-  }
+  },
 }
 </script>
 

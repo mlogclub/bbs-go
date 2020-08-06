@@ -41,13 +41,13 @@ export default {
         $axios.get('/api/tag/' + params.tagId),
         $axios.get('/api/article/tag/articles', {
           params: {
-            tagId: params.tagId
-          }
-        })
+            tagId: params.tagId,
+          },
+        }),
       ])
       return {
         tag,
-        articlesPage
+        articlesPage,
       }
     } catch (e) {
       console.error(e)
@@ -60,12 +60,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: this.$siteDescription()
+          content: this.$siteDescription(),
         },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() }
-      ]
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
     }
-  }
+  },
 }
 </script>
 

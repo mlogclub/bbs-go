@@ -25,7 +25,7 @@
               <el-form-item label="网站关键字">
                 <el-select
                   v-model="config.siteKeywords"
-                  style="width:100%"
+                  style="width: 100%;"
                   multiple
                   filterable
                   allow-create
@@ -46,7 +46,7 @@
               <el-form-item label="推荐标签">
                 <el-select
                   v-model="config.recommendTags"
-                  style="width:100%"
+                  style="width: 100%;"
                   multiple
                   filterable
                   allow-create
@@ -58,7 +58,7 @@
               <el-form-item label="默认节点">
                 <el-select
                   v-model="config.defaultNodeId"
-                  style="width:100%"
+                  style="width: 100%;"
                   placeholder="发帖默认节点"
                 >
                   <el-option
@@ -209,7 +209,7 @@ import draggable from 'vuedraggable'
 export default {
   layout: 'admin',
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
@@ -217,7 +217,7 @@ export default {
       loading: false,
       autocompleteTags: [],
       autocompleteTagLoading: false,
-      nodes: []
+      nodes: [],
     }
   },
   mounted() {
@@ -239,7 +239,7 @@ export default {
       this.loading = true
       try {
         await this.$axios.post('/api/admin/sys-config/save', {
-          config: JSON.stringify(this.config)
+          config: JSON.stringify(this.config),
         })
         this.$message({ message: '提交成功', type: 'success' })
         this.load()
@@ -255,7 +255,7 @@ export default {
       }
       this.config.siteNavs.push({
         title: '',
-        url: ''
+        url: '',
       })
     },
     delNav(index) {
@@ -263,8 +263,8 @@ export default {
         return
       }
       this.config.siteNavs.splice(index, 1)
-    }
-  }
+    },
+  },
 }
 </script>
 
