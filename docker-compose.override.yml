@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  db:
+  bbs-go-mysql:
     ports:
       - '3309:3306'
   bbs-go-server:

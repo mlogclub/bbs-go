@@ -23,7 +23,11 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json* ./
-RUN npm i --registry=https://registry.npm.taobao.org
+COPY package-lock.json* ./
+
+ENV sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+ENV registry=https://registry.npm.taobao.org
+RUN npm ci
 
 FROM builder AS application
 

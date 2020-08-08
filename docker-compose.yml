@@ -16,8 +16,8 @@ services:
   start_dependencies:
     image: dadarek/wait-for-dependencies
     depends_on:
-      - db
-    command: db:3306
+      - bbs-go-mysql
+    command: bbs-go-mysql:3306
 
   bbs-go-site:
     build:
@@ -30,7 +30,7 @@ services:
       - APP_ENV
     restart: on-failure
 
-  db:
+  bbs-go-mysql:
     image: 'mysql:5.7'
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
@@ -40,4 +40,5 @@ services:
 
 volumes:
   bbs-go-server: {}
-  db: {}
+  bbs-go-site: {}
+  bbs-go-mysql: {}
