@@ -33,7 +33,8 @@ services:
   bbs-go-mysql:
     image: 'mysql:5.7'
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: '123456'
+      # MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     volumes:
       - '.docker-compose/mysql/db/conf.d:/etc/mysql/conf.d'
       - '.docker-compose/mysql/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'

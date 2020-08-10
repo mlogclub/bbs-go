@@ -33,7 +33,7 @@ WORKDIR /app
 # Install runtime dependencies
 RUN apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends ca-certificates curl \
-    && apt-get -qq install -y host mysql-client\
+    && apt-get -qq install -y host mysql-client vim wget\
     && rm -rf /var/lib/apt/lists/*
 
 # Update timezone
@@ -41,7 +41,8 @@ ENV TZ=Asia/Shanghai
 ENV ROOT_DIR=/app
 
 COPY --from=builder /app/bbs-go-server .
-COPY --from=builder /app/bbs-go.yaml bbs-go.yaml
+COPY --from=builder /app/bbs-go.docker.yaml bbs-go.yaml
+COPY --from=builder /app/bbs-go.docker.yaml bbs-go.docker.yaml
 
 EXPOSE 8080
 

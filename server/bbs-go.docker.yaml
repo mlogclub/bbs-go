@@ -1,0 +1,58 @@
+Env: dev
+BaseUrl: http://localhost:3000
+Port: 8082
+LogFile: /data/logs/bbs-go.log # 日志文件
+ShowSql: true
+StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
+
+# 数据库连接
+MySqlUrl: root:123456@tcp(localhost:3309)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+
+# github登录配置
+Github:
+  ClientID:
+  ClientSecret:
+
+# qq登录配置
+QQConnect:
+  AppId:
+  AppKey:
+
+# 上传配置
+Uploader:
+  # 启用上传方式
+  Enable: aliyunOss
+  # 阿里云oss配置
+  AliyunOss:
+    Host: https://file.mlog.club/
+    Bucket: mlogclub
+    Endpoint: oss-cn-hongkong.aliyuncs.com
+    AccessId: LTAILip40HcqqvUv
+    AccessSecret: oMu5UcH3LTI3RW067Nw9U5tJNEN1wi
+    StyleSplitter: "!"
+    StyleAvatar: avatar
+    StylePreview: preview
+    StyleDetail: detail
+  # 本地文件上传
+  Local:
+    Host: https://st.mlog.club/ # 上传文件域名
+    Path: /data/www/st.mlog.club # 上传目录
+
+# 邮件服务器配置，用于邮件通知
+Smtp:
+  Host: smtp.exmail.qq.com
+  Port: 465
+  Username: notice@mlog.club
+  Password: manpUPymHJES2.5
+  SSL: true
+
+# 百度ai配置，用于自动分析文章摘要、标签
+BaiduAi:
+  ApiKey:
+  SecretKey:
+
+# 百度SEO相关配置
+# 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
+BaiduSEO:
+  Site: mlog.club
+  Token: Y0b5JDk00GSjyMu3
