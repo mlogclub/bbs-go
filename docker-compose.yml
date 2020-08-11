@@ -16,12 +16,6 @@ services:
     volumes:
       - "./data:/data/"
 
-  start_dependencies:
-    image: dadarek/wait-for-dependencies
-    depends_on:
-      - bbs-go-mysql
-    command: 127.0.0.1:3306
-
   bbs-go-site:
     image: mlogclub/bbs-go-site
     container_name: bbs-go-site
@@ -48,6 +42,7 @@ services:
 
 networks:
   bbsgo:
+    driver: bridge
 
 volumes:
   bbs-go-server: {}
