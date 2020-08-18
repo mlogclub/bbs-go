@@ -3,19 +3,21 @@ services:
   bbs-go-mysql:
     image: 'mysql:5.7'
     container_name: bbs-go-mysql
-    networks:
-      - bbsgo
+    # networks:
+    #   - bbsgo
     environment:
       MYSQL_ROOT_PASSWORD: '123456'
       # MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     ports:
-      - '3306:3306'
+      - 3306:3306
     volumes:
       - '.docker-compose/mysql/db/conf.d:/etc/mysql/conf.d'
       - '.docker-compose/mysql/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
 
   start_dependencies:
     image: dadarek/wait-for-dependencies
+    # networks:
+    #   - bbsgo
     depends_on:
       - bbs-go-mysql
     command: bbs-go-mysql:3306
@@ -23,10 +25,10 @@ services:
   bbs-go-server:
     image: mlogclub/bbs-go-server
     container_name: bbs-go-server
-    networks:
-      - bbsgo
+    # networks:
+    #   - bbsgo
     ports:
-      - '8082:8082'
+      - 8082:8082
     depends_on:
       - start_dependencies
     build:
@@ -41,10 +43,10 @@ services:
   bbs-go-site:
     image: mlogclub/bbs-go-site
     container_name: bbs-go-site
-    networks:
-      - bbsgo
+    # networks:
+    #   - bbsgo
     ports:
-      - '3000:3000'
+      - 3000:3000
     build:
       target: application
       context: site
@@ -56,9 +58,9 @@ services:
       - APP_ENV
     restart: on-failure
 
-networks:
-  bbsgo:
-    driver: bridge
+# networks:
+#   bbsgo:
+#     driver: bridge
 
 volumes:
   bbs-go-server: {}
