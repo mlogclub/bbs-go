@@ -37,4 +37,5 @@ COPY . .
 # Build project
 RUN npm run build
 
+ENV NODE_ENV=docker
 CMD ["npm", "run", "start"]

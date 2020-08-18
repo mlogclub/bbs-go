@@ -108,8 +108,12 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://127.0.0.1:8082',
-    // '/api/': 'https://mlog.club'
+    '/api/':
+      process.env.NODE_ENV === 'production'
+        ? 'https://mlog.club'
+        : process.env.NODE_ENV === 'docker'
+        ? 'http://bbs-go-server:8082'
+        : 'http://127.0.0.1:8082',
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
