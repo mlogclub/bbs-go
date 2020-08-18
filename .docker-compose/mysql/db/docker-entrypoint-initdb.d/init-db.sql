@@ -40,13 +40,13 @@ INSERT INTO t_user (
 ) SELECT
     1,
     'admin',
-    '站长',
+    'bbs-go-owner',
     '',
     'a@example.com',
     '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS',
     0,
-    1555419028975,
-    1555419028975,
+    (UNIX_TIMESTAMP(now()) * 1000),
+    (UNIX_TIMESTAMP(now()) * 1000),
     'owner',
     0,
     '轻轻地我走了，正如我轻轻的来。'
@@ -94,11 +94,11 @@ INSERT INTO t_sys_config(
     `update_time`
 ) SELECT
     'siteTitle',
-    'bbs-go',
+    'bbs-go演示站',
     '站点标题',
     '站点标题',
-    1555419028975,
-    1555419028975
+    (UNIX_TIMESTAMP(now()) * 1000),
+    (UNIX_TIMESTAMP(now()) * 1000)
 FROM
     DUAL
 WHERE
@@ -128,8 +128,8 @@ INSERT INTO t_sys_config (
     'bbs-go，基于Go语言的开源社区系统',
     '站点描述',
     '站点描述',
-    1555419028975,
-    1555419028975
+    (UNIX_TIMESTAMP(now()) * 1000),
+    (UNIX_TIMESTAMP(now()) * 1000)
 FROM
     DUAL
 WHERE
@@ -159,8 +159,8 @@ INSERT INTO t_sys_config (
     'bbs-go',
     '站点关键字',
     '站点关键字',
-    1555419028975,
-    1555419028975
+    (UNIX_TIMESTAMP(now()) * 1000),
+    (UNIX_TIMESTAMP(now()) * 1000)
 FROM
     DUAL
 WHERE
@@ -189,11 +189,11 @@ INSERT INTO t_sys_config (
   )
 SELECT
   'siteNavs',
-  '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
+  '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"动态\",\"url\":\"/tweets\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
   '站点导航',
   '站点导航',
-  1555419028975,
-  1555419028975
+  (UNIX_TIMESTAMP(now()) * 1000),
+  (UNIX_TIMESTAMP(now()) * 1000)
 FROM DUAL
 WHERE
   NOT EXISTS (
