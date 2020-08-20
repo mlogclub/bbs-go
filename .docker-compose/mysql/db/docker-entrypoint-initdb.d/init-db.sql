@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `t_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
-  KEY `idx_status` (`status`)
+  KEY `idx_user_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 初始化用户数据（用户名：admin、密码：123456）
