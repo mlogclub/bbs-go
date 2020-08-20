@@ -1,11 +1,5 @@
 version: '3.7'
 services:
-#  bbs-go-wait-for-mysql:
-#    image: dadarek/wait-for-dependencies
-#    container_name: bbs-go-wait-for-mysql
-#    depends_on:
-#      - bbs-go-mysql
-#    command: bbs-go-mysql:3306
 
   bbs-go-mysql:
     image: 'mysql:5.7'
@@ -26,7 +20,6 @@ services:
       - 8082:8082
     depends_on:
       - bbs-go-mysql
-#      - bbs-go-wait-for-mysql
     build:
       target: application
       context: server
