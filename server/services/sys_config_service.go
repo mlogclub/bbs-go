@@ -117,18 +117,18 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 
 func (s *sysConfigService) GetConfig() *model.ConfigData {
 	var (
-		siteTitle          = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-		siteDescription    = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
-		siteKeywords       = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
-		siteNavs           = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
-		siteNotification   = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
-		recommendTags      = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
-		urlRedirect        = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
-		scoreConfigStr     = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
-		defaultNodeIdStr   = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
-		articlePending     = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
-		topicCaptcha       = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
-		userObserveHourStr = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveHour)
+		siteTitle             = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		siteDescription       = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
+		siteKeywords          = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
+		siteNavs              = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
+		siteNotification      = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
+		recommendTags         = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
+		urlRedirect           = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
+		scoreConfigStr        = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
+		defaultNodeIdStr      = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
+		articlePending        = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
+		topicCaptcha          = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
+		userObserveSecondsStr = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
 	)
 
 	var siteKeywordsArr []string
@@ -160,23 +160,23 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 	}
 
 	var (
-		defaultNodeId, _   = strconv.ParseInt(defaultNodeIdStr, 10, 64)
-		userObserveHour, _ = strconv.Atoi(userObserveHourStr)
+		defaultNodeId, _      = strconv.ParseInt(defaultNodeIdStr, 10, 64)
+		userObserveSeconds, _ = strconv.Atoi(userObserveSecondsStr)
 	)
 
 	return &model.ConfigData{
-		SiteTitle:        siteTitle,
-		SiteDescription:  siteDescription,
-		SiteKeywords:     siteKeywordsArr,
-		SiteNavs:         siteNavsArr,
-		SiteNotification: siteNotification,
-		RecommendTags:    recommendTagsArr,
-		UrlRedirect:      strings.ToLower(urlRedirect) == "true",
-		ScoreConfig:      scoreConfig,
-		DefaultNodeId:    defaultNodeId,
-		ArticlePending:   strings.ToLower(articlePending) == "true",
-		TopicCaptcha:     strings.ToLower(topicCaptcha) == "true",
-		UserObserveHour:  userObserveHour,
+		SiteTitle:          siteTitle,
+		SiteDescription:    siteDescription,
+		SiteKeywords:       siteKeywordsArr,
+		SiteNavs:           siteNavsArr,
+		SiteNotification:   siteNotification,
+		RecommendTags:      recommendTagsArr,
+		UrlRedirect:        strings.ToLower(urlRedirect) == "true",
+		ScoreConfig:        scoreConfig,
+		DefaultNodeId:      defaultNodeId,
+		ArticlePending:     strings.ToLower(articlePending) == "true",
+		TopicCaptcha:       strings.ToLower(topicCaptcha) == "true",
+		UserObserveSeconds: userObserveSeconds,
 	}
 }
 

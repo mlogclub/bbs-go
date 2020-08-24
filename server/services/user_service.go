@@ -508,9 +508,9 @@ func (s *userService) CheckPostStatus(user *model.User) *simple.CodeError {
 	if user.IsForbidden() {
 		return common.ForbiddenError
 	}
-	observeHour := SysConfigService.GetInt(constants.SysConfigUserObserveHour)
-	if user.InObservationPeriod(observeHour) {
-		return simple.NewError(common.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeHour)+"小时，请稍后再试")
+	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds)
+	if user.InObservationPeriod(observeSeconds) {
+		return simple.NewError(common.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
 	}
 	return nil
 }

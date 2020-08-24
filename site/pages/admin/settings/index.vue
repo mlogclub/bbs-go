@@ -98,10 +98,10 @@
                   placement="top"
                 >
                   <el-input-number
-                    v-model="config.userObserveHour"
+                    v-model="config.userObserveSeconds"
                     :min="0"
                     :max="720"
-                    label="用户观察期(小时)"
+                    label="用户观察期(秒)"
                   ></el-input-number>
                 </el-tooltip>
               </el-form-item>

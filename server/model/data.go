@@ -14,16 +14,16 @@ type ScoreConfig struct {
 
 // 配置返回结构体
 type ConfigData struct {
-	SiteTitle        string       `json:"siteTitle"`
-	SiteDescription  string       `json:"siteDescription"`
-	SiteKeywords     []string     `json:"siteKeywords"`
-	SiteNavs         []ActionLink `json:"siteNavs"`
-	SiteNotification string       `json:"siteNotification"`
-	RecommendTags    []string     `json:"recommendTags"`
-	UrlRedirect      bool         `json:"urlRedirect"`
-	ScoreConfig      ScoreConfig  `json:"scoreConfig"`
-	DefaultNodeId    int64        `json:"defaultNodeId"`
-	ArticlePending   bool         `json:"articlePending"`
-	TopicCaptcha     bool         `json:"topicCaptcha"`
-	UserObserveHour  int          `json:"userObserveHour"`
+	SiteTitle          string       `json:"siteTitle"`
+	SiteDescription    string       `json:"siteDescription"`
+	SiteKeywords       []string     `json:"siteKeywords"`
+	SiteNavs           []ActionLink `json:"siteNavs"`
+	SiteNotification   string       `json:"siteNotification"`
+	RecommendTags      []string     `json:"recommendTags"`
+	UrlRedirect        bool         `json:"urlRedirect"`
+	ScoreConfig        ScoreConfig  `json:"scoreConfig"`
+	DefaultNodeId      int64        `json:"defaultNodeId"`
+	ArticlePending     bool         `json:"articlePending"`
+	TopicCaptcha       bool         `json:"topicCaptcha"`
+	UserObserveSeconds int          `json:"userObserveSeconds"`
 }

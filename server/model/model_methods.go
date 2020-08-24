@@ -60,10 +60,11 @@ func (u *User) GetRoles() []string {
 	return roles
 }
 
-// InObservationPeriod 是否在观察期，observeHour观察时长
-func (u *User) InObservationPeriod(observeHour int) bool {
-	if observeHour <= 0 {
+// InObservationPeriod 是否在观察期
+// observeSeconds 观察时长
+func (u *User) InObservationPeriod(observeSeconds int) bool {
+	if observeSeconds <= 0 {
 		return false
 	}
-	return simple.TimeFromTimestamp(u.CreateTime).Add(time.Hour * time.Duration(observeHour)).After(time.Now())
+	return simple.TimeFromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
 }
