@@ -24,15 +24,15 @@ Uploader:
   Enable: aliyunOss
   # 阿里云oss配置
   AliyunOss:
-    Host: https://file.mlog.club/
-    Bucket: mlogclub
-    Endpoint: oss-cn-hongkong.aliyuncs.com
-    AccessId: LTAILip40HcqqvUv
-    AccessSecret: oMu5UcH3LTI3RW067Nw9U5tJNEN1wi
-    StyleSplitter: "!"
-    StyleAvatar: avatar
-    StylePreview: preview
-    StyleDetail: detail
+    Host: 请配置成你自己的
+    Bucket: 请配置成你自己的
+    Endpoint: 请配置成你自己的
+    AccessId: 请配置成你自己的
+    AccessSecret: 请配置成你自己的
+    StyleSplitter: 阿里云oss图片样式分隔符
+    StyleAvatar: 头像图片样式名称
+    StylePreview: 预览图片样式名称
+    StyleDetail: 详情图片样式名称
   # 本地文件上传
   Local:
     Host: https://st.mlog.club/ # 上传文件域名
@@ -40,10 +40,10 @@ Uploader:
 
 # 邮件服务器配置，用于邮件通知
 Smtp:
-  Host: smtp.exmail.qq.com
+  Host:
   Port: 465
-  Username: notice@mlog.club
-  Password: manpUPymHJES2.5
+  Username:
+  Password:
   SSL: true
 
 # 百度ai配置，用于自动分析文章摘要、标签
@@ -54,5 +54,5 @@ BaiduAi:
 # 百度SEO相关配置
 # 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
 BaiduSEO:
-  Site: mlog.club
-  Token: Y0b5JDk00GSjyMu3
+  Site:
+  Token:
