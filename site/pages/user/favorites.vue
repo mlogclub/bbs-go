@@ -1,7 +1,8 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
+        <user-profile :user="currentUser" />
         <div class="widget">
           <div class="widget-header">
             <nav class="breadcrumb">
@@ -59,10 +60,12 @@
 </template>
 
 <script>
+import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
   components: {
+    UserProfile,
     UserCenterSidebar,
   },
   async asyncData({ $axios, params }) {},

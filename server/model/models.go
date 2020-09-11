@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScore{}, &UserScoreLog{}, &OperateLog{}, &EmailCode{},
+	&UserScore{}, &UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{},
 }
 
 type Model struct {
@@ -266,4 +266,14 @@ type EmailCode struct {
 	Content    string `gorm:"type:text" json:"content" form:"content"`                               // 内容
 	Used       bool   `gorm:"not null" json:"used" form:"used"`                                      // 是否使用
 	CreateTime int64  `json:"createTime" form:"createTime"`                                          // 创建时间
+}
+
+// 签到
+type CheckIn struct {
+	Model
+	UserId          int64 `gorm:"not null;unique_index:idx_user_id" json:"userId" form:"userId"` // 用户编号
+	LatestDayName   int   `gorm:"not null;" json:"dayName" form:"dayName"`                       // 最后一次签到
+	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`       // 连续签到天数
+	CreateTime      int64 `json:"createTime" form:"createTime"`                                  // 创建时间
+	UpdateTime      int64 `json:"updateTime" form:"updateTime"`                                  // 更新时间
 }

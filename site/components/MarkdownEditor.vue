@@ -31,65 +31,87 @@ export default {
       isLoading: true,
       vditor: null,
       width: '100%',
-      toolbar: [
-        // 'emoji',
-        'headings',
-        'bold',
-        'italic',
-        'strike',
-        '|',
-        'line',
-        'quote',
-        'list',
-        'ordered-list',
-        'check',
-        'code',
-        'inline-code',
-        'undo',
-        'redo',
-        'upload',
-        'link',
-        'table',
-        'wysiwyg',
-        'both',
-        'preview',
-        'format',
-        'fullscreen',
-      ],
     }
   },
   mounted() {
     this.doInit()
-    this.$nextTick(async () => {
-      if (this.vditor) {
-        await this.vditor.getHTML(true)
-        this.isLoading = false
-      }
-    })
   },
   methods: {
     /**
      * 初始化编辑器
      */
     doInit() {
-      if (!process.client) {
-        return
-      }
       const me = this
-      const userToken = this.$cookies.get('userToken')
-      const options = {
+      if (process.client) {
+        this.vditor = new window.Vditor(
+          this.editorId,
+          this.getOptions(function () {
+            me.vditor.setValue(me.value)
+          })
+        )
+      }
+    },
+    getOptions(afterFunc) {
+      const me = this
+      const userToken = me.$cookies.get('userToken')
+      return {
         width: me.width,
         height: me.height,
-        toolbar: me.toolbar,
+        toolbarConfig: {
+          pin: true,
+        },
+        toolbar: [
+          'emoji',
+          'headings',
+          'bold',
+          'italic',
+          'strike',
+          'link',
+          '|',
+          'list',
+          'ordered-list',
+          'check',
+          'outdent',
+          'indent',
+          '|',
+          'quote',
+          'line',
+          'code',
+          'inline-code',
+          'insert-before',
+          'insert-after',
+          '|',
+          'upload',
+          'record',
+          'table',
+          '|',
+          'undo',
+          'redo',
+          '|',
+          'edit-mode',
+          'fullscreen',
+          {
+            name: 'more',
+            toolbar: [
+              'both',
+              'code-theme',
+              'content-theme',
+              'export',
+              'outline',
+              'preview',
+              'devtools',
+              'info',
+              'help',
+            ],
+          },
+        ],
         placeholder: me.placeholder,
-        cache: true,
+        cache: {
+          enable: false,
+        },
         counter: '999999',
         delay: 500,
-        mode: 'markdown-show',
         theme: 'classic',
-        customEmoji: {
-          '1': '😝',
-        },
         preview: {
           mode: 'editor',
           hljs: {
@@ -113,9 +135,8 @@ export default {
             return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
           },
         },
+        after: afterFunc || function () {},
       }
-      this.vditor = new window.Vditor(me.editorId, options)
-      this.vditor.setValue(this.value)
     },
     /**
      * 清空编辑器内容
@@ -141,12 +162,12 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.classic.css',
+          href: '//cdn.jsdelivr.net/npm/vditor@3.4.7/dist/index.css',
         },
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor@2.1.0/dist/index.min.js',
+          src: '//cdn.jsdelivr.net/npm/vditor@3.4.7/dist/index.min.js',
         },
       ],
     }

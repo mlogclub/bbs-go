@@ -3,48 +3,59 @@
     <post-btns v-if="isOwner" />
 
     <div class="widget">
-      <div class="widget-header">
-        {{ user.nickname }}
-      </div>
-      <div class="widget-content">
-        <img :src="user.smallAvatar" class="img-avatar" />
-        <div v-if="user.description" class="description">
-          <p>{{ user.description }}</p>
-        </div>
-        <div class="score">
-          <i class="iconfont icon-score" />
-          <span>{{ user.score }}</span>
-          <a
-            v-if="isOwner"
-            class="score-log"
-            href="/user/scores"
-            target="_blank"
-            >积分详情&gt;&gt;</a
-          >
-        </div>
-        <ul v-if="isOwner" class="operations">
+      <div class="widget-header">个人成就</div>
+      <div class="widget-content extra-info">
+        <ul>
           <li>
-            <i class="iconfont icon-edit" />
-            <a href="/user/settings">&nbsp;编辑资料</a>
+            <span>积分</span><br />
+            <a href="/user/scores">
+              <b>{{ user.score }}</b>
+            </a>
           </li>
           <li>
-            <i class="iconfont icon-message" />
-            <a href="/user/messages">&nbsp;消息</a>
+            <span>文章</span><br />
+            <b>{{ user.topicCount }}</b>
           </li>
           <li>
-            <i class="iconfont icon-favorites" />
-            <a href="/user/favorites">&nbsp;收藏</a>
+            <span>评论</span><br />
+            <b>{{ user.commentCount }}</b>
+          </li>
+          <li>
+            <span>注册排名</span><br />
+            <b>{{ user.id }}</b>
           </li>
         </ul>
-        <ul v-if="isAdmin" class="operations">
-          <li v-if="user.forbidden">
-            <i class="iconfont icon-forbidden" />
-            <a @click="removeForbidden">&nbsp;取消禁言</a>
-          </li>
-          <li v-else>
-            <i class="iconfont icon-forbidden" />
-            <a @click="forbidden">&nbsp;禁言</a>
-          </li>
+      </div>
+    </div>
+
+    <div v-if="isOwner || isAdmin" class="widget">
+      <div class="widget-header">操作</div>
+      <div class="widget-content">
+        <ul class="operations">
+          <template v-if="isOwner">
+            <li>
+              <i class="iconfont icon-edit" />
+              <a href="/user/settings">&nbsp;编辑资料</a>
+            </li>
+            <li>
+              <i class="iconfont icon-message" />
+              <a href="/user/messages">&nbsp;消息</a>
+            </li>
+            <li>
+              <i class="iconfont icon-favorites" />
+              <a href="/user/favorites">&nbsp;收藏</a>
+            </li>
+          </template>
+          <template v-if="isAdmin">
+            <li v-if="user.forbidden">
+              <i class="iconfont icon-forbidden" />
+              <a @click="removeForbidden">&nbsp;取消禁言</a>
+            </li>
+            <li v-else>
+              <i class="iconfont icon-forbidden" />
+              <a @click="forbidden">&nbsp;禁言</a>
+            </li>
+          </template>
         </ul>
       </div>
     </div>
@@ -116,36 +127,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.extra-info {
+  ul {
+    display: flex;
+    li {
+      width: 100%;
+      text-align: center;
+      span {
+        font-size: 13px;
+        font-weight: 400;
+        color: #868e96;
+      }
+      a,
+      b {
+        color: #000;
+      }
+    }
+  }
+}
+
 .img-avatar {
   margin-top: 5px;
   border: 1px dotted #eeeeee;
   border-radius: 5%;
-}
-
-.description {
-  font-size: 14px;
-  padding: 5px 0 5px 5px;
-  // padding: 10px 15px;
-  // border: 1px dotted #eeeeee;
-  // border-left: 3px solid #eeeeee;
-  background-color: #fbfbfb;
-}
-
-.score {
-  span {
-    font-size: 15px;
-    font-weight: bold;
-    color: #3c3107;
-  }
-
-  .score-log {
-    color: #3273dc;
-    font-size: 75%;
-    margin-left: 5px;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 .operations {

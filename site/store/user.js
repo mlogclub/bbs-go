@@ -15,7 +15,9 @@ export const mutations = {
 export const actions = {
   // 登录成功
   loginSuccess(context, { token, user }) {
-    this.$cookies.set('userToken', token, { maxAge: 86400 * 7, path: '/' })
+    const config = context.rootState.config.config
+    const cookieMaxAge = 86400 * config.tokenExpireDays
+    this.$cookies.set('userToken', token, { maxAge: cookieMaxAge, path: '/' })
     context.commit('setUserToken', token)
     context.commit('setCurrent', user)
   },

@@ -25,7 +25,7 @@ require (
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mlogclub/simple v1.0.63
+	github.com/mlogclub/simple v1.0.67
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/robfig/cron v1.2.0

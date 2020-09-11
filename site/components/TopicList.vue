@@ -14,7 +14,7 @@
       />
       <article itemscope itemtype="http://schema.org/BlogPosting">
         <div class="topic-header">
-          <div class="topic-header-left">
+          <div v-if="showAvatar" class="topic-header-left">
             <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
               <img :src="topic.user.smallAvatar" class="avatar" />
             </a>
@@ -94,6 +94,10 @@ export default {
         return []
       },
       required: false,
+    },
+    showAvatar: {
+      type: Boolean,
+      default: true,
     },
     showAd: {
       type: Boolean,

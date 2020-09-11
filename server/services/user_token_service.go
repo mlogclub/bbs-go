@@ -104,7 +104,8 @@ func (s *userTokenService) GetUserToken(ctx iris.Context) string {
 // 生成
 func (s *userTokenService) Generate(userId int64) (string, error) {
 	token := simple.UUID()
-	expiredAt := time.Now().Add(time.Hour * 24 * 365) // 365天后过期
+	tokenExpireDays := SysConfigService.GetTokenExpireDays()
+	expiredAt := time.Now().Add(time.Hour * 24 * time.Duration(tokenExpireDays))
 	userToken := &model.UserToken{
 		Token:      token,
 		UserId:     userId,

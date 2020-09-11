@@ -10,10 +10,11 @@ type ActionLink struct {
 type ScoreConfig struct {
 	PostTopicScore   int `json:"postTopicScore"`   // 发帖获得积分
 	PostCommentScore int `json:"postCommentScore"` // 跟帖获得积分
+	CheckInScore     int `json:"checkInScore"`     // 签到积分
 }
 
 // 配置返回结构体
-type ConfigData struct {
+type SysConfigResponse struct {
 	SiteTitle          string       `json:"siteTitle"`
 	SiteDescription    string       `json:"siteDescription"`
 	SiteKeywords       []string     `json:"siteKeywords"`
@@ -26,4 +27,5 @@ type ConfigData struct {
 	ArticlePending     bool         `json:"articlePending"`
 	TopicCaptcha       bool         `json:"topicCaptcha"`
 	UserObserveSeconds int          `json:"userObserveSeconds"`
+	TokenExpireDays    int          `json:"tokenExpireDays"`
 }

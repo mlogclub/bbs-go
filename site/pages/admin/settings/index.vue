@@ -71,6 +71,13 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item label="用户登录有效期(天)">
+                <el-input-number
+                  v-model="config.tokenExpireDays"
+                  :min="1"
+                ></el-input-number>
+              </el-form-item>
+
               <el-form-item label="站外链接跳转页面">
                 <el-tooltip
                   content="在跳转前需手动确认是否前往该站外链接"
@@ -92,7 +99,7 @@
                 </el-tooltip>
               </el-form-item>
 
-              <el-form-item label="用户观察期">
+              <el-form-item label="用户观察期(秒)">
                 <el-tooltip
                   content="观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。"
                   placement="top"
@@ -101,7 +108,6 @@
                     v-model="config.userObserveSeconds"
                     :min="0"
                     :max="720"
-                    label="用户观察期(秒)"
                   ></el-input-number>
                 </el-tooltip>
               </el-form-item>
@@ -174,7 +180,7 @@
           name="scoreConfigTab"
         >
           <el-form label-width="160px">
-            <el-form-item label="发帖获得积分">
+            <el-form-item label="发帖积分">
               <el-input-number
                 v-model="config.scoreConfig.postTopicScore"
                 :min="1"
@@ -182,12 +188,20 @@
                 placeholder="发帖获得积分"
               ></el-input-number>
             </el-form-item>
-            <el-form-item label="跟帖获得积分">
+            <el-form-item label="跟帖积分">
               <el-input-number
                 v-model="config.scoreConfig.postCommentScore"
                 :min="1"
                 type="text"
                 placeholder="跟帖获得积分"
+              ></el-input-number>
+            </el-form-item>
+            <el-form-item label="签到积分">
+              <el-input-number
+                v-model="config.scoreConfig.checkInScore"
+                :min="1"
+                type="text"
+                placeholder="签到获得积分"
               ></el-input-number>
             </el-form-item>
           </el-form>

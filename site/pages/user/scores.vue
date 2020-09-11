@@ -1,7 +1,8 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
+        <user-profile :user="currentUser" />
         <div class="widget">
           <div class="widget-header">积分记录</div>
           <div class="widget-content">
@@ -40,11 +41,12 @@
 </template>
 
 <script>
+import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 import Pagination from '~/components/Pagination'
 export default {
   middleware: 'authenticated',
-  components: { UserCenterSidebar, Pagination },
+  components: { UserProfile, UserCenterSidebar, Pagination },
   async asyncData({ $axios, query }) {
     const [scoreLogsPage] = await Promise.all([
       $axios.get('/api/user/scorelogs?page=' + (query.p || 1)),

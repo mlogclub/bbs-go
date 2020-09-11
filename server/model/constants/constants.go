@@ -1,5 +1,7 @@
 package constants
 
+const DefaultTokenExpireDays = 7 // 用户登录token默认有效期
+
 // 系统配置
 const (
 	SysConfigSiteTitle          = "siteTitle"          // 站点标题
@@ -14,6 +16,7 @@ const (
 	SysConfigArticlePending     = "articlePending"     // 是否开启文章审核
 	SysConfigTopicCaptcha       = "topicCaptcha"       // 是否开启发帖验证码
 	SysConfigUserObserveSeconds = "userObserveSeconds" // 新用户观察期
+	SysConfigTokenExpireDays    = "tokenExpireDays"    // 登录Token有效天数
 )
 
 // EntityType
@@ -23,6 +26,7 @@ const (
 	EntityComment = "comment"
 	EntityTweet   = "tweet"
 	EntityUser    = "user"
+	EntityCheckIn = "checkIn"
 )
 
 // 用户角色

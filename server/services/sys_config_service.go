@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/number"
 	"strconv"
 	"strings"
 
@@ -94,10 +95,10 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	sysConfig.Value = value
 	sysConfig.UpdateTime = simple.NowTimestamp()
 
-	if len(name) > 0 {
+	if simple.IsNotBlank(name) {
 		sysConfig.Name = name
 	}
-	if len(description) > 0 {
+	if simple.IsNotBlank(description) {
 		sysConfig.Description = description
 	}
 
@@ -115,7 +116,19 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	}
 }
 
-func (s *sysConfigService) GetConfig() *model.ConfigData {
+func (s *sysConfigService) GetTokenExpireDays() int {
+	tokenExpireDaysStr := cache.SysConfigCache.GetValue(constants.SysConfigTokenExpireDays)
+	tokenExpireDays, err := strconv.Atoi(tokenExpireDaysStr)
+	if err != nil {
+		tokenExpireDays = constants.DefaultTokenExpireDays
+	}
+	if tokenExpireDays <= 0 {
+		tokenExpireDays = constants.DefaultTokenExpireDays
+	}
+	return tokenExpireDays
+}
+
+func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
 		siteTitle             = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		siteDescription       = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
@@ -129,6 +142,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		articlePending        = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
 		topicCaptcha          = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
+		tokenExpireDays       = s.GetTokenExpireDays()
 	)
 
 	var siteKeywordsArr []string
@@ -160,11 +174,15 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 	}
 
 	var (
-		defaultNodeId, _      = strconv.ParseInt(defaultNodeIdStr, 10, 64)
-		userObserveSeconds, _ = strconv.Atoi(userObserveSecondsStr)
+		defaultNodeId      = number.ToInt64(defaultNodeIdStr)
+		userObserveSeconds = number.ToInt(userObserveSecondsStr)
 	)
 
-	return &model.ConfigData{
+	if tokenExpireDays <= 0 {
+		tokenExpireDays = 7
+	}
+
+	return &model.SysConfigResponse{
 		SiteTitle:          siteTitle,
 		SiteDescription:    siteDescription,
 		SiteKeywords:       siteKeywordsArr,
@@ -177,6 +195,7 @@ func (s *sysConfigService) GetConfig() *model.ConfigData {
 		ArticlePending:     strings.ToLower(articlePending) == "true",
 		TopicCaptcha:       strings.ToLower(topicCaptcha) == "true",
 		UserObserveSeconds: userObserveSeconds,
+		TokenExpireDays:    tokenExpireDays,
 	}
 }
 
