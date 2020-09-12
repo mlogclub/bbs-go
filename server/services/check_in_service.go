@@ -47,7 +47,7 @@ func (s *checkInService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.CheckIn
 	return repositories.CheckInRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *checkInService) Count(cnd *simple.SqlCnd) int {
+func (s *checkInService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.CheckInRepository.Count(simple.DB(), cnd)
 }
 

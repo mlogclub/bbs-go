@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/common/urls"
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/json"
 	"sync"
 
 	"github.com/mlogclub/simple"
@@ -179,7 +180,7 @@ func (s *messageService) Produce(fromId, toId int64, content, quoteContent strin
 		extraData string
 		err       error
 	)
-	if extraData, err = simple.FormatJson(extraDataMap); err != nil {
+	if extraData, err = json.ToStr(extraDataMap); err != nil {
 		messageLog.Error("格式化extraData错误", err)
 	}
 	s.messagesChan <- &model.Message{

@@ -4,7 +4,6 @@ import (
 	"flag"
 	"os"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
@@ -29,7 +28,7 @@ func init() {
 	}
 
 	// 连接数据库
-	if err := simple.OpenMySql(config.Instance.MySqlUrl, 10, 20, config.Instance.ShowSql, model.Models...); err != nil {
+	if err := simple.OpenDB(config.Instance.MySqlUrl, nil, 10, 20, model.Models...); err != nil {
 		logrus.Error(err)
 	}
 }

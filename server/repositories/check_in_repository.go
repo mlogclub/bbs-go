@@ -3,7 +3,7 @@ package repositories
 import (
 	"bbs-go/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var CheckInRepository = newCheckInRepository()
@@ -60,7 +60,7 @@ func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
-func (r *checkInRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+func (r *checkInRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
 	return cnd.Count(db, &model.CheckIn{})
 }
 
@@ -87,4 +87,3 @@ func (r *checkInRepository) UpdateColumn(db *gorm.DB, id int64, name string, val
 func (r *checkInRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.CheckIn{}, "id = ?", id)
 }
-

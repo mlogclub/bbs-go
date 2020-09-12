@@ -43,7 +43,7 @@ func (s *operateLogService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Oper
 	return repositories.OperateLogRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *operateLogService) Count(cnd *simple.SqlCnd) int {
+func (s *operateLogService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.OperateLogRepository.Count(simple.DB(), cnd)
 }
 

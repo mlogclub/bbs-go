@@ -44,7 +44,7 @@ func (s *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment
 	return repositories.CommentRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *commentService) Count(cnd *simple.SqlCnd) int {
+func (s *commentService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.CommentRepository.Count(simple.DB(), cnd)
 }
 

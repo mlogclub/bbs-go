@@ -17,9 +17,9 @@ import (
 	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"bbs-go/common"
 	"bbs-go/model"
@@ -169,7 +169,7 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 		UpdateTime:  simple.NowTimestamp(),
 	}
 
-	err = simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	err = simple.DB().Transaction(func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
@@ -194,7 +194,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return simple.NewErrorMsg("请填写文章内容")
 	}
 
-	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		err := repositories.ArticleRepository.Updates(simple.DB(), articleId, map[string]interface{}{
 			"title":   title,
 			"content": content,
@@ -266,7 +266,8 @@ func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
 func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
@@ -280,7 +281,8 @@ func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break

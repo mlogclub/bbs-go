@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"github.com/mlogclub/simple/json"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -81,7 +82,7 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	content := string(response.Body())
 
 	userInfo := &UserInfo{}
-	err = simple.ParseJson(content, userInfo)
+	err = json.Parse(content, userInfo)
 	if err != nil {
 		return nil, err
 	}
