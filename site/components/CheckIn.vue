@@ -18,11 +18,20 @@
 </template>
 
 <script>
+import utils from '~/common/utils'
 export default {
   data() {
     return {
       checkIn: null,
     }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.current
+    },
+    isLogin() {
+      return this.$store.state.user.current != null
+    },
   },
   mounted() {
     this.getCheckIn()
@@ -36,6 +45,9 @@ export default {
       }
     },
     async doCheckIn() {
+      if (!this.isLogin) {
+        utils.toSignin()
+      }
       try {
         await this.$axios.post('/api/user/checkin')
         this.$toast.success('签到成功')
