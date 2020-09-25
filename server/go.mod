@@ -1,6 +1,6 @@
 module bbs-go
 
-go 1.14
+go 1.15
 
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
