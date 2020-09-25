@@ -56,51 +56,47 @@ func Generate() {
 	sm.Add(stm.URL{
 		{"loc", urls.AbsUrl("/")},
 		{"lastmod", time.Now()},
-		{"changefreq", changefreqDaily},
-		{"priority", 1.0},
+		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
 		{"loc", urls.AbsUrl("/topics")},
 		{"lastmod", time.Now()},
-		{"changefreq", changefreqDaily},
-		{"priority", 1.0},
+		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
 		{"loc", urls.AbsUrl("/articles")},
 		{"lastmod", time.Now()},
-		{"changefreq", changefreqDaily},
-		{"priority", 1.0},
+		{"changefreq", changefreqAlways},
 	})
 
 	sm.Add(stm.URL{
 		{"loc", urls.AbsUrl("/projects")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqDaily},
-		{"priority", 1.0},
 	})
 
-	var (
-		dateFrom = simple.Timestamp(time.Now().AddDate(0, -1, 0))
-		dateTo   = simple.NowTimestamp()
-	)
+	// var (
+	// 	dateFrom = simple.Timestamp(time.Now().AddDate(0, -1, 0))
+	// 	dateTo   = simple.NowTimestamp()
+	// )
 
-	services.ArticleService.ScanDescWithDate(dateFrom, dateTo, func(articles []model.Article) {
+	services.ArticleService.ScanDesc(func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == constants.StatusOk {
 				articleUrl := urls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
 					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
-					{"changefreq", changefreqDaily},
-					{"priority", 0.9},
+					{"changefreq", changefreqMonthly},
+					{"priority", 0.6},
 				})
 			}
 		}
 	})
 
-	services.TopicService.ScanDescWithDate(dateFrom, dateTo, func(topics []model.Topic) {
+	services.TopicService.ScanDesc(func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == constants.StatusOk {
 				topicUrl := urls.TopicUrl(topic.Id)
@@ -108,18 +104,18 @@ func Generate() {
 					{"loc", topicUrl},
 					{"lastmod", simple.TimeFromTimestamp(topic.LastCommentTime)},
 					{"changefreq", changefreqDaily},
-					{"priority", 0.9},
+					{"priority", 0.6},
 				})
 			}
 		}
 	})
 
-	services.ProjectService.ScanDescWithDate(dateFrom, dateTo, func(projects []model.Project) {
+	services.ProjectService.ScanDesc(func(projects []model.Project) {
 		for _, project := range projects {
 			sm.Add(stm.URL{
 				{"loc", urls.ProjectUrl(project.Id)},
 				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
-				{"changefreq", changefreqWeekly},
+				{"changefreq", changefreqMonthly},
 			})
 		}
 	})
@@ -130,7 +126,7 @@ func Generate() {
 			sm.Add(stm.URL{
 				{"loc", tagUrl},
 				{"lastmod", time.Now()},
-				{"changefreq", changefreqDaily},
+				{"changefreq", changefreqMonthly},
 			})
 		}
 	})
@@ -145,7 +141,8 @@ func Generate() {
 		}
 	})
 
-	sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
+	sm.Finalize()
+	// sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
 }
 
 // My Adapter

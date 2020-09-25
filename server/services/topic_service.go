@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/gorilla/feeds"
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"bbs-go/cache"
 	"bbs-go/common"
@@ -52,7 +52,7 @@ func (s *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, pa
 	return repositories.TopicRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *topicService) Count(cnd *simple.SqlCnd) int {
+func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
 }
 
@@ -124,7 +124,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		CreateTime:      now,
 	}
 
-	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
 		err := repositories.TopicRepository.Create(tx, topic)
 		if err != nil {
@@ -160,7 +160,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 		return simple.NewErrorMsg("节点不存在")
 	}
 
-	err := simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		err := repositories.TopicRepository.Updates(simple.DB(), topicId, map[string]interface{}{
 			"node_id": nodeId,
 			"title":   title,
@@ -240,7 +240,7 @@ func (s *topicService) IncrViewCount(topicId int64) {
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
 func (s *topicService) OnComment(topicId, lastCommentTime int64) {
-	simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	_ = simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?", lastCommentTime, topicId).Error; err != nil {
 			return err
 		}
@@ -301,7 +301,8 @@ func (s *topicService) GenerateRss() {
 func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break
@@ -315,7 +316,8 @@ func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd("id", "status", "create_time", "update_time").
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break

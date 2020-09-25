@@ -3,6 +3,7 @@ package qq
 import (
 	"errors"
 	"fmt"
+	"github.com/mlogclub/simple/json"
 	"strconv"
 	"strings"
 	"time"
@@ -143,7 +144,7 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	}
 
 	userInfo := &UserInfo{}
-	err = simple.ParseJson(content, userInfo)
+	err = json.Parse(content, userInfo)
 	if err != nil {
 		return nil, err
 	} else {

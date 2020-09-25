@@ -2,6 +2,7 @@ package render
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/json"
 	"html"
 	"strconv"
 	"strings"
@@ -277,7 +278,7 @@ func BuildTweet(tweet *model.Tweet) *model.TweetResponse {
 	}
 	if simple.IsNotBlank(tweet.ImageList) {
 		var images []string
-		if err := simple.ParseJson(tweet.ImageList, &images); err == nil {
+		if err := json.Parse(tweet.ImageList, &images); err == nil {
 			if len(images) > 0 {
 				var imageList []model.ImageInfo
 				for _, image := range images {

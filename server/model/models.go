@@ -11,7 +11,7 @@ var Models = []interface{}{
 }
 
 type Model struct {
-	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
+	Id int64 `gorm:"primaryKey;autoIncrement" json:"id" form:"id"`
 }
 
 type User struct {
@@ -45,14 +45,14 @@ type UserToken struct {
 
 type ThirdAccount struct {
 	Model
-	UserId     sql.NullInt64 `gorm:"unique_index:idx_user_id_third_type;" json:"userId" form:"userId"`                                  // 用户编号
-	Avatar     string        `gorm:"size:1024" json:"avatar" form:"avatar"`                                                             // 头像
-	Nickname   string        `gorm:"size:32" json:"nickname" form:"nickname"`                                                           // 昵称
-	ThirdType  string        `gorm:"size:32;not null;unique_index:idx_user_id_third_type,idx_third;" json:"thirdType" form:"thirdType"` // 第三方类型
-	ThirdId    string        `gorm:"size:64;not null;unique_index:idx_third;" json:"thirdId" form:"thirdId"`                            // 第三方唯一标识，例如：openId,unionId
-	ExtraData  string        `gorm:"type:longtext" json:"extraData" form:"extraData"`                                                   // 扩展数据
-	CreateTime int64         `json:"createTime" form:"createTime"`                                                                      // 创建时间
-	UpdateTime int64         `json:"updateTime" form:"updateTime"`                                                                      // 更新时间
+	UserId     sql.NullInt64 `gorm:"uniqueIndex:idx_user_id_third_type;" json:"userId" form:"userId"`                                  // 用户编号
+	Avatar     string        `gorm:"size:1024" json:"avatar" form:"avatar"`                                                            // 头像
+	Nickname   string        `gorm:"size:32" json:"nickname" form:"nickname"`                                                          // 昵称
+	ThirdType  string        `gorm:"size:32;not null;uniqueIndex:idx_user_id_third_type,idx_third;" json:"thirdType" form:"thirdType"` // 第三方类型
+	ThirdId    string        `gorm:"size:64;not null;uniqueIndex:idx_third;" json:"thirdId" form:"thirdId"`                            // 第三方唯一标识，例如：openId,unionId
+	ExtraData  string        `gorm:"type:longtext" json:"extraData" form:"extraData"`                                                  // 扩展数据
+	CreateTime int64         `json:"createTime" form:"createTime"`                                                                     // 创建时间
+	UpdateTime int64         `json:"updateTime" form:"updateTime"`                                                                     // 更新时间
 }
 
 // 标签
@@ -73,7 +73,7 @@ type Article struct {
 	Summary     string `gorm:"type:text" json:"summary" form:"summary"`                           // 摘要
 	Content     string `gorm:"type:longtext;not null;" json:"content" form:"content"`             // 内容
 	ContentType string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`   // 内容类型：markdown、html
-	Status      int    `gorm:"int;not null;index:idx_article_status" json:"status" form:"status"` // 状态
+	Status      int    `gorm:"type:int(11);index:idx_article_status" json:"status" form:"status"` // 状态
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                                // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                       // 原文链接
 	ViewCount   int64  `gorm:"not null;index:idx_view_count;" json:"viewCount" form:"viewCount"`  // 查看数量
@@ -152,10 +152,10 @@ type TopicTag struct {
 // 用户点赞
 type UserLike struct {
 	Model
-	UserId     int64  `gorm:"not null;unique_index:idx_user_like_unique;" json:"userId" form:"userId"`                                            // 用户
-	EntityType string `gorm:"not null;size:32;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"entityType" form:"entityType"` // 实体类型
-	EntityId   int64  `gorm:"not null;unique_index:idx_user_like_unique;index:idx_user_like_entity;" json:"topicId" form:"topicId"`               // 实体编号
-	CreateTime int64  `json:"createTime" form:"createTime"`                                                                                       // 创建时间
+	UserId     int64  `gorm:"not null;uniqueIndex:idx_user_like_unique;" json:"userId" form:"userId"`                                            // 用户
+	EntityType string `gorm:"not null;size:32;uniqueIndex:idx_user_like_unique;index:idx_user_like_entity;" json:"entityType" form:"entityType"` // 实体类型
+	EntityId   int64  `gorm:"not null;uniqueIndex:idx_user_like_unique;index:idx_user_like_entity;" json:"topicId" form:"topicId"`               // 实体编号
+	CreateTime int64  `json:"createTime" form:"createTime"`                                                                                      // 创建时间
 }
 
 // 动态
@@ -271,9 +271,9 @@ type EmailCode struct {
 // 签到
 type CheckIn struct {
 	Model
-	UserId          int64 `gorm:"not null;unique_index:idx_user_id" json:"userId" form:"userId"` // 用户编号
-	LatestDayName   int   `gorm:"not null;" json:"dayName" form:"dayName"`                       // 最后一次签到
-	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`       // 连续签到天数
-	CreateTime      int64 `json:"createTime" form:"createTime"`                                  // 创建时间
-	UpdateTime      int64 `json:"updateTime" form:"updateTime"`                                  // 更新时间
+	UserId          int64 `gorm:"not null;uniqueIndex:idx_user_id" json:"userId" form:"userId"` // 用户编号
+	LatestDayName   int   `gorm:"not null;" json:"dayName" form:"dayName"`                      // 最后一次签到
+	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`      // 连续签到天数
+	CreateTime      int64 `json:"createTime" form:"createTime"`                                 // 创建时间
+	UpdateTime      int64 `json:"updateTime" form:"updateTime"`                                 // 更新时间
 }

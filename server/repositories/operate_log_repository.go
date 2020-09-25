@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"bbs-go/model"
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"gorm.io/gorm"
 )
 
 var OperateLogRepository = newOperateLogRepository()
@@ -60,7 +60,7 @@ func (r *operateLogRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (l
 	return
 }
 
-func (r *operateLogRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+func (r *operateLogRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
 	return cnd.Count(db, &model.OperateLog{})
 }
 

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"gorm.io/gorm"
 
 	"bbs-go/model"
 )

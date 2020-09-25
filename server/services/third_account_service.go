@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"database/sql"
+	"github.com/mlogclub/simple/json"
 	"strconv"
 	"strings"
 
@@ -87,7 +88,7 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		nickname = strings.TrimSpace(userInfo.Name)
 	}
 
-	userInfoJson, _ := simple.FormatJson(userInfo)
+	userInfoJson, _ := json.ToStr(userInfo)
 	account = &model.ThirdAccount{
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.AvatarUrl,
@@ -116,7 +117,7 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		return account, nil
 	}
 
-	userInfoJson, _ := simple.FormatJson(userInfo)
+	userInfoJson, _ := json.ToStr(userInfo)
 	account = &model.ThirdAccount{
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.FigureurlQQ1,

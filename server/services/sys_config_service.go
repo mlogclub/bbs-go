@@ -3,14 +3,15 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/json"
 	"github.com/mlogclub/simple/number"
 	"strconv"
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
+	"gorm.io/gorm"
 
 	"bbs-go/cache"
 	"bbs-go/model"
@@ -60,7 +61,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	if !ok {
 		return errors.New("配置数据格式错误")
 	}
-	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	return simple.DB().Transaction(func(tx *gorm.DB) error {
 		for k, _ := range configs {
 			v := json.Get(k).String()
 			if err := s.setSingle(tx, k, v, "", ""); err != nil {
@@ -73,7 +74,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 
 // 设置配置，如果配置不存在，那么创建
 func (s *sysConfigService) Set(key, value, name, description string) error {
-	return simple.Tx(simple.DB(), func(tx *gorm.DB) error {
+	return simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := s.setSingle(tx, key, value, name, description); err != nil {
 			return err
 		}
@@ -147,28 +148,28 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 
 	var siteKeywordsArr []string
 	if simple.IsNotBlank(siteKeywords) {
-		if err := simple.ParseJson(siteKeywords, &siteKeywordsArr); err != nil {
+		if err := json.Parse(siteKeywords, &siteKeywordsArr); err != nil {
 			logrus.Warn("站点关键词数据错误", err)
 		}
 	}
 
 	var siteNavsArr []model.ActionLink
 	if simple.IsNotBlank(siteNavs) {
-		if err := simple.ParseJson(siteNavs, &siteNavsArr); err != nil {
+		if err := json.Parse(siteNavs, &siteNavsArr); err != nil {
 			logrus.Warn("站点导航数据错误", err)
 		}
 	}
 
 	var recommendTagsArr []string
 	if simple.IsNotBlank(recommendTags) {
-		if err := simple.ParseJson(recommendTags, &recommendTagsArr); err != nil {
+		if err := json.Parse(recommendTags, &recommendTagsArr); err != nil {
 			logrus.Warn("推荐标签数据错误", err)
 		}
 	}
 
 	var scoreConfig model.ScoreConfig
 	if simple.IsNotBlank(scoreConfigStr) {
-		if err := simple.ParseJson(scoreConfigStr, &scoreConfig); err != nil {
+		if err := json.Parse(scoreConfigStr, &scoreConfig); err != nil {
 			logrus.Warn("积分配置错误", err)
 		}
 	}

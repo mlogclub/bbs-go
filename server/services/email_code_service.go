@@ -39,7 +39,7 @@ func (s *emailCodeService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Email
 	return repositories.EmailCodeRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *emailCodeService) Count(cnd *simple.SqlCnd) int {
+func (s *emailCodeService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.EmailCodeRepository.Count(simple.DB(), cnd)
 }
 

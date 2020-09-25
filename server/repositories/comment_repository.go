@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/mlogclub/simple"
+	"gorm.io/gorm"
 
 	"bbs-go/model"
 )
@@ -61,7 +61,7 @@ func (r *commentRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
-func (r *commentRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+func (r *commentRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
 	return cnd.Count(db, &model.Comment{})
 }
 

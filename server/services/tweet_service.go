@@ -41,7 +41,7 @@ func (s *tweetService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Tweet, pa
 	return repositories.TweetRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *tweetService) Count(cnd *simple.SqlCnd) int {
+func (s *tweetService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TweetRepository.Count(simple.DB(), cnd)
 }
 

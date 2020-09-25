@@ -2,9 +2,9 @@ package baiduai
 
 import (
 	"errors"
+	"github.com/mlogclub/simple/json"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mlogclub/simple"
 )
 
 const (
@@ -48,7 +48,7 @@ func (da DefaultAuthorizer) Authorize(client *Client) error {
 		return err
 	}
 	authResponse := new(AuthResponse)
-	if err := simple.ParseJson(string(resp.Body()), authResponse); err != nil {
+	if err := json.Parse(string(resp.Body()), authResponse); err != nil {
 		return err
 	}
 	if authResponse.ERROR != "" || authResponse.AccessToken == "" {

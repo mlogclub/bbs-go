@@ -3,7 +3,7 @@
     <img :src="user.avatar" class="avatar" />
     <div class="meta">
       <h1>
-        <a :href="'/user/' + user.userId">{{ user.nickname }}</a>
+        <a :href="'/user/' + user.id">{{ user.nickname }}</a>
       </h1>
       <div v-if="user.description" class="description">
         <p>{{ user.description }}</p>

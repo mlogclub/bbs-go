@@ -3,7 +3,7 @@ package repositories
 import (
 	"bbs-go/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var EmailCodeRepository = newEmailCodeRepository()
@@ -60,7 +60,7 @@ func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (li
 	return
 }
 
-func (r *emailCodeRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+func (r *emailCodeRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
 	return cnd.Count(db, &model.EmailCode{})
 }
 
@@ -87,4 +87,3 @@ func (r *emailCodeRepository) UpdateColumn(db *gorm.DB, id int64, name string, v
 func (r *emailCodeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.EmailCode{}, "id = ?", id)
 }
-
