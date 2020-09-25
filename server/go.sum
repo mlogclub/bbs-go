@@ -148,8 +148,11 @@ github.com/iris-contrib/httpexpect/v2 v2.0.5 h1:b2Orx2FXRhnmZil4td66C8zzkHnssSoF
 github.com/iris-contrib/httpexpect/v2 v2.0.5/go.mod h1:JpRu+DEVVCA6KHLKUAs72QoaevQESqLHuG5s1CQ+QiA=
 github.com/iris-contrib/jade v1.1.4 h1:WoYdfyJFfZIUgqNAeOyRfTNQZOksSlZ6+FnXR3AEpX0=
 github.com/iris-contrib/jade v1.1.4/go.mod h1:EDqR+ur9piDl6DUgs6qRrlfzmlx/D5UybogqrXvJTBE=
+github.com/iris-contrib/middleware v12.1.2+incompatible h1:c1cZShMYVo3qlprxmNvidMZ8JJgDzFLkSrQqKdaVTTg=
 github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367 h1:8sqPsO9g8khKdBGu9jJ1O7EgOblntuv1sLra6UVpuNY=
 github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367/go.mod h1:2p74oN7zAlsFSyDjs23eCuG4lzouZycTEg9nHGe0cnM=
+github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4 h1:198lp2LA18vBp97qJnY6kzIdcrhC63CTtQie2jbVmfQ=
+github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4/go.mod h1:YKnVYB1VYVY6iEs/qXXoDvHPFUqi2lftJkTgAelW2Po=
 github.com/iris-contrib/pongo2 v0.0.1 h1:zGP7pW51oi5eQZMIlGA3I+FHY9/HOQWDB+572yin0to=
 github.com/iris-contrib/pongo2 v0.0.1/go.mod h1:Ssh+00+3GAZqSQb30AvBRNxBx7rf0GqwkjqxNd0u65g=
 github.com/iris-contrib/schema v0.0.1 h1:10g/WnoRR+U+XXHWKBHeNy/+tZmM2kcAVGLOsz+yaDA=

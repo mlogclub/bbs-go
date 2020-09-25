@@ -14,7 +14,7 @@ require (
 	github.com/goburrow/cache v0.1.0
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
-	github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367
+	github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4
 	github.com/issue9/identicon v1.0.1
 	github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0
 	github.com/kataras/iris/v12 v12.2.0-alpha
