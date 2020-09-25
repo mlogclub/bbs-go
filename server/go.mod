@@ -17,15 +17,14 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20191219204441-78279b78a367
 	github.com/issue9/identicon v1.0.1
 	github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0
-	github.com/kataras/iris/v12 v12.1.8
-	github.com/mlogclub/simple v1.1.0
+	github.com/kataras/iris/v12 v12.2.0-alpha
+	github.com/mlogclub/simple v1.1.1
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/tidwall/gjson v1.3.4
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
-	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 	gopkg.in/yaml.v2 v2.2.5
 	gorm.io/gorm v1.20.1
 )
