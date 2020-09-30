@@ -15,7 +15,9 @@ footer: Copyright © 2020
 
 ## 官网
 
-[https://mlog.club](https://mlog.club)
+- 交流站：[https://mlog.club](https://mlog.club)
+- Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
+- Gitee：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
 ## 功能
 

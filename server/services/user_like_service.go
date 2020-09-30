@@ -3,7 +3,9 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+
 	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -83,6 +85,7 @@ func (s *userLikeService) Exists(userId int64, entityType string, entityId int64
 
 // 话题点赞
 func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
+	logrus.Info("params:", userId, topicId)
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("话题不存在")
