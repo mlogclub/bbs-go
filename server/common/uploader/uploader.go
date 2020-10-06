@@ -30,8 +30,14 @@ func PutObject(key string, data []byte) (string, error) {
 	return getUploader().PutObject(key, data)
 }
 
-func CopyImage(originUrl string) (string, error) {
-	return getUploader().CopyImage(originUrl)
+func CopyImage(url string) (string, error) {
+	u1 := simple.ParseUrl(url).GetURL()
+	u2 := simple.ParseUrl(config.Instance.BaseUrl).GetURL()
+	// 本站host，不下载
+	if u1.Host == u2.Host {
+		return url, nil
+	}
+	return getUploader().CopyImage(url)
 }
 
 func getUploader() uploader {
