@@ -18,7 +18,7 @@ require (
 	github.com/issue9/identicon v1.0.1
 	github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0
 	github.com/kataras/iris/v12 v12.2.0-alpha
-	github.com/mlogclub/simple v1.1.1
+	github.com/mlogclub/simple v1.1.2
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect

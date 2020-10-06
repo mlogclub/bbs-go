@@ -234,6 +234,8 @@ github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrk
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/mlogclub/simple v1.1.1 h1:auupoUMYN1oNDSj7FASqGUU+DYR75B7WEen+Ed3QDJw=
 github.com/mlogclub/simple v1.1.1/go.mod h1:X1OeBEZfr4XYnY0fOk0tOSmWWjytyx57kKUKVFtJMMI=
+github.com/mlogclub/simple v1.1.2 h1:aDZlAxwnBmItlDN3iy9GCg1vLvxu/pdKU9lGNG+wAm0=
+github.com/mlogclub/simple v1.1.2/go.mod h1:4/afM6sLzX8Heuv7vkT8ZW/WNAcOAfBaEGOfaJ6ZN9U=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

@@ -1,15 +1,17 @@
 package main
 
 import (
-	"flag"
-	"os"
-
-	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
-
 	"bbs-go/app"
 	"bbs-go/config"
 	"bbs-go/model"
+	"flag"
+	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
+	"time"
 )
 
 var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
@@ -28,7 +30,15 @@ func init() {
 	}
 
 	// 连接数据库
-	if err := simple.OpenDB(config.Instance.MySqlUrl, nil, 10, 20, model.Models...); err != nil {
+	gormConf := &gorm.Config{Logger: logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			Colorful:      true,
+			LogLevel:      logger.Info,
+		}),
+	}
+	if err := simple.OpenDB(config.Instance.MySqlUrl, gormConf, 10, 20, model.Models...); err != nil {
 		logrus.Error(err)
 	}
 }
