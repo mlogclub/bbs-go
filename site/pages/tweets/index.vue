@@ -17,6 +17,7 @@
         </load-more>
       </div>
       <div class="right-container">
+        <check-in />
         <site-notice />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import CheckIn from '~/components/CheckIn'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
@@ -35,6 +37,7 @@ import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
+    CheckIn,
     SiteNotice,
     ScoreRank,
     FriendLinks,

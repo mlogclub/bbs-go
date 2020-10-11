@@ -9,6 +9,7 @@
         </div>
       </div>
       <div class="right-container">
+        <check-in />
         <site-notice />
         <tweets-widget :tweets="newestTweets" />
         <score-rank :score-rank="scoreRank" />
@@ -19,6 +20,7 @@
 </template>
 
 <script>
+import CheckIn from '~/components/CheckIn'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
@@ -29,6 +31,7 @@ import Pagination from '~/components/Pagination'
 
 export default {
   components: {
+    CheckIn,
     SiteNotice,
     ScoreRank,
     FriendLinks,
