@@ -162,12 +162,12 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@3.4.7/dist/index.css',
+          href: '//cdn.jsdelivr.net/npm/vditor@3.5.4/dist/index.css',
         },
       ],
       script: [
         {
-          src: '//cdn.jsdelivr.net/npm/vditor@3.4.7/dist/index.min.js',
+          src: '//cdn.jsdelivr.net/npm/vditor@3.5.4/dist/index.min.js',
         },
       ],
     }
