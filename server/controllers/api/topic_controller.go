@@ -3,9 +3,10 @@ package api
 import (
 	"bbs-go/common"
 	"bbs-go/model/constants"
-	"github.com/dchest/captcha"
 	"math/rand"
 	"strings"
+
+	"github.com/dchest/captcha"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -177,7 +178,7 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 
 // 点赞用户
 func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
-	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 10)
+	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 5)
 	var users []model.UserInfo
 	for _, like := range likes {
 		userInfo := render.BuildUserById(like.UserId)

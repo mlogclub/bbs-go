@@ -32,6 +32,7 @@ Uploader:
     StyleSplitter: 阿里云oss图片样式分隔符
     StyleAvatar: 头像图片样式名称
     StylePreview: 预览图片样式名称
+    StyleSmall: 小图样式名称
     StyleDetail: 详情图片样式名称
   # 本地文件上传
   Local:

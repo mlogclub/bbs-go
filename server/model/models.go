@@ -21,6 +21,7 @@ type User struct {
 	EmailVerified    bool           `gorm:"not null;default:false" json:"emailVerified" form:"emailVerified"`   // 邮箱是否验证
 	Nickname         string         `gorm:"size:16;" json:"nickname" form:"nickname"`                           // 昵称
 	Avatar           string         `gorm:"type:text" json:"avatar" form:"avatar"`                              // 头像
+	BackgroundImage  string         `gorm:"type:text" json:"backgroundImage" form:"backgroundImage"`            // 个人中心背景图片
 	Password         string         `gorm:"size:512" json:"password" form:"password"`                           // 密码
 	HomePage         string         `gorm:"size:1024" json:"homePage" form:"homePage"`                          // 个人主页
 	Description      string         `gorm:"type:text" json:"description" form:"description"`                    // 个人描述

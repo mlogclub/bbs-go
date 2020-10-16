@@ -1,6 +1,7 @@
 package render
 
 import (
+	"bbs-go/common/uploader"
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/json"
 	"html"
@@ -50,23 +51,25 @@ func BuildUser(user *model.User) *model.UserInfo {
 	}
 	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserInfo{
-		Id:            user.Id,
-		Username:      user.Username.String,
-		Nickname:      user.Nickname,
-		Avatar:        a,
-		SmallAvatar:   HandleOssImageStyleAvatar(a),
-		Email:         user.Email.String,
-		EmailVerified: user.EmailVerified,
-		Type:          user.Type,
-		Roles:         roles,
-		HomePage:      user.HomePage,
-		Description:   user.Description,
-		TopicCount:    user.TopicCount,
-		CommentCount:  user.CommentCount,
-		PasswordSet:   len(user.Password) > 0,
-		Forbidden:     user.IsForbidden(),
-		Status:        user.Status,
-		CreateTime:    user.CreateTime,
+		Id:                   user.Id,
+		Username:             user.Username.String,
+		Nickname:             user.Nickname,
+		Avatar:               a,
+		SmallAvatar:          HandleOssImageStyleAvatar(a),
+		BackgroundImage:      user.BackgroundImage,
+		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
+		Email:                user.Email.String,
+		EmailVerified:        user.EmailVerified,
+		Type:                 user.Type,
+		Roles:                roles,
+		HomePage:             user.HomePage,
+		Description:          user.Description,
+		TopicCount:           user.TopicCount,
+		CommentCount:         user.CommentCount,
+		PasswordSet:          len(user.Password) > 0,
+		Forbidden:            user.IsForbidden(),
+		Status:               user.Status,
+		CreateTime:           user.CreateTime,
 	}
 	if len(ret.Description) == 0 {
 		ret.Description = "这家伙很懒，什么都没留下"
@@ -582,21 +585,28 @@ func BuildHtmlContent(htmlContent string) string {
 }
 
 func HandleOssImageStyleAvatar(url string) string {
-	if config.Instance.Uploader.Enable != "aliyunOss" {
+	if !uploader.IsEnabledOss() {
 		return url
 	}
 	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleAvatar)
 }
 
 func HandleOssImageStyleDetail(url string) string {
-	if config.Instance.Uploader.Enable != "aliyunOss" {
+	if !uploader.IsEnabledOss() {
 		return url
 	}
 	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleDetail)
 }
 
+func HandleOssImageStyleSmall(url string) string {
+	if !uploader.IsEnabledOss() {
+		return url
+	}
+	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleSmall)
+}
+
 func HandleOssImageStylePreview(url string) string {
-	if !simple.EqualsIgnoreCase(config.Instance.Uploader.Enable, "aliyunOss") {
+	if !uploader.IsEnabledOss() {
 		return url
 	}
 	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StylePreview)
@@ -606,7 +616,7 @@ func HandleOssImageStyle(url, style string) string {
 	if simple.IsBlank(style) || simple.IsBlank(url) {
 		return url
 	}
-	if !IsOssImageUrl(url) {
+	if !uploader.IsOssImageUrl(url) {
 		return url
 	}
 	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
@@ -614,9 +624,4 @@ func HandleOssImageStyle(url, style string) string {
 		return url
 	}
 	return strings.Join([]string{url, style}, sep)
-}
-
-func IsOssImageUrl(url string) bool {
-	host := simple.ParseUrl(config.Instance.Uploader.AliyunOss.Host).GetURL().Host
-	return strings.Contains(url, host)
 }

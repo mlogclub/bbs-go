@@ -1,24 +1,26 @@
 package model
 
 type UserInfo struct {
-	Id            int64    `json:"id"`
-	Username      string   `json:"username"`
-	Email         string   `json:"email"`
-	EmailVerified bool     `json:"emailVerified"`
-	Nickname      string   `json:"nickname"`
-	Avatar        string   `json:"avatar"`
-	SmallAvatar   string   `json:"smallAvatar"`
-	Type          int      `json:"type"`
-	Roles         []string `json:"roles"`
-	HomePage      string   `json:"homePage"`
-	Description   string   `json:"description"`
-	Score         int      `json:"score"`        // 积分
-	TopicCount    int      `json:"topicCount"`   // 话题数量
-	CommentCount  int      `json:"commentCount"` // 跟帖数量
-	PasswordSet   bool     `json:"passwordSet"`  // 密码已设置
-	Forbidden     bool     `json:"forbidden"`    // 是否禁言
-	Status        int      `json:"status"`
-	CreateTime    int64    `json:"createTime"`
+	Id                   int64    `json:"id"`
+	Username             string   `json:"username"`
+	Email                string   `json:"email"`
+	EmailVerified        bool     `json:"emailVerified"`
+	Nickname             string   `json:"nickname"`
+	Avatar               string   `json:"avatar"`
+	SmallAvatar          string   `json:"smallAvatar"`
+	BackgroundImage      string   `json:"backgroundImage"`
+	SmallBackgroundImage string   `json:"smallBackgroundImage"`
+	Type                 int      `json:"type"`
+	Roles                []string `json:"roles"`
+	HomePage             string   `json:"homePage"`
+	Description          string   `json:"description"`
+	Score                int      `json:"score"`        // 积分
+	TopicCount           int      `json:"topicCount"`   // 话题数量
+	CommentCount         int      `json:"commentCount"` // 跟帖数量
+	PasswordSet          bool     `json:"passwordSet"`  // 密码已设置
+	Forbidden            bool     `json:"forbidden"`    // 是否禁言
+	Status               int      `json:"status"`
+	CreateTime           int64    `json:"createTime"`
 }
 
 type TagResponse struct {
