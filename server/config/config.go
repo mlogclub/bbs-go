@@ -43,6 +43,7 @@ type Config struct {
 			StyleSplitter string `yaml:"StyleSplitter"`
 			StyleAvatar   string `yaml:"StyleAvatar"`
 			StylePreview  string `yaml:"StylePreview"`
+			StyleSmall    string `yaml:"StyleSmall"`
 			StyleDetail   string `yaml:"StyleDetail"`
 		} `yaml:"AliyunOss"`
 		Local struct {
@@ -74,11 +75,12 @@ type Config struct {
 	} `yaml:"Smtp"`
 }
 
-func Init(filename string) {
+func Init(filename string) *Config {
 	Instance = &Config{}
 	if yamlFile, err := ioutil.ReadFile(filename); err != nil {
 		logrus.Error(err)
 	} else if err = yaml.Unmarshal(yamlFile, Instance); err != nil {
 		logrus.Error(err)
 	}
+	return Instance
 }

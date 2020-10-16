@@ -152,8 +152,23 @@ func (c *UserController) PostUpdatePassword() *simple.JsonResult {
 		password    = simple.FormValue(c.Ctx, "password")
 		rePassword  = simple.FormValue(c.Ctx, "rePassword")
 	)
-	err := services.UserService.UpdatePassword(user.Id, oldPassword, password, rePassword)
-	if err != nil {
+	if err := services.UserService.UpdatePassword(user.Id, oldPassword, password, rePassword); err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
+// 设置背景图
+func (c *UserController) PostSetBackgroundImage() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	backgroundImage := simple.FormValue(c.Ctx, "backgroundImage")
+	if simple.IsBlank(backgroundImage) {
+		return simple.JsonErrorMsg("请上传图片")
+	}
+	if err := services.UserService.UpdateBackgroundImage(user.Id, backgroundImage); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()

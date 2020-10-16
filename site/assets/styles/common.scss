@@ -87,6 +87,13 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     &.no-padding {
       padding: 0;
     }
+
+    .main-content-footer {
+      border-top: 1px solid #eff2f6;
+      background: #f9f9f9;
+      padding: 5px 15px 5px 15px;
+      margin: 0 -10px -10px -10px;
+    }
   }
 
   .left-container,

@@ -139,38 +139,43 @@
     font-size: 15px;
     padding-top: 0 !important;
   }
+}
 
-  .topic-actions {
-    display: flex;
-    height: 42px;
-    width: max-content;
-    padding: 5px 10px 5px 5px;
+.topic-toolbar {
+  display: flex;
+  position: relative;
 
-    background: #fff;
-    border: 1px solid #dae0e4;
-    border-radius: 30px;
-    vertical-align: middle;
-
+  .avatar-link {
+    height: 25px;
+    width:25px;
+    margin-right: 3px;
     .avatar {
+      max-width: 25px;
+      max-height: 25px;
+      min-width: 25px;
+      min-height: 25px;
       margin-left: 5px;
       border: solid 1px #e8ecee;
     }
+  }
 
-    .split {
-      display: inline-block;
-      margin: auto 7px auto 10px;
-      height: 16px;
-      width: 1px;
-      opacity: 0.4;
-      background: #dae0e4;
-      vertical-align: middle;
-    }
+  .like-desc {
+    margin-left: 10px;
+    color: #6c757d !important;
+    font-size: 13px;
+    line-height: 25px;
+  }
+
+  .action-buttons {
+    display: flex;
+    position: absolute;
+    right: 0px;
 
     .action {
       margin-left: 5px;
-      height: 30px;
-      width: 30px;
-      line-height: 30px;
+      height: 25px;
+      width: 25px;
+      line-height: 25px;
       text-align: center;
       color: #e7672e;
       background-color: rgba(126, 107, 1, 0.08);
@@ -228,7 +233,7 @@
   margin-bottom: 20px;
 
   .content {
-    padding-top: 10px;
+    padding-top: 10px !important;
     font-size: 15px;
     color: #000;
     white-space: normal;

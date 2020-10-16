@@ -82,18 +82,6 @@
                   </div>
                 </div>
                 <div class="topic-header-right">
-                  <div class="like">
-                    <span
-                      :class="{ liked: topic.liked }"
-                      class="like-btn"
-                      @click="like(topic)"
-                    >
-                      <i class="iconfont icon-like" />
-                    </span>
-                    <span v-if="topic.likeCount" class="like-count">{{
-                      topic.likeCount
-                    }}</span>
-                  </div>
                   <span class="count"
                     >{{ topic.commentCount }}&nbsp;/&nbsp;{{
                       topic.viewCount
@@ -117,38 +105,45 @@
                   v-html="topic.content"
                 ></div>
               </div>
-
-              <div class="topic-actions">
-                <div
-                  :class="{ active: favorited }"
-                  class="action favorite"
-                  @click="addFavorite(topic.topicId)"
+            </article>
+            <div class="main-content-footer">
+              <div class="topic-toolbar">
+                <a
+                  v-for="likeUser in likeUsers"
+                  :key="likeUser.id"
+                  :href="'/user/' + likeUser.id"
+                  :alt="likeUser.nickname"
+                  target="_blank"
+                  class="avatar-link"
                 >
-                  <i class="iconfont icon-favorite" />
-                </div>
-                <span class="split"></span>
-                <div
-                  :class="{ active: topic.liked }"
-                  class="action like"
-                  @click="like(topic)"
-                >
-                  <i class="iconfont icon-like" />
-                </div>
-                <div v-for="likeUser in likeUsers" :key="likeUser.id">
-                  <a
-                    :href="'/user/' + likeUser.id"
+                  <img
+                    :src="likeUser.smallAvatar"
                     :alt="likeUser.nickname"
-                    target="_blank"
+                    class="avatar"
+                  />
+                </a>
+                <span v-if="likeUsers.length" class="like-desc"
+                  >有{{ topic.likeCount }}人点赞</span
+                >
+
+                <div class="action-buttons">
+                  <div
+                    :class="{ active: topic.liked }"
+                    class="action like"
+                    @click="like(topic)"
                   >
-                    <img
-                      :src="likeUser.smallAvatar"
-                      :alt="likeUser.nickname"
-                      class="avatar size-30"
-                    />
-                  </a>
+                    <i class="iconfont icon-like" />
+                  </div>
+                  <div
+                    :class="{ active: favorited }"
+                    class="action favorite"
+                    @click="addFavorite(topic.topicId)"
+                  >
+                    <i class="iconfont icon-favorite" />
+                  </div>
                 </div>
               </div>
-            </article>
+            </div>
           </div>
 
           <!-- 评论 -->
@@ -169,39 +164,8 @@
             <span class="icon"><i class="iconfont icon-topic" /></span>
             <span>发表话题</span>
           </a>
-          <div class="user-simple">
-            <div class="base-info">
-              <a :href="'/user/' + topic.user.id" :alt="topic.user.nickname">
-                <img
-                  :src="topic.user.smallAvatar"
-                  :alt="topic.user.nickname"
-                  class="avatar"
-                />
-              </a>
-              <div class="nickname">
-                <a
-                  :href="'/user/' + topic.user.id"
-                  :alt="topic.user.nickname"
-                  >{{ topic.user.nickname }}</a
-                >
-              </div>
-              <div class="description">
-                {{ topic.user.description }}
-              </div>
-            </div>
-            <div class="extra-info">
-              <ul class="extra-data">
-                <li>
-                  <span>积分</span><br />
-                  <b>{{ topic.user.score }}</b>
-                </li>
-                <li>
-                  <span>注册排名</span><br />
-                  <b>{{ topic.user.id }}</b>
-                </li>
-              </ul>
-            </div>
-          </div>
+
+          <user-info :user="topic.user" />
 
           <div class="ad">
             <!-- 展示广告 -->
@@ -223,11 +187,13 @@
 <script>
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
+import UserInfo from '~/components/UserInfo'
 import UserHelper from '~/common/UserHelper'
 
 export default {
   components: {
     Comment,
+    UserInfo,
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -354,60 +320,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.user-simple {
-  background: #fff;
-  padding: 0;
-  margin: 10px 0;
-
-  .base-info {
-    padding: 10px;
-    text-align: center;
-
-    .avatar {
-      min-width: 80px;
-      min-height: 80px;
-      width: 80px;
-      height: 80px;
-    }
-
-    .nickname {
-      font-size: 15px;
-      font-weight: 700;
-      a:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .description {
-      text-align: left;
-      font-size: 13px;
-      margin-top: 5px;
-      overflow: hidden;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-    }
-  }
-
-  .extra-info {
-    padding: 0 10px;
-    background: rgba(0, 0, 0, 0.01);
-    border-top: 1px solid #f5f5f5;
-    ul.extra-data {
-      display: flex;
-      li {
-        width: 100%;
-        text-align: center;
-        span {
-          font-size: 13px;
-          font-weight: 400;
-          color: #868e96;
-        }
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

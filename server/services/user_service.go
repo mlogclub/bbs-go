@@ -325,9 +325,14 @@ func (s *userService) isUsernameExists(username string) bool {
 	return s.GetByUsername(username) != nil
 }
 
-// SetAvatar 更新头像
+// UpdateAvatar 更新头像
 func (s *userService) UpdateAvatar(userId int64, avatar string) error {
 	return s.UpdateColumn(userId, "avatar", avatar)
+}
+
+// UpdateBackgroundImage 修改背景图
+func (s *userService) UpdateBackgroundImage(userId int64, backgroundImage string) error {
+	return s.UpdateColumn(userId, "background_image", backgroundImage)
 }
 
 // SetUsername 设置用户名
