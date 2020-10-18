@@ -107,7 +107,7 @@
               </div>
             </article>
             <div class="main-content-footer">
-              <div class="topic-toolbar">
+              <div v-if="likeUsers && likeUsers.length" class="topic-toolbar">
                 <a
                   v-for="likeUser in likeUsers"
                   :key="likeUser.id"
