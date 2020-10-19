@@ -107,21 +107,23 @@
               </div>
             </article>
             <div class="main-content-footer">
-              <div v-if="likeUsers && likeUsers.length" class="topic-toolbar">
-                <a
-                  v-for="likeUser in likeUsers"
-                  :key="likeUser.id"
-                  :href="'/user/' + likeUser.id"
-                  :alt="likeUser.nickname"
-                  target="_blank"
-                  class="avatar-link"
-                >
-                  <img
-                    :src="likeUser.smallAvatar"
+              <div class="topic-toolbar">
+                <template v-if="likeUsers && likeUsers.length">
+                  <a
+                    v-for="likeUser in likeUsers"
+                    :key="likeUser.id"
+                    :href="'/user/' + likeUser.id"
                     :alt="likeUser.nickname"
-                    class="avatar"
-                  />
-                </a>
+                    target="_blank"
+                    class="avatar-link"
+                  >
+                    <img
+                      :src="likeUser.smallAvatar"
+                      :alt="likeUser.nickname"
+                      class="avatar"
+                    />
+                  </a>
+                </template>
                 <span v-if="likeUsers.length" class="like-desc"
                   >有{{ topic.likeCount }}人点赞</span
                 >
