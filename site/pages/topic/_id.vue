@@ -124,9 +124,7 @@
                     />
                   </a>
                 </template>
-                <span v-if="likeUsers.length" class="like-desc"
-                  >有{{ topic.likeCount }}人点赞</span
-                >
+                <span class="like-desc">有{{ topic.likeCount }}人点赞</span>
 
                 <div class="action-buttons">
                   <div
