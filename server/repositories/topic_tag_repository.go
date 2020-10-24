@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -93,7 +94,7 @@ func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []i
 		_ = r.Create(db, &model.TopicTag{
 			TopicId:    topicId,
 			TagId:      tagId,
-			CreateTime: simple.NowTimestamp(),
+			CreateTime: date.NowTimestamp(),
 		})
 	}
 }

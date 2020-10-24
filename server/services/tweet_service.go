@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -71,7 +72,7 @@ func (s *tweetService) Publish(userId int64, content, imageList string) (*model.
 		Content:    content,
 		ImageList:  imageList,
 		Status:     constants.StatusOk,
-		CreateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
 	}
 	if err := repositories.TweetRepository.Create(simple.DB(), tweet); err != nil {
 		return nil, err

@@ -6,7 +6,7 @@ import (
 	"bbs-go/repositories"
 	"errors"
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/number"
+	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
 	"strconv"
 	"sync"
@@ -96,13 +96,13 @@ func (s *checkInService) CheckIn(userId int64) error {
 			UserId:          userId,
 			LatestDayName:   dayName,
 			ConsecutiveDays: consecutiveDays,
-			CreateTime:      simple.NowTimestamp(),
-			UpdateTime:      simple.NowTimestamp(),
+			CreateTime:      date.NowTimestamp(),
+			UpdateTime:      date.NowTimestamp(),
 		})
 	} else {
 		checkIn.LatestDayName = dayName
 		checkIn.ConsecutiveDays = consecutiveDays
-		checkIn.UpdateTime = simple.NowTimestamp()
+		checkIn.UpdateTime = date.NowTimestamp()
 		err = s.Update(checkIn)
 	}
 	if err == nil {
@@ -122,6 +122,5 @@ func (s *checkInService) GetByUserId(userId int64) *model.CheckIn {
 }
 
 func (s *checkInService) GetDayName(t time.Time) int {
-	str := simple.TimeFormat(t, "20060102")
-	return number.ToInt(str)
+	return date.GetDay(t)
 }

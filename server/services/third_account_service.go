@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"database/sql"
+	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"strconv"
 	"strings"
@@ -96,8 +97,8 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		ThirdType:  constants.ThirdAccountTypeGithub,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
 		ExtraData:  userInfoJson,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
+		UpdateTime: date.NowTimestamp(),
 	}
 	err = s.Create(account)
 	if err != nil {
@@ -125,8 +126,8 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		ThirdType:  constants.ThirdAccountTypeQQ,
 		ThirdId:    userInfo.Unionid,
 		ExtraData:  userInfoJson,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
+		UpdateTime: date.NowTimestamp(),
 	}
 	err = s.Create(account)
 	if err != nil {

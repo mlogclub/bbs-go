@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -125,6 +126,6 @@ func (s *userLikeService) like(db *gorm.DB, userId int64, entityType string, ent
 		UserId:     userId,
 		EntityType: entityType,
 		EntityId:   entityId,
-		CreateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
 	})
 }

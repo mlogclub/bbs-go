@@ -4,10 +4,10 @@ import (
 	"bbs-go/model/constants"
 	"bytes"
 	"compress/gzip"
+	"github.com/mlogclub/simple/date"
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/common/uploader"
@@ -78,8 +78,8 @@ func Generate() {
 	})
 
 	// var (
-	// 	dateFrom = simple.Timestamp(time.Now().AddDate(0, -1, 0))
-	// 	dateTo   = simple.NowTimestamp()
+	// 	dateFrom = date.Timestamp(time.Now().AddDate(0, -1, 0))
+	// 	dateTo   = date.NowTimestamp()
 	// )
 
 	services.ArticleService.ScanDesc(func(articles []model.Article) {
@@ -88,7 +88,7 @@ func Generate() {
 				articleUrl := urls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
-					{"lastmod", simple.TimeFromTimestamp(article.UpdateTime)},
+					{"lastmod", date.FromTimestamp(article.UpdateTime)},
 					{"changefreq", changefreqMonthly},
 					{"priority", 0.6},
 				})
@@ -102,7 +102,7 @@ func Generate() {
 				topicUrl := urls.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},
-					{"lastmod", simple.TimeFromTimestamp(topic.LastCommentTime)},
+					{"lastmod", date.FromTimestamp(topic.LastCommentTime)},
 					{"changefreq", changefreqDaily},
 					{"priority", 0.6},
 				})
@@ -114,7 +114,7 @@ func Generate() {
 		for _, project := range projects {
 			sm.Add(stm.URL{
 				{"loc", urls.ProjectUrl(project.Id)},
-				{"lastmod", simple.TimeFromTimestamp(project.CreateTime)},
+				{"lastmod", date.FromTimestamp(project.CreateTime)},
 				{"changefreq", changefreqMonthly},
 			})
 		}

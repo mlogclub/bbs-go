@@ -3,6 +3,7 @@ package repositories
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"strings"
 
 	"github.com/mlogclub/simple"
@@ -116,8 +117,8 @@ func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error
 		tag = &model.Tag{
 			Name:       name,
 			Status:     constants.StatusOk,
-			CreateTime: simple.NowTimestamp(),
-			UpdateTime: simple.NowTimestamp(),
+			CreateTime: date.NowTimestamp(),
+			UpdateTime: date.NowTimestamp(),
 		}
 		err := r.Create(db, tag)
 		if err != nil {

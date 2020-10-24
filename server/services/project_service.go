@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
 	"time"
@@ -84,7 +85,7 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 		DownloadUrl: downloadUrl,
 		ContentType: contentType,
 		Content:     content,
-		CreateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
 	}
 	err := repositories.ProjectRepository.Create(simple.DB(), project)
 	if err != nil {
@@ -137,7 +138,7 @@ func (s *projectService) GenerateRss() {
 			Link:        &feeds.Link{Href: projectUrl},
 			Description: description,
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     simple.TimeFromTimestamp(project.CreateTime),
+			Created:     date.FromTimestamp(project.CreateTime),
 		}
 		items = append(items, item)
 	}

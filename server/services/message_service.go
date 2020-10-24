@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/common/urls"
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"sync"
 
@@ -191,7 +192,7 @@ func (s *messageService) Produce(fromId, toId int64, content, quoteContent strin
 		Type:         msgType,
 		ExtraData:    extraData,
 		Status:       constants.MsgStatusUnread,
-		CreateTime:   simple.NowTimestamp(),
+		CreateTime:   date.NowTimestamp(),
 	}
 }
 

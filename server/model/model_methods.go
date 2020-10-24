@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 	"strings"
 	"time"
 )
@@ -16,7 +17,7 @@ func (u *User) IsForbidden() bool {
 		return true
 	}
 	// 判断禁言时间
-	return u.ForbiddenEndTime > simple.NowTimestamp()
+	return u.ForbiddenEndTime > date.NowTimestamp()
 }
 
 // HasRole 是否有指定角色
@@ -66,5 +67,5 @@ func (u *User) InObservationPeriod(observeSeconds int) bool {
 	if observeSeconds <= 0 {
 		return false
 	}
-	return simple.TimeFromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
+	return date.FromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
 }

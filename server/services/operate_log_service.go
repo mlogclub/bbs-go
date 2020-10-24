@@ -4,6 +4,7 @@ import (
 	"bbs-go/model"
 	"bbs-go/repositories"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
@@ -76,7 +77,7 @@ func (s *operateLogService) AddOperateLog(userId int64, opType, dataType string,
 		DataType:    dataType,
 		DataId:      dataId,
 		Description: description,
-		CreateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
 	}
 	if r != nil {
 		operateLog.Ip = ClientIP(r)

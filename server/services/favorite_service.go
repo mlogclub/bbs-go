@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 
 	"github.com/mlogclub/simple"
 
@@ -96,6 +97,6 @@ func (s *favoriteService) addFavorite(userId int64, entityType string, entityId 
 		UserId:     userId,
 		EntityType: entityType,
 		EntityId:   entityId,
-		CreateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
 	})
 }

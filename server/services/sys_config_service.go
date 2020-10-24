@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/mlogclub/simple/number"
 	"strconv"
@@ -89,12 +90,12 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	sysConfig := repositories.SysConfigRepository.GetByKey(db, key)
 	if sysConfig == nil {
 		sysConfig = &model.SysConfig{
-			CreateTime: simple.NowTimestamp(),
+			CreateTime: date.NowTimestamp(),
 		}
 	}
 	sysConfig.Key = key
 	sysConfig.Value = value
-	sysConfig.UpdateTime = simple.NowTimestamp()
+	sysConfig.UpdateTime = date.NowTimestamp()
 
 	if simple.IsNotBlank(name) {
 		sysConfig.Name = name

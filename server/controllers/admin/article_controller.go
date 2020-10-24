@@ -2,6 +2,7 @@ package admin
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"strconv"
 
 	"bbs-go/model"
@@ -112,7 +113,7 @@ func (c *ArticleController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("请选择内容格式")
 	}
 
-	t.UpdateTime = simple.NowTimestamp()
+	t.UpdateTime = date.NowTimestamp()
 	err := services.ArticleService.Update(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

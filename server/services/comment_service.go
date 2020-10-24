@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"strings"
 
 	"github.com/mlogclub/simple"
@@ -90,14 +91,14 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		ContentType: simple.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
 		Status:      constants.StatusOk,
-		CreateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
 	}
 	if err := s.Create(comment); err != nil {
 		return nil, err
 	}
 
 	if form.EntityType == constants.EntityTopic {
-		TopicService.OnComment(form.EntityId, simple.NowTimestamp())
+		TopicService.OnComment(form.EntityId, date.NowTimestamp())
 	} else if form.EntityType == constants.EntityTweet {
 		TweetService.OnComment(form.EntityId)
 	}

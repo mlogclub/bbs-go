@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"strconv"
 
 	"github.com/mlogclub/simple"
@@ -135,11 +136,11 @@ func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceI
 	if userScore == nil {
 		userScore = &model.UserScore{
 			UserId:     userId,
-			CreateTime: simple.NowTimestamp(),
+			CreateTime: date.NowTimestamp(),
 		}
 	}
 	userScore.Score = userScore.Score + score
-	userScore.UpdateTime = simple.NowTimestamp()
+	userScore.UpdateTime = date.NowTimestamp()
 	if err := s.CreateOrUpdate(userScore); err != nil {
 		return err
 	}
@@ -155,7 +156,7 @@ func (s *userScoreService) addScore(userId int64, score int, sourceType, sourceI
 		Description: description,
 		Type:        scoreType,
 		Score:       score,
-		CreateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
 	})
 	if err == nil {
 		cache.UserCache.InvalidateScore(userId)

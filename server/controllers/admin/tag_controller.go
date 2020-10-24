@@ -2,6 +2,7 @@ package admin
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"strconv"
 	"strings"
 
@@ -49,8 +50,8 @@ func (c *TagController) PostCreate() *simple.JsonResult {
 	}
 
 	t.Status = constants.StatusOk
-	t.CreateTime = simple.NowTimestamp()
-	t.UpdateTime = simple.NowTimestamp()
+	t.CreateTime = date.NowTimestamp()
+	t.UpdateTime = date.NowTimestamp()
 
 	err = services.TagService.Create(t)
 	if err != nil {
@@ -81,7 +82,7 @@ func (c *TagController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
-	t.UpdateTime = simple.NowTimestamp()
+	t.UpdateTime = date.NowTimestamp()
 	err = services.TagService.Update(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())

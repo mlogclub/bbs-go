@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
 	"strings"
@@ -165,8 +166,8 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 		ContentType: contentType,
 		Status:      status,
 		SourceUrl:   sourceUrl,
-		CreateTime:  simple.NowTimestamp(),
-		UpdateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
+		UpdateTime:  date.NowTimestamp(),
 	}
 
 	err = simple.DB().Transaction(func(tx *gorm.DB) error {
@@ -310,7 +311,7 @@ func (s *articleService) GenerateRss() {
 			Link:        &feeds.Link{Href: articleUrl},
 			Description: description,
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     simple.TimeFromTimestamp(article.CreateTime),
+			Created:     date.FromTimestamp(article.CreateTime),
 		}
 		items = append(items, item)
 	}

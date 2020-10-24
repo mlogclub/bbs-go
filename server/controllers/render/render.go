@@ -5,6 +5,7 @@ import (
 	"bbs-go/common/markdown"
 	"bbs-go/common/uploader"
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"html"
 	"strconv"
@@ -32,7 +33,7 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 		user.Id = id
 		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
 		user.Avatar = avatar.DefaultAvatar
-		user.CreateTime = simple.NowTimestamp()
+		user.CreateTime = date.NowTimestamp()
 	}
 	return BuildUser(user)
 }

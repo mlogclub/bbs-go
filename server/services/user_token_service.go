@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -63,7 +64,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 		return nil
 	}
 	// 授权过期
-	if userToken.ExpiredAt <= simple.NowTimestamp() {
+	if userToken.ExpiredAt <= date.NowTimestamp() {
 		return nil
 	}
 	user := cache.UserCache.Get(userToken.UserId)
@@ -109,9 +110,9 @@ func (s *userTokenService) Generate(userId int64) (string, error) {
 	userToken := &model.UserToken{
 		Token:      token,
 		UserId:     userId,
-		ExpiredAt:  simple.Timestamp(expiredAt),
+		ExpiredAt:  date.Timestamp(expiredAt),
 		Status:     constants.StatusOk,
-		CreateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
 	}
 	err := repositories.UserTokenRepository.Create(simple.DB(), userToken)
 	if err != nil {

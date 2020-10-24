@@ -2,6 +2,7 @@ package admin
 
 import (
 	"bytes"
+	"github.com/mlogclub/simple/date"
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
@@ -37,7 +38,7 @@ func (c *LinkController) PostCreate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t.CreateTime = simple.NowTimestamp()
+	t.CreateTime = date.NowTimestamp()
 
 	err = services.LinkService.Create(t)
 	if err != nil {

@@ -3,6 +3,7 @@ package collect
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"strings"
 
 	"bbs-go/common/uploader"
@@ -55,8 +56,8 @@ func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
 			Avatar:      avatar,
 			Status:      constants.StatusOk,
 			Type:        constants.UserTypeGzh,
-			CreateTime:  simple.NowTimestamp(),
-			UpdateTime:  simple.NowTimestamp(),
+			CreateTime:  date.NowTimestamp(),
+			UpdateTime:  date.NowTimestamp(),
 		}
 		err = services.UserService.Create(user)
 		if err != nil {

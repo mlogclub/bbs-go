@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"encoding/json"
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"strings"
 	"sync"
 
@@ -41,7 +42,7 @@ func GetAi() *ai {
 
 // 获取baidu api token 临时用
 func (a *ai) GetToken() string {
-	durationMillis := simple.NowTimestamp() - a.accessTokenCreateTime
+	durationMillis := date.NowTimestamp() - a.accessTokenCreateTime
 	if len(a.accessToken) == 0 || durationMillis > (86400*1000) { // accessToken为空或者生成时间超过一天
 		c := NewClient(a.ApiKey, a.SecretKey)
 		err := c.Auth()
@@ -49,7 +50,7 @@ func (a *ai) GetToken() string {
 			logrus.Error(err)
 		}
 		a.accessToken = c.AccessToken
-		a.accessTokenCreateTime = simple.NowTimestamp()
+		a.accessTokenCreateTime = date.NowTimestamp()
 	}
 	return a.accessToken
 }

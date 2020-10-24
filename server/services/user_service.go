@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
@@ -111,7 +112,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 	if days == -1 { // 永久禁言
 		forbiddenEndTime = -1
 	} else if days > 0 {
-		forbiddenEndTime = simple.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
+		forbiddenEndTime = date.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
 	} else {
 		return errors.New("禁言时间错误")
 	}
@@ -192,8 +193,8 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		Nickname:   nickname,
 		Password:   simple.EncodePassword(password),
 		Status:     constants.StatusOk,
-		CreateTime: simple.NowTimestamp(),
-		UpdateTime: simple.NowTimestamp(),
+		CreateTime: date.NowTimestamp(),
+		UpdateTime: date.NowTimestamp(),
 	}
 
 	err = simple.DB().Transaction(func(tx *gorm.DB) error {
@@ -269,8 +270,8 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		Status:      constants.StatusOk,
 		HomePage:    homePage,
 		Description: description,
-		CreateTime:  simple.NowTimestamp(),
-		UpdateTime:  simple.NowTimestamp(),
+		CreateTime:  date.NowTimestamp(),
+		UpdateTime:  date.NowTimestamp(),
 	}
 	err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.Create(tx, user); err != nil {
@@ -469,7 +470,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 			Title:      title,
 			Content:    content,
 			Used:       false,
-			CreateTime: simple.NowTimestamp(),
+			CreateTime: date.NowTimestamp(),
 		}); err != nil {
 			return nil
 		}
@@ -490,7 +491,7 @@ func (s *userService) VerifyEmail(userId int64, token string) error {
 		return errors.New("非法验证码")
 	}
 
-	if simple.TimeFromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
+	if date.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
 		return errors.New("验证邮件已过期")
 	}
 	return simple.DB().Transaction(func(tx *gorm.DB) error {

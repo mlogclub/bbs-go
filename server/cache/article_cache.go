@@ -2,6 +2,7 @@ package cache
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -36,7 +37,7 @@ func newArticleCache() *articleCache {
 		),
 		hotCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, err error) {
-				createTime := simple.Timestamp(time.Now().AddDate(0, 0, -3))
+				createTime := date.Timestamp(time.Now().AddDate(0, 0, -3))
 				value = repositories.ArticleRepository.Find(simple.DB(),
 					simple.NewSqlCnd().Gt("create_time", createTime).Eq("status", constants.StatusOk).Desc("view_count").Limit(5))
 				return

@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
 	"time"
@@ -113,7 +114,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil, simple.NewErrorMsg("节点不存在")
 	}
 
-	now := simple.NowTimestamp()
+	now := date.NowTimestamp()
 	topic := &model.Topic{
 		UserId:          userId,
 		NodeId:          nodeId,
@@ -268,7 +269,7 @@ func (s *topicService) GenerateRss() {
 			Link:        &feeds.Link{Href: topicUrl},
 			Description: common.GetMarkdownSummary(topic.Content),
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     simple.TimeFromTimestamp(topic.CreateTime),
+			Created:     date.FromTimestamp(topic.CreateTime),
 		}
 		items = append(items, item)
 	}

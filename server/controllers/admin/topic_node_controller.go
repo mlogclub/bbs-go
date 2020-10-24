@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/mlogclub/simple/date"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -33,7 +34,7 @@ func (c *TopicNodeController) PostCreate() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t.CreateTime = simple.NowTimestamp()
+	t.CreateTime = date.NowTimestamp()
 	err = services.TopicNodeService.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
