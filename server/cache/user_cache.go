@@ -11,7 +11,8 @@ import (
 )
 
 type userCache struct {
-	cache cache.LoadingCache
+	cache          cache.LoadingCache
+	scoreRankCache cache.LoadingCache
 }
 
 var UserCache = newUserCache()
@@ -25,6 +26,14 @@ func newUserCache() *userCache {
 			},
 			cache.WithMaximumSize(1000),
 			cache.WithExpireAfterAccess(30*time.Minute),
+		),
+		scoreRankCache: cache.NewLoadingCache(
+			func(key cache.Key) (value cache.Value, e error) {
+				value = repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Desc("score").Limit(10))
+				return
+			},
+			cache.WithMaximumSize(10),
+			cache.WithRefreshAfterWrite(10*time.Minute),
 		),
 	}
 }
@@ -42,4 +51,12 @@ func (c *userCache) Get(userId int64) *model.User {
 
 func (c *userCache) Invalidate(userId int64) {
 	c.cache.Invalidate(userId)
+}
+
+func (c *userCache) GetScoreRank() []model.User {
+	val, err := c.scoreRankCache.Get("data")
+	if err != nil {
+		return nil
+	}
+	return val.([]model.User)
 }

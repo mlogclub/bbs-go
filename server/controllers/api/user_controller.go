@@ -251,7 +251,8 @@ func (c *UserController) GetScorelogs() *simple.JsonResult {
 
 // 积分排行
 func (c *UserController) GetScoreRank() *simple.JsonResult {
-	users := services.UserService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	// users := services.UserService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	users := cache.UserCache.GetScoreRank()
 	var results []*model.UserInfo
 	for _, user := range users {
 		results = append(results, render.BuildUser(&user))
