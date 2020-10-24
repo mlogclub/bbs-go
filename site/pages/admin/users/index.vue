@@ -87,12 +87,15 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-dropdown size="mini" type="primary">
+          <!--
+          <el-dropdown size="mini" type="primary" @command="handleCommand">
             <el-button site="mini" type="primary">
               更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click="handleEdit(scope.$index, scope.row)"
+              <el-dropdown-item
+                command="edit"
+                @click="handleEdit(scope.$index, scope.row)"
                 >编辑</el-dropdown-item
               >
               <el-dropdown-item
@@ -110,31 +113,30 @@
               >
             </el-dropdown-menu>
           </el-dropdown>
-          <!--
+          -->
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
           >
           <el-button
             v-if="scope.row.forbidden"
-            size="small"
+            size="mini"
             type="warning"
             @click="removeForbidden(scope.$index, scope.row)"
             >取消禁言
           </el-button>
           <el-button
             v-else
-            size="small"
+            size="mini"
             type="warning"
             @click="showForbiddenDialog(scope.$index, scope.row)"
             >禁言</el-button
           >
           <el-button
+            size="mini"
             type="success"
-            size="small"
-            @click="showLog(scope.$index, scope.row)"
+            @click="showScoreLog(scope.$index, scope.row)"
             >积分记录</el-button
           >
-          -->
         </template>
       </el-table-column>
     </el-table>
@@ -465,8 +467,11 @@ export default {
         this.$message.success('取消禁言失败 ' + (e.message || e))
       }
     },
-    showLog(index, row) {
+    showScoreLog(index, row) {
       this.$refs.scoreLog.showLog(row.id)
+    },
+    handleCommand(cmd) {
+      alert(cmd)
     },
   },
 }

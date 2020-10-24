@@ -1,0 +1,1 @@
+update t_user u set score = (select score from t_user_score s where u.id = s.user_id) where u.id in (select user_id from t_user_score);
