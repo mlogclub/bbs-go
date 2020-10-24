@@ -29,7 +29,7 @@ func (api *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 	tags := api.initTags(article)
 	summary := article.Summary
 	if simple.RuneLen(summary) == 0 {
-		summary = simple.GetSummary(article.TextContent, 256)
+		summary = simple.GetSummary(article.TextContent, constants.SummaryLen)
 	}
 
 	return services.ArticleService.Publish(userId, article.Title, summary, article.HtmlContent, constants.ContentTypeHtml,

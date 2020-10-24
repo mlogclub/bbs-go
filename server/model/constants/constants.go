@@ -1,6 +1,9 @@
 package constants
 
-const DefaultTokenExpireDays = 7 // 用户登录token默认有效期
+const (
+	DefaultTokenExpireDays = 7   // 用户登录token默认有效期
+	SummaryLen             = 256 // 摘要长度
+)
 
 // 系统配置
 const (

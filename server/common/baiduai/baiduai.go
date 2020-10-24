@@ -1,6 +1,8 @@
 package baiduai
 
 import (
+	"bbs-go/common/markdown"
+	"bbs-go/model/constants"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -10,7 +12,6 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/markdown"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -113,7 +114,7 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 		return "", errors.New("标题或内容为空")
 	}
 	if maxSummaryLen <= 0 {
-		maxSummaryLen = 256
+		maxSummaryLen = constants.SummaryLen
 	}
 
 	data := make(map[string]interface{})
@@ -136,7 +137,7 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 }
 
 func (a *ai) AnalyzeMarkdown(title, markdownStr string) (*AiAnalyzeRet, error) {
-	content, _ := markdown.New(markdown.SummaryLen(0)).Run(markdownStr)
+	content := markdown.ToHTML(markdownStr)
 	return a.AnalyzeHtml(title, content)
 }
 
@@ -158,7 +159,7 @@ func (a *ai) AnalyzeText(title, text string) (*AiAnalyzeRet, error) {
 	}
 	aiCategories := a.GetCategories(title, text)
 	aiTags := a.GetTags(title, text)
-	summary, _ := a.GetNewsSummary(title, text, 256)
+	summary, _ := a.GetNewsSummary(title, text, constants.SummaryLen)
 
 	set := hashset.New()
 	if aiCategories != nil {

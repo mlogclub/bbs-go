@@ -5,10 +5,12 @@ go 1.15
 replace github.com/go-check/check => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
 
 require (
+	github.com/88250/lute v1.6.5
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.3+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
+	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
 	github.com/goburrow/cache v0.1.0

@@ -1,11 +1,12 @@
 package admin
 
 import (
+	"bbs-go/common/markdown"
+	"bbs-go/model/constants"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/markdown"
 
 	"bbs-go/controllers/render"
 	"bbs-go/model"
@@ -40,7 +41,7 @@ func (c *TopicController) AnyList() *simple.JsonResult {
 		builder.Put("node", node)
 
 		// 简介
-		_, summary := markdown.New().Run(topic.Content)
+		summary := markdown.GetSummary(topic.Content, constants.SummaryLen)
 		builder.Put("summary", summary)
 
 		// 标签

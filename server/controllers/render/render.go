@@ -1,6 +1,8 @@
 package render
 
 import (
+	html2 "bbs-go/common/html"
+	"bbs-go/common/markdown"
 	"bbs-go/common/uploader"
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/json"
@@ -8,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/simple/markdown"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -123,7 +124,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if article.ContentType == constants.ContentTypeMarkdown {
-		content, _ := markdown.New(markdown.SummaryLen(0)).Run(article.Content)
+		content := markdown.ToHTML(article.Content)
 		rsp.Content = BuildHtmlContent(content)
 	} else if article.ContentType == constants.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(article.Content)
@@ -154,11 +155,11 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 
 	if article.ContentType == constants.ContentTypeMarkdown {
 		if len(rsp.Summary) == 0 {
-			_, rsp.Summary = markdown.New().Run(article.Content)
+			rsp.Summary = markdown.GetSummary(article.Content, constants.SummaryLen)
 		}
 	} else if article.ContentType == constants.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {
-			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), 256)
+			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), constants.SummaryLen)
 		}
 	}
 
@@ -222,7 +223,7 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
 
-	content, _ := markdown.New(markdown.SummaryLen(0)).Run(topic.Content)
+	content := markdown.ToHTML(topic.Content)
 	rsp.Content = BuildHtmlContent(content)
 
 	return rsp
@@ -324,9 +325,10 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 
 	if project.ContentType == constants.ContentTypeHtml {
 		rsp.Content = BuildHtmlContent(project.Content)
-		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
+		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), constants.SummaryLen)
 	} else {
-		content, summary := markdown.New().Run(project.Content)
+		content := markdown.ToHTML(project.Content)
+		summary := html2.GetSummary(content, constants.SummaryLen)
 		rsp.Content = BuildHtmlContent(content)
 		rsp.Summary = summary
 	}
@@ -361,7 +363,7 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	rsp.CreateTime = project.CreateTime
 
 	if project.ContentType == constants.ContentTypeHtml {
-		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), 256)
+		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), constants.SummaryLen)
 	} else {
 		rsp.Summary = common.GetMarkdownSummary(project.Content)
 	}
@@ -397,7 +399,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	}
 
 	if comment.ContentType == constants.ContentTypeMarkdown {
-		content, _ := markdown.New().Run(comment.Content)
+		content := markdown.ToHTML(comment.Content)
 		ret.Content = BuildHtmlContent(content)
 	} else if comment.ContentType == constants.ContentTypeHtml {
 		ret.Content = BuildHtmlContent(comment.Content)
@@ -453,7 +455,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
 				if err == nil {
 					text := doc.Text()
-					rsp.Content = simple.GetSummary(text, 256)
+					rsp.Content = simple.GetSummary(text, constants.SummaryLen)
 				}
 			}
 		}
