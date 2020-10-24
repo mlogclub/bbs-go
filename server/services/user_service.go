@@ -520,3 +520,87 @@ func (s *userService) CheckPostStatus(user *model.User) *simple.CodeError {
 	}
 	return nil
 }
+
+// IncrScoreForPostTopic 发帖获积分
+func (s *userService) IncrScoreForPostTopic(topic *model.Topic) {
+	config := SysConfigService.GetConfig()
+	if config.ScoreConfig.PostTopicScore <= 0 {
+		logrus.Info("请配置发帖积分")
+		return
+	}
+	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, constants.EntityTopic,
+		strconv.FormatInt(topic.Id, 10), "发表话题")
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
+// IncrScoreForPostComment 跟帖获积分
+func (s *userService) IncrScoreForPostComment(comment *model.Comment) {
+	// 非话题跟帖，跳过
+	if comment.EntityType != constants.EntityTopic {
+		return
+	}
+	config := SysConfigService.GetConfig()
+	if config.ScoreConfig.PostCommentScore <= 0 {
+		logrus.Info("请配置跟帖积分")
+		return
+	}
+	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, constants.EntityComment,
+		strconv.FormatInt(comment.Id, 10), "发表跟帖")
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
+// IncrScore 增加分数
+func (s *userService) IncrScore(userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(userId, score, sourceType, sourceId, description)
+}
+
+// DecrScore 减少分数
+func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(userId, -score, sourceType, sourceId, description)
+}
+
+// addScore 加分数，也可以加负数
+func (s *userService) addScore(userId int64, score int, sourceType, sourceId, description string) error {
+	if score == 0 {
+		return errors.New("分数不能为0")
+	}
+	user := s.Get(userId)
+	if user == nil {
+		return errors.New("用户不存在")
+	}
+	score = user.Score + score
+	if err := s.Updates(userId, map[string]interface{}{
+		"score":       score,
+		"update_time": date.NowTimestamp(),
+	}); err != nil {
+		return err
+	}
+
+	scoreType := constants.ScoreTypeIncr
+	if score < 0 {
+		scoreType = constants.ScoreTypeDecr
+	}
+	err := UserScoreLogService.Create(&model.UserScoreLog{
+		UserId:      userId,
+		SourceType:  sourceType,
+		SourceId:    sourceId,
+		Description: description,
+		Type:        scoreType,
+		Score:       score,
+		CreateTime:  date.NowTimestamp(),
+	})
+	if err == nil {
+		cache.UserCache.Invalidate(userId)
+	}
+	return err
+}

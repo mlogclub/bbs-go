@@ -38,12 +38,6 @@ func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	return simple.JsonErrorMsg("用户不存在")
 }
 
-// 用户积分
-func (c *UserController) GetScoreBy(userId int64) *simple.JsonResult {
-	score := cache.UserCache.GetScore(userId)
-	return simple.NewEmptyRspBuilder().Put("score", score).JsonResult()
-}
-
 // 修改用户资料
 func (c *UserController) PostEditBy(userId int64) *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
@@ -257,10 +251,11 @@ func (c *UserController) GetScorelogs() *simple.JsonResult {
 
 // 积分排行
 func (c *UserController) GetScoreRank() *simple.JsonResult {
-	userScores := services.UserScoreService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	// users := services.UserService.Find(simple.NewSqlCnd().Desc("score").Limit(10))
+	users := cache.UserCache.GetScoreRank()
 	var results []*model.UserInfo
-	for _, userScore := range userScores {
-		results = append(results, render.BuildUserDefaultIfNull(userScore.UserId))
+	for _, user := range users {
+		results = append(results, render.BuildUser(&user))
 	}
 	return simple.JsonData(results)
 }

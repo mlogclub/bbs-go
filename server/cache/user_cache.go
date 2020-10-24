@@ -11,8 +11,8 @@ import (
 )
 
 type userCache struct {
-	cache      cache.LoadingCache
-	scoreCache cache.LoadingCache
+	cache          cache.LoadingCache
+	scoreRankCache cache.LoadingCache
 }
 
 var UserCache = newUserCache()
@@ -27,19 +27,13 @@ func newUserCache() *userCache {
 			cache.WithMaximumSize(1000),
 			cache.WithExpireAfterAccess(30*time.Minute),
 		),
-		scoreCache: cache.NewLoadingCache(
-			func(key cache.Key) (value cache.Value, err error) {
-				userScore := repositories.UserScoreRepository.FindOne(simple.DB(),
-					simple.NewSqlCnd().Eq("user_id", key2Int64(key)))
-				if userScore == nil {
-					value = 0
-				} else {
-					value = userScore.Score
-				}
+		scoreRankCache: cache.NewLoadingCache(
+			func(key cache.Key) (value cache.Value, e error) {
+				value = repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Desc("score").Limit(10))
 				return
 			},
-			cache.WithMaximumSize(1000),
-			cache.WithExpireAfterAccess(30*time.Minute),
+			cache.WithMaximumSize(10),
+			cache.WithRefreshAfterWrite(10*time.Minute),
 		),
 	}
 }
@@ -59,14 +53,10 @@ func (c *userCache) Invalidate(userId int64) {
 	c.cache.Invalidate(userId)
 }
 
-func (c *userCache) GetScore(userId int64) int {
-	val, err := c.scoreCache.Get(userId)
+func (c *userCache) GetScoreRank() []model.User {
+	val, err := c.scoreRankCache.Get("data")
 	if err != nil {
-		return 0
+		return nil
 	}
-	return val.(int)
-}
-
-func (c *userCache) InvalidateScore(userId int64) {
-	c.scoreCache.Invalidate(userId)
+	return val.([]model.User)
 }

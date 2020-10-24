@@ -85,10 +85,6 @@
             <i class="iconfont icon-username"></i>
             <span>用户</span>
           </a>
-          <a class="navbar-item" href="/admin/users/score">
-            <i class="iconfont icon-score"></i>
-            <span>积分</span>
-          </a>
           <a class="navbar-item" href="/admin/links">
             <i class="iconfont icon-link"></i>
             <span>友链</span>

@@ -66,6 +66,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 		Roles:                roles,
 		HomePage:             user.HomePage,
 		Description:          user.Description,
+		Score:                user.Score,
 		TopicCount:           user.TopicCount,
 		CommentCount:         user.CommentCount,
 		PasswordSet:          len(user.Password) > 0,
@@ -83,9 +84,8 @@ func BuildUser(user *model.User) *model.UserInfo {
 		ret.Email = ""
 		ret.HomePage = ""
 		ret.Description = ""
+		ret.Score = 0
 		ret.Forbidden = true
-	} else {
-		ret.Score = cache.UserCache.GetScore(user.Id)
 	}
 	return ret
 }

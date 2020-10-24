@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"bbs-go/cache"
 	"bbs-go/model"
 
 	"github.com/kataras/iris/v12"
@@ -117,12 +116,11 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 }
 
 func (c *UserController) buildUserItem(user *model.User) map[string]interface{} {
-	score := cache.UserCache.GetScore(user.Id)
 	return simple.NewRspBuilder(user).
 		Put("roles", user.GetRoles()).
 		Put("username", user.Username.String).
 		Put("email", user.Email.String).
-		Put("score", score).
+		Put("score", user.Score).
 		Put("forbidden", user.IsForbidden()).
 		Build()
 }

@@ -103,9 +103,9 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 		TweetService.OnComment(form.EntityId)
 	}
 
-	UserService.IncrCommentCount(userId)                // 用户跟帖计数
-	UserScoreService.IncrementPostCommentScore(comment) // 获得积分
-	MessageService.SendCommentMsg(comment)              // 发送消息
+	UserService.IncrCommentCount(userId)         // 用户跟帖计数
+	UserService.IncrScoreForPostComment(comment) // 获得积分
+	MessageService.SendCommentMsg(comment)       // 发送消息
 
 	return comment, nil
 }
