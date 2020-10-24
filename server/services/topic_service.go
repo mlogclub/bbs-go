@@ -139,7 +139,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		// 用户话题计数
 		UserService.IncrTopicCount(userId)
 		// 获得积分
-		UserScoreService.IncrementPostTopicScore(topic)
+		UserService.IncrScoreForPostTopic(topic)
 		// 百度链接推送
 		baiduseo.PushUrl(urls.TopicUrl(topic.Id))
 	}

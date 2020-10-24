@@ -108,7 +108,7 @@ func (s *checkInService) CheckIn(userId int64) error {
 	if err == nil {
 		config := SysConfigService.GetConfig()
 		if config.ScoreConfig.CheckInScore > 0 {
-			_ = UserScoreService.Increment(userId, config.ScoreConfig.CheckInScore, constants.EntityCheckIn,
+			_ = UserService.IncrScore(userId, config.ScoreConfig.CheckInScore, constants.EntityCheckIn,
 				strconv.FormatInt(userId, 10), "签到"+strconv.Itoa(dayName))
 		} else {
 			logrus.Warn("签到积分未配置...")

@@ -7,7 +7,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScore{}, &UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{},
+	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{},
 }
 
 type Model struct {
@@ -25,6 +25,7 @@ type User struct {
 	Password         string         `gorm:"size:512" json:"password" form:"password"`                           // 密码
 	HomePage         string         `gorm:"size:1024" json:"homePage" form:"homePage"`                          // 个人主页
 	Description      string         `gorm:"type:text" json:"description" form:"description"`                    // 个人描述
+	Score            int            `gorm:"not null" json:"score" form:"score"`                                 // 积分
 	Status           int            `gorm:"index:idx_user_status;not null" json:"status" form:"status"`         // 状态
 	TopicCount       int            `gorm:"not null" json:"topicCount" form:"topicCount"`                       // 帖子数量
 	CommentCount     int            `gorm:"not null" json:"commentCount" form:"commentCount"`                   // 跟帖数量
@@ -219,15 +220,6 @@ type Link struct {
 	Logo       string `gorm:"type:text" json:"logo" form:"logo"`            // LOGO
 	Status     int    `gorm:"not null" json:"status" form:"status"`         // 状态
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
-}
-
-// 用户积分
-type UserScore struct {
-	Model
-	UserId     int64 `gorm:"unique;not null" json:"userId" form:"userId"` // 用户编号
-	Score      int   `gorm:"not null" json:"score" form:"score"`          // 积分
-	CreateTime int64 `json:"createTime" form:"createTime"`                // 创建时间
-	UpdateTime int64 `json:"updateTime" form:"updateTime"`                // 更新时间
 }
 
 // 用户积分流水
