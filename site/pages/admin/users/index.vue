@@ -87,6 +87,30 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
+          <el-dropdown size="mini" type="primary">
+            <el-button site="mini" type="primary">
+              更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click="handleEdit(scope.$index, scope.row)"
+                >编辑</el-dropdown-item
+              >
+              <el-dropdown-item
+                v-if="scope.row.forbidden"
+                @click="removeForbidden(scope.$index, scope.row)"
+                >取消禁言</el-dropdown-item
+              >
+              <el-dropdown-item
+                v-else
+                @click="showForbiddenDialog(scope.$index, scope.row)"
+                >禁言</el-dropdown-item
+              >
+              <el-dropdown-item @click="showLog(scope.$index, scope.row)"
+                >积分记录</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
+          <!--
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
           >
@@ -104,6 +128,13 @@
             @click="showForbiddenDialog(scope.$index, scope.row)"
             >禁言</el-button
           >
+          <el-button
+            type="success"
+            size="small"
+            @click="showLog(scope.$index, scope.row)"
+            >积分记录</el-button
+          >
+          -->
         </template>
       </el-table-column>
     </el-table>
@@ -261,12 +292,16 @@
         >
       </div>
     </el-dialog>
+
+    <score-log ref="scoreLog" />
   </section>
 </template>
 
 <script>
+import ScoreLog from './score-log'
 export default {
   layout: 'admin',
+  components: { ScoreLog },
   data() {
     return {
       results: [],
@@ -429,6 +464,9 @@ export default {
       } catch (e) {
         this.$message.success('取消禁言失败 ' + (e.message || e))
       }
+    },
+    showLog(index, row) {
+      this.$refs.scoreLog.showLog(row.id)
     },
   },
 }

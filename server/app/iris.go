@@ -87,7 +87,6 @@ func InitIris() {
 		m.Party("/topic-node").Handle(new(admin.TopicNodeController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		m.Party("/link").Handle(new(admin.LinkController))
-		m.Party("/user-score").Handle(new(admin.UserScoreController))
 		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 	})

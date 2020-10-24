@@ -24,6 +24,9 @@ import {
   Row,
   Col,
   Upload,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
   Loading,
   MessageBox,
   Message,
@@ -52,6 +55,9 @@ Vue.use(Alert)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Upload)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 
 Vue.use(Loading.directive)
 
