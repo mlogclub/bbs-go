@@ -42,13 +42,12 @@ func PushSmUrls(urls []string) {
 	if simple.IsBlank(conf.Site) || simple.IsBlank(conf.UserName) || simple.IsBlank(conf.Token) {
 		return
 	}
-	u := simple.ParseUrl("https://data.zhanzhang.sm.cn/push")
-	u.AddQuery("site", conf.Site)
-	u.AddQuery("user_name", conf.UserName)
-	u.AddQuery("resource_name", "mip_add")
-	u.AddQuery("token", conf.Token)
+
+	api := "https://data.zhanzhang.sm.cn/push?site=" + conf.Site + "&user_name=" + conf.UserName +
+		"&resource_name=mip_add&token=" + conf.Token
+
 	body := strings.Join(urls, "\n")
-	if response, err := resty.New().R().SetBody(body).Post(u.BuildStr()); err != nil {
+	if response, err := resty.New().R().SetBody(body).Post(api); err != nil {
 		logrus.Error(err)
 	} else {
 		logrus.Info("神马搜索链接推送完成：", string(response.Body()))
