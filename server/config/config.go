@@ -71,7 +71,7 @@ type Config struct {
 		Site     string `yaml:"Site"`
 		UserName string `yaml:"UserName"`
 		Token    string `yaml:"Token"`
-	}
+	} `yaml:"SmSEO"`
 
 	// smtp
 	Smtp struct {
