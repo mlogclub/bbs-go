@@ -65,6 +65,14 @@ type Config struct {
 		Token string `yaml:"Token"`
 	} `yaml:"BaiduSEO"`
 
+	// 神马搜索SEO相关
+	// 文档：https://zhanzhang.sm.cn/open/mip
+	SmSEO struct {
+		Site     string `yaml:"Site"`
+		UserName string `yaml:"UserName"`
+		Token    string `yaml:"Token"`
+	}
+
 	// smtp
 	Smtp struct {
 		Host     string `yaml:"Host"`

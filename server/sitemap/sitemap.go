@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"github.com/mlogclub/simple/date"
+	"strings"
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -141,7 +142,7 @@ func Generate() {
 		}
 	})
 
-	sm.Finalize()
+	sm.Finalize().PingSearchEngines()
 	// sm.Finalize().PingSearchEngines("http://www.google.cn/webmasters/tools/ping?sitemap=%s")
 }
 
@@ -156,17 +157,27 @@ func (adp *myAdapter) Bytes() [][]byte {
 
 // Write will create sitemap xml file into the file systems.
 func (adp *myAdapter) Write(loc *stm.Location, data []byte) {
-	var out []byte
-	if stm.GzipPtn.MatchString(loc.Filename()) {
+	if stm.GzipPtn.MatchString(loc.Filename()) { // gzip
+		var out []byte
 		var in bytes.Buffer
 		w := gzip.NewWriter(&in)
 		_, _ = w.Write(data)
 		_ = w.Close()
 		out = in.Bytes()
-	} else {
-		out = data
+
+		// 写入gzip格式数据
+		adp.ossWrite(loc.PathInPublic(), out)
+
+		// 写入原始数据
+		adp.ossWrite(strings.ReplaceAll(loc.PathInPublic(), ".gz", ""), data)
+	} else { // 非gzip
+		adp.ossWrite(loc.PathInPublic(), data)
 	}
-	if _url, err := uploader.PutObject(loc.PathInPublic(), out); err != nil {
+}
+
+// oss写入
+func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
+	if _url, err := uploader.PutObject(fileKey, out); err != nil {
 		logrus.Error("Upload sitemap error:", err)
 	} else {
 		logrus.Info("Upload sitemap:", _url)

@@ -14,7 +14,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/common"
-	"bbs-go/common/baiduseo"
+	"bbs-go/common/seo"
 	"bbs-go/common/urls"
 	"bbs-go/config"
 	"bbs-go/model"
@@ -141,7 +141,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		// 获得积分
 		UserService.IncrScoreForPostTopic(topic)
 		// 百度链接推送
-		baiduseo.PushUrl(urls.TopicUrl(topic.Id))
+		seo.Push(urls.TopicUrl(topic.Id))
 	}
 	return topic, simple.FromError(err)
 }

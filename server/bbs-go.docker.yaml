@@ -57,3 +57,10 @@ BaiduAi:
 BaiduSEO:
   Site:
   Token:
+
+# 神马搜索SEO相关
+# 文档：https://zhanzhang.sm.cn/open/mip
+SmSEO:
+  Site:
+  UserName:
+  Token:

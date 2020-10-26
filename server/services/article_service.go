@@ -12,7 +12,7 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 
 	"bbs-go/cache"
-	"bbs-go/common/baiduseo"
+	"bbs-go/common/seo"
 	"bbs-go/common/urls"
 	"bbs-go/config"
 	"bbs-go/repositories"
@@ -181,7 +181,7 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 	})
 
 	if err == nil {
-		baiduseo.PushUrl(urls.ArticleUrl(article.Id))
+		seo.Push(urls.ArticleUrl(article.Id))
 	}
 	return
 }
