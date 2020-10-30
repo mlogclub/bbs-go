@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -27,7 +28,7 @@ func init() {
 
 	// 初始化日志
 	if file, err := os.OpenFile(conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
-		logrus.SetOutput(file)
+		logrus.SetOutput(io.MultiWriter(os.Stdout, file))
 		if conf.ShowSql {
 			gormConf.Logger = logger.New(log.New(file, "\r\n", log.LstdFlags), logger.Config{
 				SlowThreshold: time.Second,
@@ -36,6 +37,7 @@ func init() {
 			})
 		}
 	} else {
+		logrus.SetOutput(os.Stdout)
 		logrus.Error(err)
 	}
 
