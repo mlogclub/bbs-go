@@ -51,6 +51,9 @@
                 <a @click="list">查看更多&gt;&gt;</a>
               </li>
             </ul>
+            <div v-else class="notification is-primary">
+              暂无收藏
+            </div>
           </div>
         </div>
       </div>
