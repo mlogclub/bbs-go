@@ -108,6 +108,7 @@ export default {
         delay: 200,
         theme: 'classic',
         preview: {
+          mode: 'editor',
           markdown: {
             toc: true,
             mark: true,
