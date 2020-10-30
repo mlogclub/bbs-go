@@ -18,9 +18,9 @@
         <li>![文字说明](图片链接)</li>
       </ol>
       <span>
-        <a href="https://mlog.club/article/5522" target="_blank"
-          >Markdown 文档</a
-        >
+        <a href="https://mlog.club/topic/1598" target="_blank">
+          <strong>Markdown语法说明(简体中文版)</strong>
+        </a>
       </span>
     </div>
   </div>
