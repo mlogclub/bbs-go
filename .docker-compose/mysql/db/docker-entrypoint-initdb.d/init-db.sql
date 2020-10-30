@@ -38,7 +38,7 @@ INSERT INTO t_user (`id`, `username`, `nickname`, `avatar`, `email`, `password`,
                     `roles`, `type`, `description`, `topic_count`, `comment_count`, `score`)
 SELECT 1,
        'admin',
-       'bbs-go-owner',
+       'bbsgo站长',
        '',
        'a@example.com',
        '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS',
