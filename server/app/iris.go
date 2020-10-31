@@ -68,6 +68,8 @@ func InitIris() {
 		m.Party("/upload").Handle(new(api.UploadController))
 		m.Party("/link").Handle(new(api.LinkController))
 		m.Party("/captcha").Handle(new(api.CaptchaController))
+		m.Party("/qq/login").Handle(new(api.QQLoginController))
+		m.Party("/github/login").Handle(new(api.GithubLoginController))
 		m.Party("/spider").Handle(new(api.SpiderController))
 	})
 

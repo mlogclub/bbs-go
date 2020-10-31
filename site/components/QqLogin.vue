@@ -30,7 +30,7 @@ export default {
           // 如果没配置refUrl，那么取当前地址
           this.refUrlValue = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/login/qq/authorize', {
+        const ret = await this.$axios.get('/api/qq/login/authorize', {
           params: {
             ref: this.refUrlValue,
           },

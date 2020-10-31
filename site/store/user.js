@@ -43,7 +43,7 @@ export const actions = {
 
   // github登录
   async signinByGithub(context, { code, state }) {
-    const ret = await this.$axios.get('/api/login/github/callback', {
+    const ret = await this.$axios.get('/api/github/login/callback', {
       params: {
         code,
         state,
@@ -55,7 +55,7 @@ export const actions = {
 
   // qq登录
   async signinByQQ(context, { code, state }) {
-    const ret = await this.$axios.get('/api/login/qq/callback', {
+    const ret = await this.$axios.get('/api/qq/login/callback', {
       params: {
         code,
         state,

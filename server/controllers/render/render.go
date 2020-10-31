@@ -628,3 +628,15 @@ func HandleOssImageStyle(url, style string) string {
 	}
 	return strings.Join([]string{url, style}, sep)
 }
+
+// user: login user, ref: 登录来源地址，需要控制登录成功之后跳转到该地址
+func GenerateLoginResult(user *model.User, ref string) *simple.JsonResult {
+	token, err := services.UserTokenService.Generate(user.Id)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.NewEmptyRspBuilder().
+		Put("token", token).
+		Put("user", BuildUser(user)).
+		Put("ref", ref).JsonResult()
+}
