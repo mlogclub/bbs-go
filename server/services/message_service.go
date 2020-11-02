@@ -86,7 +86,7 @@ func (s *messageService) GetUnReadCount(userId int64) (count int64) {
 
 // 将所有消息标记为已读
 func (s *messageService) MarkRead(userId int64) {
-	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", constants.MsgStatusReaded,
+	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", constants.MsgStatusHaveRead,
 		userId, constants.MsgStatusUnread)
 }
 
@@ -131,32 +131,52 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	}
 
 	if quote != nil { // 回复跟帖
-		if comment.UserId != authorId && quote.UserId != authorId { // 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
-			// 给帖子作者发消息
-			s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeComment, map[string]interface{}{
-				"entityType": comment.EntityType,
-				"entityId":   comment.EntityId,
-				"commentId":  comment.Id,
-				"quoteId":    comment.QuoteId,
-			})
+		if comment.UserId != authorId && quote.UserId != authorId {
+			// 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
+			s.Produce(
+				fromId,
+				authorId,
+				content,
+				quoteContent,
+				constants.MsgTypeComment,
+				map[string]interface{}{
+					"entityType": comment.EntityType,
+					"entityId":   comment.EntityId,
+					"commentId":  comment.Id,
+					"quoteId":    comment.QuoteId,
+				},
+			)
 		}
 
 		// 给被引用的人发消息
-		s.Produce(fromId, quote.UserId, user.Nickname+" 回复了你的评论："+summary,
-			common.GetMarkdownSummary(quote.Content), constants.MsgTypeComment, map[string]interface{}{
+		s.Produce(
+			fromId,
+			quote.UserId,
+			user.Nickname+" 回复了你的评论："+summary,
+			common.GetMarkdownSummary(quote.Content),
+			constants.MsgTypeComment,
+			map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
 				"quoteId":    comment.QuoteId,
-			})
-	} else if comment.UserId != authorId { // 回复主贴，并且不是自己回复自己
-		// 给帖子作者发消息
-		s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeComment, map[string]interface{}{
-			"entityType": comment.EntityType,
-			"entityId":   comment.EntityId,
-			"commentId":  comment.Id,
-			"quoteId":    comment.QuoteId,
-		})
+			},
+		)
+	} else if comment.UserId != authorId {
+		// 回复主贴，并且不是自己回复自己，给帖子作者发消息
+		s.Produce(
+			fromId,
+			authorId,
+			content,
+			quoteContent,
+			constants.MsgTypeComment,
+			map[string]interface{}{
+				"entityType": comment.EntityType,
+				"entityId":   comment.EntityId,
+				"commentId":  comment.Id,
+				"quoteId":    comment.QuoteId,
+			},
+		)
 	}
 }
 

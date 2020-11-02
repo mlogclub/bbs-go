@@ -104,6 +104,7 @@ type ProjectResponse struct {
 	Content string `json:"content"`
 }
 
+// 评论返回数据
 type CommentResponse struct {
 	CommentId    int64            `json:"commentId"`
 	User         *UserInfo        `json:"user"`
@@ -117,6 +118,7 @@ type CommentResponse struct {
 	CreateTime   int64            `json:"createTime"`
 }
 
+// 收藏返回数据
 type FavoriteResponse struct {
 	FavoriteId int64     `json:"favoriteId"`
 	EntityType string    `json:"entityType"`
@@ -143,6 +145,7 @@ type MessageResponse struct {
 	CreateTime   int64     `json:"createTime"`
 }
 
+// 图片
 type ImageInfo struct {
 	Url     string `json:"url"`
 	Preview string `json:"preview"`

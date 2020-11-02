@@ -490,37 +490,45 @@ func BuildMessage(message *model.Message) *model.MessageResponse {
 		return nil
 	}
 
-	detailUrl := ""
-	if message.Type == constants.MsgTypeComment {
-		entityType := gjson.Get(message.ExtraData, "entityType")
-		entityId := gjson.Get(message.ExtraData, "entityId")
-		if entityType.String() == constants.EntityArticle {
-			detailUrl = urls.ArticleUrl(entityId.Int())
-		} else if entityType.String() == constants.EntityTopic {
-			detailUrl = urls.TopicUrl(entityId.Int())
-		} else if entityType.String() == constants.EntityTweet {
-			detailUrl = urls.TweetUrl(entityId.Int())
-		}
-	}
-	from := BuildUserDefaultIfNull(message.FromId)
-	if message.FromId <= 0 {
-		from.Nickname = "系统通知"
-		from.Avatar = avatar.DefaultAvatar
-	}
-	return &model.MessageResponse{
+	resp := &model.MessageResponse{
 		MessageId:    message.Id,
-		From:         from,
 		UserId:       message.UserId,
 		Content:      message.Content,
 		QuoteContent: message.QuoteContent,
 		Type:         message.Type,
-		DetailUrl:    detailUrl,
 		ExtraData:    message.ExtraData,
 		Status:       message.Status,
 		CreateTime:   message.CreateTime,
 	}
+
+	// 消息发送人
+	resp.From = BuildUserDefaultIfNull(message.FromId)
+	if message.FromId <= 0 {
+		resp.From.Nickname = "系统通知"
+		resp.From.Avatar = avatar.DefaultAvatar
+	}
+
+	// 详情链接地址
+	if message.Type == constants.MsgTypeComment {
+		entityType := gjson.Get(message.ExtraData, "entityType")
+		entityId := gjson.Get(message.ExtraData, "entityId")
+		if entityType.String() == constants.EntityArticle {
+			resp.DetailUrl = urls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			resp.DetailUrl = urls.TopicUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTweet {
+			resp.DetailUrl = urls.TweetUrl(entityId.Int())
+		}
+	}
+
+	if message.Type == constants.MsgTypeComment {
+		// TODO 渲染消息对应的文章、话题，样式参见开源中国的动态消息
+	}
+
+	return resp
 }
 
+// 渲染消息列表
 func BuildMessages(messages []model.Message) []model.MessageResponse {
 	if len(messages) == 0 {
 		return nil

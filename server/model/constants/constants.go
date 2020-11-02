@@ -70,8 +70,8 @@ const (
 
 // 消息状态
 const (
-	MsgStatusUnread = 0 // 消息未读
-	MsgStatusReaded = 1 // 消息已读
+	MsgStatusUnread   = 0 // 消息未读
+	MsgStatusHaveRead = 1 // 消息已读
 )
 
 // 消息类型
