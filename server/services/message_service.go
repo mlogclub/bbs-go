@@ -92,7 +92,6 @@ func (s *messageService) MarkRead(userId int64) {
 
 // 评论被回复消息
 func (s *messageService) SendCommentMsg(comment *model.Comment) {
-	user := cache.UserCache.Get(comment.UserId)
 	quote := s.getQuoteComment(comment.QuoteId)
 	summary := common.GetSummary(comment.ContentType, comment.Content)
 
