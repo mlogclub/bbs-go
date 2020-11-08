@@ -177,6 +177,7 @@ type Message struct {
 	Model
 	FromId       int64  `gorm:"not null" json:"fromId" form:"fromId"`                            // 消息发送人
 	UserId       int64  `gorm:"not null;index:idx_message_user_id;" json:"userId" form:"userId"` // 用户编号(消息接收人)
+	Title        string `gorm:"size:1024" json:"title" form:"title"`                             // 消息标题
 	Content      string `gorm:"type:text;not null" json:"content" form:"content"`                // 消息内容
 	QuoteContent string `gorm:"type:text" json:"quoteContent" form:"quoteContent"`               // 引用内容
 	Type         int    `gorm:"not null" json:"type" form:"type"`                                // 消息类型

@@ -99,6 +99,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	var (
 		fromId       = comment.UserId // 消息发送人
 		authorId     int64            // 帖子作者编号
+		title        string           // 消息标题
 		content      string           // 消息内容
 		quoteContent string           // 引用内容
 	)
@@ -107,21 +108,24 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 		if article != nil {
 			authorId = article.UserId
-			content = user.Nickname + " 回复了你的文章：" + summary
+			title = "回复了你的文章"
+			content = summary
 			quoteContent = "《" + article.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 		if topic != nil {
 			authorId = topic.UserId
-			content = user.Nickname + " 回复了你的话题：" + summary
+			title = "回复了你的话题"
+			content = summary
 			quoteContent = "《" + topic.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
 		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
 		if tweet != nil {
 			authorId = tweet.UserId
-			content = user.Nickname + " 回复了你的话题：" + summary
+			title = "回复了你的动态"
+			content = summary
 			quoteContent = tweet.Content
 		}
 	}
@@ -136,6 +140,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 			s.Produce(
 				fromId,
 				authorId,
+				title,
 				content,
 				quoteContent,
 				constants.MsgTypeComment,
@@ -152,7 +157,8 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		s.Produce(
 			fromId,
 			quote.UserId,
-			user.Nickname+" 回复了你的评论："+summary,
+			"回复了你的评论",
+			summary,
 			common.GetMarkdownSummary(quote.Content),
 			constants.MsgTypeComment,
 			map[string]interface{}{
@@ -167,6 +173,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		s.Produce(
 			fromId,
 			authorId,
+			title,
 			content,
 			quoteContent,
 			constants.MsgTypeComment,
@@ -187,8 +194,8 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 	return repositories.CommentRepository.Get(simple.DB(), quoteId)
 }
 
-// 生产，将消息数据放入chan
-func (s *messageService) Produce(fromId, toId int64, content, quoteContent string, msgType int,
+// 生产，将消息数据放入channel
+func (s *messageService) Produce(fromId, toId int64, title, content, quoteContent string, msgType int,
 	extraDataMap map[string]interface{}) {
 	to := cache.UserCache.Get(toId)
 	if to == nil || to.Type != constants.UserTypeNormal {
@@ -207,6 +214,7 @@ func (s *messageService) Produce(fromId, toId int64, content, quoteContent strin
 	s.messagesChan <- &model.Message{
 		FromId:       fromId,
 		UserId:       toId,
+		Title:        title,
 		Content:      content,
 		QuoteContent: quoteContent,
 		Type:         msgType,
