@@ -2,6 +2,7 @@ package cache
 
 import (
 	"bbs-go/model/constants"
+	"errors"
 	"github.com/mlogclub/simple/date"
 	"time"
 
@@ -30,6 +31,9 @@ func newArticleCache() *articleCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.ArticleRepository.Find(simple.DB(),
 					simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(50))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(1),

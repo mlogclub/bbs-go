@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"errors"
 	"time"
 
 	"bbs-go/model"
@@ -22,6 +23,9 @@ func newUserCache() *userCache {
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.UserRepository.Get(simple.DB(), key2Int64(key))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(1000),
@@ -30,6 +34,9 @@ func newUserCache() *userCache {
 		scoreRankCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Desc("score").Limit(10))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(10),

@@ -2,6 +2,7 @@ package cache
 
 import (
 	"bbs-go/model/constants"
+	"errors"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -27,6 +28,9 @@ func newTopicCache() *topicCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TopicRepository.Find(simple.DB(),
 					simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(10),

@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"errors"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -21,6 +22,9 @@ func newSysConfigCache() *sysConfigCache {
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.SysConfigRepository.GetByKey(simple.DB(), key.(string))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(1000),

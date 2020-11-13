@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"errors"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -22,6 +23,9 @@ func newTagCache() *tagCache {
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TagRepository.Get(simple.DB(), key2Int64(key))
+				if value == nil {
+					e = errors.New("数据不存在")
+				}
 				return
 			},
 			cache.WithMaximumSize(1000),

@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"errors"
 	"time"
 
 	"github.com/goburrow/cache"
@@ -26,6 +27,8 @@ func newArticleTagCache() *articleTagCache {
 						tagIds = append(tagIds, articleTag.TagId)
 					}
 					value = tagIds
+				} else {
+					e = errors.New("文章没标签")
 				}
 				return
 			},
