@@ -248,8 +248,15 @@ export default {
       return this.$store.state.user.current
     },
   },
-  mounted() {},
+  mounted() {
+    this.initHighlight()
+  },
   methods: {
+    initHighlight() {
+      if (process.client) {
+        window.hljs.initHighlighting()
+      }
+    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -315,6 +322,18 @@ export default {
   head() {
     return {
       title: this.$siteTitle(this.topic.title),
+      link: [
+        {
+          rel: 'stylesheet',
+          href:
+            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
+        },
+      ],
+      script: [
+        {
+          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
+        },
+      ],
     }
   },
 }

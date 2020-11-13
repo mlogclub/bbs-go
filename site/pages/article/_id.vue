@@ -253,7 +253,15 @@ export default {
       return this.$store.state.user.current
     },
   },
+  mounted() {
+    this.initHighlight()
+  },
   methods: {
+    initHighlight() {
+      if (process.client) {
+        window.hljs.initHighlighting()
+      }
+    },
     async deleteArticle(articleId) {
       if (process.client && !window.confirm('是否确认删除该文章？')) {
         return
@@ -298,6 +306,18 @@ export default {
       meta: [
         { hid: 'description', name: 'description', content: this.description },
         { hid: 'keywords', name: 'keywords', content: this.keywords },
+      ],
+      link: [
+        {
+          rel: 'stylesheet',
+          href:
+            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
+        },
+      ],
+      script: [
+        {
+          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
+        },
       ],
     }
   },
