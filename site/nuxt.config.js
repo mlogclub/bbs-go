@@ -7,12 +7,14 @@ export default {
     },
   },
   mode: 'universal',
+  modern: true,
   /*
    ** Headers of the page
    */
   head: {
     htmlAttrs: {
       lang: 'zh-cmn-Hans',
+      xmlns: 'http://www.w3.org/1999/xhtml',
     },
     title: '',
     meta: [
@@ -29,19 +31,19 @@ export default {
       {
         rel: 'alternate',
         type: 'application/atom+xml',
-        title: '最新文章',
+        title: '文章',
         href: '/atom.xml',
       },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
-        title: '最新话题',
+        title: '话题',
         href: '/topic_atom.xml',
       },
       {
         rel: 'alternate',
         type: 'application/atom+xml',
-        title: '最新开源项目',
+        title: '开源项目',
         href: '/project_atom.xml',
       },
       {
