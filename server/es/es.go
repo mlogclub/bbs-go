@@ -33,7 +33,7 @@ func GetClient() *elasticsearch.Client {
 	return es
 }
 
-func IndexTopic(topic *model.Topic) {
+func AddIndex(topic *model.Topic) {
 	GetClient()
 	doc := NewTopicDoc(topic)
 	if doc == nil {

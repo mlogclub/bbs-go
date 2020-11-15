@@ -5,12 +5,13 @@
       "number_of_replicas": "0"
     }
   },
-  "aliases": {
-    "bbsgo_topic": {}
-  },
   "mappings": {
     "properties": {
       "id": {
+        "type": "string",
+        "store": true
+      },
+      "originId": {
         "type": "long",
         "store": true
       },

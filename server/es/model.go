@@ -4,10 +4,12 @@ import (
 	"bbs-go/model"
 	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
+	"strconv"
 )
 
-type TopicDoc struct {
-	Id              int64  `json:"id"`
+type Document struct {
+	Id              string `json:"id"`
+	OriginId        int64  `json:"originId"`
 	NodeId          int64  `json:"nodeId"`
 	UserId          int64  `json:"userId"`
 	Title           string `json:"title"`
@@ -20,7 +22,7 @@ type TopicDoc struct {
 	CreateTime      int64  `json:"createTime"`
 }
 
-func (t *TopicDoc) ToStr() string {
+func (t *Document) ToStr() string {
 	str, err := json.ToStr(t)
 	if err != nil {
 		logrus.Error(err)
@@ -28,12 +30,13 @@ func (t *TopicDoc) ToStr() string {
 	return str
 }
 
-func NewTopicDoc(topic *model.Topic) *TopicDoc {
+func NewTopicDoc(topic *model.Topic) *Document {
 	if topic == nil {
 		return nil
 	}
-	return &TopicDoc{
-		Id:              topic.Id,
+	return &Document{
+		Id:              "topic-" + strconv.FormatInt(topic.Id, 10),
+		OriginId:        topic.Id,
 		NodeId:          topic.NodeId,
 		UserId:          topic.UserId,
 		Title:           topic.Title,
@@ -44,5 +47,20 @@ func NewTopicDoc(topic *model.Topic) *TopicDoc {
 		CommentCount:    topic.CommentCount,
 		LikeCount:       topic.LikeCount,
 		CreateTime:      topic.CreateTime,
+	}
+}
+
+func NewArticleDoc(article *model.Article) *Document {
+	if article == nil {
+		return nil
+	}
+	return &Document{
+		Id:         "article-" + strconv.FormatInt(article.Id, 10),
+		OriginId:   article.Id,
+		UserId:     article.UserId,
+		Title:      article.Title,
+		Content:    article.Content,
+		Status:     article.Status,
+		CreateTime: article.CreateTime,
 	}
 }
