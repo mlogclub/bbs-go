@@ -12,7 +12,7 @@ type TopicDoc struct {
 	UserId          int64  `json:"userId"`
 	Title           string `json:"title"`
 	Content         string `json:"content"`
-	Recommend       string `json:"recommend"`
+	Recommend       bool   `json:"recommend"`
 	LastCommentTime int64  `json:"lastCommentTime"`
 	Status          int    `json:"status"`
 	CommentCount    int64  `json:"commentCount"`
@@ -33,7 +33,16 @@ func NewTopicDoc(topic *model.Topic) *TopicDoc {
 		return nil
 	}
 	return &TopicDoc{
-		Id:    topic.Id,
-		Title: topic.Title,
+		Id:              topic.Id,
+		NodeId:          topic.NodeId,
+		UserId:          topic.UserId,
+		Title:           topic.Title,
+		Content:         topic.Content,
+		Recommend:       topic.Recommend,
+		LastCommentTime: topic.LastCommentTime,
+		Status:          topic.Status,
+		CommentCount:    topic.CommentCount,
+		LikeCount:       topic.LikeCount,
+		CreateTime:      topic.CreateTime,
 	}
 }

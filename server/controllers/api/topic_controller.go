@@ -24,7 +24,7 @@ type TopicController struct {
 
 func (c *TopicController) GetEs() *simple.JsonResult {
 	go func() {
-		services.TopicService.ScanDesc(func(topics []model.Topic) {
+		services.TopicService.Scan(func(topics []model.Topic) {
 			for _, topic := range topics {
 				es.IndexTopic(&topic)
 			}
