@@ -303,7 +303,7 @@ func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
-			Cols("id", "status", "create_time", "update_time").
+			Cols("id", "status", "create_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if list == nil || len(list) == 0 {
 			break

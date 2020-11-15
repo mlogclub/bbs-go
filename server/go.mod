@@ -11,6 +11,7 @@ require (
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/dlclark/regexp2 v1.4.0 // indirect
+	github.com/elastic/go-elasticsearch/v7 v7.10.0
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
 	github.com/goburrow/cache v0.1.2

@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/common"
+	"bbs-go/es"
 	"bbs-go/model/constants"
 	"math/rand"
 	"strings"
@@ -19,6 +20,17 @@ import (
 
 type TopicController struct {
 	Ctx iris.Context
+}
+
+func (c *TopicController) GetEs() *simple.JsonResult {
+	go func() {
+		services.TopicService.ScanDesc(func(topics []model.Topic) {
+			for _, topic := range topics {
+				es.IndexTopic(&topic)
+			}
+		})
+	}()
+	return simple.JsonSuccess()
 }
 
 // 节点
