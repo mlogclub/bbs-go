@@ -26,7 +26,7 @@ func (c *TopicController) GetEs() *simple.JsonResult {
 	go func() {
 		services.TopicService.Scan(func(topics []model.Topic) {
 			for _, topic := range topics {
-				es.AddIndex(&topic)
+				es.AddTopicIndex(&topic)
 			}
 		})
 	}()

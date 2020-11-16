@@ -36,7 +36,7 @@ func initClient() *elastic.Client {
 	return es
 }
 
-func AddIndex(topic *model.Topic) error {
+func AddTopicIndex(topic *model.Topic) error {
 	initClient()
 	doc := NewTopicDoc(topic)
 	if doc == nil {
