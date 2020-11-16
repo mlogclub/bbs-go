@@ -5,7 +5,9 @@ import (
 	"context"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
+	"log"
 	"strconv"
 	"strings"
 	"sync"
@@ -20,7 +22,7 @@ const (
 	TopicIndexName = "bbsgo_topic"
 )
 
-func GetClient() *elasticsearch.Client {
+func initClient() *elasticsearch.Client {
 	once.Do(func() {
 		var err error
 		es, err = elasticsearch.NewClient(elasticsearch.Config{
@@ -34,7 +36,7 @@ func GetClient() *elasticsearch.Client {
 }
 
 func AddIndex(topic *model.Topic) {
-	GetClient()
+	initClient()
 	doc := NewTopicDoc(topic)
 	if doc == nil {
 		return
@@ -58,4 +60,49 @@ func AddIndex(topic *model.Topic) {
 	} else {
 		logrus.Info(response.String())
 	}
+}
+
+func Search(keyword string) {
+	initClient()
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"match": map[string]interface{}{
+				"title": "test",
+			},
+		},
+	}
+	body, err := json.ToStr(query)
+	if err != nil {
+		logrus.Errorf("Error encoding query: %s", err)
+		return
+	}
+
+	response, err := es.Search(
+		es.Search.WithContext(context.Background()),
+		es.Search.WithIndex(TopicIndexName),
+		es.Search.WithBody(strings.NewReader(body)),
+	)
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+	defer func() {
+		_ = response.Body.Close()
+	}()
+
+	if response.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			log.Fatalf("Error parsing the response body: %s", err)
+		} else {
+			// Print the response status and error information.
+			log.Fatalf("[%s] %s: %s",
+				res.Status(),
+				e["error"].(map[string]interface{})["type"],
+				e["error"].(map[string]interface{})["reason"],
+			)
+		}
+	}
+
+	// TODO 搜索
 }
