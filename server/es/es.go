@@ -3,18 +3,14 @@ package es
 import (
 	"bbs-go/model"
 	"context"
-	"github.com/elastic/go-elasticsearch/v7"
-	"github.com/elastic/go-elasticsearch/v7/esapi"
-	"github.com/mlogclub/simple/json"
+	"errors"
+	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
-	"log"
-	"strconv"
-	"strings"
 	"sync"
 )
 
 var (
-	es   *elasticsearch.Client
+	es   *elastic.Client
 	once sync.Once
 )
 
@@ -22,12 +18,14 @@ const (
 	TopicIndexName = "bbsgo_topic"
 )
 
-func initClient() *elasticsearch.Client {
+func initClient() *elastic.Client {
 	once.Do(func() {
 		var err error
-		es, err = elasticsearch.NewClient(elasticsearch.Config{
-			Addresses: []string{"http://127.0.0.1:9200"},
-		})
+		es, err = elastic.NewClient(
+			elastic.SetURL("http://127.0.0.1:9200"),
+			elastic.SetHealthcheck(false),
+			elastic.SetSniff(false),
+		)
 		if err != nil {
 			logrus.Error(err)
 		}
@@ -35,74 +33,21 @@ func initClient() *elasticsearch.Client {
 	return es
 }
 
-func AddIndex(topic *model.Topic) {
+func AddIndex(topic *model.Topic) error {
 	initClient()
 	doc := NewTopicDoc(topic)
 	if doc == nil {
-		return
+		return errors.New("Topic doc is null. ")
 	}
 	logrus.Infof("Es add index topic, id = %d", topic.Id)
-	request := esapi.IndexRequest{
-		Index:      TopicIndexName,
-		DocumentID: strconv.FormatInt(topic.Id, 10),
-		Body:       strings.NewReader(doc.ToStr()),
-	}
-	response, err := request.Do(context.Background(), es)
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-	defer func() {
-		_ = response.Body.Close()
-	}()
-	if response.IsError() {
-		logrus.Printf("[%s] Error indexing document ID=%d", response.Status(), topic.Id)
+	if response, err := es.Index().
+		Index(TopicIndexName).
+		BodyJson(doc).
+		Id(doc.Id).
+		Do(context.Background()); err == nil {
+		logrus.Error(response.Result)
+		return nil
 	} else {
-		logrus.Info(response.String())
+		return err
 	}
-}
-
-func Search(keyword string) {
-	initClient()
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"match": map[string]interface{}{
-				"title": "test",
-			},
-		},
-	}
-	body, err := json.ToStr(query)
-	if err != nil {
-		logrus.Errorf("Error encoding query: %s", err)
-		return
-	}
-
-	response, err := es.Search(
-		es.Search.WithContext(context.Background()),
-		es.Search.WithIndex(TopicIndexName),
-		es.Search.WithBody(strings.NewReader(body)),
-	)
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-	defer func() {
-		_ = response.Body.Close()
-	}()
-
-	if response.IsError() {
-		var e map[string]interface{}
-		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-			log.Fatalf("Error parsing the response body: %s", err)
-		} else {
-			// Print the response status and error information.
-			log.Fatalf("[%s] %s: %s",
-				res.Status(),
-				e["error"].(map[string]interface{})["type"],
-				e["error"].(map[string]interface{})["reason"],
-			)
-		}
-	}
-
-	// TODO 搜索
 }
