@@ -4,6 +4,9 @@ import (
 	"bbs-go/model"
 	"context"
 	"errors"
+	"fmt"
+	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 	"sync"
@@ -49,5 +52,42 @@ func AddIndex(topic *model.Topic) error {
 		return nil
 	} else {
 		return err
+	}
+}
+
+func Search(keyword string, page, limit int) *simple.PageResult {
+	initClient()
+
+	query := elastic.NewMultiMatchQuery(keyword, "title", "content")
+	paging := &simple.Paging{Page: page, Limit: limit}
+	searchResult, err := es.Search().
+		Index(TopicIndexName).
+		Query(query).
+		From(paging.Offset()).Size(paging.Limit).
+		Do(context.Background())
+	if err != nil {
+		logrus.Error(err)
+		return nil
+	}
+	fmt.Printf("Query took %d milliseconds\n", searchResult.TookInMillis)
+
+	var (
+		docs      []Document
+		totalHits int64
+	)
+	if totalHits = searchResult.TotalHits(); totalHits > 0 {
+		paging.Total = totalHits
+		for _, hit := range searchResult.Hits.Hits {
+			var doc Document
+			err := json.Parse(string(hit.Source), &doc)
+			if err != nil {
+				docs = append(docs, doc)
+			}
+		}
+	}
+
+	return &simple.PageResult{
+		Page:    paging,
+		Results: docs,
 	}
 }
