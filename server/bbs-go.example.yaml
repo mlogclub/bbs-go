@@ -41,7 +41,7 @@ Uploader:
 
 # 邮件服务器配置，用于邮件通知
 Smtp:
-  Addr: smtp.qq.com
+  Host: smtp.qq.com
   Port: 25
   Username: 请配置成你自己的
   Password: 请配置成你自己的
