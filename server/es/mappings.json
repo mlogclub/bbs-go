@@ -8,7 +8,7 @@
   "mappings": {
     "properties": {
       "id": {
-        "type": "string",
+        "type": "keyword",
         "store": true
       },
       "originId": {
