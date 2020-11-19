@@ -86,13 +86,15 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 		Must(elastic.NewTermQuery("status", constants.StatusOk)).
 		Must(elastic.NewMultiMatchQuery(keyword, "title", "content"))
 
-	// q, _ := query.Source()
-	// logrus.Info(json.ToStr(q))
+	highlight := elastic.NewHighlight().
+		PreTags("<span class='search-highlight'>").PostTags("</span>").
+		Fields(elastic.NewHighlighterField("title"), elastic.NewHighlighterField("content"))
 
 	searchResult, err := es.Search().
 		Index(index).
 		Query(query).
 		From(paging.Offset()).Size(paging.Limit).
+		Highlight(highlight).
 		Do(context.Background())
 	if err != nil {
 		return
@@ -104,6 +106,12 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 		for _, hit := range searchResult.Hits.Hits {
 			var doc TopicDocument
 			if err := json.Parse(string(hit.Source), &doc); err == nil {
+				if len(hit.Highlight["title"]) > 0 && simple.IsNotBlank(hit.Highlight["title"][0]) {
+					doc.Title = hit.Highlight["title"][0]
+				}
+				if len(hit.Highlight["content"]) > 0 && simple.IsNotBlank(hit.Highlight["content"][0]) {
+					doc.Content = hit.Highlight["content"][0]
+				}
 				docs = append(docs, doc)
 			} else {
 				logrus.Error(err)
