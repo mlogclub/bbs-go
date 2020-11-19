@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/es"
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/date"
 	"math"
@@ -57,10 +58,6 @@ func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
 }
 
-func (s *topicService) Create(t *model.Topic) error {
-	return repositories.TopicRepository.Create(simple.DB(), t)
-}
-
 func (s *topicService) Update(t *model.Topic) error {
 	return repositories.TopicRepository.Update(simple.DB(), t)
 }
@@ -77,6 +74,8 @@ func (s *topicService) UpdateColumn(id int64, name string, value interface{}) er
 func (s *topicService) Delete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
+		// 添加索引
+		es.UpdateTopicIndex(s.Get(id))
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(id)
 	}
@@ -136,6 +135,8 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 		return nil
 	})
 	if err == nil {
+		// 添加索引
+		es.UpdateTopicIndex(topic)
 		// 用户话题计数
 		UserService.IncrTopicCount(userId)
 		// 获得积分

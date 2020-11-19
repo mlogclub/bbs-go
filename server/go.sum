@@ -271,6 +271,10 @@ github.com/mlogclub/simple v1.1.2 h1:aDZlAxwnBmItlDN3iy9GCg1vLvxu/pdKU9lGNG+wAm0
 github.com/mlogclub/simple v1.1.2/go.mod h1:4/afM6sLzX8Heuv7vkT8ZW/WNAcOAfBaEGOfaJ6ZN9U=
 github.com/mlogclub/simple v1.1.3 h1:ZXnMp8Mr6wVkaToLhpWK2rtyBDwaI6A7KGHDoJ80gBI=
 github.com/mlogclub/simple v1.1.3/go.mod h1:zqpJ4dxn5YvfS/tjEX2XJf+sTaJi4EDXKeb7K5TRtNI=
+github.com/mlogclub/simple v1.1.4 h1:Kj+3zGXjdcGIeUxeaWHIcqggyf69Hv+REpLEQFYH2Ro=
+github.com/mlogclub/simple v1.1.4/go.mod h1:4/afM6sLzX8Heuv7vkT8ZW/WNAcOAfBaEGOfaJ6ZN9U=
+github.com/mlogclub/simple v1.1.6 h1:JvFVFBa5SGtNGcYLd6WrCNxIGiFAOmnYQp4P2xtYITI=
+github.com/mlogclub/simple v1.1.6/go.mod h1:zqpJ4dxn5YvfS/tjEX2XJf+sTaJi4EDXKeb7K5TRtNI=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

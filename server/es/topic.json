@@ -8,10 +8,6 @@
   "mappings": {
     "properties": {
       "id": {
-        "type": "keyword",
-        "store": true
-      },
-      "originId": {
         "type": "long",
         "store": true
       },

@@ -9,7 +9,6 @@ import (
 	"github.com/mlogclub/simple"
 
 	"bbs-go/controllers/render"
-	"bbs-go/model"
 	"bbs-go/services"
 )
 
@@ -78,20 +77,6 @@ func (c *TopicController) DeleteRecommend() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonSuccess()
-}
-
-func (c *TopicController) PostCreate() *simple.JsonResult {
-	t := &model.Topic{}
-	err := simple.ReadForm(c.Ctx, t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	err = services.TopicService.Create(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
 }
 
 func (c *TopicController) PostUpdate() *simple.JsonResult {

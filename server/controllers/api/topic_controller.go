@@ -26,7 +26,7 @@ func (c *TopicController) GetEs() *simple.JsonResult {
 	go func() {
 		services.TopicService.Scan(func(topics []model.Topic) {
 			for _, topic := range topics {
-				es.AddTopicIndex(&topic)
+				es.UpdateTopicIndex(&topic)
 			}
 		})
 	}()
@@ -316,4 +316,19 @@ func (c *TopicController) GetRecommend() *simple.JsonResult {
 func (c *TopicController) GetNewest() *simple.JsonResult {
 	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
 	return simple.JsonData(render.BuildSimpleTopics(topics))
+}
+
+// 搜索
+func (c *TopicController) GetSearch() *simple.JsonResult {
+	var (
+		page    = simple.FormValueIntDefault(c.Ctx, "page", 1)
+		keyword = simple.FormValue(c.Ctx, "keyword")
+	)
+
+	docs, paging, err := es.SearchTopic(keyword, page, 20)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	return simple.JsonPageData(docs, paging)
 }
