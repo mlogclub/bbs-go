@@ -11,8 +11,7 @@ import (
 )
 
 type TopicDocument struct {
-	Id              string `json:"id"`
-	OriginId        int64  `json:"originId"`
+	Id              int64  `json:"id"`
 	NodeId          int64  `json:"nodeId"`
 	UserId          int64  `json:"userId"`
 	Title           string `json:"title"`
@@ -38,8 +37,7 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 		return nil
 	}
 	return &TopicDocument{
-		Id:              "topic-" + strconv.FormatInt(topic.Id, 10),
-		OriginId:        topic.Id,
+		Id:              topic.Id,
 		NodeId:          topic.NodeId,
 		UserId:          topic.UserId,
 		Title:           topic.Title,
@@ -67,7 +65,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 	if response, err := es.Index().
 		Index(index).
 		BodyJson(doc).
-		Id(doc.Id).
+		Id(strconv.FormatInt(doc.Id, 10)).
 		Do(context.Background()); err == nil {
 		logrus.Info(response.Result)
 	} else {

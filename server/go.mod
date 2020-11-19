@@ -22,7 +22,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha
 	github.com/mlogclub/simple v1.1.6
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
-	github.com/olivere/elastic/v7 v7.0.22 // indirect
+	github.com/olivere/elastic/v7 v7.0.22
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
