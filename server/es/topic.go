@@ -2,6 +2,7 @@ package es
 
 import (
 	"bbs-go/model"
+	"bbs-go/model/constants"
 	"context"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/json"
@@ -81,7 +82,13 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 
 	paging = &simple.Paging{Page: page, Limit: limit}
 
-	query := elastic.NewMultiMatchQuery(keyword, "title", "content")
+	query := elastic.NewBoolQuery().
+		Must(elastic.NewTermQuery("status", constants.StatusOk)).
+		Must(elastic.NewMultiMatchQuery(keyword, "title", "content"))
+
+	// q, _ := query.Source()
+	// logrus.Info(json.ToStr(q))
+
 	searchResult, err := es.Search().
 		Index(index).
 		Query(query).
@@ -96,8 +103,10 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 		paging.Total = totalHits
 		for _, hit := range searchResult.Hits.Hits {
 			var doc TopicDocument
-			if json.Parse(string(hit.Source), &doc) != nil {
+			if err := json.Parse(string(hit.Source), &doc); err == nil {
 				docs = append(docs, doc)
+			} else {
+				logrus.Error(err)
 			}
 		}
 	}
