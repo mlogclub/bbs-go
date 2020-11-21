@@ -33,15 +33,9 @@
         </div>
 
         <div class="navbar-end">
-          <!--
           <div class="navbar-item searchFormDiv">
-            <form
-              id="searchForm"
-              action="https://www.google.com/search"
-              target="_blank"
-            >
+            <form id="searchForm" action="/search">
               <div class="control has-icons-right">
-                <input name="q" type="hidden" value="site:mlog.club" />
                 <input
                   name="q"
                   class="input"
@@ -55,7 +49,6 @@
               </div>
             </form>
           </div>
-          -->
 
           <div class="navbar-item dropdown is-hoverable is-right">
             <a href="/topic/create" title="发表话题" class="publish">

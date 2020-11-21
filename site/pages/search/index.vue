@@ -13,7 +13,7 @@
                     class="input"
                     type="text"
                     maxlength="30"
-                    placeholder="搜索"
+                    placeholder="请输入搜索关键字"
                   />
                 </div>
                 <div class="control">
