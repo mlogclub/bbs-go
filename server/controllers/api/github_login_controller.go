@@ -33,6 +33,6 @@ func (c *GithubLoginController) GetCallback() *simple.JsonResult {
 	if codeErr != nil {
 		return simple.JsonError(codeErr)
 	} else {
-		return render.GenerateLoginResult(user, "")
+		return render.BuildLoginSuccess(user, "")
 	}
 }

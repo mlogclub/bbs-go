@@ -33,7 +33,7 @@ func (c *LoginController) PostSignup() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return render.GenerateLoginResult(user, ref)
+	return render.BuildLoginSuccess(user, ref)
 }
 
 // 用户名密码登录
@@ -52,7 +52,7 @@ func (c *LoginController) PostSignin() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return render.GenerateLoginResult(user, ref)
+	return render.BuildLoginSuccess(user, ref)
 }
 
 // 退出登录

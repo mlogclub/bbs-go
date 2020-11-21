@@ -55,7 +55,7 @@ export default {
       const keyword = query.q || ''
       const page = query.p || 1
       const [docsPage] = await Promise.all([
-        $axios.get('/api/topic/search', {
+        $axios.get('/api/search/topic', {
           params: {
             keyword,
             page,
