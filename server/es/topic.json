@@ -38,6 +38,10 @@
       "status": {
         "type": "integer"
       },
+      "viewCount": {
+        "type": "long",
+        "store": true
+      },
       "commentCount": {
         "type": "long",
         "store": true

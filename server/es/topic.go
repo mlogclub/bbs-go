@@ -20,6 +20,7 @@ type TopicDocument struct {
 	Recommend       bool   `json:"recommend"`
 	LastCommentTime int64  `json:"lastCommentTime"`
 	Status          int    `json:"status"`
+	ViewCount       int64  `json:"viewCount"`
 	CommentCount    int64  `json:"commentCount"`
 	LikeCount       int64  `json:"likeCount"`
 	CreateTime      int64  `json:"createTime"`
@@ -46,6 +47,7 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 		Recommend:       topic.Recommend,
 		LastCommentTime: topic.LastCommentTime,
 		Status:          topic.Status,
+		ViewCount:       topic.ViewCount,
 		CommentCount:    topic.CommentCount,
 		LikeCount:       topic.LikeCount,
 		CreateTime:      topic.CreateTime,
@@ -111,6 +113,9 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 				}
 				if len(hit.Highlight["content"]) > 0 && simple.IsNotBlank(hit.Highlight["content"][0]) {
 					doc.Content = hit.Highlight["content"][0]
+				} else {
+					// 如果内容没有高亮的，那么就不显示内容
+					doc.Content = ""
 				}
 				docs = append(docs, doc)
 			} else {

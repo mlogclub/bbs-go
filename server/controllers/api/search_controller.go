@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/controllers/render"
 	"bbs-go/es"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -21,5 +22,6 @@ func (c *SearchController) GetTopic() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	return simple.JsonPageData(docs, paging)
+	items := render.BuildSearchTopics(docs)
+	return simple.JsonPageData(items, paging)
 }
