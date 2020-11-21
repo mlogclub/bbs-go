@@ -84,7 +84,6 @@ export default {
           },
         }),
       ])
-      console.log(docsPage)
       return { keyword, docsPage }
     } catch (e) {
       console.error(e)
