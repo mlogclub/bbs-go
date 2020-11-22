@@ -45,7 +45,7 @@
           </div>
         </div>
         <div v-else-if="keyword" class="notification is-primary">
-          没搜索到内容，请换一个收藏
+          没搜索到内容，请换一个搜索关键字
         </div>
 
         <pagination
