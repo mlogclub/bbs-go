@@ -56,7 +56,7 @@
             </a>
           </div>
 
-          <msg-notice />
+          <msg-notice v-if="user" />
 
           <div v-if="user" class="navbar-item has-dropdown is-hoverable">
             <a :href="'/user/' + user.id" class="navbar-link">
