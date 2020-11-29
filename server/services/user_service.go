@@ -359,10 +359,21 @@ func (s *userService) SetEmail(userId int64, email string) error {
 	if err := validate.IsEmail(email); err != nil {
 		return err
 	}
+	user := s.Get(userId)
+	if user == nil {
+		return errors.New("用户不存在")
+	}
+	if user.Email.String == email {
+		// 用户邮箱没做变更
+		return nil
+	}
 	if s.isEmailExists(email) {
 		return errors.New("邮箱：" + email + " 已被占用")
 	}
-	return s.UpdateColumn(userId, "email", email)
+	return s.Updates(userId, map[string]interface{}{
+		"email":          email,
+		"email_verified": false,
+	})
 }
 
 // SetPassword 设置密码
@@ -491,6 +502,10 @@ func (s *userService) VerifyEmail(userId int64, token string) error {
 		return errors.New("非法验证码")
 	}
 
+	user := s.Get(userId)
+	if user == nil || emailCode.Email != user.Email.String {
+		return errors.New("验证码过期")
+	}
 	if date.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
 		return errors.New("验证邮件已过期")
 	}

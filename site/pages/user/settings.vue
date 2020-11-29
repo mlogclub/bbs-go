@@ -43,14 +43,13 @@
                   <div class="control has-icons-left">
                     <template v-if="user.email">
                       <label>{{ user.email }}</label>
-                      <span v-if="user.emailVerified" class="has-text-success"
-                        >已验证</span
-                      >
+                      <a @click="showSetEmail = true">修改</a>
                       <a
-                        v-else
+                        v-if="!user.emailVerified"
                         class="has-text-danger"
+                        style="font-weight: 700;"
                         @click="requestEmailVerify"
-                        >点击验证&gt;&gt;</a
+                        >验证&gt;&gt;</a
                       >
                     </template>
                     <template v-else>
