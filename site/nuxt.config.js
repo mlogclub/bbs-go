@@ -52,7 +52,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_bu6x3hdokz.css',
+        href: '//at.alicdn.com/t/font_1142441_u0n37mpf978.css',
       },
     ],
   },

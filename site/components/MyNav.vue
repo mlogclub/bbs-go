@@ -51,9 +51,16 @@
           </div>
 
           <div class="navbar-item dropdown is-hoverable is-right">
-            <a href="/topic/create" title="发表话题" class="publish">
-              <i class="iconfont icon-publish"></i>
-            </a>
+            <nuxt-link
+              class="button is-success publish"
+              to="/topic/create"
+              title="发表话题"
+            >
+              <span class="icon">
+                <i class="iconfont icon-write"></i>
+              </span>
+              <span>发帖</span>
+            </nuxt-link>
           </div>
 
           <msg-notice v-if="user" />
@@ -85,7 +92,7 @@
           </div>
           <div v-else class="navbar-item">
             <div class="buttons">
-              <nuxt-link class="button is-success" to="/user/signin"
+              <nuxt-link class="button login-btn" to="/user/signin"
                 >登录
               </nuxt-link>
             </div>
@@ -147,9 +154,21 @@ export default {
   }
 
   .publish {
-    color: #448ef6;
+    color: #fff;
+    background-color: #3174dc;
+    width: 100px;
     &:hover {
-      color: #222;
+      color: #fff;
+      background-color: #4d91fa;
+    }
+  }
+
+  .login-btn {
+    //border-width: 2px;
+    border-color: #000;
+    &:hover {
+      color: #7e7e7e;
+      border-color: #7e7e7e;
     }
   }
 }
