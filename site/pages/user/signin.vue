@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="main-body">
-        <div class="widget">
+        <div class="widget signin">
           <div class="widget-header">
             登录
           </div>
@@ -199,3 +199,8 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+.signin {
+  //max-width: 580px;
+}
+</style>
