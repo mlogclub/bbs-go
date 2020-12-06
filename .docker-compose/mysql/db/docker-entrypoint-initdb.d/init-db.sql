@@ -68,7 +68,6 @@ CREATE TABLE `t_topic_node`
     UNIQUE KEY `name` (`name`),
     KEY `idx_sort_no` (`sort_no`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO `t_topic_node` (`id`, `name`, `description`, `sort_no`, `status`, `create_time`)
@@ -89,7 +88,6 @@ CREATE TABLE `t_sys_config`
     PRIMARY KEY (`id`),
     UNIQUE KEY `key` (`key`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 14
   DEFAULT CHARSET = utf8mb4;
 
 -- 初始化系统配置数据
