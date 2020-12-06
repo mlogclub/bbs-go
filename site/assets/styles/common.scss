@@ -31,6 +31,10 @@ body {
 .main-aside {
   background: #fff;
   padding: 10px;
+
+  &.no-bg {
+    background: none;
+  }
 }
 
 // main-container

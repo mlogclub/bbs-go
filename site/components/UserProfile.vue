@@ -159,7 +159,7 @@ export default {
   }
 
   &.background {
-    // background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
+    //background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
     background-size: cover;
     background-position: 50%;
 
