@@ -4,9 +4,9 @@ module.exports = {
     themeConfig: {
         search: true,
         nav: [
-            { text: 'Home', link: '/' },
-            { text: 'Guide', link: '/guide/' },
-            { text: '码农俱乐部', link: 'https://mlog.club' },
+            {text: 'Home', link: '/'},
+            {text: 'Guide', link: '/guide/'},
+            {text: '码农俱乐部', link: 'https://mlog.club'},
         ],
         repo: 'mlogclub/bbs-go',
         repoLabel: 'Github',
