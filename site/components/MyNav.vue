@@ -51,16 +51,16 @@
           </div>
 
           <div class="navbar-item dropdown is-hoverable is-right">
-            <nuxt-link
+            <a
+              href="/topic/create"
               class="button is-success publish"
-              to="/topic/create"
               title="发表话题"
             >
               <span class="icon">
                 <i class="iconfont icon-write"></i>
               </span>
               <span>发帖</span>
-            </nuxt-link>
+            </a>
           </div>
 
           <msg-notice v-if="user" />
