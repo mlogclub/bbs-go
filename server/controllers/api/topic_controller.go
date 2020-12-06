@@ -156,12 +156,9 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 
-	if err := services.TopicService.Delete(topicId); err != nil {
+	if err := services.TopicService.Delete(topicId, user.Id, c.Ctx.Request()); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeDelete, constants.EntityTopic, topicId,
-		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
 

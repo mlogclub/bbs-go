@@ -92,13 +92,20 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 		return errors.New("话题不存在")
 	}
 
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	if err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := s.like(tx, userId, constants.EntityTopic, topicId); err != nil {
 			return err
 		}
 		// 更新点赞数
 		return tx.Exec("update t_topic set like_count = like_count + 1 where id = ?", topicId).Error
-	})
+	}); err != nil {
+		return err
+	}
+
+	// 发送消息
+	MessageService.SendTopicLikeMsg(topicId, userId)
+
+	return nil
 }
 
 // 动态点赞

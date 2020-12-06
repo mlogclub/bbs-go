@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/date"
 	"math"
+	"net/http"
 	"path"
 	"time"
 
@@ -58,26 +59,29 @@ func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
 }
 
-func (s *topicService) Update(t *model.Topic) error {
-	return repositories.TopicRepository.Update(simple.DB(), t)
-}
-
-func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TopicRepository.Updates(simple.DB(), id, columns)
-}
-
 func (s *topicService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value)
+	if err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value); err != nil {
+		return err
+	}
+
+	// 添加索引
+	es.UpdateTopicIndex(s.Get(id))
+
+	return nil
 }
 
 // 删除
-func (s *topicService) Delete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
+func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) error {
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), topicId, "status", constants.StatusDeleted)
 	if err == nil {
 		// 添加索引
-		es.UpdateTopicIndex(s.Get(id))
+		es.UpdateTopicIndex(s.Get(topicId))
 		// 删掉标签文章
-		TopicTagService.DeleteByTopicId(id)
+		TopicTagService.DeleteByTopicId(topicId)
+		// 发送消息
+		MessageService.SendTopicDeleteMsg(topicId, deleteUserId)
+		// 操作日志
+		OperateLogService.AddOperateLog(deleteUserId, constants.OpTypeDelete, constants.EntityTopic, topicId, "", r)
 	}
 	return err
 }
@@ -88,6 +92,8 @@ func (s *topicService) Undelete(id int64) error {
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.UndeleteByTopicId(id)
+		// 添加索引
+		es.UpdateTopicIndex(s.Get(id))
 	}
 	return err
 }
@@ -182,7 +188,11 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 // 推荐
 func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
-	return s.UpdateColumn(topicId, "recommend", recommend)
+	if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
+		return err
+	}
+	MessageService.SendTopicRecommendMsg(topicId)
+	return nil
 }
 
 // 话题的标签
