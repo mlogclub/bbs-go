@@ -1,8 +1,8 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="main-body">
-        <div class="widget">
+      <div class="main-body no-bg">
+        <div class="widget signup">
           <div class="widget-header">
             注册
           </div>
@@ -103,10 +103,13 @@
                 </button>
                 <github-login :ref-url="ref" />
                 <qq-login :ref-url="ref" />
-                <nuxt-link class="button is-text" to="/user/signin">
-                  已有账号，前往登录&gt;&gt;
-                </nuxt-link>
               </div>
+            </div>
+
+            <div class="field">
+              <nuxt-link class="button is-text" to="/user/signin">
+                已有账号，前往登录&gt;&gt;
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -186,4 +189,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.signup {
+  max-width: 480px;
+  margin: auto;
+  padding: 0 20px;
+}
+</style>
