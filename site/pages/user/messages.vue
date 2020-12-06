@@ -50,16 +50,16 @@
                     <span class="msg-time">{{
                       message.createTime | prettyDate
                     }}</span>
-                    <span class="msg-title">
-                      回复了你的话题
+                    <span v-if="message.title" class="msg-title">
+                      {{ message.title }}
                     </span>
                   </div>
                   <div class="content">
-                    <div class="msg-attr message-content">
-                      {{ message.content }}
-                    </div>
                     <div class="msg-attr message-quote">
                       {{ message.quoteContent }}
+                    </div>
+                    <div class="msg-attr message-content">
+                      {{ message.content }}
                     </div>
                     <div
                       v-if="message.detailUrl"
@@ -186,6 +186,7 @@ export default {
           border-radius: 1px;
           background: #f2f2f2;
           border: 1px solid #eaeaea;
+          color: #292929;
 
           &:before {
             box-sizing: inherit;

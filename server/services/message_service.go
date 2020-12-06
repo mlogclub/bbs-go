@@ -101,10 +101,10 @@ func (s *messageService) SendTopicLikeMsg(topicId, likeUserId int64) {
 		return
 	}
 	var (
-		content      = "点赞了你的话题"
+		title        = "点赞了你的话题"
 		quoteContent = "《" + topic.Title + "》"
 	)
-	s.Produce(likeUserId, topic.UserId, content, quoteContent, constants.MsgTypeTopicLike, map[string]interface{}{
+	s.Produce(likeUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicLike, map[string]interface{}{
 		"topicId":    topicId,
 		"likeUserId": likeUserId,
 	})
@@ -120,10 +120,10 @@ func (s *messageService) SendTopicFavoriteMsg(topicId, favoriteUserId int64) {
 		return
 	}
 	var (
-		content      = "收藏了你的话题"
+		title        = "收藏了你的话题"
 		quoteContent = "《" + topic.Title + "》"
 	)
-	s.Produce(favoriteUserId, topic.UserId, content, quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
+	s.Produce(favoriteUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
 		"topicId":        topicId,
 		"favoriteUserId": favoriteUserId,
 	})
@@ -136,10 +136,10 @@ func (s *messageService) SendTopicRecommendMsg(topicId int64) {
 		return
 	}
 	var (
-		content      = "你的话题被设为推荐"
+		title        = "你的话题被设为推荐"
 		quoteContent = "《" + topic.Title + "》"
 	)
-	s.Produce(0, topic.UserId, content, quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
+	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
 		"topicId": topicId,
 	})
 }
@@ -154,10 +154,10 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 		return
 	}
 	var (
-		content      = "您的话题被删除"
+		title        = "您的话题被删除"
 		quoteContent = "《" + topic.Title + "》"
 	)
-	s.Produce(0, topic.UserId, content, quoteContent, constants.MsgTypeTopicDelete, map[string]interface{}{
+	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicDelete, map[string]interface{}{
 		"topicId":      topicId,
 		"deleteUserId": deleteUserId,
 	})
@@ -165,72 +165,74 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 
 // 评论被回复消息
 func (s *messageService) SendCommentMsg(comment *model.Comment) {
-	user := cache.UserCache.Get(comment.UserId)
-	quote := s.getQuoteComment(comment.QuoteId)
-	summary := common.GetSummary(comment.ContentType, comment.Content)
-
 	var (
-		fromId       = comment.UserId // 消息发送人
-		authorId     int64            // 帖子作者编号
-		content      string           // 消息内容
-		quoteContent string           // 引用内容
+		fromId       = comment.UserId                                          // 消息发送人
+		toId         int64                                                     // 消息接收人
+		title        string                                                    // 消息的标题
+		content      = common.GetSummary(comment.ContentType, comment.Content) // 消息内容
+		quoteContent string                                                    // 引用内容
 	)
 
 	if comment.EntityType == constants.EntityArticle { // 文章被评论
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 		if article != nil {
-			authorId = article.UserId
-			content = "回复了你的文章：" + summary
+			toId = article.UserId
+			title = "回复了你的文章"
 			quoteContent = "《" + article.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 		if topic != nil {
-			authorId = topic.UserId
-			content = "回复了你的话题：" + summary
+			toId = topic.UserId
+			title = "回复了你的话题"
 			quoteContent = "《" + topic.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
 		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
 		if tweet != nil {
-			authorId = tweet.UserId
-			content = "回复了你的话题：" + summary
+			toId = tweet.UserId
+			title = "回复了你的动态"
 			quoteContent = tweet.Content
 		}
 	}
 
-	if authorId <= 0 {
+	if toId <= 0 {
 		return
 	}
 
+	quote := s.getQuoteComment(comment.QuoteId)
 	if quote != nil { // 回复跟帖
 		// 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
-		if comment.UserId != authorId && quote.UserId != authorId {
+		if fromId != toId && quote.UserId != toId {
 			// 给帖子作者发消息（收到话题评论）
-			s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeTopicComment, map[string]interface{}{
-				"entityType": comment.EntityType,
-				"entityId":   comment.EntityId,
-				"commentId":  comment.Id,
-				"quoteId":    comment.QuoteId,
-			})
+			s.Produce(fromId, toId, title, content, quoteContent, constants.MsgTypeTopicComment,
+				map[string]interface{}{
+					"entityType": comment.EntityType,
+					"entityId":   comment.EntityId,
+					"commentId":  comment.Id,
+					"quoteId":    comment.QuoteId,
+				})
 		}
 
 		// 给被引用的人发消息（收到他人回复）
-		s.Produce(fromId, quote.UserId, user.Nickname+" 回复了你的评论："+summary,
-			common.GetMarkdownSummary(quote.Content), constants.MsgTypeCommentReply, map[string]interface{}{
+		if fromId != quote.UserId {
+			s.Produce(fromId, quote.UserId, "回复了你的评论", content, common.GetMarkdownSummary(quote.Content),
+				constants.MsgTypeCommentReply, map[string]interface{}{
+					"entityType": comment.EntityType,
+					"entityId":   comment.EntityId,
+					"commentId":  comment.Id,
+					"quoteId":    comment.QuoteId,
+				})
+		}
+	} else if fromId != toId { // 回复主贴，并且不是自己回复自己
+		// 给帖子作者发消息（收到话题评论）
+		s.Produce(fromId, toId, title, content, quoteContent, constants.MsgTypeTopicComment,
+			map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
 				"quoteId":    comment.QuoteId,
 			})
-	} else if comment.UserId != authorId { // 回复主贴，并且不是自己回复自己
-		// 给帖子作者发消息（收到话题评论）
-		s.Produce(fromId, authorId, content, quoteContent, constants.MsgTypeTopicComment, map[string]interface{}{
-			"entityType": comment.EntityType,
-			"entityId":   comment.EntityId,
-			"commentId":  comment.Id,
-			"quoteId":    comment.QuoteId,
-		})
 	}
 }
 
@@ -242,7 +244,7 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 }
 
 // 生产，将消息数据放入chan
-func (s *messageService) Produce(fromId, toId int64, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
+func (s *messageService) Produce(fromId, toId int64, title, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
 	s.Consume()
 
 	to := cache.UserCache.Get(toId)
@@ -260,6 +262,7 @@ func (s *messageService) Produce(fromId, toId int64, content, quoteContent strin
 	s.messagesChan <- &model.Message{
 		FromId:       fromId,
 		UserId:       toId,
+		Title:        title,
 		Content:      content,
 		QuoteContent: quoteContent,
 		Type:         msgType,

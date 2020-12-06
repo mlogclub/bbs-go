@@ -146,6 +146,7 @@ type MessageResponse struct {
 	MessageId    int64     `json:"messageId"`
 	From         *UserInfo `json:"from"`    // 消息发送人
 	UserId       int64     `json:"userId"`  // 消息接收人编号
+	Title        string    `json:"title"`   // 标题
 	Content      string    `json:"content"` // 消息内容
 	QuoteContent string    `json:"quoteContent"`
 	Type         int       `json:"type"`

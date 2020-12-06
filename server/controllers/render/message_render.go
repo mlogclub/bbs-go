@@ -21,6 +21,7 @@ func BuildMessage(msg *model.Message) *model.MessageResponse {
 		MessageId:    msg.Id,
 		From:         from,
 		UserId:       msg.UserId,
+		Title:        msg.Title,
 		Content:      msg.Content,
 		QuoteContent: msg.QuoteContent,
 		Type:         msg.Type,
