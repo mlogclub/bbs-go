@@ -20,7 +20,7 @@ func (c *QQLoginController) GetAuthorize() *simple.JsonResult {
 }
 
 // 获取QQ回调信息获取
-func (c *LoginController) GetCallback() *simple.JsonResult {
+func (c *QQLoginController) GetCallback() *simple.JsonResult {
 	code := c.Ctx.FormValue("code")
 	state := c.Ctx.FormValue("state")
 
