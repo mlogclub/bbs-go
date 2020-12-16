@@ -21,7 +21,7 @@ footer: Copyright © 2020
 
 ## 功能
 
-![bbs-go功能简介](https://i.loli.net/2020/07/10/RqVdG7FrajSp5vy.png)
+![bbs-go功能简介](https://file.mlog.club/mlog.club/naotu.png!detail)
 
 ## 源码
 
