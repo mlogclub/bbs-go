@@ -74,7 +74,7 @@ func GetUserInfoByCode(code, state string) (*UserInfo, error) {
 
 // 根据accessToken获取用户信息
 func GetUserInfo(accessToken string) (*UserInfo, error) {
-	response, err := resty.New().R().SetQueryParam("access_token", accessToken).Get("https://api.github.com/user")
+	response, err := resty.New().R().SetHeader("Authorization", "token "+accessToken).Get("https://api.github.com/user")
 	if err != nil {
 		logrus.Errorf("Get user info error %s", err)
 		return nil, err
