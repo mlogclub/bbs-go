@@ -23,6 +23,14 @@
                   <span>文章</span>
                 </a>
               </li>
+              <li :class="{ 'is-active': activeTab === 'tweets' }">
+                <a :href="'/user/' + user.id + '?tab=tweets'">
+                  <span class="icon is-small">
+                    <i class="iconfont icon-publish" aria-hidden="true" />
+                  </span>
+                  <span>动态</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -49,6 +57,18 @@
               暂无文章
             </div>
           </div>
+
+          <div v-if="activeTab === 'tweets'">
+            <div v-if="recentTweets && recentTweets.length">
+              <tweets-list :tweets="recentTweets" />
+              <div class="more">
+                <a :href="'/user/' + user.id + '/tweets'">查看更多&gt;&gt;</a>
+              </div>
+            </div>
+            <div v-else class="notification is-primary">
+              暂无动态
+            </div>
+          </div>
         </div>
       </div>
       <user-center-sidebar :user="user" />
@@ -59,6 +79,7 @@
 <script>
 import TopicList from '~/components/TopicList'
 import ArticleList from '~/components/ArticleList'
+import TweetsList from '~/components/TweetsList'
 import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 
@@ -68,6 +89,7 @@ export default {
   components: {
     TopicList,
     ArticleList,
+    TweetsList,
     UserProfile,
     UserCenterSidebar,
   },
@@ -86,6 +108,7 @@ export default {
     const activeTab = query.tab || defaultTab
     let recentTopics = null
     let recentArticles = null
+    let recentTweets = null
     if (activeTab === 'topics') {
       recentTopics = await $axios.get('/api/topic/user/recent', {
         params: { userId: params.userId },
@@ -94,12 +117,17 @@ export default {
       recentArticles = await $axios.get('/api/article/user/recent', {
         params: { userId: params.userId },
       })
+    } else if (activeTab === 'tweets') {
+      recentTweets = await $axios.get('/api/tweet/user/recent', {
+        params: { userId: params.userId },
+      })
     }
     return {
       activeTab,
       user,
       recentTopics,
       recentArticles,
+      recentTweets,
     }
   },
   data() {

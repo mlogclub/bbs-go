@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/model/constants"
 	"strconv"
 	"strings"
 
@@ -54,5 +55,16 @@ func (c *TweetController) PostLikeBy(tweetId int64) *simple.JsonResult {
 
 func (c *TweetController) GetNewest() *simple.JsonResult {
 	tweets := services.TweetService.GetNewest()
+	return simple.JsonData(render.BuildTweets(tweets))
+}
+
+// 用户最近的帖子
+func (c *TweetController) GetUserRecent() *simple.JsonResult {
+	userId, err := simple.FormValueInt64(c.Ctx, "userId")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	tweets := services.TweetService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
+		userId, constants.StatusOk).Desc("id").Limit(10))
 	return simple.JsonData(render.BuildTweets(tweets))
 }
