@@ -139,7 +139,7 @@ func (s *messageService) SendTopicRecommendMsg(topicId int64) {
 		title        = "你的话题被设为推荐"
 		quoteContent = "《" + topic.Title + "》"
 	)
-	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
+	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicRecommend, map[string]interface{}{
 		"topicId": topicId,
 	})
 }

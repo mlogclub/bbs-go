@@ -23,14 +23,9 @@ var emailTemplate = `
         </span>
     </h2>
     <div style="padding:0 12px 0 12px; margin-top:18px;">
-		{{if .From}}
-		<a style="text-decoration:none; color:#f5f5f5; font-weight: 700;" href="{{.From.Url}}" target="_blank" rel="noopener">{{.From.Title}}：</a>
-		{{end}}
-        {{if .Content}}
 		<p>
-            {{.Content}}
-        </p>
-		{{end}}
+		{{if .From}}<a href="{{.From.Url}}" target="_blank" rel="noopener">{{.From.Title}}</a>&nbsp;{{end}}{{if .Content}}{{.Content}}{{end}}
+		</p>
 		{{if .QuoteContent}}
 		<div style="background-color: #f5f5f5;padding: 10px 15px;margin:18px 0;word-wrap:break-word;">
             {{.QuoteContent}}
