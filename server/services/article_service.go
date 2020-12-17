@@ -345,3 +345,21 @@ func (s *articleService) GenerateRss() {
 func (s *articleService) IncrViewCount(articleId int64) {
 	simple.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
 }
+
+func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if userId > 0 {
+		cnd.Eq("user_id", userId)
+	}
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
+	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
+	if len(articles) > 0 {
+		nextCursor = articles[len(articles)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
+}

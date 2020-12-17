@@ -351,3 +351,21 @@ func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(to
 		callback(list)
 	}
 }
+
+func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if userId > 0 {
+		cnd.Eq("user_id", userId)
+	}
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
+	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
+	if len(topics) > 0 {
+		nextCursor = topics[len(topics)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
+}

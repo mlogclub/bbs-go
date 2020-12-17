@@ -35,11 +35,19 @@
           </div>
 
           <div v-if="activeTab === 'topics'">
-            <div v-if="recentTopics && recentTopics.length">
-              <topic-list :topics="recentTopics" :show-avatar="false" />
-              <div class="more">
-                <a :href="'/user/' + user.id + '/topics'">查看更多&gt;&gt;</a>
-              </div>
+            <div
+              v-if="
+                topicsPage && topicsPage.results && topicsPage.results.length
+              "
+            >
+              <load-more
+                v-if="topicsPage"
+                v-slot="{ results }"
+                :init-data="topicsPage"
+                :url="'/api/topic/user/topics?userId=' + user.id"
+              >
+                <topic-list :topics="results" :show-avatar="false" />
+              </load-more>
             </div>
             <div v-else class="notification is-primary">
               暂无话题
@@ -47,11 +55,21 @@
           </div>
 
           <div v-if="activeTab === 'articles'">
-            <div v-if="recentArticles && recentArticles.length">
-              <article-list :articles="recentArticles" />
-              <div class="more">
-                <a :href="'/user/' + user.id + '/articles'">查看更多&gt;&gt;</a>
-              </div>
+            <div
+              v-if="
+                articlesPage &&
+                articlesPage.results &&
+                articlesPage.results.length
+              "
+            >
+              <load-more
+                v-if="articlesPage"
+                v-slot="{ results }"
+                :init-data="articlesPage"
+                :url="'/api/article/user/articles?userId=' + user.id"
+              >
+                <article-list :articles="results" />
+              </load-more>
             </div>
             <div v-else class="notification is-primary">
               暂无文章
@@ -59,11 +77,19 @@
           </div>
 
           <div v-if="activeTab === 'tweets'">
-            <div v-if="recentTweets && recentTweets.length">
-              <tweets-list :tweets="recentTweets" :show-action="false" />
-              <div class="more">
-                <a :href="'/user/' + user.id + '/tweets'">查看更多&gt;&gt;</a>
-              </div>
+            <div
+              v-if="
+                tweetsPage && tweetsPage.results && tweetsPage.results.length
+              "
+            >
+              <load-more
+                v-if="tweetsPage"
+                v-slot="{ results }"
+                :init-data="tweetsPage"
+                :url="'/api/tweet/user/tweets?userId=' + user.id"
+              >
+                <tweets-list :tweets="results" :show-action="false" />
+              </load-more>
             </div>
             <div v-else class="notification is-primary">
               暂无动态
@@ -82,6 +108,7 @@ import ArticleList from '~/components/ArticleList'
 import TweetsList from '~/components/TweetsList'
 import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
+import LoadMore from '~/components/LoadMore'
 
 const defaultTab = 'topics'
 
@@ -92,6 +119,7 @@ export default {
     TweetsList,
     UserProfile,
     UserCenterSidebar,
+    LoadMore,
   },
   async asyncData({ $axios, params, query, error }) {
     let user
@@ -106,28 +134,28 @@ export default {
     }
 
     const activeTab = query.tab || defaultTab
-    let recentTopics = null
-    let recentArticles = null
-    let recentTweets = null
+    let topicsPage = null
+    let articlesPage = null
+    let tweetsPage = null
     if (activeTab === 'topics') {
-      recentTopics = await $axios.get('/api/topic/user/recent', {
+      topicsPage = await $axios.get('/api/topic/user/topics', {
         params: { userId: params.userId },
       })
     } else if (activeTab === 'articles') {
-      recentArticles = await $axios.get('/api/article/user/recent', {
+      articlesPage = await $axios.get('/api/article/user/articles', {
         params: { userId: params.userId },
       })
     } else if (activeTab === 'tweets') {
-      recentTweets = await $axios.get('/api/tweet/user/recent', {
+      tweetsPage = await $axios.get('/api/tweet/user/tweets', {
         params: { userId: params.userId },
       })
     }
     return {
       activeTab,
       user,
-      recentTopics,
-      recentArticles,
-      recentTweets,
+      topicsPage,
+      articlesPage,
+      tweetsPage,
     }
   },
   data() {

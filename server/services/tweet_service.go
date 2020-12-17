@@ -46,11 +46,15 @@ func (s *tweetService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TweetRepository.Count(simple.DB(), cnd)
 }
 
-func (s *tweetService) GetTweets(cursor int64) (tweets []model.Tweet, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(20)
+func (s *tweetService) GetTweets(userId, cursor int64) (tweets []model.Tweet, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if userId > 0 {
+		cnd.Eq("user_id", userId)
+	}
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
 	tweets = repositories.TweetRepository.Find(simple.DB(), cnd)
 	if len(tweets) > 0 {
 		nextCursor = tweets[len(tweets)-1].Id

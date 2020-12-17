@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bbs-go/model/constants"
 	"strconv"
 	"strings"
 
@@ -32,7 +31,7 @@ func (c *TweetController) PostCreate() *simple.JsonResult {
 
 func (c *TweetController) GetList() *simple.JsonResult {
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	tweets, cursor := services.TweetService.GetTweets(cursor)
+	tweets, cursor := services.TweetService.GetTweets(0, cursor)
 	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }
 
@@ -58,13 +57,12 @@ func (c *TweetController) GetNewest() *simple.JsonResult {
 	return simple.JsonData(render.BuildTweets(tweets))
 }
 
-// 用户最近的帖子
-func (c *TweetController) GetUserRecent() *simple.JsonResult {
+func (c *TweetController) GetUserTweets() *simple.JsonResult {
 	userId, err := simple.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	tweets := services.TweetService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, constants.StatusOk).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildTweets(tweets))
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	tweets, cursor := services.TweetService.GetTweets(userId, cursor)
+	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }
