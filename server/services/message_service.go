@@ -154,7 +154,7 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 		return
 	}
 	var (
-		title        = "您的话题被删除"
+		title        = "你的话题被删除"
 		quoteContent = "《" + topic.Title + "》"
 	)
 	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicDelete, map[string]interface{}{
