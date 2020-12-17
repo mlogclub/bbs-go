@@ -60,7 +60,7 @@
 
           <div v-if="activeTab === 'tweets'">
             <div v-if="recentTweets && recentTweets.length">
-              <tweets-list :tweets="recentTweets" />
+              <tweets-list :tweets="recentTweets" :show-action="false" />
               <div class="more">
                 <a :href="'/user/' + user.id + '/tweets'">查看更多&gt;&gt;</a>
               </div>

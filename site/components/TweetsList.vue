@@ -50,7 +50,7 @@
             </a>
           </li>
         </ul>
-        <div class="pin-action-row">
+        <div v-if="showAction" class="pin-action-row">
           <div class="action-box">
             <div class="like-action action" @click="like(tweet)">
               <div class="action-title-box">
@@ -85,6 +85,12 @@ export default {
         return []
       },
       required: false,
+    },
+    showAction: {
+      type: Boolean,
+      default() {
+        return true
+      },
     },
   },
   methods: {
