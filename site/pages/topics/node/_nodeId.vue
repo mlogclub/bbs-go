@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <div class="main-content">
+        <div class="main-content no-padding">
           <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
           <load-more
             v-if="topicsPage"

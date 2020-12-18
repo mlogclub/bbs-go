@@ -3,7 +3,7 @@
     <section class="main">
       <div class="container main-container left-main">
         <div class="left-container">
-          <div class="main-content">
+          <div class="main-content no-padding">
             <article
               class="topic-detail topic-wrap"
               itemscope

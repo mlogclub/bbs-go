@@ -1,16 +1,18 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" />
-        <load-more
-          v-if="topicsPage"
-          v-slot="{ results }"
-          :init-data="topicsPage"
-          :url="'/api/topic/tag/topics' + tag.tagId"
-        >
-          <topic-list :topics="results" :show-ad="true" />
-        </load-more>
+        <div class="main-content no-padding">
+          <topics-nav :nodes="nodes" />
+          <load-more
+            v-if="topicsPage"
+            v-slot="{ results }"
+            :init-data="topicsPage"
+            :url="'/api/topic/tag/topics' + tag.tagId"
+          >
+            <topic-list :topics="results" :show-ad="true" />
+          </load-more>
+        </div>
       </div>
       <div class="right-container">
         <check-in />

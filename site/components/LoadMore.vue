@@ -10,7 +10,7 @@
       <div class="loading-animation" />
       <span class="load-more-text">加载中...</span>
     </div>
-    <div v-if="!hasMore" class="no-more">没有更多数据了</div>
+    <div v-if="!hasMore" class="no-more">没有更多数据</div>
   </div>
 </template>
 
