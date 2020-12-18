@@ -118,7 +118,7 @@ export default {
 
   .no-more {
     text-align: center;
-    padding: 20px 0;
+    padding: 10px 0;
     color: #8590a6;
     font-size: 14px;
   }
