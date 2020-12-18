@@ -223,33 +223,21 @@ func (c *TopicController) GetTopics() *simple.JsonResult {
 		nodeId       = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
 		recommend, _ = simple.FormValueBool(c.Ctx, "recommend")
 	)
-
 	topics, cursor := services.TopicService.GetTopics(nodeId, cursor, recommend)
-
 	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
-}
-
-// 节点帖子列表
-func (c *TopicController) GetNodeTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("node_id", nodeId).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
-
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
 }
 
 // 标签帖子列表
 func (c *TopicController) GetTagTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	tagId, err := simple.FormValueInt64(c.Ctx, "tagId")
+	var (
+		cursor     = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+		tagId, err = simple.FormValueInt64(c.Ctx, "tagId")
+	)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	topics, paging := services.TopicService.GetTagTopics(tagId, page)
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+	topics, cursor := services.TopicService.GetTagTopics(tagId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
 }
 
 // 收藏

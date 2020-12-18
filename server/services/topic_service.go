@@ -229,12 +229,14 @@ func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics [
 }
 
 // 指定标签下话题列表
-func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
-	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
+func (s *topicService) GetTagTopics(tagId , cursor int64) (topics []model.Topic, nextCursor int64) {
+	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
+		Desc("last_comment_time").Limit(20))
 	if len(topicTags) > 0 {
+		nextCursor = topicTags[len(topicTags)-1].LastCommentTime
+
 		var topicIds []int64
 		for _, topicTag := range topicTags {
 			topicIds = append(topicIds, topicTag.TopicId)
@@ -248,6 +250,8 @@ func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic
 				}
 			}
 		}
+	} else {
+		nextCursor = cursor
 	}
 	return
 }
