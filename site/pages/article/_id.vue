@@ -92,20 +92,20 @@
               itemprop="articleBody"
               v-html="article.content"
             ></div>
-          </div>
 
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
+            <div class="ad">
+              <!-- 展示广告 -->
+              <adsbygoogle ad-slot="1742173616" />
+            </div>
 
-          <!-- 评论 -->
-          <comment
-            :entity-id="article.articleId"
-            :comments-page="commentsPage"
-            :show-ad="true"
-            entity-type="article"
-          />
+            <!-- 评论 -->
+            <comment
+              :entity-id="article.articleId"
+              :comments-page="commentsPage"
+              :show-ad="true"
+              entity-type="article"
+            />
+          </div>
         </article>
       </div>
       <div class="right-container">

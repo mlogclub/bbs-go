@@ -72,21 +72,10 @@
                         <i class="iconfont icon-edit" />&nbsp;修改
                       </a>
                     </span>
-                    <span class="meta-item act">
-                      <a @click="addFavorite(topic.topicId)">
-                        <i class="iconfont icon-favorite" />&nbsp;{{
-                          favorited ? '已收藏' : '收藏'
-                        }}
-                      </a>
-                    </span>
                   </div>
                 </div>
                 <div class="topic-header-right">
-                  <span class="count"
-                    >{{ topic.commentCount }}&nbsp;/&nbsp;{{
-                      topic.viewCount
-                    }}</span
-                  >
+                  <!--TODO 这里放举报按钮挺好的-->
                 </div>
               </div>
 
@@ -106,6 +95,39 @@
                 ></div>
               </div>
             </article>
+            <div class="actions">
+              <a class="action disabled">
+                <i class="action-icon iconfont icon-read" />
+                <span class="content">
+                  <span>浏览</span>
+                  <span v-if="topic.viewCount > 0">
+                    ({{ topic.viewCount }})
+                  </span>
+                </span>
+              </a>
+              <a class="action" @click="like(topic)">
+                <i class="action-icon iconfont icon-like" />
+                <span class="content">
+                  <span>点赞</span>
+                  <span v-if="topic.likeCount > 0">
+                    ({{ topic.likeCount }})
+                  </span>
+                </span>
+              </a>
+              <a class="action" @click="addFavorite(topic.topicId)">
+                <i
+                  class="action-icon iconfont"
+                  :class="{
+                    'icon-has-favorite': favorited,
+                    'icon-favorite': !favorited,
+                  }"
+                />
+                <span class="content">
+                  <span>收藏</span>
+                </span>
+              </a>
+            </div>
+            <!--
             <div class="main-content-footer">
               <div class="topic-toolbar">
                 <template v-if="likeUsers && likeUsers.length">
@@ -144,29 +166,18 @@
                 </div>
               </div>
             </div>
+            -->
+            <!-- 评论 -->
+            <comment
+              :entity-id="topic.topicId"
+              :comments-page="commentsPage"
+              :comment-count="topic.commentCount"
+              :show-ad="false"
+              entity-type="topic"
+            />
           </div>
-
-          <!-- 评论 -->
-          <comment
-            :entity-id="topic.topicId"
-            :comments-page="commentsPage"
-            :comment-count="topic.commentCount"
-            :show-ad="false"
-            entity-type="topic"
-          />
         </div>
         <div class="right-container">
-          <!--
-          <a
-            class="button is-success"
-            href="/topic/create"
-            style="width: 100%;"
-          >
-            <span class="icon"><i class="iconfont icon-topic" /></span>
-            <span>发表话题</span>
-          </a>
-          -->
-
           <user-info :user="topic.user" />
 
           <div class="ad">
@@ -341,4 +352,48 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.actions {
+  margin: 50px auto 40px;
+  padding: 0 25px;
+  display: flex;
+  justify-content: space-between;
+
+  .action {
+    background: #ffffff;
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #8590a6;
+
+    &.disabled {
+      cursor: not-allowed;
+      &:hover {
+        color: #8590a6;
+        > .action-icon {
+          fill: #8590a6;
+        }
+      }
+    }
+
+    > .action-icon {
+      font-size: 30px;
+      fill: #8590a6;
+    }
+
+    &:hover {
+      color: #1878f3;
+      > .action-icon {
+        fill: #1878f3;
+      }
+    }
+
+    > .content {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+  }
+}
+</style>

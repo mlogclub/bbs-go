@@ -42,11 +42,11 @@ export default {
 .user-simple {
   background: #fff;
   padding: 0;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
 
   .user-background {
     text-align: center;
-    background-image: url('https://file.mlog.club/images/2020/10/13/6e7933f5c9b2fe515210a17ea1762105.jpg!768_auto');
+    // background-image: url('https://file.mlog.club/images/2020/10/13/6e7933f5c9b2fe515210a17ea1762105.jpg!768_auto');
     background-size: cover;
     background-position: 50%;
   }
