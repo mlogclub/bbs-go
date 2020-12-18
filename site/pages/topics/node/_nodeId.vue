@@ -4,11 +4,14 @@
       <div class="left-container">
         <div class="main-content">
           <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
-          <topic-list :topics="topicsPage.results" :show-ad="true" />
-          <pagination
-            :page="topicsPage.page"
-            :url-prefix="'/topics/node/' + node.nodeId + '?p='"
-          />
+          <load-more
+            v-if="topicsPage"
+            v-slot="{ results }"
+            :init-data="topicsPage"
+            :url="'/api/topic/topics?nodeId=' + node.nodeId"
+          >
+            <topic-list :topics="results" :show-ad="true" />
+          </load-more>
         </div>
       </div>
       <div class="right-container">
@@ -30,7 +33,7 @@ import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import TweetsWidget from '~/components/TweetsWidget'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
@@ -41,7 +44,7 @@ export default {
     TopicsNav,
     TopicList,
     TweetsWidget,
-    Pagination,
+    LoadMore,
   },
   async asyncData({ $axios, params, query }) {
     const [
@@ -54,12 +57,7 @@ export default {
     ] = await Promise.all([
       $axios.get('/api/topic/node?nodeId=' + params.nodeId),
       $axios.get('/api/topic/nodes'),
-      $axios.get('/api/topic/node/topics', {
-        params: {
-          nodeId: params.nodeId,
-          page: query.p || 1,
-        },
-      }),
+      $axios.get('/api/topic/topics?nodeId=' + params.nodeId),
       $axios.get('/api/user/score/rank'),
       $axios.get('/api/link/toplinks'),
       $axios.get('/api/tweet/newest'),

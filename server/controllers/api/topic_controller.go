@@ -218,13 +218,15 @@ func (c *TopicController) GetUserTopics() *simple.JsonResult {
 
 // 帖子列表
 func (c *TopicController) GetTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
+	var (
+		cursor       = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+		nodeId       = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		recommend, _ = simple.FormValueBool(c.Ctx, "recommend")
+	)
 
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
+	topics, cursor := services.TopicService.GetTopics(nodeId, cursor, recommend)
 
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
 }
 
 // 节点帖子列表
@@ -247,17 +249,6 @@ func (c *TopicController) GetTagTopics() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	topics, paging := services.TopicService.GetTagTopics(tagId, page)
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
-}
-
-// 推荐帖子
-func (c *TopicController) GetRecommendTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("recommend", true).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
-
 	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
 }
 

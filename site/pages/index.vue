@@ -4,8 +4,14 @@
       <div class="left-container">
         <div class="main-content">
           <topics-nav :nodes="nodes" />
-          <topic-list :topics="topicsPage.results" :show-ad="true" />
-          <pagination :page="topicsPage.page" url-prefix="/topics?p=" />
+          <load-more
+            v-if="topicsPage"
+            v-slot="{ results }"
+            :init-data="topicsPage"
+            url="/api/topic/topics"
+          >
+            <topic-list :topics="results" :show-ad="true" />
+          </load-more>
         </div>
       </div>
       <div class="right-container">
@@ -27,7 +33,7 @@ import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import TweetsWidget from '~/components/TweetsWidget'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
@@ -38,7 +44,7 @@ export default {
     TopicsNav,
     TopicList,
     TweetsWidget,
-    Pagination,
+    LoadMore,
   },
   async asyncData({ $axios, params }) {
     try {

@@ -206,6 +206,28 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 	return cache.TagCache.GetList(tagIds)
 }
 
+// 获取帖子分页列表
+func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if nodeId > 0 {
+		cnd.Eq("node_id", nodeId)
+	}
+	if cursor > 0 {
+		cnd.Lt("last_comment_time", cursor)
+	}
+	if recommend {
+		cnd.Eq("recommend", true)
+	}
+	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(20)
+	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
+	if len(topics) > 0 {
+		nextCursor = topics[len(topics)-1].LastCommentTime
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
 // 指定标签下话题列表
 func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
 	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
