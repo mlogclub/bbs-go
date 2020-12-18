@@ -156,6 +156,7 @@
           />
         </div>
         <div class="right-container">
+          <!--
           <a
             class="button is-success"
             href="/topic/create"
@@ -164,6 +165,7 @@
             <span class="icon"><i class="iconfont icon-topic" /></span>
             <span>发表话题</span>
           </a>
+          -->
 
           <user-info :user="topic.user" />
 

@@ -144,10 +144,10 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 	summary = strings.TrimSpace(summary)
 	content = strings.TrimSpace(content)
 
-	if len(title) == 0 {
+	if simple.IsBlank(title) {
 		return nil, errors.New("标题不能为空")
 	}
-	if len(content) == 0 {
+	if simple.IsBlank(content) {
 		return nil, errors.New("内容不能为空")
 	}
 
