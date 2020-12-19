@@ -63,11 +63,15 @@ export default {
   /*
    ** Global CSS
    */
-  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    { src: '~/assets/styles/main.scss', lang: 'scss' },
+  ],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
+    '~/plugins/element-ui',
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
@@ -149,5 +153,21 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {},
+  },
+  // 按需加载
+  babel: {
+    plugins: [
+      [
+        'component',
+        {
+          libraryName: 'element-ui',
+          styleLibraryName: 'theme-chalk',
+        },
+      ],
+    ],
+    presets({ isServer }) {
+      const targets = isServer ? { node: '10' } : { ie: '11' }
+      return [[require.resolve('@nuxt/babel-preset-app'), { targets }]]
+    },
   },
 }

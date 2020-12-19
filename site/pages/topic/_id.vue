@@ -34,6 +34,7 @@
                       }}</a>
                     </span>
                     <span class="meta-item">
+                      发布于
                       <time
                         :datetime="
                           topic.lastCommentTime
@@ -43,20 +44,10 @@
                         >{{ topic.lastCommentTime | prettyDate }}</time
                       >
                     </span>
-                    <span v-if="hasPermission" class="meta-item act">
-                      <a @click="deleteTopic(topic.topicId)">
-                        <i class="iconfont icon-delete" />&nbsp;删除
-                      </a>
-                    </span>
-                    <span v-if="hasPermission" class="meta-item act">
-                      <a :href="'/topic/edit/' + topic.topicId">
-                        <i class="iconfont icon-edit" />&nbsp;修改
-                      </a>
-                    </span>
                   </div>
                 </div>
                 <div class="topic-header-right">
-                  <!--TODO 这里放举报按钮挺好的-->
+                  <topic-manage-menu :topic="topic" />
                 </div>
               </div>
 
@@ -184,12 +175,13 @@
 import utils from '~/common/utils'
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
-import UserHelper from '~/common/UserHelper'
+import TopicManageMenu from '~/components/topic/TopicManageMenu'
 
 export default {
   components: {
     Comment,
     UserInfo,
+    TopicManageMenu,
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -227,19 +219,6 @@ export default {
     }
   },
   computed: {
-    hasPermission() {
-      return (
-        this.isOwner ||
-        UserHelper.isOwner(this.user) ||
-        UserHelper.isAdmin(this.user)
-      )
-    },
-    isOwner() {
-      if (!this.user || !this.topic) {
-        return false
-      }
-      return this.user.id === this.topic.user.id
-    },
     user() {
       return this.$store.state.user.current
     },
@@ -272,23 +251,6 @@ export default {
       } catch (e) {
         console.error(e)
         this.$toast.error('收藏失败：' + (e.message || e))
-      }
-    },
-    async deleteTopic(topicId) {
-      if (process.client && !window.confirm('是否确认删除该话题？')) {
-        return
-      }
-      try {
-        await this.$axios.post('/api/topic/delete/' + topicId)
-        this.$toast.success('删除成功', {
-          duration: 2000,
-          onComplete() {
-            utils.linkTo('/topics')
-          },
-        })
-      } catch (e) {
-        console.error(e)
-        this.$toast.error('删除失败：' + (e.message || e))
       }
     },
     async like(topic) {

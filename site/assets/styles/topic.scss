@@ -9,13 +9,14 @@
     }
 
     .topic-header-left {
+      margin: 10px 0 5px 10px;
       width: 50px;
       height: 50px;
     }
 
     .topic-header-center {
+      margin: 10px 10px 5px 10px;
       width: 100%;
-      margin-left: 10px;
 
       .topic-title,
       .topic-title a {
@@ -39,27 +40,6 @@
             margin-right: 8px;
           }
 
-          &.act {
-            // float: right;
-            margin-right: 5px;
-
-            a {
-              font-size: 12px;
-              // color: #3273dc;
-              color: #7a7a7a;
-              font-weight: 700;
-
-              &:hover {
-                text-decoration: underline;
-              }
-
-              i {
-                font-size: 12px;
-                color: #000;
-              }
-            }
-          }
-
           .tag {
             height: auto !important;
 
@@ -76,11 +56,12 @@
     }
 
     .topic-header-right {
+      margin: 0 10px 5px 0;
       min-width: 100px;
       max-width: 100px;
       text-align: right;
-      padding-right: 8px;
 
+      // TODO 这里计划删掉的，但是列表中还在用
       .like {
         font-size: 12px;
 
@@ -90,13 +71,6 @@
 
           background-color: rgba(126, 107, 1, 0.08);
           color: #e7672e;
-          // padding: 0;
-          // display: inline-block;
-          // height: 20px;
-          // width: 20px;
-          // line-height: 20px;
-          // border-radius: 10px;
-          // text-align: center;
           padding: 4px;
           border-radius: 50%;
 
@@ -144,29 +118,10 @@
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
-
+    border-bottom: 1px solid #f2f2f2;
     //&:hover {
     //  background: #f3f6f9;
     //}
-
-    border-bottom: 1px solid #f2f2f2;
-    //&:not(:last-child) {
-    //  border-bottom: 1px solid #f2f2f2;
-    //}
-  }
-
-  .topic-header {
-    .topic-header-center {
-      // 控制内容只显示一行，多余的折叠，暂时不需要先注释掉
-      //.topic-title,
-      //.topic-title a {
-      //  word-break: break-all;
-      //  -webkit-line-clamp: 1;
-      //  text-overflow: ellipsis;
-      //  -webkit-box-orient: vertical;
-      //  display: -webkit-box;
-      //}
-    }
   }
 }
 
@@ -174,7 +129,7 @@
   margin-bottom: 20px;
 
   .topic-header {
-    padding: 10px;
+    //padding: 10px;
     border-bottom: 1px solid #eee;
   }
 
