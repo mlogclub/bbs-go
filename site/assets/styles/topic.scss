@@ -59,6 +59,14 @@
               }
             }
           }
+
+          .tag {
+            height: auto !important;
+
+            &:not(:last-child) {
+              margin-right: 3px;
+            }
+          }
         }
 
         a {
