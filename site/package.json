@@ -28,11 +28,12 @@
     "vuedraggable": "^2.24.0"
   },
   "devDependencies": {
-    "@nuxtjs/babel-preset-app": "^0.8.0",
+    "@babel/runtime-corejs3": "^7.12.5",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-component": "^1.1.1",
+    "core-js": "^3.8.1",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-nuxt": "^1.0.0",

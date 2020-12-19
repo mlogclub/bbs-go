@@ -1,3 +1,5 @@
+const isProduction = process.env.NODE_ENV === 'production'
+
 export default {
   server: {
     port: 3000,
@@ -114,12 +116,11 @@ export default {
   },
 
   proxy: {
-    '/api/':
-      process.env.NODE_ENV === 'production'
-        ? 'https://mlog.club'
-        : process.env.NODE_ENV === 'docker'
-        ? 'http://bbs-go-server:8082'
-        : 'http://127.0.0.1:8082',
+    '/api/': isProduction
+      ? 'https://mlog.club'
+      : process.env.NODE_ENV === 'docker'
+      ? 'http://bbs-go-server:8082'
+      : 'http://127.0.0.1:8082',
   },
 
   // Doc: https://github.com/shakee93/vue-toasted
@@ -154,7 +155,6 @@ export default {
      */
     extend(config, ctx) {},
   },
-  // 按需加载
   babel: {
     plugins: [
       [
@@ -165,9 +165,8 @@ export default {
         },
       ],
     ],
-    presets({ isServer }) {
-      const targets = isServer ? { node: '10' } : { ie: '11' }
-      return [[require.resolve('@nuxt/babel-preset-app'), { targets }]]
+    presets(env, [preset, options]) {
+      return [['@nuxt/babel-preset-app', options]]
     },
   },
 }
