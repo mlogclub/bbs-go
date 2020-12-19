@@ -43,25 +43,6 @@
                         >{{ topic.lastCommentTime | prettyDate }}</time
                       >
                     </span>
-                    <span class="meta-item">
-                      <a
-                        v-if="topic.node"
-                        :href="'/topics/node/' + topic.node.nodeId"
-                        class="node"
-                        >{{ topic.node.name }}</a
-                      >
-                    </span>
-                    <span class="meta-item">
-                      <span
-                        v-for="tag in topic.tags"
-                        :key="tag.tagId"
-                        class="tag"
-                      >
-                        <a :href="'/topics/tag/' + tag.tagId">{{
-                          tag.tagName
-                        }}</a>
-                      </span>
-                    </span>
                     <span v-if="hasPermission" class="meta-item act">
                       <a @click="deleteTopic(topic.topicId)">
                         <i class="iconfont icon-delete" />&nbsp;删除
@@ -88,93 +69,95 @@
                 />
               </div>
 
-              <div class="content topic-content" itemprop="articleBody">
+              <!--内容-->
+              <div class="topic-content content" itemprop="articleBody">
                 <div
                   v-lazy-container="{ selector: 'img' }"
                   v-html="topic.content"
                 ></div>
               </div>
-            </article>
-            <div class="actions">
-              <a class="action disabled">
-                <i class="action-icon iconfont icon-read" />
-                <span class="content">
-                  <span>浏览</span>
-                  <span v-if="topic.viewCount > 0">
-                    ({{ topic.viewCount }})
-                  </span>
-                </span>
-              </a>
-              <a class="action" @click="like(topic)">
-                <i class="action-icon iconfont icon-like" />
-                <span class="content">
-                  <span>点赞</span>
-                  <span v-if="topic.likeCount > 0">
-                    ({{ topic.likeCount }})
-                  </span>
-                </span>
-              </a>
-              <a class="action" @click="addFavorite(topic.topicId)">
-                <i
-                  class="action-icon iconfont"
-                  :class="{
-                    'icon-has-favorite': favorited,
-                    'icon-favorite': !favorited,
-                  }"
-                />
-                <span class="content">
-                  <span>收藏</span>
-                </span>
-              </a>
-            </div>
-            <!--
-            <div class="main-content-footer">
-              <div class="topic-toolbar">
-                <template v-if="likeUsers && likeUsers.length">
-                  <a
-                    v-for="likeUser in likeUsers"
-                    :key="likeUser.id"
-                    :href="'/user/' + likeUser.id"
-                    :alt="likeUser.nickname"
-                    target="_blank"
-                    class="avatar-link"
-                  >
-                    <img
-                      :src="likeUser.smallAvatar"
-                      :alt="likeUser.nickname"
-                      class="avatar"
-                    />
-                  </a>
-                </template>
-                <span class="like-desc">有{{ topic.likeCount }}人点赞</span>
 
-                <div class="action-buttons">
-                  <div
-                    :class="{ active: topic.liked }"
-                    class="action like"
-                    @click="like(topic)"
-                  >
-                    <i class="iconfont icon-like" />
-                  </div>
-                  <div
-                    :class="{ active: favorited }"
-                    class="action favorite"
-                    @click="addFavorite(topic.topicId)"
-                  >
-                    <i class="iconfont icon-favorite" />
-                  </div>
-                </div>
+              <!--节点、标签-->
+              <div class="topic-tags">
+                <a
+                  v-if="topic.node"
+                  :href="'/topics/node/' + topic.node.nodeId"
+                  class="topic-tag"
+                  >{{ topic.node.name }}</a
+                >
+                <a
+                  v-for="tag in topic.tags"
+                  :key="tag.tagId"
+                  :href="'/topics/tag/' + tag.tagId"
+                  class="topic-tag"
+                  >#{{ tag.tagName }}</a
+                >
               </div>
-            </div>
-            -->
-            <!-- 评论 -->
-            <comment
-              :entity-id="topic.topicId"
-              :comments-page="commentsPage"
-              :comment-count="topic.commentCount"
-              :show-ad="false"
-              entity-type="topic"
-            />
+
+              <!-- 点赞用户列表 -->
+              <div
+                v-if="likeUsers && likeUsers.length"
+                class="topic-like-users"
+              >
+                <a
+                  v-for="likeUser in likeUsers"
+                  :key="likeUser.id"
+                  :href="'/user/' + likeUser.id"
+                  :alt="likeUser.nickname"
+                  target="_blank"
+                  class="like-user"
+                >
+                  <img
+                    :src="likeUser.smallAvatar"
+                    :alt="likeUser.nickname"
+                    class="avatar"
+                  />
+                </a>
+              </div>
+
+              <!-- 功能按钮 -->
+              <div class="topic-actions">
+                <a class="action disabled">
+                  <i class="action-icon iconfont icon-read" />
+                  <span class="content">
+                    <span>浏览</span>
+                    <span v-if="topic.viewCount > 0">
+                      ({{ topic.viewCount }})
+                    </span>
+                  </span>
+                </a>
+                <a class="action" @click="like(topic)">
+                  <i class="action-icon iconfont icon-like" />
+                  <span class="content">
+                    <span>点赞</span>
+                    <span v-if="topic.likeCount > 0">
+                      ({{ topic.likeCount }})
+                    </span>
+                  </span>
+                </a>
+                <a class="action" @click="addFavorite(topic.topicId)">
+                  <i
+                    class="action-icon iconfont"
+                    :class="{
+                      'icon-has-favorite': favorited,
+                      'icon-favorite': !favorited,
+                    }"
+                  />
+                  <span class="content">
+                    <span>收藏</span>
+                  </span>
+                </a>
+              </div>
+
+              <!-- 评论 -->
+              <comment
+                :entity-id="topic.topicId"
+                :comments-page="commentsPage"
+                :comment-count="topic.commentCount"
+                :show-ad="false"
+                entity-type="topic"
+              />
+            </article>
           </div>
         </div>
         <div class="right-container">
@@ -352,48 +335,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.actions {
-  margin: 50px auto 40px;
-  padding: 0 25px;
-  display: flex;
-  justify-content: space-between;
-
-  .action {
-    background: #ffffff;
-    cursor: pointer;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    color: #8590a6;
-
-    &.disabled {
-      cursor: not-allowed;
-      &:hover {
-        color: #8590a6;
-        > .action-icon {
-          fill: #8590a6;
-        }
-      }
-    }
-
-    > .action-icon {
-      font-size: 30px;
-      fill: #8590a6;
-    }
-
-    &:hover {
-      color: #1878f3;
-      > .action-icon {
-        fill: #1878f3;
-      }
-    }
-
-    > .content {
-      margin-top: 10px;
-      font-size: 12px;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -71,7 +71,7 @@ export default {
     }
 
     .description {
-      text-align: left;
+      text-align: center;
       font-size: 13px;
       margin-top: 5px;
       overflow: hidden;
