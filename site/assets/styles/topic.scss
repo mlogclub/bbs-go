@@ -216,6 +216,10 @@
       flex-direction: column;
       color: #8590a6;
 
+      .checked-icon {
+        color: red;
+      }
+
       &.disabled {
         cursor: not-allowed;
 

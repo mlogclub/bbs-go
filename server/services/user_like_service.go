@@ -84,6 +84,16 @@ func (s *userLikeService) Exists(userId int64, entityType string, entityId int64
 		Eq("entity_type", entityType).Eq("entity_id", entityId)) != nil
 }
 
+// 是否点赞，返回已点赞实体编号
+func (s *userLikeService) IsLiked(userId int64, entityType string, entityIds []int64) (likedEntityIds []int64) {
+	list := repositories.UserLikeRepository.Find(simple.DB(), simple.NewSqlCnd().Eq("user_id", userId).
+		Eq("entity_type", entityType).In("entity_id", entityIds))
+	for _, like := range list {
+		likedEntityIds = append(likedEntityIds, like.EntityId)
+	}
+	return
+}
+
 // 话题点赞
 func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 	logrus.Info("params:", userId, topicId)

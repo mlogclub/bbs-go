@@ -117,8 +117,15 @@
                     </span>
                   </span>
                 </a>
-                <a class="action" @click="like(topic)">
-                  <i class="action-icon iconfont icon-like" />
+                <a
+                  class="action"
+                  :class="{ disabled: liked }"
+                  @click="like(topic)"
+                >
+                  <i
+                    class="action-icon iconfont icon-like"
+                    :class="{ 'checked-icon': liked }"
+                  />
                   <span class="content">
                     <span>点赞</span>
                     <span v-if="topic.likeCount > 0">
@@ -132,6 +139,7 @@
                     :class="{
                       'icon-has-favorite': favorited,
                       'icon-favorite': !favorited,
+                      'checked-icon': favorited,
                     }"
                   />
                   <span class="content">
@@ -194,7 +202,13 @@ export default {
       return
     }
 
-    const [favorited, commentsPage, likeUsers] = await Promise.all([
+    const [liked, favorited, commentsPage, likeUsers] = await Promise.all([
+      $axios.get('/api/like/liked', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id,
+        },
+      }),
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
@@ -214,6 +228,7 @@ export default {
       topic,
       commentsPage,
       favorited: favorited.favorited,
+      liked: liked.liked,
       likeUsers,
     }
   },
@@ -254,8 +269,11 @@ export default {
     },
     async like(topic) {
       try {
+        if (this.liked) {
+          return
+        }
         await this.$axios.post('/api/topic/like/' + topic.topicId)
-        topic.liked = true
+        this.liked = true
         topic.likeCount++
         this.likeUsers = this.likeUsers || []
         this.likeUsers.unshift(this.$store.state.user.current)
@@ -263,7 +281,7 @@ export default {
         if (e.errorCode === 1) {
           this.$msgSignIn()
         } else {
-          topic.liked = true
+          this.liked = true
           this.$message.error(e.message || e)
         }
       }
