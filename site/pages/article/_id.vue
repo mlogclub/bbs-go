@@ -261,22 +261,26 @@ export default {
         window.hljs.initHighlighting()
       }
     },
-    async deleteArticle(articleId) {
-      if (process.client && !window.confirm('是否确认删除该文章？')) {
+    deleteArticle(articleId) {
+      if (!process.client) {
         return
       }
-      try {
-        await this.$axios.post('/api/article/delete/' + articleId)
-        const me = this
-        this.$msg({
-          message: '删除成功',
-          onClose() {
-            me.$linkTo('/articles')
-          },
-        })
-      } catch (e) {
-        this.$message.error('删除失败：' + (e.message || e))
-      }
+      const me = this
+      this.$confirm('是否确认删除该文章？').then(function () {
+        me.$axios
+          .post('/api/article/delete/' + articleId)
+          .then(() => {
+            me.$msg({
+              message: '删除成功',
+              onClose() {
+                me.$linkTo('/articles')
+              },
+            })
+          })
+          .catch((e) => {
+            me.$message.error('删除失败：' + (e.message || e))
+          })
+      })
     },
     async addFavorite(articleId) {
       try {

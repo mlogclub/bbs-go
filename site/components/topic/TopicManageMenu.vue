@@ -55,23 +55,26 @@ export default {
         console.log('click on item ' + command)
       }
     },
-    async deleteTopic(topicId) {
-      if (process.client && !window.confirm('是否确认删除该话题？')) {
+    deleteTopic(topicId) {
+      if (!process.client) {
         return
       }
-      try {
-        await this.$axios.post('/api/topic/delete/' + topicId)
-        const me = this
-        this.$msg({
-          message: '删除成功',
-          onClose() {
-            me.$linkTo('/topics')
-          },
-        })
-      } catch (e) {
-        console.error(e)
-        this.$message.error('删除失败：' + (e.message || e))
-      }
+      const me = this
+      this.$confirm('是否确认删除该话题？').then(function () {
+        me.$axios
+          .post('/api/topic/delete/' + topicId)
+          .then(() => {
+            me.$msg({
+              message: '删除成功',
+              onClose() {
+                me.$linkTo('/topics')
+              },
+            })
+          })
+          .catch((e) => {
+            me.$message.error('删除失败：' + (e.message || e))
+          })
+      })
     },
     editTopic(topicId) {
       this.$linkTo('/topic/edit/' + topicId)
