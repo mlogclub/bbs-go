@@ -1,4 +1,5 @@
 const isProduction = process.env.NODE_ENV === 'production'
+const isDocker = process.env.NODE_ENV === 'docker'
 
 export default {
   server: {
@@ -117,7 +118,7 @@ export default {
   proxy: {
     '/api/': isProduction
       ? 'https://mlog.club'
-      : process.env.NODE_ENV === 'docker'
+      : isDocker
       ? 'http://bbs-go-server:8082'
       : 'http://127.0.0.1:8082',
   },
