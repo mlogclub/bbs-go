@@ -104,7 +104,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import UserHelper from '~/common/UserHelper'
 import MsgNotice from '~/components/MsgNotice'
 
@@ -132,7 +131,7 @@ export default {
     async signout() {
       try {
         await this.$store.dispatch('user/signout')
-        utils.linkTo('/')
+        this.$linkTo('/')
       } catch (e) {
         console.error(e)
       }

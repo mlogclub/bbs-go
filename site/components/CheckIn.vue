@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 export default {
   data() {
     return {
@@ -46,7 +45,7 @@ export default {
     },
     async doCheckIn() {
       if (!this.isLogin) {
-        utils.toSignin()
+        this.$toSignin()
       }
       try {
         await this.$axios.post('/api/user/checkin')

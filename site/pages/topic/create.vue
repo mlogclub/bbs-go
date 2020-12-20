@@ -104,7 +104,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
 import MarkdownEditor from '~/components/MarkdownEditor'
@@ -182,6 +181,7 @@ export default {
 
       this.publishing = true
 
+      const me = this
       try {
         const topic = await this.$axios.post('/api/topic/create', {
           captchaId: this.captchaId,
@@ -192,12 +192,10 @@ export default {
           tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
         })
         this.$refs.mdEditor.clearCache()
-        this.$message({
+        this.$msg({
           message: '提交成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            utils.linkTo('/topic/' + topic.topicId)
+          onClose() {
+            me.$linkTo('/topic/' + topic.topicId)
           },
         })
       } catch (e) {

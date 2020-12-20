@@ -95,7 +95,6 @@ import Viewer from 'v-viewer'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import Comment from '~/components/Comment'
-import utils from '~/common/utils'
 import 'viewerjs/dist/viewer.css'
 
 Vue.use(Viewer, {
@@ -137,14 +136,7 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$message({
-            message: '请先登录',
-            duration: 800,
-            type: 'error',
-            close() {
-              utils.toSignin()
-            },
-          })
+          this.$msgSignIn()
         } else {
           this.$message.error(e.message || e)
         }

@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
 import MarkdownEditor from '~/components/MarkdownEditor'
@@ -146,12 +145,10 @@ export default {
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )
-        this.$message({
+        this.$msg({
           message: '修改成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            utils.linkTo('/topic/' + topic.topicId)
+          onClose() {
+            me.$linkTo('/topic/' + topic.topicId)
           },
         })
       } catch (e) {

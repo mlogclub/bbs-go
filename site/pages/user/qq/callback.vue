@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 export default {
   layout: 'no-footer',
   asyncData({ params, query }) {
@@ -40,19 +39,17 @@ export default {
 
         if (this.ref) {
           // 跳到登录前
-          utils.linkTo(this.ref)
+          this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          utils.linkTo('/user/' + user.id)
+          this.$linkTo('/user/' + user.id)
         }
       } catch (e) {
-        console.log(e)
-        this.$message({
+        const me = this
+        this.$msg({
           message: '登录失败' + (e.message || e),
-          duration: 800,
-          type: 'error',
-          close() {
-            utils.linkTo('/user/signin')
+          onClose() {
+            me.$linkTo('/user/signin')
           },
         })
       } finally {

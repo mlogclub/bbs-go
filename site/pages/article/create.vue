@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
 import MarkdownEditor from '~/components/MarkdownEditor'
@@ -111,12 +110,10 @@ export default {
           tags: me.postForm.tags ? me.postForm.tags.join(',') : '',
         })
         this.$refs.mdEditor.clearCache()
-        this.$message({
+        this.$msg({
           message: '提交成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            utils.linkTo('/article/' + article.articleId)
+          onClose() {
+            me.linkTo('/article/' + article.articleId)
           },
         })
       } catch (e) {

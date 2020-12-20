@@ -160,8 +160,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
-
 export default {
   layout: 'admin',
   data() {
@@ -251,14 +249,7 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$message({
-            message: '请先登录',
-            duration: 800,
-            type: 'error',
-            close() {
-              utils.toSignin()
-            },
-          })
+          this.$msgSignIn()
         } else {
           this.$message.error(e.message || e)
         }

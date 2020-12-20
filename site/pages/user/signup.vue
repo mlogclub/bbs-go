@@ -119,7 +119,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
 export default {
@@ -160,10 +159,10 @@ export default {
         })
         if (this.ref) {
           // 跳到登录前
-          utils.linkTo(this.ref)
+          this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          utils.linkTo('/user/settings')
+          this.$linkTo('/user/settings')
         }
       } catch (err) {
         this.$message.error(err.message || err)

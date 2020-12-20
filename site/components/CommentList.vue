@@ -81,7 +81,6 @@
 
 <script>
 import LoadMore from '~/components/LoadMore'
-import utils from '~/common/utils'
 
 export default {
   components: {
@@ -125,7 +124,7 @@ export default {
     },
     reply(quote) {
       if (!this.isLogin) {
-        utils.toSignin()
+        this.$toSignin()
       }
       this.$emit('reply', quote)
     },

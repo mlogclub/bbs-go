@@ -1,5 +1,4 @@
 import qs from 'qs'
-import utils from '~/common/utils'
 
 export default function ({ $axios, app }) {
   $axios.onRequest((config) => {

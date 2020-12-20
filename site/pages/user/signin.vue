@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
 export default {
@@ -147,10 +146,10 @@ export default {
         })
         if (this.ref) {
           // 跳到登录前
-          utils.linkTo(this.ref)
+          this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          utils.linkTo('/user/' + user.id)
+          this.$linkTo('/user/' + user.id)
         }
       } catch (e) {
         this.$message.error(e.message || e)
@@ -177,15 +176,13 @@ export default {
     redirectIfLogined() {
       if (this.isLogin) {
         const me = this
-        this.$message({
+        this.$msg({
           message: '登录成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            if (me.ref && !utils.isSigninUrl(me.ref)) {
-              utils.linkTo(me.ref)
+          onClose() {
+            if (me.ref && !me.$isSigninUrl(me.ref)) {
+              me.$linkTo(me.ref)
             } else {
-              utils.linkTo('/')
+              me.$linkTo('/')
             }
           },
         })

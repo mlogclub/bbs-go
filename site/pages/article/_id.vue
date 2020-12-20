@@ -160,7 +160,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import UserHelper from '~/common/UserHelper'
 import Comment from '~/components/Comment'
 
@@ -268,12 +267,11 @@ export default {
       }
       try {
         await this.$axios.post('/api/article/delete/' + articleId)
-        this.$message({
+        const me = this
+        this.$msg({
           message: '删除成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            utils.linkTo('/articles')
+          onClose() {
+            me.$linkTo('/articles')
           },
         })
       } catch (e) {

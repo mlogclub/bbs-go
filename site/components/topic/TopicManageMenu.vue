@@ -17,7 +17,6 @@
 
 <script>
 import UserHelper from '~/common/UserHelper'
-import utils from '~/common/utils'
 export default {
   props: {
     topic: {
@@ -62,12 +61,11 @@ export default {
       }
       try {
         await this.$axios.post('/api/topic/delete/' + topicId)
-        this.$message({
+        const me = this
+        this.$msg({
           message: '删除成功',
-          duration: 800,
-          type: 'success',
-          close() {
-            utils.linkTo('/topics')
+          onClose() {
+            me.$linkTo('/topics')
           },
         })
       } catch (e) {
@@ -76,7 +74,7 @@ export default {
       }
     },
     editTopic(topicId) {
-      utils.linkTo('/topic/edit/' + topicId)
+      this.$linkTo('/topic/edit/' + topicId)
     },
   },
 }

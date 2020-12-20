@@ -36,7 +36,7 @@
 
 <script>
 import MarkdownEditor from '~/components/MarkdownEditor'
-import utils from '~/common/utils'
+
 export default {
   components: {
     MarkdownEditor,
@@ -111,7 +111,7 @@ export default {
       this.quote = null
     },
     toLogin() {
-      utils.toSignin()
+      this.$toSignin()
     },
   },
 }

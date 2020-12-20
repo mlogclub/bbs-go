@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 export default {
   components: {},
   props: {
@@ -107,7 +106,7 @@ export default {
       this.quote = null
     },
     toLogin() {
-      utils.toSignin()
+      this.$toSignin()
     },
   },
 }
