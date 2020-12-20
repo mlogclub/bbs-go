@@ -50,7 +50,7 @@ export default {
       }
       try {
         await this.$axios.post('/api/user/checkin')
-        this.$toast.success('签到成功')
+        this.$message.success('签到成功')
         await this.getCheckIn()
       } catch (e) {
         console.error(e)

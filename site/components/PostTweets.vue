@@ -140,7 +140,7 @@ export default {
         this.content = ''
         this.message = ''
         this.$emit('created', ret)
-        this.$toast.success('发布成功')
+        this.$message.success('发布成功')
       } catch (e) {
         this.message = e.message || e
       }

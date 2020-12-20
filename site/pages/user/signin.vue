@@ -127,15 +127,15 @@ export default {
     async submitLogin() {
       try {
         if (!this.username) {
-          this.$toast.error('请输入用户名或邮箱')
+          this.$message.error('请输入用户名或邮箱')
           return
         }
         if (!this.password) {
-          this.$toast.error('请输入密码')
+          this.$message.error('请输入密码')
           return
         }
         if (!this.captchaCode) {
-          this.$toast.error('请输入验证码')
+          this.$message.error('请输入验证码')
           return
         }
         const user = await this.$store.dispatch('user/signin', {
@@ -153,7 +153,7 @@ export default {
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
         await this.showCaptcha()
       }
     },
@@ -167,7 +167,7 @@ export default {
         this.captchaId = ret.captchaId
         this.captchaUrl = ret.captchaUrl
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
       }
     },
     /**
@@ -177,11 +177,11 @@ export default {
     redirectIfLogined() {
       if (this.isLogin) {
         const me = this
-        this.$toast.success('登录成功！', {
-          duration: 1000,
-          keepOnHover: false,
-          position: 'top-center',
-          onComplete() {
+        this.$message({
+          message: '登录成功',
+          duration: 800,
+          type: 'success',
+          close() {
             if (me.ref && !utils.isSigninUrl(me.ref)) {
               utils.linkTo(me.ref)
             } else {

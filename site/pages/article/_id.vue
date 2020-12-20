@@ -268,14 +268,16 @@ export default {
       }
       try {
         await this.$axios.post('/api/article/delete/' + articleId)
-        this.$toast.success('删除成功！', {
-          duration: 1000,
-          onComplete() {
+        this.$message({
+          message: '删除成功',
+          duration: 800,
+          type: 'success',
+          close() {
             utils.linkTo('/articles')
           },
         })
       } catch (e) {
-        this.$toast.error('删除失败：' + (e.message || e))
+        this.$message.error('删除失败：' + (e.message || e))
       }
     },
     async addFavorite(articleId) {
@@ -288,15 +290,15 @@ export default {
             },
           })
           this.favorited = false
-          this.$toast.success('已取消收藏！')
+          this.$message.success('已取消收藏！')
         } else {
           await this.$axios.post('/api/article/favorite/' + articleId)
           this.favorited = true
-          this.$toast.success('收藏成功！')
+          this.$message.success('收藏成功！')
         }
       } catch (e) {
         console.error(e)
-        this.$toast.error('收藏失败：' + (e.message || e))
+        this.$message.error('收藏失败：' + (e.message || e))
       }
     },
   },

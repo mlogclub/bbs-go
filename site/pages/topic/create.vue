@@ -171,12 +171,12 @@ export default {
       }
 
       if (!this.postForm.title) {
-        this.$toast.error('请输入标题')
+        this.$message.error('请输入标题')
         return
       }
 
       if (!this.postForm.nodeId) {
-        this.$toast.error('请选择节点')
+        this.$message.error('请选择节点')
         return
       }
 
@@ -192,16 +192,18 @@ export default {
           tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
         })
         this.$refs.mdEditor.clearCache()
-        this.$toast.success('提交成功', {
-          duration: 1000,
-          onComplete() {
+        this.$message({
+          message: '提交成功',
+          duration: 800,
+          type: 'success',
+          close() {
             utils.linkTo('/topic/' + topic.topicId)
           },
         })
       } catch (e) {
         await this.showCaptcha()
         this.publishing = false
-        this.$toast.error('提交失败：' + (e.message || e))
+        this.$message.error('提交失败：' + (e.message || e))
       }
     },
     async showCaptcha() {
@@ -215,7 +217,7 @@ export default {
           this.captchaId = ret.captchaId
           this.captchaUrl = ret.captchaUrl
         } catch (e) {
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },

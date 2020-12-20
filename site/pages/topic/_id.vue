@@ -242,15 +242,15 @@ export default {
             },
           })
           this.favorited = false
-          this.$toast.success('已取消收藏！')
+          this.$message.success('已取消收藏！')
         } else {
           await this.$axios.get('/api/topic/favorite/' + topicId)
           this.favorited = true
-          this.$toast.success('收藏成功')
+          this.$message.success('收藏成功')
         }
       } catch (e) {
         console.error(e)
-        this.$toast.error('收藏失败：' + (e.message || e))
+        this.$message.error('收藏失败：' + (e.message || e))
       }
     },
     async like(topic) {
@@ -262,17 +262,17 @@ export default {
         this.likeUsers.unshift(this.$store.state.user.current)
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
-            },
-          })
+          // this.$message({
+          //   message: '请先登录',
+          //   duration: 800,
+          //   type: 'error',
+          //   close() {
+          //     utils.toSignin()
+          //   },
+          // })
         } else {
           topic.liked = true
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },

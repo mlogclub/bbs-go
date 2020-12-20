@@ -166,7 +166,7 @@ export default {
           utils.linkTo('/user/settings')
         }
       } catch (err) {
-        this.$toast.error(err.message || err)
+        this.$message.error(err.message || err)
         await this.showCaptcha()
       }
     },
@@ -177,7 +177,7 @@ export default {
         this.captchaUrl = ret.captchaUrl
         this.captchaCode = ''
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
       }
     },
   },

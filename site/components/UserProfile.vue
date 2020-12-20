@@ -81,8 +81,9 @@ export default {
         // 重新加载数据
         this.user = await this.$store.dispatch('user/getCurrentUser')
 
-        this.$toast.success('背景设置成功')
+        this.$message.success('背景设置成功')
       } catch (e) {
+        this.$message.error(e.message || e)
         console.error(e)
       }
     },

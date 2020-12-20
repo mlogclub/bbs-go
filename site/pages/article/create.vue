@@ -111,15 +111,17 @@ export default {
           tags: me.postForm.tags ? me.postForm.tags.join(',') : '',
         })
         this.$refs.mdEditor.clearCache()
-        this.$toast.success('提交成功', {
-          duration: 1000,
-          onComplete() {
+        this.$message({
+          message: '提交成功',
+          duration: 800,
+          type: 'success',
+          close() {
             utils.linkTo('/article/' + article.articleId)
           },
         })
       } catch (e) {
         me.publishing = false
-        this.$toast.error('提交失败：' + (e.message || e))
+        this.$message.error('提交失败：' + (e.message || e))
       }
     },
   },

@@ -46,8 +46,11 @@ export default {
           utils.linkTo('/user/' + user.id)
         }
       } catch (e) {
-        this.$toast.error('登录失败：' + (e.message || e), {
-          onComplete() {
+        this.$message({
+          message: '登录失败' + (e.message || e),
+          duration: 800,
+          type: 'error',
+          close() {
             utils.linkTo('/user/signin')
           },
         })

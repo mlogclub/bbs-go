@@ -96,7 +96,6 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/eslint-module',
-    '@nuxtjs/toast',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
     [
       '@nuxtjs/google-adsense',
@@ -121,14 +120,6 @@ export default {
       : process.env.NODE_ENV === 'docker'
       ? 'http://bbs-go-server:8082'
       : 'http://127.0.0.1:8082',
-  },
-
-  // Doc: https://github.com/shakee93/vue-toasted
-  // Doc: https://github.com/nuxt-community/modules/tree/master/packages/toast
-  toast: {
-    position: 'top-right',
-    duration: 2000, // Display time of the toast in millisecond
-    keepOnHover: true, // When mouse is over a toast's element, the corresponding duration timer is paused until the cursor leaves the element
   },
 
   /*

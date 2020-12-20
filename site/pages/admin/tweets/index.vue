@@ -251,16 +251,16 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
+          this.$message({
+            message: '请先登录',
+            duration: 800,
+            type: 'error',
+            close() {
+              utils.toSignin()
             },
           })
         } else {
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },

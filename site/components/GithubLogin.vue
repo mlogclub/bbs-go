@@ -43,7 +43,7 @@ export default {
         window.location = ret.url
       } catch (e) {
         console.error(e)
-        this.$toast.error('登录失败：' + (e.message || e))
+        this.$message.error('登录失败：' + (e.message || e))
       }
     },
   },

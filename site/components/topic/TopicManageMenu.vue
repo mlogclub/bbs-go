@@ -62,15 +62,17 @@ export default {
       }
       try {
         await this.$axios.post('/api/topic/delete/' + topicId)
-        this.$toast.success('删除成功', {
-          duration: 2000,
-          onComplete() {
+        this.$message({
+          message: '删除成功',
+          duration: 800,
+          type: 'success',
+          close() {
             utils.linkTo('/topics')
           },
         })
       } catch (e) {
         console.error(e)
-        this.$toast.error('删除失败：' + (e.message || e))
+        this.$message.error('删除失败：' + (e.message || e))
       }
     },
     editTopic(topicId) {

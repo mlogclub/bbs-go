@@ -444,10 +444,10 @@ export default {
           description: this.form.description,
         })
         await this.reload()
-        this.$toast.success('资料修改成功')
+        this.$message.success('资料修改成功')
       } catch (e) {
         console.error(e)
-        this.$toast.error('资料修改失败：' + (e.message || e))
+        this.$message.error('资料修改失败：' + (e.message || e))
       }
     },
     async uploadAvatar(e) {
@@ -472,7 +472,7 @@ export default {
         // 重新加载数据
         await this.reload()
 
-        this.$toast.success('头像更新成功')
+        this.$message.success('头像更新成功')
       } catch (e) {
         console.error(e)
       }
@@ -484,10 +484,10 @@ export default {
           username: me.form.username,
         })
         await this.reload()
-        this.$toast.success('用户名设置成功')
+        this.$message.success('用户名设置成功')
         this.showSetUsername = false
       } catch (err) {
-        this.$toast.error('用户名设置失败：' + (err.message || err))
+        this.$message.error('用户名设置失败：' + (err.message || err))
       }
     },
     async setEmail() {
@@ -497,10 +497,10 @@ export default {
           email: me.form.email,
         })
         await this.reload()
-        this.$toast.success('邮箱设置成功')
+        this.$message.success('邮箱设置成功')
         this.showSetEmail = false
       } catch (err) {
-        this.$toast.error('邮箱设置失败：' + (err.message || err))
+        this.$message.error('邮箱设置失败：' + (err.message || err))
       }
     },
     async setPassword() {
@@ -511,10 +511,10 @@ export default {
           rePassword: me.form.rePassword,
         })
         await this.reload()
-        this.$toast.success('密码设置成功')
+        this.$message.success('密码设置成功')
         this.showSetPassword = false
       } catch (err) {
-        this.$toast.error('密码设置失败：' + (err.message || err))
+        this.$message.error('密码设置失败：' + (err.message || err))
       }
     },
     async updatePassword() {
@@ -526,10 +526,10 @@ export default {
           rePassword: me.form.rePassword,
         })
         await this.reload()
-        this.$toast.success('密码修改成功')
+        this.$message.success('密码修改成功')
         this.showUpdatePassword = false
       } catch (err) {
-        this.$toast.error('密码修改失败：' + (err.message || err))
+        this.$message.error('密码修改失败：' + (err.message || err))
       }
     },
     async reload() {
@@ -540,11 +540,11 @@ export default {
       this.$nuxt.$loading.start()
       try {
         await this.$axios.post('/api/user/email/verify')
-        this.$toast.success(
+        this.$message.success(
           '邮件已经发送到你的邮箱：' + this.user.email + '，请注意查收。'
         )
       } catch (err) {
-        this.$toast.error('请求验证失败：' + (err.message || err))
+        this.$message.error('请求验证失败：' + (err.message || err))
       } finally {
         this.$nuxt.$loading.finish()
       }

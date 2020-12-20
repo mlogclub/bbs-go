@@ -132,16 +132,18 @@ export default {
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )
-        this.$toast.success('修改成功', {
-          duration: 2000,
-          onComplete() {
+        this.$message({
+          message: '删除成功',
+          duration: 800,
+          type: 'success',
+          close() {
             utils.linkTo('/article/' + article.articleId)
           },
         })
       } catch (e) {
         console.error(e)
         me.publishing = false
-        this.$toast.error('提交失败：' + (e.message || e))
+        this.$message.error('提交失败：' + (e.message || e))
       }
     },
   },
