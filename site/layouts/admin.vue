@@ -48,7 +48,7 @@
               </a>
 
               <a class="navbar-item" href="/admin/tweets">
-                <i class="iconfont icon-tweet"></i>
+                <i class="iconfont icon-tweet2"></i>
                 <span>动态</span>
               </a>
 
