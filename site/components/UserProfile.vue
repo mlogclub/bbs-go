@@ -81,8 +81,9 @@ export default {
         // 重新加载数据
         this.user = await this.$store.dispatch('user/getCurrentUser')
 
-        this.$toast.success('背景设置成功')
+        this.$message.success('背景设置成功')
       } catch (e) {
+        this.$message.error(e.message || e)
         console.error(e)
       }
     },
@@ -159,7 +160,7 @@ export default {
   }
 
   &.background {
-    // background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
+    //background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
     background-size: cover;
     background-position: 50%;
 

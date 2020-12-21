@@ -31,7 +31,7 @@ func (c *TweetController) PostCreate() *simple.JsonResult {
 
 func (c *TweetController) GetList() *simple.JsonResult {
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	tweets, cursor := services.TweetService.GetTweets(cursor)
+	tweets, cursor := services.TweetService.GetTweets(0, cursor)
 	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }
 
@@ -55,4 +55,14 @@ func (c *TweetController) PostLikeBy(tweetId int64) *simple.JsonResult {
 func (c *TweetController) GetNewest() *simple.JsonResult {
 	tweets := services.TweetService.GetNewest()
 	return simple.JsonData(render.BuildTweets(tweets))
+}
+
+func (c *TweetController) GetUserTweets() *simple.JsonResult {
+	userId, err := simple.FormValueInt64(c.Ctx, "userId")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	tweets, cursor := services.TweetService.GetTweets(userId, cursor)
+	return simple.JsonCursorData(render.BuildTweets(tweets), strconv.FormatInt(cursor, 10))
 }

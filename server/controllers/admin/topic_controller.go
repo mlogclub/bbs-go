@@ -79,35 +79,16 @@ func (c *TopicController) DeleteRecommend() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-func (c *TopicController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(c.Ctx, "id")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	t := services.TopicService.Get(id)
-	if t == nil {
-		return simple.JsonErrorMsg("entity not found")
-	}
-
-	err = simple.ReadForm(c.Ctx, t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-
-	err = services.TopicService.Update(t)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	return simple.JsonData(t)
-}
-
 func (c *TopicController) PostDelete() *simple.JsonResult {
 	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-
-	err = services.TopicService.Delete(id)
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	err = services.TopicService.Delete(id, user.Id, c.Ctx.Request())
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

@@ -181,31 +181,15 @@ func (c *ArticleController) GetRecent() *simple.JsonResult {
 	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
 
-// 用户最近的文章
-func (c *ArticleController) GetUserRecent() *simple.JsonResult {
-	userId, err := simple.FormValueInt64(c.Ctx, "userId")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("user_id = ? and (status = ? or status = ?)",
-		userId, constants.StatusOk, constants.StatusPending).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildSimpleArticles(articles))
-}
-
 // 用户文章列表
 func (c *ArticleController) GetUserArticles() *simple.JsonResult {
 	userId, err := simple.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-
-	articles, paging := services.ArticleService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("user_id", userId).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("id"))
-
-	return simple.JsonPageData(render.BuildSimpleArticles(articles), paging)
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	articles, cursor := services.ArticleService.GetUserArticles(userId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
 }
 
 // 文章列表

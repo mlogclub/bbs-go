@@ -10,6 +10,7 @@
       <div class="loading-animation" />
       <span class="load-more-text">加载中...</span>
     </div>
+    <div v-if="!hasMore" class="no-more">没有更多数据</div>
   </div>
 </template>
 
@@ -113,6 +114,13 @@ export default {
       color: #000;
       margin-left: 5px;
     }
+  }
+
+  .no-more {
+    text-align: center;
+    padding: 10px 0;
+    color: #8590a6;
+    font-size: 14px;
   }
 }
 </style>

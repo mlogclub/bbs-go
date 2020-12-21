@@ -1,8 +1,8 @@
 # 生成静态文件
-vuepress build
+npm run docs:build
 
 # 进入生成的文件夹
-cd .vuepress/dist
+cd docs/.vuepress/dist
 
 # 如果是发布到自定义域名
 echo 'docs.bbs-go.com' > CNAME

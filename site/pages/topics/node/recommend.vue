@@ -2,13 +2,16 @@
   <section class="main">
     <div class="container main-container left-main">
       <div class="left-container">
-        <div class="main-content">
+        <div class="main-content no-padding">
           <topics-nav :nodes="nodes" :current-node-id="-1" />
-          <topic-list :topics="topicsPage.results" :show-ad="true" />
-          <pagination
-            :page="topicsPage.page"
-            url-prefix="/topics/node/recommend?p="
-          />
+          <load-more
+            v-if="topicsPage"
+            v-slot="{ results }"
+            :init-data="topicsPage"
+            url="/api/topic/topics?recommend=true"
+          >
+            <topic-list :topics="results" :show-ad="true" />
+          </load-more>
         </div>
       </div>
       <div class="right-container">
@@ -30,7 +33,7 @@ import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import TweetsWidget from '~/components/TweetsWidget'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
@@ -41,7 +44,7 @@ export default {
     TopicsNav,
     TopicList,
     TweetsWidget,
-    Pagination,
+    LoadMore,
   },
   async asyncData({ $axios, query }) {
     try {
@@ -53,11 +56,7 @@ export default {
         newestTweets,
       ] = await Promise.all([
         $axios.get('/api/topic/nodes'),
-        $axios.get('/api/topic/recommend/topics', {
-          params: {
-            page: query.p || 1,
-          },
-        }),
+        $axios.get('/api/topic/topics?recommend=true'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
         $axios.get('/api/tweet/newest'),

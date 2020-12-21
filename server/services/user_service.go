@@ -485,7 +485,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		}); err != nil {
 			return nil
 		}
-		if err := email.SendTemplateEmail(user.Email.String, subject, title, content, "", link); err != nil {
+		if err := email.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link); err != nil {
 			return err
 		}
 		return nil

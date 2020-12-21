@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 export default {
   components: {},
   props: {
@@ -70,7 +69,7 @@ export default {
   methods: {
     async create() {
       if (!this.content) {
-        this.$toast.error('请输入评论内容')
+        this.$message.error('请输入评论内容')
         return
       }
       if (this.sending) {
@@ -91,7 +90,7 @@ export default {
         this.quote = null
       } catch (e) {
         console.error(e)
-        this.$toast.error('评论失败：' + (e.message || e))
+        this.$message.error('评论失败：' + (e.message || e))
       } finally {
         this.sending = false
       }
@@ -107,7 +106,7 @@ export default {
       this.quote = null
     },
     toLogin() {
-      utils.toSignin()
+      this.$toSignin()
     },
   },
 }

@@ -1,13 +1,18 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main">
       <div class="left-container">
-        <topics-nav :nodes="nodes" />
-        <topic-list :topics="topicsPage.results" :show-ad="true" />
-        <pagination
-          :page="topicsPage.page"
-          :url-prefix="'/topics/' + tag.tagId + '?p='"
-        />
+        <div class="main-content no-padding">
+          <topics-nav :nodes="nodes" />
+          <load-more
+            v-if="topicsPage"
+            v-slot="{ results }"
+            :init-data="topicsPage"
+            :url="'/api/topic/tag/topics' + tag.tagId"
+          >
+            <topic-list :topics="results" :show-ad="true" />
+          </load-more>
+        </div>
       </div>
       <div class="right-container">
         <check-in />
@@ -28,7 +33,7 @@ import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
 import TopicList from '~/components/TopicList'
 import TweetsWidget from '~/components/TweetsWidget'
-import Pagination from '~/components/Pagination'
+import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
@@ -39,7 +44,7 @@ export default {
     TopicsNav,
     TopicList,
     TweetsWidget,
-    Pagination,
+    LoadMore,
   },
   async asyncData({ $axios, params, query }) {
     const [
@@ -55,7 +60,6 @@ export default {
       $axios.get('/api/topic/tag/topics', {
         params: {
           tagId: params.tagId,
-          page: query.p || 1,
         },
       }),
       $axios.get('/api/user/score/rank'),

@@ -52,7 +52,8 @@
 
   .pin-content-row {
     position: relative;
-    margin: 5px 4rem 5px 75px;
+    margin: 5px 4rem 0 75px;
+    padding-bottom: 8px;
 
     .content-box {
       font-size: 15px;

@@ -5,6 +5,7 @@ import (
 	"bbs-go/es"
 	"bbs-go/model/constants"
 	"math/rand"
+	"strconv"
 	"strings"
 
 	"github.com/dchest/captcha"
@@ -156,12 +157,9 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 		return simple.JsonErrorMsg("无权限")
 	}
 
-	if err := services.TopicService.Delete(topicId); err != nil {
+	if err := services.TopicService.Delete(topicId, user.Id, c.Ctx.Request()); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	// 操作日志
-	services.OperateLogService.AddOperateLog(user.Id, constants.OpTypeDelete, constants.EntityTopic, topicId,
-		"", c.Ctx.Request())
 	return simple.JsonSuccess()
 }
 
@@ -207,76 +205,39 @@ func (c *TopicController) GetRecent() *simple.JsonResult {
 	return simple.JsonData(render.BuildSimpleTopics(topics))
 }
 
-// 用户最近的帖子
-func (c *TopicController) GetUserRecent() *simple.JsonResult {
-	userId, err := simple.FormValueInt64(c.Ctx, "userId")
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
-	}
-	topics := services.TopicService.Find(simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, constants.StatusOk).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildSimpleTopics(topics))
-}
-
 // 用户帖子列表
 func (c *TopicController) GetUserTopics() *simple.JsonResult {
 	userId, err := simple.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("user_id", userId).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("id"))
-
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	topics, cursor := services.TopicService.GetUserTopics(userId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
 }
 
 // 帖子列表
 func (c *TopicController) GetTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
-
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
-}
-
-// 节点帖子列表
-func (c *TopicController) GetNodeTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	nodeId := simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("node_id", nodeId).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
-
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+	var (
+		cursor       = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+		nodeId       = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		recommend, _ = simple.FormValueBool(c.Ctx, "recommend")
+	)
+	topics, cursor := services.TopicService.GetTopics(nodeId, cursor, recommend)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
 }
 
 // 标签帖子列表
 func (c *TopicController) GetTagTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	tagId, err := simple.FormValueInt64(c.Ctx, "tagId")
+	var (
+		cursor     = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+		tagId, err = simple.FormValueInt64(c.Ctx, "tagId")
+	)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	topics, paging := services.TopicService.GetTagTopics(tagId, page)
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
-}
-
-// 推荐帖子
-func (c *TopicController) GetRecommendTopics() *simple.JsonResult {
-	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
-	topics, paging := services.TopicService.FindPageByCnd(simple.NewSqlCnd().
-		Eq("recommend", true).
-		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
-
-	return simple.JsonPageData(render.BuildSimpleTopics(topics), paging)
+	topics, cursor := services.TopicService.GetTagTopics(tagId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
 }
 
 // 收藏

@@ -1,3 +1,6 @@
+const isProduction = process.env.NODE_ENV === 'production'
+const isDocker = process.env.NODE_ENV === 'docker'
+
 export default {
   server: {
     port: 3000,
@@ -52,7 +55,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_bu6x3hdokz.css',
+        href: '//at.alicdn.com/t/font_1142441_1or22jfsge3.css',
       },
     ],
   },
@@ -63,11 +66,15 @@ export default {
   /*
    ** Global CSS
    */
-  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    { src: '~/assets/styles/main.scss', lang: 'scss' },
+  ],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
+    '~/plugins/element-ui',
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
@@ -90,7 +97,6 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/eslint-module',
-    '@nuxtjs/toast',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
     [
       '@nuxtjs/google-adsense',
@@ -110,20 +116,11 @@ export default {
   },
 
   proxy: {
-    '/api/':
-      process.env.NODE_ENV === 'production'
-        ? 'https://mlog.club'
-        : process.env.NODE_ENV === 'docker'
-        ? 'http://bbs-go-server:8082'
-        : 'http://127.0.0.1:8082',
-  },
-
-  // Doc: https://github.com/shakee93/vue-toasted
-  // Doc: https://github.com/nuxt-community/modules/tree/master/packages/toast
-  toast: {
-    position: 'top-right',
-    duration: 2000, // Display time of the toast in millisecond
-    keepOnHover: true, // When mouse is over a toast's element, the corresponding duration timer is paused until the cursor leaves the element
+    '/api/': isProduction
+      ? 'https://mlog.club'
+      : isDocker
+      ? 'http://bbs-go-server:8082'
+      : 'http://127.0.0.1:8082',
   },
 
   /*
@@ -149,5 +146,19 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {},
+  },
+  babel: {
+    plugins: [
+      [
+        'component',
+        {
+          libraryName: 'element-ui',
+          styleLibraryName: 'theme-chalk',
+        },
+      ],
+    ],
+    presets(env, [preset, options]) {
+      return [['@nuxt/babel-preset-app', options]]
+    },
   },
 }

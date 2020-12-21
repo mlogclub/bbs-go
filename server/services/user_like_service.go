@@ -84,6 +84,16 @@ func (s *userLikeService) Exists(userId int64, entityType string, entityId int64
 		Eq("entity_type", entityType).Eq("entity_id", entityId)) != nil
 }
 
+// 是否点赞，返回已点赞实体编号
+func (s *userLikeService) IsLiked(userId int64, entityType string, entityIds []int64) (likedEntityIds []int64) {
+	list := repositories.UserLikeRepository.Find(simple.DB(), simple.NewSqlCnd().Eq("user_id", userId).
+		Eq("entity_type", entityType).In("entity_id", entityIds))
+	for _, like := range list {
+		likedEntityIds = append(likedEntityIds, like.EntityId)
+	}
+	return
+}
+
 // 话题点赞
 func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 	logrus.Info("params:", userId, topicId)
@@ -92,13 +102,20 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 		return errors.New("话题不存在")
 	}
 
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	if err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := s.like(tx, userId, constants.EntityTopic, topicId); err != nil {
 			return err
 		}
 		// 更新点赞数
 		return tx.Exec("update t_topic set like_count = like_count + 1 where id = ?", topicId).Error
-	})
+	}); err != nil {
+		return err
+	}
+
+	// 发送消息
+	MessageService.SendTopicLikeMsg(topicId, userId)
+
+	return nil
 }
 
 // 动态点赞

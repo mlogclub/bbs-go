@@ -105,9 +105,9 @@ export default {
           days: 7,
         })
         this.user.forbidden = true
-        this.$toast.success('禁言成功')
+        this.$message.success('禁言成功')
       } catch (e) {
-        this.$toast.error('禁言失败')
+        this.$message.error('禁言失败')
       }
     },
     async removeForbidden() {
@@ -117,9 +117,9 @@ export default {
           days: 0,
         })
         this.user.forbidden = false
-        this.$toast.success('取消禁言成功')
+        this.$message.success('取消禁言成功')
       } catch (e) {
-        this.$toast.error('取消禁言失败')
+        this.$message.error('取消禁言失败')
       }
     },
   },

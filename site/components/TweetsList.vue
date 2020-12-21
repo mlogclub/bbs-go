@@ -50,7 +50,7 @@
             </a>
           </li>
         </ul>
-        <div class="pin-action-row">
+        <div v-if="showAction" class="pin-action-row">
           <div class="action-box">
             <div class="like-action action" @click="like(tweet)">
               <div class="action-title-box">
@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 export default {
   props: {
     tweets: {
@@ -85,6 +84,12 @@ export default {
         return []
       },
       required: false,
+    },
+    showAction: {
+      type: Boolean,
+      default() {
+        return true
+      },
     },
   },
   methods: {
@@ -95,16 +100,9 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
-            },
-          })
+          this.$msgSignIn()
         } else {
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },

@@ -1,8 +1,8 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="main-body">
-        <div class="widget">
+      <div class="main-body no-bg">
+        <div class="widget signup">
           <div class="widget-header">
             注册
           </div>
@@ -103,10 +103,13 @@
                 </button>
                 <github-login :ref-url="ref" />
                 <qq-login :ref-url="ref" />
-                <nuxt-link class="button is-text" to="/user/signin">
-                  已有账号，前往登录&gt;&gt;
-                </nuxt-link>
               </div>
+            </div>
+
+            <div class="field">
+              <nuxt-link class="button is-text" to="/user/signin">
+                已有账号，前往登录&gt;&gt;
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -116,7 +119,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
 export default {
@@ -157,13 +159,13 @@ export default {
         })
         if (this.ref) {
           // 跳到登录前
-          utils.linkTo(this.ref)
+          this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          utils.linkTo('/user/settings')
+          this.$linkTo('/user/settings')
         }
       } catch (err) {
-        this.$toast.error(err.message || err)
+        this.$message.error(err.message || err)
         await this.showCaptcha()
       }
     },
@@ -174,7 +176,7 @@ export default {
         this.captchaUrl = ret.captchaUrl
         this.captchaCode = ''
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
       }
     },
   },
@@ -186,4 +188,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.signup {
+  max-width: 480px;
+  margin: auto;
+  padding: 0 20px;
+}
+</style>

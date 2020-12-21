@@ -85,7 +85,13 @@ func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("收藏的话题不存在")
 	}
-	return s.addFavorite(userId, constants.EntityTopic, topicId)
+	if err := s.addFavorite(userId, constants.EntityTopic, topicId); err != nil {
+		return err
+	}
+
+	// 发送消息
+	MessageService.SendTopicFavoriteMsg(topicId, userId)
+	return nil
 }
 
 func (s *favoriteService) addFavorite(userId int64, entityType string, entityId int64) error {

@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/date"
 	"math"
+	"net/http"
 	"path"
 	"time"
 
@@ -58,26 +59,29 @@ func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
 }
 
-func (s *topicService) Update(t *model.Topic) error {
-	return repositories.TopicRepository.Update(simple.DB(), t)
-}
-
-func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TopicRepository.Updates(simple.DB(), id, columns)
-}
-
 func (s *topicService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value)
+	if err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value); err != nil {
+		return err
+	}
+
+	// 添加索引
+	es.UpdateTopicIndex(s.Get(id))
+
+	return nil
 }
 
 // 删除
-func (s *topicService) Delete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
+func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) error {
+	err := repositories.TopicRepository.UpdateColumn(simple.DB(), topicId, "status", constants.StatusDeleted)
 	if err == nil {
 		// 添加索引
-		es.UpdateTopicIndex(s.Get(id))
+		es.UpdateTopicIndex(s.Get(topicId))
 		// 删掉标签文章
-		TopicTagService.DeleteByTopicId(id)
+		TopicTagService.DeleteByTopicId(topicId)
+		// 发送消息
+		MessageService.SendTopicDeleteMsg(topicId, deleteUserId)
+		// 操作日志
+		OperateLogService.AddOperateLog(deleteUserId, constants.OpTypeDelete, constants.EntityTopic, topicId, "", r)
 	}
 	return err
 }
@@ -88,14 +92,20 @@ func (s *topicService) Undelete(id int64) error {
 	if err == nil {
 		// 删掉标签文章
 		TopicTagService.UndeleteByTopicId(id)
+		// 添加索引
+		es.UpdateTopicIndex(s.Get(id))
 	}
 	return err
 }
 
 // 发表
 func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
-	if len(title) == 0 {
+	if simple.IsBlank(title) {
 		return nil, simple.NewErrorMsg("标题不能为空")
+	}
+
+	if simple.IsBlank(content) {
+		return nil, simple.NewErrorMsg("内容不能为空")
 	}
 
 	if simple.RuneLen(title) > 128 {
@@ -182,7 +192,11 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 // 推荐
 func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
-	return s.UpdateColumn(topicId, "recommend", recommend)
+	if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
+		return err
+	}
+	MessageService.SendTopicRecommendMsg(topicId)
+	return nil
 }
 
 // 话题的标签
@@ -196,13 +210,37 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 	return cache.TagCache.GetList(tagIds)
 }
 
+// 获取帖子分页列表
+func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if nodeId > 0 {
+		cnd.Eq("node_id", nodeId)
+	}
+	if cursor > 0 {
+		cnd.Lt("last_comment_time", cursor)
+	}
+	if recommend {
+		cnd.Eq("recommend", true)
+	}
+	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(20)
+	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
+	if len(topics) > 0 {
+		nextCursor = topics[len(topics)-1].LastCommentTime
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
 // 指定标签下话题列表
-func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic, paging *simple.Paging) {
-	topicTags, paging := repositories.TopicTagRepository.FindPageByCnd(simple.DB(), simple.NewSqlCnd().
+func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, nextCursor int64) {
+	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", constants.StatusOk).
-		Page(page, 20).Desc("last_comment_time"))
+		Desc("last_comment_time").Limit(20))
 	if len(topicTags) > 0 {
+		nextCursor = topicTags[len(topicTags)-1].LastCommentTime
+
 		var topicIds []int64
 		for _, topicTag := range topicTags {
 			topicIds = append(topicIds, topicTag.TopicId)
@@ -216,6 +254,8 @@ func (s *topicService) GetTagTopics(tagId int64, page int) (topics []model.Topic
 				}
 			}
 		}
+	} else {
+		nextCursor = cursor
 	}
 	return
 }
@@ -340,4 +380,22 @@ func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(to
 		cursor = list[len(list)-1].Id
 		callback(list)
 	}
+}
+
+func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic, nextCursor int64) {
+	cnd := simple.NewSqlCnd()
+	if userId > 0 {
+		cnd.Eq("user_id", userId)
+	}
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
+	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
+	if len(topics) > 0 {
+		nextCursor = topics[len(topics)-1].Id
+	} else {
+		nextCursor = cursor
+	}
+	return
 }

@@ -3,7 +3,7 @@
     <section class="main">
       <div class="container main-container left-main">
         <div class="left-container">
-          <div class="main-content">
+          <div class="main-content no-padding">
             <article
               class="topic-detail topic-wrap"
               itemscope
@@ -34,6 +34,7 @@
                       }}</a>
                     </span>
                     <span class="meta-item">
+                      发布于
                       <time
                         :datetime="
                           topic.lastCommentTime
@@ -43,50 +44,10 @@
                         >{{ topic.lastCommentTime | prettyDate }}</time
                       >
                     </span>
-                    <span class="meta-item">
-                      <a
-                        v-if="topic.node"
-                        :href="'/topics/node/' + topic.node.nodeId"
-                        class="node"
-                        >{{ topic.node.name }}</a
-                      >
-                    </span>
-                    <span class="meta-item">
-                      <span
-                        v-for="tag in topic.tags"
-                        :key="tag.tagId"
-                        class="tag"
-                      >
-                        <a :href="'/topics/tag/' + tag.tagId">{{
-                          tag.tagName
-                        }}</a>
-                      </span>
-                    </span>
-                    <span v-if="hasPermission" class="meta-item act">
-                      <a @click="deleteTopic(topic.topicId)">
-                        <i class="iconfont icon-delete" />&nbsp;删除
-                      </a>
-                    </span>
-                    <span v-if="hasPermission" class="meta-item act">
-                      <a :href="'/topic/edit/' + topic.topicId">
-                        <i class="iconfont icon-edit" />&nbsp;修改
-                      </a>
-                    </span>
-                    <span class="meta-item act">
-                      <a @click="addFavorite(topic.topicId)">
-                        <i class="iconfont icon-favorite" />&nbsp;{{
-                          favorited ? '已收藏' : '收藏'
-                        }}
-                      </a>
-                    </span>
                   </div>
                 </div>
                 <div class="topic-header-right">
-                  <span class="count"
-                    >{{ topic.commentCount }}&nbsp;/&nbsp;{{
-                      topic.viewCount
-                    }}</span
-                  >
+                  <topic-manage-menu :topic="topic" />
                 </div>
               </div>
 
@@ -99,72 +60,106 @@
                 />
               </div>
 
-              <div class="content topic-content" itemprop="articleBody">
+              <!--内容-->
+              <div class="topic-content content" itemprop="articleBody">
                 <div
                   v-lazy-container="{ selector: 'img' }"
                   v-html="topic.content"
                 ></div>
               </div>
-            </article>
-            <div class="main-content-footer">
-              <div class="topic-toolbar">
-                <template v-if="likeUsers && likeUsers.length">
-                  <a
-                    v-for="likeUser in likeUsers"
-                    :key="likeUser.id"
-                    :href="'/user/' + likeUser.id"
-                    :alt="likeUser.nickname"
-                    target="_blank"
-                    class="avatar-link"
-                  >
-                    <img
-                      :src="likeUser.smallAvatar"
-                      :alt="likeUser.nickname"
-                      class="avatar"
-                    />
-                  </a>
-                </template>
-                <span class="like-desc">有{{ topic.likeCount }}人点赞</span>
 
-                <div class="action-buttons">
-                  <div
-                    :class="{ active: topic.liked }"
-                    class="action like"
-                    @click="like(topic)"
-                  >
-                    <i class="iconfont icon-like" />
-                  </div>
-                  <div
-                    :class="{ active: favorited }"
-                    class="action favorite"
-                    @click="addFavorite(topic.topicId)"
-                  >
-                    <i class="iconfont icon-favorite" />
-                  </div>
-                </div>
+              <!--节点、标签-->
+              <div class="topic-tags">
+                <a
+                  v-if="topic.node"
+                  :href="'/topics/node/' + topic.node.nodeId"
+                  class="topic-tag"
+                  >{{ topic.node.name }}</a
+                >
+                <a
+                  v-for="tag in topic.tags"
+                  :key="tag.tagId"
+                  :href="'/topics/tag/' + tag.tagId"
+                  class="topic-tag"
+                  >#{{ tag.tagName }}</a
+                >
               </div>
-            </div>
-          </div>
 
-          <!-- 评论 -->
-          <comment
-            :entity-id="topic.topicId"
-            :comments-page="commentsPage"
-            :comment-count="topic.commentCount"
-            :show-ad="false"
-            entity-type="topic"
-          />
+              <!-- 点赞用户列表 -->
+              <div
+                v-if="likeUsers && likeUsers.length"
+                class="topic-like-users"
+              >
+                <a
+                  v-for="likeUser in likeUsers"
+                  :key="likeUser.id"
+                  :href="'/user/' + likeUser.id"
+                  :alt="likeUser.nickname"
+                  target="_blank"
+                  class="like-user"
+                >
+                  <img
+                    :src="likeUser.smallAvatar"
+                    :alt="likeUser.nickname"
+                    class="avatar"
+                  />
+                </a>
+              </div>
+
+              <!-- 功能按钮 -->
+              <div class="topic-actions">
+                <a class="action disabled">
+                  <i class="action-icon iconfont icon-read" />
+                  <span class="content">
+                    <span>浏览</span>
+                    <span v-if="topic.viewCount > 0">
+                      ({{ topic.viewCount }})
+                    </span>
+                  </span>
+                </a>
+                <a
+                  class="action"
+                  :class="{ disabled: liked }"
+                  @click="like(topic)"
+                >
+                  <i
+                    class="action-icon iconfont icon-like"
+                    :class="{ 'checked-icon': liked }"
+                  />
+                  <span class="content">
+                    <span>点赞</span>
+                    <span v-if="topic.likeCount > 0">
+                      ({{ topic.likeCount }})
+                    </span>
+                  </span>
+                </a>
+                <a class="action" @click="addFavorite(topic.topicId)">
+                  <i
+                    class="action-icon iconfont"
+                    :class="{
+                      'icon-has-favorite': favorited,
+                      'icon-favorite': !favorited,
+                      'checked-icon': favorited,
+                    }"
+                  />
+                  <span class="content">
+                    <span>收藏</span>
+                  </span>
+                </a>
+              </div>
+
+              <!-- 评论 -->
+              <comment
+                :entity-id="topic.topicId"
+                :comments-page="commentsPage"
+                :comment-count="topic.commentCount"
+                :show-ad="false"
+                entity-type="topic"
+              />
+            </article>
+          </div>
         </div>
         <div class="right-container">
-          <a
-            class="button is-success"
-            href="/topic/create"
-            style="width: 100%;"
-          >
-            <span class="icon"><i class="iconfont icon-topic" /></span>
-            <span>发表话题</span>
-          </a>
-
           <user-info :user="topic.user" />
 
           <div class="ad">
@@ -185,15 +180,15 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
-import UserHelper from '~/common/UserHelper'
+import TopicManageMenu from '~/components/topic/TopicManageMenu'
 
 export default {
   components: {
     Comment,
     UserInfo,
+    TopicManageMenu,
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -207,7 +202,13 @@ export default {
       return
     }
 
-    const [favorited, commentsPage, likeUsers] = await Promise.all([
+    const [liked, favorited, commentsPage, likeUsers] = await Promise.all([
+      $axios.get('/api/like/liked', {
+        params: {
+          entityType: 'topic',
+          entityId: params.id,
+        },
+      }),
       $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
@@ -227,23 +228,11 @@ export default {
       topic,
       commentsPage,
       favorited: favorited.favorited,
+      liked: liked.liked,
       likeUsers,
     }
   },
   computed: {
-    hasPermission() {
-      return (
-        this.isOwner ||
-        UserHelper.isOwner(this.user) ||
-        UserHelper.isAdmin(this.user)
-      )
-    },
-    isOwner() {
-      if (!this.user || !this.topic) {
-        return false
-      }
-      return this.user.id === this.topic.user.id
-    },
     user() {
       return this.$store.state.user.current
     },
@@ -267,54 +256,33 @@ export default {
             },
           })
           this.favorited = false
-          this.$toast.success('已取消收藏！')
+          this.$message.success('已取消收藏！')
         } else {
           await this.$axios.get('/api/topic/favorite/' + topicId)
           this.favorited = true
-          this.$toast.success('收藏成功')
+          this.$message.success('收藏成功')
         }
       } catch (e) {
         console.error(e)
-        this.$toast.error('收藏失败：' + (e.message || e))
-      }
-    },
-    async deleteTopic(topicId) {
-      if (process.client && !window.confirm('是否确认删除该话题？')) {
-        return
-      }
-      try {
-        await this.$axios.post('/api/topic/delete/' + topicId)
-        this.$toast.success('删除成功', {
-          duration: 2000,
-          onComplete() {
-            utils.linkTo('/topics')
-          },
-        })
-      } catch (e) {
-        console.error(e)
-        this.$toast.error('删除失败：' + (e.message || e))
+        this.$message.error('收藏失败：' + (e.message || e))
       }
     },
     async like(topic) {
       try {
+        if (this.liked) {
+          return
+        }
         await this.$axios.post('/api/topic/like/' + topic.topicId)
-        topic.liked = true
+        this.liked = true
         topic.likeCount++
         this.likeUsers = this.likeUsers || []
         this.likeUsers.unshift(this.$store.state.user.current)
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
-            },
-          })
+          this.$msgSignIn()
         } else {
-          topic.liked = true
-          this.$toast.error(e.message || e)
+          this.liked = true
+          this.$message.error(e.message || e)
         }
       }
     },

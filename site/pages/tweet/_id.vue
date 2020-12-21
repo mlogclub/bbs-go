@@ -95,7 +95,6 @@ import Viewer from 'v-viewer'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import Comment from '~/components/Comment'
-import utils from '~/common/utils'
 import 'viewerjs/dist/viewer.css'
 
 Vue.use(Viewer, {
@@ -137,16 +136,9 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
-            },
-          })
+          this.$msgSignIn()
         } else {
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },

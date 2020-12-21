@@ -9,13 +9,14 @@
     }
 
     .topic-header-left {
+      margin: 10px 0 5px 10px;
       width: 50px;
       height: 50px;
     }
 
     .topic-header-center {
+      margin: 10px 10px 5px 10px;
       width: 100%;
-      margin-left: 10px;
 
       .topic-title,
       .topic-title a {
@@ -39,39 +40,12 @@
             margin-right: 8px;
           }
 
-          &.act {
-            // float: right;
-            margin-right: 5px;
-
-            a {
-              font-size: 12px;
-              // color: #3273dc;
-              color: #7a7a7a;
-              font-weight: 700;
-
-              &:hover {
-                text-decoration: underline;
-              }
-
-              i {
-                font-size: 12px;
-                color: #000;
-              }
-            }
-          }
-
           .tag {
             height: auto !important;
 
             &:not(:last-child) {
               margin-right: 3px;
             }
-          }
-
-          .node {
-            font-weight: bold;
-            color: #3273dcde;
-            // color: #e7672e;
           }
         }
 
@@ -82,11 +56,12 @@
     }
 
     .topic-header-right {
+      margin: 0 10px 5px 0;
       min-width: 100px;
       max-width: 100px;
       text-align: right;
-      padding-right: 8px;
 
+      // TODO 这里计划删掉的，但是列表中还在用
       .like {
         font-size: 12px;
 
@@ -96,13 +71,6 @@
 
           background-color: rgba(126, 107, 1, 0.08);
           color: #e7672e;
-          // padding: 0;
-          // display: inline-block;
-          // height: 20px;
-          // width: 20px;
-          // line-height: 20px;
-          // border-radius: 10px;
-          // text-align: center;
           padding: 4px;
           border-radius: 50%;
 
@@ -138,61 +106,7 @@
   .topic-content {
     font-size: 15px;
     padding-top: 0 !important;
-  }
-}
-
-.topic-toolbar {
-  display: flex;
-  position: relative;
-
-  .avatar-link {
-    height: 25px;
-    width:25px;
-    margin-right: 3px;
-    .avatar {
-      max-width: 25px;
-      max-height: 25px;
-      min-width: 25px;
-      min-height: 25px;
-      margin-left: 5px;
-      border: solid 1px #e8ecee;
-    }
-  }
-
-  .like-desc {
-    margin-left: 10px;
-    color: #6c757d !important;
-    font-size: 13px;
-    line-height: 25px;
-  }
-
-  .action-buttons {
-    display: flex;
-    position: absolute;
-    right: 0px;
-
-    .action {
-      margin-left: 5px;
-      height: 25px;
-      width: 25px;
-      line-height: 25px;
-      text-align: center;
-      color: #e7672e;
-      background-color: rgba(126, 107, 1, 0.08);
-      border-radius: 50%;
-      transition: all 0.5s;
-      cursor: pointer;
-
-      i {
-        font-size: 16px;
-      }
-
-      &:hover,
-      &.active {
-        color: #fff;
-        background-color: #e7672e;
-      }
-    }
+    margin: 0 12px;
   }
 }
 
@@ -200,40 +114,30 @@
   margin: 0 0 10px 0 !important;
 
   li.topic-item {
-    padding: 8px 0 8px 8px;
+    padding: 12px 0 12px 8px;
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
-
+    border-bottom: 1px solid #f2f2f2;
     //&:hover {
     //  background: #f3f6f9;
     //}
-
-    &:not(:last-child) {
-      border-bottom: 1px solid #f2f2f2;
-    }
-  }
-
-  .topic-header {
-    .topic-header-center {
-      // 控制内容只显示一行，多余的折叠，暂时不需要先注释掉
-      //.topic-title,
-      //.topic-title a {
-      //  word-break: break-all;
-      //  -webkit-line-clamp: 1;
-      //  text-overflow: ellipsis;
-      //  -webkit-box-orient: vertical;
-      //  display: -webkit-box;
-      //}
-    }
   }
 }
 
 .topic-detail {
   margin-bottom: 20px;
 
-  .content {
-    padding-top: 10px !important;
+  .topic-header {
+    //padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .topic-content, .topic-tags, .topic-like-users, .topic-actions {
+    margin: 20px 20px;
+  }
+
+  .topic-content {
     font-size: 15px;
     color: #000;
     white-space: normal;
@@ -254,8 +158,97 @@
     }
   }
 
-  .topic-header {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+  .topic-tags {
+    .topic-tag {
+      height: 25px;
+      padding: 0 8px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12.5px;
+      margin-right: 10px;
+      background: #f7f7f7;
+      border: 1px solid #f7f7f7;
+      color: #777;
+      font-size: 12px;
+
+      &:hover {
+        color: #1878f3;
+        background: #fff;
+        border: 1px solid #1878f3;
+      }
+    }
+  }
+
+  .topic-like-users {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+
+    .like-user {
+      height: 30px;
+      width: 30px;
+      margin: 10px auto;
+
+      .avatar {
+        max-width: 30px;
+        max-height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+        margin-right: 5px;
+        border: solid 1px #e8ecee;
+      }
+    }
+  }
+
+  .topic-actions {
+    margin: 20px auto;
+    padding: 0 25px;
+    display: flex;
+    justify-content: space-between;
+
+    .action {
+      background: #ffffff;
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      color: #8590a6;
+
+      .checked-icon {
+        color: red;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+
+        &:hover {
+          color: #8590a6;
+
+          > .action-icon {
+            fill: #8590a6;
+          }
+        }
+      }
+
+      > .action-icon {
+        font-size: 30px;
+        fill: #8590a6;
+      }
+
+      &:hover {
+        color: #1878f3;
+
+        > .action-icon {
+          fill: #1878f3;
+        }
+      }
+
+      > .content {
+        margin-top: 10px;
+        font-size: 12px;
+      }
+    }
   }
 }

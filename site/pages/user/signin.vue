@@ -1,8 +1,8 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="main-body">
-        <div class="widget">
+      <div class="main-body no-bg">
+        <div class="widget signin">
           <div class="widget-header">
             登录
           </div>
@@ -43,39 +43,41 @@
               <label class="label">验证码</label>
               <div class="control has-icons-left">
                 <div class="field is-horizontal">
-                  <div class="field">
+                  <div class="field login-captcha-input">
                     <input
                       v-model="captchaCode"
                       class="input"
                       type="text"
                       placeholder="验证码"
-                      style="max-width: 150px; margin-right: 20px;"
                       @keyup.enter="submitLogin"
                     />
                     <span class="icon is-small is-left"
                       ><i class="iconfont icon-captcha"
                     /></span>
                   </div>
-                  <div v-if="captchaUrl" class="field">
-                    <a @click="showCaptcha"
-                      ><img :src="captchaUrl" style="height: 40px;"
-                    /></a>
+                  <div v-if="captchaUrl" class="field login-captcha-img">
+                    <a @click="showCaptcha"><img :src="captchaUrl" /></a>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="field">
-              <div class="control">
-                <button class="button is-success" @click="submitLogin">
-                  登录
-                </button>
-                <github-login :ref-url="ref" />
-                <qq-login :ref-url="ref" />
-                <nuxt-link class="button is-text" to="/user/signup">
-                  没有账号？点击这里去注册&gt;&gt;
-                </nuxt-link>
+            <div class="field login-button">
+              <button class="button is-success" @click="submitLogin">
+                登录
+              </button>
+              <nuxt-link class="button is-text" to="/user/signup">
+                没有账号？点击这里去注册&gt;&gt;
+              </nuxt-link>
+            </div>
+            <div class="third-party-line">
+              <div class="third-party-title">
+                <span>第三方账号登录</span>
               </div>
+            </div>
+            <div class="third-parties">
+              <github-login :ref-url="ref" />
+              <qq-login :ref-url="ref" />
             </div>
           </div>
         </div>
@@ -85,7 +87,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
 export default {
@@ -125,15 +126,15 @@ export default {
     async submitLogin() {
       try {
         if (!this.username) {
-          this.$toast.error('请输入用户名或邮箱')
+          this.$message.error('请输入用户名或邮箱')
           return
         }
         if (!this.password) {
-          this.$toast.error('请输入密码')
+          this.$message.error('请输入密码')
           return
         }
         if (!this.captchaCode) {
-          this.$toast.error('请输入验证码')
+          this.$message.error('请输入验证码')
           return
         }
         const user = await this.$store.dispatch('user/signin', {
@@ -145,13 +146,13 @@ export default {
         })
         if (this.ref) {
           // 跳到登录前
-          utils.linkTo(this.ref)
+          this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          utils.linkTo('/user/' + user.id)
+          this.$linkTo('/user/' + user.id)
         }
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
         await this.showCaptcha()
       }
     },
@@ -165,7 +166,7 @@ export default {
         this.captchaId = ret.captchaId
         this.captchaUrl = ret.captchaUrl
       } catch (e) {
-        this.$toast.error(e.message || e)
+        this.$message.error(e.message || e)
       }
     },
     /**
@@ -175,15 +176,13 @@ export default {
     redirectIfLogined() {
       if (this.isLogin) {
         const me = this
-        this.$toast.success('登录成功！', {
-          duration: 1000,
-          keepOnHover: false,
-          position: 'top-center',
-          onComplete() {
-            if (me.ref && !utils.isSigninUrl(me.ref)) {
-              utils.linkTo(me.ref)
+        this.$msg({
+          message: '登录成功',
+          onClose() {
+            if (me.ref && !me.$isSigninUrl(me.ref)) {
+              me.$linkTo(me.ref)
             } else {
-              utils.linkTo('/')
+              me.$linkTo('/')
             }
           },
         })
@@ -199,3 +198,50 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+.signin {
+  max-width: 480px;
+  margin: auto;
+  padding: 0 20px;
+
+  .login-captcha-input {
+    width: 100%;
+    margin-right: 20px;
+    .input {
+      width: 100% !important;
+    }
+  }
+
+  .login-captcha-img {
+    img {
+      height: 40px;
+    }
+  }
+
+  .login-button {
+    .button {
+      width: 100%;
+    }
+  }
+
+  .third-party-line {
+    border-bottom: 1px solid #dedede;
+    margin-bottom: 24px;
+    .third-party-title {
+      margin-bottom: -12px;
+      text-align: center;
+
+      span {
+        background-color: #fff;
+        padding: 0 10px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .third-parties {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+}
+</style>

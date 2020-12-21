@@ -48,7 +48,7 @@
               </a>
 
               <a class="navbar-item" href="/admin/tweets">
-                <i class="iconfont icon-tweet"></i>
+                <i class="iconfont icon-tweet2"></i>
                 <span>动态</span>
               </a>
 
@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import '~/plugins/element-ui'
+// import '~/plugins/element-ui'
 
 export default {
   middleware: ['authenticated'],
@@ -133,10 +133,10 @@ export default {
     return {
       title: 'BBS-GO管理',
       link: [
-        {
-          rel: 'stylesheet',
-          href: '//unpkg.com/element-ui/lib/theme-chalk/index.css',
-        },
+        // {
+        //   rel: 'stylesheet',
+        //   href: '//unpkg.com/element-ui/lib/theme-chalk/index.css',
+        // },
       ],
     }
   },

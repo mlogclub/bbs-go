@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
+	"github.com/tidwall/gjson"
 	"sync"
 
 	"github.com/mlogclub/simple"
@@ -90,99 +91,148 @@ func (s *messageService) MarkRead(userId int64) {
 		userId, constants.MsgStatusUnread)
 }
 
+// 话题收到点赞
+func (s *messageService) SendTopicLikeMsg(topicId, likeUserId int64) {
+	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	if topic == nil {
+		return
+	}
+	if topic.UserId == likeUserId {
+		return
+	}
+	var (
+		title        = "点赞了你的话题"
+		quoteContent = "《" + topic.Title + "》"
+	)
+	s.Produce(likeUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicLike, map[string]interface{}{
+		"topicId":    topicId,
+		"likeUserId": likeUserId,
+	})
+}
+
+// 话题被收藏
+func (s *messageService) SendTopicFavoriteMsg(topicId, favoriteUserId int64) {
+	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	if topic == nil {
+		return
+	}
+	if topic.UserId == favoriteUserId {
+		return
+	}
+	var (
+		title        = "收藏了你的话题"
+		quoteContent = "《" + topic.Title + "》"
+	)
+	s.Produce(favoriteUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
+		"topicId":        topicId,
+		"favoriteUserId": favoriteUserId,
+	})
+}
+
+// 话题被设为推荐
+func (s *messageService) SendTopicRecommendMsg(topicId int64) {
+	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	if topic == nil {
+		return
+	}
+	var (
+		title        = "你的话题被设为推荐"
+		quoteContent = "《" + topic.Title + "》"
+	)
+	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicRecommend, map[string]interface{}{
+		"topicId": topicId,
+	})
+}
+
+// 话题被删除消息
+func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
+	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	if topic == nil {
+		return
+	}
+	if topic.UserId == deleteUserId {
+		return
+	}
+	var (
+		title        = "你的话题被删除"
+		quoteContent = "《" + topic.Title + "》"
+	)
+	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicDelete, map[string]interface{}{
+		"topicId":      topicId,
+		"deleteUserId": deleteUserId,
+	})
+}
+
 // 评论被回复消息
 func (s *messageService) SendCommentMsg(comment *model.Comment) {
-	quote := s.getQuoteComment(comment.QuoteId)
-	summary := common.GetSummary(comment.ContentType, comment.Content)
-
 	var (
-		fromId       = comment.UserId // 消息发送人
-		authorId     int64            // 帖子作者编号
-		title        string           // 消息标题
-		content      string           // 消息内容
-		quoteContent string           // 引用内容
+		fromId       = comment.UserId                                          // 消息发送人
+		toId         int64                                                     // 消息接收人
+		title        string                                                    // 消息的标题
+		content      = common.GetSummary(comment.ContentType, comment.Content) // 消息内容
+		quoteContent string                                                    // 引用内容
 	)
 
 	if comment.EntityType == constants.EntityArticle { // 文章被评论
 		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
 		if article != nil {
-			authorId = article.UserId
+			toId = article.UserId
 			title = "回复了你的文章"
-			content = summary
 			quoteContent = "《" + article.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTopic { // 话题被评论
 		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
 		if topic != nil {
-			authorId = topic.UserId
+			toId = topic.UserId
 			title = "回复了你的话题"
-			content = summary
 			quoteContent = "《" + topic.Title + "》"
 		}
 	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
 		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
 		if tweet != nil {
-			authorId = tweet.UserId
+			toId = tweet.UserId
 			title = "回复了你的动态"
-			content = summary
 			quoteContent = tweet.Content
 		}
 	}
 
-	if authorId <= 0 {
+	if toId <= 0 {
 		return
 	}
 
+	quote := s.getQuoteComment(comment.QuoteId)
 	if quote != nil { // 回复跟帖
-		if comment.UserId != authorId && quote.UserId != authorId {
-			// 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
-			s.Produce(
-				fromId,
-				authorId,
-				title,
-				content,
-				quoteContent,
-				constants.MsgTypeComment,
+		// 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
+		if fromId != toId && quote.UserId != toId {
+			// 给帖子作者发消息（收到话题评论）
+			s.Produce(fromId, toId, title, content, quoteContent, constants.MsgTypeTopicComment,
 				map[string]interface{}{
 					"entityType": comment.EntityType,
 					"entityId":   comment.EntityId,
 					"commentId":  comment.Id,
 					"quoteId":    comment.QuoteId,
-				},
-			)
+				})
 		}
 
-		// 给被引用的人发消息
-		s.Produce(
-			fromId,
-			quote.UserId,
-			"回复了你的评论",
-			summary,
-			common.GetMarkdownSummary(quote.Content),
-			constants.MsgTypeComment,
+		// 给被引用的人发消息（收到他人回复）
+		if fromId != quote.UserId {
+			s.Produce(fromId, quote.UserId, "回复了你的评论", content, common.GetMarkdownSummary(quote.Content),
+				constants.MsgTypeCommentReply, map[string]interface{}{
+					"entityType": comment.EntityType,
+					"entityId":   comment.EntityId,
+					"commentId":  comment.Id,
+					"quoteId":    comment.QuoteId,
+				})
+		}
+	} else if fromId != toId { // 回复主贴，并且不是自己回复自己
+		// 给帖子作者发消息（收到话题评论）
+		s.Produce(fromId, toId, title, content, quoteContent, constants.MsgTypeTopicComment,
 			map[string]interface{}{
 				"entityType": comment.EntityType,
 				"entityId":   comment.EntityId,
 				"commentId":  comment.Id,
 				"quoteId":    comment.QuoteId,
-			},
-		)
-	} else if comment.UserId != authorId {
-		// 回复主贴，并且不是自己回复自己，给帖子作者发消息
-		s.Produce(
-			fromId,
-			authorId,
-			title,
-			content,
-			quoteContent,
-			constants.MsgTypeComment,
-			map[string]interface{}{
-				"entityType": comment.EntityType,
-				"entityId":   comment.EntityId,
-				"commentId":  comment.Id,
-				"quoteId":    comment.QuoteId,
-			},
-		)
+			})
 	}
 }
 
@@ -193,15 +243,14 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 	return repositories.CommentRepository.Get(simple.DB(), quoteId)
 }
 
-// 生产，将消息数据放入channel
-func (s *messageService) Produce(fromId, toId int64, title, content, quoteContent string, msgType int,
-	extraDataMap map[string]interface{}) {
+// 生产，将消息数据放入chan
+func (s *messageService) Produce(fromId, toId int64, title, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
+	s.Consume()
+
 	to := cache.UserCache.Get(toId)
 	if to == nil || to.Type != constants.UserTypeNormal {
 		return
 	}
-
-	s.Consume()
 
 	var (
 		extraData string
@@ -243,21 +292,66 @@ func (s *messageService) Consume() {
 }
 
 // 发送邮件通知
-func (s *messageService) SendEmailNotice(message *model.Message) {
-	user := cache.UserCache.Get(message.UserId)
+func (s *messageService) SendEmailNotice(msg *model.Message) {
+	user := cache.UserCache.Get(msg.UserId)
 	if user != nil && len(user.Email.String) > 0 {
 		var (
 			siteTitle  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-			emailTitle = "新消息提醒 - " + siteTitle
+			emailTitle = siteTitle + " - 新消息提醒"
 		)
 
-		_ = email.SendTemplateEmail(user.Email.String, emailTitle, emailTitle, message.Content,
-			message.QuoteContent, &model.ActionLink{
+		if msg.Type == constants.MsgTypeTopicComment {
+			emailTitle = siteTitle + " - 收到话题评论"
+		} else if msg.Type == constants.MsgTypeCommentReply {
+			emailTitle = siteTitle + " - 收到他人回复"
+		} else if msg.Type == constants.MsgTypeTopicLike {
+			emailTitle = siteTitle + " - 收到点赞"
+		} else if msg.Type == constants.MsgTypeTopicFavorite {
+			emailTitle = siteTitle + " - 话题被收藏"
+		} else if msg.Type == constants.MsgTypeTopicRecommend {
+			emailTitle = siteTitle + " - 话题被设为推荐"
+		} else if msg.Type == constants.MsgTypeTopicDelete {
+			emailTitle = siteTitle + " - 话题被删除"
+		}
+
+		var from *model.User
+		if msg.FromId > 0 {
+			from = cache.UserCache.Get(msg.FromId)
+		}
+		err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, msg.Content,
+			msg.QuoteContent, &model.ActionLink{
 				Title: "点击查看详情",
 				Url:   urls.AbsUrl("/user/messages"),
 			})
-		messageLog.Info("发送邮件...email=", user.Email)
+		if err != nil {
+			logrus.Error(err)
+		}
 	} else {
 		messageLog.Info("邮件未发送，没设置邮箱...")
 	}
+}
+
+// 查看消息详情链接地址
+func (s *messageService) GetMessageDetailUrl(msg *model.Message) string {
+	if msg.Type == constants.MsgTypeTopicComment ||
+		msg.Type == constants.MsgTypeCommentReply {
+		entityType := gjson.Get(msg.ExtraData, "entityType")
+		entityId := gjson.Get(msg.ExtraData, "entityId")
+
+		if entityType.String() == constants.EntityArticle {
+			return urls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return urls.TopicUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTweet {
+			return urls.TweetUrl(entityId.Int())
+		}
+	} else if msg.Type == constants.MsgTypeTopicLike ||
+		msg.Type == constants.MsgTypeTopicFavorite ||
+		msg.Type == constants.MsgTypeTopicRecommend {
+		topicId := gjson.Get(msg.ExtraData, "topicId")
+		if topicId.Exists() && topicId.Int() > 0 {
+			return urls.TopicUrl(topicId.Int())
+		}
+	}
+	return urls.AbsUrl("/user/messages")
 }

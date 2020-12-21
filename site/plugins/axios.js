@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-export default function ({ $axios, $toast, app }) {
+export default function ({ $axios, app }) {
   $axios.onRequest((config) => {
     config.headers.common['X-Client'] = 'bbs-go-site'
     config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

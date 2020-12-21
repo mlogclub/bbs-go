@@ -31,40 +31,6 @@ export default {
       isLoading: true,
       vditor: null,
       width: '100%',
-      toolbar: [
-        'emoji',
-        'headings',
-        'bold',
-        'italic',
-        'strike',
-        'link',
-        '|',
-        'list',
-        'ordered-list',
-        'check',
-        'outdent',
-        'indent',
-        '|',
-        'quote',
-        'line',
-        'code',
-        'inline-code',
-        'upload',
-        'table',
-        '|',
-        'undo',
-        'redo',
-        '|',
-        'outline',
-        'edit-mode',
-        'preview',
-        'both',
-        'fullscreen',
-        {
-          name: 'more',
-          toolbar: ['devtools'],
-        },
-      ],
     }
   },
   mounted() {
@@ -75,11 +41,12 @@ export default {
      * 初始化编辑器
      */
     doInit() {
+      console.log('do init...')
       const me = this
       if (process.client) {
-        this.vditor = new window.Vditor(
-          this.editorId,
-          this.getOptions(function () {
+        me.vditor = new window.Vditor(
+          me.editorId,
+          me.getOptions(function () {
             me.vditor.setValue(me.value)
           })
         )
@@ -91,7 +58,7 @@ export default {
       return {
         width: me.width,
         height: me.height,
-        toolbar: me.toolbar,
+        toolbar: me.getToolbars(),
         mode: 'sv',
         toolbarConfig: {
           pin: false,
@@ -135,6 +102,46 @@ export default {
           },
         },
         after: afterFunc || function () {},
+      }
+    },
+    getToolbars() {
+      if (this.$isMobile()) {
+        return ['emoji', 'bold', 'italic', 'strike', 'fullscreen']
+      } else {
+        return [
+          'emoji',
+          'headings',
+          'bold',
+          'italic',
+          'strike',
+          'link',
+          '|',
+          'list',
+          'ordered-list',
+          'check',
+          'outdent',
+          'indent',
+          '|',
+          'quote',
+          'line',
+          'code',
+          'inline-code',
+          'upload',
+          'table',
+          '|',
+          'undo',
+          'redo',
+          '|',
+          'outline',
+          'edit-mode',
+          'preview',
+          'both',
+          'fullscreen',
+          {
+            name: 'more',
+            toolbar: ['devtools'],
+          },
+        ]
       }
     },
     /**

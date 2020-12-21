@@ -16,7 +16,9 @@
         <div class="msglist">
           <ul>
             <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
-              <a href="/user/messages">{{ msg.content }}</a>
+              <a href="/user/messages">
+                {{ msg.from.id > 0 ? msg.from.nickname : '' }}{{ msg.title }}
+              </a>
             </li>
           </ul>
         </div>

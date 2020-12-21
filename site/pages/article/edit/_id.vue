@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import TagInput from '~/components/TagInput'
 import MarkdownHelp from '~/components/MarkdownHelp'
 import MarkdownEditor from '~/components/MarkdownEditor'
@@ -132,16 +131,15 @@ export default {
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )
-        this.$toast.success('修改成功', {
-          duration: 2000,
-          onComplete() {
-            utils.linkTo('/article/' + article.articleId)
+        this.$msg({
+          message: '删除成功',
+          onClose() {
+            me.$linkTo('/article/' + article.articleId)
           },
         })
       } catch (e) {
-        console.error(e)
         me.publishing = false
-        this.$toast.error('提交失败：' + (e.message || e))
+        this.$message.error('提交失败：' + (e.message || e))
       }
     },
   },

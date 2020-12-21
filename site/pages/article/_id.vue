@@ -92,20 +92,20 @@
               itemprop="articleBody"
               v-html="article.content"
             ></div>
-          </div>
 
-          <div class="ad">
-            <!-- 展示广告 -->
-            <adsbygoogle ad-slot="1742173616" />
-          </div>
+            <div class="ad">
+              <!-- 展示广告 -->
+              <adsbygoogle ad-slot="1742173616" />
+            </div>
 
-          <!-- 评论 -->
-          <comment
-            :entity-id="article.articleId"
-            :comments-page="commentsPage"
-            :show-ad="true"
-            entity-type="article"
-          />
+            <!-- 评论 -->
+            <comment
+              :entity-id="article.articleId"
+              :comments-page="commentsPage"
+              :show-ad="true"
+              entity-type="article"
+            />
+          </div>
         </article>
       </div>
       <div class="right-container">
@@ -160,7 +160,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
 import UserHelper from '~/common/UserHelper'
 import Comment from '~/components/Comment'
 
@@ -262,21 +261,26 @@ export default {
         window.hljs.initHighlighting()
       }
     },
-    async deleteArticle(articleId) {
-      if (process.client && !window.confirm('是否确认删除该文章？')) {
+    deleteArticle(articleId) {
+      if (!process.client) {
         return
       }
-      try {
-        await this.$axios.post('/api/article/delete/' + articleId)
-        this.$toast.success('删除成功！', {
-          duration: 1000,
-          onComplete() {
-            utils.linkTo('/articles')
-          },
-        })
-      } catch (e) {
-        this.$toast.error('删除失败：' + (e.message || e))
-      }
+      const me = this
+      this.$confirm('是否确认删除该文章？').then(function () {
+        me.$axios
+          .post('/api/article/delete/' + articleId)
+          .then(() => {
+            me.$msg({
+              message: '删除成功',
+              onClose() {
+                me.$linkTo('/articles')
+              },
+            })
+          })
+          .catch((e) => {
+            me.$message.error('删除失败：' + (e.message || e))
+          })
+      })
     },
     async addFavorite(articleId) {
       try {
@@ -288,15 +292,15 @@ export default {
             },
           })
           this.favorited = false
-          this.$toast.success('已取消收藏！')
+          this.$message.success('已取消收藏！')
         } else {
           await this.$axios.post('/api/article/favorite/' + articleId)
           this.favorited = true
-          this.$toast.success('收藏成功！')
+          this.$message.success('收藏成功！')
         }
       } catch (e) {
         console.error(e)
-        this.$toast.error('收藏失败：' + (e.message || e))
+        this.$message.error('收藏失败：' + (e.message || e))
       }
     },
   },

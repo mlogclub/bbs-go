@@ -1,6 +1,7 @@
 package email
 
 import (
+	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bytes"
 	"crypto/tls"
@@ -22,11 +23,9 @@ var emailTemplate = `
         </span>
     </h2>
     <div style="padding:0 12px 0 12px; margin-top:18px;">
-        {{if .Content}}
 		<p>
-            {{.Content}}
-        </p>
-		{{end}}
+		{{if .From}}<a href="{{.From.Url}}" target="_blank" rel="noopener">{{.From.Title}}</a>&nbsp;{{end}}{{if .Content}}{{.Content}}{{end}}
+		</p>
 		{{if .QuoteContent}}
 		<div style="background-color: #f5f5f5;padding: 10px 15px;margin:18px 0;word-wrap:break-word;">
             {{.QuoteContent}}
@@ -43,13 +42,21 @@ var emailTemplate = `
 `
 
 // SendTemplateEmail 发送模版邮件
-func SendTemplateEmail(to, subject, title, content, quote string, link *model.ActionLink) error {
+func SendTemplateEmail(from *model.User, to, subject, title, content, quote string, link *model.ActionLink) error {
 	tpl, err := template.New("emailTemplate").Parse(emailTemplate)
 	if err != nil {
 		return err
 	}
+	var fromLink *model.ActionLink
+	if from != nil {
+		fromLink = &model.ActionLink{
+			Title: from.Nickname,
+			Url:   urls.UserUrl(from.Id),
+		}
+	}
 	var b bytes.Buffer
 	err = tpl.Execute(&b, map[string]interface{}{
+		"From":         fromLink,
 		"Title":        title,
 		"Content":      content,
 		"QuoteContent": quote,

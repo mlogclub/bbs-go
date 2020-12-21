@@ -160,8 +160,6 @@
 </template>
 
 <script>
-import utils from '~/common/utils'
-
 export default {
   layout: 'admin',
   data() {
@@ -251,16 +249,9 @@ export default {
         tweet.likeCount++
       } catch (e) {
         if (e.errorCode === 1) {
-          this.$toast.info('请登录后点赞！！！', {
-            action: {
-              text: '去登录',
-              onClick: (e, toastObject) => {
-                utils.toSignin()
-              },
-            },
-          })
+          this.$msgSignIn()
         } else {
-          this.$toast.error(e.message || e)
+          this.$message.error(e.message || e)
         }
       }
     },
