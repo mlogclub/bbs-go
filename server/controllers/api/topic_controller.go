@@ -54,20 +54,13 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 		return simple.JsonError(err)
 	}
 
-	var (
-		captchaId   = simple.FormValue(c.Ctx, "captchaId")
-		captchaCode = simple.FormValue(c.Ctx, "captchaCode")
-		nodeId      = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
-		title       = strings.TrimSpace(simple.FormValue(c.Ctx, "title"))
-		content     = strings.TrimSpace(simple.FormValue(c.Ctx, "content"))
-		tags        = simple.FormValueStringArray(c.Ctx, "tags")
-	)
+	form := model.GetCreateTopicForm(c.Ctx)
 
-	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(captchaId, captchaCode) {
+	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}
 
-	topic, err := services.TopicService.Publish(user.Id, nodeId, tags, title, content)
+	topic, err := services.TopicService.Publish(user.Id, form)
 	if err != nil {
 		return simple.JsonError(err)
 	}

@@ -99,57 +99,54 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(topicType constants.TopicType, userId, nodeId int64, tags []string,
-	title, content string, imageList []string) (*model.Topic, *simple.CodeError) {
-
-	if topicType == constants.TopicTypeTweet {
-		if simple.IsBlank(content) && len(imageList) == 0 {
+func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model.Topic, *simple.CodeError) {
+	if form.Type == constants.TopicTypeTweet {
+		if simple.IsBlank(form.Content) && len(form.ImageList) == 0 {
 			return nil, simple.NewErrorMsg("内容或图片不能为空")
 		}
 	} else {
-		if simple.IsBlank(title) {
+		if simple.IsBlank(form.Title) {
 			return nil, simple.NewErrorMsg("标题不能为空")
 		}
 
-		if simple.IsBlank(content) {
+		if simple.IsBlank(form.Content) {
 			return nil, simple.NewErrorMsg("内容不能为空")
 		}
 
-		if simple.RuneLen(title) > 128 {
+		if simple.RuneLen(form.Title) > 128 {
 			return nil, simple.NewErrorMsg("标题长度不能超过128")
 		}
 	}
 
-	if nodeId <= 0 {
-		nodeId = SysConfigService.GetConfig().DefaultNodeId
-		if nodeId <= 0 {
+	if form.NodeId <= 0 {
+		form.NodeId = SysConfigService.GetConfig().DefaultNodeId
+		if form.NodeId <= 0 {
 			return nil, simple.NewErrorMsg("请选择节点")
 		}
 	}
-	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
+	node := repositories.TopicNodeRepository.Get(simple.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
 		return nil, simple.NewErrorMsg("节点不存在")
 	}
 
 	now := date.NowTimestamp()
 	topic := &model.Topic{
-		Type:            topicType,
+		Type:            form.Type,
 		UserId:          userId,
-		NodeId:          nodeId,
-		Title:           title,
-		Content:         content,
+		NodeId:          form.NodeId,
+		Title:           form.Title,
+		Content:         form.Content,
 		Status:          constants.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
 	}
 
 	err := simple.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
 		err := repositories.TopicRepository.Create(tx, topic)
 		if err != nil {
 			return err
 		}
-
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
