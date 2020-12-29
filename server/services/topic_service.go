@@ -99,23 +99,31 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
-	if simple.IsBlank(title) {
-		return nil, simple.NewErrorMsg("标题不能为空")
-	}
+func (s *topicService) Publish(topicType constants.TopicType, userId, nodeId int64, tags []string,
+	title, content string, imageList []string) (*model.Topic, *simple.CodeError) {
 
-	if simple.IsBlank(content) {
-		return nil, simple.NewErrorMsg("内容不能为空")
-	}
+	if topicType == constants.TopicTypeTweet {
+		if simple.IsBlank(content) && len(imageList) == 0 {
+			return nil, simple.NewErrorMsg("内容或图片不能为空")
+		}
+	} else {
+		if simple.IsBlank(title) {
+			return nil, simple.NewErrorMsg("标题不能为空")
+		}
 
-	if simple.RuneLen(title) > 128 {
-		return nil, simple.NewErrorMsg("标题长度不能超过128")
+		if simple.IsBlank(content) {
+			return nil, simple.NewErrorMsg("内容不能为空")
+		}
+
+		if simple.RuneLen(title) > 128 {
+			return nil, simple.NewErrorMsg("标题长度不能超过128")
+		}
 	}
 
 	if nodeId <= 0 {
 		nodeId = SysConfigService.GetConfig().DefaultNodeId
 		if nodeId <= 0 {
-			return nil, simple.NewErrorMsg("请配置默认节点")
+			return nil, simple.NewErrorMsg("请选择节点")
 		}
 	}
 	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
@@ -125,6 +133,7 @@ func (s *topicService) Publish(userId, nodeId int64, tags []string, title, conte
 
 	now := date.NowTimestamp()
 	topic := &model.Topic{
+		Type:            topicType,
 		UserId:          userId,
 		NodeId:          nodeId,
 		Title:           title,
