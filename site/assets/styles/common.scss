@@ -97,6 +97,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
 
     &.no-padding {
       padding: 0;
+
       .main-content-footer {
         margin: 0;
       }
@@ -303,76 +304,6 @@ img.avatar {
         color: #746f6f;
       }
     }
-  }
-}
-
-.categories {
-  background: #fff;
-  margin-bottom: 10px;
-
-  .tag {
-    a {
-      color: #4a4a4a;
-    }
-  }
-}
-
-.toc {
-  position: relative;
-  width: $sidebar-width;
-
-  ul {
-    margin: 0px;
-    padding-left: 20px;
-    list-style: disc;
-
-    li {
-      a {
-        font-size: 13px;
-        display: block;
-        padding: 3px 0;
-        color: #000;
-        background: transparent;
-      }
-
-      a.active {
-        color: #009a61;
-        font-weight: bold;
-        // font-size: 15px;
-      }
-    }
-  }
-
-  & > ul:not(li a) {
-    list-style: none;
-  }
-
-  .content {
-    overflow: auto;
-    height: 100%;
-
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    &::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-      border-radius: 0;
-      background: rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  // 屏幕宽度小于768的时候隐藏toc目录
-  .toc {
-    display: none;
   }
 }
 

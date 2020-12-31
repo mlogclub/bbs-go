@@ -39,7 +39,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 		CaptchaCode: simple.FormValue(ctx, "captchaCode"),
 		NodeId:      simple.FormValueInt64Default(ctx, "nodeId", 0),
 		Title:       strings.TrimSpace(simple.FormValue(ctx, "title")),
-		Content:     strings.TrimSpace(simple.FormValue(ctx, "title")),
+		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
 		Tags:        simple.FormValueStringArray(ctx, "tags"),
 		ImageList:   imageList,
 	}

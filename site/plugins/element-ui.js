@@ -27,6 +27,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  Popover,
   Loading,
   MessageBox,
   Message,
@@ -56,6 +57,7 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Upload)
 Vue.use(Dropdown)
+Vue.use(Popover)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 

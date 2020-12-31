@@ -128,7 +128,7 @@ type TopicNode struct {
 // 话题节点
 type Topic struct {
 	Model
-	Type              constants.TopicType `gorm:"not null:default:0" json:"type" form:"type"`                                      // 类型
+	Type              constants.TopicType `gorm:"type:int;not null:default:0" json:"type" form:"type"`                             // 类型
 	NodeId            int64               `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`                         // 节点编号
 	UserId            int64               `gorm:"not null;index:idx_topic_user_id;" json:"userId" form:"userId"`                   // 用户
 	Title             string              `gorm:"size:128" json:"title" form:"title"`                                              // 标题

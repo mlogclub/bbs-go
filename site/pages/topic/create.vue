@@ -13,35 +13,34 @@
                   }}</a>
                 </li>
                 <li class="is-active">
-                  <a href="#" aria-current="page">主题</a>
+                  <a href="#" aria-current="page">发帖</a>
                 </li>
               </ul>
             </nav>
           </div>
-          <div class="widget-content">
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field" style="width: 100%;">
-                  <input
-                    v-model="postForm.title"
-                    class="input"
-                    type="text"
-                    placeholder="请输入标题"
-                  />
-                </div>
-                <div class="field">
-                  <div class="select">
-                    <select v-model="postForm.nodeId">
-                      <option value="0">选择节点</option>
-                      <option
-                        v-for="node in nodes"
-                        :key="node.nodeId"
-                        :value="node.nodeId"
-                        >{{ node.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
+          <div class="widget-content topic-create-form" style="padding: 20px;">
+            <div class="field">
+              <div class="control">
+                <span
+                  v-for="node in nodes"
+                  :key="node.nodeId"
+                  class="tag"
+                  :class="{ selected: postForm.nodeId === node.nodeId }"
+                  @click="postForm.nodeId = node.nodeId"
+                >
+                  {{ node.name }}
+                </span>
+              </div>
+            </div>
+
+            <div class="field" style="width: 100%;">
+              <div class="control">
+                <input
+                  v-model="postForm.title"
+                  class="input topic-title"
+                  type="text"
+                  placeholder="请输入帖子标题"
+                />
               </div>
             </div>
 
@@ -51,7 +50,7 @@
                   ref="mdEditor"
                   v-model="postForm.content"
                   editor-id="topicCreateEditor"
-                  placeholder="可空，将图片复制或拖入编辑器可上传"
+                  placeholder="请输入你要发表的内容..."
                 />
               </div>
             </div>
@@ -201,7 +200,7 @@ export default {
       } catch (e) {
         await this.showCaptcha()
         this.publishing = false
-        this.$message.error('提交失败：' + (e.message || e))
+        this.$message.error(e.message || e)
       }
     },
     async showCaptcha() {
@@ -228,4 +227,24 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.topic-create-form {
+  .tag {
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #777;
+
+    &.selected {
+      color: #fff;
+      background: #1878f3;
+    }
+  }
+
+  .topic-title {
+    background-color: rgb(247, 247, 247);
+    border: 1px solid hsla(0, 0%, 89.4%, 0.6);
+  }
+}
+</style>
