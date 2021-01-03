@@ -1,13 +1,14 @@
 <template>
   <ul class="topic-list2">
     <li v-for="topic in topics" :key="topic.topicId" class="topic-item">
-      <a
+      <div
         class="topic-avatar"
         :href="'/user/' + topic.user.id"
         :title="topic.user.nickname"
       >
-        <img :src="topic.user.smallAvatar" class="avatar" />
-      </a>
+        <!--        <img :src="topic.user.smallAvatar" class="avatar" />-->
+        <avatar :user="topic.user" />
+      </div>
       <div class="topic-main-content">
         <div class="topic-top">
           <div class="topic-user-info">
@@ -44,7 +45,11 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
+  components: {
+    Avatar,
+  },
   props: {
     topics: {
       type: Array,
@@ -100,13 +105,13 @@ export default {
     //}
 
     .topic-avatar {
-      .avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 2px;
-        background-color: unset;
-        border: none;
-      }
+      //.avatar {
+      //  width: 50px;
+      //  height: 50px;
+      //  border-radius: 2px;
+      //  background-color: unset;
+      //  border: none;
+      //}
     }
 
     .topic-main-content {
@@ -139,7 +144,7 @@ export default {
 
         .topic-time {
           color: #8590a6;
-          font-size: 14px;
+          font-size: 13px;
           float: right;
         }
       }
