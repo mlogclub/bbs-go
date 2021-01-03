@@ -3,7 +3,9 @@ package render
 import (
 	"bbs-go/common/markdown"
 	"bbs-go/model"
+	"bbs-go/model/constants"
 	"bbs-go/services"
+	"github.com/mlogclub/simple"
 )
 
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
@@ -63,13 +65,28 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicSimpleResponse {
 	return rsp
 }
 
-func BuildSimpleTopics(topics []model.Topic) []model.TopicSimpleResponse {
+func BuildSimpleTopics(topics []model.Topic, currentUser *model.User) []model.TopicSimpleResponse {
 	if topics == nil || len(topics) == 0 {
 		return nil
 	}
+
+	var likedTopicIds []int64
+	if currentUser != nil {
+		var topicIds []int64
+		for _, topic := range topics {
+			topicIds = append(topicIds, topic.Id)
+		}
+		likedTopicIds = services.UserLikeService.IsLiked(currentUser.Id, constants.EntityTopic, topicIds)
+	}
+
 	var responses []model.TopicSimpleResponse
 	for _, topic := range topics {
-		responses = append(responses, *BuildSimpleTopic(&topic))
+		var (
+			liked = simple.Contains(topic.Id, likedTopicIds)
+			item  = BuildSimpleTopic(&topic)
+		)
+		item.Liked = liked
+		responses = append(responses, *item)
 	}
 	return responses
 }

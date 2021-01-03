@@ -194,8 +194,9 @@ func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
 
 // 最新帖子
 func (c *TopicController) GetRecent() *simple.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	topics := services.TopicService.Find(simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildSimpleTopics(topics))
+	return simple.JsonData(render.BuildSimpleTopics(topics, user))
 }
 
 // 用户帖子列表
@@ -205,8 +206,9 @@ func (c *TopicController) GetUserTopics() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	topics, cursor := services.TopicService.GetUserTopics(userId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
 }
 
 // 帖子列表
@@ -215,9 +217,10 @@ func (c *TopicController) GetTopics() *simple.JsonResult {
 		cursor       = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 		nodeId       = simple.FormValueInt64Default(c.Ctx, "nodeId", 0)
 		recommend, _ = simple.FormValueBool(c.Ctx, "recommend")
+		user         = services.UserTokenService.GetCurrent(c.Ctx)
 	)
 	topics, cursor := services.TopicService.GetTopics(nodeId, cursor, recommend)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
 }
 
 // 标签帖子列表
@@ -225,12 +228,13 @@ func (c *TopicController) GetTagTopics() *simple.JsonResult {
 	var (
 		cursor     = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 		tagId, err = simple.FormValueInt64(c.Ctx, "tagId")
+		user       = services.UserTokenService.GetCurrent(c.Ctx)
 	)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	topics, cursor := services.TopicService.GetTagTopics(tagId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics), strconv.FormatInt(cursor, 10))
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
 }
 
 // 收藏
@@ -262,12 +266,12 @@ func (c *TopicController) GetRecommend() *simple.JsonResult {
 			end = len(topics)
 		}
 		ret := dest[0:end]
-		return simple.JsonData(render.BuildSimpleTopics(ret))
+		return simple.JsonData(render.BuildSimpleTopics(ret, nil))
 	}
 }
 
 // 最新话题
 func (c *TopicController) GetNewest() *simple.JsonResult {
 	topics := services.TopicService.Find(simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
-	return simple.JsonData(render.BuildSimpleTopics(topics))
+	return simple.JsonData(render.BuildSimpleTopics(topics, nil))
 }

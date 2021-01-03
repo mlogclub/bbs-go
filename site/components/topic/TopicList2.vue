@@ -10,9 +10,9 @@
       </a>
       <div class="topic-main-content">
         <div class="topic-top">
-          <a class="topic-user-info">
-            <span>{{ topic.user.nickname }}</span>
-          </a>
+          <div class="topic-user-info">
+            <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
+          </div>
           <div class="topic-time">
             发布于{{ topic.createTime | prettyDate }}
           </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="topic-handlers">
           <div class="btn" @click="like(topic)">
-            <i class="iconfont icon-like" />点赞
+            <i class="iconfont icon-like" />{{ topic.liked ? '已赞' : '赞' }}
             <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
           </div>
           <div class="btn" @click="toTopicDetail(topic.topicId)">
@@ -68,6 +68,7 @@ export default {
         await this.$axios.post('/api/topic/like/' + topic.topicId)
         topic.liked = true
         topic.likeCount++
+        this.$message.success('点赞成功')
       } catch (e) {
         if (e.errorCode === 1) {
           this.$msgSignIn()
@@ -103,7 +104,8 @@ export default {
         width: 50px;
         height: 50px;
         border-radius: 2px;
-        object-fit: cover;
+        background-color: unset;
+        border: none;
       }
     }
 
@@ -112,34 +114,33 @@ export default {
       margin-left: 15px;
 
       .topic-top {
-        display: flex;
-        justify-content: space-between;
         margin-bottom: 8px;
 
         .topic-user-info {
           display: inline-flex;
           align-items: center;
 
-          span {
+          a {
             font-weight: 700;
             font-size: 16px;
             color: rgb(51, 51, 51);
             display: flex;
             max-width: 250px;
             overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            word-break: break-all;
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          .topic-time {
+            float: none !important;
+            margin-top: 8px;
           }
         }
 
         .topic-time {
           color: #8590a6;
-          font-size: 12px;
-          display: flex;
-          align-items: center;
+          font-size: 14px;
+          float: right;
         }
       }
 
@@ -180,8 +181,9 @@ export default {
 
           i {
             margin-right: 3px;
-            //vertical-align: middle;
-            font-size: 18px;
+            font-size: 20px;
+            position: relative;
+            top: 2px;
           }
         }
       }
