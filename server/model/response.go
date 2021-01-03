@@ -1,5 +1,7 @@
 package model
 
+import "bbs-go/model/constants"
+
 type UserInfo struct {
 	Id                   int64    `json:"id"`
 	Username             string   `json:"username"`
@@ -63,17 +65,18 @@ type SearchTopicResponse struct {
 
 // 帖子列表返回实体
 type TopicSimpleResponse struct {
-	TopicId         int64          `json:"topicId"`
-	User            *UserInfo      `json:"user"`
-	Node            *NodeResponse  `json:"node"`
-	Tags            *[]TagResponse `json:"tags"`
-	Title           string         `json:"title"`
-	LastCommentTime int64          `json:"lastCommentTime"`
-	ViewCount       int64          `json:"viewCount"`
-	CommentCount    int64          `json:"commentCount"`
-	LikeCount       int64          `json:"likeCount"`
-	Liked           bool           `json:"liked"`
-	CreateTime      int64          `json:"createTime"`
+	TopicId         int64               `json:"topicId"`
+	Type            constants.TopicType `json:"type"`
+	User            *UserInfo           `json:"user"`
+	Node            *NodeResponse       `json:"node"`
+	Tags            *[]TagResponse      `json:"tags"`
+	Title           string              `json:"title"`
+	LastCommentTime int64               `json:"lastCommentTime"`
+	ViewCount       int64               `json:"viewCount"`
+	CommentCount    int64               `json:"commentCount"`
+	LikeCount       int64               `json:"likeCount"`
+	Liked           bool                `json:"liked"`
+	CreateTime      int64               `json:"createTime"`
 }
 
 // 帖子详情返回实体
