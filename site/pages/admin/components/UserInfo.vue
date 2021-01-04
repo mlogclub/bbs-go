@@ -1,6 +1,6 @@
 <template>
   <div class="user-info-component">
-    <img :src="user.smallAvatar" class="avatar" />
+    <avatar :user="user" />
     <div class="user-info-component-right">
       <div>{{ user.id }}</div>
       <span>{{ user.nickname }}</span>
@@ -9,7 +9,9 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
+  components: { Avatar },
   props: {
     user: {
       type: Object,

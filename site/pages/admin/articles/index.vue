@@ -34,7 +34,7 @@
     <div v-if="results && results.length > 0" class="page-section articles">
       <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
-          <img :src="item.user.smallAvatar" class="avatar" />
+          <avatar :user="item.user" />
           <div class="article-right">
             <div class="article-title">
               <a :href="'/article/' + item.id" target="_blank">{{
@@ -136,8 +136,10 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
   layout: 'admin',
+  components: { Avatar },
   data() {
     return {
       results: [],
@@ -307,14 +309,6 @@ export default {
 
     .article-header {
       display: flex;
-
-      .avatar {
-        max-width: 50px;
-        max-height: 50px;
-        min-width: 50px;
-        min-height: 50px;
-        border-radius: 50%;
-      }
 
       .article-right {
         display: block;

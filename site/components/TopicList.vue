@@ -16,7 +16,7 @@
         <div class="topic-header">
           <div v-if="showAvatar" class="topic-header-left">
             <a :href="'/user/' + topic.user.id" :title="topic.user.nickname">
-              <img :src="topic.user.smallAvatar" class="avatar" />
+              <avatar :user="topic.user" />
             </a>
           </div>
           <div class="topic-header-center">
@@ -85,7 +85,9 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
+  components: { Avatar },
   props: {
     topics: {
       type: Array,

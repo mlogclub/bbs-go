@@ -4,6 +4,7 @@
     class="avatar-a"
     :href="'/user/' + user.id"
     :class="[sizeClass]"
+    :style="extraStyle"
   >
     <img
       v-if="hasAvatarUrl && !loadError"
@@ -41,6 +42,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    extraStyle: {
+      type: [Object],
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -53,15 +58,16 @@ export default {
         50: 'font-size: 24px;line-height: 50px;border-radius: 2px',
         45: 'font-size: 22px;line-height: 45px;border-radius: 2px',
         40: 'font-size: 20px;line-height: 40px;border-radius: 2px',
-        30: 'font-size: 18px;line-height: 30px;border-radius: 2px',
         35: 'font-size: 18px;line-height: 30px;border-radius: 2px',
+        30: 'font-size: 18px;line-height: 30px;border-radius: 2px',
         20: 'font-size: 10px;line-height: 20px;border-radius: 2px',
       },
     }
   },
   computed: {
     hasAvatarUrl() {
-      return this.avatarUrl
+      // return this.avatarUrl
+      return false
     },
     avatarUrl() {
       return this.user.smallAvatar || this.user.avatar

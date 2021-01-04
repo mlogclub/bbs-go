@@ -183,21 +183,12 @@
   .topic-like-users {
     width: 80%;
     margin: 0 auto;
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
-    .like-user {
-      height: 30px;
-      width: 30px;
-      margin: 10px auto;
-
-      .avatar {
-        max-width: 30px;
-        max-height: 30px;
-        min-width: 30px;
-        min-height: 30px;
-        margin-right: 5px;
-        border: solid 1px #e8ecee;
-      }
+    .avatar-a {
+      margin-right: 3px;
     }
   }
 

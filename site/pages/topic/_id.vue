@@ -11,12 +11,7 @@
             >
               <div class="topic-header">
                 <div class="topic-header-left">
-                  <a
-                    :href="'/user/' + topic.user.id"
-                    :title="topic.user.nickname"
-                  >
-                    <img :src="topic.user.smallAvatar" class="avatar size-45" />
-                  </a>
+                  <avatar :user="topic.user" size="45" />
                 </div>
                 <div class="topic-header-center">
                   <h1 class="topic-title" itemprop="headline">
@@ -90,20 +85,13 @@
                 v-if="likeUsers && likeUsers.length"
                 class="topic-like-users"
               >
-                <a
+                <avatar
                   v-for="likeUser in likeUsers"
                   :key="likeUser.id"
-                  :href="'/user/' + likeUser.id"
-                  :alt="likeUser.nickname"
-                  target="_blank"
-                  class="like-user"
-                >
-                  <img
-                    :src="likeUser.smallAvatar"
-                    :alt="likeUser.nickname"
-                    class="avatar"
-                  />
-                </a>
+                  :user="likeUser"
+                  :round="true"
+                  size="30"
+                />
               </div>
 
               <!-- 功能按钮 -->
@@ -183,12 +171,14 @@
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
+import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     Comment,
     UserInfo,
     TopicManageMenu,
+    Avatar,
   },
   async asyncData({ $axios, params, error }) {
     let topic

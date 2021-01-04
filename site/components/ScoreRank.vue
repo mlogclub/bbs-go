@@ -7,7 +7,7 @@
       <ul class="score-rank">
         <li v-for="user in scoreRank" :key="user.id">
           <a :href="'/user/' + user.id" class="score-user-avatar">
-            <img :src="user.smallAvatar" class="avatar size-30" />
+            <avatar :user="user" size="30" />
           </a>
           <div class="score-user-info">
             <a :href="'/user/' + user.id">{{ user.nickname }}</a>
@@ -25,8 +25,10 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
   name: 'ScoreRank',
+  components: { Avatar },
   props: {
     scoreRank: {
       type: Array,
@@ -53,10 +55,6 @@ export default {
 
     .score-user-avatar {
       min-width: 30px;
-      .avatar {
-        width: 30px;
-        height: 30px;
-      }
     }
 
     .score-user-info {

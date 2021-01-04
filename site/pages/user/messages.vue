@@ -33,7 +33,7 @@
                 class="message-item"
               >
                 <div class="message-item-left">
-                  <img :src="message.from.smallAvatar" class="avatar" />
+                  <avatar :user="message.from" size="40" :round="true" />
                 </div>
                 <div class="message-item-right">
                   <div class="message-item-meta">
@@ -92,10 +92,11 @@
 import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 import Pagination from '~/components/Pagination'
+import Avatar from '~/components/Avatar'
 
 export default {
   middleware: 'authenticated',
-  components: { UserProfile, UserCenterSidebar, Pagination },
+  components: { UserProfile, UserCenterSidebar, Pagination, Avatar },
   async asyncData({ $axios, query }) {
     const [messagesPage] = await Promise.all([
       $axios.get('/api/user/messages?page=' + (query.p || 1)),

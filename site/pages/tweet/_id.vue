@@ -5,14 +5,7 @@
         <div class="tweet">
           <div class="pin-header-row">
             <div class="account-group">
-              <div>
-                <a
-                  :href="'/user/' + tweet.user.id"
-                  :title="tweet.user.nickname"
-                >
-                  <img :src="tweet.user.smallAvatar" class="avatar size-45" />
-                </a>
-              </div>
+              <avatar :user="tweet.user" size="45" />
               <div class="pin-header-content">
                 <div>
                   <a
@@ -95,6 +88,7 @@ import Viewer from 'v-viewer'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import Comment from '~/components/Comment'
+import Avatar from '~/components/Avatar'
 import 'viewerjs/dist/viewer.css'
 
 Vue.use(Viewer, {
@@ -114,6 +108,7 @@ export default {
     SiteNotice,
     ScoreRank,
     Comment,
+    Avatar,
   },
   async asyncData({ $axios, params }) {
     const [tweet, commentsPage, scoreRank] = await Promise.all([

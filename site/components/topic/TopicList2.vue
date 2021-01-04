@@ -6,7 +6,6 @@
         :href="'/user/' + topic.user.id"
         :title="topic.user.nickname"
       >
-        <!--        <img :src="topic.user.smallAvatar" class="avatar" />-->
         <avatar :user="topic.user" />
       </div>
       <div class="topic-main-content">

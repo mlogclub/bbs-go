@@ -31,14 +31,7 @@
           <div class="tweet">
             <div class="pin-header-row">
               <div class="account-group">
-                <div>
-                  <a
-                    :href="'/user/' + tweet.user.id"
-                    :title="tweet.user.nickname"
-                  >
-                    <img :src="tweet.user.smallAvatar" class="avatar size-45" />
-                  </a>
-                </div>
+                <avatar :user="tweet.user" size="45" />
                 <div class="pin-header-content">
                   <div>
                     <a
@@ -160,8 +153,10 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
   layout: 'admin',
+  components: { Avatar },
   data() {
     return {
       results: [],

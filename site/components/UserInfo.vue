@@ -1,9 +1,7 @@
 <template>
   <div class="user-simple">
     <div class="base-info">
-      <a :href="'/user/' + user.id" :alt="user.nickname">
-        <img :src="user.smallAvatar" :alt="user.nickname" class="avatar" />
-      </a>
+      <avatar :user="user" size="80" :extra-style="{ margin: '0 auto' }" />
       <div class="nickname">
         <a :href="'/user/' + user.id" :alt="user.nickname">{{
           user.nickname
@@ -29,7 +27,9 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
+  components: { Avatar },
   props: {
     user: {
       type: Object,
@@ -54,13 +54,6 @@ export default {
   .base-info {
     padding: 10px;
     text-align: center;
-
-    .avatar {
-      min-width: 80px;
-      min-height: 80px;
-      width: 80px;
-      height: 80px;
-    }
 
     .nickname {
       font-size: 15px;

@@ -81,6 +81,11 @@ export default {
     { src: '~/plugins/infinite-scroll', ssr: false },
     { src: '~/plugins/vue-lazyload', ssr: false },
   ],
+  // /*
+  //  ** Auto import components
+  //  ** See https://nuxtjs.org/api/configuration-components
+  //  */
+  // components: true,
   /*
    ** Nuxt.js dev-modules
    */
