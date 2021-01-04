@@ -34,7 +34,7 @@
             <span v-if="topic.commentCount > 0">{{ topic.commentCount }}</span>
           </div>
           <div class="btn" @click="toTopicDetail(topic.topicId)">
-            <i class="iconfont icon-view" />查看
+            <i class="iconfont icon-read" />浏览
             <span v-if="topic.viewCount > 0">{{ topic.viewCount }}</span>
           </div>
         </div>
@@ -92,17 +92,16 @@ export default {
 <style lang="scss" scoped>
 .topic-list2 {
   .topic-item {
-    padding: 12px 12px 12px 8px;
+    padding: 12px 20px;
     display: flex;
-    //padding: 20px 20px 10px 20px;
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
     border-bottom: 1px solid #f2f2f2;
     //cursor: pointer;
-    //&:hover {
-    //  background: #f3f6f9;
-    //}
+    &:hover {
+      background: #f3f6f9;
+    }
 
     .topic-main-content {
       flex: 1;
@@ -125,7 +124,7 @@ export default {
           }
         }
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 1024px) {
           .topic-time {
             float: none !important;
             margin-top: 8px;

@@ -83,6 +83,11 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     @include main-size(320px);
   }
 
+  // 设定宽度360
+  &.size-360 {
+    @include main-size(360px);
+  }
+
   .main-content {
     background-color: #fff;
     padding: 0 10px 10px 10px;
@@ -131,7 +136,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
 
   // 左侧大，右侧小
   &.left-main {
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       .left-container {
         width: 100% !important;
         margin-right: 0 !important;
@@ -147,14 +152,14 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     }
 
     .right-container {
-      padding: 0px;
+      padding: 0;
       margin-left: $sidebar-margin;
     }
   }
 
   // 左侧小，右侧大
   &.right-main {
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       .right-container {
         width: 100% !important;
         margin-left: 0 !important;
@@ -170,7 +175,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     }
 
     .left-container {
-      padding: 0px;
+      padding: 0;
       margin-right: $sidebar-margin;
     }
   }

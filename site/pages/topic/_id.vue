@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container left-main">
+      <div class="container main-container left-main size-360">
         <div class="left-container">
           <div class="main-content no-padding">
             <article

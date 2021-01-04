@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container main-container left-main size-360">
       <div class="left-container">
         <div class="main-content no-padding">
           <topics-nav :nodes="nodes" :current-node-id="node.nodeId" />
@@ -31,7 +31,7 @@ import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
-import TopicList from '~/components/TopicList'
+import TopicList from '~/components/topic/TopicList2'
 import TweetsWidget from '~/components/TweetsWidget'
 import LoadMore from '~/components/LoadMore'
 

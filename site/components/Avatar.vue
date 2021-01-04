@@ -66,8 +66,7 @@ export default {
   },
   computed: {
     hasAvatarUrl() {
-      // return this.avatarUrl
-      return false
+      return this.avatarUrl
     },
     avatarUrl() {
       return this.user.smallAvatar || this.user.avatar
