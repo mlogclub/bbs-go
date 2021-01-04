@@ -116,11 +116,12 @@ export default {
   },
 
   proxy: {
-    '/api/': isProduction
-      ? 'https://mlog.club'
-      : isDocker
-      ? 'http://bbs-go-server:8082'
-      : 'http://127.0.0.1:8082',
+    // '/api/': isProduction
+    //   ? 'https://mlog.club'
+    //   : isDocker
+    //   ? 'http://bbs-go-server:8082'
+    //   : 'http://127.0.0.1:8082',
+    '/api/': 'https://mlog.club',
   },
 
   /*

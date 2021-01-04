@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"bbs-go/cache"
-	"bbs-go/common/avatar"
 	"bbs-go/common/uploader"
 
 	"bbs-go/model"
@@ -197,22 +196,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 		UpdateTime: date.NowTimestamp(),
 	}
 
-	err = simple.DB().Transaction(func(tx *gorm.DB) error {
-		if err := repositories.UserRepository.Create(tx, user); err != nil {
-			return err
-		}
-
-		avatarUrl, err := s.HandleAvatar(user.Id, "")
-		if err != nil {
-			return err
-		}
-
-		if err := repositories.UserRepository.UpdateColumn(tx, user.Id, "avatar", avatarUrl); err != nil {
-			return err
-		}
-		return nil
-	})
-
+	err = repositories.UserRepository.Create(simple.DB(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -282,10 +266,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 			return err
 		}
 
-		avatarUrl, err := s.HandleAvatar(user.Id, thirdAccount.Avatar)
-		if err != nil {
-			return err
-		}
+		avatarUrl := s.HandleThirdAvatar(thirdAccount.Avatar)
 
 		if err := repositories.UserRepository.UpdateColumn(tx, user.Id, "avatar", avatarUrl); err != nil {
 			return err
@@ -299,18 +280,16 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 	return user, nil
 }
 
-// HandleAvatar 处理头像，优先级如下：1. 如果第三方登录带有来头像；2. 生成随机默认头像
-// thirdAvatar: 第三方登录带过来的头像
-func (s *userService) HandleAvatar(userId int64, thirdAvatar string) (string, error) {
-	if len(thirdAvatar) > 0 {
-		return uploader.CopyImage(thirdAvatar)
+// HandleThirdAvatar 处理第三方头像
+func (s *userService) HandleThirdAvatar(thirdAvatar string) string {
+	if simple.IsBlank(thirdAvatar) {
+		return ""
 	}
-
-	avatarBytes, err := avatar.Generate(userId)
+	avatar, err := uploader.CopyImage(thirdAvatar)
 	if err != nil {
-		return "", err
+		return ""
 	}
-	return uploader.PutImage(avatarBytes)
+	return avatar
 }
 
 // isEmailExists 邮箱是否存在

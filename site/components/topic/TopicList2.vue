@@ -46,6 +46,7 @@
 
 <script>
 import Avatar from '~/components/Avatar'
+
 export default {
   components: {
     Avatar,
@@ -92,27 +93,17 @@ export default {
 <style lang="scss" scoped>
 .topic-list2 {
   .topic-item {
-    // padding: 12px 12px 12px 8px;
-    padding: 20px 20px 10px 20px;
+    padding: 12px 12px 12px 8px;
+    display: flex;
+    //padding: 20px 20px 10px 20px;
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
     border-bottom: 1px solid #f2f2f2;
-    cursor: pointer;
-    display: flex;
+    //cursor: pointer;
     //&:hover {
     //  background: #f3f6f9;
     //}
-
-    .topic-avatar {
-      //.avatar {
-      //  width: 50px;
-      //  height: 50px;
-      //  border-radius: 2px;
-      //  background-color: unset;
-      //  border: none;
-      //}
-    }
 
     .topic-main-content {
       flex: 1;
@@ -144,7 +135,7 @@ export default {
 
         .topic-time {
           color: #8590a6;
-          font-size: 13px;
+          font-size: 12px;
           float: right;
         }
       }
@@ -152,7 +143,7 @@ export default {
       .topic-content {
         .topic-title {
           display: inline-block;
-          font-size: 16px;
+          font-size: 15px;
           margin-bottom: 6px;
           word-wrap: break-word;
           word-break: normal;
@@ -160,6 +151,7 @@ export default {
 
           a {
             color: #3273dc;
+
             &:hover {
               color: #3273dc;
               text-decoration: underline;
@@ -180,6 +172,7 @@ export default {
           color: #8590a6;
           cursor: pointer;
           min-width: 100px;
+
           &:hover {
             color: #1878f3;
           }

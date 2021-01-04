@@ -1,7 +1,6 @@
 package render
 
 import (
-	"bbs-go/common/avatar"
 	"bbs-go/model"
 	"bbs-go/services"
 )
@@ -14,7 +13,6 @@ func BuildMessage(msg *model.Message) *model.MessageResponse {
 	from := BuildUserDefaultIfNull(msg.FromId)
 	if msg.FromId <= 0 {
 		from.Nickname = "系统通知"
-		from.Avatar = avatar.DefaultAvatar
 	}
 	detailUrl := services.MessageService.GetMessageDetailUrl(msg)
 	resp := &model.MessageResponse{
