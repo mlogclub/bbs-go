@@ -58,6 +58,7 @@ export default {
     .nickname {
       font-size: 15px;
       font-weight: 700;
+      margin: 10px auto;
       a:hover {
         text-decoration: underline;
       }
