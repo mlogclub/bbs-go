@@ -19,11 +19,13 @@
     </div>
     <div class="profile-info">
       <avatar
+        v-if="backgroundImage"
         :user="user"
         :round="true"
         size="100"
         :extra-style="{ position: 'absolute', top: '50px' }"
       />
+      <avatar v-else :user="user" :round="true" size="100" />
       <div class="meta">
         <h1>
           <a :href="'/user/' + user.id">{{ user.nickname }}</a>

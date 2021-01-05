@@ -1,16 +1,11 @@
 <template>
-  <el-dropdown @command="handleCommand">
+  <el-dropdown v-if="hasPermission" @command="handleCommand">
     <span class="el-dropdown-link">
       管理<i class="el-icon-arrow-down el-icon--right"></i>
     </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-if="hasPermission" command="edit"
-        >修改</el-dropdown-item
-      >
-      <el-dropdown-item v-if="hasPermission" command="delete"
-        >删除</el-dropdown-item
-      >
-      <!--<el-dropdown-item command="report">举报</el-dropdown-item>-->
+      <el-dropdown-item command="edit">修改</el-dropdown-item>
+      <el-dropdown-item command="delete">删除</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 </template>

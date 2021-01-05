@@ -89,6 +89,7 @@
                 <div class="field">
                   <div class="control">
                     <img
+                      v-if="user.avatar"
                       :src="user.avatar"
                       style="width: 150px; height: 150px;"
                     />
