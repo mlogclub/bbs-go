@@ -92,7 +92,7 @@ export default {
 <style lang="scss" scoped>
 .topic-list2 {
   .topic-item {
-    padding: 12px 20px;
+    padding: 12px 12px;
     display: flex;
     position: relative;
     overflow: hidden;
@@ -105,7 +105,7 @@ export default {
 
     .topic-main-content {
       flex: 1;
-      margin-left: 15px;
+      margin-left: 12px;
 
       .topic-top {
         margin-bottom: 8px;
@@ -169,7 +169,6 @@ export default {
         .btn {
           color: #8590a6;
           cursor: pointer;
-          min-width: 100px;
 
           &:hover {
             color: #1878f3;

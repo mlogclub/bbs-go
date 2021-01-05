@@ -15,7 +15,7 @@
     }
 
     .topic-header-center {
-      margin: 10px 10px 5px 10px;
+      margin: auto 0 auto 10px;
       width: 100%;
 
       .topic-title,
@@ -56,7 +56,7 @@
     }
 
     .topic-header-right {
-      margin: 0 10px 5px 0;
+      margin: auto 0;
       min-width: 100px;
       max-width: 100px;
       text-align: right;
@@ -114,7 +114,7 @@
   margin: 0 0 10px 0 !important;
 
   li.topic-item {
-    //padding: 8px 0 8px 8px;
+    padding: 12px 0 12px 8px;
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
