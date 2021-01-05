@@ -50,6 +50,7 @@
             </form>
           </div>
 
+          <!--
           <div class="navbar-item dropdown is-hoverable is-right">
             <a
               href="/topic/create"
@@ -62,6 +63,29 @@
               <span>发帖</span>
             </a>
           </div>
+          -->
+          <div class="navbar-item">
+            <el-dropdown
+              placement="bottom"
+              trigger="click"
+              @command="handlePostCommand"
+            >
+              <span class="el-dropdown-link">
+                <el-button type="primary" icon="el-icon-plus">发表</el-button>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="topic" icon="iconfont icon-topic"
+                  >发帖子</el-dropdown-item
+                >
+                <el-dropdown-item command="tweet" icon="iconfont icon-tweet2"
+                  >发动态</el-dropdown-item
+                >
+                <el-dropdown-item command="article" icon="iconfont icon-article"
+                  >发文章</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
 
           <msg-notice v-if="user" />
 
@@ -70,12 +94,6 @@
               <strong>{{ user.nickname }}</strong>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/topic/create">
-                <i class="iconfont icon-topic" />&nbsp;发表话题
-              </a>
-              <a class="navbar-item" href="/article/create">
-                <i class="iconfont icon-publish" />&nbsp;发表文章
-              </a>
               <a class="navbar-item" href="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </a>
@@ -139,6 +157,15 @@ export default {
     toggleNav() {
       this.navbarActive = !this.navbarActive
     },
+    handlePostCommand(cmd) {
+      if (cmd === 'topic') {
+        this.$linkTo('/topic/create')
+      } else if (cmd === 'tweet') {
+        this.$linkTo('/tweets')
+      } else if (cmd === 'article') {
+        this.$linkTo('/article/create')
+      }
+    },
   },
 }
 </script>
@@ -173,12 +200,9 @@ export default {
 }
 
 .searchFormDiv {
-  @media screen and (max-width: 768px) {
-    & {
-      display: none;
-    }
+  @media screen and (max-width: 1024px) {
+    display: none;
   }
-
   #searchForm {
     .input {
       box-shadow: none;
