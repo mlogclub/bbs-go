@@ -19,7 +19,10 @@
               <avatar :user="topic.user" />
             </a>
           </div>
-          <div class="topic-header-center">
+          <div
+            class="topic-header-center"
+            :style="{ 'margin-left': showAvatar ? '10px' : '0' }"
+          >
             <h1 class="topic-title" itemprop="headline">
               <a :href="'/topic/' + topic.topicId" :title="topic.title">{{
                 topic.title
