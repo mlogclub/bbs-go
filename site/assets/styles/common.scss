@@ -244,58 +244,58 @@ img[lazy=loaded] {
   /* your style here */
 }
 
-img.avatar {
-  max-width: 50px;
-  max-height: 50px;
-  min-width: 50px;
-  min-height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #e8e8e8;
-  transition: all .5s ease-out .1s;
-  border: 1px solid #e8e8e8;
-
-  &.radius-5 {
-    border-radius: 5px;
-  }
-
-  &.no-border {
-    border: none;
-  }
-
-  &:hover {
-    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-    backface-visibility: hidden;
-  }
-
-  &.size-20 {
-    max-width: 20px;
-    max-height: 20px;
-    min-width: 20px;
-    min-height: 20px;
-  }
-
-  &.size-30 {
-    max-width: 30px;
-    max-height: 30px;
-    min-width: 30px;
-    min-height: 30px;
-  }
-
-  &.size-40 {
-    max-width: 40px;
-    max-height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-  }
-
-  &.size-45 {
-    max-width: 45px;
-    max-height: 45px;
-    min-width: 45px;
-    min-height: 45px;
-  }
-}
+//img.avatar {
+//  max-width: 50px;
+//  max-height: 50px;
+//  min-width: 50px;
+//  min-height: 50px;
+//  border-radius: 50%;
+//  object-fit: cover;
+//  background-color: #e8e8e8;
+//  transition: all .5s ease-out .1s;
+//  border: 1px solid #e8e8e8;
+//
+//  &.radius-5 {
+//    border-radius: 5px;
+//  }
+//
+//  &.no-border {
+//    border: none;
+//  }
+//
+//  &:hover {
+//    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+//    backface-visibility: hidden;
+//  }
+//
+//  &.size-20 {
+//    max-width: 20px;
+//    max-height: 20px;
+//    min-width: 20px;
+//    min-height: 20px;
+//  }
+//
+//  &.size-30 {
+//    max-width: 30px;
+//    max-height: 30px;
+//    min-width: 30px;
+//    min-height: 30px;
+//  }
+//
+//  &.size-40 {
+//    max-width: 40px;
+//    max-height: 40px;
+//    min-width: 40px;
+//    min-height: 40px;
+//  }
+//
+//  &.size-45 {
+//    max-width: 45px;
+//    max-height: 45px;
+//    min-width: 45px;
+//    min-height: 45px;
+//  }
+//}
 
 .footer {
   background: #fff;

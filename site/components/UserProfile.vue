@@ -22,6 +22,7 @@
         v-if="backgroundImage"
         :user="user"
         :round="true"
+        :has-border="true"
         size="100"
         :extra-style="{ position: 'absolute', top: '50px' }"
       />

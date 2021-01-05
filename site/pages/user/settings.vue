@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <div class="widget">
           <div class="widget-header">
@@ -98,6 +98,7 @@
                         <input
                           class="file-input"
                           type="file"
+                          accept="image/png,image/jpeg,image/gif"
                           @change="uploadAvatar"
                         />
                         <span class="file-cta">

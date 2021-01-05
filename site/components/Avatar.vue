@@ -9,14 +9,14 @@
     <img
       v-if="hasAvatarUrl && !loadError"
       :src="avatarUrl"
-      class="img"
-      :class="[sizeClass, roundClass]"
+      class="avatar"
+      :class="[sizeClass, roundClass, borderClass]"
       :alt="user.nickname"
       @error="error"
     />
     <span
       v-else-if="styleText"
-      :class="['avatar', sizeClass, roundClass]"
+      :class="['avatar', sizeClass, roundClass, borderClass]"
       :style="styleText"
     >
       {{ usernameAt }}
@@ -39,6 +39,10 @@ export default {
       default: 50,
     },
     round: {
+      type: Boolean,
+      default: false,
+    },
+    hasBorder: {
       type: Boolean,
       default: false,
     },
@@ -90,6 +94,9 @@ export default {
     },
     roundClass() {
       return this.round ? 'round' : ''
+    },
+    borderClass() {
+      return this.hasBorder ? 'has-border' : ''
     },
   },
   methods: {
@@ -162,14 +169,27 @@ export default {
   display: block;
   position: relative;
 }
+
 .avatar {
+  &.has-border {
+    border: 1px solid #e8e8e8;
+  }
+}
+
+img.avatar {
+  object-fit: cover;
+  transition: all 0.5s ease-out 0.1s;
+
+  &:hover {
+    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+    backface-visibility: hidden;
+  }
+}
+span.avatar {
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-}
-.img {
-  object-fit: cover;
 }
 </style>

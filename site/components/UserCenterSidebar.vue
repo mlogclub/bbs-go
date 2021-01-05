@@ -154,8 +154,6 @@ export default {
 
 .operations {
   list-style: none;
-  margin-top: 8px;
-  margin-left: 0px;
 
   li {
     padding-left: 3px;
