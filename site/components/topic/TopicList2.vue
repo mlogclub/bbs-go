@@ -10,7 +10,8 @@
       </div>
       <div class="topic-main-content">
         <div class="topic-top">
-          <div class="topic-user-info">
+          <div class="topic-userinfo">
+            <avatar class="topic-inline-avatar" :user="topic.user" size="20" />
             <a :href="'/user/' + topic.user.id">{{ topic.user.nickname }}</a>
           </div>
           <div class="topic-time">
@@ -98,7 +99,7 @@ export default {
     overflow: hidden;
     transition: background 0.5s;
     border-bottom: 1px solid #f2f2f2;
-    //cursor: pointer;
+
     &:hover {
       background: #f3f6f9;
     }
@@ -110,7 +111,7 @@ export default {
       .topic-top {
         margin-bottom: 8px;
 
-        .topic-user-info {
+        .topic-userinfo {
           display: inline-flex;
           align-items: center;
 
@@ -122,12 +123,10 @@ export default {
             max-width: 250px;
             overflow: hidden;
           }
-        }
 
-        @media screen and (max-width: 1024px) {
-          .topic-time {
-            float: none !important;
-            margin-top: 8px;
+          .topic-inline-avatar {
+            display: none;
+            margin-right: 5px;
           }
         }
 
@@ -135,6 +134,13 @@ export default {
           color: #8590a6;
           font-size: 12px;
           float: right;
+        }
+
+        @media screen and (max-width: 1024px) {
+          .topic-time {
+            float: none;
+            margin-top: 8px;
+          }
         }
       }
 
@@ -180,6 +186,20 @@ export default {
             position: relative;
             top: 2px;
           }
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .topic-avatar {
+        display: none;
+      }
+
+      .topic-main-content {
+        margin-left: 0;
+
+        .topic-inline-avatar {
+          display: block !important;
         }
       }
     }
