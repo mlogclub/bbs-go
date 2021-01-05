@@ -68,6 +68,7 @@
           </div>
         </div>
         <comment
+          style="background: #fff;"
           :entity-id="tweet.tweetId"
           :comments-page="commentsPage"
           mode="text"
