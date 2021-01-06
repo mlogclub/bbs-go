@@ -18,7 +18,7 @@
           </div>
         </div>
 
-        <div v-if="type === '1'" class="field" style="width: 100%;">
+        <div v-if="postForm.type === 0" class="field" style="width: 100%;">
           <div class="control">
             <input
               v-model="postForm.title"
@@ -29,7 +29,7 @@
           </div>
         </div>
 
-        <div v-if="type === '1'" class="field">
+        <div v-if="postForm.type === 0" class="field">
           <div class="control">
             <markdown-editor
               ref="mdEditor"
@@ -39,7 +39,7 @@
             />
           </div>
         </div>
-        <div v-if="type === '2'" class="field">
+        <div v-if="postForm.type === 1" class="field">
           <div class="control">
             <simple-editor />
           </div>
@@ -115,12 +115,14 @@ export default {
       }
     }
 
+    const type = parseInt(query.type || 0) || 0
+
     return {
       nodes,
       postForm: {
+        type,
         nodeId: currentNode ? currentNode.nodeId : 0,
       },
-      type: query.type || '1',
     }
   },
   data() {
@@ -130,6 +132,7 @@ export default {
       captchaUrl: '',
       captchaCode: '',
       postForm: {
+        type: 0,
         nodeId: 0,
         title: '',
         tags: [],
@@ -154,11 +157,6 @@ export default {
         return
       }
 
-      if (!this.postForm.title) {
-        this.$message.error('请输入标题')
-        return
-      }
-
       if (!this.postForm.nodeId) {
         this.$message.error('请选择节点')
         return
@@ -171,6 +169,7 @@ export default {
         const topic = await this.$axios.post('/api/topic/create', {
           captchaId: this.captchaId,
           captchaCode: this.captchaCode,
+          type: this.postForm.type,
           nodeId: this.postForm.nodeId,
           title: this.postForm.title,
           content: this.postForm.content,
