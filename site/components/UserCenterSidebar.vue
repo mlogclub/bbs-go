@@ -1,7 +1,5 @@
 <template>
   <div class="right-container">
-    <post-btns v-if="isOwner" />
-
     <div class="widget">
       <div class="widget-header">个人成就</div>
       <div class="widget-content extra-info">
@@ -68,10 +66,8 @@
 </template>
 
 <script>
-import PostBtns from '~/components/PostBtns'
 import UserHelper from '~/common/UserHelper'
 export default {
-  components: { PostBtns },
   props: {
     user: {
       type: Object,
