@@ -50,41 +50,8 @@
             </form>
           </div>
 
-          <!--
-          <div class="navbar-item dropdown is-hoverable is-right">
-            <a
-              href="/topic/create"
-              class="button is-success publish"
-              title="发表话题"
-            >
-              <span class="icon">
-                <i class="iconfont icon-write"></i>
-              </span>
-              <span>发帖</span>
-            </a>
-          </div>
-          -->
           <div class="navbar-item">
-            <el-dropdown
-              placement="bottom"
-              trigger="click"
-              @command="handlePostCommand"
-            >
-              <span class="el-dropdown-link">
-                <el-button type="primary" icon="el-icon-plus">发表</el-button>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="topic" icon="iconfont icon-topic"
-                  >发帖子</el-dropdown-item
-                >
-                <el-dropdown-item command="tweet" icon="iconfont icon-tweet2"
-                  >发动态</el-dropdown-item
-                >
-                <el-dropdown-item command="article" icon="iconfont icon-article"
-                  >发文章</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </el-dropdown>
+            <create-topic-btn />
           </div>
 
           <msg-notice v-if="user" />
@@ -124,10 +91,12 @@
 <script>
 import UserHelper from '~/common/UserHelper'
 import MsgNotice from '~/components/MsgNotice'
+import CreateTopicBtn from '~/components/topic/CreateTopicBtn'
 
 export default {
   components: {
     MsgNotice,
+    CreateTopicBtn,
   },
   data() {
     return {
@@ -156,15 +125,6 @@ export default {
     },
     toggleNav() {
       this.navbarActive = !this.navbarActive
-    },
-    handlePostCommand(cmd) {
-      if (cmd === 'topic') {
-        this.$linkTo('/topic/create')
-      } else if (cmd === 'tweet') {
-        this.$linkTo('/tweets')
-      } else if (cmd === 'article') {
-        this.$linkTo('/article/create')
-      }
     },
   },
 }

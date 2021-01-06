@@ -1,102 +1,87 @@
 <template>
-  <section class="main">
-    <div class="container main-container is-white left-main">
-      <div class="left-container">
-        <div class="widget">
-          <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li><a href="/">首页</a></li>
-                <li>
-                  <a :href="'/user/' + user.id + '?tab=topics'">{{
-                    user.nickname
-                  }}</a>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">发帖</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="widget-content topic-create-form" style="padding: 20px;">
-            <div class="field">
-              <div class="control">
-                <span
-                  v-for="node in nodes"
-                  :key="node.nodeId"
-                  class="tag"
-                  :class="{ selected: postForm.nodeId === node.nodeId }"
-                  @click="postForm.nodeId = node.nodeId"
-                >
-                  {{ node.name }}
-                </span>
-              </div>
-            </div>
+  <section class="section">
+    <div class="container">
+      <div class="topic-create-form">
+        <h1 class="title">发帖子</h1>
 
-            <div class="field" style="width: 100%;">
-              <div class="control">
-                <input
-                  v-model="postForm.title"
-                  class="input topic-title"
-                  type="text"
-                  placeholder="请输入帖子标题"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <markdown-editor
-                  ref="mdEditor"
-                  v-model="postForm.content"
-                  editor-id="topicCreateEditor"
-                  placeholder="请输入你要发表的内容..."
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <tag-input v-model="postForm.tags" />
-              </div>
-            </div>
-
-            <div v-if="captchaUrl" class="field is-horizontal">
-              <div class="field control has-icons-left">
-                <input
-                  v-model="captchaCode"
-                  class="input"
-                  type="text"
-                  placeholder="验证码"
-                  style="max-width: 150px; margin-right: 20px;"
-                />
-                <span class="icon is-small is-left">
-                  <i class="iconfont icon-captcha" />
-                </span>
-              </div>
-              <div class="field">
-                <a @click="showCaptcha">
-                  <img :src="captchaUrl" style="height: 40px;" />
-                </a>
-              </div>
-            </div>
-
-            <div class="field is-grouped">
-              <div class="control">
-                <a
-                  :class="{ 'is-loading': publishing }"
-                  :disabled="publishing"
-                  class="button is-success"
-                  @click="submitCreate"
-                  >发表话题</a
-                >
-              </div>
-            </div>
+        <div class="field">
+          <div class="control">
+            <span
+              v-for="node in nodes"
+              :key="node.nodeId"
+              class="tag"
+              :class="{ selected: postForm.nodeId === node.nodeId }"
+              @click="postForm.nodeId = node.nodeId"
+            >
+              {{ node.name }}
+            </span>
           </div>
         </div>
-      </div>
-      <div class="right-container">
-        <markdown-help />
+
+        <div v-if="type === '1'" class="field" style="width: 100%;">
+          <div class="control">
+            <input
+              v-model="postForm.title"
+              class="input topic-title"
+              type="text"
+              placeholder="请输入帖子标题"
+            />
+          </div>
+        </div>
+
+        <div v-if="type === '1'" class="field">
+          <div class="control">
+            <markdown-editor
+              ref="mdEditor"
+              v-model="postForm.content"
+              editor-id="topicCreateEditor"
+              placeholder="请输入你要发表的内容..."
+            />
+          </div>
+        </div>
+        <div v-if="type === '2'" class="field">
+          <div class="control">
+            <simple-editor />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <tag-input v-model="postForm.tags" />
+          </div>
+        </div>
+
+        <div v-if="captchaUrl" class="field is-horizontal">
+          <div class="field control has-icons-left">
+            <input
+              v-model="captchaCode"
+              class="input"
+              type="text"
+              placeholder="验证码"
+              style="max-width: 150px; margin-right: 20px;"
+            />
+            <span class="icon is-small is-left">
+              <i class="iconfont icon-captcha" />
+            </span>
+          </div>
+          <div class="field">
+            <a @click="showCaptcha">
+              <img :src="captchaUrl" style="height: 40px;" />
+            </a>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <a
+              :class="{ 'is-loading': publishing }"
+              :disabled="publishing"
+              class="button is-success"
+              @click="submitCreate"
+              >发表话题</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -104,15 +89,15 @@
 
 <script>
 import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
 import MarkdownEditor from '~/components/MarkdownEditor'
+import SimpleEditor from '~/components/SimpleEditor'
 
 export default {
   middleware: 'authenticated',
   components: {
     TagInput,
-    MarkdownHelp,
     MarkdownEditor,
+    SimpleEditor,
   },
   async asyncData({ $axios, query, store }) {
     // 节点
@@ -135,6 +120,7 @@ export default {
       postForm: {
         nodeId: currentNode ? currentNode.nodeId : 0,
       },
+      type: query.type || '1',
     }
   },
   data() {
@@ -229,6 +215,8 @@ export default {
 
 <style lang="scss" scoped>
 .topic-create-form {
+  background: #ffffff;
+  padding: 30px;
   .tag {
     margin-right: 10px;
     cursor: pointer;
@@ -243,8 +231,8 @@ export default {
   }
 
   .topic-title {
-    background-color: rgb(247, 247, 247);
-    border: 1px solid hsla(0, 0%, 89.4%, 0.6);
+    //background-color: rgb(247, 247, 247);
+    //border: 1px solid hsla(0, 0%, 89.4%, 0.6);
   }
 }
 </style>
