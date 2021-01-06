@@ -150,7 +150,7 @@ export default {
           font-size: 15px;
           margin-bottom: 6px;
           word-wrap: break-word;
-          word-break: normal;
+          word-break: break-all;
           width: 100%;
 
           a {
