@@ -27,7 +27,7 @@ func (aliyun *aliyunOssUploader) PutObject(key string, data []byte) (string, err
 	if err := bucket.PutObject(key, bytes.NewReader(data)); err != nil {
 		return "", err
 	}
-	c := config.Instance.Uploader.AliyunOss
+	c := config.Instance.Uploader.ObjectStorage
 	return urls.UrlJoin(c.Host, key), nil
 }
 
@@ -41,7 +41,7 @@ func (aliyun *aliyunOssUploader) CopyImage(originUrl string) (string, error) {
 
 func (aliyun *aliyunOssUploader) getBucket() *oss.Bucket {
 	aliyun.once.Do(func() {
-		c := config.Instance.Uploader.AliyunOss
+		c := config.Instance.Uploader.ObjectStorage
 		if client, err := oss.New(c.Endpoint, c.AccessId, c.AccessSecret); err != nil {
 			logrus.Error(err)
 		} else if aliyun.bucket, err = client.Bucket(c.Bucket); err != nil {

@@ -33,8 +33,8 @@ type Config struct {
 
 	// 阿里云oss配置
 	Uploader struct {
-		Enable    string `yaml:"Enable"`
-		AliyunOss struct {
+		Enable        string `yaml:"Enable"`
+		ObjectStorage struct {
 			Host          string `yaml:"Host"`
 			Bucket        string `yaml:"Bucket"`
 			Endpoint      string `yaml:"Endpoint"`
@@ -45,7 +45,7 @@ type Config struct {
 			StylePreview  string `yaml:"StylePreview"`
 			StyleSmall    string `yaml:"StyleSmall"`
 			StyleDetail   string `yaml:"StyleDetail"`
-		} `yaml:"AliyunOss"`
+		} `yaml:"ObjectStorage"`
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`

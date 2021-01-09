@@ -1,7 +1,6 @@
 package uploader
 
 import (
-	"strings"
 	"sync"
 
 	"github.com/mlogclub/simple"
@@ -19,6 +18,10 @@ var (
 	aliyun = &aliyunOssUploader{
 		once:   sync.Once{},
 		bucket: nil,
+	}
+	tencent = &tencentCosUploader{
+		once:   sync.Once{},
+		client: nil,
 	}
 	local = &localUploader{}
 )
@@ -42,15 +45,38 @@ func CopyImage(url string) (string, error) {
 }
 
 func getUploader() uploader {
-	if IsEnabledOss() {
+	/*if IsEnabledOss() {
 		return aliyun
 	} else {
+		return local
+	}*/
+
+	switch EnabledObjectStorage() {
+	case 1:
+		return aliyun
+	case 2:
+		return tencent
+	default:
 		return local
 	}
 }
 
+//是否启用对象储存
+func EnabledObjectStorage() int {
+	enable := config.Instance.Uploader.Enable
+	if simple.EqualsIgnoreCase(enable, "aliyun") || simple.EqualsIgnoreCase(enable, "oss") ||
+		simple.EqualsIgnoreCase(enable, "aliyunOss") {
+		return 1
+	} else if simple.EqualsIgnoreCase(enable, "cos") || simple.EqualsIgnoreCase(enable, "tencent") ||
+		simple.EqualsIgnoreCase(enable, "tencentCos") {
+		return 2
+	} else {
+		return -1
+	}
+}
+
 // IsEnabledOss 是否启用阿里云oss
-func IsEnabledOss() bool {
+/*func IsEnabledOss() bool {
 	enable := config.Instance.Uploader.Enable
 	return simple.EqualsIgnoreCase(enable, "aliyun") || simple.EqualsIgnoreCase(enable, "oss") ||
 		simple.EqualsIgnoreCase(enable, "aliyunOss")
@@ -58,6 +84,6 @@ func IsEnabledOss() bool {
 
 // IsOssImageUrl 是否是存放在阿里云oss中的图片
 func IsOssImageUrl(url string) bool {
-	host := simple.ParseUrl(config.Instance.Uploader.AliyunOss.Host).GetURL().Host
+	host := simple.ParseUrl(config.Instance.Uploader.ObjectStorage.Host).GetURL().Host
 	return strings.Contains(url, host)
-}
+}*/
