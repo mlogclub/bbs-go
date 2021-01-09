@@ -28,6 +28,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Popover,
+  Progress,
   Loading,
   MessageBox,
   Message,
@@ -60,6 +61,7 @@ Vue.use(Dropdown)
 Vue.use(Popover)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Progress)
 
 Vue.use(Loading.directive)
 

@@ -11,30 +11,45 @@
     </div>
     <label class="simple-editor-input">
       <textarea
-        v-model="content"
+        v-model="post.content"
         placeholder="请输入您要发表的内容 ..."
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
+        @input="onInput"
       ></textarea>
     </label>
+    <div class="simple-editor-image-upload">
+      <image-upload
+        :file-list="post && post.imageList"
+        :on-upload.sync="onUploadImage"
+        @success="onImageUploadSuccess"
+        @remove="onImageUploadRemove"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import ImageUpload from '~/components/ImageUpload'
 export default {
   name: 'SimpleEditor',
+  components: { ImageUpload },
   data() {
     return {
-      content: '',
       maxWordCount: 5000,
+      onUploadImage: false,
+      post: {
+        content: '',
+        imageList: [],
+      },
     }
   },
   computed: {
     hasContent() {
-      return this.content && this.content.length > 0
+      return this.post.content && this.post.content.length > 0
     },
     wordCount() {
-      return this.content ? this.content.length : 0
+      return this.post.content ? this.post.content.length : 0
     },
     user() {
       return this.$store.state.user.current
@@ -42,13 +57,22 @@ export default {
   },
   methods: {
     async doSubmit() {},
+    onInput() {
+      this.$emit('input', this.post)
+      console.log('input', this.post)
+    },
+    onImageUploadSuccess(imageList) {
+      this.$emit('input', this.post)
+    },
+    onImageUploadRemove(imageList) {
+      this.$emit('input', this.post)
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-$border-color-base: rgba(228, 228, 228, 0.6);
-$background-color-editor: #f5f6f7;
+@import './assets/styles/variable.scss';
 
 .simple-editor {
   border: 1px solid hsla(0, 0%, 89.4%, 0.6);
@@ -67,9 +91,11 @@ $background-color-editor: #f5f6f7;
     top: 65px;
     z-index: 6;
     border-bottom: 1px solid $border-color-base;
+
     .act-btn {
       display: flex;
       padding: 0 10px;
+
       i {
         cursor: pointer;
         margin-left: 20px;
@@ -80,8 +106,10 @@ $background-color-editor: #f5f6f7;
         }
       }
     }
+
     .publish-container {
       margin-left: auto;
+
       > .button-publish {
         margin-left: auto;
 
@@ -100,6 +128,7 @@ $background-color-editor: #f5f6f7;
 
   .simple-editor-input {
     width: 100%;
+
     textarea {
       font-family: inherit;
       background: $background-color-editor;
@@ -116,6 +145,11 @@ $background-color-editor: #f5f6f7;
       overscroll-behavior: contain;
       transition: all 100ms linear;
     }
+  }
+
+  .simple-editor-image-upload {
+    background: $background-color-editor;
+    padding: 20px 20px 30px;
   }
 }
 </style>

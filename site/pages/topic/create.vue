@@ -2,7 +2,7 @@
   <section class="section">
     <div class="container">
       <div class="topic-create-form">
-        <h1 class="title">发帖子</h1>
+        <h1 class="title">{{ postForm.type === 0 ? '发帖子' : '发动态' }}</h1>
 
         <div class="field">
           <div class="control">
