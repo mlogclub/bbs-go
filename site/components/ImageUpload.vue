@@ -76,7 +76,6 @@ export default {
   watch: {
     fileList: {
       handler() {
-        console.log(this.fileList)
         if (
           this.fileList.length > this.previewFiles.length &&
           this.previewFiles.length === 0
@@ -155,8 +154,8 @@ export default {
           const _fileList = [...this.fileList]
           resList.forEach((item) => _fileList.push(item))
           this.currentInput.value = ''
-          this.$emit('success', _fileList)
-          // this.$emit(`update:onUpload`, false)
+          this.$emit('input', _fileList)
+          this.$emit(`update:onUpload`, false)
         },
         (e) => {
           // 失败的时候取消对应的预览照片
@@ -178,7 +177,7 @@ export default {
           this.previewFiles[index].deleted = true // 删除动画
           const _fileList = [...this.fileList]
           _fileList.splice(index, 1)
-          this.$emit('remove', _fileList, index) // 避免和回显冲突，先修改 fileList
+          this.$emit('input', _fileList) // 避免和回显冲突，先修改 fileList
           setTimeout(() => {
             this.previewFiles.splice(index, 1)
             this.$message.success('删除成功')

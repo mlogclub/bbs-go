@@ -20,10 +20,9 @@
     </label>
     <div class="simple-editor-image-upload">
       <image-upload
+        v-model="post.imageList"
         :file-list="post && post.imageList"
         :on-upload.sync="onUploadImage"
-        @success="onImageUploadSuccess"
-        @remove="onImageUploadRemove"
       />
     </div>
   </div>
@@ -34,6 +33,12 @@ import ImageUpload from '~/components/ImageUpload'
 export default {
   name: 'SimpleEditor',
   components: { ImageUpload },
+  props: {
+    onUpload: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       maxWordCount: 5000,
@@ -56,16 +61,12 @@ export default {
     },
   },
   methods: {
-    async doSubmit() {},
+    doSubmit() {
+      this.$emit('submit')
+    },
     onInput() {
       this.$emit('input', this.post)
       console.log('input', this.post)
-    },
-    onImageUploadSuccess(imageList) {
-      this.$emit('input', this.post)
-    },
-    onImageUploadRemove(imageList) {
-      this.$emit('input', this.post)
     },
   },
 }

@@ -41,7 +41,7 @@
         </div>
         <div v-if="postForm.type === 1" class="field">
           <div class="control">
-            <simple-editor />
+            <simple-editor @input="onSimpleEditorInput" />
           </div>
         </div>
 
@@ -137,6 +137,7 @@ export default {
         title: '',
         tags: [],
         content: '',
+        imageList: [],
       },
     }
   },
@@ -173,9 +174,15 @@ export default {
           nodeId: this.postForm.nodeId,
           title: this.postForm.title,
           content: this.postForm.content,
+          imageList:
+            this.postForm.imageList && this.postForm.imageList.length
+              ? JSON.stringify(this.postForm.imageList)
+              : '',
           tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
         })
-        this.$refs.mdEditor.clearCache()
+        if (this.$refs.mdEditor) {
+          this.$refs.mdEditor.clearCache()
+        }
         this.$msg({
           message: '提交成功',
           onClose() {
@@ -202,6 +209,11 @@ export default {
           this.$message.error(e.message || e)
         }
       }
+    },
+    onSimpleEditorInput(value) {
+      this.postForm.content = value.content
+      this.postForm.imageList = value.imageList
+      console.log(this.postForm)
     },
   },
   head() {
