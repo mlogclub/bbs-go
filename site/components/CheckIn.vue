@@ -18,9 +18,7 @@
         <div class="rank-title">今日排行</div>
         <ul>
           <li v-for="rank in checkInRank" :key="rank.id">
-            <a :href="'/user/' + rank.user.id" class="rank-user-avatar">
-              <avatar :user="rank.user" size="30" />
-            </a>
+            <avatar :user="rank.user" size="30" class="rank-user-avatar" />
             <div class="rank-user-info">
               <a :href="'/user/' + rank.user.id">{{ rank.user.nickname }}</a>
               <p>@{{ rank.updateTime | formatDate }}</p>
@@ -36,17 +34,18 @@
 import Avatar from '~/components/Avatar'
 export default {
   components: { Avatar },
-  props: {
-    checkInRank: {
-      type: Array,
-      default() {
-        return null
-      },
-    },
-  },
+  // props: {
+  //   checkInRank: {
+  //     type: Array,
+  //     default() {
+  //       return null
+  //     },
+  //   },
+  // },
   data() {
     return {
       checkIn: null,
+      checkInRank: null,
     }
   },
   computed: {
@@ -59,6 +58,7 @@ export default {
   },
   mounted() {
     this.getCheckIn()
+    this.loadCheckInRank()
   },
   methods: {
     async getCheckIn() {
@@ -76,6 +76,14 @@ export default {
         await this.$axios.post('/api/checkin/checkin')
         this.$message.success('签到成功')
         await this.getCheckIn()
+        await this.loadCheckInRank()
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async loadCheckInRank() {
+      try {
+        this.checkInRank = await this.$axios.get('/api/checkin/rank')
       } catch (e) {
         console.error(e)
       }
