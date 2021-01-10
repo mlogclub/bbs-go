@@ -61,9 +61,21 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
 
+	// 构建内容
+	if buildContent {
+		if topic.Type == constants.TopicTypeTopic {
+			content := markdown.ToHTML(topic.Content)
+			rsp.Content = handleHtmlContent(content)
+		} else {
+			rsp.Content = topic.Content
+		}
+	}
+
 	if topic.Type == constants.TopicTypeTweet {
 		if simple.IsBlank(topic.Content) {
 			rsp.Content = "分享图片"
+		} else {
+			rsp.Content = topic.Content
 		}
 		if simple.IsNotBlank(topic.ImageList) {
 			var images []model.ImageDTO
@@ -91,15 +103,6 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
-
-	if buildContent {
-		if topic.Type == constants.TopicTypeTopic {
-			content := markdown.ToHTML(topic.Content)
-			rsp.Content = handleHtmlContent(content)
-		} else {
-			rsp.Content = topic.Content
-		}
-	}
 
 	return rsp
 }
