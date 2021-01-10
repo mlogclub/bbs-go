@@ -115,9 +115,9 @@ export default {
     transition: background 0.5s;
     border-bottom: 1px solid #f2f2f2;
 
-    &:hover {
-      background: #f3f6f9;
-    }
+    //&:hover {
+    //  background: #f3f6f9;
+    //}
 
     .topic-main-content {
       flex: 1;

@@ -93,8 +93,12 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if buildContent {
-		content := markdown.ToHTML(topic.Content)
-		rsp.Content = handleHtmlContent(content)
+		if topic.Type == constants.TopicTypeTopic {
+			content := markdown.ToHTML(topic.Content)
+			rsp.Content = handleHtmlContent(content)
+		} else {
+			rsp.Content = topic.Content
+		}
 	}
 
 	return rsp

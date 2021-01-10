@@ -18,6 +18,14 @@ Vue.use({
       return this.$store.getters['config/siteKeywords']
     }
 
+    Vue.prototype.$topicSiteTitle = function (topic) {
+      if (topic.type === 0) {
+        return this.$siteTitle(topic.title)
+      } else {
+        return this.$siteTitle(topic.content)
+      }
+    }
+
     /**
      * 是否是移动端
      * @returns {boolean}

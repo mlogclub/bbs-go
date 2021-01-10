@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import TopicList from '~/components/TopicList'
+import TopicList from '~/components/topic/TopicList2'
 import ArticleList from '~/components/ArticleList'
 import TweetsList from '~/components/TweetsList'
 import UserProfile from '~/components/UserProfile'
