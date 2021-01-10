@@ -238,7 +238,7 @@ export default {
       .topic-handlers {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        //justify-content: space-between;
         margin-top: 6px;
         font-size: 12px;
         flex: 1;
@@ -247,15 +247,18 @@ export default {
           color: #8590a6;
           cursor: pointer;
 
+          &:not(:last-child) {
+            margin-right: 20px;
+          }
+
           &:hover {
             color: #1878f3;
           }
 
           i {
             margin-right: 3px;
-            font-size: 20px;
+            font-size: 12px;
             position: relative;
-            top: 2px;
           }
         }
       }
