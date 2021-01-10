@@ -61,6 +61,17 @@
                   class="topic-content-detail"
                   v-html="topic.content"
                 ></div>
+                <ul
+                  v-if="topic.imageList && topic.imageList.length"
+                  v-viewer
+                  class="topic-image-list"
+                >
+                  <li v-for="(image, index) in topic.imageList" :key="index">
+                    <div class="image-item">
+                      <img :src="image.preview" :data-src="image.url" />
+                    </div>
+                  </li>
+                </ul>
               </div>
 
               <!--节点、标签-->
@@ -168,10 +179,25 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import Viewer from 'v-viewer'
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
 import Avatar from '~/components/Avatar'
+import 'viewerjs/dist/viewer.css'
+
+Vue.use(Viewer, {
+  defaultOptions: {
+    zIndex: 9999,
+    navbar: false,
+    title: false,
+    tooltip: false,
+    movable: false,
+    scalable: false,
+    url: 'data-src',
+  },
+})
 
 export default {
   components: {
@@ -380,6 +406,53 @@ export default {
     .topic-content-detail {
       font-size: 16px;
       line-height: 24px;
+    }
+
+    .topic-image-list {
+      margin-left: 0;
+      margin-top: 10px;
+
+      li {
+        cursor: pointer;
+        border: 1px dashed #ddd;
+        text-align: center;
+
+        // 图片尺寸
+        $image-size: 120px;
+
+        display: inline-block;
+        vertical-align: middle;
+        width: $image-size;
+        height: $image-size;
+        line-height: $image-size;
+        margin: 0 8px 8px 0;
+        background-color: #e8e8e8;
+        background-size: 32px 32px;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        position: relative;
+
+        .image-item {
+          display: block;
+          width: $image-size;
+          height: $image-size;
+          overflow: hidden;
+          transform-style: preserve-3d;
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease-out 0.1s;
+
+            &:hover {
+              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+              backface-visibility: hidden;
+            }
+          }
+        }
+      }
     }
 
     nav {
