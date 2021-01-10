@@ -135,6 +135,7 @@ type Topic struct {
 	Content           string              `gorm:"type:longtext" json:"content" form:"content"`                                     // 内容
 	ImageList         string              `gorm:"type:longtext" json:"imageList" form:"imageList"`                                 // 图片
 	Recommend         bool                `gorm:"not null;index:idx_recommend" json:"recommend" form:"recommend"`                  // 是否推荐
+	RecommendTime     int64               `gorm:"not null" json:"recommendTime" form:"recommendTime"`                              // 推荐时间
 	ViewCount         int64               `gorm:"not null" json:"viewCount" form:"viewCount"`                                      // 查看数量
 	CommentCount      int64               `gorm:"not null" json:"commentCount" form:"commentCount"`                                // 跟帖数量
 	LikeCount         int64               `gorm:"not null" json:"likeCount" form:"likeCount"`                                      // 点赞数量
@@ -274,5 +275,5 @@ type CheckIn struct {
 	LatestDayName   int   `gorm:"not null;index:idx_latest" json:"dayName" form:"dayName"`      // 最后一次签到
 	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`      // 连续签到天数
 	CreateTime      int64 `json:"createTime" form:"createTime"`                                 // 创建时间
-	UpdateTime      int64 `gorm:"index:idx_latest" json:"updateTime" form:"updateTime"`                // 更新时间
+	UpdateTime      int64 `gorm:"index:idx_latest" json:"updateTime" form:"updateTime"`         // 更新时间
 }

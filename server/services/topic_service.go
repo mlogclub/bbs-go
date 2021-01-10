@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/es"
 	"bbs-go/model/constants"
+	"errors"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"math"
@@ -58,6 +59,17 @@ func (s *topicService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Topic, pa
 
 func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
+}
+
+func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
+	if err := repositories.TopicRepository.Updates(simple.DB(), id, columns); err != nil {
+		return err
+	}
+
+	// 添加索引
+	es.UpdateTopicIndex(s.Get(id))
+
+	return nil
 }
 
 func (s *topicService) UpdateColumn(id int64, name string, value interface{}) error {
@@ -208,10 +220,26 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 // 推荐
 func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
-	if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
-		return err
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New("帖子不存在")
 	}
-	MessageService.SendTopicRecommendMsg(topicId)
+	if topic.Recommend == recommend { // 推荐状态没变更
+		return nil
+	}
+	if recommend {
+		if err := s.Updates(topicId, map[string]interface{}{
+			"recommend":      recommend,
+			"recommend_time": date.NowTimestamp(),
+		}); err != nil {
+			return err
+		}
+		MessageService.SendTopicRecommendMsg(topicId)
+	} else {
+		if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

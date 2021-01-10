@@ -60,6 +60,8 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.ViewCount = topic.ViewCount
 	rsp.CommentCount = topic.CommentCount
 	rsp.LikeCount = topic.LikeCount
+	rsp.Recommend = topic.Recommend
+	rsp.RecommendTime = topic.RecommendTime
 
 	// 构建内容
 	if buildContent {

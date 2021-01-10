@@ -159,6 +159,27 @@ func (c *TopicController) PostDeleteBy(topicId int64) *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+// PostRecommendBy 设为推荐
+func (c *TopicController) PostRecommendBy(topicId int64) *simple.JsonResult {
+	recommend, err := simple.FormValueBool(c.Ctx, "recommend")
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return simple.JsonError(simple.ErrorNotLogin)
+	}
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+		return simple.JsonErrorMsg("无权限")
+	}
+
+	err = services.TopicService.SetRecommend(topicId, recommend)
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonSuccess()
+}
+
 // 帖子详情
 func (c *TopicController) GetBy(topicId int64) *simple.JsonResult {
 	topic := services.TopicService.Get(topicId)
@@ -253,7 +274,7 @@ func (c *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-// 推荐
+// 推荐话题列表（目前逻辑为取最近50条数据随机展示）
 func (c *TopicController) GetRecommend() *simple.JsonResult {
 	topics := cache.TopicCache.GetRecommendTopics()
 	if topics == nil || len(topics) == 0 {

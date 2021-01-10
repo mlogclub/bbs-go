@@ -79,6 +79,8 @@ type TopicResponse struct {
 	LikeCount       int64               `json:"likeCount"`
 	Liked           bool                `json:"liked"`
 	CreateTime      int64               `json:"createTime"`
+	Recommend       bool                `json:"recommend"`
+	RecommendTime   int64               `json:"recommendTime"`
 }
 
 // 帖子列表返回实体
