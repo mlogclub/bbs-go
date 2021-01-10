@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bbs-go/model/constants"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/date"
 	"strings"
@@ -68,4 +69,17 @@ func (u *User) InObservationPeriod(observeSeconds int) bool {
 		return false
 	}
 	return date.FromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
+}
+
+// GetTitle 获取帖子的标题
+func (t *Topic) GetTitle() string {
+	if t.Type == constants.TopicTypeTweet {
+		if simple.IsNotBlank(t.Content) {
+			return t.Content
+		} else {
+			return "分享图片"
+		}
+	} else {
+		return t.Title
+	}
 }
