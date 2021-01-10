@@ -113,7 +113,7 @@ export default {
         this.$msg({
           message: '提交成功',
           onClose() {
-            me.linkTo('/article/' + article.articleId)
+            me.$linkTo('/article/' + article.articleId)
           },
         })
       } catch (e) {
