@@ -78,6 +78,9 @@ func (c *TopicController) GetEditBy(topicId int64) *simple.JsonResult {
 	if topic == nil || topic.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("话题不存在或已被删除")
 	}
+	if topic.Type != constants.TopicTypeTopic {
+		return simple.JsonErrorMsg("当前类型帖子不支持修改")
+	}
 
 	// 非作者、且非管理员
 	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {

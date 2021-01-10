@@ -4,7 +4,9 @@
       管理<i class="el-icon-arrow-down el-icon--right"></i>
     </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item command="edit">修改</el-dropdown-item>
+      <el-dropdown-item v-if="topic.type === 0" command="edit"
+        >修改</el-dropdown-item
+      >
       <el-dropdown-item command="delete">删除</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
