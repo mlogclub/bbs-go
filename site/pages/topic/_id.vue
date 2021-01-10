@@ -153,6 +153,7 @@
                 :comments-page="commentsPage"
                 :comment-count="topic.commentCount"
                 :show-ad="false"
+                :mode="topic.type === 1 ? 'text' : 'markdown'"
                 entity-type="topic"
               />
             </article>
