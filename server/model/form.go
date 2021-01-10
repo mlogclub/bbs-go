@@ -29,7 +29,8 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 		ret := gjson.Parse(imageListStr)
 		if ret.IsArray() {
 			for _, item := range ret.Array() {
-				imageList = append(imageList, item.String())
+				imageUrl := item.Get("url").String()
+				imageList = append(imageList, imageUrl)
 			}
 		}
 	}

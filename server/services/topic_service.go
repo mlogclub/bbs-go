@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/es"
 	"bbs-go/model/constants"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/mlogclub/simple/date"
 	"math"
 	"net/http"
@@ -139,6 +140,15 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		Status:          constants.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
+	}
+
+	if len(form.ImageList) > 0 {
+		imageListStr, err := jsoniter.MarshalToString(form.ImageList)
+		if err == nil {
+			topic.ImageList = imageListStr
+		} else {
+			logrus.Error(err)
+		}
 	}
 
 	err := simple.DB().Transaction(func(tx *gorm.DB) error {

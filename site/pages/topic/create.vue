@@ -41,7 +41,7 @@
         </div>
         <div v-if="postForm.type === 1" class="field">
           <div class="control">
-            <simple-editor @input="onSimpleEditorInput" />
+            <simple-editor ref="simpleEditor" @input="onSimpleEditorInput" />
           </div>
         </div>
 
@@ -165,6 +165,11 @@ export default {
 
       this.publishing = true
 
+      if (this.$refs.simpleEditor && this.$refs.simpleEditor.isOnUpload()) {
+        this.$message.warning('图片正在上传中...请上传完成后提交')
+        return
+      }
+
       const me = this
       try {
         const topic = await this.$axios.post('/api/topic/create', {
@@ -213,7 +218,6 @@ export default {
     onSimpleEditorInput(value) {
       this.postForm.content = value.content
       this.postForm.imageList = value.imageList
-      console.log(this.postForm)
     },
   },
   head() {

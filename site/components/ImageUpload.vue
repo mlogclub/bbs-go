@@ -57,11 +57,6 @@ export default {
       type: Number,
       default: 1024 * 1024 * 3,
     },
-    fileList: {
-      type: Array,
-      default: () => [],
-      required: true,
-    },
     onUpload: {
       type: Boolean,
       default: false,
@@ -69,6 +64,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       previewFiles: [],
       currentInput: '',
     }

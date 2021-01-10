@@ -21,8 +21,8 @@
     <div class="simple-editor-image-upload">
       <image-upload
         v-model="post.imageList"
-        :file-list="post && post.imageList"
-        :on-upload.sync="onUploadImage"
+        :on-upload.sync="onUpload"
+        @input="onInput"
       />
     </div>
   </div>
@@ -30,19 +30,15 @@
 
 <script>
 import ImageUpload from '~/components/ImageUpload'
+
 export default {
   name: 'SimpleEditor',
   components: { ImageUpload },
-  props: {
-    onUpload: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data() {
     return {
+      onUpload: false, // 是否正在上传中...
       maxWordCount: 5000,
-      onUploadImage: false,
+      // onUploadImage: false,
       post: {
         content: '',
         imageList: [],
@@ -66,7 +62,9 @@ export default {
     },
     onInput() {
       this.$emit('input', this.post)
-      console.log('input', this.post)
+    },
+    isOnUpload() {
+      return this.onUpload
     },
   },
 }

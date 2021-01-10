@@ -33,7 +33,8 @@ export default {
       if (cmd === 'topic') {
         this.$linkTo('/topic/create')
       } else if (cmd === 'tweet') {
-        this.$linkTo('/tweets')
+        // this.$linkTo('/tweets')
+        this.$linkTo('/topic/create?type=1')
       } else if (cmd === 'article') {
         this.$linkTo('/article/create')
       }
