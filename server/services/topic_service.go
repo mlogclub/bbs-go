@@ -3,8 +3,8 @@ package services
 import (
 	"bbs-go/es"
 	"bbs-go/model/constants"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/json"
 	"math"
 	"net/http"
 	"path"
@@ -143,7 +143,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 	}
 
 	if len(form.ImageList) > 0 {
-		imageListStr, err := jsoniter.MarshalToString(form.ImageList)
+		imageListStr, err := json.ToStr(form.ImageList)
 		if err == nil {
 			topic.ImageList = imageListStr
 		} else {

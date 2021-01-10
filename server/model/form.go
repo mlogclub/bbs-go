@@ -16,7 +16,7 @@ type CreateTopicForm struct {
 	Title       string
 	Content     string
 	Tags        []string
-	ImageList   []string
+	ImageList   []ImageDTO
 }
 
 func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
@@ -24,13 +24,15 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 		topicType    = simple.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))
 		imageListStr = simple.FormValue(ctx, "imageList")
 	)
-	var imageList []string
+	var imageList []ImageDTO
 	if simple.IsNotBlank(imageListStr) {
 		ret := gjson.Parse(imageListStr)
 		if ret.IsArray() {
 			for _, item := range ret.Array() {
-				imageUrl := item.Get("url").String()
-				imageList = append(imageList, imageUrl)
+				url := item.Get("url").String()
+				imageList = append(imageList, ImageDTO{
+					Url: url,
+				})
 			}
 		}
 	}
@@ -53,4 +55,8 @@ type CreateCommentForm struct {
 	Content     string `form:"content"`
 	QuoteId     int64  `form:"quoteId"`
 	ContentType string `form:"contentType"`
+}
+
+type ImageDTO struct {
+	Url string `json:"url"`
 }
