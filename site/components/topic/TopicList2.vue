@@ -24,6 +24,21 @@
               发布了：<a :href="'/topic/' + topic.topicId">{{ topic.title }}</a>
             </div>
           </template>
+          <template v-if="topic.type === 1">
+            <div v-if="topic.content" class="topic-summary">
+              {{ topic.content }}
+            </div>
+            <ul
+              v-if="topic.imageList && topic.imageList.length"
+              class="topic-image-list"
+            >
+              <li v-for="(image, index) in topic.imageList" :key="index">
+                <a :href="'/topic/' + topic.topicId" class="image-item">
+                  <img v-lazy="image.preview" />
+                </a>
+              </li>
+            </ul>
+          </template>
         </div>
         <div class="topic-handlers">
           <div class="btn" @click="like(topic)">
@@ -159,6 +174,62 @@ export default {
             &:hover {
               color: #3273dc;
               text-decoration: underline;
+            }
+          }
+        }
+
+        .topic-summary {
+          display: inline-block;
+          font-size: 15px;
+          margin-bottom: 6px;
+          word-wrap: break-word;
+          word-break: break-all;
+          width: 100%;
+          color: #17181a;
+        }
+
+        .topic-image-list {
+          margin-top: 10px;
+
+          li {
+            cursor: pointer;
+            border: 1px dashed #ddd;
+            text-align: center;
+
+            // 图片尺寸
+            $image-size: 120px;
+
+            display: inline-block;
+            vertical-align: middle;
+            width: $image-size;
+            height: $image-size;
+            line-height: $image-size;
+            margin: 0 8px 8px 0;
+            background-color: #e8e8e8;
+            background-size: 32px 32px;
+            background-position: 50%;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            position: relative;
+
+            .image-item {
+              display: block;
+              width: $image-size;
+              height: $image-size;
+              overflow: hidden;
+              transform-style: preserve-3d;
+
+              & > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: all 0.5s ease-out 0.1s;
+
+                &:hover {
+                  transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+                  backface-visibility: hidden;
+                }
+              }
             }
           }
         }

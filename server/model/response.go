@@ -64,25 +64,21 @@ type SearchTopicResponse struct {
 }
 
 // 帖子列表返回实体
-type TopicSimpleResponse struct {
+type TopicResponse struct {
 	TopicId         int64               `json:"topicId"`
 	Type            constants.TopicType `json:"type"`
 	User            *UserInfo           `json:"user"`
 	Node            *NodeResponse       `json:"node"`
 	Tags            *[]TagResponse      `json:"tags"`
 	Title           string              `json:"title"`
+	Content         string              `json:"content"`
+	ImageList       []ImageInfo         `json:"imageList"`
 	LastCommentTime int64               `json:"lastCommentTime"`
 	ViewCount       int64               `json:"viewCount"`
 	CommentCount    int64               `json:"commentCount"`
 	LikeCount       int64               `json:"likeCount"`
 	Liked           bool                `json:"liked"`
 	CreateTime      int64               `json:"createTime"`
-}
-
-// 帖子详情返回实体
-type TopicResponse struct {
-	TopicSimpleResponse
-	Content string `json:"content"`
 }
 
 // 帖子列表返回实体
