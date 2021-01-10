@@ -78,7 +78,7 @@
               :disabled="publishing"
               class="button is-success"
               @click="submitCreate"
-              >发表话题</a
+              >{{ postForm.type === 1 ? '发表动态' : '发表话题' }}</a
             >
           </div>
         </div>

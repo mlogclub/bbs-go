@@ -62,7 +62,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.LikeCount = topic.LikeCount
 
 	if topic.Type == constants.TopicTypeTweet {
-		if simple.IsNotBlank(topic.Content) {
+		if simple.IsBlank(topic.Content) {
 			rsp.Content = "分享图片"
 		}
 		if simple.IsNotBlank(topic.ImageList) {

@@ -2,11 +2,11 @@
   <div class="simple-editor">
     <div class="simple-editor-toolbar">
       <div class="act-btn">
-        <i class="iconfont icon-image" />
+        <i class="iconfont icon-image" @click="showImageUpload = true" />
       </div>
       <div class="publish-container">
         <span class="tip">还能输入{{ maxWordCount - wordCount }}个字</span>
-        <button class="button is-success is-small">发 布</button>
+        <!--<button class="button is-success is-small">发 布</button>-->
       </div>
     </div>
     <label class="simple-editor-input">
@@ -18,7 +18,7 @@
         @input="onInput"
       ></textarea>
     </label>
-    <div class="simple-editor-image-upload">
+    <div v-show="showImageUpload" class="simple-editor-image-upload">
       <image-upload
         v-model="post.imageList"
         :on-upload.sync="onUpload"
@@ -38,6 +38,7 @@ export default {
     return {
       onUpload: false, // 是否正在上传中...
       maxWordCount: 5000,
+      showImageUpload: false,
       // onUploadImage: false,
       post: {
         content: '',
