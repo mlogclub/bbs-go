@@ -121,6 +121,12 @@ func (s *checkInService) GetByUserId(userId int64) *model.CheckIn {
 	return s.FindOne(simple.NewSqlCnd().Eq("user_id", userId))
 }
 
+// GetRank 获取当天签到排行榜（最早签到的排在最前面）
+func (s *checkInService) GetRank() []model.CheckIn {
+	today := s.GetDayName(time.Now())
+	return s.Find(simple.NewSqlCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
+}
+
 func (s *checkInService) GetDayName(t time.Time) int {
 	return date.GetDay(t)
 }

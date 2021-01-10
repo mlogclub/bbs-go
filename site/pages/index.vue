@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="right-container">
-        <check-in />
+        <check-in :check-in-rank="checkInRank" />
         <site-notice />
         <tweets-widget :tweets="newestTweets" />
         <score-rank :score-rank="scoreRank" />
@@ -52,16 +52,18 @@ export default {
         nodes,
         topicsPage,
         scoreRank,
+        checkInRank,
         links,
         newestTweets,
       ] = await Promise.all([
         $axios.get('/api/topic/nodes'),
         $axios.get('/api/topic/topics'),
         $axios.get('/api/user/score/rank'),
+        $axios.get('/api/checkin/rank'),
         $axios.get('/api/link/toplinks'),
         $axios.get('/api/tweet/newest'),
       ])
-      return { nodes, topicsPage, scoreRank, links, newestTweets }
+      return { nodes, topicsPage, scoreRank, checkInRank, links, newestTweets }
     } catch (e) {
       console.error(e)
     }

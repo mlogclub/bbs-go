@@ -271,8 +271,8 @@ type EmailCode struct {
 type CheckIn struct {
 	Model
 	UserId          int64 `gorm:"not null;uniqueIndex:idx_user_id" json:"userId" form:"userId"` // 用户编号
-	LatestDayName   int   `gorm:"not null;" json:"dayName" form:"dayName"`                      // 最后一次签到
+	LatestDayName   int   `gorm:"not null;index:idx_latest" json:"dayName" form:"dayName"`      // 最后一次签到
 	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`      // 连续签到天数
 	CreateTime      int64 `json:"createTime" form:"createTime"`                                 // 创建时间
-	UpdateTime      int64 `json:"updateTime" form:"updateTime"`                                 // 更新时间
+	UpdateTime      int64 `gorm:"index:idx_latest" json:"updateTime" form:"updateTime"`                // 更新时间
 }

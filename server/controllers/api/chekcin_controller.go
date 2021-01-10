@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/controllers/render"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -39,4 +40,15 @@ func (c *CheckinController) GetCheckin() *simple.JsonResult {
 			JsonResult()
 	}
 	return simple.JsonSuccess()
+}
+
+func (c *CheckinController) GetRank() *simple.JsonResult {
+	list := services.CheckInService.GetRank()
+	var itemList []map[string]interface{}
+	for _, checkIn := range list {
+		itemList = append(itemList, simple.NewRspBuilder(checkIn).
+			Put("user", render.BuildUserById(checkIn.UserId)).
+			Build())
+	}
+	return simple.JsonData(itemList)
 }
