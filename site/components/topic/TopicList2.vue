@@ -25,9 +25,13 @@
             </div>
           </template>
           <template v-if="topic.type === 1">
-            <div v-if="topic.content" class="topic-summary">
+            <a
+              v-if="topic.content"
+              :href="'/topic/' + topic.topicId"
+              class="topic-summary"
+            >
               {{ topic.content }}
-            </div>
+            </a>
             <ul
               v-if="topic.imageList && topic.imageList.length"
               class="topic-image-list"
@@ -186,6 +190,7 @@ export default {
           word-break: break-all;
           width: 100%;
           color: #17181a;
+          text-decoration: none;
         }
 
         .topic-image-list {
