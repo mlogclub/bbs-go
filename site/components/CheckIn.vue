@@ -38,7 +38,7 @@ export default {
   methods: {
     async getCheckIn() {
       try {
-        this.checkIn = await this.$axios.get('/api/user/checkin')
+        this.checkIn = await this.$axios.get('/api/checkin/checkin')
       } catch (e) {
         console.log(e)
       }
@@ -48,7 +48,7 @@ export default {
         this.$toSignin()
       }
       try {
-        await this.$axios.post('/api/user/checkin')
+        await this.$axios.post('/api/checkin/checkin')
         this.$message.success('签到成功')
         await this.getCheckIn()
       } catch (e) {
