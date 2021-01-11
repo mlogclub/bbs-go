@@ -331,10 +331,9 @@ export default {
   margin-bottom: 20px;
 
   .topic-header {
-    //padding: 10px;
     display: flex;
     margin: 0 10px;
-    border-bottom: 1px solid $line-color-base;
+    // border-bottom: 1px solid $line-color-base;
 
     @media screen and (max-width: 1024px) {
       .topic-header-right {
@@ -344,8 +343,6 @@ export default {
 
     .topic-header-left {
       margin: 10px 10px 0 0;
-      //width: 50px;
-      //height: 50px;
     }
 
     .topic-header-center {
@@ -354,7 +351,7 @@ export default {
 
       .topic-nickname a {
         color: #555;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: bold;
         overflow: hidden;
       }
