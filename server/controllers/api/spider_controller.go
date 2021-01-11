@@ -91,6 +91,7 @@ func (c *SpiderController) PostProjectPublish() *simple.JsonResult {
 		docUrl      = c.Ctx.FormValue("docUrl")
 		downloadUrl = c.Ctx.FormValue("downloadUrl")
 		content     = c.Ctx.FormValue("content")
+		contentType = c.Ctx.FormValue("contentType")
 	)
 
 	if len(name) == 0 || len(title) == 0 || len(content) == 0 {
@@ -102,8 +103,12 @@ func (c *SpiderController) PostProjectPublish() *simple.JsonResult {
 		return simple.JsonErrorMsg("项目已经存在：" + name)
 	}
 
+	if len(contentType) == 0 {
+		contentType = constants.ContentTypeHtml
+	}
+
 	p, err := services.ProjectService.Publish(userId, name, title, logo, url, docUrl, downloadUrl,
-		constants.ContentTypeHtml, content)
+		contentType, content)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
