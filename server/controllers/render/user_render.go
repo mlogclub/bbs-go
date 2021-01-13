@@ -2,7 +2,6 @@ package render
 
 import (
 	"bbs-go/cache"
-	"bbs-go/common/avatar"
 	"bbs-go/model"
 	"bbs-go/model/constants"
 	"github.com/mlogclub/simple"
@@ -17,7 +16,6 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 		user = &model.User{}
 		user.Id = id
 		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
-		user.Avatar = avatar.DefaultAvatar
 		user.CreateTime = date.NowTimestamp()
 	}
 	return BuildUser(user)
@@ -32,17 +30,13 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if user == nil {
 		return nil
 	}
-	a := user.Avatar
-	if len(a) == 0 {
-		a = avatar.DefaultAvatar
-	}
 	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserInfo{
 		Id:                   user.Id,
 		Username:             user.Username.String,
 		Nickname:             user.Nickname,
-		Avatar:               a,
-		SmallAvatar:          HandleOssImageStyleAvatar(a),
+		Avatar:               user.Avatar,
+		SmallAvatar:          HandleOssImageStyleAvatar(user.Avatar),
 		BackgroundImage:      user.BackgroundImage,
 		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
 		Email:                user.Email.String,
@@ -65,7 +59,6 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if user.Status == constants.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.Nickname = "黑名单用户"
-		ret.Avatar = avatar.DefaultAvatar
 		ret.Email = ""
 		ret.HomePage = ""
 		ret.Description = ""

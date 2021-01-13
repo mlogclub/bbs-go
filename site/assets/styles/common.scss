@@ -83,6 +83,11 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     @include main-size(320px);
   }
 
+  // 设定宽度360
+  &.size-360 {
+    @include main-size(360px);
+  }
+
   .main-content {
     background-color: #fff;
     padding: 0 10px 10px 10px;
@@ -97,6 +102,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
 
     &.no-padding {
       padding: 0;
+
       .main-content-footer {
         margin: 0;
       }
@@ -130,7 +136,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
 
   // 左侧大，右侧小
   &.left-main {
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       .left-container {
         width: 100% !important;
         margin-right: 0 !important;
@@ -146,14 +152,14 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     }
 
     .right-container {
-      padding: 0px;
+      padding: 0;
       margin-left: $sidebar-margin;
     }
   }
 
   // 左侧小，右侧大
   &.right-main {
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       .right-container {
         width: 100% !important;
         margin-left: 0 !important;
@@ -169,7 +175,7 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
     }
 
     .left-container {
-      padding: 0px;
+      padding: 0;
       margin-right: $sidebar-margin;
     }
   }
@@ -238,58 +244,58 @@ img[lazy=loaded] {
   /* your style here */
 }
 
-img.avatar {
-  max-width: 50px;
-  max-height: 50px;
-  min-width: 50px;
-  min-height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #e8e8e8;
-  transition: all .5s ease-out .1s;
-  border: 1px solid #e8e8e8;
-
-  &.radius-5 {
-    border-radius: 5px;
-  }
-
-  &.no-border {
-    border: none;
-  }
-
-  &:hover {
-    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-    backface-visibility: hidden;
-  }
-
-  &.size-20 {
-    max-width: 20px;
-    max-height: 20px;
-    min-width: 20px;
-    min-height: 20px;
-  }
-
-  &.size-30 {
-    max-width: 30px;
-    max-height: 30px;
-    min-width: 30px;
-    min-height: 30px;
-  }
-
-  &.size-40 {
-    max-width: 40px;
-    max-height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-  }
-
-  &.size-45 {
-    max-width: 45px;
-    max-height: 45px;
-    min-width: 45px;
-    min-height: 45px;
-  }
-}
+//img.avatar {
+//  max-width: 50px;
+//  max-height: 50px;
+//  min-width: 50px;
+//  min-height: 50px;
+//  border-radius: 50%;
+//  object-fit: cover;
+//  background-color: #e8e8e8;
+//  transition: all .5s ease-out .1s;
+//  border: 1px solid #e8e8e8;
+//
+//  &.radius-5 {
+//    border-radius: 5px;
+//  }
+//
+//  &.no-border {
+//    border: none;
+//  }
+//
+//  &:hover {
+//    transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+//    backface-visibility: hidden;
+//  }
+//
+//  &.size-20 {
+//    max-width: 20px;
+//    max-height: 20px;
+//    min-width: 20px;
+//    min-height: 20px;
+//  }
+//
+//  &.size-30 {
+//    max-width: 30px;
+//    max-height: 30px;
+//    min-width: 30px;
+//    min-height: 30px;
+//  }
+//
+//  &.size-40 {
+//    max-width: 40px;
+//    max-height: 40px;
+//    min-width: 40px;
+//    min-height: 40px;
+//  }
+//
+//  &.size-45 {
+//    max-width: 45px;
+//    max-height: 45px;
+//    min-width: 45px;
+//    min-height: 45px;
+//  }
+//}
 
 .footer {
   background: #fff;
@@ -303,76 +309,6 @@ img.avatar {
         color: #746f6f;
       }
     }
-  }
-}
-
-.categories {
-  background: #fff;
-  margin-bottom: 10px;
-
-  .tag {
-    a {
-      color: #4a4a4a;
-    }
-  }
-}
-
-.toc {
-  position: relative;
-  width: $sidebar-width;
-
-  ul {
-    margin: 0px;
-    padding-left: 20px;
-    list-style: disc;
-
-    li {
-      a {
-        font-size: 13px;
-        display: block;
-        padding: 3px 0;
-        color: #000;
-        background: transparent;
-      }
-
-      a.active {
-        color: #009a61;
-        font-weight: bold;
-        // font-size: 15px;
-      }
-    }
-  }
-
-  & > ul:not(li a) {
-    list-style: none;
-  }
-
-  .content {
-    overflow: auto;
-    height: 100%;
-
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    &::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-      border-radius: 0;
-      background: rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  // 屏幕宽度小于768的时候隐藏toc目录
-  .toc {
-    display: none;
   }
 }
 

@@ -1,38 +1,29 @@
 <template>
   <div>
     <section class="main">
-      <div class="container main-container left-main">
+      <div class="container main-container left-main size-360">
         <div class="left-container">
           <div class="main-content no-padding">
             <article
-              class="topic-detail topic-wrap"
+              class="topic-detail"
               itemscope
               itemtype="http://schema.org/BlogPosting"
             >
               <div class="topic-header">
                 <div class="topic-header-left">
-                  <a
-                    :href="'/user/' + topic.user.id"
-                    :title="topic.user.nickname"
-                  >
-                    <img :src="topic.user.smallAvatar" class="avatar size-45" />
-                  </a>
+                  <avatar :user="topic.user" size="45" />
                 </div>
                 <div class="topic-header-center">
-                  <h1 class="topic-title" itemprop="headline">
-                    {{ topic.title }}
-                  </h1>
-                  <div class="topic-meta">
-                    <span
-                      class="meta-item"
+                  <div class="topic-nickname" itemprop="headline">
+                    <a
                       itemprop="author"
                       itemscope
                       itemtype="http://schema.org/Person"
+                      :href="'/user/' + topic.user.id"
+                      >{{ topic.user.nickname }}</a
                     >
-                      <a :href="'/user/' + topic.user.id" itemprop="name">{{
-                        topic.user.nickname
-                      }}</a>
-                    </span>
+                  </div>
+                  <div class="topic-meta">
                     <span class="meta-item">
                       发布于
                       <time
@@ -62,10 +53,25 @@
 
               <!--内容-->
               <div class="topic-content content" itemprop="articleBody">
+                <h1 v-if="topic.title" class="topic-title" itemprop="headline">
+                  {{ topic.title }}
+                </h1>
                 <div
                   v-lazy-container="{ selector: 'img' }"
+                  class="topic-content-detail"
                   v-html="topic.content"
                 ></div>
+                <ul
+                  v-if="topic.imageList && topic.imageList.length"
+                  v-viewer
+                  class="topic-image-list"
+                >
+                  <li v-for="(image, index) in topic.imageList" :key="index">
+                    <div class="image-item">
+                      <img :src="image.preview" :data-src="image.url" />
+                    </div>
+                  </li>
+                </ul>
               </div>
 
               <!--节点、标签-->
@@ -90,20 +96,13 @@
                 v-if="likeUsers && likeUsers.length"
                 class="topic-like-users"
               >
-                <a
+                <avatar
                   v-for="likeUser in likeUsers"
                   :key="likeUser.id"
-                  :href="'/user/' + likeUser.id"
-                  :alt="likeUser.nickname"
-                  target="_blank"
-                  class="like-user"
-                >
-                  <img
-                    :src="likeUser.smallAvatar"
-                    :alt="likeUser.nickname"
-                    class="avatar"
-                  />
-                </a>
+                  :user="likeUser"
+                  :round="true"
+                  size="30"
+                />
               </div>
 
               <!-- 功能按钮 -->
@@ -154,6 +153,7 @@
                 :comments-page="commentsPage"
                 :comment-count="topic.commentCount"
                 :show-ad="false"
+                :mode="topic.type === 1 ? 'text' : 'markdown'"
                 entity-type="topic"
               />
             </article>
@@ -180,15 +180,32 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import Viewer from 'v-viewer'
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
+import Avatar from '~/components/Avatar'
+import 'viewerjs/dist/viewer.css'
+
+Vue.use(Viewer, {
+  defaultOptions: {
+    zIndex: 9999,
+    navbar: false,
+    title: false,
+    tooltip: false,
+    movable: false,
+    scalable: false,
+    url: 'data-src',
+  },
+})
 
 export default {
   components: {
     Comment,
     UserInfo,
     TopicManageMenu,
+    Avatar,
   },
   async asyncData({ $axios, params, error }) {
     let topic
@@ -289,7 +306,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle(this.topic.title),
+      title: this.$topicSiteTitle(this.topic),
       link: [
         {
           rel: 'stylesheet',
@@ -307,4 +324,232 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import './assets/styles/variable.scss';
+
+.topic-detail {
+  margin-bottom: 20px;
+
+  .topic-header {
+    display: flex;
+    margin: 0 10px;
+    // border-bottom: 1px solid $line-color-base;
+
+    @media screen and (max-width: 1024px) {
+      .topic-header-right {
+        display: none;
+      }
+    }
+
+    .topic-header-left {
+      margin: 10px 10px 0 0;
+    }
+
+    .topic-header-center {
+      margin: 10px 10px 0 0;
+      width: 100%;
+
+      .topic-nickname a {
+        color: #555;
+        font-size: 16px;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      .topic-meta {
+        position: relative;
+        font-size: 12px;
+        line-height: 24px;
+        color: #70727c;
+        margin-top: 5px;
+
+        span.meta-item {
+          font-size: 12px;
+
+          &:not(:last-child) {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+
+    .topic-header-right {
+      min-width: 42px;
+    }
+  }
+
+  .topic-content,
+  .topic-tags,
+  .topic-like-users,
+  .topic-actions {
+    margin: 20px 12px;
+  }
+
+  .topic-content {
+    font-size: 15px;
+    color: #000;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+    padding-top: 0 !important;
+    margin: 0 12px;
+
+    .topic-title {
+      font-weight: 700;
+      font-size: 20px;
+      word-wrap: break-word;
+      word-break: normal;
+    }
+
+    .topic-content-detail {
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .topic-image-list {
+      margin-left: 0;
+      margin-top: 10px;
+
+      li {
+        cursor: pointer;
+        border: 1px dashed #ddd;
+        text-align: center;
+
+        // 图片尺寸
+        $image-size: 120px;
+
+        display: inline-block;
+        vertical-align: middle;
+        width: $image-size;
+        height: $image-size;
+        line-height: $image-size;
+        margin: 0 8px 8px 0;
+        background-color: #e8e8e8;
+        background-size: 32px 32px;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        position: relative;
+
+        .image-item {
+          display: block;
+          width: $image-size;
+          height: $image-size;
+          overflow: hidden;
+          transform-style: preserve-3d;
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease-out 0.1s;
+
+            &:hover {
+              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+              backface-visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+
+    nav {
+      background-color: #fdfdfd;
+      border: 1px solid #f6f6f6;
+      padding: 10px 0;
+      font-size: 14px;
+
+      ul {
+        list-style: disc outside;
+        margin-left: 2em;
+        margin-top: 0;
+      }
+    }
+  }
+
+  .topic-tags {
+    .topic-tag {
+      height: 25px;
+      padding: 0 8px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12.5px;
+      margin-right: 10px;
+      background: #f7f7f7;
+      border: 1px solid #f7f7f7;
+      color: #777;
+      font-size: 12px;
+
+      &:hover {
+        color: #1878f3;
+        background: #fff;
+        border: 1px solid #1878f3;
+      }
+    }
+  }
+
+  .topic-like-users {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .avatar-a {
+      margin-right: 3px;
+    }
+  }
+
+  .topic-actions {
+    margin: 20px auto;
+    padding: 0 25px;
+    display: flex;
+    justify-content: space-between;
+
+    .action {
+      background: #ffffff;
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      color: #8590a6;
+
+      .checked-icon {
+        color: red;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+
+        &:hover {
+          color: #8590a6;
+
+          > .action-icon {
+            fill: #8590a6;
+          }
+        }
+      }
+
+      > .action-icon {
+        font-size: 30px;
+        fill: #8590a6;
+      }
+
+      &:hover {
+        color: #1878f3;
+
+        > .action-icon {
+          fill: #1878f3;
+        }
+      }
+
+      > .content {
+        margin-top: 10px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+</style>

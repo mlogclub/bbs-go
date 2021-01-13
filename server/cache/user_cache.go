@@ -2,6 +2,7 @@ package cache
 
 import (
 	"errors"
+	"github.com/mlogclub/simple/date"
 	"time"
 
 	"bbs-go/model"
@@ -12,8 +13,9 @@ import (
 )
 
 type userCache struct {
-	cache          cache.LoadingCache
-	scoreRankCache cache.LoadingCache
+	cache            cache.LoadingCache
+	scoreRankCache   cache.LoadingCache
+	checkInRankCache cache.LoadingCache
 }
 
 var UserCache = newUserCache()
@@ -42,6 +44,16 @@ func newUserCache() *userCache {
 			cache.WithMaximumSize(10),
 			cache.WithRefreshAfterWrite(10*time.Minute),
 		),
+		checkInRankCache: cache.NewLoadingCache(
+			func(key cache.Key) (value cache.Value, e error) {
+				today := date.GetDay(time.Now())
+				value = repositories.CheckInRepository.Find(simple.DB(),
+					simple.NewSqlCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
+				return
+			},
+			cache.WithMaximumSize(10),
+			cache.WithExpireAfterAccess(1*time.Hour),
+		),
 	}
 }
 
@@ -66,4 +78,17 @@ func (c *userCache) GetScoreRank() []model.User {
 		return nil
 	}
 	return val.([]model.User)
+}
+
+func (c *userCache) GetCheckInRank() []model.CheckIn {
+	today := date.GetDay(time.Now())
+	val, err := c.checkInRankCache.Get(today)
+	if err != nil {
+		return nil
+	}
+	return val.([]model.CheckIn)
+}
+
+func (c *userCache) RefreshCheckInRank() {
+	c.checkInRankCache.Refresh(date.GetDay(time.Now()))
 }

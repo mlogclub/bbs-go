@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <user-profile :user="user" />
 
@@ -21,14 +21,6 @@
                     <i class="iconfont icon-article" aria-hidden="true" />
                   </span>
                   <span>文章</span>
-                </a>
-              </li>
-              <li :class="{ 'is-active': activeTab === 'tweets' }">
-                <a :href="'/user/' + user.id + '?tab=tweets'">
-                  <span class="icon is-small">
-                    <i class="iconfont icon-publish" aria-hidden="true" />
-                  </span>
-                  <span>动态</span>
                 </a>
               </li>
             </ul>
@@ -75,26 +67,6 @@
               暂无文章
             </div>
           </div>
-
-          <div v-if="activeTab === 'tweets'">
-            <div
-              v-if="
-                tweetsPage && tweetsPage.results && tweetsPage.results.length
-              "
-            >
-              <load-more
-                v-if="tweetsPage"
-                v-slot="{ results }"
-                :init-data="tweetsPage"
-                :url="'/api/tweet/user/tweets?userId=' + user.id"
-              >
-                <tweets-list :tweets="results" :show-action="false" />
-              </load-more>
-            </div>
-            <div v-else class="notification is-primary">
-              暂无动态
-            </div>
-          </div>
         </div>
       </div>
       <user-center-sidebar :user="user" />
@@ -103,9 +75,8 @@
 </template>
 
 <script>
-import TopicList from '~/components/TopicList'
+import TopicList from '~/components/topic/TopicList2'
 import ArticleList from '~/components/ArticleList'
-import TweetsList from '~/components/TweetsList'
 import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'
 import LoadMore from '~/components/LoadMore'
@@ -116,7 +87,6 @@ export default {
   components: {
     TopicList,
     ArticleList,
-    TweetsList,
     UserProfile,
     UserCenterSidebar,
     LoadMore,
@@ -136,7 +106,6 @@ export default {
     const activeTab = query.tab || defaultTab
     let topicsPage = null
     let articlesPage = null
-    let tweetsPage = null
     if (activeTab === 'topics') {
       topicsPage = await $axios.get('/api/topic/user/topics', {
         params: { userId: params.userId },
@@ -145,17 +114,12 @@ export default {
       articlesPage = await $axios.get('/api/article/user/articles', {
         params: { userId: params.userId },
       })
-    } else if (activeTab === 'tweets') {
-      tweetsPage = await $axios.get('/api/tweet/user/tweets', {
-        params: { userId: params.userId },
-      })
     }
     return {
       activeTab,
       user,
       topicsPage,
       articlesPage,
-      tweetsPage,
     }
   },
   data() {

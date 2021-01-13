@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
 	"bbs-go/repositories"
@@ -76,8 +77,8 @@ func (s *checkInService) CheckIn(userId int64) error {
 	defer s.m.Unlock()
 	var (
 		checkIn         = s.GetByUserId(userId)
-		dayName         = s.GetDayName(time.Now())
-		yesterdayName   = s.GetDayName(time.Now().Add(-time.Hour * 24))
+		dayName         = date.GetDay(time.Now())
+		yesterdayName   = date.GetDay(time.Now().Add(-time.Hour * 24))
 		consecutiveDays = 1
 		err             error
 	)
@@ -106,6 +107,9 @@ func (s *checkInService) CheckIn(userId int64) error {
 		err = s.Update(checkIn)
 	}
 	if err == nil {
+		// 清理签到排行榜缓存
+		cache.UserCache.RefreshCheckInRank()
+		// 处理签到积分
 		config := SysConfigService.GetConfig()
 		if config.ScoreConfig.CheckInScore > 0 {
 			_ = UserService.IncrScore(userId, config.ScoreConfig.CheckInScore, constants.EntityCheckIn,
@@ -119,8 +123,4 @@ func (s *checkInService) CheckIn(userId int64) error {
 
 func (s *checkInService) GetByUserId(userId int64) *model.CheckIn {
 	return s.FindOne(simple.NewSqlCnd().Eq("user_id", userId))
-}
-
-func (s *checkInService) GetDayName(t time.Time) int {
-	return date.GetDay(t)
 }

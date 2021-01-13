@@ -95,3 +95,10 @@ const (
 	ScoreTypeIncr = 0 // 积分+
 	ScoreTypeDecr = 1 // 积分-
 )
+
+type TopicType int
+
+const (
+	TopicTypeTopic TopicType = 0
+	TopicTypeTweet TopicType = 1
+)

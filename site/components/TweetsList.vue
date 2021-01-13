@@ -6,7 +6,7 @@
           <div class="account-group">
             <div>
               <a :href="'/user/' + tweet.user.id" :title="tweet.user.nickname">
-                <img :src="tweet.user.smallAvatar" class="avatar size-45" />
+                <avatar :user="tweet.user" size="45" />
               </a>
             </div>
             <div class="pin-header-content">
@@ -76,7 +76,9 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
+  components: { Avatar },
   props: {
     tweets: {
       type: Array,

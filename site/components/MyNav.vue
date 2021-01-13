@@ -50,17 +50,8 @@
             </form>
           </div>
 
-          <div class="navbar-item dropdown is-hoverable is-right">
-            <a
-              href="/topic/create"
-              class="button is-success publish"
-              title="发表话题"
-            >
-              <span class="icon">
-                <i class="iconfont icon-write"></i>
-              </span>
-              <span>发帖</span>
-            </a>
+          <div class="navbar-item">
+            <create-topic-btn />
           </div>
 
           <msg-notice v-if="user" />
@@ -70,12 +61,6 @@
               <strong>{{ user.nickname }}</strong>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/topic/create">
-                <i class="iconfont icon-topic" />&nbsp;发表话题
-              </a>
-              <a class="navbar-item" href="/article/create">
-                <i class="iconfont icon-publish" />&nbsp;发表文章
-              </a>
               <a class="navbar-item" href="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </a>
@@ -106,10 +91,12 @@
 <script>
 import UserHelper from '~/common/UserHelper'
 import MsgNotice from '~/components/MsgNotice'
+import CreateTopicBtn from '~/components/topic/CreateTopicBtn'
 
 export default {
   components: {
     MsgNotice,
+    CreateTopicBtn,
   },
   data() {
     return {
@@ -173,12 +160,9 @@ export default {
 }
 
 .searchFormDiv {
-  @media screen and (max-width: 768px) {
-    & {
-      display: none;
-    }
+  @media screen and (max-width: 1024px) {
+    display: none;
   }
-
   #searchForm {
     .input {
       box-shadow: none;

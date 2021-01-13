@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <user-profile :user="currentUser" />
         <div class="widget">

@@ -102,7 +102,7 @@ func (s *messageService) SendTopicLikeMsg(topicId, likeUserId int64) {
 	}
 	var (
 		title        = "点赞了你的话题"
-		quoteContent = "《" + topic.Title + "》"
+		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	s.Produce(likeUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicLike, map[string]interface{}{
 		"topicId":    topicId,
@@ -121,7 +121,7 @@ func (s *messageService) SendTopicFavoriteMsg(topicId, favoriteUserId int64) {
 	}
 	var (
 		title        = "收藏了你的话题"
-		quoteContent = "《" + topic.Title + "》"
+		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	s.Produce(favoriteUserId, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicFavorite, map[string]interface{}{
 		"topicId":        topicId,
@@ -137,7 +137,7 @@ func (s *messageService) SendTopicRecommendMsg(topicId int64) {
 	}
 	var (
 		title        = "你的话题被设为推荐"
-		quoteContent = "《" + topic.Title + "》"
+		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicRecommend, map[string]interface{}{
 		"topicId": topicId,
@@ -155,7 +155,7 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 	}
 	var (
 		title        = "你的话题被删除"
-		quoteContent = "《" + topic.Title + "》"
+		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	s.Produce(0, topic.UserId, title, "", quoteContent, constants.MsgTypeTopicDelete, map[string]interface{}{
 		"topicId":      topicId,
@@ -185,7 +185,7 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 		if topic != nil {
 			toId = topic.UserId
 			title = "回复了你的话题"
-			quoteContent = "《" + topic.Title + "》"
+			quoteContent = "《" + topic.GetTitle() + "》"
 		}
 	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
 		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)

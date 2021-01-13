@@ -3,7 +3,9 @@ package services
 import (
 	"bbs-go/es"
 	"bbs-go/model/constants"
+	"errors"
 	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/json"
 	"math"
 	"net/http"
 	"path"
@@ -59,6 +61,17 @@ func (s *topicService) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.TopicRepository.Count(simple.DB(), cnd)
 }
 
+func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
+	if err := repositories.TopicRepository.Updates(simple.DB(), id, columns); err != nil {
+		return err
+	}
+
+	// 添加索引
+	es.UpdateTopicIndex(s.Get(id))
+
+	return nil
+}
+
 func (s *topicService) UpdateColumn(id int64, name string, value interface{}) error {
 	if err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, name, value); err != nil {
 		return err
@@ -99,48 +112,63 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 发表
-func (s *topicService) Publish(userId, nodeId int64, tags []string, title, content string) (*model.Topic, *simple.CodeError) {
-	if simple.IsBlank(title) {
-		return nil, simple.NewErrorMsg("标题不能为空")
-	}
+func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model.Topic, *simple.CodeError) {
+	if form.Type == constants.TopicTypeTweet {
+		if simple.IsBlank(form.Content) && len(form.ImageList) == 0 {
+			return nil, simple.NewErrorMsg("内容或图片不能为空")
+		}
+	} else {
+		if simple.IsBlank(form.Title) {
+			return nil, simple.NewErrorMsg("标题不能为空")
+		}
 
-	if simple.IsBlank(content) {
-		return nil, simple.NewErrorMsg("内容不能为空")
-	}
+		if simple.IsBlank(form.Content) {
+			return nil, simple.NewErrorMsg("内容不能为空")
+		}
 
-	if simple.RuneLen(title) > 128 {
-		return nil, simple.NewErrorMsg("标题长度不能超过128")
-	}
-
-	if nodeId <= 0 {
-		nodeId = SysConfigService.GetConfig().DefaultNodeId
-		if nodeId <= 0 {
-			return nil, simple.NewErrorMsg("请配置默认节点")
+		if simple.RuneLen(form.Title) > 128 {
+			return nil, simple.NewErrorMsg("标题长度不能超过128")
 		}
 	}
-	node := repositories.TopicNodeRepository.Get(simple.DB(), nodeId)
+
+	if form.NodeId <= 0 {
+		form.NodeId = SysConfigService.GetConfig().DefaultNodeId
+		if form.NodeId <= 0 {
+			return nil, simple.NewErrorMsg("请选择节点")
+		}
+	}
+	node := repositories.TopicNodeRepository.Get(simple.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
 		return nil, simple.NewErrorMsg("节点不存在")
 	}
 
 	now := date.NowTimestamp()
 	topic := &model.Topic{
+		Type:            form.Type,
 		UserId:          userId,
-		NodeId:          nodeId,
-		Title:           title,
-		Content:         content,
+		NodeId:          form.NodeId,
+		Title:           form.Title,
+		Content:         form.Content,
 		Status:          constants.StatusOk,
 		LastCommentTime: now,
 		CreateTime:      now,
 	}
 
+	if len(form.ImageList) > 0 {
+		imageListStr, err := json.ToStr(form.ImageList)
+		if err == nil {
+			topic.ImageList = imageListStr
+		} else {
+			logrus.Error(err)
+		}
+	}
+
 	err := simple.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
 		err := repositories.TopicRepository.Create(tx, topic)
 		if err != nil {
 			return err
 		}
-
 		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
 		return nil
 	})
@@ -192,10 +220,26 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 // 推荐
 func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
-	if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
-		return err
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New("帖子不存在")
 	}
-	MessageService.SendTopicRecommendMsg(topicId)
+	if topic.Recommend == recommend { // 推荐状态没变更
+		return nil
+	}
+	if recommend {
+		if err := s.Updates(topicId, map[string]interface{}{
+			"recommend":      recommend,
+			"recommend_time": date.NowTimestamp(),
+		}); err != nil {
+			return err
+		}
+		MessageService.SendTopicRecommendMsg(topicId)
+	} else {
+		if err := s.UpdateColumn(topicId, "recommend", recommend); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -281,12 +325,16 @@ func (s *topicService) IncrViewCount(topicId int64) {
 }
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
-func (s *topicService) OnComment(topicId, lastCommentTime int64) {
+func (s *topicService) OnComment(topicId int64, comment *model.Comment) {
 	_ = simple.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Exec("update t_topic set last_comment_time = ?, comment_count = comment_count + 1 where id = ?", lastCommentTime, topicId).Error; err != nil {
+		if err := repositories.TopicRepository.Updates(tx, topicId, map[string]interface{}{
+			"last_comment_time":    comment.CreateTime,
+			"last_comment_user_id": comment.UserId,
+		}); err != nil {
 			return err
 		}
-		if err := tx.Exec("update t_topic_tag set last_comment_time = ? where topic_id = ?", lastCommentTime, topicId).Error; err != nil {
+		if err := tx.Exec("update t_topic_tag set last_comment_time = ?, last_comment_user_id = ? where topic_id = ?",
+			comment.CreateTime, comment.UserId, topicId).Error; err != nil {
 			return err
 		}
 		return nil

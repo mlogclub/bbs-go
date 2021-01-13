@@ -42,7 +42,7 @@
     <div class="page-section topics">
       <div v-for="item in results" :key="item.id" class="topic">
         <div class="topic-header">
-          <img :src="item.user.smallAvatar" class="avatar" />
+          <avatar :user="item.user" />
           <div class="topic-right">
             <div class="topic-title">
               <a :href="'/topic/' + item.id" target="_blank">{{
@@ -202,8 +202,10 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
 export default {
   layout: 'admin',
+  components: { Avatar },
   data() {
     return {
       results: [],
