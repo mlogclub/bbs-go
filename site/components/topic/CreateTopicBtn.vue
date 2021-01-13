@@ -2,7 +2,7 @@
   <div>
     <el-dropdown
       placement="bottom"
-      trigger="click"
+      trigger="hover"
       @command="handlePostCommand"
     >
       <span class="el-dropdown-link">

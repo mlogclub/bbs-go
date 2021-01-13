@@ -95,7 +95,10 @@ export default {
     },
     onInput(e) {
       const files = e.target.files
-
+      this.addFiles(files)
+    },
+    addFiles(files) {
+      if (!files || !files.length) return // 没有文件
       if (!this.checkSizeLimit(files)) return // 文件大小检查
       if (!this.checkLengthLimit(files)) return // 文件数量检查
 
