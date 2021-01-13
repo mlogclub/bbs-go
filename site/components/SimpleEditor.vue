@@ -13,9 +13,11 @@
       <textarea
         v-model="post.content"
         placeholder="请输入您要发表的内容 ..."
+        @input="onInput"
+        @paste="handleParse"
+        @drop="handleDrag"
         @keydown.ctrl.enter="doSubmit"
         @keydown.meta.enter="doSubmit"
-        @input="onInput"
       ></textarea>
     </label>
     <div v-show="showImageUpload" class="simple-editor-image-upload">
@@ -39,7 +41,6 @@ export default {
       onUpload: false, // 是否正在上传中...
       maxWordCount: 5000,
       showImageUpload: false,
-      // onUploadImage: false,
       post: {
         content: '',
         imageList: [],
@@ -66,6 +67,56 @@ export default {
     },
     isOnUpload() {
       return this.onUpload
+    },
+    handleParse(e) {
+      const items = e.clipboardData && e.clipboardData.items
+      if (!items || !items.length) {
+        return
+      }
+
+      let file = null
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.includes('image')) {
+          file = items[i].getAsFile()
+        }
+      }
+
+      if (!file) {
+        return
+      }
+
+      this.showImageUpload = true // 展开上传面板
+      e.preventDefault() // 阻止默认行为即不让剪贴板内容在div中显示出来
+
+      if (this.imageCount + 1 > this.maxImageCount) {
+        this.message = '图片数量超过上限'
+        return
+      }
+
+      // TODO
+      this.upload(file) // 上传
+    },
+    handleDrag(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const items = e.dataTransfer.items
+      if (!items || !items.length) {
+        return
+      }
+
+      const files = []
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.includes('image')) {
+          files.push(items[i].getAsFile())
+        }
+      }
+
+      // TODO
+      if (files && files.length) {
+        this.showImageUpload = true // 展开上传面板
+        this.uploadFiles(files)
+      }
     },
   },
 }

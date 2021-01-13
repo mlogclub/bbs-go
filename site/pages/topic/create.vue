@@ -41,7 +41,11 @@
         </div>
         <div v-if="postForm.type === 1" class="field">
           <div class="control">
-            <simple-editor ref="simpleEditor" @input="onSimpleEditorInput" />
+            <simple-editor
+              ref="simpleEditor"
+              @input="onSimpleEditorInput"
+              @submit="submitCreate"
+            />
           </div>
         </div>
 
