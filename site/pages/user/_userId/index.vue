@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import TopicList from '~/components/topic/TopicList2'
+import TopicList from '~/components/topic/TopicList'
 import ArticleList from '~/components/ArticleList'
 import UserProfile from '~/components/UserProfile'
 import UserCenterSidebar from '~/components/UserCenterSidebar'

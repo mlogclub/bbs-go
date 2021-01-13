@@ -517,7 +517,7 @@ export default {
       color: #8590a6;
 
       .checked-icon {
-        color: red;
+        color: $color-red;
       }
 
       &.disabled {

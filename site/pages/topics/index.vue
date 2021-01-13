@@ -30,7 +30,7 @@ import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
 import TopicsNav from '~/components/TopicsNav'
-import TopicList from '~/components/topic/TopicList2'
+import TopicList from '~/components/topic/TopicList'
 import LoadMore from '~/components/LoadMore'
 
 export default {

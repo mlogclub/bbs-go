@@ -1,5 +1,5 @@
 <template>
-  <ul class="topic-list2">
+  <ul class="topic-list">
     <li v-for="topic in topics" :key="topic.topicId" class="topic-item">
       <div
         class="topic-avatar"
@@ -45,7 +45,7 @@
           </template>
         </div>
         <div class="topic-handlers">
-          <div class="btn" @click="like(topic)">
+          <div class="btn" :class="{ liked: topic.liked }" @click="like(topic)">
             <i class="iconfont icon-like" />{{ topic.liked ? '已赞' : '赞' }}
             <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
           </div>
@@ -110,7 +110,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.topic-list2 {
+@import './assets/styles/variable.scss';
+.topic-list {
   .topic-item {
     padding: 12px 12px;
     display: flex;
@@ -137,7 +138,7 @@ export default {
           a {
             font-weight: 700;
             font-size: 16px;
-            color: rgb(51, 51, 51);
+            color: #606266;
             display: flex;
             max-width: 250px;
             overflow: hidden;
@@ -189,7 +190,7 @@ export default {
           word-wrap: break-word;
           word-break: break-all;
           width: 100%;
-          color: #17181a;
+          color: #000;
           text-decoration: none;
         }
 
@@ -243,7 +244,6 @@ export default {
       .topic-handlers {
         display: flex;
         align-items: center;
-        //justify-content: space-between;
         margin-top: 6px;
         font-size: 12px;
         flex: 1;
@@ -266,6 +266,10 @@ export default {
             position: relative;
           }
         }
+      }
+
+      .liked {
+        color: $color-red !important;
       }
     }
 
