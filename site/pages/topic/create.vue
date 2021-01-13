@@ -82,7 +82,7 @@
               :disabled="publishing"
               class="button is-success"
               @click="submitCreate"
-              >{{ postForm.type === 1 ? '发表动态' : '发表话题' }}</a
+              >{{ postForm.type === 1 ? '发表动态' : '发表帖子' }}</a
             >
           </div>
         </div>
@@ -226,7 +226,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle('发表话题'),
+      title: this.$siteTitle(this.postForm.type === 1 ? '发动态' : '发帖子'),
     }
   },
 }
