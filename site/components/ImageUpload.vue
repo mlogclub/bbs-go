@@ -65,7 +65,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 9,
+      default: 12,
     },
     sizeLimit: {
       type: Number,
