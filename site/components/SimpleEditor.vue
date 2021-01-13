@@ -22,6 +22,7 @@
     </label>
     <div v-show="showImageUpload" class="simple-editor-image-upload">
       <image-upload
+        ref="imageUploader"
         v-model="post.imageList"
         :on-upload.sync="onUpload"
         @input="onInput"
@@ -81,20 +82,11 @@ export default {
         }
       }
 
-      if (!file) {
-        return
+      if (file) {
+        e.preventDefault() // 阻止默认行为即不让剪贴板内容显示出来
+        this.showImageUpload = true // 展开上传面板
+        this.$refs.imageUploader.addFiles(new Array(file))
       }
-
-      this.showImageUpload = true // 展开上传面板
-      e.preventDefault() // 阻止默认行为即不让剪贴板内容在div中显示出来
-
-      if (this.imageCount + 1 > this.maxImageCount) {
-        this.message = '图片数量超过上限'
-        return
-      }
-
-      // TODO
-      this.upload(file) // 上传
     },
     handleDrag(e) {
       e.stopPropagation()
@@ -112,10 +104,9 @@ export default {
         }
       }
 
-      // TODO
       if (files && files.length) {
         this.showImageUpload = true // 展开上传面板
-        this.uploadFiles(files)
+        this.$refs.imageUploader.addFiles(files)
       }
     },
   },

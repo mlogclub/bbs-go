@@ -51,7 +51,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 9,
+      default: 3,
     },
     sizeLimit: {
       type: Number,
@@ -66,7 +66,7 @@ export default {
     return {
       fileList: [],
       previewFiles: [],
-      currentInput: '',
+      currentInput: null,
     }
   },
   watch: {
@@ -152,13 +152,17 @@ export default {
           }) // 请求响应后，更新到 100%
           const _fileList = [...this.fileList]
           resList.forEach((item) => _fileList.push(item))
-          this.currentInput.value = ''
+          if (this.currentInput) {
+            this.currentInput.value = ''
+          }
           this.$emit('input', _fileList)
           this.$emit(`update:onUpload`, false)
         },
         (e) => {
           // 失败的时候取消对应的预览照片
-          this.currentInput.value = ''
+          if (this.currentInput) {
+            this.currentInput.value = ''
+          }
           const length = promiseList.length
           this.$emit(`update:onUpload`, false)
           this.previewFiles.splice(this.previewFiles.length - length, length)
