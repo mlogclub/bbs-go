@@ -264,7 +264,7 @@ export default {
       top: 80px;
       left: 10px;
       width: 80px;
-      height: 1px;
+      height: 6px;
     }
 
     .cover {
