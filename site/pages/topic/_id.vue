@@ -399,6 +399,8 @@ export default {
       font-size: 20px;
       word-wrap: break-word;
       word-break: normal;
+      border-bottom: 1px solid $border-color-base;
+      padding-bottom: 10px;
     }
 
     .topic-content-detail {
