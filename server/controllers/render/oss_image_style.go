@@ -8,41 +8,41 @@ import (
 )
 
 func HandleOssImageStyleAvatar(url string) string {
-	if !uploader.IsEnabledOss() {
+	if uploader.EnabledObjectStorage() == -1 {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleAvatar)
+	return HandleOssImageStyle(url, config.Instance.Uploader.ObjectStorage.StyleAvatar)
 }
 
 func HandleOssImageStyleDetail(url string) string {
-	if !uploader.IsEnabledOss() {
+	if uploader.EnabledObjectStorage() == -1 {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleDetail)
+	return HandleOssImageStyle(url, config.Instance.Uploader.ObjectStorage.StyleDetail)
 }
 
 func HandleOssImageStyleSmall(url string) string {
-	if !uploader.IsEnabledOss() {
+	if uploader.EnabledObjectStorage() == -1 {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleSmall)
+	return HandleOssImageStyle(url, config.Instance.Uploader.ObjectStorage.StyleSmall)
 }
 
 func HandleOssImageStylePreview(url string) string {
-	if !uploader.IsEnabledOss() {
+	if uploader.EnabledObjectStorage() == -1 {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StylePreview)
+	return HandleOssImageStyle(url, config.Instance.Uploader.ObjectStorage.StylePreview)
 }
 
 func HandleOssImageStyle(url, style string) string {
 	if simple.IsBlank(style) || simple.IsBlank(url) {
 		return url
 	}
-	if !uploader.IsOssImageUrl(url) {
+	if uploader.EnabledObjectStorage() == -1 {
 		return url
 	}
-	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
+	sep := config.Instance.Uploader.ObjectStorage.StyleSplitter
 	if simple.IsBlank(sep) {
 		return url
 	}

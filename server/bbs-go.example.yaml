@@ -20,10 +20,10 @@ QQConnect:
 
 # 上传配置
 Uploader:
-  # 启用上传方式
+  # 启用上传方式 local/Oss/Cos
   Enable: Oss
-  # 阿里云oss配置
-  AliyunOss:
+  # 对象储存配置
+  ObjectStorage:
     Host: 请配置成你自己的
     Bucket: 请配置成你自己的
     Endpoint: 请配置成你自己的
