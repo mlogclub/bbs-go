@@ -35,6 +35,10 @@
             <span v-if="scope.row.forbiddenEndTime === -1">永久</span>
             <span v-else>{{ scope.row.forbiddenEndTime | formatDate }}</span>
           </div>
+          <div>
+            <span>用户名：</span>
+            {{ scope.row.username }}
+          </div>
           <div v-if="scope.row.roles && scope.row.roles.length">
             <div>
               <span>角色：</span>
@@ -64,13 +68,9 @@
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
       <el-table-column prop="avatar" label="头像" width="80">
         <template slot-scope="scope">
-          <img
-            :src="scope.row.avatar"
-            style="max-height: 50px; max-width: 50px; border-radius: 50%;"
-          />
+          <avatar :user="scope.row" />
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="nickname" label="昵称"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="score" label="积分"></el-table-column>
@@ -87,56 +87,34 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <!--
-          <el-dropdown size="mini" type="primary" @command="handleCommand">
-            <el-button site="mini" type="primary">
-              更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
+          <el-dropdown
+            size="mini"
+            trigger="hover"
+            placement="bottom"
+            @command="handleCommand"
+          >
+            <el-button type="primary">
+              操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                command="edit"
-                @click="handleEdit(scope.$index, scope.row)"
+              <el-dropdown-item :command="{ cmd: 'edit', row: scope.row }"
                 >编辑</el-dropdown-item
               >
               <el-dropdown-item
                 v-if="scope.row.forbidden"
-                @click="removeForbidden(scope.$index, scope.row)"
+                :command="{ cmd: 'removeForbidden', row: scope.row }"
                 >取消禁言</el-dropdown-item
               >
               <el-dropdown-item
                 v-else
-                @click="showForbiddenDialog(scope.$index, scope.row)"
+                :command="{ cmd: 'forbidden', row: scope.row }"
                 >禁言</el-dropdown-item
               >
-              <el-dropdown-item @click="showLog(scope.$index, scope.row)"
+              <el-dropdown-item :command="{ cmd: 'scoreLog', row: scope.row }"
                 >积分记录</el-dropdown-item
               >
             </el-dropdown-menu>
           </el-dropdown>
-          -->
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            v-if="scope.row.forbidden"
-            size="mini"
-            type="warning"
-            @click="removeForbidden(scope.$index, scope.row)"
-            >取消禁言
-          </el-button>
-          <el-button
-            v-else
-            size="mini"
-            type="warning"
-            @click="showForbiddenDialog(scope.$index, scope.row)"
-            >禁言</el-button
-          >
-          <el-button
-            size="mini"
-            type="success"
-            @click="showScoreLog(scope.$index, scope.row)"
-            >积分记录</el-button
-          >
         </template>
       </el-table-column>
     </el-table>
@@ -301,9 +279,10 @@
 
 <script>
 import ScoreLog from './score-log'
+import Avatar from '~/components/Avatar'
 export default {
   layout: 'admin',
-  components: { ScoreLog },
+  components: { Avatar, ScoreLog },
   data() {
     return {
       results: [],
@@ -399,7 +378,7 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    handleEdit(index, row) {
+    handleEdit(row) {
       const me = this
       this.$axios
         .get(`/api/admin/user/${row.id}`)
@@ -433,7 +412,7 @@ export default {
     handleSelectionChange(val) {
       this.selectedRows = val
     },
-    showForbiddenDialog(index, row) {
+    showForbiddenDialog(row) {
       this.forbiddenForm = {
         userId: row.id,
         days: 7,
@@ -455,7 +434,7 @@ export default {
         this.forbiddenLoading = false
       }
     },
-    async removeForbidden(index, row) {
+    async removeForbidden(row) {
       try {
         await this.$axios.post('/api/admin/user/forbidden', {
           userId: row.id,
@@ -467,11 +446,19 @@ export default {
         this.$message.success('取消禁言失败 ' + (e.message || e))
       }
     },
-    showScoreLog(index, row) {
+    showScoreLog(row) {
       this.$refs.scoreLog.showLog(row.id)
     },
     handleCommand(cmd) {
-      alert(cmd)
+      if (cmd.cmd === 'edit') {
+        this.handleEdit(cmd.row)
+      } else if (cmd.cmd === 'removeForbidden') {
+        this.removeForbidden(cmd.row)
+      } else if (cmd.cmd === 'forbidden') {
+        this.showForbiddenDialog(cmd.row)
+      } else if (cmd.cmd === 'scoreLog') {
+        this.showScoreLog(cmd.row)
+      }
     },
   },
 }
