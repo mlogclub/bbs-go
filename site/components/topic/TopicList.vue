@@ -18,10 +18,13 @@
             发布于{{ topic.createTime | prettyDate }}
           </div>
         </div>
-        <div class="topic-content">
+        <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
           <template v-if="topic.type === 0">
-            <div class="topic-title">
-              发布了：<a :href="'/topic/' + topic.topicId">{{ topic.title }}</a>
+            <h1 class="topic-title">
+              <a :href="'/topic/' + topic.topicId">{{ topic.title }}</a>
+            </h1>
+            <div class="topic-summary">
+              {{ topic.summary }}
             </div>
           </template>
           <template v-if="topic.type === 1">
@@ -120,9 +123,9 @@ export default {
     transition: background 0.5s;
     border-bottom: 1px solid #f2f2f2;
 
-    //&:hover {
-    //  background: #f3f6f9;
-    //}
+    &:hover {
+      background: #f3f6f9;
+    }
 
     .topic-main-content {
       flex: 1;
@@ -167,17 +170,19 @@ export default {
       .topic-content {
         .topic-title {
           display: inline-block;
-          font-size: 15px;
           margin-bottom: 6px;
           word-wrap: break-word;
           word-break: break-all;
           width: 100%;
 
           a {
-            color: #3273dc;
+            // color: #3273dc;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
 
             &:hover {
-              color: #3273dc;
+              //color: #3273dc;
               text-decoration: underline;
             }
           }
@@ -190,8 +195,14 @@ export default {
           word-wrap: break-word;
           word-break: break-all;
           width: 100%;
-          color: #000;
           text-decoration: none;
+          color: #525252;
+        }
+
+        &.topic-tweet {
+          .topic-summary {
+            color: #000;
+          }
         }
 
         .topic-image-list {
