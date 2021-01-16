@@ -63,24 +63,6 @@
                 >已推荐</span
               >
             </div>
-
-            <!--
-            <div class="topic-right">
-              <div class="topic-meta">
-                <label>ID: {{ item.topicId }}</label>
-                <label v-if="item.user" class="author">{{
-                  item.user.nickname
-                }}</label>
-                <label>{{ item.createTime | formatDate }}</label>
-                <label class="node">{{
-                  item.node ? item.node.name : ''
-                }}</label>
-                <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
-                  tag.tagName
-                }}</label>
-              </div>
-            </div>
-            -->
           </div>
 
           <div class="topic-metadata">
@@ -119,7 +101,11 @@
             class="topic-image-list"
           >
             <li v-for="(image, index) in item.imageList" :key="index">
-              <a :href="'/topic/' + item.topicId" class="image-item">
+              <a
+                :href="'/topic/' + item.topicId"
+                target="_blank"
+                class="image-item"
+              >
                 <img v-lazy="image.preview" />
               </a>
             </li>
