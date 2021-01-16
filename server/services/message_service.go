@@ -187,13 +187,6 @@ func (s *messageService) SendCommentMsg(comment *model.Comment) {
 			title = "回复了你的话题"
 			quoteContent = "《" + topic.GetTitle() + "》"
 		}
-	} else if comment.EntityType == constants.EntityTweet { // 动态被评论
-		tweet := repositories.TweetRepository.Get(simple.DB(), comment.EntityId)
-		if tweet != nil {
-			toId = tweet.UserId
-			title = "回复了你的动态"
-			quoteContent = tweet.Content
-		}
 	}
 
 	if toId <= 0 {
@@ -342,8 +335,6 @@ func (s *messageService) GetMessageDetailUrl(msg *model.Message) string {
 			return urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == constants.EntityTopic {
 			return urls.TopicUrl(entityId.Int())
-		} else if entityType.String() == constants.EntityTweet {
-			return urls.TweetUrl(entityId.Int())
 		}
 	} else if msg.Type == constants.MsgTypeTopicLike ||
 		msg.Type == constants.MsgTypeTopicFavorite ||

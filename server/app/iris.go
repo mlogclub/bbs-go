@@ -56,7 +56,6 @@ func InitIris() {
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
 		m.Party("/topic").Handle(new(api.TopicController))
-		m.Party("/tweet").Handle(new(api.TweetController))
 		m.Party("/article").Handle(new(api.ArticleController))
 		m.Party("/project").Handle(new(api.ProjectController))
 		m.Party("/login").Handle(new(api.LoginController))
@@ -88,7 +87,6 @@ func InitIris() {
 		m.Party("/favorite").Handle(new(admin.FavoriteController))
 		m.Party("/article-tag").Handle(new(admin.ArticleTagController))
 		m.Party("/topic").Handle(new(admin.TopicController))
-		m.Party("/tweet").Handle(new(admin.TweetController))
 		m.Party("/topic-node").Handle(new(admin.TopicNodeController))
 		m.Party("/sys-config").Handle(new(admin.SysConfigController))
 		m.Party("/link").Handle(new(admin.LinkController))

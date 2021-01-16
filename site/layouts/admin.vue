@@ -47,11 +47,6 @@
                 <span>话题</span>
               </a>
 
-              <a class="navbar-item" href="/admin/tweets">
-                <i class="iconfont icon-tweet2"></i>
-                <span>动态</span>
-              </a>
-
               <a class="navbar-item" href="/admin/articles">
                 <i class="iconfont icon-article"></i>
                 <span>文章</span>

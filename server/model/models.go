@@ -7,7 +7,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &UserLike{}, &Tweet{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
+	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{},
 }
 
@@ -164,18 +164,6 @@ type UserLike struct {
 	EntityType string `gorm:"not null;size:32;uniqueIndex:idx_user_like_unique;index:idx_user_like_entity;" json:"entityType" form:"entityType"` // 实体类型
 	EntityId   int64  `gorm:"not null;uniqueIndex:idx_user_like_unique;index:idx_user_like_entity;" json:"topicId" form:"topicId"`               // 实体编号
 	CreateTime int64  `json:"createTime" form:"createTime"`                                                                                      // 创建时间
-}
-
-// 动态
-type Tweet struct {
-	Model
-	UserId       int64  `gorm:"not null;index:idx_topic_like_user_id;" json:"userId" form:"userId"` // 用户
-	Content      string `gorm:"type:text;not null;" json:"content" form:"content"`                  // 内容
-	ImageList    string `gorm:"type:longtext" json:"imageList" form:"imageList"`                    // 图片
-	CommentCount int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                   // 跟帖数量
-	LikeCount    int64  `gorm:"not null" json:"likeCount" form:"likeCount"`                         // 点赞数量
-	Status       int    `gorm:"index:idx_topic_status;" json:"status" form:"status"`                // 状态：0：正常、1：删除
-	CreateTime   int64  `json:"createTime" form:"createTime"`                                       // 创建时间
 }
 
 // 消息

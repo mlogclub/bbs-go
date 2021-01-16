@@ -123,7 +123,7 @@ WHERE NOT EXISTS(SELECT * FROM `t_sys_config` WHERE `key` = 'siteKeywords');
 
 INSERT INTO t_sys_config (`key`, `value`, `name`, `description`, `create_time`, `update_time`)
 SELECT 'siteNavs',
-       '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"动态\",\"url\":\"/tweets\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
+       '[{\"title\":\"首页\",\"url\":\"/\"},{\"title\":\"话题\",\"url\":\"/topics\"},{\"title\":\"文章\",\"url\":\"/articles\"}]',
        '站点导航',
        '站点导航',
        (UNIX_TIMESTAMP(now()) * 1000),

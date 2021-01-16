@@ -116,21 +116,6 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 	return nil
 }
 
-// 动态点赞
-func (s *userLikeService) TweetLike(userId int64, tweetId int64) error {
-	tweet := repositories.TweetRepository.Get(simple.DB(), tweetId)
-	if tweet == nil || tweet.Status != constants.StatusOk {
-		return errors.New("动态不存在")
-	}
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
-		if err := s.like(tx, userId, constants.EntityTweet, tweetId); err != nil {
-			return err
-		}
-		// 更新点赞数
-		return tx.Exec("update t_tweet set like_count = like_count + 1 where id = ?", tweetId).Error
-	})
-}
-
 func (s *userLikeService) like(db *gorm.DB, userId int64, entityType string, entityId int64) error {
 	// 判断是否已经点赞了
 	if s.Exists(userId, entityType, entityId) {

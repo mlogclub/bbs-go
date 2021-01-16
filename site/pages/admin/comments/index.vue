@@ -17,7 +17,6 @@
           >
             <el-option label="话题" value="topic"></el-option>
             <el-option label="文章" value="article"></el-option>
-            <el-option label="动态" value="tweet"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>

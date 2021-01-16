@@ -27,7 +27,6 @@ const (
 	EntityArticle = "article"
 	EntityTopic   = "topic"
 	EntityComment = "comment"
-	EntityTweet   = "tweet"
 	EntityUser    = "user"
 	EntityCheckIn = "checkIn"
 )

@@ -52,11 +52,6 @@ func TopicUrl(topicId int64) string {
 	return AbsUrl("/topic/" + strconv.FormatInt(topicId, 10))
 }
 
-// 动态详情
-func TweetUrl(tweetId int64) string {
-	return AbsUrl("/tweet/" + strconv.FormatInt(tweetId, 10))
-}
-
 // 项目详情
 func ProjectUrl(projectId int64) string {
 	return AbsUrl("/project/" + strconv.FormatInt(projectId, 10))
