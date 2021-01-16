@@ -71,6 +71,7 @@ type TopicResponse struct {
 	Node            *NodeResponse       `json:"node"`
 	Tags            *[]TagResponse      `json:"tags"`
 	Title           string              `json:"title"`
+	Summary         string              `json:"summary"`
 	Content         string              `json:"content"`
 	ImageList       []ImageInfo         `json:"imageList"`
 	LastCommentTime int64               `json:"lastCommentTime"`
