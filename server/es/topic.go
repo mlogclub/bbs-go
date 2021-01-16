@@ -55,6 +55,9 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 }
 
 func UpdateTopicIndex(topic *model.Topic) {
+	if true { // 默认全部关闭
+		return
+	}
 	if initClient() == nil {
 		logrus.Error(noConfigErr)
 		return
