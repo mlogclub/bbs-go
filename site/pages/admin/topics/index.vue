@@ -40,58 +40,118 @@
     </div>
 
     <div class="page-section topics">
-      <div v-for="item in results" :key="item.id" class="topic">
-        <div class="topic-header">
+      <div v-for="item in results" :key="item.topicId" class="topic-item">
+        <div class="topic-avatar">
           <avatar :user="item.user" />
-          <div class="topic-right">
-            <div class="topic-title">
-              <a :href="'/topic/' + item.id" target="_blank">{{
-                item.title
-              }}</a>
-            </div>
-            <div class="topic-meta">
-              <label>ID: {{ item.id }}</label>
-              <label v-if="item.user" class="author">{{
-                item.user.nickname
-              }}</label>
-              <label>{{ item.createTime | formatDate }}</label>
-              <label class="node">{{ item.node ? item.node.name : '' }}</label>
-              <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
-                tag.tagName
-              }}</label>
+        </div>
+        <div class="topic-main">
+          <div class="topic-header">
+            <a
+              :href="'/user/' + item.user.id"
+              target="_blank"
+              class="topic-nickname"
+              >{{ item.user.nickname }}</a
+            >
 
-              <div class="actions">
-                <span v-if="item.status === 1" class="action-item danger"
-                  >已删除</span
-                >
-                <a
-                  v-if="item.status === 0"
-                  class="action-item btn"
-                  @click="deleteSubmit(item)"
-                  >删除</a
-                >
-                <a v-else class="action-item btn" @click="undeleteSubmit(item)"
-                  >取消删除</a
-                >
-                <a
-                  v-if="!item.recommend"
-                  class="action-item btn"
-                  @click="recommend(item.id)"
-                  >推荐</a
-                >
-                <a
-                  v-else
-                  class="action-item btn"
-                  @click="cancelRecommend(item.id)"
-                  >取消推荐</a
-                >
+            <div class="topic-info">
+              <span
+                v-if="item.status === 1"
+                style="color: red; font-weight: bold;"
+                >已删除</span
+              >
+              <span v-if="item.recommend" style="color: red; font-weight: bold;"
+                >已推荐</span
+              >
+            </div>
+
+            <!--
+            <div class="topic-right">
+              <div class="topic-meta">
+                <label>ID: {{ item.topicId }}</label>
+                <label v-if="item.user" class="author">{{
+                  item.user.nickname
+                }}</label>
+                <label>{{ item.createTime | formatDate }}</label>
+                <label class="node">{{
+                  item.node ? item.node.name : ''
+                }}</label>
+                <label v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
+                  tag.tagName
+                }}</label>
               </div>
             </div>
+            -->
           </div>
-        </div>
 
-        <div class="summary">
-          {{ item.summary }}
+          <div class="topic-metadata">
+            <span class="topic-metadata-item">ID: {{ item.topicId }}</span>
+            <span class="topic-metadata-item"
+              >发布于：{{ item.createTime | formatDate }}</span
+            >
+            <span class="node">{{ item.node ? item.node.name : '' }}</span>
+            <span
+              v-for="tag in item.tags"
+              :key="tag.tagId"
+              class="topic-metadata-item tag"
+              >#{{ tag.tagName }}</span
+            >
+          </div>
+
+          <div class="topic-title">
+            <a :href="'/topic/' + item.topicId" target="_blank">{{
+              item.title
+            }}</a>
+          </div>
+
+          <template v-if="item.type === 0">
+            <div class="topic-summary">
+              {{ item.summary }}
+            </div>
+          </template>
+          <template v-else>
+            <div class="topic-summary">
+              {{ item.content }}
+            </div>
+          </template>
+
+          <ul
+            v-if="item.imageList && item.imageList.length"
+            class="topic-image-list"
+          >
+            <li v-for="(image, index) in item.imageList" :key="index">
+              <a :href="'/topic/' + item.topicId" class="image-item">
+                <img v-lazy="image.preview" />
+              </a>
+            </li>
+          </ul>
+
+          <div class="topic-actions">
+            <a
+              v-if="item.status === 0"
+              class="action-item btn"
+              @click="deleteSubmit(item.topicId)"
+              >删除</a
+            >
+            <a
+              v-else
+              class="action-item btn"
+              @click="undeleteSubmit(item.topicId)"
+              >取消删除</a
+            >
+
+            <a
+              v-if="!item.recommend"
+              class="action-item btn"
+              @click="recommend(item.topicId)"
+              >推荐</a
+            >
+            <a
+              v-else
+              class="action-item btn"
+              @click="cancelRecommend(item.topicId)"
+              >取消推荐</a
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -203,6 +263,7 @@
 
 <script>
 import Avatar from '~/components/Avatar'
+
 export default {
   layout: 'admin',
   components: { Avatar },
@@ -314,7 +375,7 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    deleteSubmit(row) {
+    deleteSubmit(topicId) {
       const me = this
       this.$confirm('是否确认删除该话题?', '提示', {
         confirmButtonText: '确定',
@@ -323,7 +384,7 @@ export default {
       })
         .then(function () {
           me.$axios
-            .post('/api/admin/topic/delete', { id: row.id })
+            .post('/api/admin/topic/delete', { id: topicId })
             .then(function () {
               me.$message({ message: '删除成功', type: 'success' })
               me.list()
@@ -339,9 +400,9 @@ export default {
           })
         })
     },
-    async undeleteSubmit(row) {
+    async undeleteSubmit(topicId) {
       try {
-        await this.$axios.post('/api/admin/topic/undelete', { id: row.id })
+        await this.$axios.post('/api/admin/topic/undelete', { id: topicId })
         this.list()
         this.$message({ message: '取消删除成功', type: 'success' })
       } catch (err) {
@@ -383,106 +444,109 @@ export default {
 .topics {
   width: 100%;
 
-  .topic:not(:last-child) {
+  .topic-item:not(:last-child) {
     border-bottom: solid 1px rgba(140, 147, 157, 0.14);
   }
 
-  .topic {
+  .topic-item {
     width: 100%;
     padding: 10px;
+    display: flex;
+    flex: 1;
 
-    .topic-header {
-      display: flex;
-
-      .avatar {
-        max-width: 50px;
-        max-height: 50px;
-        min-width: 50px;
-        min-height: 50px;
-        border-radius: 50%;
+    .topic-main {
+      width: 100%;
+      margin-left: 10px;
+      font-size: 14px;
+      a {
+        font-size: 14px;
       }
 
-      .topic-right {
-        display: block;
-        margin-left: 10px;
-
-        .topic-title a {
-          color: #555;
+      .topic-header {
+        .topic-nickname {
           font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-          text-decoration: none;
+          font-weight: 600;
+          color: #606266;
         }
 
-        .topic-meta {
-          display: flex;
-          font-size: 12px;
+        .topic-info {
+          margin-left: 10px;
+          float: right;
+          cursor: pointer;
+        }
+      }
 
-          label:not(:last-child) {
-            margin-right: 8px;
-          }
+      .topic-title {
+        margin-top: 6px;
+        a {
+          font-size: 16px;
+          font-weight: 600;
+          color: #000;
+        }
+      }
 
-          label {
-            color: #999;
-          }
+      .topic-metadata {
+        margin-top: 6px;
+        color: #8590a6;
 
-          label.author {
-            font-weight: bold;
-          }
+        .topic-metadata-item {
+          margin-right: 12px;
+        }
+      }
 
-          label.node {
-            color: #dc2323;
-            font-weight: bold;
-          }
+      .topic-summary {
+        margin-top: 6px;
+        color: #525252;
+      }
 
-          label.tag {
-            align-items: center;
-            background-color: #f5f5f5;
-            border-radius: 4px;
-            color: #4a4a4a;
-            display: inline-flex;
-            justify-content: center;
-            line-height: 1.5;
-            padding-left: 5px;
-            padding-right: 5px;
-            white-space: nowrap;
-          }
+      .topic-image-list {
+        margin-top: 6px;
+        li {
+          cursor: pointer;
+          border: 1px dashed #ddd;
+          text-align: center;
 
-          .actions {
-            margin-left: 20px;
-            text-align: right;
+          // 图片尺寸
+          $image-size: 120px;
 
-            .action-item {
-              margin-right: 9px;
-            }
+          display: inline-block;
+          vertical-align: middle;
+          width: $image-size;
+          height: $image-size;
+          line-height: $image-size;
+          margin: 0 8px 8px 0;
+          background-color: #e8e8e8;
+          background-size: 32px 32px;
+          background-position: 50%;
+          background-repeat: no-repeat;
+          overflow: hidden;
+          position: relative;
 
-            span.danger {
-              background: #eee;
-              color: red;
-              padding: 2px 5px 2px 5px;
-            }
+          .image-item {
+            display: block;
+            width: $image-size;
+            height: $image-size;
+            overflow: hidden;
+            transform-style: preserve-3d;
 
-            a.btn {
-              color: blue;
-              cursor: pointer;
+            & > img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: all 0.5s ease-out 0.1s;
+
+              &:hover {
+                transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+                backface-visibility: hidden;
+              }
             }
           }
         }
       }
-    }
 
-    .summary {
-      margin-left: 60px;
-      word-break: break-all;
-      -webkit-line-clamp: 2;
-      overflow: hidden !important;
-      text-overflow: ellipsis;
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-      color: #4a4a4a;
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 1.5;
+      .topic-actions {
+        margin-top: 6px;
+      }
     }
   }
 }

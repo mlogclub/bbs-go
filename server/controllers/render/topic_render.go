@@ -15,7 +15,8 @@ func BuildTopic(topic *model.Topic) *model.TopicResponse {
 }
 
 func BuildSimpleTopic(topic *model.Topic) *model.TopicResponse {
-	return _buildTopic(topic, false)
+	buildContent:= topic.Type == constants.TopicTypeTweet // 动态时渲染内容
+	return _buildTopic(topic, buildContent)
 }
 
 func BuildSimpleTopics(topics []model.Topic, currentUser *model.User) []model.TopicResponse {
