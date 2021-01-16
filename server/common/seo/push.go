@@ -11,8 +11,10 @@ import (
 )
 
 func Push(url string) {
-	PushUrls([]string{url})
-	PushSmUrls([]string{url})
+	go func() {
+		PushUrls([]string{url})
+		PushSmUrls([]string{url})
+	}()
 }
 
 // 百度链接推送
