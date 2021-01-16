@@ -330,6 +330,7 @@ func (s *topicService) OnComment(topicId int64, comment *model.Comment) {
 		if err := repositories.TopicRepository.Updates(tx, topicId, map[string]interface{}{
 			"last_comment_time":    comment.CreateTime,
 			"last_comment_user_id": comment.UserId,
+			"comment_count":        gorm.Expr("comment_count + 1"),
 		}); err != nil {
 			return err
 		}
