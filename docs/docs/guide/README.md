@@ -53,7 +53,7 @@ git clone https://github.com/mlogclub/mlog.git
 
 ## 项目结构
 
-bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。bbs-go包含三个模块：server、site，两个模块的介绍如下：
+bbs-go采用前后端分离技术，网站和后台均使用`http api`进行数据通信。bbs-go包含两个模块：server、site，两个模块的介绍如下：
 
 ### server模块
 
