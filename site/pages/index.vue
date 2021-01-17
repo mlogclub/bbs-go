@@ -3,7 +3,7 @@
     <div class="container main-container left-main size-320">
       <div class="left-container">
         <div class="main-content no-padding no-bg topics-wrapper">
-          <div class="topics-nav"><bbs-left :nodes="nodes" /></div>
+          <div class="topics-nav"><topics-nav :nodes="nodes" /></div>
           <div class="topics-main">
             <load-more
               v-if="topicsPage"
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import BbsLeft from '~/components/BbsLeft'
+import TopicsNav from '~/components/topic/TopicsNav'
 import CheckIn from '~/components/CheckIn'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
@@ -37,7 +37,7 @@ import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
-    BbsLeft,
+    TopicsNav,
     CheckIn,
     SiteNotice,
     ScoreRank,
