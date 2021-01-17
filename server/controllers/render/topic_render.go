@@ -73,7 +73,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 			rsp.Content = topic.Content
 		}
 	} else {
-		rsp.Summary = markdown.GetSummary(topic.Content, 256)
+		rsp.Summary = markdown.GetSummary(topic.Content, 128)
 	}
 
 	if topic.Type == constants.TopicTypeTweet {
