@@ -28,11 +28,10 @@
                       发布于
                       <time
                         :datetime="
-                          topic.lastCommentTime
-                            | formatDate('yyyy-MM-ddTHH:mm:ss')
+                          topic.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
                         "
                         itemprop="datePublished"
-                        >{{ topic.lastCommentTime | prettyDate }}</time
+                        >{{ topic.createTime | prettyDate }}</time
                       >
                     </span>
                   </div>
