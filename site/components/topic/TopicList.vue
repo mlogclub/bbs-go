@@ -121,7 +121,13 @@ export default {
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
-    border-bottom: 1px solid #f2f2f2;
+    // border-bottom: 1px solid #f2f2f2;
+    border-radius: 6px;
+    background: #ffffff;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
 
     &:hover {
       background: #f3f6f9;
