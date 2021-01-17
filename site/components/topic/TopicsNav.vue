@@ -37,6 +37,11 @@ export default {
 
 <style lang="scss" scoped>
 .dock-nav {
+  display: block;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+
   width: 150px;
   border-radius: 2px;
   background-color: #fff;
