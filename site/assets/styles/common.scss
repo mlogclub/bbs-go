@@ -185,22 +185,6 @@ $sidebar-margin: 10px; // 侧边栏之间的缝隙
   }
 }
 
-.topics-wrapper {
-  display: flex;
-  .topics-nav {
-    margin-right: 10px;
-  }
-  .topics-main {
-    width: 100%;
-  }
-
-  @media screen and (max-width: 768px) {
-    .topics-nav {
-      display: none;
-    }
-  }
-}
-
 .widget {
   background: #fff;
   padding: 0 12px;
