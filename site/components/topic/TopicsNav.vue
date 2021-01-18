@@ -61,7 +61,7 @@ export default {
       justify-content: center;
       font-size: 14px;
       color: #2e3135;
-      padding: 0 12px;
+      //padding: 0 12px;
       border-radius: 3px;
       transition: background-color 0.2s, color 0.2s;
       font-weight: 500;
@@ -86,6 +86,10 @@ export default {
         text-decoration: none;
         cursor: pointer;
         color: #909090;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        line-height: 30px;
       }
     }
   }
