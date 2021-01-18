@@ -416,14 +416,8 @@ export default {
         border: 1px dashed #ddd;
         text-align: center;
 
-        // 图片尺寸
-        $image-size: 120px;
-
         display: inline-block;
         vertical-align: middle;
-        width: $image-size;
-        height: $image-size;
-        line-height: $image-size;
         margin: 0 8px 8px 0;
         background-color: #e8e8e8;
         background-size: 32px 32px;
@@ -434,8 +428,6 @@ export default {
 
         .image-item {
           display: block;
-          width: $image-size;
-          height: $image-size;
           overflow: hidden;
           transform-style: preserve-3d;
 
@@ -449,6 +441,44 @@ export default {
               transform: matrix(1.04, 0, 0, 1.04, 0, 0);
               backface-visibility: hidden;
             }
+          }
+        }
+
+        /* 只有一个图片时 */
+        &:first-child:nth-last-child(1) {
+          width: 210px;
+          height: 210px;
+          line-height: 210px;
+
+          .image-item {
+            width: 210px;
+            height: 210px;
+          }
+        }
+
+        /* 只有两个图片时 */
+        &:first-child:nth-last-child(2),
+        &:first-child:nth-last-child(2) ~ li {
+          width: 180px;
+          height: 180px;
+          line-height: 180px;
+
+          .image-item {
+            width: 180px;
+            height: 180px;
+          }
+        }
+
+        /*大于两个图片时*/
+        &:first-child:nth-last-child(n + 3),
+        &:first-child:nth-last-child(n + 3) ~ li {
+          width: 120px;
+          height: 120px;
+          line-height: 120px;
+
+          .image-item {
+            width: 120px;
+            height: 120px;
           }
         }
       }
