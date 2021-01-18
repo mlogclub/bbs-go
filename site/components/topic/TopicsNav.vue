@@ -7,6 +7,7 @@
       <li :class="{ active: currentNodeId === -1 }">
         <a href="/topics/node/recommend">推荐</a>
       </li>
+      <li class="dock-nav-divider"></li>
       <li
         v-for="node in nodes"
         :key="node.nodeId"
@@ -36,6 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './assets/styles/variable';
 .dock-nav {
   display: block;
   position: -webkit-sticky;
@@ -52,7 +54,7 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 16px 12px;
-    li {
+    li:not(.dock-nav-divider) {
       position: relative;
       cursor: pointer;
       height: 30px;
@@ -91,6 +93,10 @@ export default {
         text-align: center;
         line-height: 30px;
       }
+    }
+    li.dock-nav-divider {
+      height: 15px;
+      border-bottom: 1px solid $border-color-base;
     }
   }
 }
