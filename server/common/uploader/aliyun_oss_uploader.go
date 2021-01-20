@@ -2,6 +2,7 @@ package uploader
 
 import (
 	"bytes"
+	"net/http"
 	"sync"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -23,8 +24,10 @@ func (aliyun *aliyunOssUploader) PutImage(data []byte) (string, error) {
 }
 
 func (aliyun *aliyunOssUploader) PutObject(key string, data []byte) (string, error) {
+	contentType := http.DetectContentType(data)
+
 	bucket := aliyun.getBucket()
-	if err := bucket.PutObject(key, bytes.NewReader(data)); err != nil {
+	if err := bucket.PutObject(key, bytes.NewReader(data), oss.ContentType(contentType)); err != nil {
 		return "", err
 	}
 	c := config.Instance.Uploader.AliyunOss
