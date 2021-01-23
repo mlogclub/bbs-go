@@ -42,9 +42,10 @@ Go 是非常年轻的一门语言，它的主要目标是`兼具Python等动态�
 *技术栈*
 - iris (https://github.com/kataras/iris) Go 语言 mvc 框架
 - gorm (http://gorm.io/) Go 语言 orm 框架
+- Nuxt.js （https://nuxtjs.org/） 基于Vue.js的服务端页面渲染框架，简单、好用、功能强大
 - resty (https://github.com/go-resty/resty) Go 语言好用的 http-client
 - cron (https://github.com/robfig/cron) 定时任务
-- goquery（https://github.com/PuerkitoBio/goquery）html dom 元素解析
+- goquery (https://github.com/PuerkitoBio/goquery) html dom 元素解析
 
 ### site
 
