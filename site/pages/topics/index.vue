@@ -2,16 +2,18 @@
   <section class="main">
     <div class="container main-container left-main size-360">
       <div class="left-container">
-        <div class="main-content no-padding">
-          <topics-nav :nodes="nodes" />
-          <load-more
-            v-if="topicsPage"
-            v-slot="{ results }"
-            :init-data="topicsPage"
-            url="/api/topic/topics"
-          >
-            <topic-list :topics="results" :show-ad="true" />
-          </load-more>
+        <div class="main-content no-padding no-bg topics-wrapper">
+          <div class="topics-nav"><topics-nav :nodes="nodes" /></div>
+          <div class="topics-main">
+            <load-more
+              v-if="topicsPage"
+              v-slot="{ results }"
+              :init-data="topicsPage"
+              url="/api/topic/topics"
+            >
+              <topic-list :topics="results" :show-ad="true" />
+            </load-more>
+          </div>
         </div>
       </div>
       <div class="right-container">
@@ -29,7 +31,7 @@ import CheckIn from '~/components/CheckIn'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
-import TopicsNav from '~/components/TopicsNav'
+import TopicsNav from '~/components/topic/TopicsNav'
 import TopicList from '~/components/topic/TopicList'
 import LoadMore from '~/components/LoadMore'
 
