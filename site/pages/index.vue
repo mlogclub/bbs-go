@@ -27,21 +27,21 @@
 </template>
 
 <script>
-import TopicsNav from '~/components/topic/TopicsNav'
 import CheckIn from '~/components/CheckIn'
 import SiteNotice from '~/components/SiteNotice'
 import ScoreRank from '~/components/ScoreRank'
 import FriendLinks from '~/components/FriendLinks'
+import TopicsNav from '~/components/topic/TopicsNav'
 import TopicList from '~/components/topic/TopicList'
 import LoadMore from '~/components/LoadMore'
 
 export default {
   components: {
-    TopicsNav,
     CheckIn,
     SiteNotice,
     ScoreRank,
     FriendLinks,
+    TopicsNav,
     TopicList,
     LoadMore,
   },
