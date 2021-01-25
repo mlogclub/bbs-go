@@ -23,9 +23,9 @@
             <h1 class="topic-title">
               <a :href="'/topic/' + topic.topicId">{{ topic.title }}</a>
             </h1>
-            <div class="topic-summary">
+            <a :href="'/topic/' + topic.topicId" class="topic-summary">
               {{ topic.summary }}
-            </div>
+            </a>
           </template>
           <template v-if="topic.type === 1">
             <a
