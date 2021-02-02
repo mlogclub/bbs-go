@@ -296,7 +296,7 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 // rss
 func (s *articleService) GenerateRss() {
 	articles := repositories.ArticleRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, article := range articles {

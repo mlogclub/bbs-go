@@ -345,7 +345,7 @@ func (s *topicService) OnComment(topicId int64, comment *model.Comment) {
 // rss
 func (s *topicService) GenerateRss() {
 	topics := repositories.TopicRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(1000))
+		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, topic := range topics {

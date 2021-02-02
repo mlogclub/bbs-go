@@ -19,7 +19,7 @@ func startSchedule() {
 	})
 
 	// Generate sitemap
-	addCronFunc(c, "@every 2h", func() {
+	addCronFunc(c, "0 0 4 ? * *", func() {
 		sitemap.Generate()
 	})
 

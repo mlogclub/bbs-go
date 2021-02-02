@@ -123,7 +123,7 @@ func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 // rss
 func (s *projectService) GenerateRss() {
 	projects := repositories.ProjectRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(2000))
+		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, project := range projects {
