@@ -26,6 +26,10 @@ func (c *LoginController) PostSignup() *simple.JsonResult {
 		nickname    = c.Ctx.PostValueTrim("nickname")
 		ref         = c.Ctx.FormValue("ref")
 	)
+	loginMethod := services.SysConfigService.GetLoginMethod()
+	if !loginMethod.Password {
+		return simple.JsonErrorMsg("账号密码登录/注册已禁用")
+	}
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}
@@ -45,6 +49,10 @@ func (c *LoginController) PostSignin() *simple.JsonResult {
 		password    = c.Ctx.PostValueTrim("password")
 		ref         = c.Ctx.FormValue("ref")
 	)
+	loginMethod := services.SysConfigService.GetLoginMethod()
+	if !loginMethod.Password {
+		return simple.JsonErrorMsg("账号密码登录/注册已禁用")
+	}
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}

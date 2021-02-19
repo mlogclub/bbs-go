@@ -14,6 +14,11 @@ type GithubLoginController struct {
 
 // 获取Github登录授权地址
 func (c *GithubLoginController) GetAuthorize() *simple.JsonResult {
+	loginMethod := services.SysConfigService.GetLoginMethod()
+	if !loginMethod.Github {
+		return simple.JsonErrorMsg("Github登录/注册已禁用")
+	}
+
 	ref := c.Ctx.FormValue("ref")
 	url := github.AuthCodeURL(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
@@ -21,6 +26,11 @@ func (c *GithubLoginController) GetAuthorize() *simple.JsonResult {
 
 // 获取Github回调信息获取
 func (c *GithubLoginController) GetCallback() *simple.JsonResult {
+	loginMethod := services.SysConfigService.GetLoginMethod()
+	if !loginMethod.Github {
+		return simple.JsonErrorMsg("Github登录/注册已禁用")
+	}
+
 	code := c.Ctx.FormValue("code")
 	state := c.Ctx.FormValue("state")
 
