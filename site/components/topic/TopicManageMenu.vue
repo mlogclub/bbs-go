@@ -11,12 +11,17 @@
         topic.recommend ? '取消推荐' : '推荐'
       }}</el-dropdown-item>
       <el-dropdown-item command="delete">删除</el-dropdown-item>
+      <el-dropdown-item command="forbidden7Days">禁言7天</el-dropdown-item>
+      <el-dropdown-item v-if="isOwner" command="forbiddenForever"
+        >永久禁言</el-dropdown-item
+      >
     </el-dropdown-menu>
   </el-dropdown>
 </template>
 
 <script>
 import UserHelper from '~/common/UserHelper'
+
 export default {
   props: {
     topic: {
@@ -27,23 +32,27 @@ export default {
   computed: {
     hasPermission() {
       return (
-        this.isOwner ||
+        this.isTopicOwner ||
         UserHelper.isOwner(this.user) ||
         UserHelper.isAdmin(this.user)
       )
     },
-    isOwner() {
+    isTopicOwner() {
       if (!this.user || !this.topic) {
         return false
       }
       return this.user.id === this.topic.user.id
+    },
+    isOwner() {
+      const current = this.$store.state.user.current
+      return this.user && current && this.user.id === current.id
     },
     user() {
       return this.$store.state.user.current
     },
   },
   methods: {
-    handleCommand(command) {
+    async handleCommand(command) {
       if (!this.topic || !this.topic.topicId) {
         return
       }
@@ -53,8 +62,23 @@ export default {
         this.deleteTopic(this.topic.topicId)
       } else if (command === 'recommend') {
         this.switchRecommend(this.topic)
+      } else if (command === 'forbidden7Days') {
+        await this.forbidden(7)
+      } else if (command === 'forbiddenForever') {
+        await this.forbidden(-1)
       } else {
         console.log('click on item ' + command)
+      }
+    },
+    async forbidden(days) {
+      try {
+        await this.$axios.post('/api/user/forbidden', {
+          userId: this.user.id,
+          days,
+        })
+        this.$message.success('禁言成功')
+      } catch (e) {
+        this.$message.error('禁言失败')
       }
     },
     deleteTopic(topicId) {
