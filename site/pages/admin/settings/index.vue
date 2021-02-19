@@ -71,12 +71,19 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="用户登录有效期(天)">
-                <el-input-number
-                  v-model="config.tokenExpireDays"
-                  :min="1"
-                ></el-input-number>
-              </el-form-item>
+              <template v-if="config.loginMethod">
+                <el-form-item label="登录方式">
+                  <el-checkbox v-model="config.loginMethod.password"
+                    >密码登录</el-checkbox
+                  >
+                  <el-checkbox v-model="config.loginMethod.qq"
+                    >QQ登录</el-checkbox
+                  >
+                  <el-checkbox v-model="config.loginMethod.github"
+                    >Github登录</el-checkbox
+                  >
+                </el-form-item>
+              </template>
 
               <el-form-item label="站外链接跳转页面">
                 <el-tooltip

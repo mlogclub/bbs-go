@@ -130,6 +130,28 @@ func (s *sysConfigService) GetTokenExpireDays() int {
 	return tokenExpireDays
 }
 
+func (s *sysConfigService) GetLoginMethod() model.LoginMethod {
+	loginMethodStr := cache.SysConfigCache.GetValue(constants.SysConfigLoginMethod)
+
+	useDefault := true
+	var loginMethod model.LoginMethod
+	if simple.IsNotBlank(loginMethodStr) {
+		if err := json.Parse(loginMethodStr, &loginMethod); err != nil {
+			logrus.Warn("登录方式数据错误", err)
+		} else {
+			useDefault = false
+		}
+	}
+	if useDefault {
+		loginMethod = model.LoginMethod{
+			Password: true,
+			QQ:       true,
+			Github:   true,
+		}
+	}
+	return loginMethod
+}
+
 func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
 		siteTitle             = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
@@ -145,6 +167,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		topicCaptcha          = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
 		tokenExpireDays       = s.GetTokenExpireDays()
+		loginMethod           = s.GetLoginMethod()
 	)
 
 	var siteKeywordsArr []string
@@ -198,6 +221,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		TopicCaptcha:       strings.ToLower(topicCaptcha) == "true",
 		UserObserveSeconds: userObserveSeconds,
 		TokenExpireDays:    tokenExpireDays,
+		LoginMethod:        loginMethod,
 	}
 }
 

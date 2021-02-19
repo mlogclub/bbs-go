@@ -7,77 +7,86 @@
             登录
           </div>
           <div class="widget-content">
-            <div class="field">
-              <label class="label">用户名/邮箱</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="username"
-                  class="input is-success"
-                  type="text"
-                  placeholder="请输入用户名或邮箱"
-                  @keyup.enter="submitLogin"
-                />
-                <span class="icon is-small is-left"
-                  ><i class="iconfont icon-username"
-                /></span>
+            <template v-if="loginMethod.password">
+              <div class="field">
+                <label class="label">用户名/邮箱</label>
+                <div class="control has-icons-left">
+                  <input
+                    v-model="username"
+                    class="input is-success"
+                    type="text"
+                    placeholder="请输入用户名或邮箱"
+                    @keyup.enter="submitLogin"
+                  />
+                  <span class="icon is-small is-left"
+                    ><i class="iconfont icon-username"
+                  /></span>
+                </div>
               </div>
-            </div>
 
-            <div class="field">
-              <label class="label">密码</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="password"
-                  class="input"
-                  type="password"
-                  placeholder="请输入密码"
-                  @keyup.enter="submitLogin"
-                />
-                <span class="icon is-small is-left"
-                  ><i class="iconfont icon-password"
-                /></span>
+              <div class="field">
+                <label class="label">密码</label>
+                <div class="control has-icons-left">
+                  <input
+                    v-model="password"
+                    class="input"
+                    type="password"
+                    placeholder="请输入密码"
+                    @keyup.enter="submitLogin"
+                  />
+                  <span class="icon is-small is-left"
+                    ><i class="iconfont icon-password"
+                  /></span>
+                </div>
               </div>
-            </div>
 
-            <div class="field">
-              <label class="label">验证码</label>
-              <div class="control has-icons-left">
-                <div class="field is-horizontal">
-                  <div class="field login-captcha-input">
-                    <input
-                      v-model="captchaCode"
-                      class="input"
-                      type="text"
-                      placeholder="验证码"
-                      @keyup.enter="submitLogin"
-                    />
-                    <span class="icon is-small is-left"
-                      ><i class="iconfont icon-captcha"
-                    /></span>
-                  </div>
-                  <div v-if="captchaUrl" class="field login-captcha-img">
-                    <a @click="showCaptcha"><img :src="captchaUrl" /></a>
+              <div class="field">
+                <label class="label">验证码</label>
+                <div class="control has-icons-left">
+                  <div class="field is-horizontal">
+                    <div class="field login-captcha-input">
+                      <input
+                        v-model="captchaCode"
+                        class="input"
+                        type="text"
+                        placeholder="验证码"
+                        @keyup.enter="submitLogin"
+                      />
+                      <span class="icon is-small is-left"
+                        ><i class="iconfont icon-captcha"
+                      /></span>
+                    </div>
+                    <div v-if="captchaUrl" class="field login-captcha-img">
+                      <a @click="showCaptcha"><img :src="captchaUrl" /></a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="field login-button">
-              <button class="button is-success" @click="submitLogin">
-                登录
-              </button>
-              <nuxt-link class="button is-text" to="/user/signup">
-                没有账号？点击这里去注册&gt;&gt;
-              </nuxt-link>
-            </div>
-            <div class="third-party-line">
+              <div class="field login-button">
+                <button class="button is-success" @click="submitLogin">
+                  登录
+                </button>
+                <a class="to-reg is-text" to="/user/signup">
+                  没有账号？点击这里去注册&gt;&gt;
+                </a>
+              </div>
+            </template>
+
+            <div
+              v-if="
+                loginMethod.password && (loginMethod.qq || loginMethod.github)
+              "
+              class="third-party-line"
+            >
               <div class="third-party-title">
                 <span>第三方账号登录</span>
               </div>
             </div>
+
             <div class="third-parties">
-              <github-login :ref-url="ref" />
-              <qq-login :ref-url="ref" />
+              <github-login v-if="loginMethod.github" :ref-url="ref" />
+              <qq-login v-if="loginMethod.qq" :ref-url="ref" />
             </div>
           </div>
         </div>
@@ -89,6 +98,7 @@
 <script>
 import GithubLogin from '~/components/GithubLogin'
 import QqLogin from '~/components/QqLogin'
+
 export default {
   components: {
     GithubLogin,
@@ -114,6 +124,10 @@ export default {
     },
     isLogin() {
       return !!this.currentUser
+    },
+    loginMethod() {
+      console.log(this.$store.state.config.config.loginMethod)
+      return this.$store.state.config.config.loginMethod
     },
   },
   mounted() {
@@ -207,6 +221,7 @@ export default {
   .login-captcha-input {
     width: 100%;
     margin-right: 20px;
+
     .input {
       width: 100% !important;
     }
@@ -221,12 +236,18 @@ export default {
   .login-button {
     .button {
       width: 100%;
+      margin-bottom: 10px;
+    }
+    .to-reg {
+      color: #363636;
+      text-decoration: underline;
     }
   }
 
   .third-party-line {
     border-bottom: 1px solid #dedede;
     margin-bottom: 24px;
+
     .third-party-title {
       margin-bottom: -12px;
       text-align: center;
@@ -241,7 +262,7 @@ export default {
 
   .third-parties {
     text-align: center;
-    margin-bottom: 10px;
+    margin: 10px 0;
   }
 }
 </style>
