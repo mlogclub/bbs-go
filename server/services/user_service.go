@@ -123,6 +123,29 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 		}
 		OperateLogService.AddOperateLog(operatorId, constants.OpTypeForbidden, constants.EntityUser, userId,
 			description, r)
+
+		// 永久禁言
+		if days == -1 {
+			go func() {
+				// 删除话题
+				TopicService.ScanByUser(userId, func(topics []model.Topic) {
+					for _, topic := range topics {
+						if topic.Status != constants.StatusDeleted {
+							_ = TopicService.Delete(topic.Id, operatorId, nil)
+						}
+					}
+				})
+
+				// 删除文章
+				ArticleService.ScanByUser(userId, func(articles []model.Article) {
+					for _, article := range articles {
+						if article.Status != constants.StatusDeleted {
+							_ = ArticleService.Delete(article.Id)
+						}
+					}
+				})
+			}()
+		}
 	}
 	return nil
 }
