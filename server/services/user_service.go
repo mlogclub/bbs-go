@@ -116,6 +116,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 		return errors.New("禁言时间错误")
 	}
 	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
+		cache.UserCache.Invalidate(userId)
 		description := ""
 		if simple.IsNotBlank(reason) {
 			description = "禁言原因：" + reason
@@ -133,6 +134,7 @@ func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request)
 		return
 	}
 	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", 0) == nil {
+		cache.UserCache.Invalidate(user.Id)
 		OperateLogService.AddOperateLog(operatorId, constants.OpTypeRemoveForbidden, constants.EntityUser, userId, "", r)
 	}
 }
