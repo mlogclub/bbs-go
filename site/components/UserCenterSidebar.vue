@@ -49,10 +49,16 @@
               <i class="iconfont icon-forbidden" />
               <a @click="removeForbidden">&nbsp;取消禁言</a>
             </li>
-            <li v-else>
-              <i class="iconfont icon-forbidden" />
-              <a @click="forbidden">&nbsp;禁言</a>
-            </li>
+            <template v-else>
+              <li>
+                <i class="iconfont icon-forbidden" />
+                <a @click="forbidden(7)">&nbsp;禁言7天</a>
+              </li>
+              <li>
+                <i v-if="isSiteOwner" class="iconfont icon-forbidden" />
+                <a @click="forbidden(-1)">&nbsp;永久禁言</a>
+              </li>
+            </template>
           </template>
         </ul>
       </div>
@@ -86,6 +92,9 @@ export default {
       const current = this.$store.state.user.current
       return this.user && current && this.user.id === current.id
     },
+    isSiteOwner() {
+      return UserHelper.isOwner(this.currentUser)
+    },
     isAdmin() {
       return (
         UserHelper.isOwner(this.currentUser) ||
@@ -94,11 +103,11 @@ export default {
     },
   },
   methods: {
-    async forbidden() {
+    async forbidden(days) {
       try {
         await this.$axios.post('/api/user/forbidden', {
           userId: this.user.id,
-          days: 7,
+          days,
         })
         this.user.forbidden = true
         this.$message.success('禁言成功')
