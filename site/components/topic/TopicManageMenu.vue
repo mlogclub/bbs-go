@@ -44,8 +44,7 @@ export default {
       return this.user.id === this.topic.user.id
     },
     isOwner() {
-      const current = this.$store.state.user.current
-      return this.user && current && this.user.id === current.id
+      return UserHelper.isOwner(this.user)
     },
     user() {
       return this.$store.state.user.current
