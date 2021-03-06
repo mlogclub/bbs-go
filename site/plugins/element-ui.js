@@ -6,6 +6,7 @@ import {
   Dialog,
   Input,
   InputNumber,
+  Checkbox,
   Switch,
   Select,
   Option,
@@ -39,6 +40,7 @@ Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Input)
 Vue.use(InputNumber)
+Vue.use(Checkbox)
 Vue.use(Switch)
 Vue.use(Select)
 Vue.use(Option)

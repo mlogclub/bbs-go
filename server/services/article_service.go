@@ -278,6 +278,19 @@ func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 	}
 }
 
+func (s *articleService) ScanByUser(userId int64, callback func(articles []model.Article)) {
+	var cursor int64 = 0
+	for {
+		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		callback(list)
+	}
+}
+
 // 倒序扫描
 func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64

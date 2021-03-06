@@ -388,6 +388,19 @@ func (s *topicService) GenerateRss() {
 	}
 }
 
+func (s *topicService) ScanByUser(userId int64, callback func(topics []model.Topic)) {
+	var cursor int64 = 0
+	for {
+		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		callback(list)
+	}
+}
+
 func (s *topicService) Scan(callback func(topics []model.Topic)) {
 	var cursor int64 = 0
 	for {

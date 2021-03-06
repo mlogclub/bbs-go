@@ -274,6 +274,9 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 	if userId < 0 {
 		return simple.JsonErrorMsg("请传入：userId")
 	}
+	if days == -1 && !user.HasRole(constants.RoleOwner) {
+		return simple.JsonErrorMsg("无永久禁言权限")
+	}
 	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
 	} else {

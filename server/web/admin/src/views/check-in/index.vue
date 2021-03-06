@@ -23,15 +23,15 @@
             <el-table-column prop="id" label="编号"></el-table-column>
             
 			<el-table-column prop="userId" label="userId"></el-table-column>
-            
+			
+			<el-table-column prop="latestDayName" label="latestDayName"></el-table-column>
+			
 			<el-table-column prop="consecutiveDays" label="consecutiveDays"></el-table-column>
-            
-			<el-table-column prop="lastDay" label="lastDay"></el-table-column>
-            
+			
 			<el-table-column prop="createTime" label="createTime"></el-table-column>
-            
+			
 			<el-table-column prop="updateTime" label="updateTime"></el-table-column>
-            
+			
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -51,7 +51,6 @@
             </el-pagination>
         </el-col>
 
-
         
         <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" ref="addForm">
@@ -60,12 +59,12 @@
 					<el-input v-model="addForm.userId"></el-input>
 				</el-form-item>
                 
-				<el-form-item label="consecutiveDays">
-					<el-input v-model="addForm.consecutiveDays"></el-input>
+				<el-form-item label="latestDayName">
+					<el-input v-model="addForm.latestDayName"></el-input>
 				</el-form-item>
                 
-				<el-form-item label="lastDay">
-					<el-input v-model="addForm.lastDay"></el-input>
+				<el-form-item label="consecutiveDays">
+					<el-input v-model="addForm.consecutiveDays"></el-input>
 				</el-form-item>
                 
 				<el-form-item label="createTime">
@@ -92,12 +91,12 @@
 					<el-input v-model="editForm.userId"></el-input>
 				</el-form-item>
                 
-				<el-form-item label="consecutiveDays">
-					<el-input v-model="editForm.consecutiveDays"></el-input>
+				<el-form-item label="latestDayName">
+					<el-input v-model="editForm.latestDayName"></el-input>
 				</el-form-item>
                 
-				<el-form-item label="lastDay">
-					<el-input v-model="editForm.lastDay"></el-input>
+				<el-form-item label="consecutiveDays">
+					<el-input v-model="editForm.consecutiveDays"></el-input>
 				</el-form-item>
                 
 				<el-form-item label="createTime">
@@ -118,10 +117,7 @@
 </template>
 
 <script>
-  import HttpClient from '../../apis/HttpClient'
-
   export default {
-    name: "List",
     data() {
       return {
         results: [],
@@ -130,36 +126,11 @@
         filters: {},
         selectedRows: [],
 
-        addForm: {
-          
-          'userId': '',
-          
-          'consecutiveDays': '',
-          
-          'lastDay': '',
-          
-          'createTime': '',
-          
-          'updateTime': '',
-          
-        },
+        addForm: {},
         addFormVisible: false,
         addLoading: false,
 
-        editForm: {
-          'id': '',
-          
-          'userId': '',
-          
-          'consecutiveDays': '',
-          
-          'lastDay': '',
-          
-          'createTime': '',
-          
-          'updateTime': '',
-          
-        },
+        editForm: {},
         editFormVisible: false,
         editLoading: false,
       }
@@ -168,75 +139,68 @@
       this.list();
     },
     methods: {
-      list() {
-        let me = this
-        me.listLoading = true
-		let params = Object.assign(me.filters, {
-          page: me.page.page,
-          limit: me.page.limit
-        })
-        HttpClient.post('/api/admin/check-in/list', params)
-          .then(data => {
-            me.results = data.results
-            me.page = data.page
-          })
-          .finally(() => {
-            me.listLoading = false
-          })
-      },
-      handlePageChange (val) {
-        this.page.page = val
-        this.list()
-      },
-      handleLimitChange (val) {
-        this.page.limit = val
-        this.list()
-      },
-      handleAdd() {
-        this.addForm = {
-          name: '',
-          description: '',
-        }
-        this.addFormVisible = true
-      },
-      addSubmit() {
-        let me = this
-        HttpClient.post('/api/admin/check-in/create', this.addForm)
-          .then(data => {
-            me.$message({message: '提交成功', type: 'success'});
-            me.addFormVisible = false
-            me.list()
-          })
-          .catch(rsp => {
-            me.$notify.error({title: '错误', message: rsp.message})
-          })
-      },
-      handleEdit(index, row) {
-        let me = this
-        HttpClient.get('/api/admin/check-in/' + row.id)
-          .then(data => {
-            me.editForm = Object.assign({}, data);
-            me.editFormVisible = true
-          })
-          .catch(rsp => {
-            me.$notify.error({title: '错误', message: rsp.message})
-          })
-      },
-      editSubmit() {
-        let me = this
-        HttpClient.post('/api/admin/check-in/update', me.editForm)
-          .then(data => {
-            me.list()
-            me.editFormVisible = false
-          })
-          .catch(rsp => {
-            me.$notify.error({title: '错误', message: rsp.message})
-          })
-      },
-
-      handleSelectionChange(val) {
-        this.selectedRows = val
-      },
+		async list() {
+		  const params = Object.assign(this.filters, {
+			page: this.page.page,
+			limit: this.page.limit,
+		  })
+		  try {
+			const data = await this.$axios.post('/api/admin/check-in/list', params)
+			this.results = data.results
+			this.page = data.page
+		  } catch (e) {
+			this.$notify.error({ title: '错误', message: e || e.message })
+		  } finally {
+			this.listLoading = false
+		  }
+		},
+		async handlePageChange(val) {
+		  this.page.page = val
+		  await this.list()
+		},
+		async handleLimitChange(val) {
+		  this.page.limit = val
+		  await this.list()
+		},
+		handleAdd() {
+		  this.addForm = {
+			name: '',
+			description: '',
+		  }
+		  this.addFormVisible = true
+		},
+		async addSubmit() {
+		  try {
+			await this.$axios.post('/api/admin/check-in/create', this.addForm)
+			this.$message({ message: '提交成功', type: 'success' })
+			this.addFormVisible = false
+			await this.list()
+		  } catch (e) {
+			this.$notify.error({ title: '错误', message: e || e.message })
+		  }
+		},
+		async handleEdit(index, row) {
+		  try {
+			const data = await this.$axios.get('/api/admin/check-in/' + row.id)
+			this.editForm = Object.assign({}, data)
+			this.editFormVisible = true
+		  } catch (e) {
+			this.$notify.error({ title: '错误', message: e || e.message })
+		  }
+		},
+		async editSubmit() {
+		  try {
+			await this.$axios.post('/api/admin/check-in/update', this.editForm)
+			await this.list()
+			this.editFormVisible = false
+		  } catch (e) {
+			this.$notify.error({ title: '错误', message: e || e.message })
+		  }
+		},
+	
+		handleSelectionChange(val) {
+		  this.selectedRows = val
+		},
     }
   }
 </script>
