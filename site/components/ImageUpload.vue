@@ -22,7 +22,7 @@
         }"
         @click="removeItem(index)"
       >
-        <i class="iconfont icon-delete" style="font-size: 14px; fill: white;" />
+        <i class="iconfont icon-delete" />
       </div>
     </div>
     <div
@@ -180,7 +180,8 @@ export default {
           const length = promiseList.length
           this.$emit(`update:onUpload`, false)
           this.previewFiles.splice(this.previewFiles.length - length, length)
-          this.handleError(e).then(() => {})
+          // this.handleError(e).then(() => {})
+          console.error(e)
         }
       )
     },
@@ -306,6 +307,16 @@ export default {
       justify-content: center;
       align-items: center;
       background: rgba(0, 0, 0, 0.3);
+      text-align: center;
+      vertical-align: middle;
+      line-height: 20px;
+
+      i.iconfont {
+        font-size: 14px;
+        fill: white;
+        color: #fff;
+        font-weight: 700;
+      }
     }
 
     &:hover {
