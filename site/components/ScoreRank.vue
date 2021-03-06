@@ -6,9 +6,7 @@
     <div class="widget-content">
       <ul class="score-rank">
         <li v-for="user in scoreRank" :key="user.id">
-          <a :href="'/user/' + user.id" class="score-user-avatar">
-            <avatar :user="user" size="30" />
-          </a>
+          <avatar :user="user" size="30" />
           <div class="score-user-info">
             <a :href="'/user/' + user.id">{{ user.nickname }}</a>
             <p>{{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论</p>
@@ -51,10 +49,6 @@ export default {
 
     &:not(:last-child) {
       border-bottom: 1px solid #f7f7f7;
-    }
-
-    .score-user-avatar {
-      min-width: 30px;
     }
 
     .score-user-info {
