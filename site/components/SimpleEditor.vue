@@ -191,7 +191,7 @@ export default {
 
   .simple-editor-image-upload {
     background: $background-color-editor;
-    padding: 20px 20px 30px;
+    padding: 20px 20px 20px;
   }
 }
 </style>

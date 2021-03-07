@@ -37,7 +37,9 @@
         multiple
         @input="onInput"
       />
-      <i class="iconfont icon-add" />
+      <slot name="add-image-button">
+        <i class="iconfont icon-add" />
+      </slot>
     </div>
   </div>
 </template>
@@ -141,8 +143,8 @@ export default {
           if (!progressEvent.lengthComputable) {
             // 当进度不可估量,直接等于 100
             me.previewFiles[
-              me.previewFiles.length - length + index
-            ].progress = 100
+            me.previewFiles.length - length + index
+              ].progress = 100
             return
           }
           me.previewFiles[me.previewFiles.length - length + index].progress =
@@ -253,12 +255,13 @@ export default {
 
   .preview-item {
     position: relative;
-    border-radius: 5px;
-    border: 1px solid $border-color-base;
+    // border-radius: 5px;
+    // border: 1px solid $border-color-base;
+    border: 2px dashed #e8e8e8;
     margin-right: 10px;
     margin-bottom: 10px;
-    width: 100px;
-    height: 100px;
+    width: 94px;
+    height: 94px;
 
     &.deleted {
       transition: 1s all;
@@ -268,7 +271,7 @@ export default {
 
     .image-item {
       cursor: pointer;
-      border-radius: 5px;
+      // border-radius: 5px;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -328,10 +331,11 @@ export default {
 
   .add-image-btn {
     cursor: pointer;
-    width: 100px;
-    height: 100px;
-    border-radius: 5px;
-    border: 1px dashed $color-blue-base;
+    width: 94px;
+    height: 94px;
+    // border-radius: 5px;
+    // border: 1px dashed $color-blue-base;
+    border: 2px dashed #e8e8e8;
     position: relative;
 
     input[type='file'] {
