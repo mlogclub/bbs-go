@@ -166,12 +166,13 @@ export default {
           this.previewFiles.map((item) => {
             item.progress = 100
           }) // 请求响应后，更新到 100%
-          const _fileList = [...this.fileList]
-          resList.forEach((item) => _fileList.push(item))
+          // const _fileList = [...this.fileList]
+          // resList.forEach((item) => _fileList.push(item))
+          resList.forEach((item) => this.fileList.push(item))
           if (this.currentInput) {
             this.currentInput.value = ''
           }
-          this.$emit('input', _fileList)
+          this.$emit('input', this.fileList)
           this.$emit(`update:onUpload`, false)
         },
         (e) => {
@@ -195,9 +196,10 @@ export default {
       }).then(
         () => {
           this.previewFiles[index].deleted = true // 删除动画
-          const _fileList = [...this.fileList]
-          _fileList.splice(index, 1)
-          this.$emit('input', _fileList) // 避免和回显冲突，先修改 fileList
+          // const _fileList = [...this.fileList]
+          // _fileList.splice(index, 1)
+          this.fileList.splice(index, 1)
+          this.$emit('input', this.fileList) // 避免和回显冲突，先修改 fileList
           setTimeout(() => {
             this.previewFiles.splice(index, 1)
             this.$message.success('删除成功')
