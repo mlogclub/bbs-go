@@ -143,8 +143,8 @@ export default {
           if (!progressEvent.lengthComputable) {
             // 当进度不可估量,直接等于 100
             me.previewFiles[
-            me.previewFiles.length - length + index
-              ].progress = 100
+              me.previewFiles.length - length + index
+            ].progress = 100
             return
           }
           me.previewFiles[me.previewFiles.length - length + index].progress =
