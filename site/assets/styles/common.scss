@@ -39,15 +39,17 @@ body {
 
 // main-container
 $sidebar-margin: 10px; // 侧边栏之间的缝隙
+$sidebar-width: null; // 侧边栏宽度
+$main-container-width: null; // 主栏目的宽度
 
 // 计算页面宽度
 @mixin main-size($side-width) {
   // 侧边栏宽度
-  $sidebar-width: $side-width !global;
+  $sidebar-width: $side-width;
   // 主栏目的宽度
   $main-container-width: calc(
     100% - #{$side-width} - #{$sidebar-margin}
-  ) !global;
+  );
 
   &.left-main {
     .left-container {
