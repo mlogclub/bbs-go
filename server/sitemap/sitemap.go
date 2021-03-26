@@ -46,7 +46,11 @@ func Generate() {
 
 	sm := stm.NewSitemap(0)
 	sm.SetDefaultHost(config.Instance.BaseUrl)                  // 网站host
-	sm.SetSitemapsHost(config.Instance.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	if uploader.IsEnabledOss() {
+		sm.SetSitemapsHost(config.Instance.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
+	}else{
+		sm.SetPublicPath(config.Instance.Uploader.Local.Host)
+	}
 	sm.SetSitemapsPath("sitemap2")                              // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
