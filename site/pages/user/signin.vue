@@ -3,9 +3,7 @@
     <div class="container">
       <div class="main-body no-bg">
         <div class="widget signin">
-          <div class="widget-header">
-            登录
-          </div>
+          <div class="widget-header">登录</div>
           <div class="widget-content">
             <template v-if="loginMethod.password">
               <div class="field">
@@ -67,9 +65,9 @@
                 <button class="button is-success" @click="submitLogin">
                   登录
                 </button>
-                <a class="to-reg is-text" to="/user/signup">
+                <nuxt-link class="to-reg is-text" to="/user/signup">
                   没有账号？点击这里去注册&gt;&gt;
-                </a>
+                </nuxt-link>
               </div>
             </template>
 
