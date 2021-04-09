@@ -51,7 +51,13 @@
               </div>
 
               <!--内容-->
-              <div class="topic-content content" itemprop="articleBody">
+              <div
+                class="topic-content content"
+                :class="{
+                  'topic-tweet': topic.type === 1,
+                }"
+                itemprop="articleBody"
+              >
                 <h1 v-if="topic.title" class="topic-title" itemprop="headline">
                   {{ topic.title }}
                 </h1>
