@@ -111,53 +111,73 @@ export default {
 .avatar-size-100 {
   width: 100px;
   height: 100px;
+  min-width: 100px;
+  min-height: 100px;
   border-radius: 2px;
 }
 .avatar-size-80 {
   width: 80px;
   height: 80px;
+  min-width: 80px;
+  min-height: 80px;
   border-radius: 2px;
 }
 
 .avatar-size-70 {
   width: 70px;
   height: 70px;
+  min-width: 70px;
+  min-height: 70px;
   border-radius: 2px;
 }
 
 .avatar-size-60 {
   width: 60px;
   height: 60px;
+  min-width: 60px;
+  min-height: 60px;
   border-radius: 2px;
 }
 .avatar-size-50 {
   width: 50px;
   height: 50px;
+  min-width: 50px;
+  min-height: 50px;
   border-radius: 2px;
 }
 .avatar-size-45 {
   width: 45px;
   height: 45px;
+  min-width: 45px;
+  min-height: 45px;
   border-radius: 2px;
 }
 .avatar-size-40 {
   width: 40px;
   height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 2px;
 }
 .avatar-size-35 {
   width: 35px;
   height: 35px;
+  min-width: 35px;
+  min-height: 35px;
   border-radius: 2px;
 }
 .avatar-size-30 {
   width: 30px;
   height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   border-radius: 2px;
 }
 .avatar-size-20 {
   width: 20px;
   height: 20px;
+  min-width: 20px;
+  min-height: 20px;
   border-radius: 2px;
 }
 
