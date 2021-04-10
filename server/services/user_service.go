@@ -1,11 +1,12 @@
 package services
 
 import (
-	"bbs-go/common"
-	"bbs-go/common/email"
-	"bbs-go/common/urls"
-	"bbs-go/common/validate"
 	"bbs-go/model/constants"
+	"bbs-go/package/common"
+	email2 "bbs-go/package/email"
+	uploader2 "bbs-go/package/uploader"
+	urls2 "bbs-go/package/urls"
+	validate2 "bbs-go/package/validate"
 	"database/sql"
 	"errors"
 	"github.com/mlogclub/simple"
@@ -19,7 +20,6 @@ import (
 	"time"
 
 	"bbs-go/cache"
-	"bbs-go/common/uploader"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -184,14 +184,14 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	}
 
 	// 验证密码
-	err := validate.IsPassword(password, rePassword)
+	err := validate2.IsPassword(password, rePassword)
 	if err != nil {
 		return nil, err
 	}
 
 	// 验证邮箱
 	if len(email) > 0 {
-		if err := validate.IsEmail(email); err != nil {
+		if err := validate2.IsEmail(email); err != nil {
 			return nil, err
 		}
 		if s.GetByEmail(email) != nil {
@@ -203,7 +203,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 
 	// 验证用户名
 	if len(username) > 0 {
-		if err := validate.IsUsername(username); err != nil {
+		if err := validate2.IsUsername(username); err != nil {
 			return nil, err
 		}
 		if s.isUsernameExists(username) {
@@ -237,7 +237,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 		return nil, errors.New("密码不能为空")
 	}
 	var user *model.User = nil
-	if err := validate.IsEmail(username); err == nil { // 如果用户输入的是邮箱
+	if err := validate2.IsEmail(username); err == nil { // 如果用户输入的是邮箱
 		user = s.GetByEmail(username)
 	} else {
 		user = s.GetByUsername(username)
@@ -310,7 +310,7 @@ func (s *userService) HandleThirdAvatar(thirdAvatar string) string {
 	if simple.IsBlank(thirdAvatar) {
 		return ""
 	}
-	avatar, err := uploader.CopyImage(thirdAvatar)
+	avatar, err := uploader2.CopyImage(thirdAvatar)
 	if err != nil {
 		return ""
 	}
@@ -343,7 +343,7 @@ func (s *userService) UpdateBackgroundImage(userId int64, backgroundImage string
 // SetUsername 设置用户名
 func (s *userService) SetUsername(userId int64, username string) error {
 	username = strings.TrimSpace(username)
-	if err := validate.IsUsername(username); err != nil {
+	if err := validate2.IsUsername(username); err != nil {
 		return err
 	}
 
@@ -360,7 +360,7 @@ func (s *userService) SetUsername(userId int64, username string) error {
 // SetEmail 设置密码
 func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
-	if err := validate.IsEmail(email); err != nil {
+	if err := validate2.IsEmail(email); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -382,7 +382,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 
 // SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate2.IsPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -395,7 +395,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 
 // UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate2.IsPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -463,12 +463,12 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	if user.EmailVerified {
 		return errors.New("用户邮箱已验证")
 	}
-	if err := validate.IsEmail(user.Email.String); err != nil {
+	if err := validate2.IsEmail(user.Email.String); err != nil {
 		return err
 	}
 	var (
 		token     = simple.UUID()
-		url       = urls.AbsUrl("/user/email/verify?token=" + token)
+		url       = urls2.AbsUrl("/user/email/verify?token=" + token)
 		link      = &model.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
 		siteTitle = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		subject   = "邮箱验证 - " + siteTitle
@@ -489,7 +489,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		}); err != nil {
 			return nil
 		}
-		if err := email.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link); err != nil {
+		if err := email2.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link); err != nil {
 			return err
 		}
 		return nil

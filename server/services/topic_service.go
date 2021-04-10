@@ -1,8 +1,11 @@
 package services
 
 import (
-	"bbs-go/es"
 	"bbs-go/model/constants"
+	"bbs-go/package/config"
+	"bbs-go/package/es"
+	seo2 "bbs-go/package/seo"
+	urls2 "bbs-go/package/urls"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
@@ -17,11 +20,8 @@ import (
 	"gorm.io/gorm"
 
 	"bbs-go/cache"
-	"bbs-go/common"
-	"bbs-go/common/seo"
-	"bbs-go/common/urls"
-	"bbs-go/config"
 	"bbs-go/model"
+	"bbs-go/package/common"
 	"bbs-go/repositories"
 )
 
@@ -180,7 +180,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		// 获得积分
 		UserService.IncrScoreForPostTopic(topic)
 		// 百度链接推送
-		seo.Push(urls.TopicUrl(topic.Id))
+		seo2.Push(urls2.TopicUrl(topic.Id))
 	}
 	return topic, simple.FromError(err)
 }
@@ -349,7 +349,7 @@ func (s *topicService) GenerateRss() {
 
 	var items []*feeds.Item
 	for _, topic := range topics {
-		topicUrl := urls.TopicUrl(topic.Id)
+		topicUrl := urls2.TopicUrl(topic.Id)
 		user := cache.UserCache.Get(topic.UserId)
 		if user == nil {
 			continue

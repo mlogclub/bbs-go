@@ -1,9 +1,9 @@
 package api
 
 import (
-	"bbs-go/common"
-	"bbs-go/es"
 	"bbs-go/model/constants"
+	"bbs-go/package/common"
+	"bbs-go/package/es"
 	"math/rand"
 	"strconv"
 	"strings"

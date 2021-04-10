@@ -1,7 +1,7 @@
 package uploader
 
 import (
-	"bbs-go/config"
+	"bbs-go/package/config"
 	"github.com/mlogclub/simple/date"
 	"path/filepath"
 	"time"

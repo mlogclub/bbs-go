@@ -1,8 +1,8 @@
 package render
 
 import (
-	"bbs-go/es"
 	"bbs-go/model"
+	"bbs-go/package/es"
 	"bbs-go/services"
 )
 

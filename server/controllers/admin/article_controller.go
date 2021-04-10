@@ -2,18 +2,18 @@ package admin
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/package/sitemap"
 	"github.com/mlogclub/simple/date"
 	"strconv"
 
 	"bbs-go/model"
-	"bbs-go/sitemap"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"bbs-go/cache"
-	"bbs-go/common"
 	"bbs-go/controllers/render"
+	"bbs-go/package/common"
 	"bbs-go/services"
 )
 

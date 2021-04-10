@@ -1,7 +1,7 @@
 package app
 
 import (
-	"bbs-go/common"
+	"bbs-go/package/common"
 )
 
 func StartOn() {

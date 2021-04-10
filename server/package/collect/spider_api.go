@@ -2,11 +2,11 @@ package collect
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/package/baiduai"
 	"errors"
 
-	"bbs-go/common"
-	"bbs-go/common/baiduai"
 	"bbs-go/model"
+	"bbs-go/package/common"
 	"bbs-go/services"
 )
 

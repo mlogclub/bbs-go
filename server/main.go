@@ -2,7 +2,7 @@ package main
 
 import (
 	"bbs-go/app"
-	"bbs-go/config"
+	"bbs-go/package/config"
 	"bbs-go/model"
 	"flag"
 	"github.com/mlogclub/simple"

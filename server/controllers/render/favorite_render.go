@@ -1,10 +1,10 @@
 package render
 
 import (
-	"bbs-go/common"
-	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/package/common"
+	urls2 "bbs-go/package/urls"
 	"bbs-go/services"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
@@ -22,7 +22,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if article == nil || article.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = urls.ArticleUrl(article.Id)
+			rsp.Url = urls2.ArticleUrl(article.Id)
 			rsp.User = BuildUserById(article.UserId)
 			rsp.Title = article.Title
 			if article.ContentType == constants.ContentTypeMarkdown {
@@ -40,7 +40,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if topic == nil || topic.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = urls.TopicUrl(topic.Id)
+			rsp.Url = urls2.TopicUrl(topic.Id)
 			rsp.User = BuildUserById(topic.UserId)
 			rsp.Title = topic.Title
 			rsp.Content = common.GetMarkdownSummary(topic.Content)

@@ -2,6 +2,8 @@ package sitemap
 
 import (
 	"bbs-go/model/constants"
+	uploader2 "bbs-go/package/uploader"
+	urls2 "bbs-go/package/urls"
 	"bytes"
 	"compress/gzip"
 	"github.com/mlogclub/simple/date"
@@ -11,10 +13,8 @@ import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/common/uploader"
-	"bbs-go/common/urls"
-	"bbs-go/config"
 	"bbs-go/model"
+	"bbs-go/package/config"
 	"bbs-go/services"
 )
 
@@ -55,25 +55,25 @@ func Generate() {
 	sm.Create()
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/")},
+		{"loc", urls2.AbsUrl("/")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/topics")},
+		{"loc", urls2.AbsUrl("/topics")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/articles")},
+		{"loc", urls2.AbsUrl("/articles")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqAlways},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/projects")},
+		{"loc", urls2.AbsUrl("/projects")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqDaily},
 	})
@@ -86,7 +86,7 @@ func Generate() {
 	services.ArticleService.ScanDesc(func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == constants.StatusOk {
-				articleUrl := urls.ArticleUrl(article.Id)
+				articleUrl := urls2.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
 					{"lastmod", date.FromTimestamp(article.UpdateTime)},
@@ -100,7 +100,7 @@ func Generate() {
 	services.TopicService.ScanDesc(func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == constants.StatusOk {
-				topicUrl := urls.TopicUrl(topic.Id)
+				topicUrl := urls2.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},
 					{"lastmod", date.FromTimestamp(topic.LastCommentTime)},
@@ -114,7 +114,7 @@ func Generate() {
 	services.ProjectService.ScanDesc(func(projects []model.Project) {
 		for _, project := range projects {
 			sm.Add(stm.URL{
-				{"loc", urls.ProjectUrl(project.Id)},
+				{"loc", urls2.ProjectUrl(project.Id)},
 				{"lastmod", date.FromTimestamp(project.CreateTime)},
 				{"changefreq", changefreqMonthly},
 			})
@@ -123,7 +123,7 @@ func Generate() {
 
 	services.TagService.Scan(func(tags []model.Tag) {
 		for _, tag := range tags {
-			tagUrl := urls.TagArticlesUrl(tag.Id)
+			tagUrl := urls2.TagArticlesUrl(tag.Id)
 			sm.Add(stm.URL{
 				{"loc", tagUrl},
 				{"lastmod", time.Now()},
@@ -135,7 +135,7 @@ func Generate() {
 	services.UserService.Scan(func(users []model.User) {
 		for _, user := range users {
 			sm.Add(stm.URL{
-				{"loc", urls.UserUrl(user.Id)},
+				{"loc", urls2.UserUrl(user.Id)},
 				{"lastmod", time.Now()},
 				{"changefreq", changefreqWeekly},
 			})
@@ -177,7 +177,7 @@ func (adp *myAdapter) Write(loc *stm.Location, data []byte) {
 
 // oss写入
 func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
-	if _url, err := uploader.PutObject(fileKey, out); err != nil {
+	if _url, err := uploader2.PutObject(fileKey, out); err != nil {
 		logrus.Error("Upload sitemap error:", err)
 	} else {
 		logrus.Info("Upload sitemap:", _url)
