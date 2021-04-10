@@ -2,8 +2,8 @@ package sitemap
 
 import (
 	"bbs-go/model/constants"
-	uploader2 "bbs-go/package/uploader"
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/uploader"
+	"bbs-go/package/urls"
 	"bytes"
 	"compress/gzip"
 	"github.com/mlogclub/simple/date"
@@ -45,13 +45,13 @@ func Generate() {
 	}()
 
 	sm := stm.NewSitemap(0)
-	sm.SetDefaultHost(config.Instance.BaseUrl)                  // 网站host
+	sm.SetDefaultHost(config.Instance.BaseUrl) // 网站host
 	if uploader.IsEnabledOss() {
 		sm.SetSitemapsHost(config.Instance.Uploader.AliyunOss.Host) // 上传到阿里云所以host设置为阿里云
-	}else{
+	} else {
 		sm.SetPublicPath(config.Instance.Uploader.Local.Host)
 	}
-	sm.SetSitemapsPath("sitemap2")                              // sitemap存放目录
+	sm.SetSitemapsPath("sitemap2") // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
 	sm.SetCompress(true)
@@ -59,25 +59,25 @@ func Generate() {
 	sm.Create()
 
 	sm.Add(stm.URL{
-		{"loc", urls2.AbsUrl("/")},
+		{"loc", urls.AbsUrl("/")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls2.AbsUrl("/topics")},
+		{"loc", urls.AbsUrl("/topics")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls2.AbsUrl("/articles")},
+		{"loc", urls.AbsUrl("/articles")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqAlways},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls2.AbsUrl("/projects")},
+		{"loc", urls.AbsUrl("/projects")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqDaily},
 	})
@@ -90,7 +90,7 @@ func Generate() {
 	services.ArticleService.ScanDesc(func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == constants.StatusOk {
-				articleUrl := urls2.ArticleUrl(article.Id)
+				articleUrl := urls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
 					{"lastmod", date.FromTimestamp(article.UpdateTime)},
@@ -104,7 +104,7 @@ func Generate() {
 	services.TopicService.ScanDesc(func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == constants.StatusOk {
-				topicUrl := urls2.TopicUrl(topic.Id)
+				topicUrl := urls.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},
 					{"lastmod", date.FromTimestamp(topic.LastCommentTime)},
@@ -118,7 +118,7 @@ func Generate() {
 	services.ProjectService.ScanDesc(func(projects []model.Project) {
 		for _, project := range projects {
 			sm.Add(stm.URL{
-				{"loc", urls2.ProjectUrl(project.Id)},
+				{"loc", urls.ProjectUrl(project.Id)},
 				{"lastmod", date.FromTimestamp(project.CreateTime)},
 				{"changefreq", changefreqMonthly},
 			})
@@ -127,7 +127,7 @@ func Generate() {
 
 	services.TagService.Scan(func(tags []model.Tag) {
 		for _, tag := range tags {
-			tagUrl := urls2.TagArticlesUrl(tag.Id)
+			tagUrl := urls.TagArticlesUrl(tag.Id)
 			sm.Add(stm.URL{
 				{"loc", tagUrl},
 				{"lastmod", time.Now()},
@@ -139,7 +139,7 @@ func Generate() {
 	services.UserService.Scan(func(users []model.User) {
 		for _, user := range users {
 			sm.Add(stm.URL{
-				{"loc", urls2.UserUrl(user.Id)},
+				{"loc", urls.UserUrl(user.Id)},
 				{"lastmod", time.Now()},
 				{"changefreq", changefreqWeekly},
 			})
@@ -181,7 +181,7 @@ func (adp *myAdapter) Write(loc *stm.Location, data []byte) {
 
 // oss写入
 func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
-	if _url, err := uploader2.PutObject(fileKey, out); err != nil {
+	if _url, err := uploader.PutObject(fileKey, out); err != nil {
 		logrus.Error("Upload sitemap error:", err)
 	} else {
 		logrus.Info("Upload sitemap:", _url)

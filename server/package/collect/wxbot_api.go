@@ -2,7 +2,7 @@ package collect
 
 import (
 	"bbs-go/model/constants"
-	uploader2 "bbs-go/package/uploader"
+	"bbs-go/package/uploader"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"strings"
@@ -45,7 +45,7 @@ func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {
 		_ = services.UserService.Update(user)
 		return user.Id, nil
 	} else {
-		avatar, err := uploader2.CopyImage(article.OriHead)
+		avatar, err := uploader.CopyImage(article.OriHead)
 		if err != nil {
 			return 0, err
 		}

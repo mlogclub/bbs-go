@@ -1,7 +1,7 @@
 package uploader
 
 import (
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/urls"
 	"bytes"
 	"sync"
 
@@ -28,7 +28,7 @@ func (aliyun *aliyunOssUploader) PutObject(key string, data []byte) (string, err
 		return "", err
 	}
 	c := config.Instance.Uploader.AliyunOss
-	return urls2.UrlJoin(c.Host, key), nil
+	return urls.UrlJoin(c.Host, key), nil
 }
 
 func (aliyun *aliyunOssUploader) CopyImage(originUrl string) (string, error) {

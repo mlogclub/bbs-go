@@ -1,7 +1,7 @@
 package api
 
 import (
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/urls"
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -22,7 +22,7 @@ func (c *CaptchaController) GetRequest() *simple.JsonResult {
 	} else {
 		captchaId = captcha.NewLen(4)
 	}
-	captchaUrl := urls2.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + simple.UUID())
+	captchaUrl := urls.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + simple.UUID())
 	return simple.NewEmptyRspBuilder().
 		Put("captchaId", captchaId).
 		Put("captchaUrl", captchaUrl).

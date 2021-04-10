@@ -3,7 +3,7 @@ package baiduai
 import (
 	"bbs-go/model/constants"
 	"bbs-go/package/config"
-	markdown2 "bbs-go/package/markdown"
+	"bbs-go/package/markdown"
 	"encoding/json"
 	"errors"
 	"github.com/mlogclub/simple/date"
@@ -137,7 +137,7 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 }
 
 func (a *ai) AnalyzeMarkdown(title, markdownStr string) (*AiAnalyzeRet, error) {
-	content := markdown2.ToHTML(markdownStr)
+	content := markdown.ToHTML(markdownStr)
 	return a.AnalyzeHtml(title, content)
 }
 

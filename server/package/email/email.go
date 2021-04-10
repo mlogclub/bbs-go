@@ -2,7 +2,7 @@ package email
 
 import (
 	"bbs-go/model"
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/urls"
 	"bytes"
 	"crypto/tls"
 	"html/template"
@@ -51,7 +51,7 @@ func SendTemplateEmail(from *model.User, to, subject, title, content, quote stri
 	if from != nil {
 		fromLink = &model.ActionLink{
 			Title: from.Nickname,
-			Url:   urls2.UserUrl(from.Id),
+			Url:   urls.UserUrl(from.Id),
 		}
 	}
 	var b bytes.Buffer

@@ -1,7 +1,7 @@
 package api
 
 import (
-	uploader2 "bbs-go/package/uploader"
+	"bbs-go/package/uploader"
 	"io/ioutil"
 
 	"github.com/kataras/iris/v12"
@@ -40,7 +40,7 @@ func (c *UploadController) Post() *simple.JsonResult {
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
-	url, err := uploader2.PutImage(fileBytes)
+	url, err := uploader.PutImage(fileBytes)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -88,7 +88,7 @@ func (c *UploadController) PostEditor() {
 			errFiles = append(errFiles, file.Filename)
 			continue
 		}
-		url, err := uploader2.PutImage(fileBytes)
+		url, err := uploader.PutImage(fileBytes)
 		if err != nil {
 			logrus.Error(err)
 			errFiles = append(errFiles, file.Filename)
@@ -136,7 +136,7 @@ func (c *UploadController) PostFetch() {
 	}
 
 	url := data["url"]
-	output, err := uploader2.CopyImage(url)
+	output, err := uploader.CopyImage(url)
 	if err != nil {
 		_, _ = c.Ctx.JSON(iris.Map{
 			"msg":  err.Error(),

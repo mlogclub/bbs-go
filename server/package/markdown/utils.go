@@ -1,7 +1,7 @@
 package markdown
 
 import (
-	html2 "bbs-go/package/html"
+	"bbs-go/package/html"
 	"github.com/88250/lute"
 	"github.com/mlogclub/simple"
 	"sync"
@@ -31,5 +31,5 @@ func ToHTML(markdownStr string) string {
 
 func GetSummary(markdownStr string, summaryLen int) string {
 	htmlStr := ToHTML(markdownStr)
-	return html2.GetSummary(htmlStr, summaryLen)
+	return html.GetSummary(htmlStr, summaryLen)
 }

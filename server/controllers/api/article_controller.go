@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/urls"
 	"math/rand"
 	"strconv"
 
@@ -172,7 +172,7 @@ func (c *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 	if article == nil || article.Status != constants.StatusOk {
 		return simple.JsonErrorMsg("文章不存在")
 	}
-	return simple.NewEmptyRspBuilder().Put("url", urls2.ArticleUrl(articleId)).JsonResult()
+	return simple.NewEmptyRspBuilder().Put("url", urls.ArticleUrl(articleId)).JsonResult()
 }
 
 // 最近文章

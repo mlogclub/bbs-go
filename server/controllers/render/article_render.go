@@ -4,7 +4,7 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	markdown2 "bbs-go/package/markdown"
+	"bbs-go/package/markdown"
 	"github.com/mlogclub/simple"
 )
 
@@ -29,7 +29,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.Tags = BuildTags(tags)
 
 	if article.ContentType == constants.ContentTypeMarkdown {
-		content := markdown2.ToHTML(article.Content)
+		content := markdown.ToHTML(article.Content)
 		rsp.Content = handleHtmlContent(content)
 	} else if article.ContentType == constants.ContentTypeHtml {
 		rsp.Content = handleHtmlContent(article.Content)
@@ -60,7 +60,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 
 	if article.ContentType == constants.ContentTypeMarkdown {
 		if len(rsp.Summary) == 0 {
-			rsp.Summary = markdown2.GetSummary(article.Content, constants.SummaryLen)
+			rsp.Summary = markdown.GetSummary(article.Content, constants.SummaryLen)
 		}
 	} else if article.ContentType == constants.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {

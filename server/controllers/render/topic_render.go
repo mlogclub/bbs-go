@@ -3,7 +3,7 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	markdown2 "bbs-go/package/markdown"
+	"bbs-go/package/markdown"
 	"bbs-go/services"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/json"
@@ -67,13 +67,13 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	// 构建内容
 	if buildContent {
 		if topic.Type == constants.TopicTypeTopic {
-			content := markdown2.ToHTML(topic.Content)
+			content := markdown.ToHTML(topic.Content)
 			rsp.Content = handleHtmlContent(content)
 		} else {
 			rsp.Content = topic.Content
 		}
 	} else {
-		rsp.Summary = markdown2.GetSummary(topic.Content, 128)
+		rsp.Summary = markdown.GetSummary(topic.Content, 128)
 	}
 
 	if topic.Type == constants.TopicTypeTweet {

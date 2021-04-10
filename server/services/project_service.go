@@ -3,7 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"bbs-go/package/config"
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/urls"
 	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
@@ -127,7 +127,7 @@ func (s *projectService) GenerateRss() {
 
 	var items []*feeds.Item
 	for _, project := range projects {
-		projectUrl := urls2.ProjectUrl(project.Id)
+		projectUrl := urls.ProjectUrl(project.Id)
 		user := cache.UserCache.Get(project.UserId)
 		if user == nil {
 			continue

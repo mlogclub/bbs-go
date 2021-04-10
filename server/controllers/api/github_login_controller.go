@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/controllers/render"
-	github2 "bbs-go/package/github"
+	"bbs-go/package/github"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -20,7 +20,7 @@ func (c *GithubLoginController) GetAuthorize() *simple.JsonResult {
 	}
 
 	ref := c.Ctx.FormValue("ref")
-	url := github2.AuthCodeURL(map[string]string{"ref": ref})
+	url := github.AuthCodeURL(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 

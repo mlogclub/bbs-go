@@ -2,8 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	email2 "bbs-go/package/email"
-	urls2 "bbs-go/package/urls"
+	"bbs-go/package/email"
+	"bbs-go/package/urls"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/tidwall/gjson"
@@ -311,10 +311,10 @@ func (s *messageService) SendEmailNotice(msg *model.Message) {
 		if msg.FromId > 0 {
 			from = cache.UserCache.Get(msg.FromId)
 		}
-		err := email2.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, msg.Content,
+		err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, msg.Content,
 			msg.QuoteContent, &model.ActionLink{
 				Title: "点击查看详情",
-				Url:   urls2.AbsUrl("/user/messages"),
+				Url:   urls.AbsUrl("/user/messages"),
 			})
 		if err != nil {
 			logrus.Error(err)
@@ -332,17 +332,17 @@ func (s *messageService) GetMessageDetailUrl(msg *model.Message) string {
 		entityId := gjson.Get(msg.ExtraData, "entityId")
 
 		if entityType.String() == constants.EntityArticle {
-			return urls2.ArticleUrl(entityId.Int())
+			return urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == constants.EntityTopic {
-			return urls2.TopicUrl(entityId.Int())
+			return urls.TopicUrl(entityId.Int())
 		}
 	} else if msg.Type == constants.MsgTypeTopicLike ||
 		msg.Type == constants.MsgTypeTopicFavorite ||
 		msg.Type == constants.MsgTypeTopicRecommend {
 		topicId := gjson.Get(msg.ExtraData, "topicId")
 		if topicId.Exists() && topicId.Int() > 0 {
-			return urls2.TopicUrl(topicId.Int())
+			return urls.TopicUrl(topicId.Int())
 		}
 	}
-	return urls2.AbsUrl("/user/messages")
+	return urls.AbsUrl("/user/messages")
 }

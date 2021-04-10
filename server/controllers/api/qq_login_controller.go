@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/controllers/render"
-	qq2 "bbs-go/package/qq"
+	"bbs-go/package/qq"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -20,7 +20,7 @@ func (c *QQLoginController) GetAuthorize() *simple.JsonResult {
 	}
 
 	ref := c.Ctx.FormValue("ref")
-	url := qq2.AuthorizeUrl(map[string]string{"ref": ref})
+	url := qq.AuthorizeUrl(map[string]string{"ref": ref})
 	return simple.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
