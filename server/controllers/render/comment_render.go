@@ -1,9 +1,9 @@
 package render
 
 import (
-	"bbs-go/common/markdown"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	markdown2 "bbs-go/package/markdown"
 	"bbs-go/services"
 	"html"
 )
@@ -36,7 +36,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 	}
 
 	if comment.ContentType == constants.ContentTypeMarkdown {
-		content := markdown.ToHTML(comment.Content)
+		content := markdown2.ToHTML(comment.Content)
 		ret.Content = handleHtmlContent(content)
 	} else if comment.ContentType == constants.ContentTypeHtml {
 		ret.Content = handleHtmlContent(comment.Content)

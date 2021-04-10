@@ -1,11 +1,11 @@
 package app
 
 import (
+	"bbs-go/package/sitemap"
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/services"
-	"bbs-go/sitemap"
 )
 
 func startSchedule() {

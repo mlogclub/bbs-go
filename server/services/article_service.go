@@ -2,6 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	seo2 "bbs-go/package/seo"
+	urls2 "bbs-go/package/urls"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"math"
@@ -12,9 +14,7 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 
 	"bbs-go/cache"
-	"bbs-go/common/seo"
-	"bbs-go/common/urls"
-	"bbs-go/config"
+	"bbs-go/package/config"
 	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"
@@ -22,8 +22,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"bbs-go/common"
 	"bbs-go/model"
+	"bbs-go/package/common"
 )
 
 var ArticleService = newArticleService()
@@ -181,7 +181,7 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 	})
 
 	if err == nil {
-		seo.Push(urls.ArticleUrl(article.Id))
+		seo2.Push(urls2.ArticleUrl(article.Id))
 	}
 	return
 }
@@ -313,7 +313,7 @@ func (s *articleService) GenerateRss() {
 
 	var items []*feeds.Item
 	for _, article := range articles {
-		articleUrl := urls.ArticleUrl(article.Id)
+		articleUrl := urls2.ArticleUrl(article.Id)
 		user := cache.UserCache.Get(article.UserId)
 		if user == nil {
 			continue

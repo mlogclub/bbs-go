@@ -3,13 +3,13 @@ package admin
 import (
 	"bbs-go/model"
 	"bbs-go/services"
-	"github.com/mlogclub/simple"
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple"
 	"strconv"
 )
 
 type CheckInController struct {
-	Ctx             iris.Context
+	Ctx iris.Context
 }
 
 func (c *CheckInController) GetBy(id int64) *simple.JsonResult {
@@ -60,4 +60,3 @@ func (c *CheckInController) PostUpdate() *simple.JsonResult {
 	}
 	return simple.JsonData(t)
 }
-

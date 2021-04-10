@@ -1,8 +1,9 @@
 package baiduai
 
 import (
-	"bbs-go/common/markdown"
 	"bbs-go/model/constants"
+	"bbs-go/package/config"
+	markdown2 "bbs-go/package/markdown"
 	"encoding/json"
 	"errors"
 	"github.com/mlogclub/simple/date"
@@ -15,8 +16,6 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-
-	"bbs-go/config"
 )
 
 type ai struct {
@@ -138,7 +137,7 @@ func (a *ai) GetNewsSummary(title, content string, maxSummaryLen int) (string, e
 }
 
 func (a *ai) AnalyzeMarkdown(title, markdownStr string) (*AiAnalyzeRet, error) {
-	content := markdown.ToHTML(markdownStr)
+	content := markdown2.ToHTML(markdownStr)
 	return a.AnalyzeHtml(title, content)
 }
 

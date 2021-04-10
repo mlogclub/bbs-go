@@ -1,10 +1,10 @@
 package common
 
 import (
-	"bbs-go/common/html"
-	"bbs-go/common/markdown"
-	"bbs-go/config"
 	"bbs-go/model/constants"
+	"bbs-go/package/config"
+	html2 "bbs-go/package/html"
+	markdown2 "bbs-go/package/markdown"
 	"github.com/mlogclub/simple"
 	"math/rand"
 	"strconv"
@@ -17,9 +17,9 @@ func IsProd() bool {
 
 func GetSummary(contentType string, content string) (summary string) {
 	if contentType == constants.ContentTypeMarkdown {
-		summary = markdown.GetSummary(content, constants.SummaryLen)
+		summary = markdown2.GetSummary(content, constants.SummaryLen)
 	} else if contentType == constants.ContentTypeHtml {
-		summary = html.GetSummary(content, constants.SummaryLen)
+		summary = html2.GetSummary(content, constants.SummaryLen)
 	} else {
 		summary = simple.GetSummary(content, constants.SummaryLen)
 	}
@@ -28,7 +28,7 @@ func GetSummary(contentType string, content string) (summary string) {
 
 // 截取markdown摘要
 func GetMarkdownSummary(markdownStr string) string {
-	return markdown.GetSummary(markdownStr, constants.SummaryLen)
+	return markdown2.GetSummary(markdownStr, constants.SummaryLen)
 }
 
 // 生成随机验证码

@@ -1,12 +1,12 @@
 package render
 
 import (
+	urls2 "bbs-go/package/urls"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/common/urls"
 	"bbs-go/model"
 	"bbs-go/services"
 )
@@ -26,13 +26,13 @@ func handleHtmlContent(htmlContent string) string {
 		}
 
 		// 不是内部链接
-		if !urls.IsInternalUrl(href) {
+		if !urls2.IsInternalUrl(href) {
 			selection.SetAttr("target", "_blank")
 			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
 
 			_config := services.SysConfigService.GetConfig()
 			if _config.UrlRedirect { // 开启非内部链接跳转
-				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+				newHref := simple.ParseUrl(urls2.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 				selection.SetAttr("href", newHref)
 			}
 		}

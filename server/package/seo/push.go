@@ -7,7 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/config"
+	"bbs-go/package/config"
 )
 
 func Push(url string) {

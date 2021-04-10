@@ -1,7 +1,7 @@
 package es
 
 import (
-	"bbs-go/config"
+	"bbs-go/package/config"
 	"errors"
 	"github.com/mlogclub/simple"
 	"github.com/olivere/elastic/v7"

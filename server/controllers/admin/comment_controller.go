@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"bbs-go/common/markdown"
+	markdown2 "bbs-go/package/markdown"
 	"strconv"
 
 	"bbs-go/controllers/render"
@@ -60,7 +60,7 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		builder = builder.Put("user", render.BuildUserDefaultIfNull(comment.UserId))
 
 		// 简介
-		content := markdown.ToHTML(comment.Content)
+		content := markdown2.ToHTML(comment.Content)
 		builder.Put("content", content)
 
 		results = append(results, builder.Build())

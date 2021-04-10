@@ -23,18 +23,17 @@
             <h1 class="topic-title">
               <a :href="'/topic/' + topic.topicId">{{ topic.title }}</a>
             </h1>
-            <a :href="'/topic/' + topic.topicId" class="topic-summary">
-              {{ topic.summary }}
-            </a>
+            <a :href="'/topic/' + topic.topicId" class="topic-summary">{{
+              topic.summary
+            }}</a>
           </template>
           <template v-if="topic.type === 1">
             <a
               v-if="topic.content"
               :href="'/topic/' + topic.topicId"
               class="topic-summary"
+              >{{ topic.content }}</a
             >
-              {{ topic.content }}
-            </a>
             <ul
               v-if="topic.imageList && topic.imageList.length"
               class="topic-image-list"

@@ -6,7 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/common"
+	"bbs-go/package/common"
 	"bbs-go/services"
 )
 

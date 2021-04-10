@@ -181,9 +181,9 @@ export default {
       display: block;
       position: relative;
       resize: none;
-      line-height: 16px;
+      line-height: 1.8;
       padding: 15px 15px 20px;
-      overflow: hidden;
+      overflow: auto;
       overscroll-behavior: contain;
       transition: all 100ms linear;
     }

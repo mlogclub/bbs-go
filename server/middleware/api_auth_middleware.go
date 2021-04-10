@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"bbs-go/common/urls"
 	"bbs-go/model/constants"
+	urls2 "bbs-go/package/urls"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -19,7 +19,7 @@ var (
 		{Pattern: "/api/admin/tag/update", Roles: []string{constants.RoleOwner}},
 		{Pattern: "/api/admin/**", Roles: []string{constants.RoleOwner, constants.RoleAdmin}},
 	}
-	antPathMatcher = urls.NewAntPathMatcher()
+	antPathMatcher = urls2.NewAntPathMatcher()
 )
 
 // AdminAuth 后台权限

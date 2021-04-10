@@ -2,6 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	github2 "bbs-go/package/github"
+	qq2 "bbs-go/package/qq"
 	"database/sql"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
@@ -10,8 +12,6 @@ import (
 
 	"github.com/mlogclub/simple"
 
-	"bbs-go/common/github"
-	"bbs-go/common/qq"
 	"bbs-go/model"
 	"bbs-go/repositories"
 )
@@ -74,7 +74,7 @@ func (s *thirdAccountService) GetThirdAccount(thirdType string, thirdId string) 
 }
 
 func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {
-	userInfo, err := github.GetUserInfoByCode(code, state)
+	userInfo, err := github2.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 }
 
 func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdAccount, error) {
-	userInfo, err := qq.GetUserInfoByCode(code, state)
+	userInfo, err := qq2.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
 	}

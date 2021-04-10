@@ -14,8 +14,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	"bbs-go/common"
-	"bbs-go/config"
+	"bbs-go/package/common"
+	"bbs-go/package/config"
 )
 
 type UserInfo struct {
