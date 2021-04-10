@@ -1,8 +1,9 @@
 package baiduai
 
 import (
-	"bbs-go/common/markdown"
 	"bbs-go/model/constants"
+	"bbs-go/package/common/markdown"
+	"bbs-go/package/config"
 	"encoding/json"
 	"errors"
 	"github.com/mlogclub/simple/date"
@@ -15,8 +16,6 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-
-	"bbs-go/config"
 )
 
 type ai struct {

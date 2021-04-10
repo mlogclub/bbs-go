@@ -1,11 +1,11 @@
 package render
 
 import (
-	"bbs-go/common"
 	html2 "bbs-go/common/html"
 	"bbs-go/common/markdown"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/package/common"
 	"github.com/mlogclub/simple"
 )
 

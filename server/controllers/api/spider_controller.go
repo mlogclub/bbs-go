@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/package/collect"
 	"errors"
 	"io/ioutil"
 	"strconv"
@@ -10,7 +11,6 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/collect"
 	"bbs-go/services"
 )
 
