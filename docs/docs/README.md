@@ -13,17 +13,32 @@ features:
 footer: Copyright © 2020
 ---
 
-## 官网
-
-- 交流站：[https://mlog.club](https://mlog.club)
-- Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
-- Gitee：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
-
-## 功能
-
 ![bbs-go功能简介](https://file.mlog.club/mlog.club/naotu.png!detail)
 
-## 源码
+## 官网
 
+- 交流/演示站：[码农俱乐部](https://mlog.club)
 - Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - 码云：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
+
+## 技术栈
+
+- iris ([https://github.com/kataras/iris](https://github.com/kataras/iris)) Go语言 mvc 框架
+- gorm ([http://gorm.io/](http://gorm.io/)) 最好用的Go语言数据库orm框架
+- nuxt.js ([https://nuxtjs.org](https://nuxtjs.org)) 基于Vue的服务端渲染框架，效率高到爆
+- element-UI ([https://element.eleme.cn](https://element.eleme.cn)) 饿了么开源的基于 vue.js 的前端库
+- vditor ([https://github.com/b3log/vditor](https://github.com/b3log/vditor)) Markdown 编辑器
+- resty ([https://github.com/go-resty/resty](https://github.com/go-resty/resty)) Go语言好用的 http-client
+- cron ([https://github.com/robfig/cron](https://github.com/robfig/cron)) 定时任务框架
+- goquery ([https://github.com/PuerkitoBio/goquery](https://github.com/PuerkitoBio/goquery)) html dom 元素解析
+
+## 公众号
+
+> 关注公众号`码农俱乐部`获取更多干货资源。
+
+![码农俱乐部](https://open.weixin.qq.com/qr/code?username=gh_950827012b8d)
+
+## 问题反馈
+
+- 问题反馈：[https://mlog.club/topic/create?nodeId=6](https://mlog.club/topic/create?nodeId=6)
+- 功能建议：[https://mlog.club/topic/609](https://mlog.club/topic/609)
