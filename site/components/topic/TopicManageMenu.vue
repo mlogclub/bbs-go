@@ -79,7 +79,7 @@ export default {
     async forbidden(days) {
       try {
         await this.$axios.post('/api/user/forbidden', {
-          userId: this.topic.userId,
+          userId: this.topic.user.id,
           days,
         })
         this.$message.success('禁言成功')
