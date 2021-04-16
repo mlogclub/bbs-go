@@ -1,0 +1,265 @@
+@import "./variable";
+
+.topic-detail {
+  margin-bottom: 20px;
+
+  .topic-header {
+    display: flex;
+    margin: 0 10px;
+    // border-bottom: 1px solid $line-color-base;
+
+    @media screen and (max-width: 1024px) {
+      .topic-header-right {
+        display: none;
+      }
+    }
+
+    .topic-header-left {
+      margin: 10px 10px 0 0;
+    }
+
+    .topic-header-center {
+      margin: 10px 10px 0 0;
+      width: 100%;
+
+      .topic-nickname a {
+        color: #555;
+        font-size: 16px;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      .topic-meta {
+        position: relative;
+        font-size: 12px;
+        line-height: 24px;
+        color: #70727c;
+        margin-top: 5px;
+
+        span.meta-item {
+          font-size: 12px;
+
+          &:not(:last-child) {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+
+    .topic-header-right {
+      min-width: 42px;
+    }
+  }
+
+  .topic-content,
+  .topic-tags,
+  .topic-like-users,
+  .topic-actions {
+    margin: 20px 12px;
+  }
+
+  .topic-content {
+    font-size: 15px;
+    color: #000;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+    padding-top: 0 !important;
+    margin: 0 12px;
+
+    .topic-title {
+      font-weight: 700;
+      font-size: 20px;
+      word-wrap: break-word;
+      word-break: normal;
+      border-bottom: 1px solid $border-color-base;
+      padding-bottom: 10px;
+    }
+
+    .topic-content-detail {
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    &.topic-tweet {
+      .topic-content-detail {
+        white-space: pre-line;
+      }
+    }
+
+    .topic-image-list {
+      margin-left: 0;
+      margin-top: 10px;
+
+      li {
+        cursor: pointer;
+        border: 1px dashed #ddd;
+        text-align: center;
+
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 8px 8px 0;
+        background-color: #e8e8e8;
+        background-size: 32px 32px;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        position: relative;
+
+        .image-item {
+          display: block;
+          overflow: hidden;
+          transform-style: preserve-3d;
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease-out 0.1s;
+
+            &:hover {
+              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+              backface-visibility: hidden;
+            }
+          }
+        }
+
+        /* 只有一个图片时 */
+        &:first-child:nth-last-child(1) {
+          width: 210px;
+          height: 210px;
+          line-height: 210px;
+
+          .image-item {
+            width: 210px;
+            height: 210px;
+          }
+        }
+
+        /* 只有两个图片时 */
+        &:first-child:nth-last-child(2),
+        &:first-child:nth-last-child(2) ~ li {
+          width: 180px;
+          height: 180px;
+          line-height: 180px;
+
+          .image-item {
+            width: 180px;
+            height: 180px;
+          }
+        }
+
+        /*大于两个图片时*/
+        &:first-child:nth-last-child(n + 3),
+        &:first-child:nth-last-child(n + 3) ~ li {
+          width: 120px;
+          height: 120px;
+          line-height: 120px;
+
+          .image-item {
+            width: 120px;
+            height: 120px;
+          }
+        }
+      }
+    }
+
+    nav {
+      background-color: #fdfdfd;
+      border: 1px solid #f6f6f6;
+      padding: 10px 0;
+      font-size: 14px;
+
+      ul {
+        list-style: disc outside;
+        margin-left: 2em;
+        margin-top: 0;
+      }
+    }
+  }
+
+  .topic-tags {
+    .topic-tag {
+      height: 25px;
+      padding: 0 8px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12.5px;
+      margin-right: 10px;
+      background: #f7f7f7;
+      border: 1px solid #f7f7f7;
+      color: #777;
+      font-size: 12px;
+
+      &:hover {
+        color: #1878f3;
+        background: #fff;
+        border: 1px solid #1878f3;
+      }
+    }
+  }
+
+  .topic-like-users {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .avatar-a {
+      margin-right: 3px;
+    }
+  }
+
+  .topic-actions {
+    margin: 20px auto;
+    padding: 0 25px;
+    display: flex;
+    justify-content: space-between;
+
+    .action {
+      background: #ffffff;
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      color: #8590a6;
+
+      .checked-icon {
+        color: $color-red;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+
+        &:hover {
+          color: #8590a6;
+
+          > .action-icon {
+            fill: #8590a6;
+          }
+        }
+      }
+
+      > .action-icon {
+        font-size: 30px;
+        fill: #8590a6;
+      }
+
+      &:hover {
+        color: #1878f3;
+
+        > .action-icon {
+          fill: #1878f3;
+        }
+      }
+
+      > .content {
+        margin-top: 10px;
+        font-size: 12px;
+      }
+    }
+  }
+}

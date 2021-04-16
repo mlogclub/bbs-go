@@ -46,18 +46,36 @@
             </ul>
           </template>
         </div>
-        <div class="topic-handlers">
-          <div class="btn" :class="{ liked: topic.liked }" @click="like(topic)">
-            <i class="iconfont icon-like" />{{ topic.liked ? '已赞' : '赞' }}
-            <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
+        <div class="topic-bottom">
+          <div class="topic-handlers">
+            <div
+              class="btn"
+              :class="{ liked: topic.liked }"
+              @click="like(topic)"
+            >
+              <i class="iconfont icon-like" />{{ topic.liked ? '已赞' : '赞' }}
+              <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
+            </div>
+            <div class="btn" @click="toTopicDetail(topic.topicId)">
+              <i class="iconfont icon-comments" />评论
+              <span v-if="topic.commentCount > 0">{{
+                topic.commentCount
+              }}</span>
+            </div>
+            <div class="btn" @click="toTopicDetail(topic.topicId)">
+              <i class="iconfont icon-read" />浏览
+              <span v-if="topic.viewCount > 0">{{ topic.viewCount }}</span>
+            </div>
           </div>
-          <div class="btn" @click="toTopicDetail(topic.topicId)">
-            <i class="iconfont icon-comments" />评论
-            <span v-if="topic.commentCount > 0">{{ topic.commentCount }}</span>
-          </div>
-          <div class="btn" @click="toTopicDetail(topic.topicId)">
-            <i class="iconfont icon-read" />浏览
-            <span v-if="topic.viewCount > 0">{{ topic.viewCount }}</span>
+          <div class="topic-tags">
+            <span>
+              <a
+                v-if="topic.node"
+                :href="'/topics/node/' + topic.node.nodeId"
+                :alt="topic.node.name"
+                >{{ topic.node.name }}</a
+              >
+            </span>
           </div>
         </div>
       </div>
