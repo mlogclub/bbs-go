@@ -1,0 +1,259 @@
+@import "./variable";
+
+.topic-list {
+  .topic-item {
+    padding: 12px 12px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.5s;
+    // border-bottom: 1px solid #f2f2f2;
+    border-radius: 6px;
+    background: #ffffff;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    &:hover {
+      background: #f3f6f9;
+    }
+
+    .topic-main-content {
+      flex: 1;
+      margin-left: 12px;
+
+      .topic-top {
+        margin-bottom: 8px;
+
+        .topic-userinfo {
+          display: inline-flex;
+          align-items: center;
+
+          a {
+            font-weight: 700;
+            font-size: 16px;
+            color: #606266;
+            display: flex;
+            max-width: 250px;
+            overflow: hidden;
+          }
+
+          .topic-inline-avatar {
+            display: none;
+            margin-right: 5px;
+          }
+        }
+
+        .topic-time {
+          color: #8590a6;
+          font-size: 12px;
+          float: right;
+        }
+
+        @media screen and (max-width: 1024px) {
+          .topic-time {
+            float: none;
+            margin-top: 8px;
+          }
+        }
+      }
+
+      .topic-content {
+        .topic-title {
+          display: inline-block;
+          margin-bottom: 6px;
+          word-wrap: break-word;
+          word-break: break-all;
+          width: 100%;
+
+          a {
+            // color: #3273dc;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+
+            &:hover {
+              //color: #3273dc;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .topic-summary {
+          display: inline-block;
+          font-size: 15px;
+          margin-bottom: 6px;
+          word-wrap: break-word;
+          word-break: break-all;
+          width: 100%;
+          text-decoration: none;
+          color: #525252;
+        }
+
+        &.topic-tweet {
+          .topic-summary {
+            color: #000;
+            white-space: pre-line;
+          }
+        }
+
+        .topic-image-list {
+          margin-top: 10px;
+
+          li {
+            cursor: pointer;
+            text-align: center;
+
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 8px 8px 0;
+            background-color: #e8e8e8;
+            background-size: 32px 32px;
+            background-position: 50%;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            position: relative;
+
+            .image-item {
+              display: block;
+              overflow: hidden;
+              transform-style: preserve-3d;
+
+              & > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: all 0.5s ease-out 0.1s;
+
+                &:hover {
+                  transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+                  backface-visibility: hidden;
+                }
+              }
+            }
+
+            /* 只有一个图片时 */
+            &:first-child:nth-last-child(1) {
+              width: 210px;
+              height: 210px;
+              line-height: 210px;
+
+              .image-item {
+                width: 210px;
+                height: 210px;
+              }
+            }
+
+            /* 只有两个图片时 */
+            &:first-child:nth-last-child(2),
+            &:first-child:nth-last-child(2) ~ li {
+              width: 180px;
+              height: 180px;
+              line-height: 180px;
+
+              .image-item {
+                width: 180px;
+                height: 180px;
+              }
+            }
+
+            /*大于两个图片时*/
+            &:first-child:nth-last-child(n + 3),
+            &:first-child:nth-last-child(n + 3) ~ li {
+              width: 120px;
+              height: 120px;
+              line-height: 120px;
+
+              .image-item {
+                width: 120px;
+                height: 120px;
+              }
+            }
+          }
+        }
+      }
+
+      .topic-bottom {
+        display: flex;
+
+        .topic-handlers {
+          display: flex;
+          align-items: center;
+          margin-top: 6px;
+          font-size: 12px;
+          flex: 1;
+
+          .btn {
+            color: #8590a6;
+            cursor: pointer;
+
+            &:not(:last-child) {
+              margin-right: 20px;
+            }
+
+            &:hover {
+              color: #1878f3;
+            }
+
+            i {
+              margin-right: 3px;
+              font-size: 12px;
+              position: relative;
+            }
+          }
+        }
+
+        .topic-tags {
+          span {
+            font-size: 11px;
+            margin-left: 6px;
+            a {
+              //height: 25px;
+              padding: 0 8px;
+              //display: inline-flex;
+              justify-content: center;
+              align-items: center;
+              border-radius: 12.5px;
+              margin-right: 10px;
+              background: #ebeef5;
+              border: 1px solid #dcdfe6;
+              color: #777;
+              font-size: 12px;
+
+              &:hover {
+                color: #1878f3;
+                background: #fff;
+                border: 1px solid #1878f3;
+              }
+            }
+          }
+        }
+      }
+
+      .liked {
+        color: $color-red !important;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .topic-avatar {
+        display: none;
+      }
+
+      .topic-main-content {
+        margin-left: 0;
+
+        .topic-inline-avatar {
+          display: block !important;
+        }
+
+        .topic-bottom {
+          .topic-tags {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
