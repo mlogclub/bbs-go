@@ -25,6 +25,12 @@ type Config struct {
 		ClientSecret string `yaml:"ClientSecret"`
 	} `yaml:"Github"`
 
+	// OSChina
+	OSChina struct {
+		ClientID     string `yaml:"ClientID"`
+		ClientSecret string `yaml:"ClientSecret"`
+	} `yaml:"OSChina"`
+
 	// QQ登录
 	QQConnect struct {
 		AppId  string `yaml:"AppId"`

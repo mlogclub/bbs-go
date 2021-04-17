@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"bbs-go/package/github"
+	"bbs-go/package/osc"
 	"bbs-go/package/qq"
 	"database/sql"
 	"github.com/mlogclub/simple/date"
@@ -95,6 +96,40 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		Avatar:     userInfo.AvatarUrl,
 		Nickname:   nickname,
 		ThirdType:  constants.ThirdAccountTypeGithub,
+		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
+		ExtraData:  userInfoJson,
+		CreateTime: date.NowTimestamp(),
+		UpdateTime: date.NowTimestamp(),
+	}
+	err = s.Create(account)
+	if err != nil {
+		return nil, err
+	}
+	return account, nil
+}
+
+func (s *thirdAccountService) GetOrCreateByOSC(code, state string) (*model.ThirdAccount, error) {
+	userInfo, err := osc.GetUserInfoByCode(code, state)
+	if err != nil {
+		return nil, err
+	}
+
+	account := s.GetThirdAccount(constants.ThirdAccountTypeOSC, strconv.FormatInt(userInfo.Id, 10))
+	if account != nil {
+		return account, nil
+	}
+
+	nickname := userInfo.Name
+	if len(userInfo.Name) > 0 {
+		nickname = strings.TrimSpace(userInfo.Name)
+	}
+
+	userInfoJson, _ := json.ToStr(userInfo)
+	account = &model.ThirdAccount{
+		UserId:     sql.NullInt64{},
+		Avatar:     userInfo.Avatar,
+		Nickname:   nickname,
+		ThirdType:  constants.ThirdAccountTypeOSC,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
 		ExtraData:  userInfoJson,
 		CreateTime: date.NowTimestamp(),

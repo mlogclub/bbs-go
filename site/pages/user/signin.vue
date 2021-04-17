@@ -84,6 +84,7 @@
 
             <div class="third-parties">
               <github-login v-if="loginMethod.github" :ref-url="ref" />
+              <osc-login v-if="loginMethod.osc" :ref-url="ref" />
               <qq-login v-if="loginMethod.qq" :ref-url="ref" />
             </div>
           </div>
@@ -95,11 +96,13 @@
 
 <script>
 import GithubLogin from '~/components/GithubLogin'
+import OscLogin from '~/components/OscLogin'
 import QqLogin from '~/components/QqLogin'
 
 export default {
   components: {
     GithubLogin,
+    OscLogin,
     QqLogin,
   },
   asyncData({ params, query }) {
@@ -124,7 +127,6 @@ export default {
       return !!this.currentUser
     },
     loginMethod() {
-      console.log(this.$store.state.config.config.loginMethod)
       return this.$store.state.config.config.loginMethod
     },
   },

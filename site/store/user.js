@@ -53,6 +53,18 @@ export const actions = {
     return ret.user
   },
 
+  // osc登录
+  async signinByOSC(context, { code, state }) {
+    const ret = await this.$axios.get('/api/osc/login/callback', {
+      params: {
+        code,
+        state,
+      },
+    })
+    context.dispatch('loginSuccess', ret)
+    return ret.user
+  },
+
   // qq登录
   async signinByQQ(context, { code, state }) {
     const ret = await this.$axios.get('/api/qq/login/callback', {

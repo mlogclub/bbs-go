@@ -82,6 +82,9 @@
                   <el-checkbox v-model="config.loginMethod.github"
                     >Github登录</el-checkbox
                   >
+                  <el-checkbox v-model="config.loginMethod.osc"
+                    >OSChina登录</el-checkbox
+                  >
                 </el-form-item>
               </template>
 

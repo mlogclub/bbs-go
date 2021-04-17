@@ -87,6 +87,7 @@ const (
 // 第三方账号类型
 const (
 	ThirdAccountTypeGithub = "github"
+	ThirdAccountTypeOSC    = "osc"
 	ThirdAccountTypeQQ     = "qq"
 )
 

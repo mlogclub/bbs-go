@@ -13,6 +13,11 @@ Github:
   ClientID:
   ClientSecret:
 
+# 开源中国登录配置
+OSChina:
+  ClientID:
+  ClientSecret:
+
 # qq登录配置
 QQConnect:
   AppId:
