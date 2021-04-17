@@ -597,9 +597,8 @@ func (s *userService) addScore(userId int64, score int, sourceType, sourceId, de
 	if user == nil {
 		return errors.New("用户不存在")
 	}
-	score = user.Score + score
 	if err := s.Updates(userId, map[string]interface{}{
-		"score":       score,
+		"score":       gorm.Expr("score + ?", score),
 		"update_time": date.NowTimestamp(),
 	}); err != nil {
 		return err
