@@ -126,6 +126,8 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 
 		// 永久禁言
 		if days == -1 {
+			user := cache.UserCache.Get(userId)
+			_ = s.DecrScore(userId, user.Score, constants.EntityUser, strconv.FormatInt(operatorId, 10), "永久禁言")
 			go func() {
 				// 删除话题
 				TopicService.ScanByUser(userId, func(topics []model.Topic) {
