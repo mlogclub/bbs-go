@@ -12,7 +12,7 @@
               >个人中心 &gt; 编辑资料</a
             ></strong
           >
-          页面设置邮箱，并完成邮箱认证后再发帖。
+          页面设置邮箱，并完成邮箱认证。
         </div>
       </article>
       <div v-else class="topic-create-form">
@@ -168,7 +168,6 @@ export default {
     },
     // 是否需要先邮箱认证
     isNeedEmailVerify() {
-      // 发帖必须认证
       return this.config.createTopicEmailVerified && !this.user.emailVerified
     },
   },

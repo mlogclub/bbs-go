@@ -1,6 +1,22 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
+    <div v-if="isNeedEmailVerify" class="container">
+      <article class="message is-warning">
+        <div class="message-header">
+          <p>请先验证邮箱</p>
+        </div>
+        <div class="message-body">
+          发表文章前，请先前往
+          <strong
+            ><a href="/user/settings" style="color: #1878f3;"
+              >个人中心 &gt; 编辑资料</a
+            ></strong
+          >
+          页面设置邮箱，并完成邮箱认证。
+        </div>
+      </article>
+    </div>
+    <div v-else class="container main-container is-white left-main">
       <div class="left-container">
         <div class="widget">
           <div class="widget-header">
@@ -94,6 +110,14 @@ export default {
     user() {
       return this.$store.state.user.current
     },
+    config() {
+      return this.$store.state.config.config
+    },
+    // 是否需要先邮箱认证
+    isNeedEmailVerify() {
+      // 发帖必须认证
+      return this.config.createArticleEmailVerified && !this.user.emailVerified
+    },
   },
   mounted() {},
   methods: {
@@ -118,7 +142,7 @@ export default {
         })
       } catch (e) {
         me.publishing = false
-        this.$message.error('提交失败：' + (e.message || e))
+        this.$message.error(e.message || e)
       }
     },
   },

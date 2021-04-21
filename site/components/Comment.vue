@@ -3,20 +3,39 @@
     <div class="comment-header">
       评论<span v-if="commentCount > 0">({{ commentCount }})</span>
     </div>
-    <comment-input
-      v-if="mode === 'markdown'"
-      ref="input"
-      :entity-id="entityId"
-      :entity-type="entityType"
-      @created="commentCreated"
-    />
-    <comment-text-input
-      v-else
-      ref="input"
-      :entity-id="entityId"
-      :entity-type="entityType"
-      @created="commentCreated"
-    />
+
+    <template v-if="isLogin">
+      <div v-if="isNeedEmailVerify" class="comment-not-login">
+        <div class="comment-login-div">
+          请先前往
+          <a style="font-weight: 700;" href="/user/settings"
+            >个人中心 &gt; 编辑资料</a
+          >页面设置邮箱，并完成邮箱认证。
+        </div>
+      </div>
+      <template v-else>
+        <comment-input
+          v-if="mode === 'markdown'"
+          ref="input"
+          :entity-id="entityId"
+          :entity-type="entityType"
+          @created="commentCreated"
+        />
+        <comment-text-input
+          v-else
+          ref="input"
+          :entity-id="entityId"
+          :entity-type="entityType"
+          @created="commentCreated"
+        />
+      </template>
+    </template>
+    <div v-else class="comment-not-login">
+      <div class="comment-login-div">
+        请
+        <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
+      </div>
+    </div>
 
     <comment-list
       ref="list"
@@ -69,12 +88,34 @@ export default {
       default: false,
     },
   },
+  computed: {
+    isLogin() {
+      return this.$store.state.user.current != null
+    },
+    user() {
+      return this.$store.state.user.current
+    },
+    config() {
+      return this.$store.state.config.config
+    },
+    // 是否需要先邮箱认证
+    isNeedEmailVerify() {
+      return (
+        this.config.createCommentEmailVerified &&
+        this.user &&
+        !this.user.emailVerified
+      )
+    },
+  },
   methods: {
     commentCreated(data) {
       this.$refs.list.append(data)
     },
     reply(quote) {
       this.$refs.input.reply(quote)
+    },
+    toLogin() {
+      this.$toSignin()
     },
   },
 }
@@ -87,5 +128,27 @@ export default {
   border-top: 1px solid rgba(228, 228, 228, 0.6);
   color: #6d6d6d;
   font-size: 16px;
+}
+
+.comment-not-login {
+  margin: 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  padding: 10px;
+  box-sizing: border-box;
+
+  .comment-login-div {
+    color: #d5d5d5;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 0 10px;
+
+    a {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
 }
 </style>

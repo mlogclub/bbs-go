@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/package/common"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -45,6 +46,10 @@ func (c *CommentController) PostCreate() *simple.JsonResult {
 	err := simple.ReadForm(c.Ctx, form)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
+	}
+
+	if services.SysConfigService.IsCreateCommentEmailVerified() && !user.EmailVerified {
+		return simple.JsonError(common.EmailNotVerified)
 	}
 
 	comment, err := services.CommentService.Publish(user.Id, form)

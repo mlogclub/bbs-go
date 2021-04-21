@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/package/common"
 	"bbs-go/package/urls"
 	"math/rand"
 	"strconv"
@@ -53,6 +54,10 @@ func (c *ArticleController) PostCreate() *simple.JsonResult {
 		summary = c.Ctx.PostValue("summary")
 		content = c.Ctx.PostValue("content")
 	)
+
+	if services.SysConfigService.IsCreateArticleEmailVerified() && !user.EmailVerified {
+		return simple.JsonError(common.EmailNotVerified)
+	}
 
 	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
 		constants.ContentTypeMarkdown, tags, "")

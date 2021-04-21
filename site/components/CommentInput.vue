@@ -1,6 +1,6 @@
 <template>
   <div class="comment-form">
-    <div v-if="isLogin" class="comment-create">
+    <div class="comment-create">
       <div ref="commentEditor" class="comment-input-wrapper">
         <div v-if="quote" class="comment-quote-info">
           回复：
@@ -23,12 +23,6 @@
           @click="create"
           v-text="btnName"
         />
-      </div>
-    </div>
-    <div v-else class="comment-not-login">
-      <div class="comment-login-div">
-        请
-        <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
       </div>
     </div>
   </div>
@@ -67,9 +61,6 @@ export default {
     user() {
       return this.$store.state.user.current
     },
-    isLogin() {
-      return this.$store.state.user.current != null
-    },
   },
   methods: {
     async create() {
@@ -95,7 +86,7 @@ export default {
         this.quote = null
       } catch (e) {
         console.error(e)
-        this.$message.error('评论失败：' + (e.message || e))
+        this.$message.error(e.message || e)
       } finally {
         this.sending = false
       }
@@ -109,9 +100,6 @@ export default {
     },
     cancelReply() {
       this.quote = null
-    },
-    toLogin() {
-      this.$toSignin()
     },
   },
 }

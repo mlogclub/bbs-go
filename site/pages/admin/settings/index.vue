@@ -103,13 +103,32 @@
                 </el-tooltip>
               </el-form-item>
 
-              <el-form-item label="邮箱验证才能发帖">
+              <el-form-item label="邮箱验证后发帖">
+                <el-tooltip content="需要验证邮箱后才能发帖" placement="top">
+                  <el-switch
+                    v-model="config.createTopicEmailVerified"
+                  ></el-switch>
+                </el-tooltip>
+              </el-form-item>
+
+              <el-form-item label="邮箱验证后发表文章">
                 <el-tooltip
-                  content="需要发帖邮箱验证后才能发帖"
+                  content="需要验证邮箱后才能发表文章"
                   placement="top"
                 >
                   <el-switch
-                    v-model="config.createTopicEmailVerified"
+                    v-model="config.createArticleEmailVerified"
+                  ></el-switch>
+                </el-tooltip>
+              </el-form-item>
+
+              <el-form-item label="邮箱验证后评论">
+                <el-tooltip
+                  content="需要验证邮箱后才能发表评论"
+                  placement="top"
+                >
+                  <el-switch
+                    v-model="config.createCommentEmailVerified"
                   ></el-switch>
                 </el-tooltip>
               </el-form-item>

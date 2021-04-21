@@ -65,28 +65,6 @@
       }
     }
   }
-
-  .comment-not-login {
-    border: 1px solid #f0f0f0;
-    border-radius: 0px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    position: relative;
-    padding: 10px;
-    box-sizing: border-box;
-
-    .comment-login-div {
-      color: #d5d5d5;
-      cursor: pointer;
-      border-radius: 3px;
-      padding: 0 10px;
-
-      a {
-        margin-left: 10px;
-        margin-right: 10px;
-      }
-    }
-  }
 }
 
 .comments {
