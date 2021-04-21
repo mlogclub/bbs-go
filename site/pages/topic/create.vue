@@ -1,7 +1,21 @@
 <template>
   <section class="section">
     <div class="container">
-      <div class="topic-create-form">
+      <article v-if="isNeedEmailVerify" class="message is-warning">
+        <div class="message-header">
+          <p>请先验证邮箱</p>
+        </div>
+        <div class="message-body">
+          发表话题前，请先前往
+          <strong
+            ><a href="/user/settings" style="color: #1878f3;"
+              >个人中心 &gt; 编辑资料</a
+            ></strong
+          >
+          页面设置邮箱，并完成邮箱认证后再发帖。
+        </div>
+      </article>
+      <div v-else class="topic-create-form">
         <h1 class="title">{{ postForm.type === 0 ? '发帖子' : '发动态' }}</h1>
 
         <div class="field">
@@ -151,6 +165,11 @@ export default {
     },
     config() {
       return this.$store.state.config.config
+    },
+    // 是否需要先邮箱认证
+    isNeedEmailVerify() {
+      // 发帖必须认证
+      return this.config.createTopicEmailVerified && !this.user.emailVerified
     },
   },
   mounted() {

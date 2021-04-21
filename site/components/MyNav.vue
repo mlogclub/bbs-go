@@ -61,6 +61,9 @@
               <strong>{{ user.nickname }}</strong>
             </a>
             <div class="navbar-dropdown">
+              <a class="navbar-item" :href="'/user/' + user.id">
+                <i class="iconfont icon-username" />&nbsp;个人中心
+              </a>
               <a class="navbar-item" href="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </a>
