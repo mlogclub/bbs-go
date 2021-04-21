@@ -56,6 +56,10 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 
 	form := model.GetCreateTopicForm(c.Ctx)
 
+	if services.SysConfigService.IsCreateTopicEmailVerified() && !user.EmailVerified {
+		return simple.JsonError(common.EmailNotVerified)
+	}
+
 	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}

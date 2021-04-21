@@ -73,7 +73,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	})
 }
 
-// 设置配置，如果配置不存在，那么创建
+// Set 设置配置，如果配置不存在，那么创建
 func (s *sysConfigService) Set(key, value, name, description string) error {
 	return simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := s.setSingle(tx, key, value, name, description); err != nil {
@@ -152,22 +152,28 @@ func (s *sysConfigService) GetLoginMethod() model.LoginMethod {
 	return loginMethod
 }
 
+func (s *sysConfigService) IsCreateTopicEmailVerified() bool {
+	value := cache.SysConfigCache.GetValue(constants.SysConfigCreateTopicEmailVerified)
+	return simple.EqualsIgnoreCase(value, "true") || simple.EqualsIgnoreCase(value, "1")
+}
+
 func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
-		siteTitle             = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-		siteDescription       = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
-		siteKeywords          = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
-		siteNavs              = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
-		siteNotification      = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
-		recommendTags         = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
-		urlRedirect           = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
-		scoreConfigStr        = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
-		defaultNodeIdStr      = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
-		articlePending        = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
-		topicCaptcha          = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
-		userObserveSecondsStr = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
-		tokenExpireDays       = s.GetTokenExpireDays()
-		loginMethod           = s.GetLoginMethod()
+		siteTitle                = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		siteDescription          = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
+		siteKeywords             = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
+		siteNavs                 = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
+		siteNotification         = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
+		recommendTags            = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
+		urlRedirect              = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
+		scoreConfigStr           = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
+		defaultNodeIdStr         = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
+		articlePending           = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
+		topicCaptcha             = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
+		userObserveSecondsStr    = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
+		tokenExpireDays          = s.GetTokenExpireDays()
+		loginMethod              = s.GetLoginMethod()
+		createTopicEmailVerified = s.IsCreateTopicEmailVerified()
 	)
 
 	var siteKeywordsArr []string
@@ -208,20 +214,21 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	}
 
 	return &model.SysConfigResponse{
-		SiteTitle:          siteTitle,
-		SiteDescription:    siteDescription,
-		SiteKeywords:       siteKeywordsArr,
-		SiteNavs:           siteNavsArr,
-		SiteNotification:   siteNotification,
-		RecommendTags:      recommendTagsArr,
-		UrlRedirect:        strings.ToLower(urlRedirect) == "true",
-		ScoreConfig:        scoreConfig,
-		DefaultNodeId:      defaultNodeId,
-		ArticlePending:     strings.ToLower(articlePending) == "true",
-		TopicCaptcha:       strings.ToLower(topicCaptcha) == "true",
-		UserObserveSeconds: userObserveSeconds,
-		TokenExpireDays:    tokenExpireDays,
-		LoginMethod:        loginMethod,
+		SiteTitle:                siteTitle,
+		SiteDescription:          siteDescription,
+		SiteKeywords:             siteKeywordsArr,
+		SiteNavs:                 siteNavsArr,
+		SiteNotification:         siteNotification,
+		RecommendTags:            recommendTagsArr,
+		UrlRedirect:              strings.ToLower(urlRedirect) == "true",
+		ScoreConfig:              scoreConfig,
+		DefaultNodeId:            defaultNodeId,
+		ArticlePending:           strings.ToLower(articlePending) == "true",
+		TopicCaptcha:             strings.ToLower(topicCaptcha) == "true",
+		UserObserveSeconds:       userObserveSeconds,
+		TokenExpireDays:          tokenExpireDays,
+		LoginMethod:              loginMethod,
+		CreateTopicEmailVerified: createTopicEmailVerified,
 	}
 }
 

@@ -103,6 +103,17 @@
                 </el-tooltip>
               </el-form-item>
 
+              <el-form-item label="邮箱验证才能发帖">
+                <el-tooltip
+                  content="需要发帖邮箱验证后才能发帖"
+                  placement="top"
+                >
+                  <el-switch
+                    v-model="config.createTopicEmailVerified"
+                  ></el-switch>
+                </el-tooltip>
+              </el-form-item>
+
               <el-form-item label="发表文章审核">
                 <el-tooltip content="发布文章后是否开启审核" placement="top">
                   <el-switch v-model="config.articlePending"></el-switch>
