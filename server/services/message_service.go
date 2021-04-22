@@ -284,8 +284,12 @@ func (s *messageService) Consume() {
 	})
 }
 
-// 发送邮件通知
+// SendEmailNotice 发送邮件通知
 func (s *messageService) SendEmailNotice(msg *model.Message) {
+	// 话题被删除不发送邮件提醒
+	if msg.Type == constants.MsgTypeTopicDelete {
+		return
+	}
 	user := cache.UserCache.Get(msg.UserId)
 	if user != nil && len(user.Email.String) > 0 {
 		var (
