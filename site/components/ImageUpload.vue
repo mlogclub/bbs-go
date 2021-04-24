@@ -5,6 +5,7 @@
       :key="index"
       class="preview-item"
       :class="{ deleted: image.deleted }"
+      :style="{ width: size, height: size, margin: previewItemMargin }"
     >
       <img :src="image.url" class="image-item" />
       <el-progress
@@ -14,7 +15,7 @@
         :show-text="false"
         class="progress"
       />
-      <div v-show="image.progress < 100" class="cover">图片上传中...</div>
+      <div v-show="image.progress < 100" class="cover">上传中...</div>
       <div
         :class="{
           'upload-delete': true,
@@ -28,6 +29,7 @@
     <div
       v-show="previewFiles.length < limit"
       class="add-image-btn"
+      :style="{ width: size, height: size }"
       @click="onClick($event)"
     >
       <input
@@ -71,11 +73,15 @@ export default {
     },
     sizeLimit: {
       type: Number,
-      default: 1024 * 1024 * 3,
+      default: 1024 * 1024 * 20,
     },
     onUpload: {
       type: Boolean,
       default: false,
+    },
+    size: {
+      type: String,
+      default: '94px',
     },
   },
   data() {
@@ -84,6 +90,16 @@ export default {
       previewFiles: [],
       currentInput: null,
     }
+  },
+  computed: {
+    previewItemMargin() {
+      if (this.previewFiles.length > 1 || this.limit > 1) {
+        // margin-right: 10px;
+        // margin-bottom: 10px;
+        return '0 10px 10px 0'
+      }
+      return '0'
+    },
   },
   watch: {
     fileList: {
@@ -260,10 +276,10 @@ export default {
     // border-radius: 5px;
     // border: 1px solid $border-color-base;
     border: 2px dashed #e8e8e8;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    width: 94px;
-    height: 94px;
+    // margin-right: 10px;
+    // margin-bottom: 10px;
+    // width: 94px;
+    // height: 94px;
 
     &.deleted {
       transition: 1s all;
@@ -282,9 +298,9 @@ export default {
     .progress {
       position: absolute;
       top: 80px;
-      left: 10px;
-      width: 80px;
+      width: 100%;
       height: 6px;
+      padding: 0 10px;
     }
 
     .cover {
@@ -333,8 +349,8 @@ export default {
 
   .add-image-btn {
     cursor: pointer;
-    width: 94px;
-    height: 94px;
+    // width: 94px;
+    // height: 94px;
     // border-radius: 5px;
     // border: 1px dashed $color-blue-base;
     border: 2px dashed #e8e8e8;
