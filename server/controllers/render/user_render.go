@@ -56,7 +56,7 @@ func BuildUser(user *model.User) *model.UserInfo {
 	if len(ret.Description) == 0 {
 		ret.Description = "这家伙很懒，什么都没留下"
 	}
-	if user.Status == constants.StatusDeleted {
+	if user.Status == constants.StatusDeleted || user.IsForbidden() {
 		ret.Username = "blacklist"
 		ret.Nickname = "黑名单用户"
 		ret.Email = ""
