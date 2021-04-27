@@ -1,13 +1,12 @@
 package controllers
 
 import (
+	"github.com/go-resty/resty/v2"
 	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-
-	"github.com/go-resty/resty/v2"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
