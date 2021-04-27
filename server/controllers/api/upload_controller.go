@@ -1,7 +1,7 @@
 package api
 
 import (
-	"bbs-go/package/uploader"
+	"bbs-go/pkg/uploader"
 	"io/ioutil"
 
 	"github.com/kataras/iris/v12"

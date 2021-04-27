@@ -2,7 +2,7 @@ package admin
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/sitemap"
+	"bbs-go/pkg/sitemap"
 	"github.com/mlogclub/simple/date"
 	"strconv"
 
@@ -13,7 +13,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/controllers/render"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"bbs-go/services"
 )
 

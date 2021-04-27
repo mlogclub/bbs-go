@@ -3,7 +3,7 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/package/markdown"
+	"bbs-go/pkg/markdown"
 	"bbs-go/services"
 	"html"
 )

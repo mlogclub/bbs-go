@@ -1,7 +1,7 @@
 package api
 
 import (
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"strconv"
 
 	"github.com/kataras/iris/v12"

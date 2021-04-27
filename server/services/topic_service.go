@@ -2,10 +2,10 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/config"
-	"bbs-go/package/es"
-	"bbs-go/package/seo"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/es"
+	"bbs-go/pkg/seo"
+	"bbs-go/pkg/urls"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
@@ -21,7 +21,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/model"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"bbs-go/repositories"
 )
 

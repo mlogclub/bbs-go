@@ -1,14 +1,14 @@
 package app
 
 import (
-	"bbs-go/package/sitemap"
+	"bbs-go/pkg/sitemap"
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/services"
 )
 
-func startSchedule() {
+func StartSchedule() {
 	c := cron.New()
 
 	// Generate RSS

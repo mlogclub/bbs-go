@@ -3,9 +3,9 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/package/common"
-	"bbs-go/package/html"
-	"bbs-go/package/markdown"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/html"
+	"bbs-go/pkg/markdown"
 	"github.com/mlogclub/simple"
 )
 

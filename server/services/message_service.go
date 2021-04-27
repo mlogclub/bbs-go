@@ -2,8 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/email"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/email"
+	"bbs-go/pkg/urls"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/tidwall/gjson"
@@ -14,7 +14,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/model"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"bbs-go/repositories"
 )
 

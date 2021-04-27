@@ -2,8 +2,10 @@ package main
 
 import (
 	"bbs-go/app"
-	"bbs-go/package/config"
+	"bbs-go/controllers"
 	"bbs-go/model"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/config"
 	"flag"
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -48,6 +50,9 @@ func init() {
 }
 
 func main() {
-	app.StartOn()
-	app.InitIris()
+	if common.IsProd() {
+		// 开启定时任务
+		app.StartSchedule()
+	}
+	controllers.Router()
 }

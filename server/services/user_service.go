@@ -2,11 +2,11 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/common"
-	"bbs-go/package/email"
-	"bbs-go/package/uploader"
-	"bbs-go/package/urls"
-	"bbs-go/package/validate"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/email"
+	"bbs-go/pkg/uploader"
+	"bbs-go/pkg/urls"
+	"bbs-go/pkg/validate"
 	"database/sql"
 	"errors"
 	"github.com/mlogclub/simple"

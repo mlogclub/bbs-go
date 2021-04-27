@@ -2,8 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/seo"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/seo"
+	"bbs-go/pkg/urls"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"math"
@@ -14,7 +14,7 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 
 	"bbs-go/cache"
-	"bbs-go/package/config"
+	"bbs-go/pkg/config"
 	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"
@@ -23,7 +23,7 @@ import (
 	"gorm.io/gorm"
 
 	"bbs-go/model"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 )
 
 var ArticleService = newArticleService()

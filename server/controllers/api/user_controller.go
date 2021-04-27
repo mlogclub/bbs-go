@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/validate"
+	"bbs-go/pkg/validate"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 	"strconv"

@@ -2,8 +2,8 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/config"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/urls"
 	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
@@ -15,7 +15,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/model"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"bbs-go/repositories"
 )
 

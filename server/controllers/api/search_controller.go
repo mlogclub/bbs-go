@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/controllers/render"
-	"bbs-go/package/es"
+	"bbs-go/pkg/es"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )

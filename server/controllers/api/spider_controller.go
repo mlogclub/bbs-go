@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/collect"
+	"bbs-go/pkg/collect"
 	"errors"
 	"io/ioutil"
 	"strconv"
