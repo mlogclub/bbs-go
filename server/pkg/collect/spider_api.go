@@ -26,8 +26,14 @@ func (api *SpiderApi) Publish(article *Article) (articleId int64, err error) {
 		article.Tags = api.AnalyzeTags(article)
 	}
 
-	t, err := services.ArticleService.Publish(article.UserId, article.Title, article.Summary, article.Content,
-		article.ContentType, article.Tags, article.SourceUrl)
+	t, err := services.ArticleService.Publish(article.UserId, model.CreateArticleForm{
+		Title:       article.Title,
+		Summary:     article.Summary,
+		Content:     article.Content,
+		ContentType: article.ContentType,
+		Tags:        article.Tags,
+		SourceUrl:   article.SourceUrl,
+	})
 	if err == nil {
 		articleId = t.Id
 
@@ -43,8 +49,7 @@ func (api *SpiderApi) PublishComment(comment *Comment) (commentId int64, err err
 		err = errors.New("评论内容不能为空")
 		return
 	}
-
-	c, err := services.CommentService.Publish(comment.UserId, &model.CreateCommentForm{
+	c, err := services.CommentService.Publish(comment.UserId, model.CreateCommentForm{
 		EntityType:  comment.EntityType,
 		EntityId:    comment.EntityId,
 		Content:     comment.Content,

@@ -32,9 +32,14 @@ func (api *WxbotApi) Publish(article *WxArticle) (*model.Article, error) {
 	if simple.RuneLen(summary) == 0 {
 		summary = simple.GetSummary(article.TextContent, constants.SummaryLen)
 	}
-
-	return services.ArticleService.Publish(userId, article.Title, summary, article.HtmlContent, constants.ContentTypeHtml,
-		tags, article.Url)
+	return services.ArticleService.Publish(userId, model.CreateArticleForm{
+		Title:       article.Title,
+		Summary:     summary,
+		Content:     article.HtmlContent,
+		ContentType: constants.ContentTypeHtml,
+		Tags:        tags,
+		SourceUrl:   article.Url,
+	})
 }
 
 func (api *WxbotApi) initUser(article *WxArticle) (int64, error) {

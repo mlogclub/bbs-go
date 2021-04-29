@@ -69,10 +69,9 @@ func (s *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 }
 
-// 发表评论
-func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
+// Publish 发表评论
+func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
-
 	if simple.IsBlank(form.EntityType) {
 		return nil, errors.New("参数非法")
 	}

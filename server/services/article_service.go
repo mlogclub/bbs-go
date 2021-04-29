@@ -138,16 +138,15 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 }
 
 // 发布文章
-func (s *articleService) Publish(userId int64, title, summary, content, contentType string, tags []string,
-	sourceUrl string) (article *model.Article, err error) {
-	title = strings.TrimSpace(title)
-	summary = strings.TrimSpace(summary)
-	content = strings.TrimSpace(content)
+func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (article *model.Article, err error) {
+	form.Title = strings.TrimSpace(form.Title)
+	form.Summary = strings.TrimSpace(form.Summary)
+	form.Content = strings.TrimSpace(form.Content)
 
-	if simple.IsBlank(title) {
+	if simple.IsBlank(form.Title) {
 		return nil, errors.New("标题不能为空")
 	}
-	if simple.IsBlank(content) {
+	if simple.IsBlank(form.Content) {
 		return nil, errors.New("内容不能为空")
 	}
 
@@ -160,18 +159,18 @@ func (s *articleService) Publish(userId int64, title, summary, content, contentT
 
 	article = &model.Article{
 		UserId:      userId,
-		Title:       title,
-		Summary:     summary,
-		Content:     content,
-		ContentType: contentType,
+		Title:       form.Title,
+		Summary:     form.Summary,
+		Content:     form.Content,
+		ContentType: form.ContentType,
 		Status:      status,
-		SourceUrl:   sourceUrl,
+		SourceUrl:   form.SourceUrl,
 		CreateTime:  date.NowTimestamp(),
 		UpdateTime:  date.NowTimestamp(),
 	}
 
 	err = simple.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)
+		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
 		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
 			return err

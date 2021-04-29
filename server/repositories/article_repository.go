@@ -61,6 +61,10 @@ func (r *articleRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
+func (r *articleRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
+	return cnd.Count(db, &model.Article{})
+}
+
 func (r *articleRepository) Create(db *gorm.DB, t *model.Article) (err error) {
 	err = db.Create(t).Error
 	return

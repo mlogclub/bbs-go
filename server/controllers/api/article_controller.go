@@ -2,8 +2,8 @@ package api
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/pkg/common"
 	"bbs-go/pkg/urls"
+	"bbs-go/spam"
 	"math/rand"
 	"strconv"
 
@@ -42,7 +42,7 @@ func (c *ArticleController) GetBy(articleId int64) *simple.JsonResult {
 	return simple.JsonData(render.BuildArticle(article))
 }
 
-// 发表文章
+// PostCreate 发表文章
 func (c *ArticleController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if err := services.UserService.CheckPostStatus(user); err != nil {
@@ -54,13 +54,19 @@ func (c *ArticleController) PostCreate() *simple.JsonResult {
 		summary = c.Ctx.PostValue("summary")
 		content = c.Ctx.PostValue("content")
 	)
-
-	if services.SysConfigService.IsCreateArticleEmailVerified() && !user.EmailVerified {
-		return simple.JsonError(common.EmailNotVerified)
+	form := model.CreateArticleForm{
+		Title:       title,
+		Summary:     summary,
+		Content:     content,
+		ContentType: constants.ContentTypeMarkdown,
+		Tags:        tags,
 	}
 
-	article, err := services.ArticleService.Publish(user.Id, title, summary, content,
-		constants.ContentTypeMarkdown, tags, "")
+	if err := spam.CheckArticle(user, form); err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+
+	article, err := services.ArticleService.Publish(user.Id, form)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

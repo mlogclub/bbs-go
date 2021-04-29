@@ -1,14 +1,14 @@
 package api
 
 import (
-	"bbs-go/pkg/common"
+	"bbs-go/model"
+	"bbs-go/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
 	"bbs-go/controllers/render"
-	"bbs-go/model"
 	"bbs-go/services"
 )
 
@@ -42,14 +42,24 @@ func (c *CommentController) PostCreate() *simple.JsonResult {
 		return simple.JsonError(err)
 	}
 
-	form := &model.CreateCommentForm{}
-	err := simple.ReadForm(c.Ctx, form)
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+	var (
+		entityType  = simple.FormValue(c.Ctx, "entityType")
+		entityId    = simple.FormValueInt64Default(c.Ctx, "entityId", 0)
+		content     = simple.FormValue(c.Ctx, "content")
+		quoteId     = simple.FormValueInt64Default(c.Ctx, "quoteId", 0)
+		contentType = simple.FormValue(c.Ctx, "contentType")
+	)
+
+	form := model.CreateCommentForm{
+		EntityType:  entityType,
+		EntityId:    entityId,
+		Content:     content,
+		QuoteId:     quoteId,
+		ContentType: contentType,
 	}
 
-	if services.SysConfigService.IsCreateCommentEmailVerified() && !user.EmailVerified {
-		return simple.JsonError(common.EmailNotVerified)
+	if err := spam.CheckComment(user, form); err != nil {
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	comment, err := services.CommentService.Publish(user.Id, form)
