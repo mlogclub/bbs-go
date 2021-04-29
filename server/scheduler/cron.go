@@ -1,14 +1,15 @@
-package app
+package scheduler
 
 import (
 	"bbs-go/pkg/sitemap"
+
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/services"
 )
 
-func StartSchedule() {
+func Start() {
 	c := cron.New()
 
 	// Generate RSS

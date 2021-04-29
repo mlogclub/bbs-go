@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/pkg/urls"
+
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
