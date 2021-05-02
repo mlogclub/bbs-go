@@ -48,7 +48,9 @@ func (c *TopicController) GetNode() *simple.JsonResult {
 // 发表帖子
 func (c *TopicController) PostCreate() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return simple.JsonError(err)
+	}
 	form := model.GetCreateTopicForm(c.Ctx)
 
 	if err := spam.CheckTopic(user, form); err != nil {

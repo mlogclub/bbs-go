@@ -150,7 +150,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 				// 删除评论
 				CommentService.ScanByUser(userId, func(comments []model.Comment) {
 					for _, comment := range comments {
-						if comment.Status != constants.StatusOk {
+						if comment.Status != constants.StatusDeleted {
 							_ = CommentService.Delete(comment.Id)
 						}
 					}
