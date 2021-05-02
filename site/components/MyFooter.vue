@@ -8,7 +8,7 @@
       </div>
       <div>
         © 2021 Powered by
-        <a href="http://docs.bbs-go.com" target="_blank" class="light"
+        <a href="https://docs.bbs-go.com" target="_blank" class="light"
           >BBS-GO</a
         >
       </div>
