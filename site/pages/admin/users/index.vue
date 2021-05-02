@@ -30,12 +30,7 @@
     >
       <el-table-column type="expand">
         <template slot-scope="scope">
-          <div v-if="scope.row.forbidden" style="font-weight: 600; color: red;">
-            <span>已禁言至</span>
-            <span v-if="scope.row.forbiddenEndTime === -1">永久</span>
-            <span v-else>{{ scope.row.forbiddenEndTime | formatDate }}</span>
-          </div>
-          <div>
+          <div v-if="scope.row.username">
             <span>用户名：</span>
             {{ scope.row.username }}
           </div>
@@ -76,7 +71,14 @@
       <el-table-column prop="score" label="积分"></el-table-column>
       <el-table-column prop="forbidden" label="是否禁言">
         <template slot-scope="scope">
-          <span v-if="scope.row.forbidden" class="tag is-warning">已禁言</span>
+          <span v-if="scope.row.forbidden" class="tag is-warning">
+            <template v-if="scope.row.forbiddenEndTime === -1"
+              >永久禁言</template
+            >
+            <template v-else
+              >禁言至：{{ scope.row.forbiddenEndTime | formatDate }}</template
+            >
+          </span>
           <span v-else class="tag is-success">正常</span>
         </template>
       </el-table-column>
