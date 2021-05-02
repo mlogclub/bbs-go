@@ -16,6 +16,23 @@ type CommentController struct {
 	Ctx iris.Context
 }
 
+// func (c *CommentController) GetFuck() *simple.JsonResult {
+// 	go func() {
+// 		users := services.UserService.Find(simple.NewSqlCnd().Eq("forbidden_end_time", -1))
+// 		for _, user := range users {
+// 			// 删除评论
+// 			services.CommentService.ScanByUser(user.Id, func(comments []model.Comment) {
+// 				for _, comment := range comments {
+// 					if comment.Status != constants.StatusOk {
+// 						_ = services.CommentService.Delete(comment.Id)
+// 					}
+// 				}
+// 			})
+// 		}
+// 	}()
+// 	return simple.JsonSuccess()
+// }
+
 func (c *CommentController) GetList() *simple.JsonResult {
 	var (
 		err        error
