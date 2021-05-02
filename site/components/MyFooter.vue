@@ -7,7 +7,7 @@
         <a href="/links">友链</a>
       </div>
       <div>
-        © 2019 Powered by
+        © 2021 Powered by
         <a href="http://docs.bbs-go.com" target="_blank" class="light"
           >BBS-GO</a
         >
