@@ -13,6 +13,11 @@ func (CaptchaStrategy) Name() string {
 	return "CaptchaStrategy"
 }
 
+func (CaptchaStrategy) IsOpen() bool {
+	// TODO 这个要做成配置
+	return true
+}
+
 func (CaptchaStrategy) CheckTopic(user *model.User, form model.CreateTopicForm) error {
 	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
 		return common.CaptchaError

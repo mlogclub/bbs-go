@@ -16,6 +16,11 @@ func (PostFrequencyStrategy) Name() string {
 	return "PostFrequencyStrategy"
 }
 
+func (PostFrequencyStrategy) IsOpen() bool {
+	// TODO 这个要做成配置
+	return true
+}
+
 func (PostFrequencyStrategy) CheckTopic(user *model.User, topic model.CreateTopicForm) error {
 	var (
 		maxCountInTenMinutes int64 = 2  // 十分钟内最高发帖数量

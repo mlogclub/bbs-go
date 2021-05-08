@@ -12,6 +12,11 @@ func (EmailVerifyStrategy) Name() string {
 	return "EmailVerifyStrategy"
 }
 
+func (EmailVerifyStrategy) IsOpen() bool {
+	// TODO 这个要做成配置
+	return true
+}
+
 func (EmailVerifyStrategy) CheckTopic(user *model.User, form model.CreateTopicForm) error {
 	if services.SysConfigService.IsCreateTopicEmailVerified() && !user.EmailVerified {
 		return common.EmailNotVerified
