@@ -3,8 +3,8 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/package/common"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/urls"
 	"bbs-go/services"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"

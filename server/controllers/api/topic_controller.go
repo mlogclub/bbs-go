@@ -2,13 +2,11 @@ package api
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/common"
-	"bbs-go/package/es"
+	"bbs-go/pkg/es"
+	"bbs-go/spam"
 	"math/rand"
 	"strconv"
 	"strings"
-
-	"github.com/dchest/captcha"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -53,15 +51,10 @@ func (c *TopicController) PostCreate() *simple.JsonResult {
 	if err := services.UserService.CheckPostStatus(user); err != nil {
 		return simple.JsonError(err)
 	}
-
 	form := model.GetCreateTopicForm(c.Ctx)
 
-	if services.SysConfigService.IsCreateTopicEmailVerified() && !user.EmailVerified {
-		return simple.JsonError(common.EmailNotVerified)
-	}
-
-	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
-		return simple.JsonError(common.CaptchaError)
+	if err := spam.CheckTopic(user, form); err != nil {
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	topic, err := services.TopicService.Publish(user.Id, form)

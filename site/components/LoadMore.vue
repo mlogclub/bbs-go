@@ -104,6 +104,7 @@ export default {
   .load-more-loading {
     text-align: center;
     font-size: 12px;
+    margin-top: 10px;
 
     .loading-animation {
       height: 12px;

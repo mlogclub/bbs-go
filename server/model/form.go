@@ -19,6 +19,15 @@ type CreateTopicForm struct {
 	ImageList   []ImageDTO
 }
 
+type CreateArticleForm struct {
+	Title       string
+	Summary     string
+	Content     string
+	ContentType string
+	Tags        []string
+	SourceUrl   string
+}
+
 func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 	var (
 		topicType    = simple.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))
@@ -48,7 +57,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 	}
 }
 
-// 发表评论
+// CreateCommentForm 发表评论
 type CreateCommentForm struct {
 	EntityType  string `form:"entityType"`
 	EntityId    int64  `form:"entityId"`

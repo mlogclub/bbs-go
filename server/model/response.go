@@ -116,18 +116,17 @@ type ProjectResponse struct {
 	Content string `json:"content"`
 }
 
-// 评论返回数据
+// CommentResponse 评论返回数据
 type CommentResponse struct {
-	CommentId    int64            `json:"commentId"`
-	User         *UserInfo        `json:"user"`
-	EntityType   string           `json:"entityType"`
-	EntityId     int64            `json:"entityId"`
-	Content      string           `json:"content"`
-	QuoteId      int64            `json:"quoteId"`
-	Quote        *CommentResponse `json:"quote"`
-	QuoteContent string           `json:"quoteContent"`
-	Status       int              `json:"status"`
-	CreateTime   int64            `json:"createTime"`
+	CommentId  int64            `json:"commentId"`
+	User       *UserInfo        `json:"user"`
+	EntityType string           `json:"entityType"`
+	EntityId   int64            `json:"entityId"`
+	Content    string           `json:"content"`
+	QuoteId    int64            `json:"quoteId"`
+	Quote      *CommentResponse `json:"quote"`
+	Status     int              `json:"status"`
+	CreateTime int64            `json:"createTime"`
 }
 
 // 收藏返回数据

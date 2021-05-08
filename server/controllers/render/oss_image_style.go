@@ -1,8 +1,8 @@
 package render
 
 import (
-	"bbs-go/package/config"
-	"bbs-go/package/uploader"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/uploader"
 	"github.com/mlogclub/simple"
 	"strings"
 )

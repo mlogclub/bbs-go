@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"bbs-go/package/markdown"
+	"bbs-go/pkg/markdown"
 	"strconv"
 
 	"bbs-go/controllers/render"

@@ -2,11 +2,11 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/common"
-	"bbs-go/package/email"
-	"bbs-go/package/uploader"
-	"bbs-go/package/urls"
-	"bbs-go/package/validate"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/email"
+	"bbs-go/pkg/uploader"
+	"bbs-go/pkg/urls"
+	"bbs-go/pkg/validate"
 	"database/sql"
 	"errors"
 	"github.com/mlogclub/simple"
@@ -146,6 +146,16 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 						}
 					}
 				})
+
+				// 删除评论
+				CommentService.ScanByUser(userId, func(comments []model.Comment) {
+					for _, comment := range comments {
+						if comment.Status != constants.StatusDeleted {
+							_ = CommentService.Delete(comment.Id)
+						}
+					}
+				})
+
 			}()
 		}
 	}

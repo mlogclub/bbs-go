@@ -2,9 +2,9 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/github"
-	"bbs-go/package/osc"
-	"bbs-go/package/qq"
+	"bbs-go/pkg/github"
+	"bbs-go/pkg/osc"
+	"bbs-go/pkg/qq"
 	"database/sql"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"

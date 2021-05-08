@@ -4,7 +4,7 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/package/markdown"
+	"bbs-go/pkg/markdown"
 	"github.com/mlogclub/simple"
 )
 

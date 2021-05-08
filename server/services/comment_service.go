@@ -69,10 +69,9 @@ func (s *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
 }
 
-// 发表评论
-func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*model.Comment, error) {
+// Publish 发表评论
+func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
-
 	if simple.IsBlank(form.EntityType) {
 		return nil, errors.New("参数非法")
 	}
@@ -115,7 +114,7 @@ func (s *commentService) Publish(userId int64, form *model.CreateCommentForm) (*
 // 	return count
 // }
 
-// 列表
+// GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
 	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(50)
 	if cursor > 0 {
@@ -128,4 +127,18 @@ func (s *commentService) GetComments(entityType string, entityId int64, cursor i
 		nextCursor = cursor
 	}
 	return
+}
+
+// ScanByUser 按照用户扫描数据
+func (s *commentService) ScanByUser(userId int64, callback func(comments []model.Comment)) {
+	var cursor int64 = 0
+	for {
+		list := repositories.CommentRepository.Find(simple.DB(), simple.NewSqlCnd().
+			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
+		if list == nil || len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		callback(list)
+	}
 }

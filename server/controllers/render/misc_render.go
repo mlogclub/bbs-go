@@ -1,7 +1,7 @@
 package render
 
 import (
-	"bbs-go/package/urls"
+	"bbs-go/pkg/urls"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/urls"
 	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"

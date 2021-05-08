@@ -1,18 +1,21 @@
 package main
 
 import (
-	"bbs-go/app"
-	"bbs-go/package/config"
+	"bbs-go/controllers"
 	"bbs-go/model"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/config"
+	"bbs-go/scheduler"
 	"flag"
-	"github.com/mlogclub/simple"
-	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"io"
 	"log"
 	"os"
 	"time"
+
+	"github.com/mlogclub/simple"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
@@ -48,6 +51,9 @@ func init() {
 }
 
 func main() {
-	app.StartOn()
-	app.InitIris()
+	if common.IsProd() {
+		// 开启定时任务
+		scheduler.Start()
+	}
+	controllers.Router()
 }

@@ -2,10 +2,10 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/package/config"
-	"bbs-go/package/es"
-	"bbs-go/package/seo"
-	"bbs-go/package/urls"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/es"
+	"bbs-go/pkg/seo"
+	"bbs-go/pkg/urls"
 	"errors"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
@@ -21,7 +21,7 @@ import (
 
 	"bbs-go/cache"
 	"bbs-go/model"
-	"bbs-go/package/common"
+	"bbs-go/pkg/common"
 	"bbs-go/repositories"
 )
 
@@ -111,30 +111,8 @@ func (s *topicService) Undelete(id int64) error {
 	return err
 }
 
-// CheckPostFrequency 检测发帖频率
-func (s *topicService) CheckPostFrequency(userId int64) error {
-	// TODO 这里的频率限制做成可配置
-
-	if s.Count(simple.NewSqlCnd().Eq("user_id", userId).Gt("create_time", date.Timestamp(time.Now().Add(-time.Minute*10)))) >= 2 {
-		return errors.New("发表太快了，请休息一会儿")
-	}
-
-	if s.Count(simple.NewSqlCnd().Eq("user_id", userId).Gt("create_time", date.Timestamp(time.Now().Add(-time.Hour)))) >= 6 {
-		return errors.New("发表太快了，请休息一会儿")
-	}
-
-	if s.Count(simple.NewSqlCnd().Eq("user_id", userId).Gt("create_time", date.Timestamp(time.Now().Add(-time.Hour*24)))) >= 32 {
-		return errors.New("发表太快了，请休息一会儿")
-	}
-	return nil
-}
-
-// 发表
+// Publish 发表
 func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model.Topic, *simple.CodeError) {
-	if err := s.CheckPostFrequency(userId); err != nil {
-		logrus.Warnf("触发发帖频率限制，userId:=%d", userId)
-		return nil, simple.NewErrorMsg(err.Error())
-	}
 	if form.Type == constants.TopicTypeTweet {
 		if simple.IsBlank(form.Content) && len(form.ImageList) == 0 {
 			return nil, simple.NewErrorMsg("内容或图片不能为空")
