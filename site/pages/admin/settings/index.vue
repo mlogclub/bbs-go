@@ -3,156 +3,99 @@
     <div class="page-section config-panel">
       <el-tabs value="commonConfigTab">
         <el-tab-pane label="通用配置" name="commonConfigTab">
-          <div class="config">
-            <el-form label-width="160px">
-              <el-form-item label="网站名称">
-                <el-input
-                  v-model="config.siteTitle"
-                  type="text"
-                  placeholder="网站名称"
-                ></el-input>
-              </el-form-item>
+          <el-form label-width="160px">
+            <el-form-item label="网站名称">
+              <el-input
+                v-model="config.siteTitle"
+                type="text"
+                placeholder="网站名称"
+              ></el-input>
+            </el-form-item>
 
-              <el-form-item label="网站描述">
-                <el-input
-                  v-model="config.siteDescription"
-                  type="textarea"
-                  autosize
-                  placeholder="网站描述"
-                ></el-input>
-              </el-form-item>
+            <el-form-item label="网站描述">
+              <el-input
+                v-model="config.siteDescription"
+                type="textarea"
+                autosize
+                placeholder="网站描述"
+              ></el-input>
+            </el-form-item>
 
-              <el-form-item label="网站关键字">
-                <el-select
-                  v-model="config.siteKeywords"
-                  style="width: 100%;"
-                  multiple
-                  filterable
-                  allow-create
-                  default-first-option
-                  placeholder="网站关键字"
-                ></el-select>
-              </el-form-item>
+            <el-form-item label="网站关键字">
+              <el-select
+                v-model="config.siteKeywords"
+                style="width: 100%;"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="网站关键字"
+              ></el-select>
+            </el-form-item>
 
-              <el-form-item label="网站公告">
-                <el-input
-                  v-model="config.siteNotification"
-                  type="textarea"
-                  autosize
-                  placeholder="网站公告（支持输入HTML）"
-                ></el-input>
-              </el-form-item>
+            <el-form-item label="网站公告">
+              <el-input
+                v-model="config.siteNotification"
+                type="textarea"
+                autosize
+                placeholder="网站公告（支持输入HTML）"
+              ></el-input>
+            </el-form-item>
 
-              <el-form-item label="推荐标签">
-                <el-select
-                  v-model="config.recommendTags"
-                  style="width: 100%;"
-                  multiple
-                  filterable
-                  allow-create
-                  default-first-option
-                  placeholder="推荐标签"
-                ></el-select>
-              </el-form-item>
+            <el-form-item label="推荐标签">
+              <el-select
+                v-model="config.recommendTags"
+                style="width: 100%;"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="推荐标签"
+              ></el-select>
+            </el-form-item>
 
-              <el-form-item label="默认节点">
-                <el-select
-                  v-model="config.defaultNodeId"
-                  style="width: 100%;"
-                  placeholder="发帖默认节点"
+            <el-form-item label="默认节点">
+              <el-select
+                v-model="config.defaultNodeId"
+                style="width: 100%;"
+                placeholder="发帖默认节点"
+              >
+                <el-option
+                  v-for="node in nodes"
+                  :key="node.id"
+                  :label="node.name"
+                  :value="node.id"
                 >
-                  <el-option
-                    v-for="node in nodes"
-                    :key="node.id"
-                    :label="node.name"
-                    :value="node.id"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
+                </el-option>
+              </el-select>
+            </el-form-item>
 
-              <template v-if="config.loginMethod">
-                <el-form-item label="登录方式">
-                  <el-checkbox v-model="config.loginMethod.password"
-                    >密码登录</el-checkbox
-                  >
-                  <el-checkbox v-model="config.loginMethod.qq"
-                    >QQ登录</el-checkbox
-                  >
-                  <el-checkbox v-model="config.loginMethod.github"
-                    >Github登录</el-checkbox
-                  >
-                  <el-checkbox v-model="config.loginMethod.osc"
-                    >OSChina登录</el-checkbox
-                  >
-                </el-form-item>
-              </template>
-
-              <el-form-item label="站外链接跳转页面">
-                <el-tooltip
-                  content="在跳转前需手动确认是否前往该站外链接"
-                  placement="top"
+            <template v-if="config.loginMethod">
+              <el-form-item label="登录方式">
+                <el-checkbox v-model="config.loginMethod.password"
+                  >密码登录</el-checkbox
                 >
-                  <el-switch v-model="config.urlRedirect"></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="发帖验证码">
-                <el-tooltip content="发帖时是否开启验证码校验" placement="top">
-                  <el-switch v-model="config.topicCaptcha"></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="邮箱验证后发帖">
-                <el-tooltip content="需要验证邮箱后才能发帖" placement="top">
-                  <el-switch
-                    v-model="config.createTopicEmailVerified"
-                  ></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="邮箱验证后发表文章">
-                <el-tooltip
-                  content="需要验证邮箱后才能发表文章"
-                  placement="top"
+                <el-checkbox v-model="config.loginMethod.qq"
+                  >QQ登录</el-checkbox
                 >
-                  <el-switch
-                    v-model="config.createArticleEmailVerified"
-                  ></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="邮箱验证后评论">
-                <el-tooltip
-                  content="需要验证邮箱后才能发表评论"
-                  placement="top"
+                <el-checkbox v-model="config.loginMethod.github"
+                  >Github登录</el-checkbox
                 >
-                  <el-switch
-                    v-model="config.createCommentEmailVerified"
-                  ></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="发表文章审核">
-                <el-tooltip content="发布文章后是否开启审核" placement="top">
-                  <el-switch v-model="config.articlePending"></el-switch>
-                </el-tooltip>
-              </el-form-item>
-
-              <el-form-item label="用户观察期(秒)">
-                <el-tooltip
-                  content="观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。"
-                  placement="top"
+                <el-checkbox v-model="config.loginMethod.osc"
+                  >OSChina登录</el-checkbox
                 >
-                  <el-input-number
-                    v-model="config.userObserveSeconds"
-                    :min="0"
-                    :max="720"
-                  ></el-input-number>
-                </el-tooltip>
               </el-form-item>
-            </el-form>
-          </div>
+            </template>
+
+            <el-form-item label="站外链接跳转页面">
+              <el-tooltip
+                content="在跳转前需手动确认是否前往该站外链接"
+                placement="top"
+              >
+                <el-switch v-model="config.urlRedirect"></el-switch>
+              </el-tooltip>
+            </el-form-item>
+          </el-form>
         </el-tab-pane>
         <el-tab-pane label="导航配置" name="navConfigTab" class="nav-panel">
           <draggable
@@ -243,6 +186,58 @@
                 type="text"
                 placeholder="签到获得积分"
               ></el-input-number>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="反作弊配置" name="spamConfigTab">
+          <el-form label-width="160px">
+            <el-form-item label="发帖验证码">
+              <el-tooltip content="发帖时是否开启验证码校验" placement="top">
+                <el-switch v-model="config.topicCaptcha"></el-switch>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="邮箱验证后发帖">
+              <el-tooltip content="需要验证邮箱后才能发帖" placement="top">
+                <el-switch
+                  v-model="config.createTopicEmailVerified"
+                ></el-switch>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="邮箱验证后发表文章">
+              <el-tooltip content="需要验证邮箱后才能发表文章" placement="top">
+                <el-switch
+                  v-model="config.createArticleEmailVerified"
+                ></el-switch>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="邮箱验证后评论">
+              <el-tooltip content="需要验证邮箱后才能发表评论" placement="top">
+                <el-switch
+                  v-model="config.createCommentEmailVerified"
+                ></el-switch>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="发表文章审核">
+              <el-tooltip content="发布文章后是否开启审核" placement="top">
+                <el-switch v-model="config.articlePending"></el-switch>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="用户观察期(秒)">
+              <el-tooltip
+                content="观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。"
+                placement="top"
+              >
+                <el-input-number
+                  v-model="config.userObserveSeconds"
+                  :min="0"
+                  :max="720"
+                ></el-input-number>
+              </el-tooltip>
             </el-form-item>
           </el-form>
         </el-tab-pane>
