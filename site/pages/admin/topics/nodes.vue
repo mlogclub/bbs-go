@@ -25,6 +25,11 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="name" label="名称"></el-table-column>
+      <el-table-column prop="logo" label="图标">
+        <template slot-scope="scope">
+          <img v-if="scope.row.logo" :src="scope.row.logo" class="node-logo" />
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="描述"></el-table-column>
       <el-table-column prop="sortNo" label="排序"></el-table-column>
       <el-table-column prop="status" label="状态">
@@ -70,6 +75,9 @@
         <el-form-item label="名称">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
+        <el-form-item label="图标">
+          <upload v-model="addForm.logo" />
+        </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="addForm.description"
@@ -95,12 +103,16 @@
     <el-dialog
       :visible.sync="editFormVisible"
       :close-on-click-modal="false"
+      :destroy-on-close="true"
       title="编辑"
     >
       <el-form ref="editForm" :model="editForm" label-width="80px">
         <el-input v-model="editForm.id" type="hidden"></el-input>
         <el-form-item label="名称">
           <el-input v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="图标">
+          <upload v-model="editForm.logo" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
@@ -137,8 +149,10 @@
 </template>
 
 <script>
+import Upload from '~/pages/admin/components/Upload'
 export default {
   layout: 'admin',
+  components: { Upload },
   data() {
     return {
       results: [],
@@ -149,6 +163,7 @@ export default {
 
       addForm: {
         name: '',
+        logo: '',
         description: '',
         status: '',
         sortNo: '',
@@ -160,6 +175,7 @@ export default {
       editForm: {
         id: '',
         name: '',
+        logo: '',
         description: '',
         status: '',
         sortNo: '',
@@ -250,4 +266,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.node-logo {
+  width: 80px;
+  height: 80px;
+  max-height: 80px;
+  max-width: 80px;
+}
+</style>
