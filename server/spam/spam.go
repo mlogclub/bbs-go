@@ -18,9 +18,6 @@ func CheckTopic(user *model.User, form model.CreateTopicForm) error {
 		return nil
 	}
 	for _, strategy := range strategies {
-		if !strategy.IsOpen() {
-			continue
-		}
 		if err := strategy.CheckTopic(user, form); err != nil {
 			logrus.Warnf("[Topic]命中策略：%s, userId：%d", strategy.Name(), user.Id)
 			return err

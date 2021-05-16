@@ -62,13 +62,3 @@ func (s *emailCodeService) UpdateColumn(id int64, name string, value interface{}
 func (s *emailCodeService) Delete(id int64) {
 	repositories.EmailCodeRepository.Delete(simple.DB(), id)
 }
-
-// 发送邮箱验证码
-func (s *emailCodeService) SendVerifyEmail(userId int64, emailStr, title, template string) error {
-	// email.SendTemplateEmail()
-	// email.SendTemplateEmail(email, , "邮箱验证", "邮件内容:"+code, "", "https://mlog.club")
-	// TODO 发送验证码
-	// TODO 插入EmailCode记录
-	// email.SendTemplateEmail(emailStr)
-	return nil
-}
