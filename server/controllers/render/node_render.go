@@ -9,6 +9,7 @@ func BuildNode(node *model.TopicNode) *model.NodeResponse {
 	return &model.NodeResponse{
 		NodeId:      node.Id,
 		Name:        node.Name,
+		Logo:        node.Logo,
 		Description: node.Description,
 	}
 }

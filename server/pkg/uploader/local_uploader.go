@@ -12,12 +12,12 @@ import (
 // 本地文件系统
 type localUploader struct{}
 
-func (local *localUploader) PutImage(data []byte) (string, error) {
-	key := generateImageKey(data)
-	return local.PutObject(key, data)
+func (local *localUploader) PutImage(data []byte, contentType string) (string, error) {
+	key := generateImageKey(data, contentType)
+	return local.PutObject(key, data, contentType)
 }
 
-func (local *localUploader) PutObject(key string, data []byte) (string, error) {
+func (local *localUploader) PutObject(key string, data []byte, contentType string) (string, error) {
 	if err := os.MkdirAll("/", os.ModeDir); err != nil {
 		return "", err
 	}
@@ -33,9 +33,9 @@ func (local *localUploader) PutObject(key string, data []byte) (string, error) {
 }
 
 func (local *localUploader) CopyImage(originUrl string) (string, error) {
-	data, err := download(originUrl)
+	data, contentType, err := download(originUrl)
 	if err != nil {
 		return "", err
 	}
-	return local.PutImage(data)
+	return local.PutImage(data, contentType)
 }

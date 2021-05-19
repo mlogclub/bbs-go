@@ -2,10 +2,16 @@
   <nav class="dock-nav">
     <ul>
       <li :class="{ active: currentNodeId === 0 }">
-        <a href="/topics/node/newest">最新</a>
+        <a href="/topics/node/newest">
+          <img class="node-logo" src="~/assets/images/new.png" />
+          <span class="node-name">最新</span>
+        </a>
       </li>
       <li :class="{ active: currentNodeId === -1 }">
-        <a href="/topics/node/recommend">推荐</a>
+        <a href="/topics/node/recommend">
+          <img class="node-logo" src="~/assets/images/recommend2.png" />
+          <span class="node-name">推荐</span>
+        </a>
       </li>
       <li class="dock-nav-divider"></li>
       <li
@@ -13,7 +19,11 @@
         :key="node.nodeId"
         :class="{ active: currentNodeId === node.nodeId }"
       >
-        <a :href="'/topics/node/' + node.nodeId">{{ node.name }}</a>
+        <a :href="'/topics/node/' + node.nodeId">
+          <img v-if="node.logo" class="node-logo" :src="node.logo" />
+          <img v-else class="node-logo" src="~/assets/images/node.png" />
+          <span class="node-name">{{ node.name }}</span>
+        </a>
       </li>
     </ul>
   </nav>
@@ -38,6 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 @import './assets/styles/variable';
+
 .dock-nav {
   display: block;
   position: -webkit-sticky;
@@ -54,6 +65,7 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 16px 12px;
+
     li:not(.dock-nav-divider) {
       position: relative;
       cursor: pointer;
@@ -75,6 +87,7 @@ export default {
       &.active {
         background-color: #ea6f5a;
         color: #fff;
+
         a {
           color: #fff;
         }
@@ -92,8 +105,21 @@ export default {
         height: 100%;
         text-align: center;
         line-height: 30px;
+        padding-left: 10px;
+
+        display: flex;
+        align-items: center;
+        //justify-content: center;
+        .node-logo {
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+          margin-right: 10px;
+          background: #fff;
+        }
       }
     }
+
     li.dock-nav-divider {
       height: 15px;
       border-bottom: 1px solid $border-color-base;

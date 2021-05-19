@@ -50,6 +50,7 @@ type ArticleResponse struct {
 type NodeResponse struct {
 	NodeId      int64  `json:"nodeId"`
 	Name        string `json:"name"`
+	Logo        string `json:"logo"`
 	Description string `json:"description"`
 }
 

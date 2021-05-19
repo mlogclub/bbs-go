@@ -181,7 +181,7 @@ func (adp *myAdapter) Write(loc *stm.Location, data []byte) {
 
 // oss写入
 func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
-	if _url, err := uploader.PutObject(fileKey, out); err != nil {
+	if _url, err := uploader.PutObject(fileKey, out, ""); err != nil {
 		logrus.Error("Upload sitemap error:", err)
 	} else {
 		logrus.Info("Upload sitemap:", _url)

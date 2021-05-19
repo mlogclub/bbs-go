@@ -10,8 +10,8 @@ import (
 )
 
 type uploader interface {
-	PutImage(data []byte) (string, error)
-	PutObject(key string, data []byte) (string, error)
+	PutImage(data []byte, contentType string) (string, error)
+	PutObject(key string, data []byte, contentType string) (string, error)
 	CopyImage(originUrl string) (string, error)
 }
 
@@ -23,12 +23,12 @@ var (
 	local = &localUploader{}
 )
 
-func PutImage(data []byte) (string, error) {
-	return getUploader().PutImage(data)
+func PutImage(data []byte, contentType string) (string, error) {
+	return getUploader().PutImage(data, contentType)
 }
 
-func PutObject(key string, data []byte) (string, error) {
-	return getUploader().PutObject(key, data)
+func PutObject(key string, data []byte, contentType string) (string, error) {
+	return getUploader().PutObject(key, data, contentType)
 }
 
 func CopyImage(url string) (string, error) {

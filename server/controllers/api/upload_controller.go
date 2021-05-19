@@ -33,6 +33,7 @@ func (c *UploadController) Post() *simple.JsonResult {
 		return simple.JsonErrorMsg("图片不能超过3M")
 	}
 
+	contentType := header.Header.Get("Content-Type")
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -40,7 +41,7 @@ func (c *UploadController) Post() *simple.JsonResult {
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
-	url, err := uploader.PutImage(fileBytes)
+	url, err := uploader.PutImage(fileBytes, contentType)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -76,6 +77,7 @@ func (c *UploadController) PostEditor() {
 	form := c.Ctx.Request().MultipartForm
 	files := form.File["file[]"]
 	for _, file := range files {
+		contentType := file.Header.Get("Content-Type")
 		f, err := file.Open()
 		if err != nil {
 			logrus.Error(err)
@@ -88,7 +90,7 @@ func (c *UploadController) PostEditor() {
 			errFiles = append(errFiles, file.Filename)
 			continue
 		}
-		url, err := uploader.PutImage(fileBytes)
+		url, err := uploader.PutImage(fileBytes, contentType)
 		if err != nil {
 			logrus.Error(err)
 			errFiles = append(errFiles, file.Filename)
