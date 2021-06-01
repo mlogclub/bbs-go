@@ -57,6 +57,16 @@ export default {
         rel: 'stylesheet',
         href: '//at.alicdn.com/t/font_1142441_1or22jfsge3.css',
       },
+      {
+        rel: 'stylesheet',
+        href: '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
+      },
+    ],
+    script: [
+      {
+        src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
+        async: true,
+      },
     ],
   },
   /*

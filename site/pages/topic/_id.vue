@@ -297,18 +297,6 @@ export default {
   head() {
     return {
       title: this.$topicSiteTitle(this.topic),
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
-        },
-      ],
     }
   },
 }
