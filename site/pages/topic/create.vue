@@ -117,6 +117,7 @@ export default {
     MarkdownEditor,
     SimpleEditor,
   },
+  watchQuery: ['type', 'nodeId'],
   async asyncData({ $axios, query, store }) {
     // 节点
     const nodes = await $axios.get('/api/topic/nodes')
