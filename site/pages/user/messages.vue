@@ -8,12 +8,12 @@
             <nav class="breadcrumb">
               <ul>
                 <li>
-                  <a href="/">首页</a>
+                  <nuxt-link to="/">首页</nuxt-link>
                 </li>
                 <li>
-                  <a :href="'/user/' + currentUser.id">{{
+                  <nuxt-link :to="'/user/' + currentUser.id">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">消息</a>
@@ -38,9 +38,11 @@
                 <div class="message-item-right">
                   <div class="message-item-meta">
                     <span v-if="message.from.id > 0" class="msg-nickname">
-                      <a :href="'/user/' + message.from.id" target="_blank">{{
-                        message.from.nickname
-                      }}</a>
+                      <nuxt-link
+                        :to="'/user/' + message.from.id"
+                        target="_blank"
+                        >{{ message.from.nickname }}</nuxt-link
+                      >
                     </span>
                     <span v-else class="msg-nickname">
                       <a href="javascript:void(0)" target="_blank">{{

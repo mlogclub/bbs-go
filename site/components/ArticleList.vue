@@ -15,7 +15,9 @@
         itemtype="http://schema.org/BlogPosting"
       >
         <h1 class="article-title" itemprop="headline">
-          <a :href="'/article/' + article.articleId">{{ article.title }}</a>
+          <nuxt-link :to="'/article/' + article.articleId">{{
+            article.title
+          }}</nuxt-link>
         </h1>
 
         <div class="article-summary" itemprop="description">
@@ -49,7 +51,9 @@
               :key="tag.tagId"
               class="article-tag tag"
             >
-              <a :href="'/articles/' + tag.tagId" class>{{ tag.tagName }}</a>
+              <nuxt-link :to="'/articles/' + tag.tagId" class>{{
+                tag.tagName
+              }}</nuxt-link>
             </span>
           </span>
 

@@ -3,9 +3,9 @@
     <div class="base-info">
       <avatar :user="user" size="80" :extra-style="{ margin: '0 auto' }" />
       <div class="nickname">
-        <a :href="'/user/' + user.id" :alt="user.nickname">{{
+        <nuxt-link :to="'/user/' + user.id" :alt="user.nickname">{{
           user.nickname
-        }}</a>
+        }}</nuxt-link>
       </div>
       <div class="description">
         {{ user.description }}

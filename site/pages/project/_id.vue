@@ -12,9 +12,9 @@
             </h1>
             <div class="project-meta">
               <span>
-                <a :href="'/user/' + project.user.id">{{
+                <nuxt-link :to="'/user/' + project.user.id">{{
                   project.user.nickname
-                }}</a>
+                }}</nuxt-link>
               </span>
               <span>{{ project.createTime | prettyDate }}</span>
             </div>

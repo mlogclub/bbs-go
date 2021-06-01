@@ -41,9 +41,9 @@
                     :key="tag.tagId"
                     class="article-tag tag"
                   >
-                    <a :href="'/articles/' + tag.tagId" class>{{
+                    <nuxt-link :to="'/articles/' + tag.tagId" class>{{
                       tag.tagName
-                    }}</a>
+                    }}</nuxt-link>
                   </span>
                 </span>
 
@@ -54,9 +54,9 @@
                     </a>
                   </span>
                   <span v-if="hasPermission">
-                    <a :href="'/article/edit/' + article.articleId">
+                    <nuxt-link :to="'/article/edit/' + article.articleId">
                       <i class="iconfont icon-edit" />&nbsp;修改
-                    </a>
+                    </nuxt-link>
                   </span>
                   <span>
                     <a @click="addFavorite(article.articleId)">

@@ -9,9 +9,9 @@
               <ul>
                 <li><a href="/">首页</a></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id">{{
+                  <nuxt-link :to="'/user/' + currentUser.id">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">收藏列表</a>
@@ -30,16 +30,18 @@
                 </article>
                 <article v-else class="article-item">
                   <div class="article-title">
-                    <a :href="favorite.url">{{ favorite.title }}</a>
+                    <a :href="favorite.url" target="_blank">{{
+                      favorite.title
+                    }}</a>
                   </div>
                   <div class="article-summary">
                     {{ favorite.content }}
                   </div>
                   <div class="article-meta">
                     <span class="article-meta-item"
-                      ><a :href="'/user/' + favorite.user.id">{{
+                      ><nuxt-link :to="'/user/' + favorite.user.id">{{
                         favorite.user.nickname
-                      }}</a></span
+                      }}</nuxt-link></span
                     >
                     <span class="article-meta-item"
                       ><time>{{ favorite.createTime | prettyDate }}</time></span

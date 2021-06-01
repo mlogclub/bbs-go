@@ -8,20 +8,20 @@
           <div class="tabs">
             <ul>
               <li :class="{ 'is-active': activeTab === 'topics' }">
-                <a :href="'/user/' + user.id + '?tab=topics'">
+                <nuxt-link :to="'/user/' + user.id + '?tab=topics'">
                   <span class="icon is-small">
                     <i class="iconfont icon-topic" aria-hidden="true" />
                   </span>
                   <span>话题</span>
-                </a>
+                </nuxt-link>
               </li>
               <li :class="{ 'is-active': activeTab === 'articles' }">
-                <a :href="'/user/' + user.id + '?tab=articles'">
+                <nuxt-link :to="'/user/' + user.id + '?tab=articles'">
                   <span class="icon is-small">
                     <i class="iconfont icon-article" aria-hidden="true" />
                   </span>
                   <span>文章</span>
-                </a>
+                </nuxt-link>
               </li>
             </ul>
           </div>
@@ -91,6 +91,7 @@ export default {
     UserCenterSidebar,
     LoadMore,
   },
+  watchQuery: ['tab'],
   async asyncData({ $axios, params, query, error }) {
     let user
     try {

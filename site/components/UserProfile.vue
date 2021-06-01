@@ -29,7 +29,7 @@
       <avatar v-else :user="user" :round="true" size="100" />
       <div class="meta">
         <h1>
-          <a :href="'/user/' + user.id">{{ user.nickname }}</a>
+          <nuxt-link :to="'/user/' + user.id">{{ user.nickname }}</nuxt-link>
         </h1>
         <div v-if="user.description" class="description">
           <p>{{ user.description }}</p>

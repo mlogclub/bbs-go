@@ -33,9 +33,9 @@
               itemscope
               itemtype="http://schema.org/Person"
             >
-              <a :href="'/user/' + comment.user.id" itemprop="name">
+              <nuxt-link :to="'/user/' + comment.user.id" itemprop="name">
                 {{ comment.user.nickname }}
-              </a>
+              </nuxt-link>
             </span>
             <span class="comment-time">
               <time

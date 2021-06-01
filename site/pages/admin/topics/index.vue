@@ -46,11 +46,11 @@
         </div>
         <div class="topic-main">
           <div class="topic-header">
-            <a
-              :href="'/user/' + item.user.id"
+            <nuxt-link
+              :to="'/user/' + item.user.id"
               target="_blank"
               class="topic-nickname"
-              >{{ item.user.nickname }}</a
+              >{{ item.user.nickname }}</nuxt-link
             >
 
             <div class="topic-info">
@@ -80,9 +80,9 @@
           </div>
 
           <div class="topic-title">
-            <a :href="'/topic/' + item.topicId" target="_blank">{{
+            <nuxt-link :to="'/topic/' + item.topicId" target="_blank">{{
               item.title
-            }}</a>
+            }}</nuxt-link>
           </div>
 
           <template v-if="item.type === 0">
@@ -101,13 +101,13 @@
             class="topic-image-list"
           >
             <li v-for="(image, index) in item.imageList" :key="index">
-              <a
-                :href="'/topic/' + item.topicId"
+              <nuxt-link
+                :to="'/topic/' + item.topicId"
                 target="_blank"
                 class="image-item"
               >
                 <img v-lazy="image.preview" />
-              </a>
+              </nuxt-link>
             </li>
           </ul>
 

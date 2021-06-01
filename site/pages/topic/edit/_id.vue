@@ -8,9 +8,9 @@
               <ul>
                 <li><a href="/">首页</a></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                  <nuxt-link :to="'/user/' + currentUser.id + '?tab=topics'">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">主题</a>

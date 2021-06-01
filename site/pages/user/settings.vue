@@ -10,7 +10,9 @@
                   <a href="/">首页</a>
                 </li>
                 <li>
-                  <a :href="'/user/' + user.id">{{ user.nickname }}</a>
+                  <nuxt-link :to="'/user/' + user.id">{{
+                    user.nickname
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">编辑资料</a>

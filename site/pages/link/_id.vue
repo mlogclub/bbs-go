@@ -13,7 +13,7 @@
             {{ link.summary }}
           </div>
           <div class="link">
-            博客地址：<a :href="link.url">{{ link.url }}</a>
+            地址：<a :href="link.url">{{ link.url }}</a>
           </div>
         </div>
         <div style="margin-top: 20px;">
