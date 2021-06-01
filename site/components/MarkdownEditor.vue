@@ -50,12 +50,14 @@ export default {
      */
     doInit() {
       const me = this
-      this.vditor = new Vditor(
-        this.editorId,
-        this.getOptions(function () {
-          me.vditor.setValue(me.value)
-        })
-      )
+      if (process.client) {
+        this.vditor = new Vditor(
+          this.editorId,
+          this.getOptions(function () {
+            me.vditor.setValue(me.value)
+          })
+        )
+      }
     },
     getOptions(afterFunc) {
       const me = this
