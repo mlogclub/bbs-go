@@ -1,5 +1,5 @@
 <template>
-  <div v-viewer class="image-uploads">
+  <div v-viewer="viewerOptions" class="image-uploads">
     <div
       v-for="(image, index) in previewFiles"
       :key="index"
@@ -47,20 +47,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
-
-Vue.use(Viewer, {
-  defaultOptions: {
-    zIndex: 9999,
-    navbar: false,
-    title: false,
-    tooltip: false,
-    movable: false,
-    scalable: false,
-  },
-})
 export default {
   props: {
     accept: {
@@ -89,6 +75,22 @@ export default {
       fileList: [],
       previewFiles: [],
       currentInput: null,
+      viewerOptions: {
+        zIndex: 9999,
+        navbar: false,
+        title: false,
+        tooltip: false,
+        movable: false,
+        scalable: false,
+        url: 'src',
+        filter(image) {
+          return (
+            image.classList &&
+            image.classList.length &&
+            image.classList.contains('image-item')
+          )
+        },
+      },
     }
   },
   computed: {

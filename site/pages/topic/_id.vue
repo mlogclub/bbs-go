@@ -185,25 +185,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import Viewer from 'v-viewer'
 import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
 import Avatar from '~/components/Avatar'
-import 'viewerjs/dist/viewer.css'
-
-Vue.use(Viewer, {
-  defaultOptions: {
-    zIndex: 9999,
-    navbar: false,
-    title: false,
-    tooltip: false,
-    movable: false,
-    scalable: false,
-    url: 'data-src',
-  },
-})
 
 export default {
   components: {

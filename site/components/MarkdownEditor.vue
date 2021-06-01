@@ -33,6 +33,11 @@ export default {
       width: '100%',
     }
   },
+  computed: {
+    isMobile() {
+      return this.$store.state.env.isMobile
+    },
+  },
   mounted() {
     this.doInit()
   },
@@ -105,7 +110,7 @@ export default {
       }
     },
     getToolbars() {
-      if (this.$isMobile()) {
+      if (this.isMobile) {
         return ['emoji', 'bold', 'italic', 'strike', 'fullscreen']
       } else {
         return [
