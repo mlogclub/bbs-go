@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section style="padding: 8px; margin: 8px;">
     <div class="container">
       <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
