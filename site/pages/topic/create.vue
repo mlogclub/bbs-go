@@ -8,8 +8,8 @@
         <div class="message-body">
           发表话题前，请先前往
           <strong
-            ><a href="/user/settings" style="color: #1878f3;"
-              >个人中心 &gt; 编辑资料</a
+            ><nuxt-link to="/user/settings" style="color: #1878f3;"
+              >个人中心 &gt; 编辑资料</nuxt-link
             ></strong
           >
           页面设置邮箱，并完成邮箱认证。

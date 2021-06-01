@@ -27,13 +27,15 @@
         <div class="article-meta">
           <span class="article-meta-item">
             由
-            <a
-              :href="'/user/' + article.user.id"
+            <nuxt-link
+              :to="'/user/' + article.user.id"
               class="article-author"
               itemprop="author"
               itemscope
               itemtype="http://schema.org/Person"
-              ><span itemprop="name">{{ article.user.nickname }}</span></a
+              ><span itemprop="name">{{
+                article.user.nickname
+              }}</span></nuxt-link
             >发布于
             <time
               :datetime="article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"

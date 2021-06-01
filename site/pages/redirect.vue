@@ -27,11 +27,11 @@
                 <div class="widget-content">
                   <ul>
                     <li v-for="a in recommendArticles" :key="a.articleId">
-                      <a
-                        :href="'/article/' + a.articleId"
+                      <nuxt-link
+                        :to="'/article/' + a.articleId"
                         :title="a.title"
                         target="_blank"
-                        >{{ a.title }}</a
+                        >{{ a.title }}</nuxt-link
                       >
                     </li>
                   </ul>
@@ -49,11 +49,11 @@
                 <div class="widget-content">
                   <ul>
                     <li v-for="t in recommendTopics" :key="t.topicId">
-                      <a
-                        :href="'/topic/' + t.topicId"
+                      <nuxt-link
+                        :to="'/topic/' + t.topicId"
                         :title="t.title"
                         target="_blank"
-                        >{{ t.title }}</a
+                        >{{ t.title }}</nuxt-link
                       >
                     </li>
                   </ul>

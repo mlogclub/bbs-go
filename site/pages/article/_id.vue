@@ -15,13 +15,15 @@
               <div class="article-meta">
                 <span class="article-meta-item">
                   由
-                  <a
-                    :href="'/user/' + article.user.id"
+                  <nuxt-link
+                    :to="'/user/' + article.user.id"
                     class="article-author"
                     itemprop="author"
                     itemscope
                     itemtype="http://schema.org/Person"
-                    ><span itemprop="name">{{ article.user.nickname }}</span></a
+                    ><span itemprop="name">{{
+                      article.user.nickname
+                    }}</span></nuxt-link
                   >发布于
                   <time
                     :datetime="
@@ -120,12 +122,12 @@
           <div class="widget-content article-related">
             <ul>
               <li v-for="a in relatedArticles" :key="a.articleId">
-                <a
-                  :href="'/article/' + a.articleId"
+                <nuxt-link
+                  :to="'/article/' + a.articleId"
                   :title="a.title"
                   class="article-related-title"
                   target="_blank"
-                  >{{ a.title }}</a
+                  >{{ a.title }}</nuxt-link
                 >
               </li>
             </ul>
@@ -140,12 +142,12 @@
           <div class="widget-content article-related">
             <ul>
               <li v-for="a in nearlyArticles" :key="a.articleId">
-                <a
-                  :href="'/article/' + a.articleId"
+                <nuxt-link
+                  :to="'/article/' + a.articleId"
                   :title="a.title"
                   class="article-related-title"
                   target="_blank"
-                  >{{ a.title }}</a
+                  >{{ a.title }}</nuxt-link
                 >
               </li>
             </ul>

@@ -6,7 +6,7 @@
           <div class="widget-header">
             <nav class="breadcrumb">
               <ul>
-                <li><a href="/">首页</a></li>
+                <li><nuxt-link to="/">首页</nuxt-link></li>
                 <li>
                   <nuxt-link :to="'/user/' + currentUser.id + '?tab=topics'">{{
                     currentUser.nickname

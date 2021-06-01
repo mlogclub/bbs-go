@@ -6,9 +6,9 @@
         <ul>
           <li>
             <span>积分</span><br />
-            <a href="/user/scores">
+            <nuxt-link to="/user/scores">
               <b>{{ user.score }}</b>
-            </a>
+            </nuxt-link>
           </li>
           <li>
             <span>文章</span><br />
@@ -33,15 +33,15 @@
           <template v-if="isOwner">
             <li>
               <i class="iconfont icon-edit" />
-              <a href="/user/settings">&nbsp;编辑资料</a>
+              <nuxt-link to="/user/settings">&nbsp;编辑资料</nuxt-link>
             </li>
             <li>
               <i class="iconfont icon-message" />
-              <a href="/user/messages">&nbsp;消息</a>
+              <nuxt-link to="/user/messages">&nbsp;消息</nuxt-link>
             </li>
             <li>
               <i class="iconfont icon-favorites" />
-              <a href="/user/favorites">&nbsp;收藏</a>
+              <nuxt-link to="/user/favorites">&nbsp;收藏</nuxt-link>
             </li>
           </template>
           <template v-if="isAdmin">

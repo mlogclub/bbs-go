@@ -1,29 +1,29 @@
 <template>
   <div class="navbar-item dropdown is-hoverable is-right msg-notice">
     <div class="dropdown-trigger">
-      <a
+      <nuxt-link
         :class="{ 'msg-flicker': msgcount > 0 }"
-        href="/user/messages"
+        to="/user/messages"
         class="msgicon"
         title="消息"
       >
         <i class="iconfont icon-bell"></i>
         <sup v-if="msgcount > 0">{{ msgcount > 9 ? '9+' : msgcount }}</sup>
-      </a>
+      </nuxt-link>
     </div>
     <div v-if="messages && messages.length" class="dropdown-menu">
       <div class="dropdown-content msglist-wrapper">
         <div class="msglist">
           <ul>
             <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
-              <a href="/user/messages">
+              <nuxt-link to="/user/messages">
                 {{ msg.from.id > 0 ? msg.from.nickname : '' }}{{ msg.title }}
-              </a>
+              </nuxt-link>
             </li>
           </ul>
         </div>
         <div class="msgfooter">
-          <a href="/user/messages">消息中心&gt;&gt;</a>
+          <nuxt-link to="/user/messages">消息中心&gt;&gt;</nuxt-link>
         </div>
       </div>
     </div>

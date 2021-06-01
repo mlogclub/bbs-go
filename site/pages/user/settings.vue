@@ -7,7 +7,7 @@
             <nav class="breadcrumb">
               <ul>
                 <li>
-                  <a href="/">首页</a>
+                  <nuxt-link to="/">首页</nuxt-link>
                 </li>
                 <li>
                   <nuxt-link :to="'/user/' + user.id">{{
