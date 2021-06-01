@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import Vditor from 'vditor'
+import 'vditor/dist/index.css'
+
 export default {
   props: {
     editorId: {
@@ -46,16 +49,13 @@ export default {
      * 初始化编辑器
      */
     doInit() {
-      console.log('do init...')
       const me = this
-      if (process.client) {
-        me.vditor = new window.Vditor(
-          me.editorId,
-          me.getOptions(function () {
-            me.vditor.setValue(me.value)
-          })
-        )
-      }
+      this.vditor = new Vditor(
+        this.editorId,
+        this.getOptions(function () {
+          me.vditor.setValue(me.value)
+        })
+      )
     },
     getOptions(afterFunc) {
       const me = this
@@ -167,21 +167,6 @@ export default {
         this.vditor.clearCache()
       }
     },
-  },
-  head() {
-    return {
-      link: [
-        {
-          rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@3.5.5/dist/index.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.jsdelivr.net/npm/vditor@3.5.5/dist/index.min.js',
-        },
-      ],
-    }
   },
 }
 </script>
