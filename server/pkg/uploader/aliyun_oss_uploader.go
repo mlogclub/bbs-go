@@ -19,10 +19,10 @@ type aliyunOssUploader struct {
 }
 
 func (aliyun *aliyunOssUploader) PutImage(data []byte, contentType string) (string, error) {
-	key := generateImageKey(data, contentType)
 	if simple.IsBlank(contentType) {
 		contentType = "image/jpeg"
 	}
+	key := generateImageKey(data, contentType)
 	return aliyun.PutObject(key, data, contentType)
 }
 
