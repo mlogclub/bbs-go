@@ -31,12 +31,7 @@ Vue.use({
      * @param path
      */
     Vue.prototype.$linkTo = function (path) {
-      if (window) {
-        // window.location = path
-        // 这里使用$router.push会导致跳转页面之后window.vditor对象undefined，原因未知
-        // window.$nuxt.$router.push(path)
-        this.$router.push(path)
-      }
+      this.$router.push(path)
     }
 
     /**
