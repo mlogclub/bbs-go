@@ -190,6 +190,10 @@ import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
 import Avatar from '~/components/Avatar'
 
+const highlightScript =
+  '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js'
+const highlightCss =
+  '//cdn.staticfile.org/highlight.js/10.3.2/styles/a11y-dark.min.css'
 export default {
   components: {
     Comment,
@@ -250,7 +254,17 @@ export default {
   methods: {
     initHighlight() {
       if (process.client) {
-        window.hljs.initHighlighting()
+        if (window.hljs) {
+          window.hljs.initHighlighting()
+        } else {
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.src = highlightScript
+          document.body.appendChild(script)
+          script.onload = function () {
+            window.hljs.initHighlighting()
+          }
+        }
       }
     },
     async addFavorite(topicId) {
@@ -297,6 +311,12 @@ export default {
   head() {
     return {
       title: this.$topicSiteTitle(this.topic),
+      link: [
+        {
+          rel: 'stylesheet',
+          href: highlightCss,
+        },
+      ],
     }
   },
 }
