@@ -1,16 +1,16 @@
 <template>
-  <div class="load-more">
+  <div
+    v-infinite-scroll="loadMore"
+    class="load-more"
+    infinite-scroll-disabled="disabled"
+    infinite-scroll-distance="10"
+  >
     <slot :results="results" />
-    <div class="has-more">
-      <el-button
-        size="small"
-        :type="hasMore ? 'primary' : 'info'"
-        :loading="loading"
-        :disabled="!hasMore"
-        @click="loadMore"
-        >{{ hasMore ? '查看更多' : '到底啦' }}</el-button
-      >
+    <div v-if="loading" class="load-more-loading">
+      <div class="loading-animation" />
+      <span class="load-more-text">加载中...</span>
     </div>
+    <div v-if="!hasMore" class="no-more">没有更多数据</div>
   </div>
 </template>
 
@@ -114,14 +114,6 @@ export default {
     .load-more-text {
       color: #000;
       margin-left: 5px;
-    }
-  }
-
-  .has-more {
-    text-align: center;
-    margin: 10px;
-    button {
-      width: 150px;
     }
   }
 
