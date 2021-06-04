@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Vditor from 'vditor'
-import 'vditor/dist/index.css'
+const vditorCss = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.css'
+const vditorScript = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.min.js'
 
 export default {
   props: {
@@ -40,78 +40,7 @@ export default {
     isMobile() {
       return this.$store.state.env.isMobile
     },
-  },
-  mounted() {
-    this.doInit()
-  },
-  methods: {
-    /**
-     * 初始化编辑器
-     */
-    doInit() {
-      const me = this
-      if (process.client) {
-        this.vditor = new Vditor(
-          this.editorId,
-          this.getOptions(function () {
-            me.vditor.setValue(me.value)
-          })
-        )
-      }
-    },
-    getOptions(afterFunc) {
-      const me = this
-      const userToken = me.$cookies.get('userToken')
-      return {
-        width: me.width,
-        height: me.height,
-        toolbar: me.getToolbars(),
-        mode: 'sv',
-        toolbarConfig: {
-          pin: false,
-          hide: false,
-        },
-        placeholder: me.placeholder,
-        cache: {
-          enable: false,
-        },
-        counter: {
-          enable: true,
-          type: 'text',
-        },
-        delay: 200,
-        theme: 'classic',
-        preview: {
-          mode: 'editor',
-          markdown: {
-            toc: true,
-            mark: true,
-          },
-          hljs: {
-            enable: true,
-            style: 'github',
-            lineNumber: true,
-          },
-        },
-        input(val) {
-          me.$emit('input', val)
-        },
-        ctrlEnter(val) {
-          me.$emit('input', val)
-          me.$emit('submit', val)
-        },
-        upload: {
-          accept: 'image/*',
-          url: '/api/upload/editor?userToken=' + userToken,
-          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
-          filename(name) {
-            return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
-          },
-        },
-        after: afterFunc || function () {},
-      }
-    },
-    getToolbars() {
+    toolbars() {
       if (this.isMobile) {
         return ['emoji', 'bold', 'italic', 'strike', 'fullscreen']
       } else {
@@ -151,6 +80,88 @@ export default {
         ]
       }
     },
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      const me = this
+      if (process.client) {
+        if (window.Vditor) {
+          me.createEditor()
+        } else {
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.src = vditorScript
+          document.body.appendChild(script)
+          script.onload = function () {
+            me.createEditor()
+          }
+        }
+      }
+    },
+    createEditor() {
+      const me = this
+      me.vditor = new window.Vditor(
+        me.editorId,
+        me.getOptions(function () {
+          me.vditor.setValue(me.value)
+        })
+      )
+    },
+    getOptions(afterFunc) {
+      const me = this
+      const userToken = me.$cookies.get('userToken')
+      return {
+        width: me.width,
+        height: me.height,
+        toolbar: me.toolbars,
+        mode: 'ir',
+        toolbarConfig: {
+          pin: false,
+          hide: false,
+        },
+        placeholder: me.placeholder,
+        cache: {
+          enable: false,
+        },
+        counter: {
+          enable: true,
+          type: 'text',
+        },
+        delay: 200,
+        theme: 'classic',
+        preview: {
+          mode: 'both',
+          markdown: {
+            toc: true,
+            mark: true,
+          },
+          hljs: {
+            enable: true,
+            style: 'github',
+            lineNumber: true,
+          },
+        },
+        input(val) {
+          me.$emit('input', val)
+        },
+        ctrlEnter(val) {
+          me.$emit('input', val)
+          me.$emit('submit', val)
+        },
+        upload: {
+          accept: 'image/*',
+          url: '/api/upload/editor?userToken=' + userToken,
+          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
+          filename(name) {
+            return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
+          },
+        },
+        after: afterFunc || function () {},
+      }
+    },
     /**
      * 清空编辑器内容
      */
@@ -169,6 +180,16 @@ export default {
         this.vditor.clearCache()
       }
     },
+  },
+  head() {
+    return {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: vditorCss,
+        },
+      ],
+    }
   },
 }
 </script>
