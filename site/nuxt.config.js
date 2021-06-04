@@ -88,7 +88,6 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
-    { src: '~/plugins/infinite-scroll', ssr: false },
     { src: '~/plugins/vue-lazyload', ssr: false },
     { src: '~/plugins/viewer.js', ssr: false },
   ],
