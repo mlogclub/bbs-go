@@ -101,25 +101,9 @@ export default {
 
 <style lang="scss" scoped>
 .load-more {
-  .load-more-loading {
-    text-align: center;
-    font-size: 12px;
-    margin-top: 10px;
-
-    .loading-animation {
-      height: 12px;
-      width: 12px;
-    }
-
-    .load-more-text {
-      color: #000;
-      margin-left: 5px;
-    }
-  }
-
   .has-more {
     text-align: center;
-    margin: 10px;
+    margin: 10px auto;
     button {
       width: 150px;
     }
