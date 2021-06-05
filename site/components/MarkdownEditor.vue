@@ -83,29 +83,34 @@ export default {
     },
   },
   mounted() {
-    this.init()
+    // this.init()
+    // this.createEditor()
+    // this.temp = true
   },
   methods: {
-    // init() {
-    //   const me = this
-    //   if (process.client) {
-    //     if (window.Vditor) {
-    //       me.createEditor()
-    //     } else {
-    //       CommonHelper.addScript(vditorScript, function () {
-    //         me.createEditor()
-    //       })
-    //     }
-    //   }
-    // },
-    createEditor() {
+    init() {
       const me = this
-      me.vditor = new window.Vditor(
-        me.editorId,
-        me.getOptions(function () {
-          me.vditor.setValue(me.value)
-        })
-      )
+      if (process.client) {
+        if (window.Vditor) {
+          me.createEditor()
+        } else {
+          CommonHelper.addScript(vditorScript, function () {
+            me.createEditor()
+          })
+        }
+      }
+    },
+    createEditor() {
+      console.log('初始化编辑器...')
+      if (process.client) {
+        const me = this
+        me.vditor = new window.Vditor(
+          me.editorId,
+          me.getOptions(function () {
+            me.vditor.setValue(me.value)
+          })
+        )
+      }
     },
     getOptions(afterFunc) {
       const me = this
@@ -185,6 +190,15 @@ export default {
           rel: 'stylesheet',
           href: vditorCss,
         },
+      ],
+      script: [
+        // {
+        //   type: 'text/javascript',
+        //   src: vditorScript,
+        //   callback: () => {
+        //     this.createEditor()
+        //   },
+        // },
       ],
     }
   },

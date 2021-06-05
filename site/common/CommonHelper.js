@@ -1,11 +1,11 @@
-const highlightScript =
-  '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js'
-const highlightLineNumberScript =
-  '//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js'
-const highlightCss =
-  '//cdn.staticfile.org/highlight.js/10.3.2/styles/dracula.min.css'
-
 class CommonHelper {
+  highlightScript = '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js'
+  highlightLineNumberScript =
+    '//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js'
+
+  highlightCss =
+    '//cdn.staticfile.org/highlight.js/10.3.2/styles/dracula.min.css'
+
   isMobile(ua) {
     return /mobile|android|webos|iphone|blackberry|micromessenger/i.test(ua)
   }
@@ -18,19 +18,14 @@ class CommonHelper {
     const me = this
     if (window.hljs) {
       window.hljs.initHighlighting()
-      window.hljs.initLineNumbersOnLoad()
-    } else {
-      me.addScript(highlightScript, function () {
-        me.addScript(highlightLineNumberScript, function () {
-          window.hljs.initHighlighting()
+      if (window.hljs.initLineNumbersOnLoad) {
+        window.hljs.initLineNumbersOnLoad()
+      } else {
+        me.addScript(this.highlightLineNumberScript, function () {
           window.hljs.initLineNumbersOnLoad()
         })
-      })
+      }
     }
-  }
-
-  getHighlightCss() {
-    return highlightCss
   }
 
   addScript(url, callback) {

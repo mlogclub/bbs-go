@@ -247,10 +247,14 @@ export default {
     },
   },
   mounted() {
-    // TODO 处理高亮
-    // CommonHelper.initHighlight()
+    this.init()
   },
   methods: {
+    init() {
+      if (process.client) {
+        this.$meta().refresh()
+      }
+    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -298,7 +302,22 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: CommonHelper.getHighlightCss(),
+          href: CommonHelper.highlightCss,
+        },
+      ],
+      script: [
+        {
+          type: 'text/javascript',
+          src: CommonHelper.highlightScript,
+          callback: () => {
+            window.hljs.initHighlighting()
+            CommonHelper.addScript(
+              CommonHelper.highlightLineNumberScript,
+              function () {
+                window.hljs.initLineNumbersOnLoad()
+              }
+            )
+          },
         },
       ],
     }
