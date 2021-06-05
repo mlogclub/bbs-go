@@ -83,9 +83,7 @@ export default {
     },
   },
   mounted() {
-    // this.init()
-    // this.createEditor()
-    // this.temp = true
+    this.init()
   },
   methods: {
     init() {

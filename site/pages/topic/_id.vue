@@ -247,14 +247,11 @@ export default {
     },
   },
   mounted() {
-    this.init()
+    // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
+    // 所以服务端渲染时会调用这里的方法进行代码高亮
+    CommonHelper.initHighlight(this)
   },
   methods: {
-    init() {
-      if (process.client) {
-        this.$meta().refresh()
-      }
-    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -310,13 +307,8 @@ export default {
           type: 'text/javascript',
           src: CommonHelper.highlightScript,
           callback: () => {
-            window.hljs.initHighlighting()
-            CommonHelper.addScript(
-              CommonHelper.highlightLineNumberScript,
-              function () {
-                window.hljs.initLineNumbersOnLoad()
-              }
-            )
+            // 客户端渲染的时候执行这里进行代码高亮
+            CommonHelper.initHighlight()
           },
         },
       ],

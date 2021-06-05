@@ -10,21 +10,27 @@ class CommonHelper {
     return /mobile|android|webos|iphone|blackberry|micromessenger/i.test(ua)
   }
 
-  initHighlight() {
+  initHighlight(ctx) {
     if (!process.client) {
       return
     }
-
     const me = this
     if (window.hljs) {
       window.hljs.initHighlighting()
       if (window.hljs.initLineNumbersOnLoad) {
         window.hljs.initLineNumbersOnLoad()
       } else {
-        me.addScript(this.highlightLineNumberScript, function () {
+        me.addScript(me.highlightLineNumberScript, function () {
           window.hljs.initLineNumbersOnLoad()
         })
       }
+    } else {
+      me.addScript(this.highlightScript, function () {
+        window.hljs.initHighlighting()
+        me.addScript(me.highlightLineNumberScript, function () {
+          window.hljs.initLineNumbersOnLoad()
+        })
+      })
     }
   }
 
