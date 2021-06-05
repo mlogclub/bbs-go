@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import CommonHelper from '~/common/CommonHelper'
 const vditorCss = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.css'
 const vditorScript = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.min.js'
 
@@ -85,22 +86,18 @@ export default {
     this.init()
   },
   methods: {
-    init() {
-      const me = this
-      if (process.client) {
-        if (window.Vditor) {
-          me.createEditor()
-        } else {
-          const script = document.createElement('script')
-          script.type = 'text/javascript'
-          script.src = vditorScript
-          document.body.appendChild(script)
-          script.onload = function () {
-            me.createEditor()
-          }
-        }
-      }
-    },
+    // init() {
+    //   const me = this
+    //   if (process.client) {
+    //     if (window.Vditor) {
+    //       me.createEditor()
+    //     } else {
+    //       CommonHelper.addScript(vditorScript, function () {
+    //         me.createEditor()
+    //       })
+    //     }
+    //   }
+    // },
     createEditor() {
       const me = this
       me.vditor = new window.Vditor(

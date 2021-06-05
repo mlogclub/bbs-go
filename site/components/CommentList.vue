@@ -65,10 +65,10 @@
                 v-html="comment.quote.content"
               />
             </blockquote>
-            <p
+            <div
               v-lazy-container="{ selector: 'img' }"
               v-html="comment.content"
-            />
+            ></div>
           </div>
         </li>
       </ul>

@@ -164,6 +164,7 @@
 <script>
 import UserHelper from '~/common/UserHelper'
 import Comment from '~/components/Comment'
+import CommonHelper from '~/common/CommonHelper'
 
 export default {
   components: {
@@ -255,14 +256,9 @@ export default {
     },
   },
   mounted() {
-    this.initHighlight()
+    CommonHelper.initHighlight()
   },
   methods: {
-    initHighlight() {
-      if (process.client) {
-        window.hljs.initHighlighting()
-      }
-    },
     deleteArticle(articleId) {
       if (!process.client) {
         return
@@ -316,13 +312,7 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
+          href: CommonHelper.getHighlightCss(),
         },
       ],
     }

@@ -62,6 +62,7 @@
                   {{ topic.title }}
                 </h1>
                 <div
+                  ref="topicContent"
                   v-lazy-container="{ selector: 'img' }"
                   class="topic-content-detail"
                   v-html="topic.content"
@@ -189,11 +190,8 @@ import Comment from '~/components/Comment'
 import UserInfo from '~/components/UserInfo'
 import TopicManageMenu from '~/components/topic/TopicManageMenu'
 import Avatar from '~/components/Avatar'
+import CommonHelper from '~/common/CommonHelper'
 
-const highlightScript =
-  '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js'
-const highlightCss =
-  '//cdn.staticfile.org/highlight.js/10.3.2/styles/a11y-dark.min.css'
 export default {
   components: {
     Comment,
@@ -249,24 +247,10 @@ export default {
     },
   },
   mounted() {
-    this.initHighlight()
+    // TODO 处理高亮
+    // CommonHelper.initHighlight()
   },
   methods: {
-    initHighlight() {
-      if (process.client) {
-        if (window.hljs) {
-          window.hljs.initHighlighting()
-        } else {
-          const script = document.createElement('script')
-          script.type = 'text/javascript'
-          script.src = highlightScript
-          document.body.appendChild(script)
-          script.onload = function () {
-            window.hljs.initHighlighting()
-          }
-        }
-      }
-    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -314,7 +298,7 @@ export default {
       link: [
         {
           rel: 'stylesheet',
-          href: highlightCss,
+          href: CommonHelper.getHighlightCss(),
         },
       ],
     }
