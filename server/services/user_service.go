@@ -9,15 +9,16 @@ import (
 	"bbs-go/pkg/validate"
 	"database/sql"
 	"errors"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
-	"strings"
-	"time"
 
 	"bbs-go/cache"
 
@@ -97,7 +98,7 @@ func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
 	for {
 		list := repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id

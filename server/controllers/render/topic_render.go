@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/markdown"
 	"bbs-go/services"
+
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
@@ -20,7 +21,7 @@ func BuildSimpleTopic(topic *model.Topic) *model.TopicResponse {
 }
 
 func BuildSimpleTopics(topics []model.Topic, currentUser *model.User) []model.TopicResponse {
-	if topics == nil || len(topics) == 0 {
+	if len(topics) == 0 {
 		return nil
 	}
 

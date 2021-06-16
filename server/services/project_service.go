@@ -4,10 +4,11 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/config"
 	"bbs-go/pkg/urls"
-	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
 	"time"
+
+	"github.com/mlogclub/simple/date"
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple"
@@ -99,7 +100,7 @@ func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
 			Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -112,7 +113,7 @@ func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 	for {
 		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
 			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id

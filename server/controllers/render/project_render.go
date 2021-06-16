@@ -6,6 +6,7 @@ import (
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
+
 	"github.com/mlogclub/simple"
 )
 
@@ -38,7 +39,7 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 }
 
 func BuildSimpleProjects(projects []model.Project) []model.ProjectSimpleResponse {
-	if projects == nil || len(projects) == 0 {
+	if len(projects) == 0 {
 		return nil
 	}
 	var responses []model.ProjectSimpleResponse

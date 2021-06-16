@@ -5,11 +5,12 @@ import (
 	"bbs-go/pkg/seo"
 	"bbs-go/pkg/urls"
 	"errors"
-	"github.com/mlogclub/simple/date"
 	"math"
 	"path"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple/date"
 
 	"github.com/emirpasic/gods/sets/hashset"
 
@@ -104,14 +105,16 @@ func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
 }
 
 // 文章列表
-func (s *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(20)
+func (s *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
+	limit := 20
+	cnd := simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
 	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
 	if len(articles) > 0 {
 		nextCursor = articles[len(articles)-1].Id
+		hasMore = len(articles) >= limit
 	} else {
 		nextCursor = cursor
 	}
@@ -119,8 +122,9 @@ func (s *articleService) GetArticles(cursor int64) (articles []model.Article, ne
 }
 
 // 标签文章列表
-func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(20)
+func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
+	limit := 20
+	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -134,6 +138,7 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 		}
 		articles = s.GetArticleInIds(articleIds)
 	}
+	hasMore = len(articleTags) >= limit
 	return
 }
 
@@ -269,7 +274,7 @@ func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -282,7 +287,7 @@ func (s *articleService) ScanByUser(userId int64, callback func(articles []model
 	for {
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -297,7 +302,7 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -358,7 +363,8 @@ func (s *articleService) IncrViewCount(articleId int64) {
 	simple.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
 }
 
-func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64) {
+func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
+	limit := 20
 	cnd := simple.NewSqlCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
@@ -366,10 +372,11 @@ func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
 	if len(articles) > 0 {
 		nextCursor = articles[len(articles)-1].Id
+		hasMore = len(articles) >= limit
 	} else {
 		nextCursor = cursor
 	}

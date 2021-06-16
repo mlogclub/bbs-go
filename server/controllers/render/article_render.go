@@ -5,6 +5,7 @@ import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
 	"bbs-go/pkg/markdown"
+
 	"github.com/mlogclub/simple"
 )
 
@@ -72,7 +73,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 }
 
 func BuildSimpleArticles(articles []model.Article) []model.ArticleSimpleResponse {
-	if articles == nil || len(articles) == 0 {
+	if len(articles) == 0 {
 		return nil
 	}
 	var responses []model.ArticleSimpleResponse

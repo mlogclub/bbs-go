@@ -50,8 +50,8 @@ func (c *CommentController) GetList() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	comments, cursor := services.CommentService.GetComments(entityType, entityId, cursor)
-	return simple.JsonCursorData(render.BuildComments(comments), strconv.FormatInt(cursor, 10))
+	comments, cursor, hasMore := services.CommentService.GetComments(entityType, entityId, cursor)
+	return simple.JsonCursorData(render.BuildComments(comments), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 func (c *CommentController) PostCreate() *simple.JsonResult {

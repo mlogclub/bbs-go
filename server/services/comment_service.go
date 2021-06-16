@@ -3,8 +3,9 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
-	"github.com/mlogclub/simple/date"
 	"strings"
+
+	"github.com/mlogclub/simple/date"
 
 	"github.com/mlogclub/simple"
 
@@ -115,14 +116,16 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 // }
 
 // GetComments 列表
-func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64) {
-	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(50)
+func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64, hasMore bool) {
+	limit := 50
+	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
 	comments = repositories.CommentRepository.Find(simple.DB(), cnd)
 	if len(comments) > 0 {
 		nextCursor = comments[len(comments)-1].Id
+		hasMore = len(comments) >= limit
 	} else {
 		nextCursor = cursor
 	}
@@ -135,7 +138,7 @@ func (s *commentService) ScanByUser(userId int64, callback func(comments []model
 	for {
 		list := repositories.CommentRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id

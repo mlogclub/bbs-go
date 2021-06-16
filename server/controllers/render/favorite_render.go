@@ -6,9 +6,10 @@ import (
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/urls"
 	"bbs-go/services"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple"
-	"strings"
 )
 
 func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
@@ -50,7 +51,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 }
 
 func BuildFavorites(favorites []model.Favorite) []model.FavoriteResponse {
-	if favorites == nil || len(favorites) == 0 {
+	if len(favorites) == 0 {
 		return nil
 	}
 	var responses []model.FavoriteResponse

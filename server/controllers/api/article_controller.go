@@ -199,23 +199,23 @@ func (c *ArticleController) GetUserArticles() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	articles, cursor := services.ArticleService.GetUserArticles(userId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
+	articles, cursor, hasMore := services.ArticleService.GetUserArticles(userId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 文章列表
 func (c *ArticleController) GetArticles() *simple.JsonResult {
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	articles, cursor := services.ArticleService.GetArticles(cursor)
-	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
+	articles, cursor, hasMore := services.ArticleService.GetArticles(cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 标签文章列表
 func (c *ArticleController) GetTagArticles() *simple.JsonResult {
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 	tagId := simple.FormValueInt64Default(c.Ctx, "tagId", 0)
-	articles, cursor := services.ArticleService.GetTagArticles(tagId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10))
+	articles, cursor, hasMore := services.ArticleService.GetTagArticles(tagId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 用户最新的文章
@@ -239,7 +239,7 @@ func (c *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
 // 推荐
 func (c *ArticleController) GetRecommend() *simple.JsonResult {
 	articles := cache.ArticleCache.GetRecommendArticles()
-	if articles == nil || len(articles) == 0 {
+	if len(articles) == 0 {
 		return simple.JsonSuccess()
 	} else {
 		dest := make([]model.Article, len(articles))

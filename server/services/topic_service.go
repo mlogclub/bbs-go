@@ -7,12 +7,13 @@ import (
 	"bbs-go/pkg/seo"
 	"bbs-go/pkg/urls"
 	"errors"
-	"github.com/mlogclub/simple/date"
-	"github.com/mlogclub/simple/json"
 	"math"
 	"net/http"
 	"path"
 	"time"
+
+	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/json"
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple"
@@ -255,7 +256,8 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 }
 
 // 获取帖子分页列表
-func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64) {
+func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	limit := 20
 	cnd := simple.NewSqlCnd()
 	if nodeId > 0 {
 		cnd.Eq("node_id", nodeId)
@@ -266,10 +268,11 @@ func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics [
 	if recommend {
 		cnd.Eq("recommend", true)
 	}
-	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(20)
+	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(limit)
 	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
 	if len(topics) > 0 {
 		nextCursor = topics[len(topics)-1].LastCommentTime
+		hasMore = len(topics) >= limit
 	} else {
 		nextCursor = cursor
 	}
@@ -277,11 +280,12 @@ func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics [
 }
 
 // 指定标签下话题列表
-func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, nextCursor int64) {
+func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	limit := 20
 	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().
 		Eq("tag_id", tagId).
 		Eq("status", constants.StatusOk).
-		Desc("last_comment_time").Limit(20))
+		Desc("last_comment_time").Limit(limit))
 	if len(topicTags) > 0 {
 		nextCursor = topicTags[len(topicTags)-1].LastCommentTime
 
@@ -301,6 +305,7 @@ func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, 
 	} else {
 		nextCursor = cursor
 	}
+	hasMore = len(topicTags) >= limit
 	return
 }
 
@@ -393,7 +398,7 @@ func (s *topicService) ScanByUser(userId int64, callback func(topics []model.Top
 	for {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -406,7 +411,7 @@ func (s *topicService) Scan(callback func(topics []model.Topic)) {
 	for {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Gt("id", cursor).Asc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -421,7 +426,7 @@ func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Cols("id", "status", "create_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -436,7 +441,7 @@ func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(to
 		list := repositories.TopicRepository.Find(simple.DB(), simple.NewSqlCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id
@@ -444,7 +449,8 @@ func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(to
 	}
 }
 
-func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic, nextCursor int64) {
+func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	limit := 20
 	cnd := simple.NewSqlCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
@@ -452,10 +458,11 @@ func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(20)
+	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	topics = repositories.TopicRepository.Find(simple.DB(), cnd)
 	if len(topics) > 0 {
 		nextCursor = topics[len(topics)-1].Id
+		hasMore = len(topics) >= limit
 	} else {
 		nextCursor = cursor
 	}

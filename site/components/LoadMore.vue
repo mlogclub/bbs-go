@@ -44,7 +44,7 @@ export default {
     return {
       cursor: this.initData.cursor, // 分页标识
       results: this.initData.results || [], // 列表数据
-      hasMore: true, // 是否有更多数据
+      hasMore: this.initData.hasMore, // 是否有更多数据
       loading: false, // 是否正在加载中
     }
   },
@@ -65,12 +65,11 @@ export default {
           params: _params,
         })
         this.cursor = ret.cursor
+        this.hasMore = ret.hasMore
         if (ret.results && ret.results.length) {
           ret.results.forEach((item) => {
             this.results.push(item)
           })
-        } else {
-          this.hasMore = false
         }
       } catch (err) {
         this.hasMore = false
