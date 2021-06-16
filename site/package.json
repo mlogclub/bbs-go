@@ -20,7 +20,7 @@
     "@nuxtjs/google-adsense": "^1.1.3",
     "cookie-universal-nuxt": "^2.1.4",
     "element-ui": "^2.13.2",
-    "nuxt": "^2.14.1",
+    "nuxt": "^2.15.2",
     "qs": "^6.9.4",
     "v-viewer": "^1.5.1",
     "vuedraggable": "^2.24.0"

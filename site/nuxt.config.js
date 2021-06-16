@@ -9,7 +9,6 @@ export default {
       total: true,
     },
   },
-  mode: 'universal',
   modern: true,
   /*
    ** Headers of the page
