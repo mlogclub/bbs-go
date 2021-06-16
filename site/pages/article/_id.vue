@@ -163,13 +163,9 @@
 
 <script>
 import UserHelper from '~/common/UserHelper'
-import Comment from '~/components/Comment'
 import CommonHelper from '~/common/CommonHelper'
 
 export default {
-  components: {
-    Comment,
-  },
   async asyncData({ $axios, params, error }) {
     let article
     try {

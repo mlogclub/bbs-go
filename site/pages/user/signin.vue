@@ -95,16 +95,7 @@
 </template>
 
 <script>
-import GithubLogin from '~/components/GithubLogin'
-import OscLogin from '~/components/OscLogin'
-import QqLogin from '~/components/QqLogin'
-
 export default {
-  components: {
-    GithubLogin,
-    OscLogin,
-    QqLogin,
-  },
   asyncData({ params, query }) {
     return {
       ref: query.ref,

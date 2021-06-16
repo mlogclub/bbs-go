@@ -85,17 +85,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownHelp,
-    MarkdownEditor,
-  },
   data() {
     return {
       publishing: false, // 当前是否正处于发布中...

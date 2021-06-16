@@ -27,10 +27,7 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 export default {
-  name: 'ScoreRank',
-  components: { Avatar },
   props: {
     scoreRank: {
       type: Array,

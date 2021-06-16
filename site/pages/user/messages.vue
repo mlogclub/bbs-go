@@ -91,14 +91,8 @@
 </template>
 
 <script>
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
-import Pagination from '~/components/Pagination'
-import Avatar from '~/components/Avatar'
-
 export default {
   middleware: 'authenticated',
-  components: { UserProfile, UserCenterSidebar, Pagination, Avatar },
   async asyncData({ $axios, query }) {
     const [messagesPage] = await Promise.all([
       $axios.get('/api/user/messages?page=' + (query.p || 1)),

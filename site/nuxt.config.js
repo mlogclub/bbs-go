@@ -81,11 +81,11 @@ export default {
     { src: '~/plugins/vue-lazyload', ssr: false },
     { src: '~/plugins/viewer.js', ssr: false },
   ],
-  // /*
-  //  ** Auto import components
-  //  ** See https://nuxtjs.org/api/configuration-components
-  //  */
-  // components: true,
+  /*
+   ** Auto import components
+   ** See https://nuxtjs.org/api/configuration-components
+   */
+  components: true,
   /*
    ** Nuxt.js dev-modules
    */

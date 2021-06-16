@@ -78,14 +78,7 @@
 </template>
 
 <script>
-import Comment from '~/components/Comment'
-import SiteNotice from '~/components/SiteNotice'
-
 export default {
-  components: {
-    Comment,
-    SiteNotice,
-  },
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
       $axios.get('/api/project/' + params.id),

@@ -77,14 +77,7 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
-import LoadMore from '~/components/LoadMore'
-
 export default {
-  components: {
-    Avatar,
-    LoadMore,
-  },
   props: {
     entityType: {
       type: String,

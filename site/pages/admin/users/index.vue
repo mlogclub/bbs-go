@@ -281,10 +281,10 @@
 
 <script>
 import ScoreLog from './score-log'
-import Avatar from '~/components/Avatar'
+
 export default {
   layout: 'admin',
-  components: { Avatar, ScoreLog },
+  components: { ScoreLog },
   data() {
     return {
       results: [],

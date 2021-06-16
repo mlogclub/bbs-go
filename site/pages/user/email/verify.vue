@@ -25,10 +25,8 @@
 </template>
 
 <script>
-import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
-  components: { UserCenterSidebar },
   async asyncData({ $axios, query }) {
     try {
       await $axios.get('/api/user/email/verify?token=' + query.token)

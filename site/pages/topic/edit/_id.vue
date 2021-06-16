@@ -83,17 +83,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownHelp,
-    MarkdownEditor,
-  },
   async asyncData({ $axios, params }) {
     const [topic, nodes] = await Promise.all([
       $axios.get('/api/topic/edit/' + params.id),

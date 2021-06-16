@@ -65,14 +65,8 @@
 </template>
 
 <script>
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
-  components: {
-    UserProfile,
-    UserCenterSidebar,
-  },
   async asyncData({ $axios, params }) {},
   data() {
     return {

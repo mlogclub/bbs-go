@@ -48,16 +48,7 @@
 </template>
 
 <script>
-import CommentList from '~/components/CommentList'
-import CommentInput from '~/components/CommentInput'
-import CommentTextInput from '~/components/CommentTextInput'
 export default {
-  name: 'Comment',
-  components: {
-    CommentList,
-    CommentInput,
-    CommentTextInput,
-  },
   props: {
     mode: {
       type: String,

@@ -397,12 +397,8 @@
 </template>
 
 <script>
-import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
-  components: {
-    UserCenterSidebar,
-  },
   async asyncData({ $axios, params }) {
     const user = await $axios.get('/api/user/current')
     const form = { ...user }

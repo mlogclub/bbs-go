@@ -149,10 +149,8 @@
 </template>
 
 <script>
-import Upload from '~/pages/admin/components/Upload'
 export default {
   layout: 'admin',
-  components: { Upload },
   data() {
     return {
       results: [],

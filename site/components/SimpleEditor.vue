@@ -32,11 +32,7 @@
 </template>
 
 <script>
-import ImageUpload from '~/components/ImageUpload'
-
 export default {
-  name: 'SimpleEditor',
-  components: { ImageUpload },
   data() {
     return {
       onUpload: false, // 是否正在上传中...

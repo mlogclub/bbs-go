@@ -93,14 +93,8 @@
 
 <script>
 import UserHelper from '~/common/UserHelper'
-import MsgNotice from '~/components/MsgNotice'
-import CreateTopicBtn from '~/components/topic/CreateTopicBtn'
 
 export default {
-  components: {
-    MsgNotice,
-    CreateTopicBtn,
-  },
   data() {
     return {
       navbarActive: false,

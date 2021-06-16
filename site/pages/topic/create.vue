@@ -106,17 +106,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownEditor from '~/components/MarkdownEditor'
-import SimpleEditor from '~/components/SimpleEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownEditor,
-    SimpleEditor,
-  },
   watchQuery: ['type', 'nodeId'],
   async asyncData({ $axios, query, store }) {
     // 节点

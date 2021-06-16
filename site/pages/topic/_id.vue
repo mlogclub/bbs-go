@@ -186,19 +186,9 @@
 </template>
 
 <script>
-import Comment from '~/components/Comment'
-import UserInfo from '~/components/UserInfo'
-import TopicManageMenu from '~/components/topic/TopicManageMenu'
-import Avatar from '~/components/Avatar'
 import CommonHelper from '~/common/CommonHelper'
 
 export default {
-  components: {
-    Comment,
-    UserInfo,
-    TopicManageMenu,
-    Avatar,
-  },
   async asyncData({ $axios, params, error }) {
     let topic
     try {

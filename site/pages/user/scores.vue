@@ -41,12 +41,8 @@
 </template>
 
 <script>
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
-import Pagination from '~/components/Pagination'
 export default {
   middleware: 'authenticated',
-  components: { UserProfile, UserCenterSidebar, Pagination },
   async asyncData({ $axios, query }) {
     const [scoreLogsPage] = await Promise.all([
       $axios.get('/api/user/scorelogs?page=' + (query.p || 1)),
