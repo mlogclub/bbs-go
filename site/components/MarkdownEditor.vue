@@ -8,8 +8,8 @@
 
 <script>
 import CommonHelper from '~/common/CommonHelper'
-const vditorCss = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.css'
-const vditorScript = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.min.js'
+// const vditorCss = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.css'
+// const vditorScript = '//cdn.jsdelivr.net/npm/vditor@3.8.5/dist/index.min.js'
 
 export default {
   props: {
@@ -35,6 +35,25 @@ export default {
       isLoading: true,
       vditor: null,
       width: '100%',
+    }
+  },
+  head() {
+    return {
+      // link: [
+      //   {
+      //     rel: 'stylesheet',
+      //     href: vditorCss,
+      //   },
+      // ],
+      script: [
+        // {
+        //   type: 'text/javascript',
+        //   src: vditorScript,
+        //   callback: () => {
+        //     this.createEditor()
+        //   },
+        // },
+      ],
     }
   },
   computed: {
@@ -87,16 +106,15 @@ export default {
   },
   methods: {
     init() {
-      const me = this
-      if (process.client) {
-        if (window.Vditor) {
-          me.createEditor()
-        } else {
-          CommonHelper.addScript(vditorScript, function () {
-            me.createEditor()
-          })
-        }
-      }
+      // const me = this
+      // if (window.Vditor) {
+      //   me.createEditor()
+      // } else   {
+      //   CommonHelper.addScript(vditorScript, function () {
+      //     me.createEditor()
+      //   })
+      // }
+      this.createEditor()
     },
     createEditor() {
       console.log('初始化编辑器...')
@@ -180,25 +198,6 @@ export default {
         this.vditor.clearCache()
       }
     },
-  },
-  head() {
-    return {
-      link: [
-        {
-          rel: 'stylesheet',
-          href: vditorCss,
-        },
-      ],
-      script: [
-        // {
-        //   type: 'text/javascript',
-        //   src: vditorScript,
-        //   callback: () => {
-        //     this.createEditor()
-        //   },
-        // },
-      ],
-    }
   },
 }
 </script>

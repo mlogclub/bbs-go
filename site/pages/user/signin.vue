@@ -205,7 +205,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .signin {
-  max-width: 480px;
+  max-width: 500px;
   margin: auto;
   padding: 0 20px;
 
@@ -254,6 +254,10 @@ export default {
   .third-parties {
     text-align: center;
     margin: 10px 0;
+
+    a:not(:last-child) {
+      margin-right: 10px;
+    }
   }
 }
 </style>
