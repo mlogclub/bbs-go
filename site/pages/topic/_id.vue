@@ -174,9 +174,7 @@
           </div>
 
           <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
-            <div class="widget-header">
-              目录
-            </div>
+            <div class="widget-header">目录</div>
             <div class="widget-content" v-html="topic.toc" />
           </div>
         </div>
@@ -231,6 +229,27 @@ export default {
       likeUsers,
     }
   },
+  head() {
+    return {
+      title: this.$topicSiteTitle(this.topic),
+      link: [
+        {
+          rel: 'stylesheet',
+          href: CommonHelper.highlightCss,
+        },
+      ],
+      script: [
+        {
+          type: 'text/javascript',
+          src: CommonHelper.highlightScript,
+          callback: () => {
+            // 客户端渲染的时候执行这里进行代码高亮
+            CommonHelper.initHighlight()
+          },
+        },
+      ],
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.current
@@ -282,27 +301,6 @@ export default {
         }
       }
     },
-  },
-  head() {
-    return {
-      title: this.$topicSiteTitle(this.topic),
-      link: [
-        {
-          rel: 'stylesheet',
-          href: CommonHelper.highlightCss,
-        },
-      ],
-      script: [
-        {
-          type: 'text/javascript',
-          src: CommonHelper.highlightScript,
-          callback: () => {
-            // 客户端渲染的时候执行这里进行代码高亮
-            CommonHelper.initHighlight()
-          },
-        },
-      ],
-    }
   },
 }
 </script>

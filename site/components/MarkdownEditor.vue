@@ -10,10 +10,6 @@
 import Vditor from 'vditor'
 import 'vditor/src/assets/scss/index.scss'
 
-// import CommonHelper from '~/common/CommonHelper'
-// const vditorCss = '//cdn.jsdelivr.net/npm/vditor@3.5.4/dist/index.css'
-// const vditorScript = '//cdn.jsdelivr.net/npm/vditor@3.5.4/dist/index.min.js'
-
 export default {
   props: {
     editorId: {
@@ -40,25 +36,6 @@ export default {
       width: '100%',
     }
   },
-  // head() {
-  //   return {
-  //     link: [
-  //       {
-  //         rel: 'stylesheet',
-  //         href: vditorCss,
-  //       },
-  //     ],
-  //     script: [
-  //       {
-  //         type: 'text/javascript',
-  //         src: vditorScript,
-  //         callback: () => {
-  //           this.createEditor()
-  //         },
-  //       },
-  //     ],
-  //   }
-  // },
   computed: {
     isMobile() {
       return this.$store.state.env.isMobile
@@ -109,18 +86,7 @@ export default {
     this.createEditor()
   },
   methods: {
-    // init() {
-    //   const me = this
-    //   if (window.Vditor) {
-    //     me.createEditor()
-    //   } else {
-    //     CommonHelper.addScript(vditorScript, function () {
-    //       me.createEditor()
-    //     })
-    //   }
-    // },
     createEditor() {
-      console.log('初始化编辑器...')
       if (process.client) {
         const me = this
         me.vditor = new Vditor(
