@@ -56,17 +56,17 @@ export default {
         rel: 'stylesheet',
         href: '//at.alicdn.com/t/font_1142441_1or22jfsge3.css',
       },
-      {
-        rel: 'stylesheet',
-        href: '//cdn.jsdelivr.net/npm/vditor@3.7.7/dist/index.css',
-      },
+      // {
+      //   rel: 'stylesheet',
+      //   href: '//cdn.jsdelivr.net/npm/vditor@3.7.7/dist/index.css',
+      // },
     ],
-    script: [
-      {
-        type: 'text/javascript',
-        src: '//cdn.jsdelivr.net/npm/vditor@3.7.7/dist/index.min.js',
-      },
-    ]
+    // script: [
+    //   {
+    //     type: 'text/javascript',
+    //     src: '//cdn.jsdelivr.net/npm/vditor@3.7.7/dist/index.min.js',
+    //   },
+    // ],
   },
   /*
    ** Customize the progress-bar color
@@ -101,7 +101,6 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    'nuxt-vite',
   ],
   /*
    ** Nuxt.js modules
