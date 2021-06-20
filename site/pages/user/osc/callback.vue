@@ -25,6 +25,11 @@ export default {
       loading: false,
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('登录处理中...'),
+    }
+  },
   mounted() {
     this.callback()
   },
@@ -56,11 +61,6 @@ export default {
         this.loading = false
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('登录处理中...'),
-    }
   },
 }
 </script>

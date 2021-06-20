@@ -28,7 +28,7 @@
       :data="results"
       highlight-current-row
       stripe
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column type="expand">
         <template slot-scope="scope">

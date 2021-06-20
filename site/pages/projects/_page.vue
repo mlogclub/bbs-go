@@ -23,15 +23,7 @@
 </template>
 
 <script>
-import ProjectList from '~/components/ProjectList'
-import Pagination from '~/components/Pagination'
-import SiteNotice from '~/components/SiteNotice'
 export default {
-  components: {
-    ProjectList,
-    Pagination,
-    SiteNotice,
-  },
   async asyncData({ $axios, params }) {
     const [projectPage] = await Promise.all([
       $axios.get('/api/project/projects', {

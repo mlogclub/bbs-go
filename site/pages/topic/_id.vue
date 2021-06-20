@@ -15,12 +15,12 @@
                 </div>
                 <div class="topic-header-center">
                   <div class="topic-nickname" itemprop="headline">
-                    <a
+                    <nuxt-link
                       itemprop="author"
                       itemscope
                       itemtype="http://schema.org/Person"
-                      :href="'/user/' + topic.user.id"
-                      >{{ topic.user.nickname }}</a
+                      :to="'/user/' + topic.user.id"
+                      >{{ topic.user.nickname }}</nuxt-link
                     >
                   </div>
                   <div class="topic-meta">
@@ -62,6 +62,7 @@
                   {{ topic.title }}
                 </h1>
                 <div
+                  ref="topicContent"
                   v-lazy-container="{ selector: 'img' }"
                   class="topic-content-detail"
                   v-html="topic.content"
@@ -81,18 +82,18 @@
 
               <!--节点、标签-->
               <div class="topic-tags">
-                <a
+                <nuxt-link
                   v-if="topic.node"
-                  :href="'/topics/node/' + topic.node.nodeId"
+                  :to="'/topics/node/' + topic.node.nodeId"
                   class="topic-tag"
-                  >{{ topic.node.name }}</a
+                  >{{ topic.node.name }}</nuxt-link
                 >
-                <a
+                <nuxt-link
                   v-for="tag in topic.tags"
                   :key="tag.tagId"
-                  :href="'/topics/tag/' + tag.tagId"
+                  :to="'/topics/tag/' + tag.tagId"
                   class="topic-tag"
-                  >#{{ tag.tagName }}</a
+                  >#{{ tag.tagName }}</nuxt-link
                 >
               </div>
 
@@ -173,9 +174,7 @@
           </div>
 
           <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
-            <div class="widget-header">
-              目录
-            </div>
+            <div class="widget-header">目录</div>
             <div class="widget-content" v-html="topic.toc" />
           </div>
         </div>
@@ -185,33 +184,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import Viewer from 'v-viewer'
-import Comment from '~/components/Comment'
-import UserInfo from '~/components/UserInfo'
-import TopicManageMenu from '~/components/topic/TopicManageMenu'
-import Avatar from '~/components/Avatar'
-import 'viewerjs/dist/viewer.css'
-
-Vue.use(Viewer, {
-  defaultOptions: {
-    zIndex: 9999,
-    navbar: false,
-    title: false,
-    tooltip: false,
-    movable: false,
-    scalable: false,
-    url: 'data-src',
-  },
-})
+import CommonHelper from '~/common/CommonHelper'
 
 export default {
-  components: {
-    Comment,
-    UserInfo,
-    TopicManageMenu,
-    Avatar,
-  },
   async asyncData({ $axios, params, error }) {
     let topic
     try {
@@ -254,20 +229,38 @@ export default {
       likeUsers,
     }
   },
+  head() {
+    return {
+      title: this.$topicSiteTitle(this.topic),
+      link: [
+        {
+          rel: 'stylesheet',
+          href: CommonHelper.highlightCss,
+        },
+      ],
+      script: [
+        {
+          type: 'text/javascript',
+          src: CommonHelper.highlightScript,
+          callback: () => {
+            // 客户端渲染的时候执行这里进行代码高亮
+            CommonHelper.initHighlight()
+          },
+        },
+      ],
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.current
     },
   },
   mounted() {
-    this.initHighlight()
+    // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
+    // 所以服务端渲染时会调用这里的方法进行代码高亮
+    CommonHelper.initHighlight(this)
   },
   methods: {
-    initHighlight() {
-      if (process.client) {
-        window.hljs.initHighlighting()
-      }
-    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -308,23 +301,6 @@ export default {
         }
       }
     },
-  },
-  head() {
-    return {
-      title: this.$topicSiteTitle(this.topic),
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
-        },
-      ],
-    }
   },
 }
 </script>

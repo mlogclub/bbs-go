@@ -7,10 +7,12 @@
             <nav class="breadcrumb">
               <ul>
                 <li>
-                  <a href="/">首页</a>
+                  <nuxt-link to="/">首页</nuxt-link>
                 </li>
                 <li>
-                  <a :href="'/user/' + user.id">{{ user.nickname }}</a>
+                  <nuxt-link :to="'/user/' + user.id">{{
+                    user.nickname
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">编辑资料</a>
@@ -47,7 +49,7 @@
                       <a
                         v-if="!user.emailVerified"
                         class="has-text-danger"
-                        style="font-weight: 700;"
+                        style="font-weight: 700"
                         @click="requestEmailVerify"
                         >验证&gt;&gt;</a
                       >
@@ -82,7 +84,7 @@
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
-                  <span style="color: red;">*&nbsp;</span>头像：
+                  <span style="color: red">*&nbsp;</span>头像：
                 </label>
               </div>
               <div class="field-body">
@@ -91,7 +93,7 @@
                     <img
                       v-if="user.avatar"
                       :src="user.avatar"
-                      style="width: 150px; height: 150px;"
+                      style="width: 150px; height: 150px"
                     />
                     <div class="file">
                       <label class="file-label">
@@ -109,7 +111,7 @@
                         </span>
                       </label>
                     </div>
-                    <span style="font-weight: bold; color: red;"
+                    <span style="font-weight: bold; color: red"
                       >*图像必须为正方形，大小不要超过1M。</span
                     >
                   </div>
@@ -121,7 +123,7 @@
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">
-                  <span style="color: red;">*&nbsp;</span>昵称：
+                  <span style="color: red">*&nbsp;</span>昵称：
                 </label>
               </div>
               <div class="field-body">
@@ -395,12 +397,8 @@
 </template>
 
 <script>
-import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
-  components: {
-    UserCenterSidebar,
-  },
   async asyncData({ $axios, params }) {
     const user = await $axios.get('/api/user/current')
     const form = { ...user }
@@ -434,6 +432,11 @@ export default {
       // password: '',
       // rePassword: '',
       // oldPassword: ''
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.user.nickname + ' - 编辑资料'),
     }
   },
   methods: {
@@ -551,11 +554,6 @@ export default {
         this.$nuxt.$loading.finish()
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.user.nickname + ' - 编辑资料'),
-    }
   },
 }
 </script>

@@ -25,7 +25,7 @@
       :data="results"
       highlight-current-row
       stripe
-      style="width: 100%;"
+      style="width: 100%"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="expand">
@@ -41,7 +41,7 @@
                 v-for="role in scope.row.roles"
                 :key="role"
                 size="mini"
-                style="margin-right: 3px;"
+                style="margin-right: 3px"
                 >{{ role }}
               </el-tag>
             </div>
@@ -201,7 +201,7 @@
             allow-create
             default-first-option
             placeholder="用户角色"
-            style="width: 100%;"
+            style="width: 100%"
           >
             <el-option
               v-for="item in editForm.roles"
@@ -281,10 +281,10 @@
 
 <script>
 import ScoreLog from './score-log'
-import Avatar from '~/components/Avatar'
+
 export default {
+  components: { ScoreLog },
   layout: 'admin',
-  components: { Avatar, ScoreLog },
   data() {
     return {
       results: [],

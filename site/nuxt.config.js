@@ -9,7 +9,6 @@ export default {
       total: true,
     },
   },
-  mode: 'universal',
   modern: true,
   /*
    ** Headers of the page
@@ -78,21 +77,20 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
-    { src: '~/plugins/infinite-scroll', ssr: false },
     { src: '~/plugins/vue-lazyload', ssr: false },
+    { src: '~/plugins/viewer.js', ssr: false },
   ],
-  // /*
-  //  ** Auto import components
-  //  ** See https://nuxtjs.org/api/configuration-components
-  //  */
-  // components: true,
+  /*
+   ** Auto import components
+   ** See https://nuxtjs.org/api/configuration-components
+   */
+  components: true,
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    'nuxt-vite',
   ],
   /*
    ** Nuxt.js modules
@@ -134,6 +132,7 @@ export default {
    */
   build: {
     // publicPath: 'https://file.mlog.club/static/nuxtclient/',
+    analyze: true,
     optimizeCSS: true,
     extractCSS: true,
     splitChunks: {
@@ -141,17 +140,6 @@ export default {
       pages: true,
       commons: true,
     },
-    postcss: {
-      preset: {
-        features: {
-          customProperties: false,
-        },
-      },
-    },
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {},
   },
   babel: {
     plugins: [

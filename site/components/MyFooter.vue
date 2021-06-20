@@ -2,9 +2,9 @@
   <footer class="footer">
     <div class="container content">
       <div>
-        <a href="/about">关于</a>
-        <a href="/tags">标签</a>
-        <a href="/links">友链</a>
+        <nuxt-link to="/about">关于</nuxt-link>
+        <nuxt-link to="/tags">标签</nuxt-link>
+        <nuxt-link to="/links">友链</nuxt-link>
       </div>
       <div>
         © 2021 Powered by

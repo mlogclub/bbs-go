@@ -105,7 +105,7 @@ func (s *tagService) Scan(callback func(tags []model.Tag)) {
 	var cursor int64
 	for {
 		list := repositories.TagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
-		if list == nil || len(list) == 0 {
+		if len(list) == 0 {
 			break
 		}
 		cursor = list[len(list)-1].Id

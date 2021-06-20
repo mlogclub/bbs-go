@@ -24,7 +24,7 @@
             <el-form-item label="网站关键字">
               <el-select
                 v-model="config.siteKeywords"
-                style="width: 100%;"
+                style="width: 100%"
                 multiple
                 filterable
                 allow-create
@@ -45,7 +45,7 @@
             <el-form-item label="推荐标签">
               <el-select
                 v-model="config.recommendTags"
-                style="width: 100%;"
+                style="width: 100%"
                 multiple
                 filterable
                 allow-create
@@ -57,7 +57,7 @@
             <el-form-item label="默认节点">
               <el-select
                 v-model="config.defaultNodeId"
-                style="width: 100%;"
+                style="width: 100%"
                 placeholder="发帖默认节点"
               >
                 <el-option
@@ -243,7 +243,7 @@
         </el-tab-pane>
       </el-tabs>
 
-      <div style="text-align: right;">
+      <div style="text-align: right">
         <el-button :loading="loading" type="primary" @click="save"
           >保存配置
         </el-button>
@@ -256,10 +256,10 @@
 import draggable from 'vuedraggable'
 
 export default {
-  layout: 'admin',
   components: {
     draggable,
   },
+  layout: 'admin',
   data() {
     return {
       config: {},

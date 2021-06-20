@@ -8,8 +8,8 @@
       <div v-if="isNeedEmailVerify" class="comment-not-login">
         <div class="comment-login-div">
           请先前往
-          <a style="font-weight: 700;" href="/user/settings"
-            >个人中心 &gt; 编辑资料</a
+          <nuxt-link style="font-weight: 700" to="/user/settings"
+            >个人中心 &gt; 编辑资料</nuxt-link
           >页面设置邮箱，并完成邮箱认证。
         </div>
       </div>
@@ -33,7 +33,7 @@
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
         请
-        <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
+        <a style="font-weight: 700" @click="toLogin">登录</a>后发表观点
       </div>
     </div>
 
@@ -48,16 +48,7 @@
 </template>
 
 <script>
-import CommentList from '~/components/CommentList'
-import CommentInput from '~/components/CommentInput'
-import CommentTextInput from '~/components/CommentTextInput'
 export default {
-  name: 'Comment',
-  components: {
-    CommentList,
-    CommentInput,
-    CommentTextInput,
-  },
   props: {
     mode: {
       type: String,

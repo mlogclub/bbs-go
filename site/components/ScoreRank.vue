@@ -6,10 +6,14 @@
     <div class="widget-content">
       <ul class="score-rank">
         <li v-for="user in scoreRank" :key="user.id">
-          <avatar :user="user" size="30" />
+          <avatar :user="user" size="35" round />
           <div class="score-user-info">
-            <a :href="'/user/' + user.id">{{ user.nickname }}</a>
-            <p>{{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论</p>
+            <nuxt-link :to="'/user/' + user.id" class="score-nickname">{{
+              user.nickname
+            }}</nuxt-link>
+            <p class="score-desc">
+              {{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论
+            </p>
           </div>
           <div class="score-rank-info">
             <span class="score-user-score">
@@ -23,10 +27,7 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 export default {
-  name: 'ScoreRank',
-  components: { Avatar },
   props: {
     scoreRank: {
       type: Array,
@@ -42,25 +43,36 @@ export default {
 .score-rank {
   li {
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
     list-style: none;
-    margin: 8px 0;
     font-size: 13px;
     position: relative;
+    padding: 10px 0;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #f7f7f7;
+      border-bottom: 1px solid #eee;
     }
 
     .score-user-info {
       width: 100%;
-      margin-left: 5px;
+      margin-left: 9px;
       line-height: 1.4;
       font-size: 12px;
-      a {
-        font-weight: 700;
+      .score-nickname {
+        font-size: 14px;
+        color: #333;
+        line-height: 20px;
+
         &:hover {
-          text-decoration: underline;
+          color: rgba(0, 166, 244, 0.8);
         }
+      }
+      .score-desc {
+        font-size: 11px;
+        color: #999;
+        line-height: 20px;
+        display: block;
       }
     }
 

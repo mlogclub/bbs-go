@@ -27,54 +27,11 @@ Vue.use({
     }
 
     /**
-     * 是否是移动端
-     * @returns {boolean}
-     */
-    Vue.prototype.$isMobile = function () {
-      const sUserAgent = navigator.userAgent.toLowerCase()
-
-      const bIsWeixin = sUserAgent.match(/micromessenger/i)
-      if (bIsWeixin && bIsWeixin.index !== -1) {
-        return true
-      }
-
-      const bIsIphoneOs = sUserAgent.match(/iphone os/i)
-      if (bIsIphoneOs && bIsIphoneOs.index !== -1) {
-        return true
-      }
-
-      const bIsAndroid = sUserAgent.match(/android/i)
-      if (bIsAndroid && bIsAndroid.index !== -1) {
-        return true
-      }
-
-      const bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i)
-      if (bIsUc7 && bIsUc7.index !== -1) {
-        return true
-      }
-
-      const bIsUc = sUserAgent.match(/ucweb/i)
-      if (bIsUc && bIsUc.index !== -1) {
-        return true
-      }
-
-      const bIsMidp = sUserAgent.match(/midp/i)
-      if (bIsMidp && bIsMidp.index !== -1) {
-        return true
-      }
-      return false
-    }
-
-    /**
      * 链接跳转
      * @param path
      */
     Vue.prototype.$linkTo = function (path) {
-      if (window) {
-        window.location = path
-        // 这里使用$router.push会导致跳转页面之后window.vditor对象undefined，原因未知
-        // window.$nuxt.$router.push(path)
-      }
+      this.$router.push(path)
     }
 
     /**

@@ -2,16 +2,16 @@
   <nav class="dock-nav">
     <ul>
       <li :class="{ active: currentNodeId === 0 }">
-        <a href="/topics/node/newest">
+        <nuxt-link to="/topics/node/newest">
           <img class="node-logo" src="~/assets/images/new.png" />
           <span class="node-name">最新</span>
-        </a>
+        </nuxt-link>
       </li>
       <li :class="{ active: currentNodeId === -1 }">
-        <a href="/topics/node/recommend">
+        <nuxt-link to="/topics/node/recommend">
           <img class="node-logo" src="~/assets/images/recommend2.png" />
           <span class="node-name">推荐</span>
-        </a>
+        </nuxt-link>
       </li>
       <li class="dock-nav-divider"></li>
       <li
@@ -19,11 +19,11 @@
         :key="node.nodeId"
         :class="{ active: currentNodeId === node.nodeId }"
       >
-        <a :href="'/topics/node/' + node.nodeId">
+        <nuxt-link :to="'/topics/node/' + node.nodeId">
           <img v-if="node.logo" class="node-logo" :src="node.logo" />
           <img v-else class="node-logo" src="~/assets/images/node.png" />
           <span class="node-name">{{ node.name }}</span>
-        </a>
+        </nuxt-link>
       </li>
     </ul>
   </nav>

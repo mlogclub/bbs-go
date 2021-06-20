@@ -6,11 +6,11 @@
           <div class="widget-header">
             <nav class="breadcrumb">
               <ul>
-                <li><a href="/">首页</a></li>
+                <li><nuxt-link to="/">首页</nuxt-link></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                  <nuxt-link :to="'/user/' + currentUser.id + '?tab=topics'">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">文章</a>
@@ -68,17 +68,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownHelp,
-    MarkdownEditor,
-  },
   async asyncData({ $axios, params, error }) {
     try {
       const [article] = await Promise.all([
@@ -107,6 +98,11 @@ export default {
         tags: [],
         content: '',
       },
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('修改文章'),
     }
   },
   computed: {
@@ -142,11 +138,6 @@ export default {
         this.$message.error('提交失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('修改文章'),
-    }
   },
 }
 </script>

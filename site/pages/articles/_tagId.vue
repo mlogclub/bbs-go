@@ -29,12 +29,7 @@
 </template>
 
 <script>
-import ArticleList from '~/components/ArticleList'
-import LoadMore from '~/components/LoadMore'
-import SiteNotice from '~/components/SiteNotice'
-
 export default {
-  components: { ArticleList, LoadMore, SiteNotice },
   async asyncData({ $axios, params }) {
     try {
       const [tag, articlesPage] = await Promise.all([

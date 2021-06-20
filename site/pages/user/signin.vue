@@ -95,16 +95,7 @@
 </template>
 
 <script>
-import GithubLogin from '~/components/GithubLogin'
-import OscLogin from '~/components/OscLogin'
-import QqLogin from '~/components/QqLogin'
-
 export default {
-  components: {
-    GithubLogin,
-    OscLogin,
-    QqLogin,
-  },
   asyncData({ params, query }) {
     return {
       ref: query.ref,
@@ -117,6 +108,11 @@ export default {
       captchaId: '',
       captchaUrl: '',
       captchaCode: '',
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('登录'),
     }
   },
   computed: {
@@ -205,16 +201,11 @@ export default {
       return false
     },
   },
-  head() {
-    return {
-      title: this.$siteTitle('登录'),
-    }
-  },
 }
 </script>
 <style scoped lang="scss">
 .signin {
-  max-width: 480px;
+  max-width: 500px;
   margin: auto;
   padding: 0 20px;
 
@@ -263,6 +254,10 @@ export default {
   .third-parties {
     text-align: center;
     margin: 10px 0;
+
+    a:not(:last-child) {
+      margin-right: 10px;
+    }
   }
 }
 </style>

@@ -228,8 +228,8 @@ func (c *TopicController) GetUserTopics() *simple.JsonResult {
 	}
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	topics, cursor := services.TopicService.GetUserTopics(userId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
+	topics, cursor, hasMore := services.TopicService.GetUserTopics(userId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 帖子列表
@@ -240,8 +240,8 @@ func (c *TopicController) GetTopics() *simple.JsonResult {
 		recommend, _ = simple.FormValueBool(c.Ctx, "recommend")
 		user         = services.UserTokenService.GetCurrent(c.Ctx)
 	)
-	topics, cursor := services.TopicService.GetTopics(nodeId, cursor, recommend)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
+	topics, cursor, hasMore := services.TopicService.GetTopics(nodeId, cursor, recommend)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 标签帖子列表
@@ -254,8 +254,8 @@ func (c *TopicController) GetTagTopics() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	topics, cursor := services.TopicService.GetTagTopics(tagId, cursor)
-	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10))
+	topics, cursor, hasMore := services.TopicService.GetTagTopics(tagId, cursor)
+	return simple.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 收藏
@@ -274,7 +274,7 @@ func (c *TopicController) GetFavoriteBy(topicId int64) *simple.JsonResult {
 // 推荐话题列表（目前逻辑为取最近50条数据随机展示）
 func (c *TopicController) GetRecommend() *simple.JsonResult {
 	topics := cache.TopicCache.GetRecommendTopics()
-	if topics == nil || len(topics) == 0 {
+	if len(topics) == 0 {
 		return simple.JsonSuccess()
 	} else {
 		dest := make([]model.Topic, len(topics))

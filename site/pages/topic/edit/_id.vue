@@ -6,11 +6,11 @@
           <div class="widget-header">
             <nav class="breadcrumb">
               <ul>
-                <li><a href="/">首页</a></li>
+                <li><nuxt-link to="/">首页</nuxt-link></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id + '?tab=topics'">{{
+                  <nuxt-link :to="'/user/' + currentUser.id + '?tab=topics'">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">主题</a>
@@ -21,7 +21,7 @@
           <div class="widget-content">
             <div class="field is-horizontal">
               <div class="field-body">
-                <div class="field" style="width: 100%;">
+                <div class="field" style="width: 100%">
                   <input
                     v-model="postForm.title"
                     class="input"
@@ -37,8 +37,9 @@
                         v-for="node in nodes"
                         :key="node.nodeId"
                         :value="node.nodeId"
-                        >{{ node.name }}</option
                       >
+                        {{ node.name }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -83,17 +84,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownHelp,
-    MarkdownEditor,
-  },
   async asyncData({ $axios, params }) {
     const [topic, nodes] = await Promise.all([
       $axios.get('/api/topic/edit/' + params.id),
@@ -119,6 +111,11 @@ export default {
         tags: [],
         content: '',
       },
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('修改话题'),
     }
   },
   computed: {
@@ -157,11 +154,6 @@ export default {
         this.$message.error('提交失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('修改话题'),
-    }
   },
 }
 </script>

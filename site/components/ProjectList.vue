@@ -15,12 +15,12 @@
           </div>
           <div class="project-header">
             <h1 itemprop="headline">
-              <a :href="'/project/' + p.projectId">
+              <nuxt-link :to="'/project/' + p.projectId">
                 <span class="project-name">{{ p.name }}</span>
                 <span v-if="p.title" class="project-title"
                   >&nbsp;-&nbsp;{{ p.title }}</span
                 >
-              </a>
+              </nuxt-link>
             </h1>
           </div>
           <div class="summary" itemprop="description">
@@ -32,9 +32,9 @@
               itemscope
               itemtype="http://schema.org/Person"
             >
-              <a :href="'/user/' + p.user.id" itemprop="name">{{
+              <nuxt-link :to="'/user/' + p.user.id" itemprop="name">{{
                 p.user.nickname
-              }}</a>
+              }}</nuxt-link>
             </span>
             <span>
               <time

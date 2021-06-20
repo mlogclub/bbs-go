@@ -16,7 +16,7 @@
       :data="results"
       highlight-current-row
       border
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="userId" label="用户">
@@ -68,8 +68,8 @@
 import ScoreLog from './score-log'
 import UserInfo from '~/pages/admin/components/UserInfo'
 export default {
-  layout: 'admin',
   components: { ScoreLog, UserInfo },
+  layout: 'admin',
   data() {
     return {
       results: [],

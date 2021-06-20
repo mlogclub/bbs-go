@@ -19,7 +19,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4
 	github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0
 	github.com/kataras/iris/v12 v12.2.0-alpha2
-	github.com/mlogclub/simple v1.1.6
+	github.com/mlogclub/simple v1.1.10
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/robfig/cron v1.2.0

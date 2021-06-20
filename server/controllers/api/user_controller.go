@@ -3,10 +3,11 @@ package api
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/validate"
-	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"strconv"
 	"strings"
+
+	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple"
 
 	"bbs-go/cache"
 	"bbs-go/controllers/render"
@@ -177,19 +178,22 @@ func (c *UserController) GetFavorites() *simple.JsonResult {
 	}
 
 	// 查询列表
+	limit := 20
 	var favorites []model.Favorite
 	if cursor > 0 {
 		favorites = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ? and id < ?",
 			user.Id, cursor).Desc("id").Limit(20))
 	} else {
-		favorites = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(20))
+		favorites = services.FavoriteService.Find(simple.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(limit))
 	}
 
+	hasMore := false
 	if len(favorites) > 0 {
 		cursor = favorites[len(favorites)-1].Id
+		hasMore = len(favorites) >= limit
 	}
 
-	return simple.JsonCursorData(render.BuildFavorites(favorites), strconv.FormatInt(cursor, 10))
+	return simple.JsonCursorData(render.BuildFavorites(favorites), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 获取最近3条未读消息

@@ -84,11 +84,18 @@
           display: inline-block;
           font-size: 15px;
           margin-bottom: 6px;
-          word-wrap: break-word;
-          word-break: break-all;
           width: 100%;
           text-decoration: none;
           color: #525252;
+          word-wrap: break-word;
+
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          text-align: justify;
+          word-break: break-all;
+          text-overflow: ellipsis;
         }
 
         &.topic-tweet {

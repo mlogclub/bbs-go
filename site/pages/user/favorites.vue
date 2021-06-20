@@ -7,11 +7,11 @@
           <div class="widget-header">
             <nav class="breadcrumb">
               <ul>
-                <li><a href="/">首页</a></li>
+                <li><nuxt-link to="/">首页</nuxt-link></li>
                 <li>
-                  <a :href="'/user/' + currentUser.id">{{
+                  <nuxt-link :to="'/user/' + currentUser.id">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">收藏列表</a>
@@ -24,22 +24,22 @@
             <ul v-if="favorites && favorites.length" class="article-list">
               <li v-for="favorite in favorites" :key="favorite.favoriteId">
                 <article v-if="favorite.deleted" class="article-item">
-                  <div class="article-summary">
-                    收藏内容失效!!!
-                  </div>
+                  <div class="article-summary">收藏内容失效!!!</div>
                 </article>
                 <article v-else class="article-item">
                   <div class="article-title">
-                    <a :href="favorite.url">{{ favorite.title }}</a>
+                    <a :href="favorite.url" target="_blank">{{
+                      favorite.title
+                    }}</a>
                   </div>
                   <div class="article-summary">
                     {{ favorite.content }}
                   </div>
                   <div class="article-meta">
                     <span class="article-meta-item"
-                      ><a :href="'/user/' + favorite.user.id">{{
+                      ><nuxt-link :to="'/user/' + favorite.user.id">{{
                         favorite.user.nickname
-                      }}</a></span
+                      }}</nuxt-link></span
                     >
                     <span class="article-meta-item"
                       ><time>{{ favorite.createTime | prettyDate }}</time></span
@@ -51,9 +51,7 @@
                 <a @click="list">查看更多&gt;&gt;</a>
               </li>
             </ul>
-            <div v-else class="notification is-primary">
-              暂无收藏
-            </div>
+            <div v-else class="notification is-primary">暂无收藏</div>
           </div>
         </div>
       </div>
@@ -63,14 +61,8 @@
 </template>
 
 <script>
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
 export default {
   middleware: 'authenticated',
-  components: {
-    UserProfile,
-    UserCenterSidebar,
-  },
   async asyncData({ $axios, params }) {},
   data() {
     return {

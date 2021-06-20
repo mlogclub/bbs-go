@@ -8,20 +8,20 @@
           <div class="tabs">
             <ul>
               <li :class="{ 'is-active': activeTab === 'topics' }">
-                <a :href="'/user/' + user.id + '?tab=topics'">
+                <nuxt-link :to="'/user/' + user.id + '?tab=topics'">
                   <span class="icon is-small">
                     <i class="iconfont icon-topic" aria-hidden="true" />
                   </span>
                   <span>话题</span>
-                </a>
+                </nuxt-link>
               </li>
               <li :class="{ 'is-active': activeTab === 'articles' }">
-                <a :href="'/user/' + user.id + '?tab=articles'">
+                <nuxt-link :to="'/user/' + user.id + '?tab=articles'">
                   <span class="icon is-small">
                     <i class="iconfont icon-article" aria-hidden="true" />
                   </span>
                   <span>文章</span>
-                </a>
+                </nuxt-link>
               </li>
             </ul>
           </div>
@@ -41,9 +41,7 @@
                 <topic-list :topics="results" :show-avatar="false" />
               </load-more>
             </div>
-            <div v-else class="notification is-primary">
-              暂无话题
-            </div>
+            <div v-else class="notification is-primary">暂无话题</div>
           </div>
 
           <div v-if="activeTab === 'articles'">
@@ -63,9 +61,7 @@
                 <article-list :articles="results" />
               </load-more>
             </div>
-            <div v-else class="notification is-primary">
-              暂无文章
-            </div>
+            <div v-else class="notification is-primary">暂无文章</div>
           </div>
         </div>
       </div>
@@ -75,22 +71,9 @@
 </template>
 
 <script>
-import TopicList from '~/components/topic/TopicList'
-import ArticleList from '~/components/ArticleList'
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
-import LoadMore from '~/components/LoadMore'
-
 const defaultTab = 'topics'
 
 export default {
-  components: {
-    TopicList,
-    ArticleList,
-    UserProfile,
-    UserCenterSidebar,
-    LoadMore,
-  },
   async asyncData({ $axios, params, query, error }) {
     let user
     try {
@@ -125,6 +108,11 @@ export default {
   data() {
     return {}
   },
+  head() {
+    return {
+      title: this.$siteTitle(this.user.nickname),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current
@@ -134,11 +122,7 @@ export default {
       return this.user && current && this.user.id === current.id
     },
   },
-  head() {
-    return {
-      title: this.$siteTitle(this.user.nickname),
-    }
-  },
+  watchQuery: ['tab'],
 }
 </script>
 

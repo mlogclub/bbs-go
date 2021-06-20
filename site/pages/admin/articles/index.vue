@@ -37,9 +37,9 @@
           <avatar :user="item.user" />
           <div class="article-right">
             <div class="article-title">
-              <a :href="'/article/' + item.id" target="_blank">{{
+              <nuxt-link :to="'/article/' + item.id" target="_blank">{{
                 item.title
-              }}</a>
+              }}</nuxt-link>
             </div>
             <div class="article-meta">
               <label class="action-item info">ID: {{ item.id }}</label>
@@ -116,7 +116,7 @@
         <el-form-item label="标签">
           <el-select
             v-model="updateTagForm.tags"
-            style="width: 100%;"
+            style="width: 100%"
             multiple
             filterable
             allow-create
@@ -136,10 +136,8 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 export default {
   layout: 'admin',
-  components: { Avatar },
   data() {
     return {
       results: [],

@@ -8,12 +8,12 @@
             <nav class="breadcrumb">
               <ul>
                 <li>
-                  <a href="/">首页</a>
+                  <nuxt-link to="/">首页</nuxt-link>
                 </li>
                 <li>
-                  <a :href="'/user/' + currentUser.id">{{
+                  <nuxt-link :to="'/user/' + currentUser.id">{{
                     currentUser.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">消息</a>
@@ -38,9 +38,11 @@
                 <div class="message-item-right">
                   <div class="message-item-meta">
                     <span v-if="message.from.id > 0" class="msg-nickname">
-                      <a :href="'/user/' + message.from.id" target="_blank">{{
-                        message.from.nickname
-                      }}</a>
+                      <nuxt-link
+                        :to="'/user/' + message.from.id"
+                        target="_blank"
+                        >{{ message.from.nickname }}</nuxt-link
+                      >
                     </span>
                     <span v-else class="msg-nickname">
                       <a href="javascript:void(0)" target="_blank">{{
@@ -73,9 +75,7 @@
                 </div>
               </li>
             </ul>
-            <div v-else class="notification is-primary">
-              暂无消息
-            </div>
+            <div v-else class="notification is-primary">暂无消息</div>
             <pagination
               :page="messagesPage.page"
               url-prefix="/user/messages?p="
@@ -89,14 +89,8 @@
 </template>
 
 <script>
-import UserProfile from '~/components/UserProfile'
-import UserCenterSidebar from '~/components/UserCenterSidebar'
-import Pagination from '~/components/Pagination'
-import Avatar from '~/components/Avatar'
-
 export default {
   middleware: 'authenticated',
-  components: { UserProfile, UserCenterSidebar, Pagination, Avatar },
   async asyncData({ $axios, query }) {
     const [messagesPage] = await Promise.all([
       $axios.get('/api/user/messages?page=' + (query.p || 1)),

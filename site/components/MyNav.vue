@@ -7,9 +7,9 @@
   >
     <div class="container">
       <div class="navbar-brand">
-        <a href="/" class="navbar-item">
+        <nuxt-link to="/" class="navbar-item">
           <img :alt="config.siteTitle" src="~/assets/images/logo.png" />
-        </a>
+        </nuxt-link>
         <a
           :class="{ 'is-active': navbarActive }"
           class="navbar-burger burger"
@@ -23,16 +23,17 @@
       </div>
       <div :class="{ 'is-active': navbarActive }" class="navbar-menu">
         <div class="navbar-start">
-          <a
+          <nuxt-link
             v-for="(nav, index) in config.siteNavs"
             :key="index"
-            :href="nav.url"
+            :to="nav.url"
             class="navbar-item"
-            >{{ nav.title }}</a
+            >{{ nav.title }}</nuxt-link
           >
         </div>
 
         <div class="navbar-end">
+          <!--
           <div class="navbar-item searchFormDiv">
             <form id="searchForm" action="/search">
               <div class="control has-icons-right">
@@ -49,6 +50,7 @@
               </div>
             </form>
           </div>
+          -->
 
           <div class="navbar-item">
             <create-topic-btn />
@@ -57,22 +59,22 @@
           <msg-notice v-if="user" />
 
           <div v-if="user" class="navbar-item has-dropdown is-hoverable">
-            <a :href="'/user/' + user.id" class="navbar-link">
+            <nuxt-link :to="'/user/' + user.id" class="navbar-link">
               <strong>{{ user.nickname }}</strong>
-            </a>
+            </nuxt-link>
             <div class="navbar-dropdown">
-              <a class="navbar-item" :href="'/user/' + user.id">
+              <nuxt-link class="navbar-item" :to="'/user/' + user.id">
                 <i class="iconfont icon-username" />&nbsp;个人中心
-              </a>
-              <a class="navbar-item" href="/user/favorites">
+              </nuxt-link>
+              <nuxt-link class="navbar-item" to="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
-              </a>
-              <a class="navbar-item" href="/user/settings">
+              </nuxt-link>
+              <nuxt-link class="navbar-item" to="/user/settings">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
-              </a>
-              <a v-if="isOwnerOrAdmin" class="navbar-item" href="/admin">
+              </nuxt-link>
+              <nuxt-link v-if="isOwnerOrAdmin" class="navbar-item" to="/admin">
                 <i class="iconfont icon-dashboard" />&nbsp;后台管理
-              </a>
+              </nuxt-link>
               <a class="navbar-item" @click="signout">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>
@@ -93,14 +95,8 @@
 
 <script>
 import UserHelper from '~/common/UserHelper'
-import MsgNotice from '~/components/MsgNotice'
-import CreateTopicBtn from '~/components/topic/CreateTopicBtn'
 
 export default {
-  components: {
-    MsgNotice,
-    CreateTopicBtn,
-  },
   data() {
     return {
       navbarActive: false,

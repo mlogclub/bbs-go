@@ -28,16 +28,7 @@
 </template>
 
 <script>
-import ArticleList from '~/components/ArticleList'
-import SiteNotice from '~/components/SiteNotice'
-import LoadMore from '~/components/LoadMore'
-
 export default {
-  components: {
-    ArticleList,
-    SiteNotice,
-    LoadMore,
-  },
   async asyncData({ $axios }) {
     try {
       const [articlesPage] = await Promise.all([

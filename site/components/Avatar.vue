@@ -1,8 +1,8 @@
 <template>
-  <a
+  <nuxt-link
     v-if="user"
     class="avatar-a"
-    :href="'/user/' + user.id"
+    :to="'/user/' + user.id"
     :class="[sizeClass]"
     :style="extraStyle"
   >
@@ -21,7 +21,7 @@
     >
       {{ usernameAt }}
     </span>
-  </a>
+  </nuxt-link>
 </template>
 
 <script>

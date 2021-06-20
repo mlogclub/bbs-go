@@ -46,20 +46,20 @@
         </div>
         <div class="topic-main">
           <div class="topic-header">
-            <a
-              :href="'/user/' + item.user.id"
+            <nuxt-link
+              :to="'/user/' + item.user.id"
               target="_blank"
               class="topic-nickname"
-              >{{ item.user.nickname }}</a
+              >{{ item.user.nickname }}</nuxt-link
             >
 
             <div class="topic-info">
               <span
                 v-if="item.status === 1"
-                style="color: red; font-weight: bold;"
+                style="color: red; font-weight: bold"
                 >已删除</span
               >
-              <span v-if="item.recommend" style="color: red; font-weight: bold;"
+              <span v-if="item.recommend" style="color: red; font-weight: bold"
                 >已推荐</span
               >
             </div>
@@ -80,9 +80,9 @@
           </div>
 
           <div class="topic-title">
-            <a :href="'/topic/' + item.topicId" target="_blank">{{
+            <nuxt-link :to="'/topic/' + item.topicId" target="_blank">{{
               item.title
-            }}</a>
+            }}</nuxt-link>
           </div>
 
           <template v-if="item.type === 0">
@@ -101,13 +101,13 @@
             class="topic-image-list"
           >
             <li v-for="(image, index) in item.imageList" :key="index">
-              <a
-                :href="'/topic/' + item.topicId"
+              <nuxt-link
+                :to="'/topic/' + item.topicId"
                 target="_blank"
                 class="image-item"
               >
                 <img v-lazy="image.preview" />
-              </a>
+              </nuxt-link>
             </li>
           </ul>
 
@@ -248,11 +248,8 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
-
 export default {
   layout: 'admin',
-  components: { Avatar },
   data() {
     return {
       results: [],

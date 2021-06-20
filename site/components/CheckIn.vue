@@ -105,7 +105,9 @@
               class="rank-user-avatar"
             />
             <div class="rank-user-info">
-              <a :href="'/user/' + rank.user.id">{{ rank.user.nickname }}</a>
+              <nuxt-link :to="'/user/' + rank.user.id">{{
+                rank.user.nickname
+              }}</nuxt-link>
               <p>@{{ rank.updateTime | formatDate }}</p>
             </div>
           </li>
@@ -116,9 +118,7 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 export default {
-  components: { Avatar },
   // props: {
   //   checkInRank: {
   //     type: Array,

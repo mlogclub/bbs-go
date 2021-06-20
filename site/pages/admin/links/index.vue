@@ -33,7 +33,7 @@
       :data="results"
       highlight-current-row
       stripe
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column prop="id" label="编号" width="100"></el-table-column>
       <el-table-column prop="title" label="标题"></el-table-column>
@@ -87,7 +87,7 @@
     >
       <el-form ref="addForm" :model="addForm" label-width="80px">
         <el-form-item label="链接">
-          <el-input v-model="addForm.url" style="width: 80%;"></el-input>&nbsp;
+          <el-input v-model="addForm.url" style="width: 80%"></el-input>&nbsp;
           <el-button type="primary" @click="detect">Detect</el-button>
         </el-form-item>
         <el-form-item label="标题">

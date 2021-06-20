@@ -1,12 +1,10 @@
 <template>
   <div class="widget markdown-help">
-    <div class="widget-header">
-      Markdown 语法参考
-    </div>
+    <div class="widget-header">Markdown 语法参考</div>
     <div class="widget-content content">
       <ol>
         <li>
-          <span style="font-weight: 700; color: red;"
+          <span style="font-weight: 700; color: red"
             >将图片复制或拖入编辑器可上传</span
           >
         </li>

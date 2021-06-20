@@ -29,12 +29,7 @@
 </template>
 
 <script>
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
-  components: {
-    MarkdownEditor,
-  },
   props: {
     entityType: {
       type: String,

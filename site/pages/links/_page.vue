@@ -38,11 +38,7 @@
 </template>
 
 <script>
-import Pagination from '~/components/Pagination'
 export default {
-  components: {
-    Pagination,
-  },
   async asyncData({ $axios, params }) {
     const [linksPage] = await Promise.all([
       $axios.get('/api/link/links', {

@@ -8,8 +8,8 @@
         <div class="message-body">
           发表文章前，请先前往
           <strong
-            ><a href="/user/settings" style="color: #1878f3;"
-              >个人中心 &gt; 编辑资料</a
+            ><nuxt-link to="/user/settings" style="color: #1878f3"
+              >个人中心 &gt; 编辑资料</nuxt-link
             ></strong
           >
           页面设置邮箱，并完成邮箱认证。
@@ -22,11 +22,11 @@
           <div class="widget-header">
             <nav class="breadcrumb">
               <ul>
-                <li><a href="/">首页</a></li>
+                <li><nuxt-link to="/">首页</nuxt-link></li>
                 <li>
-                  <a :href="'/user/' + user.id + '?tab=articles'">{{
+                  <nuxt-link :to="'/user/' + user.id + '?tab=articles'">{{
                     user.nickname
-                  }}</a>
+                  }}</nuxt-link>
                 </li>
                 <li class="is-active">
                   <a href="#" aria-current="page">文章</a>
@@ -85,17 +85,8 @@
 </template>
 
 <script>
-import TagInput from '~/components/TagInput'
-import MarkdownHelp from '~/components/MarkdownHelp'
-import MarkdownEditor from '~/components/MarkdownEditor'
-
 export default {
   middleware: 'authenticated',
-  components: {
-    TagInput,
-    MarkdownHelp,
-    MarkdownEditor,
-  },
   data() {
     return {
       publishing: false, // 当前是否正处于发布中...
@@ -104,6 +95,11 @@ export default {
         tags: [],
         content: '',
       },
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('发表文章'),
     }
   },
   computed: {
@@ -145,11 +141,6 @@ export default {
         this.$message.error(e.message || e)
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('发表文章'),
-    }
   },
 }
 </script>

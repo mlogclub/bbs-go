@@ -15,11 +15,11 @@
                     :key="tag.tagId"
                     class="tag is-normal"
                   >
-                    <a
-                      :href="'/articles/' + tag.tagId"
+                    <nuxt-link
+                      :to="'/articles/' + tag.tagId"
                       :title="tag.tagName"
                       target="_blank"
-                      >{{ tag.tagName }}</a
+                      >{{ tag.tagName }}</nuxt-link
                     >
                   </span>
                 </div>
@@ -44,14 +44,7 @@
 </template>
 
 <script>
-import Pagination from '~/components/Pagination'
-import SiteNotice from '~/components/SiteNotice'
-
 export default {
-  components: {
-    Pagination,
-    SiteNotice,
-  },
   async asyncData({ $axios, params }) {
     const [tagsPage] = await Promise.all([
       $axios.get('/api/tag/tags', {

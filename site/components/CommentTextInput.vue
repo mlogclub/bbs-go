@@ -29,7 +29,6 @@
 
 <script>
 export default {
-  components: {},
   props: {
     entityType: {
       type: String,

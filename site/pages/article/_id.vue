@@ -15,13 +15,15 @@
               <div class="article-meta">
                 <span class="article-meta-item">
                   由
-                  <a
-                    :href="'/user/' + article.user.id"
+                  <nuxt-link
+                    :to="'/user/' + article.user.id"
                     class="article-author"
                     itemprop="author"
                     itemscope
                     itemtype="http://schema.org/Person"
-                    ><span itemprop="name">{{ article.user.nickname }}</span></a
+                    ><span itemprop="name">{{
+                      article.user.nickname
+                    }}</span></nuxt-link
                   >发布于
                   <time
                     :datetime="
@@ -41,9 +43,9 @@
                     :key="tag.tagId"
                     class="article-tag tag"
                   >
-                    <a :href="'/articles/' + tag.tagId" class>{{
+                    <nuxt-link :to="'/articles/' + tag.tagId" class>{{
                       tag.tagName
-                    }}</a>
+                    }}</nuxt-link>
                   </span>
                 </span>
 
@@ -54,9 +56,9 @@
                     </a>
                   </span>
                   <span v-if="hasPermission">
-                    <a :href="'/article/edit/' + article.articleId">
+                    <nuxt-link :to="'/article/edit/' + article.articleId">
                       <i class="iconfont icon-edit" />&nbsp;修改
-                    </a>
+                    </nuxt-link>
                   </span>
                   <span>
                     <a @click="addFavorite(article.articleId)">
@@ -68,7 +70,7 @@
                   <span v-if="isPending">
                     <a
                       href="javascript:void(0)"
-                      style="cursor: default; text-decoration: none;"
+                      style="cursor: default; text-decoration: none"
                     >
                       <i class="iconfont icon-shenhe" />&nbsp;审核中
                     </a>
@@ -120,12 +122,12 @@
           <div class="widget-content article-related">
             <ul>
               <li v-for="a in relatedArticles" :key="a.articleId">
-                <a
-                  :href="'/article/' + a.articleId"
+                <nuxt-link
+                  :to="'/article/' + a.articleId"
                   :title="a.title"
                   class="article-related-title"
                   target="_blank"
-                  >{{ a.title }}</a
+                  >{{ a.title }}</nuxt-link
                 >
               </li>
             </ul>
@@ -140,12 +142,12 @@
           <div class="widget-content article-related">
             <ul>
               <li v-for="a in nearlyArticles" :key="a.articleId">
-                <a
-                  :href="'/article/' + a.articleId"
+                <nuxt-link
+                  :to="'/article/' + a.articleId"
                   :title="a.title"
                   class="article-related-title"
                   target="_blank"
-                  >{{ a.title }}</a
+                  >{{ a.title }}</nuxt-link
                 >
               </li>
             </ul>
@@ -161,12 +163,9 @@
 
 <script>
 import UserHelper from '~/common/UserHelper'
-import Comment from '~/components/Comment'
+import CommonHelper from '~/common/CommonHelper'
 
 export default {
-  components: {
-    Comment,
-  },
   async asyncData({ $axios, params, error }) {
     let article
     try {
@@ -178,27 +177,23 @@ export default {
       })
       return
     }
-    const [
-      commentsPage,
-      favorited,
-      nearlyArticles,
-      relatedArticles,
-    ] = await Promise.all([
-      $axios.get('/api/comment/list', {
-        params: {
-          entityType: 'article',
-          entityId: article.articleId,
-        },
-      }),
-      $axios.get('/api/favorite/favorited', {
-        params: {
-          entityType: 'article',
-          entityId: params.id,
-        },
-      }),
-      $axios.get('/api/article/nearly/' + article.articleId),
-      $axios.get('/api/article/related/' + article.articleId),
-    ])
+    const [commentsPage, favorited, nearlyArticles, relatedArticles] =
+      await Promise.all([
+        $axios.get('/api/comment/list', {
+          params: {
+            entityType: 'article',
+            entityId: article.articleId,
+          },
+        }),
+        $axios.get('/api/favorite/favorited', {
+          params: {
+            entityType: 'article',
+            entityId: params.id,
+          },
+        }),
+        $axios.get('/api/article/nearly/' + article.articleId),
+        $axios.get('/api/article/related/' + article.articleId),
+      ])
 
     // 文章关键字
     let keywords = ''
@@ -231,6 +226,31 @@ export default {
       description,
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle(this.article.title),
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'keywords', name: 'keywords', content: this.keywords },
+      ],
+      link: [
+        {
+          rel: 'stylesheet',
+          href: CommonHelper.highlightCss,
+        },
+      ],
+      script: [
+        {
+          type: 'text/javascript',
+          src: CommonHelper.highlightScript,
+          callback: () => {
+            // 客户端渲染的时候执行这里进行代码高亮
+            CommonHelper.initHighlight()
+          },
+        },
+      ],
+    }
+  },
   computed: {
     hasPermission() {
       return (
@@ -253,14 +273,11 @@ export default {
     },
   },
   mounted() {
-    this.initHighlight()
+    // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
+    // 所以服务端渲染时会调用这里的方法进行代码高亮
+    CommonHelper.initHighlight(this)
   },
   methods: {
-    initHighlight() {
-      if (process.client) {
-        window.hljs.initHighlighting()
-      }
-    },
     deleteArticle(articleId) {
       if (!process.client) {
         return
@@ -303,27 +320,6 @@ export default {
         this.$message.error('收藏失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.article.title),
-      meta: [
-        { hid: 'description', name: 'description', content: this.description },
-        { hid: 'keywords', name: 'keywords', content: this.keywords },
-      ],
-      link: [
-        {
-          rel: 'stylesheet',
-          href:
-            '//cdn.staticfile.org/highlight.js/10.3.2/styles/github.min.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js',
-        },
-      ],
-    }
   },
 }
 </script>

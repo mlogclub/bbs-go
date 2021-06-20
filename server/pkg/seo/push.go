@@ -1,8 +1,9 @@
 package seo
 
 import (
-	"github.com/mlogclub/simple"
 	"strings"
+
+	"github.com/mlogclub/simple"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
@@ -19,7 +20,7 @@ func Push(url string) {
 
 // 百度链接推送
 func PushUrls(urls []string) {
-	if urls == nil || len(urls) == 0 {
+	if len(urls) == 0 {
 		return
 	}
 	if len(config.Instance.BaiduSEO.Site) == 0 || len(config.Instance.BaiduSEO.Token) == 0 {
@@ -37,7 +38,7 @@ func PushUrls(urls []string) {
 
 // 神马链接推送
 func PushSmUrls(urls []string) {
-	if urls == nil || len(urls) == 0 {
+	if len(urls) == 0 {
 		return
 	}
 	conf := config.Instance.SmSEO

@@ -33,9 +33,9 @@
               itemscope
               itemtype="http://schema.org/Person"
             >
-              <a :href="'/user/' + comment.user.id" itemprop="name">
+              <nuxt-link :to="'/user/' + comment.user.id" itemprop="name">
                 {{ comment.user.nickname }}
-              </a>
+              </nuxt-link>
             </span>
             <span class="comment-time">
               <time
@@ -65,10 +65,10 @@
                 v-html="comment.quote.content"
               />
             </blockquote>
-            <p
+            <div
               v-lazy-container="{ selector: 'img' }"
               v-html="comment.content"
-            />
+            ></div>
           </div>
         </li>
       </ul>
@@ -77,14 +77,7 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
-import LoadMore from '~/components/LoadMore'
-
 export default {
-  components: {
-    Avatar,
-    LoadMore,
-  },
   props: {
     entityType: {
       type: String,

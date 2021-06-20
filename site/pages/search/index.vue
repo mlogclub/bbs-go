@@ -62,16 +62,7 @@
 </template>
 
 <script>
-import CheckIn from '@/components/CheckIn'
-import SiteNotice from '@/components/SiteNotice'
-import Pagination from '@/components/Pagination'
-
 export default {
-  components: {
-    CheckIn,
-    SiteNotice,
-    Pagination,
-  },
   async asyncData({ $axios, query }) {
     try {
       const keyword = query.q || ''

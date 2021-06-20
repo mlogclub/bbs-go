@@ -1,16 +1,16 @@
 <template>
-  <div class="load-more">
+  <div
+    v-infinite-scroll="loadMore"
+    class="load-more"
+    infinite-scroll-disabled="disabled"
+    infinite-scroll-distance="10"
+  >
     <slot :results="results" />
-    <div class="has-more">
-      <el-button
-        size="small"
-        :type="hasMore ? 'primary' : 'info'"
-        :loading="loading"
-        :disabled="!hasMore"
-        @click="loadMore"
-        >{{ hasMore ? '查看更多' : '到底啦' }}</el-button
-      >
+    <div v-if="loading" class="load-more-loading">
+      <div class="loading-animation" />
+      <span class="load-more-text">加载中...</span>
     </div>
+    <div v-if="!hasMore" class="no-more">没有更多数据</div>
   </div>
 </template>
 
@@ -44,7 +44,7 @@ export default {
     return {
       cursor: this.initData.cursor, // 分页标识
       results: this.initData.results || [], // 列表数据
-      hasMore: this.initData.hasMore, // 是否有更多数据
+      hasMore: true, // 是否有更多数据
       loading: false, // 是否正在加载中
     }
   },
@@ -65,11 +65,12 @@ export default {
           params: _params,
         })
         this.cursor = ret.cursor
-        this.hasMore = ret.hasMore
         if (ret.results && ret.results.length) {
           ret.results.forEach((item) => {
             this.results.push(item)
           })
+        } else {
+          this.hasMore = false
         }
       } catch (err) {
         this.hasMore = false
@@ -100,11 +101,19 @@ export default {
 
 <style lang="scss" scoped>
 .load-more {
-  .has-more {
+  .load-more-loading {
     text-align: center;
-    margin: 10px auto;
-    button {
-      width: 150px;
+    font-size: 12px;
+    margin-top: 10px;
+
+    .loading-animation {
+      height: 12px;
+      width: 12px;
+    }
+
+    .load-more-text {
+      color: #000;
+      margin-left: 5px;
     }
   }
 

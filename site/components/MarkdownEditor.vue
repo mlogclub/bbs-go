@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import Vditor from 'vditor'
+import 'vditor/src/assets/scss/index.scss'
+
 export default {
   props: {
     editorId: {
@@ -33,79 +36,12 @@ export default {
       width: '100%',
     }
   },
-  mounted() {
-    this.doInit()
-  },
-  methods: {
-    /**
-     * 初始化编辑器
-     */
-    doInit() {
-      console.log('do init...')
-      const me = this
-      if (process.client) {
-        me.vditor = new window.Vditor(
-          me.editorId,
-          me.getOptions(function () {
-            me.vditor.setValue(me.value)
-          })
-        )
-      }
+  computed: {
+    isMobile() {
+      return this.$store.state.env.isMobile
     },
-    getOptions(afterFunc) {
-      const me = this
-      const userToken = me.$cookies.get('userToken')
-      return {
-        width: me.width,
-        height: me.height,
-        toolbar: me.getToolbars(),
-        mode: 'sv',
-        toolbarConfig: {
-          pin: false,
-          hide: false,
-        },
-        placeholder: me.placeholder,
-        cache: {
-          enable: false,
-        },
-        counter: {
-          enable: true,
-          type: 'text',
-        },
-        delay: 200,
-        theme: 'classic',
-        preview: {
-          mode: 'editor',
-          markdown: {
-            toc: true,
-            mark: true,
-          },
-          hljs: {
-            enable: true,
-            style: 'github',
-            lineNumber: true,
-          },
-        },
-        input(val) {
-          me.$emit('input', val)
-        },
-        ctrlEnter(val) {
-          me.$emit('input', val)
-          me.$emit('submit', val)
-        },
-        upload: {
-          accept: 'image/*',
-          url: '/api/upload/editor?userToken=' + userToken,
-          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
-          filename(name) {
-            return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
-          },
-        },
-        after: afterFunc || function () {},
-      }
-    },
-    getToolbars() {
-      if (this.$isMobile()) {
+    toolbars() {
+      if (this.isMobile) {
         return ['emoji', 'bold', 'italic', 'strike', 'fullscreen']
       } else {
         return [
@@ -144,12 +80,81 @@ export default {
         ]
       }
     },
+  },
+  mounted() {
+    // this.init()
+    this.createEditor()
+  },
+  methods: {
+    createEditor() {
+      if (process.client) {
+        const me = this
+        me.vditor = new Vditor(
+          me.editorId,
+          me.getOptions(function () {
+            me.vditor.setValue(me.value)
+          })
+        )
+      }
+    },
+    getOptions(afterFunc) {
+      const me = this
+      const userToken = me.$cookies.get('userToken')
+      return {
+        width: me.width,
+        height: me.height,
+        toolbar: me.toolbars,
+        mode: 'ir',
+        toolbarConfig: {
+          pin: false,
+          hide: false,
+        },
+        placeholder: me.placeholder,
+        cache: {
+          enable: false,
+        },
+        counter: {
+          enable: true,
+          type: 'text',
+        },
+        delay: 200,
+        theme: 'classic',
+        preview: {
+          mode: 'both',
+          markdown: {
+            toc: true,
+            mark: true,
+          },
+          hljs: {
+            enable: true,
+            style: 'github',
+            lineNumber: true,
+          },
+        },
+        input(val) {
+          me.$emit('input', val)
+        },
+        ctrlEnter(val) {
+          me.$emit('input', val)
+          me.$emit('submit', val)
+        },
+        upload: {
+          accept: 'image/*',
+          url: '/api/upload/editor?userToken=' + userToken,
+          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
+          filename(name) {
+            return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
+          },
+        },
+        after: afterFunc || function () {},
+      }
+    },
     /**
      * 清空编辑器内容
      */
     clear() {
       if (this.vditor) {
-        this.value = ''
+        this.$emit('input', '')
         this.vditor.setValue('')
         this.clearCache()
       }
@@ -162,21 +167,6 @@ export default {
         this.vditor.clearCache()
       }
     },
-  },
-  head() {
-    return {
-      link: [
-        {
-          rel: 'stylesheet',
-          href: '//cdn.jsdelivr.net/npm/vditor@3.5.5/dist/index.css',
-        },
-      ],
-      script: [
-        {
-          src: '//cdn.jsdelivr.net/npm/vditor@3.5.5/dist/index.min.js',
-        },
-      ],
-    }
   },
 }
 </script>

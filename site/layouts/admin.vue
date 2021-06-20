@@ -31,10 +31,10 @@
         class="navbar-menu"
       >
         <div class="navbar-start">
-          <a class="navbar-item" href="/admin">
+          <nuxt-link class="navbar-item" to="/admin">
             <i class="iconfont icon-dashboard"></i>
             <span>后台</span>
-          </a>
+          </nuxt-link>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
@@ -42,64 +42,64 @@
               <span>内容</span>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/admin/topics">
+              <nuxt-link class="navbar-item" to="/admin/topics">
                 <i class="iconfont icon-topic"></i>
                 <span>话题</span>
-              </a>
+              </nuxt-link>
 
-              <a class="navbar-item" href="/admin/articles">
+              <nuxt-link class="navbar-item" to="/admin/articles">
                 <i class="iconfont icon-article"></i>
                 <span>文章</span>
-              </a>
+              </nuxt-link>
 
-              <a class="navbar-item" href="/admin/comments">
+              <nuxt-link class="navbar-item" to="/admin/comments">
                 <i class="iconfont icon-comments"></i>
                 <span>评论</span>
-              </a>
+              </nuxt-link>
             </div>
           </div>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
               <i class="iconfont icon-tags"></i>
-              <span>节点</span>
+              <span>分类</span>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/admin/topics/nodes">
+              <nuxt-link class="navbar-item" to="/admin/topics/nodes">
                 <i class="iconfont icon-tag"></i>
                 <span>节点</span>
-              </a>
-              <a class="navbar-item" href="/admin/tags">
+              </nuxt-link>
+              <nuxt-link class="navbar-item" to="/admin/tags">
                 <i class="iconfont icon-tags"></i>
                 <span>标签</span>
-              </a>
+              </nuxt-link>
             </div>
           </div>
 
-          <a class="navbar-item" href="/admin/users">
+          <nuxt-link class="navbar-item" to="/admin/users">
             <i class="iconfont icon-username"></i>
             <span>用户</span>
-          </a>
-          <a class="navbar-item" href="/admin/links">
+          </nuxt-link>
+          <nuxt-link class="navbar-item" to="/admin/links">
             <i class="iconfont icon-link"></i>
             <span>友链</span>
-          </a>
-          <a class="navbar-item" href="/admin/settings">
+          </nuxt-link>
+          <nuxt-link class="navbar-item" to="/admin/settings">
             <i class="iconfont icon-setting"></i>
             <span>设置</span>
-          </a>
-          <a class="navbar-item" href="/admin/operate-log">
+          </nuxt-link>
+          <nuxt-link class="navbar-item" to="/admin/operate-log">
             <i class="iconfont icon-log"></i>
             <span>操作日志</span>
-          </a>
+          </nuxt-link>
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-success" href="/" target="_blank">
+              <nuxt-link class="button is-success" to="/">
                 <strong>查看网站</strong>
-              </a>
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -110,8 +110,6 @@
 </template>
 
 <script>
-// import '~/plugins/element-ui'
-
 export default {
   middleware: ['authenticated'],
   data() {
@@ -119,21 +117,15 @@ export default {
       navbarActive: false,
     }
   },
+  head() {
+    return {
+      title: 'BBS-GO管理',
+    }
+  },
   methods: {
     toggleNav() {
       this.navbarActive = !this.navbarActive
     },
-  },
-  head() {
-    return {
-      title: 'BBS-GO管理',
-      link: [
-        // {
-        //   rel: 'stylesheet',
-        //   href: '//unpkg.com/element-ui/lib/theme-chalk/index.css',
-        // },
-      ],
-    }
   },
 }
 </script>
