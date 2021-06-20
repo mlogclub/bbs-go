@@ -116,7 +116,7 @@
         <el-form-item label="标签">
           <el-select
             v-model="updateTagForm.tags"
-            style="width: 100%;"
+            style="width: 100%"
             multiple
             filterable
             allow-create

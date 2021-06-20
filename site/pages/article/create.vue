@@ -8,7 +8,7 @@
         <div class="message-body">
           发表文章前，请先前往
           <strong
-            ><nuxt-link to="/user/settings" style="color: #1878f3;"
+            ><nuxt-link to="/user/settings" style="color: #1878f3"
               >个人中心 &gt; 编辑资料</nuxt-link
             ></strong
           >
@@ -97,6 +97,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('发表文章'),
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.current
@@ -136,11 +141,6 @@ export default {
         this.$message.error(e.message || e)
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('发表文章'),
-    }
   },
 }
 </script>

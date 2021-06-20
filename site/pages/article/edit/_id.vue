@@ -100,6 +100,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('修改文章'),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current
@@ -133,11 +138,6 @@ export default {
         this.$message.error('提交失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('修改文章'),
-    }
   },
 }
 </script>

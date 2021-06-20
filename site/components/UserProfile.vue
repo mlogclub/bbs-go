@@ -11,9 +11,7 @@
           <span class="file-icon">
             <i class="iconfont icon-upload" />
           </span>
-          <span class="file-label">
-            更换背景
-          </span>
+          <span class="file-label"> 更换背景 </span>
         </span>
       </label>
     </div>

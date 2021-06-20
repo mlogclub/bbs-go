@@ -16,7 +16,7 @@
             地址：<a :href="link.url">{{ link.url }}</a>
           </div>
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px">
           <!-- 展示广告 -->
           <adsbygoogle ad-slot="1742173616" />
         </div>

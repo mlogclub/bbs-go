@@ -132,6 +132,7 @@ export default {
    */
   build: {
     // publicPath: 'https://file.mlog.club/static/nuxtclient/',
+    analyze: true,
     optimizeCSS: true,
     extractCSS: true,
     splitChunks: {
@@ -139,17 +140,6 @@ export default {
       pages: true,
       commons: true,
     },
-    postcss: {
-      preset: {
-        features: {
-          customProperties: false,
-        },
-      },
-    },
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {},
   },
   babel: {
     plugins: [

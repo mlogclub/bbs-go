@@ -3,9 +3,7 @@
     <div class="container">
       <div class="main-body no-bg">
         <div class="widget signup">
-          <div class="widget-header">
-            注册
-          </div>
+          <div class="widget-header">注册</div>
           <div class="widget-content">
             <div class="field">
               <label class="label">昵称</label>
@@ -75,7 +73,7 @@
               <label class="label">验证码</label>
               <div class="control has-icons-left">
                 <div class="field is-horizontal">
-                  <div class="field" style="width: 100%;">
+                  <div class="field" style="width: 100%">
                     <input
                       v-model="captchaCode"
                       class="input"
@@ -89,7 +87,7 @@
                   </div>
                   <div v-if="captchaUrl" class="field">
                     <a @click="showCaptcha"
-                      ><img :src="captchaUrl" style="height: 40px;"
+                      ><img :src="captchaUrl" style="height: 40px"
                     /></a>
                   </div>
                 </div>
@@ -98,9 +96,7 @@
 
             <div class="field">
               <div class="control">
-                <button class="button is-success" @click="signup">
-                  注册
-                </button>
+                <button class="button is-success" @click="signup">注册</button>
                 <github-login :ref-url="ref" />
                 <qq-login :ref-url="ref" />
               </div>
@@ -134,6 +130,11 @@ export default {
       captchaId: '',
       captchaUrl: '',
       captchaCode: '',
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle('注册'),
     }
   },
   mounted() {
@@ -173,11 +174,6 @@ export default {
         this.$message.error(e.message || e)
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('注册'),
-    }
   },
 }
 </script>

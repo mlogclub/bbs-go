@@ -1,5 +1,5 @@
 <template>
-  <section style="padding: 8px; margin: 8px;">
+  <section style="padding: 8px; margin: 8px">
     <div class="container">
       <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
@@ -8,7 +8,7 @@
         <div class="message-body">
           发表话题前，请先前往
           <strong
-            ><nuxt-link to="/user/settings" style="color: #1878f3;"
+            ><nuxt-link to="/user/settings" style="color: #1878f3"
               >个人中心 &gt; 编辑资料</nuxt-link
             ></strong
           >
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div v-if="postForm.type === 0" class="field" style="width: 100%;">
+        <div v-if="postForm.type === 0" class="field" style="width: 100%">
           <div class="control">
             <input
               v-model="postForm.title"
@@ -76,7 +76,7 @@
               class="input"
               type="text"
               placeholder="验证码"
-              style="max-width: 150px; margin-right: 20px;"
+              style="max-width: 150px; margin-right: 20px"
             />
             <span class="icon is-small is-left">
               <i class="iconfont icon-captcha" />
@@ -84,7 +84,7 @@
           </div>
           <div class="field">
             <a @click="showCaptcha">
-              <img :src="captchaUrl" style="height: 40px;" />
+              <img :src="captchaUrl" style="height: 40px" />
             </a>
           </div>
         </div>
@@ -108,7 +108,6 @@
 <script>
 export default {
   middleware: 'authenticated',
-  watchQuery: ['type', 'nodeId'],
   async asyncData({ $axios, query, store }) {
     // 节点
     const nodes = await $axios.get('/api/topic/nodes')
@@ -151,6 +150,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle(this.postForm.type === 1 ? '发动态' : '发帖子'),
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.current
@@ -163,6 +167,7 @@ export default {
       return this.config.createTopicEmailVerified && !this.user.emailVerified
     },
   },
+  watchQuery: ['type', 'nodeId'],
   mounted() {
     this.showCaptcha()
   },
@@ -233,11 +238,6 @@ export default {
       this.postForm.content = value.content
       this.postForm.imageList = value.imageList
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.postForm.type === 1 ? '发动态' : '发帖子'),
-    }
   },
 }
 </script>

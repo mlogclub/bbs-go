@@ -117,15 +117,15 @@ export default {
       navbarActive: false,
     }
   },
-  methods: {
-    toggleNav() {
-      this.navbarActive = !this.navbarActive
-    },
-  },
   head() {
     return {
       title: 'BBS-GO管理',
     }
+  },
+  methods: {
+    toggleNav() {
+      this.navbarActive = !this.navbarActive
+    },
   },
 }
 </script>

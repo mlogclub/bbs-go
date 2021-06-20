@@ -70,7 +70,7 @@
                   <span v-if="isPending">
                     <a
                       href="javascript:void(0)"
-                      style="cursor: default; text-decoration: none;"
+                      style="cursor: default; text-decoration: none"
                     >
                       <i class="iconfont icon-shenhe" />&nbsp;审核中
                     </a>
@@ -177,27 +177,23 @@ export default {
       })
       return
     }
-    const [
-      commentsPage,
-      favorited,
-      nearlyArticles,
-      relatedArticles,
-    ] = await Promise.all([
-      $axios.get('/api/comment/list', {
-        params: {
-          entityType: 'article',
-          entityId: article.articleId,
-        },
-      }),
-      $axios.get('/api/favorite/favorited', {
-        params: {
-          entityType: 'article',
-          entityId: params.id,
-        },
-      }),
-      $axios.get('/api/article/nearly/' + article.articleId),
-      $axios.get('/api/article/related/' + article.articleId),
-    ])
+    const [commentsPage, favorited, nearlyArticles, relatedArticles] =
+      await Promise.all([
+        $axios.get('/api/comment/list', {
+          params: {
+            entityType: 'article',
+            entityId: article.articleId,
+          },
+        }),
+        $axios.get('/api/favorite/favorited', {
+          params: {
+            entityType: 'article',
+            entityId: params.id,
+          },
+        }),
+        $axios.get('/api/article/nearly/' + article.articleId),
+        $axios.get('/api/article/related/' + article.articleId),
+      ])
 
     // 文章关键字
     let keywords = ''
@@ -228,6 +224,31 @@ export default {
       commentsPage,
       keywords,
       description,
+    }
+  },
+  head() {
+    return {
+      title: this.$siteTitle(this.article.title),
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'keywords', name: 'keywords', content: this.keywords },
+      ],
+      link: [
+        {
+          rel: 'stylesheet',
+          href: CommonHelper.highlightCss,
+        },
+      ],
+      script: [
+        {
+          type: 'text/javascript',
+          src: CommonHelper.highlightScript,
+          callback: () => {
+            // 客户端渲染的时候执行这里进行代码高亮
+            CommonHelper.initHighlight()
+          },
+        },
+      ],
     }
   },
   computed: {
@@ -299,31 +320,6 @@ export default {
         this.$message.error('收藏失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle(this.article.title),
-      meta: [
-        { hid: 'description', name: 'description', content: this.description },
-        { hid: 'keywords', name: 'keywords', content: this.keywords },
-      ],
-      link: [
-        {
-          rel: 'stylesheet',
-          href: CommonHelper.highlightCss,
-        },
-      ],
-      script: [
-        {
-          type: 'text/javascript',
-          src: CommonHelper.highlightScript,
-          callback: () => {
-            // 客户端渲染的时候执行这里进行代码高亮
-            CommonHelper.initHighlight()
-          },
-        },
-      ],
-    }
   },
 }
 </script>

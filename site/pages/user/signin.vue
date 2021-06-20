@@ -110,6 +110,11 @@ export default {
       captchaCode: '',
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('登录'),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current
@@ -195,11 +200,6 @@ export default {
       }
       return false
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('登录'),
-    }
   },
 }
 </script>

@@ -19,7 +19,7 @@
       :data="results"
       highlight-current-row
       border
-      style="width: 100%;"
+      style="width: 100%"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>

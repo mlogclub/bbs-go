@@ -42,6 +42,19 @@ export default {
     }
   },
   data() {},
+  head() {
+    return {
+      title: this.$siteTitle(),
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$siteDescription(),
+        },
+        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
+      ],
+    }
+  },
   methods: {
     twitterCreated(data) {
       if (this.topicsPage) {
@@ -52,18 +65,6 @@ export default {
         }
       }
     },
-  },
-  head() {
-    return {
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.$siteDescription(),
-        },
-        { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
-      ],
-    }
   },
 }
 </script>

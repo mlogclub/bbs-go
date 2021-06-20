@@ -8,7 +8,7 @@
       <div v-if="isNeedEmailVerify" class="comment-not-login">
         <div class="comment-login-div">
           请先前往
-          <nuxt-link style="font-weight: 700;" to="/user/settings"
+          <nuxt-link style="font-weight: 700" to="/user/settings"
             >个人中心 &gt; 编辑资料</nuxt-link
           >页面设置邮箱，并完成邮箱认证。
         </div>
@@ -33,7 +33,7 @@
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
         请
-        <a style="font-weight: 700;" @click="toLogin">登录</a>后发表观点
+        <a style="font-weight: 700" @click="toLogin">登录</a>后发表观点
       </div>
     </div>
 

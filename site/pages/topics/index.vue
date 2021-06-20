@@ -41,17 +41,6 @@ export default {
       console.error(e)
     }
   },
-  methods: {
-    twitterCreated(data) {
-      if (this.topicsPage) {
-        if (this.topicsPage.results) {
-          this.topicsPage.results.unshift(data)
-        } else {
-          this.topicsPage.results = [data]
-        }
-      }
-    },
-  },
   head() {
     return {
       title: this.$siteTitle('话题'),
@@ -64,6 +53,17 @@ export default {
         { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
       ],
     }
+  },
+  methods: {
+    twitterCreated(data) {
+      if (this.topicsPage) {
+        if (this.topicsPage.results) {
+          this.topicsPage.results.unshift(data)
+        } else {
+          this.topicsPage.results = [data]
+        }
+      }
+    },
   },
 }
 </script>

@@ -75,9 +75,7 @@
                 </div>
               </li>
             </ul>
-            <div v-else class="notification is-primary">
-              暂无消息
-            </div>
+            <div v-else class="notification is-primary">暂无消息</div>
             <pagination
               :page="messagesPage.page"
               url-prefix="/user/messages?p="

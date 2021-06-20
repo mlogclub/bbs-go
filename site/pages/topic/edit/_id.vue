@@ -21,7 +21,7 @@
           <div class="widget-content">
             <div class="field is-horizontal">
               <div class="field-body">
-                <div class="field" style="width: 100%;">
+                <div class="field" style="width: 100%">
                   <input
                     v-model="postForm.title"
                     class="input"
@@ -37,8 +37,9 @@
                         v-for="node in nodes"
                         :key="node.nodeId"
                         :value="node.nodeId"
-                        >{{ node.name }}</option
                       >
+                        {{ node.name }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -112,6 +113,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('修改话题'),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current
@@ -148,11 +154,6 @@ export default {
         this.$message.error('提交失败：' + (e.message || e))
       }
     },
-  },
-  head() {
-    return {
-      title: this.$siteTitle('修改话题'),
-    }
   },
 }
 </script>

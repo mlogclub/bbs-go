@@ -56,10 +56,10 @@
             <div class="topic-info">
               <span
                 v-if="item.status === 1"
-                style="color: red; font-weight: bold;"
+                style="color: red; font-weight: bold"
                 >已删除</span
               >
-              <span v-if="item.recommend" style="color: red; font-weight: bold;"
+              <span v-if="item.recommend" style="color: red; font-weight: bold"
                 >已推荐</span
               >
             </div>

@@ -2,9 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="widget">
-        <div class="widget-header">
-          关于
-        </div>
+        <div class="widget-header">关于</div>
         <div class="widget-content content">
           <h2>简介</h2>
           <p>

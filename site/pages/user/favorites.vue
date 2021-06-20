@@ -24,9 +24,7 @@
             <ul v-if="favorites && favorites.length" class="article-list">
               <li v-for="favorite in favorites" :key="favorite.favoriteId">
                 <article v-if="favorite.deleted" class="article-item">
-                  <div class="article-summary">
-                    收藏内容失效!!!
-                  </div>
+                  <div class="article-summary">收藏内容失效!!!</div>
                 </article>
                 <article v-else class="article-item">
                   <div class="article-title">
@@ -53,9 +51,7 @@
                 <a @click="list">查看更多&gt;&gt;</a>
               </li>
             </ul>
-            <div v-else class="notification is-primary">
-              暂无收藏
-            </div>
+            <div v-else class="notification is-primary">暂无收藏</div>
           </div>
         </div>
       </div>
