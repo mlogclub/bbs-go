@@ -2,7 +2,7 @@
   <div
     class="profile"
     :class="{ background: backgroundImage }"
-    :style="{ backgroundImage: 'url(' + user.smallBackgroundImage + ')' }"
+    :style="{ backgroundImage: 'url(' + localUser.smallBackgroundImage + ')' }"
   >
     <div v-if="isOwner" class="file is-info is-small change-bg">
       <label class="file-label">
@@ -18,25 +18,30 @@
     <div class="profile-info">
       <avatar
         v-if="backgroundImage"
-        :user="user"
+        :user="localUser"
         :round="true"
         :has-border="true"
         size="100"
         :extra-style="{ position: 'absolute', top: '50px' }"
       />
-      <avatar v-else :user="user" :round="true" size="100" />
+      <avatar v-else :user="localUser" :round="true" size="100" />
       <div class="meta">
         <h1>
-          <nuxt-link :to="'/user/' + user.id">{{ user.nickname }}</nuxt-link>
+          <nuxt-link :to="'/user/' + localUser.id">{{
+            localUser.nickname
+          }}</nuxt-link>
         </h1>
-        <div v-if="user.description" class="description">
-          <p>{{ user.description }}</p>
+        <div v-if="localUser.description" class="description">
+          <p>{{ localUser.description }}</p>
         </div>
-        <div v-if="user.homePage" class="homepage">
+        <div v-if="localUser.homePage" class="homepage">
           <i class="iconfont icon-home"></i>
-          <a :href="user.homePage" target="_blank" rel="external nofollow">{{
-            user.homePage
-          }}</a>
+          <a
+            :href="localUser.homePage"
+            target="_blank"
+            rel="external nofollow"
+            >{{ localUser.homePage }}</a
+          >
         </div>
       </div>
     </div>
@@ -51,9 +56,14 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      localUser: Object.assign({}, this.user),
+    }
+  },
   computed: {
     backgroundImage() {
-      return this.user.backgroundImage
+      return this.localUser.backgroundImage
     },
     currentUser() {
       return this.$store.state.user.current
@@ -61,7 +71,7 @@ export default {
     // 是否是主人态
     isOwner() {
       const current = this.$store.state.user.current
-      return this.user && current && this.user.id === current.id
+      return this.localUser && current && this.localUser.id === current.id
     },
   },
   methods: {
@@ -85,7 +95,7 @@ export default {
         })
 
         // 重新加载数据
-        this.user = await this.$store.dispatch('user/getCurrentUser')
+        this.localUser = await this.$store.dispatch('user/getCurrentUser')
 
         this.$message.success('背景设置成功')
       } catch (e) {

@@ -7,20 +7,20 @@
           <li>
             <span>积分</span><br />
             <nuxt-link to="/user/scores">
-              <b>{{ user.score }}</b>
+              <b>{{ localUser.score }}</b>
             </nuxt-link>
           </li>
           <li>
             <span>文章</span><br />
-            <b>{{ user.topicCount }}</b>
+            <b>{{ localUser.topicCount }}</b>
           </li>
           <li>
             <span>评论</span><br />
-            <b>{{ user.commentCount }}</b>
+            <b>{{ localUser.commentCount }}</b>
           </li>
           <li>
             <span>注册排名</span><br />
-            <b>{{ user.id }}</b>
+            <b>{{ localUser.id }}</b>
           </li>
         </ul>
       </div>
@@ -45,7 +45,7 @@
             </li>
           </template>
           <template v-if="isAdmin">
-            <li v-if="user.forbidden">
+            <li v-if="localUser.forbidden">
               <i class="iconfont icon-forbidden" />
               <a @click="removeForbidden">&nbsp;取消禁言</a>
             </li>
@@ -81,7 +81,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      localUser: Object.assign({}, this.user),
+    }
   },
   computed: {
     currentUser() {
@@ -90,7 +92,7 @@ export default {
     // 是否是主人态
     isOwner() {
       const current = this.$store.state.user.current
-      return this.user && current && this.user.id === current.id
+      return this.localUser && current && this.localUser.id === current.id
     },
     isSiteOwner() {
       return UserHelper.isOwner(this.currentUser)
@@ -106,10 +108,10 @@ export default {
     async forbidden(days) {
       try {
         await this.$axios.post('/api/user/forbidden', {
-          userId: this.user.id,
+          userId: this.localUser.id,
           days,
         })
-        this.user.forbidden = true
+        this.localUser.forbidden = true
         this.$message.success('禁言成功')
       } catch (e) {
         this.$message.error('禁言失败')
@@ -118,10 +120,10 @@ export default {
     async removeForbidden() {
       try {
         await this.$axios.post('/api/user/forbidden', {
-          userId: this.user.id,
+          userId: this.localUser.id,
           days: 0,
         })
-        this.user.forbidden = false
+        this.localUser.forbidden = false
         this.$message.success('取消禁言成功')
       } catch (e) {
         this.$message.error('取消禁言失败')
