@@ -185,7 +185,7 @@ export default {
       this.publishing = true
 
       if (this.$refs.simpleEditor && this.$refs.simpleEditor.isOnUpload()) {
-        this.$message.warning('图片正在上传中...请上传完成后提交')
+        this.$message.warning('正在上传中...请上传完成后提交')
         return
       }
 

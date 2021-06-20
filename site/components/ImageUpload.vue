@@ -262,6 +262,10 @@ export default {
       }
       return url
     },
+    clear() {
+      this.fileList = []
+      this.previewFiles = []
+    },
   },
 }
 </script>

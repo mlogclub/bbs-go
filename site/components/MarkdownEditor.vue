@@ -81,6 +81,14 @@ export default {
       }
     },
   },
+  watch: {
+    // value(newV, oldV) {
+    //   // props value数据变化之后修改vditor中的数据
+    //   if (!newV) {
+    //     this.clear()
+    //   }
+    // },
+  },
   mounted() {
     // this.init()
     this.createEditor()

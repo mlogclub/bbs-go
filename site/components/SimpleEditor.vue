@@ -5,8 +5,7 @@
         <i class="iconfont icon-image" @click="showImageUpload = true" />
       </div>
       <div class="publish-container">
-        <span class="tip">还能输入{{ maxWordCount - wordCount }}个字</span>
-        <!--<button class="button is-success is-small">发 布</button>-->
+        <span class="tip">{{ wordCount }} / {{ maxWordCount }}</span>
       </div>
     </div>
     <label class="simple-editor-input">
@@ -24,7 +23,7 @@
       <image-upload
         ref="imageUploader"
         v-model="post.imageList"
-        :on-upload.sync="onUpload"
+        :on-upload.sync="imageUploading"
         @input="onInput"
       />
     </div>
@@ -33,15 +32,26 @@
 
 <script>
 export default {
+  props: {
+    maxWordCount: {
+      type: Number,
+      default: 5000,
+    },
+    value: {
+      type: Object,
+      default() {
+        return {
+          content: '',
+          imageList: [],
+        }
+      },
+    },
+  },
   data() {
     return {
-      onUpload: false, // 是否正在上传中...
-      maxWordCount: 5000,
+      imageUploading: false, // 图片上传中...
       showImageUpload: false,
-      post: {
-        content: '',
-        imageList: [],
-      },
+      post: this.value,
     }
   },
   computed: {
@@ -54,6 +64,9 @@ export default {
     user() {
       return this.$store.state.user.current
     },
+    loading() {
+      return this.imageUploading
+    },
   },
   methods: {
     doSubmit() {
@@ -63,7 +76,7 @@ export default {
       this.$emit('input', this.post)
     },
     isOnUpload() {
-      return this.onUpload
+      return this.imageUploading
     },
     handleParse(e) {
       const items = e.clipboardData && e.clipboardData.items
@@ -105,6 +118,12 @@ export default {
         this.$refs.imageUploader.addFiles(files)
       }
     },
+    clear() {
+      this.post.content = ''
+      this.post.imageList = []
+      this.$refs.imageUploader.clear()
+      this.onInput()
+    },
   },
 }
 </script>
@@ -125,7 +144,7 @@ export default {
     padding: 0 10px;
     align-items: center;
     background: #ffffff;
-    position: sticky;
+    // position: sticky;
     top: 65px;
     z-index: 6;
     border-bottom: 1px solid $border-color-base;

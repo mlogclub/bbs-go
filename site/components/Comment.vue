@@ -15,15 +15,8 @@
       </div>
       <template v-else>
         <comment-input
-          v-if="mode === 'markdown'"
           ref="input"
-          :entity-id="entityId"
-          :entity-type="entityType"
-          @created="commentCreated"
-        />
-        <comment-text-input
-          v-else
-          ref="input"
+          :mode="mode"
           :entity-id="entityId"
           :entity-type="entityType"
           @created="commentCreated"

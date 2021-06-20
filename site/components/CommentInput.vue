@@ -8,11 +8,19 @@
           <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
         </div>
         <markdown-editor
+          v-if="mode === 'markdown'"
           ref="mdEditor"
-          v-model="content"
+          v-model="value.content"
           editor-id="createEditor"
           height="200px"
           placeholder="请发表你的观点..."
+          @submit="create"
+        />
+        <simple-editor
+          v-else
+          ref="simpleEditor"
+          v-model="value"
+          :max-word-count="500"
           @submit="create"
         />
       </div>
@@ -31,6 +39,10 @@
 <script>
 export default {
   props: {
+    mode: {
+      type: String,
+      default: 'markdown',
+    },
     entityType: {
       type: String,
       default: '',
@@ -44,7 +56,10 @@ export default {
   },
   data() {
     return {
-      content: '', // 内容
+      value: {
+        content: '', // 内容
+        imageList: [],
+      },
       sending: false, // 发送中
       quote: null, // 引用的对象
     }
@@ -59,7 +74,7 @@ export default {
   },
   methods: {
     async create() {
-      if (!this.content) {
+      if (!this.value.content) {
         this.$message.error('请输入评论内容')
         return
       }
@@ -67,18 +82,34 @@ export default {
         console.log('正在发送中，请不要重复提交...')
         return
       }
+      if (this.$refs.simpleEditor && this.$refs.simpleEditor.isOnUpload()) {
+        this.$message.warning('正在上传中...请上传完成后提交')
+        return
+      }
       this.sending = true
       try {
         const data = await this.$axios.post('/api/comment/create', {
+          contentType: this.mode === 'markdown' ? 'markdown' : 'text',
           entityType: this.entityType,
           entityId: this.entityId,
-          content: this.content,
+          content: this.value.content,
+          imageList:
+            this.value.imageList && this.value.imageList.length
+              ? JSON.stringify(this.value.imageList)
+              : '',
           quoteId: this.quote ? this.quote.commentId : '',
         })
         this.$emit('created', data)
-        this.content = ''
-        this.$refs.mdEditor.clear()
+
+        this.value.content = ''
+        this.value.imageList = []
         this.quote = null
+        if (this.$refs.mdEditor) {
+          this.$refs.mdEditor.clear()
+        }
+        if (this.$refs.simpleEditor) {
+          this.$refs.simpleEditor.clear()
+        }
       } catch (e) {
         console.error(e)
         this.$message.error(e.message || e)
