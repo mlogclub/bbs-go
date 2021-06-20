@@ -33,6 +33,7 @@
         </div>
 
         <div class="navbar-end">
+          <!--
           <div class="navbar-item searchFormDiv">
             <form id="searchForm" action="/search">
               <div class="control has-icons-right">
@@ -49,6 +50,7 @@
               </div>
             </form>
           </div>
+          -->
 
           <div class="navbar-item">
             <create-topic-btn />
