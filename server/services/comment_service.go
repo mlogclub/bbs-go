@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/json"
+	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/simple"
 
@@ -93,6 +95,16 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		Status:      constants.StatusOk,
 		CreateTime:  date.NowTimestamp(),
 	}
+
+	if len(form.ImageList) > 0 {
+		imageListStr, err := json.ToStr(form.ImageList)
+		if err == nil {
+			comment.ImageList = imageListStr
+		} else {
+			logrus.Error(err)
+		}
+	}
+
 	if err := s.Create(comment); err != nil {
 		return nil, err
 	}

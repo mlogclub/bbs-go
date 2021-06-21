@@ -124,6 +124,60 @@
       position: relative;
       padding-left: 45px;
       margin-top: -5px;
+
+      img {
+        max-width: 50%;
+      }
+
+      .comment-image-list {
+        margin-top: 10px;
+
+        .comment-image {
+          cursor: pointer;
+          text-align: center;
+
+          display: inline-block;
+          vertical-align: middle;
+          margin: 0 8px 8px 0;
+          background-color: #e8e8e8;
+          background-size: 32px 32px;
+          background-position: 50%;
+          background-repeat: no-repeat;
+          overflow: hidden;
+          position: relative;
+
+          width: 120px;
+          height: 120px;
+          line-height: 120px;
+
+          &>img {
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            max-width: 120px;
+            object-fit: cover;
+            transition: all 0.5s ease-out 0.1s;
+
+            &:hover {
+              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+              backface-visibility: hidden;
+            }
+          }
+
+          &.small {
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+
+            &>img {
+              width: 90px;
+              height: 90px;
+              line-height: 90px;
+              max-width: 90px;
+            }
+          }
+        }
+      }
     }
 
     .comment-quote {

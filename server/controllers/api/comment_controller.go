@@ -59,23 +59,7 @@ func (c *CommentController) PostCreate() *simple.JsonResult {
 	if err := services.UserService.CheckPostStatus(user); err != nil {
 		return simple.JsonError(err)
 	}
-
-	var (
-		entityType  = simple.FormValue(c.Ctx, "entityType")
-		entityId    = simple.FormValueInt64Default(c.Ctx, "entityId", 0)
-		content     = simple.FormValue(c.Ctx, "content")
-		quoteId     = simple.FormValueInt64Default(c.Ctx, "quoteId", 0)
-		contentType = simple.FormValue(c.Ctx, "contentType")
-	)
-
-	form := model.CreateCommentForm{
-		EntityType:  entityType,
-		EntityId:    entityId,
-		Content:     content,
-		QuoteId:     quoteId,
-		ContentType: contentType,
-	}
-
+	form := model.GetCreateCommentForm(c.Ctx)
 	if err := spam.CheckComment(user, form); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

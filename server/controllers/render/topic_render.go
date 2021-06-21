@@ -7,8 +7,6 @@ import (
 	"bbs-go/services"
 
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/json"
-	"github.com/sirupsen/logrus"
 )
 
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
@@ -83,23 +81,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 		} else {
 			rsp.Content = topic.Content
 		}
-		if simple.IsNotBlank(topic.ImageList) {
-			var images []model.ImageDTO
-			if err := json.Parse(topic.ImageList, &images); err == nil {
-				if len(images) > 0 {
-					var imageList []model.ImageInfo
-					for _, image := range images {
-						imageList = append(imageList, model.ImageInfo{
-							Url:     HandleOssImageStyleDetail(image.Url),
-							Preview: HandleOssImageStylePreview(image.Url),
-						})
-					}
-					rsp.ImageList = imageList
-				}
-			} else {
-				logrus.Error(err)
-			}
-		}
+		rsp.ImageList = buildImageList(topic.ImageList)
 	}
 
 	if topic.NodeId > 0 {

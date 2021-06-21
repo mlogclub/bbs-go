@@ -44,6 +44,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 		} else {
 			ret.Content = html.EscapeString(comment.Content)
 		}
+		ret.ImageList = buildImageList(comment.ImageList)
 	} else {
 		ret.Content = "内容已删除"
 	}

@@ -50,7 +50,7 @@
               <a @click="reply(comment)">回复</a>
             </span>
           </div>
-          <div class="comment-content content">
+          <div v-viewer class="comment-content content">
             <blockquote v-if="comment.quote" class="comment-quote">
               <div class="comment-quote-user">
                 <avatar :user="comment.quote.user" size="20" />
@@ -64,11 +64,37 @@
                 itemprop="text"
                 v-html="comment.quote.content"
               />
+              <div
+                v-if="comment.quote.imageList && comment.quote.imageList.length"
+                v-lazy-container="{ selector: 'img' }"
+                class="comment-image-list"
+              >
+                <div
+                  v-for="(image, imageIndex) in comment.quote.imageList"
+                  :key="imageIndex"
+                  class="comment-image small"
+                >
+                  <img :data-src="image.url" />
+                </div>
+              </div>
             </blockquote>
             <div
               v-lazy-container="{ selector: 'img' }"
               v-html="comment.content"
             ></div>
+            <div
+              v-if="comment.imageList && comment.imageList.length"
+              v-lazy-container="{ selector: 'img' }"
+              class="comment-image-list"
+            >
+              <div
+                v-for="(image, imageIndex) in comment.imageList"
+                :key="imageIndex"
+                class="comment-image"
+              >
+                <img :data-src="image.url" />
+              </div>
+            </div>
           </div>
         </li>
       </ul>

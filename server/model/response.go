@@ -124,6 +124,7 @@ type CommentResponse struct {
 	EntityType string           `json:"entityType"`
 	EntityId   int64            `json:"entityId"`
 	Content    string           `json:"content"`
+	ImageList  []ImageInfo      `json:"imageList"`
 	QuoteId    int64            `json:"quoteId"`
 	Quote      *CommentResponse `json:"quote"`
 	Status     int              `json:"status"`
