@@ -1,10 +1,34 @@
 <template>
-  <div :id="myId" :style="{ width: width, height: height }" class="vditor" />
+  <div class="bbsgoEditor">
+    <v-md-editor
+      v-model="content"
+      :left-toolbar="toolbars"
+      :right-toolbar="rightToolbar"
+      :height="height"
+      :placeholder="placeholder"
+      :disabled-menus="[]"
+      mode="edit"
+      @change="change"
+      @upload-image="uploadImage"
+    ></v-md-editor>
+  </div>
 </template>
 
 <script>
-import Vditor from 'vditor'
-import 'vditor/src/assets/scss/index.scss'
+import Vue from 'vue'
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+
+// highlightjs
+import hljs from 'highlight.js'
+
+VMdEditor.use(githubTheme, {
+  Hljs: hljs,
+})
+
+Vue.use(VMdEditor)
 
 export default {
   props: {
@@ -28,9 +52,9 @@ export default {
   data() {
     return {
       isLoading: true,
-      vditor: null,
       width: '100%',
       myId: this.editorId + '-' + new Date().getTime(),
+      content: this.value,
     }
   },
   computed: {
@@ -39,141 +63,81 @@ export default {
     },
     toolbars() {
       if (this.isMobile) {
-        return ['emoji', 'bold', 'italic', 'strike', 'fullscreen']
+        return 'h bold italic strikethrough'
       } else {
-        return [
-          'emoji',
-          'headings',
-          'bold',
-          'italic',
-          'strike',
-          'link',
-          '|',
-          'list',
-          'ordered-list',
-          'check',
-          'outdent',
-          'indent',
-          '|',
-          'quote',
-          'line',
-          'code',
-          'inline-code',
-          'upload',
-          'table',
-          '|',
-          'undo',
-          'redo',
-          '|',
-          'outline',
-          'edit-mode',
-          'preview',
-          'both',
-          'fullscreen',
-          {
-            name: 'more',
-            toolbar: ['devtools'],
-          },
-        ]
+        return 'undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code'
       }
     },
+    rightToolbar() {
+      if (this.$store.state.env.isMobile) {
+        return 'fullscreen'
+      }
+      return 'preview sync-scroll fullscreen'
+    },
   },
-  watch: {
-    // value(newV, oldV) {
-    //   // props value数据变化之后修改vditor中的数据
-    //   if (!newV) {
-    //     this.clear()
-    //   }
-    // },
-  },
-  mounted() {
-    // this.init()
-    this.createEditor()
-  },
+  mounted() {},
   methods: {
-    createEditor() {
-      if (process.client) {
-        const me = this
-        me.vditor = new Vditor(
-          me.myId,
-          me.getOptions(function () {
-            me.vditor.setValue(me.value)
-          })
-        )
+    /**
+     * 上传图片
+     */
+    async uploadImage(event, insertImage, files) {
+      if (!files || !files.length) {
+        return
+      }
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const formData = new FormData()
+        formData.append('image', file, file.name)
+        const ret = await this.$axios.post('/api/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        insertImage({
+          url: ret.url,
+          desc: ' ',
+        })
       }
     },
-    getOptions(afterFunc) {
-      const me = this
-      const userToken = me.$cookies.get('userToken')
-      return {
-        width: me.width,
-        height: me.height,
-        toolbar: me.toolbars,
-        mode: 'ir',
-        toolbarConfig: {
-          pin: false,
-          hide: false,
-        },
-        placeholder: me.placeholder,
-        cache: {
-          enable: false,
-        },
-        counter: {
-          enable: true,
-          type: 'text',
-        },
-        delay: 200,
-        theme: 'classic',
-        preview: {
-          mode: 'both',
-          markdown: {
-            toc: true,
-            mark: true,
-          },
-          hljs: {
-            enable: true,
-            style: 'github',
-            lineNumber: true,
-          },
-        },
-        input(val) {
-          me.$emit('input', val)
-        },
-        ctrlEnter(val) {
-          me.$emit('input', val)
-          me.$emit('submit', val)
-        },
-        upload: {
-          accept: 'image/*',
-          url: '/api/upload/editor?userToken=' + userToken,
-          linkToImgUrl: '/api/upload/fetch?userToken=' + userToken,
-          filename(name) {
-            return name.replace(/\?|\\|\/|:|\||<|>|\*|\[|\]|\s+/g, '-')
-          },
-        },
-        after: afterFunc || function () {},
-      }
+    change(value, render) {
+      this.$emit('input', value)
     },
     /**
      * 清空编辑器内容
      */
     clear() {
-      if (this.vditor) {
-        this.$emit('input', '')
-        this.vditor.setValue('')
-        this.clearCache()
-      }
+      this.content = ''
+      this.$emit('input', this.content)
     },
     /**
      * 清理缓存
      */
-    clearCache() {
-      if (this.vditor) {
-        this.vditor.clearCache()
-      }
-    },
+    clearCache() {},
   },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.bbsgoEditor {
+  .v-md-editor {
+    box-shadow: none !important;
+    // box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    border: 1px solid #ddd;
+
+    .v-md-editor__toolbar {
+      background-color: #fff;
+      padding: 3px;
+
+      .v-md-editor__toolbar-item {
+        font-size: 14px !important;
+      }
+    }
+
+    .v-md-editor__editor-wrapper {
+      background-color: #fff !important;
+    }
+
+    .v-md-editor__preview-wrapper {
+      background-color: rgb(251, 251, 251) !important;
+    }
+  }
+}
+</style>

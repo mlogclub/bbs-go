@@ -15,6 +15,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^1.7.6",
     "@nuxt/types": "^2.14.7",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/google-adsense": "^1.1.3",
