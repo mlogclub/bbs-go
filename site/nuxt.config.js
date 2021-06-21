@@ -132,7 +132,7 @@ export default {
    */
   build: {
     // publicPath: 'https://file.mlog.club/static/nuxtclient/',
-    analyze: true,
+    analyze: false,
     optimizeCSS: true,
     extractCSS: true,
     splitChunks: {
