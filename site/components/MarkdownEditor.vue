@@ -1,9 +1,5 @@
 <template>
-  <div
-    :id="editorId"
-    :style="{ width: width, height: height }"
-    class="vditor"
-  />
+  <div :id="myId" :style="{ width: width, height: height }" class="vditor" />
 </template>
 
 <script>
@@ -34,6 +30,7 @@ export default {
       isLoading: true,
       vditor: null,
       width: '100%',
+      myId: this.editorId + '-' + new Date().getTime(),
     }
   },
   computed: {
@@ -98,7 +95,7 @@ export default {
       if (process.client) {
         const me = this
         me.vditor = new Vditor(
-          me.editorId,
+          me.myId,
           me.getOptions(function () {
             me.vditor.setValue(me.value)
           })
