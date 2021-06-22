@@ -10,6 +10,8 @@
       mode="edit"
       @change="change"
       @upload-image="uploadImage"
+      @keydown.ctrl.enter.native="submit"
+      @keydown.meta.enter.native="submit"
     ></v-md-editor>
   </div>
 </template>
@@ -77,6 +79,9 @@ export default {
   },
   mounted() {},
   methods: {
+    submit() {
+      this.$emit('submit', this.content)
+    },
     /**
      * 上传图片
      */
