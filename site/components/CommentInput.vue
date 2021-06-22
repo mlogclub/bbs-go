@@ -8,7 +8,7 @@
           <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
         </div>
         <markdown-editor
-          v-if="mode === 'markdown'"
+          v-if="inputMode === 'markdown'"
           ref="mdEditor"
           v-model="value.content"
           editor-id="commentCreateEditor"
@@ -21,6 +21,7 @@
           ref="simpleEditor"
           v-model="value"
           :max-word-count="500"
+          height="150px"
           @submit="create"
         />
       </div>
@@ -71,6 +72,16 @@ export default {
     user() {
       return this.$store.state.user.current
     },
+    inputMode() {
+      if (this.$store.state.env.isMobile) {
+        // 手机中，强制使用普通文本编辑器
+        return 'text'
+      }
+      return this.mode
+    },
+    contentType() {
+      return this.inputMode === 'markdown' ? 'markdown' : 'text'
+    },
   },
   methods: {
     async create() {
@@ -89,7 +100,7 @@ export default {
       this.sending = true
       try {
         const data = await this.$axios.post('/api/comment/create', {
-          contentType: this.mode === 'markdown' ? 'markdown' : 'text',
+          contentType: this.contentType,
           entityType: this.entityType,
           entityId: this.entityId,
           content: this.value.content,

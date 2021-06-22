@@ -2,7 +2,7 @@
   <div class="simple-editor">
     <div class="simple-editor-toolbar">
       <div class="act-btn">
-        <i class="iconfont icon-image" @click="showImageUpload = true" />
+        <i class="iconfont icon-image" @click="switchImageUpload" />
       </div>
       <div class="publish-container">
         <span class="tip">{{ wordCount }} / {{ maxWordCount }}</span>
@@ -12,6 +12,7 @@
       <textarea
         v-model="post.content"
         placeholder="请输入您要发表的内容 ..."
+        :style="{ 'min-height': height, height: height }"
         @input="onInput"
         @paste="handleParse"
         @drop="handleDrag"
@@ -46,6 +47,10 @@ export default {
         }
       },
     },
+    height: {
+      type: String,
+      default: '200px',
+    },
   },
   data() {
     return {
@@ -77,6 +82,13 @@ export default {
     },
     isOnUpload() {
       return this.imageUploading
+    },
+    switchImageUpload() {
+      if (!this.showImageUpload) {
+        // 打开文件弹窗
+        this.$refs.imageUploader.onClick()
+      }
+      this.showImageUpload = !this.showImageUpload
     },
     handleParse(e) {
       const items = e.clipboardData && e.clipboardData.items
@@ -190,7 +202,7 @@ export default {
       font-family: inherit;
       background: $background-color-editor;
       width: 100%;
-      min-height: 200px;
+      // min-height: 200px;
       border: 0;
       outline: 0;
       display: block;
