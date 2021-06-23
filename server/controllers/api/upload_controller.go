@@ -3,6 +3,7 @@ package api
 import (
 	"bbs-go/pkg/uploader"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -11,7 +12,8 @@ import (
 	"bbs-go/services"
 )
 
-const uploadMaxBytes int64 = 1024 * 1024 * 3 // 1M
+const uploadMaxM = 10
+const uploadMaxBytes int64 = 1024 * 1024 * 1024 * uploadMaxM
 
 type UploadController struct {
 	Ctx iris.Context
@@ -30,7 +32,7 @@ func (c *UploadController) Post() *simple.JsonResult {
 	defer file.Close()
 
 	if header.Size > uploadMaxBytes {
-		return simple.JsonErrorMsg("图片不能超过3M")
+		return simple.JsonErrorMsg("图片不能超过" + strconv.Itoa(uploadMaxM) + "M")
 	}
 
 	contentType := header.Header.Get("Content-Type")
@@ -108,8 +110,6 @@ func (c *UploadController) PostEditor() {
 			"succMap":  succMap,
 		},
 	})
-	return
-
 }
 
 // vditor 拷贝第三方图片
@@ -124,9 +124,7 @@ func (c *UploadController) PostFetch() {
 		return
 	}
 
-	var data map[string]string
-	data = make(map[string]string)
-
+	data := make(map[string]string)
 	err := c.Ctx.ReadJSON(&data)
 	if err != nil {
 		_, _ = c.Ctx.JSON(iris.Map{
