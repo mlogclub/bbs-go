@@ -30,11 +30,13 @@
 
 <script>
 export default {
-  async asyncData({ $axios, params, query }) {
+  async asyncData({ $axios, params, store }) {
+    const nodeId = parseInt(params.nodeId)
+    store.commit('env/setCurrentNodeId', nodeId) // 设置当前所在node
     const [node, nodes, topicsPage, scoreRank, links] = await Promise.all([
-      $axios.get('/api/topic/node?nodeId=' + params.nodeId),
+      $axios.get('/api/topic/node?nodeId=' + nodeId),
       $axios.get('/api/topic/nodes'),
-      $axios.get('/api/topic/topics?nodeId=' + params.nodeId),
+      $axios.get('/api/topic/topics?nodeId=' + nodeId),
       $axios.get('/api/user/score/rank'),
       $axios.get('/api/link/toplinks'),
     ])

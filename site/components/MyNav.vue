@@ -1,182 +1,33 @@
 <template>
-  <nav
-    ref="nav"
-    class="navbar has-shadow"
-    role="navigation"
-    aria-label="main navigation"
-  >
-    <div class="container">
-      <div class="navbar-brand">
-        <nuxt-link to="/" class="navbar-item">
-          <img :alt="config.siteTitle" src="~/assets/images/logo.png" />
-        </nuxt-link>
-        <a
-          :class="{ 'is-active': navbarActive }"
-          class="navbar-burger burger"
-          data-target="navbarBasic"
-          @click="toggleNav"
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </a>
-      </div>
-      <div :class="{ 'is-active': navbarActive }" class="navbar-menu">
-        <div class="navbar-start">
-          <nuxt-link
-            v-for="(nav, index) in config.siteNavs"
-            :key="index"
-            :to="nav.url"
-            class="navbar-item"
-            >{{ nav.title }}</nuxt-link
-          >
-        </div>
-
-        <div class="navbar-end">
-          <!--
-          <div class="navbar-item searchFormDiv">
-            <form id="searchForm" action="/search">
-              <div class="control has-icons-right">
-                <input
-                  name="q"
-                  class="input"
-                  type="text"
-                  maxlength="30"
-                  placeholder="搜索"
-                />
-                <span class="icon is-medium is-right">
-                  <i class="iconfont icon-search" />
-                </span>
-              </div>
-            </form>
-          </div>
-          -->
-
-          <div class="navbar-item">
-            <create-topic-btn />
-          </div>
-
-          <msg-notice v-if="user" />
-
-          <div v-if="user" class="navbar-item has-dropdown is-hoverable">
-            <nuxt-link :to="'/user/' + user.id" class="navbar-link">
-              <strong>{{ user.nickname }}</strong>
-            </nuxt-link>
-            <div class="navbar-dropdown">
-              <nuxt-link class="navbar-item" :to="'/user/' + user.id">
-                <i class="iconfont icon-username" />&nbsp;个人中心
-              </nuxt-link>
-              <nuxt-link class="navbar-item" to="/user/favorites">
-                <i class="iconfont icon-favorites" />&nbsp;我的收藏
-              </nuxt-link>
-              <nuxt-link class="navbar-item" to="/user/settings">
-                <i class="iconfont icon-username" />&nbsp;编辑资料
-              </nuxt-link>
-              <nuxt-link v-if="isOwnerOrAdmin" class="navbar-item" to="/admin">
-                <i class="iconfont icon-dashboard" />&nbsp;后台管理
-              </nuxt-link>
-              <a class="navbar-item" @click="signout">
-                <i class="iconfont icon-log-out" />&nbsp;退出登录
-              </a>
-            </div>
-          </div>
-          <div v-else class="navbar-item">
-            <div class="buttons">
-              <nuxt-link class="button login-btn" to="/user/signin"
-                >登录
-              </nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div>
+    <pc-nav class="pc-nav" />
+    <mobile-nav class="mobile-nav" />
+  </div>
 </template>
 
 <script>
-import UserHelper from '~/common/UserHelper'
-
-export default {
-  data() {
-    return {
-      navbarActive: false,
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.state.user.current
-    },
-    isOwnerOrAdmin() {
-      return UserHelper.isOwner(this.user) || UserHelper.isAdmin(this.user)
-    },
-    config() {
-      return this.$store.state.config.config
-    },
-  },
-  methods: {
-    async signout() {
-      try {
-        await this.$store.dispatch('user/signout')
-        this.$linkTo('/')
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    toggleNav() {
-      this.navbarActive = !this.navbarActive
-    },
-  },
-}
+export default {}
 </script>
 
-<style lang="scss" scoped>
-.navbar {
-  /*opacity: 0.99;*/
-  /*border-bottom: 1px solid #e7edf3;*/
-
-  .navbar-item {
-    font-weight: 700;
+<style lang="scss">
+// 当现实顶部导航栏的时候，顶部预留一段空白，防止重叠
+body {
+  @media screen and (max-width: 768px) {
+    padding-top: 46px;
   }
+}
+</style>
 
-  .publish {
-    color: #fff;
-    background-color: #3174dc;
-    width: 100px;
-    &:hover {
-      color: #fff;
-      background-color: #4d91fa;
-    }
-  }
-
-  .login-btn {
-    //border-width: 2px;
-    border-color: #000;
-    &:hover {
-      color: #7e7e7e;
-      border-color: #7e7e7e;
-    }
+<style scoped>
+@media screen and (max-width: 768px) {
+  .pc-nav {
+    display: none !important;
   }
 }
 
-.searchFormDiv {
-  @media screen and (max-width: 1024px) {
-    display: none;
-  }
-  #searchForm {
-    .input {
-      box-shadow: none;
-      border-radius: 2px;
-      background-color: #fff;
-      transition: all 0.4s;
-      float: right;
-      position: relative;
-
-      &:focus {
-        background-color: #fff;
-        border-color: #e7672e;
-        outline: none;
-      }
-    }
+@media screen and (min-width: 768px) {
+  .mobile-nav {
+    display: none !important;
   }
 }
 </style>

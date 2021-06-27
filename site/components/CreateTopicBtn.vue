@@ -6,7 +6,9 @@
       @command="handlePostCommand"
     >
       <span class="el-dropdown-link">
-        <el-button type="primary" icon="el-icon-plus">发表</el-button>
+        <slot>
+          <el-button type="primary" icon="el-icon-plus">发表</el-button>
+        </slot>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="tweet" icon="iconfont icon-tweet2"

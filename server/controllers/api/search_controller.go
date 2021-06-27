@@ -2,13 +2,27 @@ package api
 
 import (
 	"bbs-go/controllers/render"
+	"bbs-go/model"
 	"bbs-go/pkg/es"
+	"bbs-go/services"
+
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
 
 type SearchController struct {
 	Ctx iris.Context
+}
+
+func (c *SearchController) GetRebuild() *simple.JsonResult {
+	go func() {
+		services.TopicService.Scan(func(topics []model.Topic) {
+			for _, topic := range topics {
+				es.UpdateTopicIndex(&topic)
+			}
+		})
+	}()
+	return simple.JsonSuccess()
 }
 
 func (c *SearchController) GetTopic() *simple.JsonResult {
