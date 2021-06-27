@@ -4,7 +4,7 @@
       <div class="left-container">
         <div class="main-content no-padding no-bg topics-wrapper">
           <div class="topics-nav">
-            <topics-nav :nodes="nodes" :current-node-id="-1" />
+            <topics-nav :nodes="nodes" />
           </div>
           <div class="topics-main">
             <load-more

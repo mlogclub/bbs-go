@@ -32,15 +32,17 @@
 <script>
 export default {
   props: {
-    currentNodeId: {
-      type: Number,
-      default: 0,
-    },
     nodes: {
       type: Array,
       default() {
         return []
       },
+    },
+  },
+  computed: {
+    currentNodeId() {
+      console.log('currentNodeId', this.$store.state.env.currentNodeId)
+      return this.$store.state.env.currentNodeId
     },
   },
 }
