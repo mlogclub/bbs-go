@@ -86,6 +86,12 @@ export default {
    */
   components: true,
   /*
+   ** Router property -  https://nuxtjs.org/docs/2.x/features/file-system-routing#the-router-property
+   */
+  router: {
+    middleware: ['resetEnv'],
+  },
+  /*
    ** Nuxt.js dev-modules
    */
   buildModules: [

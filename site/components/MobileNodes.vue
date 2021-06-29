@@ -63,7 +63,6 @@ export default {
       return arrTemp
     },
     currentNodeId() {
-      console.log('currentNodeId', this.$store.state.env.currentNodeId)
       return this.$store.state.env.currentNodeId
     },
   },
