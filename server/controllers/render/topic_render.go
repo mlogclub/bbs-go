@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/markdown"
 	"bbs-go/services"
+	"html"
 
 	"github.com/mlogclub/simple"
 )
@@ -69,7 +70,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 			content := markdown.ToHTML(topic.Content)
 			rsp.Content = handleHtmlContent(content)
 		} else {
-			rsp.Content = topic.Content
+			rsp.Content = html.EscapeString(topic.Content)
 		}
 	} else {
 		rsp.Summary = markdown.GetSummary(topic.Content, 128)
@@ -79,7 +80,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 		if simple.IsBlank(topic.Content) {
 			rsp.Content = "分享图片"
 		} else {
-			rsp.Content = topic.Content
+			rsp.Content = html.EscapeString(topic.Content)
 		}
 		rsp.ImageList = buildImageList(topic.ImageList)
 	}

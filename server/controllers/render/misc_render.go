@@ -2,6 +2,7 @@ package render
 
 import (
 	"bbs-go/pkg/urls"
+	"github.com/microcosm-cc/bluemonday"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -11,8 +12,15 @@ import (
 	"bbs-go/services"
 )
 
+func xssProtection(htmlContent string) string {
+	ugcProtection := bluemonday.UGCPolicy() // 用户生成内容模式
+	ugcProtection.AllowAttrs("class").OnElements("code")
+	return ugcProtection.Sanitize(htmlContent)
+}
+
 // handleHtmlContent 处理html内容
 func handleHtmlContent(htmlContent string) string {
+	htmlContent = xssProtection(htmlContent)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
 	if err != nil {
 		return htmlContent
