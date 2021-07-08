@@ -7,6 +7,9 @@
         </div>
       </div>
       <div class="nav-center">
+        <div class="menu-item active">
+          <nuxt-link to="/">首页</nuxt-link>
+        </div>
         <div
           class="menu-item"
           :class="{ active: isShowNodes }"
@@ -15,9 +18,6 @@
           频道
           <i v-if="isShowNodes" class="iconfont icon-drop-up" />
           <i v-else class="iconfont icon-drop-down" />
-        </div>
-        <div class="menu-item active">
-          <nuxt-link to="/">首页</nuxt-link>
         </div>
       </div>
       <div class="nav-right">
