@@ -35,37 +35,41 @@
       @blur="closeRecommendTags"
       @click="openRecommendTags"
     />
-    <div v-if="autocompleteTags.length > 0" class="autocomplete-tags">
-      <div class="tags-container">
-        <section class="tag-section">
-          <div
-            v-for="(item, index) in autocompleteTags"
-            :key="item"
-            :class="{ active: index === selectIndex }"
-            class="tag-item"
-            @click="selectTag(index)"
-            v-text="item"
-          />
-        </section>
-      </div>
-    </div>
-    <div v-if="showRecommendTags" class="recommend-tags">
-      <div class="tags-container">
-        <div class="header">
-          <span>推荐标签</span>
-          <span class="close-recommend"
-            ><i class="iconfont icon-close" @click="closeRecommendTags"
-          /></span>
+    <transition name="el-zoom-in-bottom">
+      <div v-show="autocompleteTags.length > 0" class="autocomplete-tags">
+        <div class="tags-container">
+          <section class="tag-section">
+            <div
+              v-for="(item, index) in autocompleteTags"
+              :key="item"
+              :class="{ active: index === selectIndex }"
+              class="tag-item"
+              @click="selectTag(index)"
+              v-text="item"
+            />
+          </section>
         </div>
-        <a
-          v-for="tag in recommendTags"
-          :key="tag"
-          class="tag-item"
-          @click="addRecommendTag(tag)"
-          v-text="tag"
-        />
       </div>
-    </div>
+    </transition>
+    <transition name="el-zoom-in-bottom">
+      <div v-show="showRecommendTags" class="recommend-tags">
+        <div class="tags-container">
+          <div class="header">
+            <span>推荐标签</span>
+            <span class="close-recommend"
+              ><i class="iconfont icon-close" @click="closeRecommendTags"
+            /></span>
+          </div>
+          <a
+            v-for="tag in recommendTags"
+            :key="tag"
+            class="tag-item"
+            @click="addRecommendTag(tag)"
+            v-text="tag"
+          />
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -275,11 +279,12 @@ export default {
     display: flex;
 
     span.tag-item {
-      margin: 5px 5px 5px 5px;
-      padding: 0 5px;
+      margin: 5px;
+      padding: 0 10px;
       background: #eee;
       color: #000;
       line-height: 30px;
+      border-radius: 5px;
 
       .text {
         text-align: center;
@@ -306,7 +311,7 @@ export default {
     z-index: 2000;
     left: 0;
     right: 0;
-    top: 38px;
+    top: 42px;
     bottom: 0;
     position: absolute;
 
@@ -340,7 +345,7 @@ export default {
     z-index: 2000;
     left: 0;
     right: 0;
-    top: 38px;
+    top: 42px;
     bottom: 0;
     position: absolute;
 
@@ -373,7 +378,7 @@ export default {
 
       .tag-item {
         padding: 0 11px;
-        border-radius: 11px;
+        border-radius: 5px;
         display: inline-block;
         color: #017e66;
         background-color: rgba(1, 126, 102, 0.08);
