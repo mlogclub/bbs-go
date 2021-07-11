@@ -1,7 +1,7 @@
 <template>
   <section class="main">
-    <div v-if="isNeedEmailVerify" class="container">
-      <article class="message is-warning">
+    <div class="container">
+      <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
           <p>请先验证邮箱</p>
         </div>
@@ -15,70 +15,47 @@
           页面设置邮箱，并完成邮箱认证。
         </div>
       </article>
-    </div>
-    <div v-else class="container main-container is-white left-main">
-      <div class="left-container">
-        <div class="widget">
-          <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li><nuxt-link to="/">首页</nuxt-link></li>
-                <li>
-                  <nuxt-link :to="'/user/' + user.id + '?tab=articles'">{{
-                    user.nickname
-                  }}</nuxt-link>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">文章</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="widget-content">
-            <div class="field">
-              <div class="control">
-                <input
-                  v-model="postForm.title"
-                  class="input"
-                  type="text"
-                  placeholder="标题"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <markdown-editor
-                  ref="mdEditor"
-                  v-model="postForm.content"
-                  editor-id="articleCreateEditor"
-                  placeholder="请输入内容，将图片复制或拖入编辑器可上传"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <tag-input v-model="postForm.tags" />
-              </div>
-            </div>
-
-            <div class="field is-grouped">
-              <div class="control">
-                <a
-                  :class="{ 'is-loading': publishing }"
-                  :disabled="publishing"
-                  class="button is-success"
-                  @click="submitCreate"
-                  >发表</a
-                >
-              </div>
-            </div>
+      <div v-else class="article-create-form">
+        <h1 class="title">发文章</h1>
+        <div class="field">
+          <div class="control">
+            <input
+              v-model="postForm.title"
+              class="input"
+              type="text"
+              placeholder="标题"
+            />
           </div>
         </div>
-      </div>
-      <div class="right-container">
-        <markdown-help />
+
+        <div class="field">
+          <div class="control">
+            <markdown-editor
+              ref="mdEditor"
+              v-model="postForm.content"
+              editor-id="articleCreateEditor"
+              placeholder="请输入内容，将图片复制或拖入编辑器可上传"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <tag-input v-model="postForm.tags" />
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <a
+              :class="{ 'is-loading': publishing }"
+              :disabled="publishing"
+              class="button is-success"
+              @click="submitCreate"
+              >发表</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -145,4 +122,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.article-create-form {
+  background: #ffffff;
+  padding: 30px;
+}
+</style>
