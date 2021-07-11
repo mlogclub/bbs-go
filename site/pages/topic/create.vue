@@ -1,5 +1,5 @@
 <template>
-  <section style="padding: 8px; margin: 8px">
+  <section class="main">
     <div class="container">
       <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div v-if="postForm.type === 0" class="field" style="width: 100%">
+        <div v-if="postForm.type === 0" class="field">
           <div class="control">
             <input
               v-model="postForm.title"
@@ -242,22 +242,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.topic-create-form {
-  background: #ffffff;
-  padding: 30px;
-  .tag {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #777;
-
-    &.selected {
-      color: #fff;
-      background: #1878f3;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

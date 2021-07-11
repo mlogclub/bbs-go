@@ -1,83 +1,61 @@
 <template>
   <section class="main">
-    <div class="container main-container is-white left-main">
-      <div class="left-container">
-        <div class="widget">
-          <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li><nuxt-link to="/">首页</nuxt-link></li>
-                <li>
-                  <nuxt-link :to="'/user/' + currentUser.id + '?tab=topics'">{{
-                    currentUser.nickname
-                  }}</nuxt-link>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">主题</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="widget-content">
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field" style="width: 100%">
-                  <input
-                    v-model="postForm.title"
-                    class="input"
-                    type="text"
-                    placeholder="请输入标题"
-                  />
-                </div>
-                <div class="field">
-                  <div class="select">
-                    <select v-model="postForm.nodeId">
-                      <option value="0">选择节点</option>
-                      <option
-                        v-for="node in nodes"
-                        :key="node.nodeId"
-                        :value="node.nodeId"
-                      >
-                        {{ node.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div class="container">
+      <div class="topic-create-form">
+        <h1 class="title">修改帖子</h1>
 
-            <div class="field">
-              <div class="control">
-                <markdown-editor
-                  v-model="postForm.content"
-                  editor-id="topicEditEditor"
-                  placeholder="可空，将图片复制或拖入编辑器可上传"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <tag-input v-model="postForm.tags" />
-              </div>
-            </div>
-
-            <div class="field is-grouped">
-              <div class="control">
-                <a
-                  :class="{ 'is-loading': publishing }"
-                  :disabled="publishing"
-                  class="button is-success"
-                  @click="submitCreate"
-                  >提交更改</a
-                >
-              </div>
+        <div class="field">
+          <div class="control">
+            <div
+              v-for="node in nodes"
+              :key="node.nodeId"
+              class="tag"
+              :class="{ selected: postForm.nodeId === node.nodeId }"
+              @click="postForm.nodeId = node.nodeId"
+            >
+              <span>{{ node.name }}</span>
             </div>
           </div>
         </div>
-      </div>
-      <div class="right-container">
-        <markdown-help />
+
+        <div class="field">
+          <div class="control">
+            <input
+              v-model="postForm.title"
+              class="input topic-title"
+              type="text"
+              placeholder="请输入帖子标题"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <markdown-editor
+              v-model="postForm.content"
+              editor-id="topicEditEditor"
+              placeholder="可空，将图片复制或拖入编辑器可上传"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <tag-input v-model="postForm.tags" />
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <a
+              :class="{ 'is-loading': publishing }"
+              :disabled="publishing"
+              class="button is-success"
+              @click="submitCreate"
+              >提交更改</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </section>
