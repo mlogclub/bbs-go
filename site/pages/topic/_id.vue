@@ -271,7 +271,7 @@ export default {
             },
           })
           this.favorited = false
-          this.$message.success('已取消收藏！')
+          this.$message.success('已取消收藏')
         } else {
           await this.$axios.get('/api/topic/favorite/' + topicId)
           this.favorited = true

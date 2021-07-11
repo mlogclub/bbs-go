@@ -309,11 +309,11 @@ export default {
             },
           })
           this.favorited = false
-          this.$message.success('已取消收藏！')
+          this.$message.success('已取消收藏')
         } else {
           await this.$axios.post('/api/article/favorite/' + articleId)
           this.favorited = true
-          this.$message.success('收藏成功！')
+          this.$message.success('收藏成功')
         }
       } catch (e) {
         console.error(e)
