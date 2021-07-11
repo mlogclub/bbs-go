@@ -5,21 +5,8 @@
         <user-profile :user="currentUser" />
         <div class="widget">
           <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li>
-                  <nuxt-link to="/">首页</nuxt-link>
-                </li>
-                <li>
-                  <nuxt-link :to="'/user/' + currentUser.id">{{
-                    currentUser.nickname
-                  }}</nuxt-link>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">消息</a>
-                </li>
-              </ul>
-            </nav>
+            <i class="iconfont icon-bell" />
+            <span>消息</span>
           </div>
 
           <div class="widget-content">

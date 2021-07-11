@@ -4,7 +4,10 @@
       <div class="left-container">
         <user-profile :user="currentUser" />
         <div class="widget">
-          <div class="widget-header">收藏列表</div>
+          <div class="widget-header">
+            <i class="iconfont icon-favorite" />
+            <span>收藏列表</span>
+          </div>
 
           <div class="widget-content">
             <ul v-if="favorites && favorites.length" class="favorite-list">
