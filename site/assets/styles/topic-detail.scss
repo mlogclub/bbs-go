@@ -6,13 +6,12 @@
   .topic-header {
     display: flex;
     margin: 0 10px;
-    // border-bottom: 1px solid $line-color-base;
 
-    @media screen and (max-width: 1024px) {
-      .topic-header-right {
-        display: none;
-      }
-    }
+    // @media screen and (max-width: 768px) {
+    //   .topic-header-right {
+    //     display: none;
+    //   }
+    // }
 
     .topic-header-left {
       margin: 10px 10px 0 0;
