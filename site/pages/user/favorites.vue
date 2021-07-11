@@ -4,50 +4,40 @@
       <div class="left-container">
         <user-profile :user="currentUser" />
         <div class="widget">
-          <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li><nuxt-link to="/">首页</nuxt-link></li>
-                <li>
-                  <nuxt-link :to="'/user/' + currentUser.id">{{
-                    currentUser.nickname
-                  }}</nuxt-link>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">收藏列表</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <div class="widget-header">收藏列表</div>
 
           <div class="widget-content">
-            <ul v-if="favorites && favorites.length" class="article-list">
-              <li v-for="favorite in favorites" :key="favorite.favoriteId">
-                <article v-if="favorite.deleted" class="article-item">
-                  <div class="article-summary">收藏内容失效!!!</div>
-                </article>
-                <article v-else class="article-item">
-                  <div class="article-title">
+            <ul v-if="favorites && favorites.length" class="favorite-list">
+              <li
+                v-for="favorite in favorites"
+                :key="favorite.favoriteId"
+                class="favorite-item"
+              >
+                <div v-if="favorite.deleted" class="favorite-item">
+                  <div class="favorite-summary">收藏内容失效</div>
+                </div>
+                <div v-else>
+                  <div class="favorite-title">
                     <a :href="favorite.url" target="_blank">{{
                       favorite.title
                     }}</a>
                   </div>
-                  <div class="article-summary">
+                  <div class="favorite-summary">
                     {{ favorite.content }}
                   </div>
-                  <div class="article-meta">
-                    <span class="article-meta-item"
+                  <div class="favorite-meta">
+                    <span class="favorite-meta-item"
                       ><nuxt-link :to="'/user/' + favorite.user.id">{{
                         favorite.user.nickname
                       }}</nuxt-link></span
                     >
-                    <span class="article-meta-item"
+                    <span class="favorite-meta-item"
                       ><time>{{ favorite.createTime | prettyDate }}</time></span
                     >
                   </div>
-                </article>
+                </div>
               </li>
-              <li v-if="hasMore" class="more">
+              <li v-if="hasMore" class="favorite-item more">
                 <a @click="list">查看更多&gt;&gt;</a>
               </li>
             </ul>
@@ -98,10 +88,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.article-list {
+.favorite-list {
   margin: 0 !important;
 
-  li {
+  .favorite-item {
+    overflow: hidden;
+    zoom: 1;
+    line-height: 24px;
+
     padding: 8px 0;
     zoom: 1;
     position: relative;
@@ -119,55 +113,47 @@ export default {
         font-weight: bold;
       }
     }
-  }
 
-  .article-item {
-    overflow: hidden;
-    zoom: 1;
-    line-height: 24px;
-  }
-}
+    .favorite-title {
+      a {
+        color: #999;
+        font-weight: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 18px;
+        line-height: 30px;
+      }
+    }
 
-article {
-  .article-title {
-    a {
-      color: #999;
-      font-weight: normal;
+    .favorite-summary {
+      color: #000;
       overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      text-align: justify;
+      padding-top: 6px;
+      word-break: break-all;
       text-overflow: ellipsis;
-      font-size: 18px;
-      line-height: 30px;
-    }
-  }
-
-  .article-summary {
-    color: #000;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    text-align: justify;
-    padding-top: 6px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    font-size: 14px;
-  }
-
-  .article-meta {
-    display: inline-block;
-    font-size: 13px;
-    padding-top: 6px;
-
-    .article-meta-item {
-      padding: 0 6px 0 0;
+      font-size: 14px;
     }
 
-    a {
-      color: #3273dc;
-    }
+    .favorite-meta {
+      display: inline-block;
+      font-size: 13px;
+      padding-top: 6px;
 
-    span {
-      color: #999;
+      .favorite-meta-item {
+        padding: 0 6px 0 0;
+      }
+
+      a {
+        color: #3273dc;
+      }
+
+      span {
+        color: #999;
+      }
     }
   }
 }
