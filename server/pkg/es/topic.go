@@ -4,11 +4,12 @@ import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
 	"context"
+	"strconv"
+
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
-	"strconv"
 )
 
 type TopicDocument struct {
@@ -59,7 +60,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 		return
 	}
 	if initClient() == nil {
-		logrus.Error(noConfigErr)
+		logrus.Error(errNoConfig)
 		return
 	}
 	doc := NewTopicDoc(topic)
@@ -81,7 +82,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 
 func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging *simple.Paging, err error) {
 	if initClient() == nil {
-		err = noConfigErr
+		err = errNoConfig
 		return
 	}
 

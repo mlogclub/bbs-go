@@ -3,17 +3,18 @@ package es
 import (
 	"bbs-go/pkg/config"
 	"errors"
+	"sync"
+
 	"github.com/mlogclub/simple"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
-	"sync"
 )
 
 var (
 	es          *elastic.Client
 	index       string
 	once        sync.Once
-	noConfigErr = errors.New("Es config not found. ")
+	errNoConfig = errors.New("es config not found. ")
 )
 
 func initClient() *elastic.Client {
@@ -27,7 +28,7 @@ func initClient() *elastic.Client {
 				elastic.SetSniff(false),
 			)
 		} else {
-			err = noConfigErr
+			err = errNoConfig
 		}
 		if err != nil {
 			logrus.Error(err)
