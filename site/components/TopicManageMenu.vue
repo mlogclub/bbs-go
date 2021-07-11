@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown v-if="hasPermission" @command="handleCommand">
+  <el-dropdown v-if="hasPermission" trigger="click" @command="handleCommand">
     <span class="el-dropdown-link">
       管理<i class="el-icon-arrow-down el-icon--right"></i>
     </span>
