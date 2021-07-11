@@ -20,15 +20,15 @@
 
         <div class="field">
           <div class="control">
-            <span
+            <div
               v-for="node in nodes"
               :key="node.nodeId"
               class="tag"
               :class="{ selected: postForm.nodeId === node.nodeId }"
               @click="postForm.nodeId = node.nodeId"
             >
-              {{ node.name }}
-            </span>
+              <span>{{ node.name }}</span>
+            </div>
           </div>
         </div>
 
@@ -248,6 +248,7 @@ export default {
   padding: 30px;
   .tag {
     margin-right: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 700;
@@ -257,11 +258,6 @@ export default {
       color: #fff;
       background: #1878f3;
     }
-  }
-
-  .topic-title {
-    //background-color: rgb(247, 247, 247);
-    //border: 1px solid hsla(0, 0%, 89.4%, 0.6);
   }
 }
 </style>
