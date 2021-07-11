@@ -4,21 +4,8 @@
       <div class="left-container">
         <div class="widget">
           <div class="widget-header">
-            <nav class="breadcrumb">
-              <ul>
-                <li>
-                  <nuxt-link to="/">首页</nuxt-link>
-                </li>
-                <li>
-                  <nuxt-link :to="'/user/' + user.id">{{
-                    user.nickname
-                  }}</nuxt-link>
-                </li>
-                <li class="is-active">
-                  <a href="#" aria-current="page">编辑资料</a>
-                </li>
-              </ul>
-            </nav>
+            <i class="iconfont icon-setting" />
+            <span>编辑资料</span>
           </div>
           <div class="widget-content">
             <div class="field is-horizontal">
