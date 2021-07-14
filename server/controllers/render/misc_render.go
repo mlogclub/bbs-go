@@ -47,11 +47,6 @@ func handleHtmlContent(htmlContent string) string {
 	// 处理图片
 	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
 		src := selection.AttrOr("src", "")
-		// 处理第三方图片
-		if strings.Contains(src, "qpic.cn") {
-			src = simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
-			// selection.SetAttr("src", src)
-		}
 
 		// 处理图片样式
 		src = HandleOssImageStyleDetail(src)

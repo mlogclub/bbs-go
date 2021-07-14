@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/go-resty/resty/v2"
 	"net/http"
 	"os"
 	"os/signal"
@@ -92,17 +91,6 @@ func Router() {
 		m.Party("/link").Handle(new(admin.LinkController))
 		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
-	})
-
-	app.Get("/api/img/proxy", func(i iris.Context) {
-		url := i.FormValue("url")
-		resp, err := resty.New().R().Get(url)
-		i.Header("Content-Type", "image/jpg")
-		if err == nil {
-			_, _ = i.Write(resp.Body())
-		} else {
-			logrus.Error(err)
-		}
 	})
 
 	server := &http.Server{Addr: ":" + config.Instance.Port}
