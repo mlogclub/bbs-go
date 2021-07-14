@@ -52,6 +52,6 @@ HEALTHCHECK --start-period=10s \
             --interval=15s \
             --timeout=5s \
             --retries=3 \
-            CMD curl -sSf http://localhost:8082/api/img/proxy || exit 1
+            CMD curl -sSf http://localhost:8082 || exit 1
 
 CMD ["./start.sh"]
