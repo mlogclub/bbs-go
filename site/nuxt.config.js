@@ -146,6 +146,12 @@ export default {
       pages: true,
       commons: true,
     },
+    postcss: {
+      // Add plugin names as key and arguments as value
+      // Install them before as dependencies with npm or yarn
+      plugins: {},
+      preset: {},
+    },
   },
   babel: {
     plugins: [

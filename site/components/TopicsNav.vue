@@ -41,7 +41,6 @@ export default {
   },
   computed: {
     currentNodeId() {
-      console.log('currentNodeId', this.$store.state.env.currentNodeId)
       return this.$store.state.env.currentNodeId
     },
   },
