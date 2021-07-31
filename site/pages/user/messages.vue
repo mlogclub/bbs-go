@@ -95,6 +95,11 @@ export default {
       hasMore: true,
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('消息'),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current

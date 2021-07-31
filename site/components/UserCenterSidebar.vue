@@ -45,6 +45,7 @@
             </li>
           </template>
           <template v-if="isAdmin">
+            <hr />
             <li v-if="localUser.forbidden">
               <i class="iconfont icon-forbidden" />
               <a @click="removeForbidden">&nbsp;取消禁言</a>
@@ -105,7 +106,20 @@ export default {
     },
   },
   methods: {
-    async forbidden(days) {
+    forbidden(days) {
+      const me = this
+      const msg = days > 0 ? '是否禁言该用户？' : '是否永久禁言该用户？'
+      this.$confirm(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          me.doForbidden(days)
+        })
+        .catch(() => {})
+    },
+    async doForbidden(days) {
       try {
         await this.$axios.post('/api/user/forbidden', {
           userId: this.localUser.id,

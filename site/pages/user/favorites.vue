@@ -68,6 +68,11 @@ export default {
       hasMore: true,
     }
   },
+  head() {
+    return {
+      title: this.$siteTitle('收藏'),
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.user.current
