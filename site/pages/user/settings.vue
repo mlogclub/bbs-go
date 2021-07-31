@@ -1,7 +1,7 @@
 <template>
   <section class="main">
     <div class="container">
-      <user-profile :user="currentUser" />
+      <user-profile :user="user" />
       <div class="container main-container right-main size-320">
         <user-center-sidebar :user="user" />
         <div class="right-container">

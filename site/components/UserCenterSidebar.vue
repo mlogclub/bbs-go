@@ -32,16 +32,16 @@
         <ul class="operations">
           <template v-if="isOwner">
             <li>
-              <i class="iconfont icon-edit" />
-              <nuxt-link to="/user/settings">&nbsp;编辑资料</nuxt-link>
-            </li>
-            <li>
               <i class="iconfont icon-message" />
               <nuxt-link to="/user/messages">&nbsp;消息</nuxt-link>
             </li>
             <li>
               <i class="iconfont icon-favorites" />
               <nuxt-link to="/user/favorites">&nbsp;收藏</nuxt-link>
+            </li>
+            <li>
+              <i class="iconfont icon-edit" />
+              <nuxt-link to="/user/settings">&nbsp;编辑资料</nuxt-link>
             </li>
           </template>
           <template v-if="isAdmin">
