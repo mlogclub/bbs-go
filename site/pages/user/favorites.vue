@@ -1,54 +1,58 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main size-320">
-      <div class="left-container">
-        <user-profile :user="currentUser" />
-        <div class="widget">
-          <div class="widget-header">
-            <i class="iconfont icon-favorite" />
-            <span>收藏列表</span>
-          </div>
+    <div class="container">
+      <user-profile :user="currentUser" />
+      <div class="container main-container right-main size-320">
+        <user-center-sidebar :user="currentUser" />
+        <div class="right-container">
+          <div class="widget">
+            <div class="widget-header">
+              <i class="iconfont icon-favorite" />
+              <span>收藏列表</span>
+            </div>
 
-          <div class="widget-content">
-            <ul v-if="favorites && favorites.length" class="favorite-list">
-              <li
-                v-for="favorite in favorites"
-                :key="favorite.favoriteId"
-                class="favorite-item"
-              >
-                <div v-if="favorite.deleted" class="favorite-item">
-                  <div class="favorite-summary">收藏内容失效</div>
-                </div>
-                <div v-else>
-                  <div class="favorite-title">
-                    <a :href="favorite.url" target="_blank">{{
-                      favorite.title
-                    }}</a>
+            <div class="widget-content">
+              <ul v-if="favorites && favorites.length" class="favorite-list">
+                <li
+                  v-for="favorite in favorites"
+                  :key="favorite.favoriteId"
+                  class="favorite-item"
+                >
+                  <div v-if="favorite.deleted" class="favorite-item">
+                    <div class="favorite-summary">收藏内容失效</div>
                   </div>
-                  <div class="favorite-summary">
-                    {{ favorite.content }}
+                  <div v-else>
+                    <div class="favorite-title">
+                      <a :href="favorite.url" target="_blank">{{
+                        favorite.title
+                      }}</a>
+                    </div>
+                    <div class="favorite-summary">
+                      {{ favorite.content }}
+                    </div>
+                    <div class="favorite-meta">
+                      <span class="favorite-meta-item"
+                        ><nuxt-link :to="'/user/' + favorite.user.id">{{
+                          favorite.user.nickname
+                        }}</nuxt-link></span
+                      >
+                      <span class="favorite-meta-item"
+                        ><time>{{
+                          favorite.createTime | prettyDate
+                        }}</time></span
+                      >
+                    </div>
                   </div>
-                  <div class="favorite-meta">
-                    <span class="favorite-meta-item"
-                      ><nuxt-link :to="'/user/' + favorite.user.id">{{
-                        favorite.user.nickname
-                      }}</nuxt-link></span
-                    >
-                    <span class="favorite-meta-item"
-                      ><time>{{ favorite.createTime | prettyDate }}</time></span
-                    >
-                  </div>
-                </div>
-              </li>
-              <li v-if="hasMore" class="favorite-item more">
-                <a @click="list">查看更多&gt;&gt;</a>
-              </li>
-            </ul>
-            <div v-else class="notification is-primary">暂无收藏</div>
+                </li>
+                <li v-if="hasMore" class="favorite-item more">
+                  <a @click="list">查看更多&gt;&gt;</a>
+                </li>
+              </ul>
+              <div v-else class="notification is-primary">暂无收藏</div>
+            </div>
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="currentUser" />
     </div>
   </section>
 </template>

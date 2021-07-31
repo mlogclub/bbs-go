@@ -1,186 +1,190 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main size-320">
-      <div class="left-container">
-        <div class="widget">
-          <div class="widget-header">
-            <i class="iconfont icon-setting" />
-            <span>编辑资料</span>
-          </div>
-          <div class="widget-content">
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">用户名：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <label v-if="user.username">{{ user.username }}</label>
-                    <a v-else @click="showSetUsername = true">点击设置</a>
-                  </div>
-                </div>
-              </div>
+    <div class="container">
+      <user-profile :user="currentUser" />
+      <div class="container main-container right-main size-320">
+        <user-center-sidebar :user="user" />
+        <div class="right-container">
+          <div class="widget">
+            <div class="widget-header">
+              <i class="iconfont icon-setting" />
+              <span>编辑资料</span>
             </div>
-
-            <!-- 邮箱 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">邮箱：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <template v-if="user.email">
-                      <label>{{ user.email }}</label>
-                      <a @click="showSetEmail = true">修改</a>
-                      <a
-                        v-if="!user.emailVerified"
-                        class="has-text-danger"
-                        style="font-weight: 700"
-                        @click="requestEmailVerify"
-                        >验证&gt;&gt;</a
-                      >
-                    </template>
-                    <template v-else>
-                      <a @click="showSetEmail = true">点击设置</a>
-                    </template>
-                  </div>
+            <div class="widget-content">
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">用户名：</label>
                 </div>
-              </div>
-            </div>
-
-            <!-- 密码 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">密码：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <template v-if="user.passwordSet">
-                      <label>密码已设置&nbsp;</label>
-                      <a @click="showUpdatePassword = true">点击修改</a>
-                    </template>
-                    <a v-else @click="showSetPassword = true">点击设置</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 头像 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">
-                  <span style="color: red">*&nbsp;</span>头像：
-                </label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <img
-                      v-if="user.avatar"
-                      :src="user.avatar"
-                      style="width: 150px; height: 150px"
-                    />
-                    <div class="file">
-                      <label class="file-label">
-                        <input
-                          class="file-input"
-                          type="file"
-                          accept="image/png,image/jpeg,image/gif"
-                          @change="uploadAvatar"
-                        />
-                        <span class="file-cta">
-                          <span class="file-icon">
-                            <i class="iconfont icon-upload" />
-                          </span>
-                          <span class="file-label">选择头像</span>
-                        </span>
-                      </label>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control has-icons-left">
+                      <label v-if="user.username">{{ user.username }}</label>
+                      <a v-else @click="showSetUsername = true">点击设置</a>
                     </div>
-                    <span style="font-weight: bold; color: red"
-                      >*图像必须为正方形，大小不要超过1M。</span
-                    >
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 昵称 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">
-                  <span style="color: red">*&nbsp;</span>昵称：
-                </label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="form.nickname"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="请输入昵称"
-                    />
-                    <span class="icon is-small is-left">
-                      <i class="iconfont icon-username" />
-                    </span>
+              <!-- 邮箱 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">邮箱：</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control has-icons-left">
+                      <template v-if="user.email">
+                        <label>{{ user.email }}</label>
+                        <a @click="showSetEmail = true">修改</a>
+                        <a
+                          v-if="!user.emailVerified"
+                          class="has-text-danger"
+                          style="font-weight: 700"
+                          @click="requestEmailVerify"
+                          >验证&gt;&gt;</a
+                        >
+                      </template>
+                      <template v-else>
+                        <a @click="showSetEmail = true">点击设置</a>
+                      </template>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 简介 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">简介：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <textarea
-                      v-model="form.description"
-                      class="textarea"
-                      rows="2"
-                      placeholder="一句话介绍你自己"
-                    />
+              <!-- 密码 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">密码：</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control has-icons-left">
+                      <template v-if="user.passwordSet">
+                        <label>密码已设置&nbsp;</label>
+                        <a @click="showUpdatePassword = true">点击修改</a>
+                      </template>
+                      <a v-else @click="showSetPassword = true">点击设置</a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 个人主页 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">个人主页：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <input
-                      v-model="form.homePage"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="请输入个人主页"
-                    />
-                    <span class="icon is-small is-left">
-                      <i class="iconfont icon-net" />
-                    </span>
+              <!-- 头像 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">
+                    <span style="color: red">*&nbsp;</span>头像：
+                  </label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                      <img
+                        v-if="user.avatar"
+                        :src="user.avatar"
+                        style="width: 150px; height: 150px"
+                      />
+                      <div class="file">
+                        <label class="file-label">
+                          <input
+                            class="file-input"
+                            type="file"
+                            accept="image/png,image/jpeg,image/gif"
+                            @change="uploadAvatar"
+                          />
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i class="iconfont icon-upload" />
+                            </span>
+                            <span class="file-label">选择头像</span>
+                          </span>
+                        </label>
+                      </div>
+                      <span style="font-weight: bold; color: red"
+                        >*图像必须为正方形，大小不要超过1M。</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label is-normal" />
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <a class="button is-success" @click="submitForm"
-                      >提交修改</a
-                    >
+              <!-- 昵称 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">
+                    <span style="color: red">*&nbsp;</span>昵称：
+                  </label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control has-icons-left">
+                      <input
+                        v-model="form.nickname"
+                        class="input"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="请输入昵称"
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="iconfont icon-username" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 简介 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">简介：</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                      <textarea
+                        v-model="form.description"
+                        class="textarea"
+                        rows="2"
+                        placeholder="一句话介绍你自己"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 个人主页 -->
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">个人主页：</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control has-icons-left">
+                      <input
+                        v-model="form.homePage"
+                        class="input"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="请输入个人主页"
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="iconfont icon-net" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field is-horizontal">
+                <div class="field-label is-normal" />
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                      <a class="button is-success" @click="submitForm"
+                        >提交修改</a
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -188,7 +192,6 @@
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="user" />
     </div>
 
     <!-- 设置用户名 -->

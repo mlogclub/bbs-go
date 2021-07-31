@@ -109,7 +109,7 @@ export default {
   display: flex;
   padding-top: 20px;
   margin: 0 10px;
-  border-top: 1px solid rgba(228, 228, 228, 0.6);
+  // border-top: 1px solid rgba(228, 228, 228, 0.6);
   color: #6d6d6d;
   font-size: 16px;
 }

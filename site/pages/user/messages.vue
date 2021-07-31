@@ -1,76 +1,78 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main size-320">
-      <div class="left-container">
-        <user-profile :user="currentUser" />
-        <div class="widget">
-          <div class="widget-header">
-            <i class="iconfont icon-bell" />
-            <span>消息</span>
-          </div>
+    <div class="container">
+      <user-profile :user="currentUser" />
+      <div class="container main-container right-main size-320">
+        <user-center-sidebar :user="currentUser" />
+        <div class="right-container">
+          <div class="widget">
+            <div class="widget-header">
+              <i class="iconfont icon-bell" />
+              <span>消息</span>
+            </div>
 
-          <div class="widget-content">
-            <ul
-              v-if="messagesPage && messagesPage.results"
-              class="message-list"
-            >
-              <li
-                v-for="message in messagesPage.results"
-                :key="message.messageId"
-                class="message-item"
+            <div class="widget-content">
+              <ul
+                v-if="messagesPage && messagesPage.results"
+                class="message-list"
               >
-                <div class="message-item-left">
-                  <avatar :user="message.from" size="40" :round="true" />
-                </div>
-                <div class="message-item-right">
-                  <div class="message-item-meta">
-                    <span v-if="message.from.id > 0" class="msg-nickname">
-                      <nuxt-link
-                        :to="'/user/' + message.from.id"
-                        target="_blank"
-                        >{{ message.from.nickname }}</nuxt-link
-                      >
-                    </span>
-                    <span v-else class="msg-nickname">
-                      <a href="javascript:void(0)" target="_blank">{{
-                        message.from.nickname
-                      }}</a>
-                    </span>
-                    <span class="msg-time">{{
-                      message.createTime | prettyDate
-                    }}</span>
-                    <span v-if="message.title" class="msg-title">
-                      {{ message.title }}
-                    </span>
+                <li
+                  v-for="message in messagesPage.results"
+                  :key="message.messageId"
+                  class="message-item"
+                >
+                  <div class="message-item-left">
+                    <avatar :user="message.from" size="40" :round="true" />
                   </div>
-                  <div class="content">
-                    <div class="msg-attr message-quote">
-                      {{ message.quoteContent }}
+                  <div class="message-item-right">
+                    <div class="message-item-meta">
+                      <span v-if="message.from.id > 0" class="msg-nickname">
+                        <nuxt-link
+                          :to="'/user/' + message.from.id"
+                          target="_blank"
+                          >{{ message.from.nickname }}</nuxt-link
+                        >
+                      </span>
+                      <span v-else class="msg-nickname">
+                        <a href="javascript:void(0)" target="_blank">{{
+                          message.from.nickname
+                        }}</a>
+                      </span>
+                      <span class="msg-time">{{
+                        message.createTime | prettyDate
+                      }}</span>
+                      <span v-if="message.title" class="msg-title">
+                        {{ message.title }}
+                      </span>
                     </div>
-                    <div class="msg-attr message-content">
-                      {{ message.content }}
-                    </div>
-                    <div
-                      v-if="message.detailUrl"
-                      class="msg-attr message-show-more"
-                    >
-                      <a :href="message.detailUrl" target="_blank"
-                        >点击查看详情&gt;&gt;</a
+                    <div class="content">
+                      <div class="msg-attr message-quote">
+                        {{ message.quoteContent }}
+                      </div>
+                      <div class="msg-attr message-content">
+                        {{ message.content }}
+                      </div>
+                      <div
+                        v-if="message.detailUrl"
+                        class="msg-attr message-show-more"
                       >
+                        <a :href="message.detailUrl" target="_blank"
+                          >点击查看详情&gt;&gt;</a
+                        >
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-            <div v-else class="notification is-primary">暂无消息</div>
-            <pagination
-              :page="messagesPage.page"
-              url-prefix="/user/messages?p="
-            />
+                </li>
+              </ul>
+              <div v-else class="notification is-primary">暂无消息</div>
+              <pagination
+                :page="messagesPage.page"
+                url-prefix="/user/messages?p="
+              />
+            </div>
           </div>
         </div>
       </div>
-      <user-center-sidebar :user="currentUser" />
     </div>
   </section>
 </template>
