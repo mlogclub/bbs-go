@@ -11,7 +11,7 @@
           <span class="file-icon">
             <i class="iconfont icon-upload" />
           </span>
-          <span class="file-label"> 更换背景 </span>
+          <span class="file-label">设置背景</span>
         </span>
       </label>
     </div>
@@ -112,6 +112,8 @@ export default {
   display: flex;
   margin-bottom: 10px;
   position: relative;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 
   .change-bg {
     position: absolute;
@@ -126,15 +128,15 @@ export default {
   .profile-info {
     display: flex;
     width: 100%;
-    padding: 10px;
+    padding: 10px 30px;
     background: #fff;
 
-    .avatar {
-      max-width: 66px;
-      max-height: 66px;
-      min-width: 66px;
-      min-height: 66px;
-    }
+    // .avatar {
+    //   max-width: 66px;
+    //   max-height: 66px;
+    //   min-width: 66px;
+    //   min-height: 66px;
+    // }
 
     .meta {
       margin-left: 18px;
@@ -179,15 +181,17 @@ export default {
     //background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
     background-size: cover;
     background-position: 50%;
+    // filter: blur(2px) contrast(0.8);
 
     .profile-info {
       margin-top: 100px;
       background-color: unset;
       background-image: linear-gradient(
         90deg,
-        #dce9f25c,
-        rgba(255, 255, 255, 0.76),
-        #dce9f25c
+        // #dce9f25c
+        #ffffffff,
+        rgba(255, 255, 255, 0.5),
+        #dce9f200
       );
 
       .meta {

@@ -1,5 +1,5 @@
 <template>
-  <div class="right-container">
+  <div class="left-container">
     <div class="widget">
       <div class="widget-header">个人成就</div>
       <div class="widget-content extra-info">

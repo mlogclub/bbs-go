@@ -55,6 +55,7 @@ export default {
     return {
       loadError: false,
       sizes: {
+        150: 'font-size: 60px;line-height: 150px;border-radius: 2px',
         100: 'font-size: 40px;line-height: 100px;border-radius: 2px',
         80: 'font-size: 32px;line-height: 80px;border-radius: 2px',
         70: 'font-size: 28px;line-height: 70px;border-radius: 2px',
