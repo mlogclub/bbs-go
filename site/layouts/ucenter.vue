@@ -1,15 +1,21 @@
 <template>
-  <section class="main">
-    <div class="container">
-      <user-profile :user="user" />
-      <div class="container main-container right-main size-320">
-        <user-center-sidebar :user="user" />
-        <div class="right-container">
-          <nuxt-child />
+  <div>
+    <my-nav />
+
+    <section class="main">
+      <div class="container">
+        <user-profile :user="user" />
+        <div class="container main-container right-main size-320">
+          <user-center-sidebar :user="user" />
+          <div class="right-container">
+            <nuxt />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <my-footer />
+  </div>
 </template>
 
 <script>
