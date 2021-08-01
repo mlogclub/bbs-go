@@ -8,8 +8,8 @@
         <div class="message-body">
           发表文章前，请先前往
           <strong
-            ><nuxt-link to="/user/settings" style="color: #1878f3"
-              >个人中心 &gt; 编辑资料</nuxt-link
+            ><nuxt-link to="/user/profile" style="color: #1878f3"
+              >个人中心 &gt; 个人资料</nuxt-link
             ></strong
           >
           页面设置邮箱，并完成邮箱认证。

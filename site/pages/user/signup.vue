@@ -157,7 +157,7 @@ export default {
           this.$linkTo(this.ref)
         } else {
           // 跳到个人主页
-          this.$linkTo('/user/settings')
+          this.$linkTo('/user/profile')
         }
       } catch (err) {
         this.$message.error(err.message || err)

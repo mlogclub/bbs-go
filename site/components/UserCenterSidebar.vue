@@ -41,7 +41,7 @@
             </li>
             <li>
               <i class="iconfont icon-edit" />
-              <nuxt-link to="/user/settings">&nbsp;编辑资料</nuxt-link>
+              <nuxt-link to="/user/profile">&nbsp;个人资料</nuxt-link>
             </li>
           </template>
           <template v-if="isAdmin">

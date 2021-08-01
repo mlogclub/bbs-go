@@ -71,8 +71,8 @@
               <nuxt-link class="navbar-item" to="/user/favorites">
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </nuxt-link>
-              <nuxt-link class="navbar-item" to="/user/settings">
-                <i class="iconfont icon-username" />&nbsp;编辑资料
+              <nuxt-link class="navbar-item" to="/user/profile">
+                <i class="iconfont icon-username" />&nbsp;个人资料
               </nuxt-link>
               <nuxt-link v-if="isOwnerOrAdmin" class="navbar-item" to="/admin">
                 <i class="iconfont icon-dashboard" />&nbsp;后台管理

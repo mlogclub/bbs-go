@@ -31,8 +31,8 @@
               >
             </div>
             <div class="sidebar-menu-item">
-              <nuxt-link class="sidebar-menu-item" to="/user/settings"
-                >编辑资料</nuxt-link
+              <nuxt-link class="sidebar-menu-item" to="/user/profile"
+                >个人资料</nuxt-link
               >
             </div>
             <div class="sidebar-menu-item">

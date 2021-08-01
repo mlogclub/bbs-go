@@ -11,13 +11,12 @@
               <div v-if="success">
                 恭喜，邮箱验证成功。你的邮箱为：{{
                   currentUser.email
-                }}，<nuxt-link to="/user/settings">点击前往资料页</nuxt-link>
+                }}，<nuxt-link to="/user/profile">点击前往资料页</nuxt-link>
               </div>
               <div v-else>
                 邮箱验证失败<span v-if="message" class="has-text-danger"
                   >&nbsp;原因：{{ message }}</span
-                >，请前往&nbsp;<nuxt-link to="/user/settings"
-                  >编辑资料</nuxt-link
+                >，请前往&nbsp;<nuxt-link to="/user/profile">个人资料</nuxt-link
                 >&nbsp;页面尝试重新发送验证邮件。
               </div>
             </div>
