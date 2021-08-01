@@ -1,49 +1,35 @@
 <template>
-  <section class="main">
-    <div class="container">
-      <user-profile :user="currentUser" />
-      <div class="container main-container right-main size-320">
-        <user-center-sidebar :user="currentUser" />
-        <div class="right-container">
-          <div class="widget">
-            <div class="widget-header">积分记录</div>
-            <div class="widget-content">
-              <ul class="score-logs">
-                <li
-                  v-for="scoreLog in scoreLogsPage.results"
-                  :key="scoreLog.id"
-                  :class="{ plus: scoreLog.type === 0 }"
-                >
-                  <span class="score-type">{{
-                    scoreLog.type === 0 ? '获得积分' : '减少积分'
-                  }}</span>
-                  <span class="score-score"
-                    ><i class="iconfont icon-score" /><span>{{
-                      scoreLog.score
-                    }}</span></span
-                  >
-                  <span class="score-description">{{
-                    scoreLog.description
-                  }}</span>
-                  <span class="score-time"
-                    >@{{ scoreLog.createTime | formatDate }}</span
-                  >
-                </li>
-              </ul>
-              <pagination
-                :page="scoreLogsPage.page"
-                url-prefix="/user/scores?p="
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="widget">
+    <div class="widget-header">积分记录</div>
+    <div class="widget-content">
+      <ul class="score-logs">
+        <li
+          v-for="scoreLog in scoreLogsPage.results"
+          :key="scoreLog.id"
+          :class="{ plus: scoreLog.type === 0 }"
+        >
+          <span class="score-type">{{
+            scoreLog.type === 0 ? '获得积分' : '减少积分'
+          }}</span>
+          <span class="score-score"
+            ><i class="iconfont icon-score" /><span>{{
+              scoreLog.score
+            }}</span></span
+          >
+          <span class="score-description">{{ scoreLog.description }}</span>
+          <span class="score-time"
+            >@{{ scoreLog.createTime | formatDate }}</span
+          >
+        </li>
+      </ul>
+      <pagination :page="scoreLogsPage.page" url-prefix="/user/scores?p=" />
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
 export default {
+  layout: 'ucenter',
   middleware: 'authenticated',
   async asyncData({ $axios, query }) {
     const [scoreLogsPage] = await Promise.all([
@@ -52,11 +38,6 @@ export default {
     return {
       scoreLogsPage,
     }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.state.user.current
-    },
   },
 }
 </script>

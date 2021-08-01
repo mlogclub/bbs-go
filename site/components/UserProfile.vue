@@ -119,7 +119,7 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
-    opacity: 0.7;
+    opacity: 0.5;
     &:hover {
       opacity: 1;
     }
