@@ -3,11 +3,12 @@ package services
 import (
 	"bbs-go/model/constants"
 	"errors"
+	"strconv"
+	"strings"
+
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/mlogclub/simple/number"
-	"strconv"
-	"strings"
 
 	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
@@ -167,12 +168,22 @@ func (s *sysConfigService) IsCreateCommentEmailVerified() bool {
 	return simple.EqualsIgnoreCase(value, "true") || simple.EqualsIgnoreCase(value, "1")
 }
 
+func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
+	siteNavs := cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
+	var siteNavsArr []model.ActionLink
+	if simple.IsNotBlank(siteNavs) {
+		if err := json.Parse(siteNavs, &siteNavsArr); err != nil {
+			logrus.Warn("站点导航数据错误", err)
+		}
+	}
+	return siteNavsArr
+}
+
 func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
 		siteTitle                  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		siteDescription            = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
 		siteKeywords               = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
-		siteNavs                   = cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
 		siteNotification           = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
 		recommendTags              = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
 		urlRedirect                = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
@@ -181,6 +192,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		articlePending             = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
 		topicCaptcha               = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr      = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
+		siteNavs                   = s.GetSiteNavs()
 		tokenExpireDays            = s.GetTokenExpireDays()
 		loginMethod                = s.GetLoginMethod()
 		createTopicEmailVerified   = s.IsCreateTopicEmailVerified()
@@ -192,13 +204,6 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	if simple.IsNotBlank(siteKeywords) {
 		if err := json.Parse(siteKeywords, &siteKeywordsArr); err != nil {
 			logrus.Warn("站点关键词数据错误", err)
-		}
-	}
-
-	var siteNavsArr []model.ActionLink
-	if simple.IsNotBlank(siteNavs) {
-		if err := json.Parse(siteNavs, &siteNavsArr); err != nil {
-			logrus.Warn("站点导航数据错误", err)
 		}
 	}
 
@@ -229,7 +234,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		SiteTitle:                  siteTitle,
 		SiteDescription:            siteDescription,
 		SiteKeywords:               siteKeywordsArr,
-		SiteNavs:                   siteNavsArr,
+		SiteNavs:                   siteNavs,
 		SiteNotification:           siteNotification,
 		RecommendTags:              recommendTagsArr,
 		UrlRedirect:                strings.ToLower(urlRedirect) == "true",

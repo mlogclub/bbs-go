@@ -184,9 +184,22 @@ $sidebarZIndex: 50;
       }
     }
 
-    .sidebar-message {
+    .sidebar-message,
+    .sidebar-navs {
       padding-bottom: 15px;
       border-bottom: 1px solid #F6F6F6;
+    }
+
+    .sidebar-navs {
+      display: block;
+
+      .sidebar-nav-item {
+        padding: 12px 0;
+
+        i {
+          font-size: 14px;
+        }
+      }
     }
 
     .sidebar-userinfo {

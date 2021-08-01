@@ -2,6 +2,16 @@
   <div class="mobile-sidebar">
     <transition name="fadeLeft">
       <div v-show="show" class="sidebar-container">
+        <div v-if="siteNavs && siteNavs.length" class="sidebar-navs">
+          <div
+            v-for="(nav, index) in siteNavs"
+            :key="index"
+            class="sidebar-nav-item"
+          >
+            <i class="iconfont icon-nav" />
+            <nuxt-link :to="nav.url">{{ nav.title }}</nuxt-link>
+          </div>
+        </div>
         <div class="sidebar-message">
           <i class="iconfont icon-message" />
           <nuxt-link to="/user/messages">消息</nuxt-link>
@@ -62,6 +72,10 @@ export default {
     },
     config() {
       return this.$store.state.config.config
+    },
+    siteNavs() {
+      const config = this.$store.state.config.config
+      return config.siteNavs || []
     },
   },
   methods: {
