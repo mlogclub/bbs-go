@@ -7,10 +7,12 @@
         class="msgicon"
         title="消息"
       >
-        <i class="iconfont icon-bell"></i>
+        <i class="iconfont icon-message"></i>
+        <span>消息</span>
         <sup v-if="msgcount > 0">{{ msgcount > 9 ? '9+' : msgcount }}</sup>
       </nuxt-link>
     </div>
+    <!--
     <div v-if="messages && messages.length" class="dropdown-menu">
       <div class="dropdown-content msglist-wrapper">
         <div class="msglist">
@@ -27,6 +29,7 @@
         </div>
       </div>
     </div>
+    -->
   </div>
 </template>
 
@@ -62,7 +65,7 @@ export default {
 .msg-notice {
   .msgicon {
     font-size: 16px;
-    color: #000;
+    color: #4a4a4a;
 
     &:hover {
       color: red;

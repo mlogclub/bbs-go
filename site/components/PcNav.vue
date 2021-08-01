@@ -56,9 +56,13 @@
 
           <msg-notice v-if="user" />
 
-          <div v-if="user" class="navbar-item has-dropdown is-hoverable">
+          <div
+            v-if="user"
+            class="navbar-item has-dropdown is-hoverable user-menus"
+          >
             <nuxt-link :to="'/user/' + user.id" class="navbar-link">
-              <strong>{{ user.nickname }}</strong>
+              <avatar :user="user" :size="30" round />
+              <span class="user-menus-nickname">{{ user.nickname }}</span>
             </nuxt-link>
             <div class="navbar-dropdown">
               <nuxt-link class="navbar-item" :to="'/user/' + user.id">
@@ -152,6 +156,12 @@ export default {
       color: #7e7e7e;
       border-color: #7e7e7e;
     }
+  }
+}
+
+.user-menus {
+  .user-menus-nickname {
+    margin-left: 5px;
   }
 }
 

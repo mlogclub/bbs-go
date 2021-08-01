@@ -3,7 +3,7 @@
     <transition name="fadeLeft">
       <div v-show="show" class="sidebar-container">
         <div class="sidebar-message">
-          <i class="iconfont icon-bell" />
+          <i class="iconfont icon-message" />
           <nuxt-link to="/user/messages">消息</nuxt-link>
         </div>
         <template v-if="user">

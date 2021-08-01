@@ -4,7 +4,7 @@
     :class="{ background: backgroundImage }"
     :style="{ backgroundImage: 'url(' + localUser.smallBackgroundImage + ')' }"
   >
-    <div v-if="isOwner" class="file is-info is-small change-bg">
+    <div v-if="isOwner" class="file is-light is-small change-bg">
       <label class="file-label">
         <input class="file-input" type="file" @change="uploadBackground" />
         <span class="file-cta">
@@ -160,7 +160,7 @@ export default {
 
       .description {
         font-size: 14px;
-        color: #555;
+        color: 000;
         margin-bottom: 6px;
       }
 

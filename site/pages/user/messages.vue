@@ -7,7 +7,7 @@
         <div class="right-container">
           <div class="widget">
             <div class="widget-header">
-              <i class="iconfont icon-bell" />
+              <i class="iconfont icon-message" />
               <span>消息</span>
             </div>
 
