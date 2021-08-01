@@ -110,21 +110,21 @@
           </div>
           <div class="field-body">
             <div class="field">
-              <!-- <div class="control has-icons-left">
-                      <input
-                        v-model="form.nickname"
-                        class="input"
-                        type="text"
-                        autocomplete="off"
-                        placeholder="请输入昵称"
-                      />
-                      <span class="icon is-small is-left">
-                        <i class="iconfont icon-username" />
-                      </span>
-                    </div> -->
-              <div class="control">
-                <label>{{ user.nickname || '' }}</label>
+              <div class="control has-icons-left">
+                <input
+                  v-model="form.nickname"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="请输入昵称"
+                />
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-username" />
+                </span>
               </div>
+              <!-- <div class="control">
+                <label>{{ user.nickname || '' }}</label>
+              </div> -->
             </div>
           </div>
         </div>
@@ -136,17 +136,17 @@
           </div>
           <div class="field-body">
             <div class="field">
-              <!-- <div class="control">
-                      <textarea
-                        v-model="form.description"
-                        class="textarea"
-                        rows="2"
-                        placeholder="一句话介绍你自己"
-                      />
-                    </div> -->
               <div class="control">
-                <div>{{ user.description || '' }}</div>
+                <textarea
+                  v-model="form.description"
+                  class="textarea"
+                  rows="2"
+                  placeholder="一句话介绍你自己"
+                />
               </div>
+              <!-- <div class="control">
+                <div>{{ user.description || '' }}</div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -158,19 +158,19 @@
           </div>
           <div class="field-body">
             <div class="field">
-              <!-- <div class="control has-icons-left">
-                      <input
-                        v-model="form.homePage"
-                        class="input"
-                        type="text"
-                        autocomplete="off"
-                        placeholder="请输入个人主页"
-                      />
-                      <span class="icon is-small is-left">
-                        <i class="iconfont icon-net" />
-                      </span>
-                    </div> -->
-              <div class="control">
+              <div class="control has-icons-left">
+                <input
+                  v-model="form.homePage"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="请输入个人主页"
+                />
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-net" />
+                </span>
+              </div>
+              <!-- <div class="control">
                 <a
                   v-if="user.homePage"
                   target="_blank"
@@ -178,6 +178,18 @@
                   :href="user.homePage"
                   >{{ user.homePage }}</a
                 >
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" @click="submitForm">
+                  提交修改
+                </button>
               </div>
             </div>
           </div>
@@ -381,7 +393,7 @@
 export default {
   layout: 'ucenter',
   middleware: 'authenticated',
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios }) {
     const user = await $axios.get('/api/user/current')
     const form = { ...user }
     return {
@@ -418,7 +430,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle(this.user.nickname),
+      title: this.$siteTitle(this.user.nickname + ' - 编辑资料'),
     }
   },
   methods: {
