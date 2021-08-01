@@ -73,18 +73,17 @@
               <!-- 头像 -->
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="label">
-                    <span style="color: red">*&nbsp;</span>头像：
-                  </label>
+                  <label class="label">头像：</label>
                 </div>
                 <div class="field-body">
                   <div class="field">
                     <div class="control">
-                      <img
+                      <!-- <img
                         v-if="user.avatar"
                         :src="user.avatar"
                         style="width: 150px; height: 150px"
-                      />
+                      /> -->
+                      <avatar :user="user" :size="150" />
                       <div class="file">
                         <label class="file-label">
                           <input
@@ -97,7 +96,7 @@
                             <span class="file-icon">
                               <i class="iconfont icon-upload" />
                             </span>
-                            <span class="file-label">选择头像</span>
+                            <span class="file-label">修改头像</span>
                           </span>
                         </label>
                       </div>
@@ -112,13 +111,11 @@
               <!-- 昵称 -->
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="label">
-                    <span style="color: red">*&nbsp;</span>昵称：
-                  </label>
+                  <label class="label">昵称：</label>
                 </div>
                 <div class="field-body">
                   <div class="field">
-                    <div class="control has-icons-left">
+                    <!-- <div class="control has-icons-left">
                       <input
                         v-model="form.nickname"
                         class="input"
@@ -129,6 +126,9 @@
                       <span class="icon is-small is-left">
                         <i class="iconfont icon-username" />
                       </span>
+                    </div> -->
+                    <div class="control">
+                      <label>{{ user.nickname || '' }}</label>
                     </div>
                   </div>
                 </div>
@@ -141,13 +141,16 @@
                 </div>
                 <div class="field-body">
                   <div class="field">
-                    <div class="control">
+                    <!-- <div class="control">
                       <textarea
                         v-model="form.description"
                         class="textarea"
                         rows="2"
                         placeholder="一句话介绍你自己"
                       />
+                    </div> -->
+                    <div class="control">
+                      <div>{{ user.description || '' }}</div>
                     </div>
                   </div>
                 </div>
@@ -160,7 +163,7 @@
                 </div>
                 <div class="field-body">
                   <div class="field">
-                    <div class="control has-icons-left">
+                    <!-- <div class="control has-icons-left">
                       <input
                         v-model="form.homePage"
                         class="input"
@@ -171,6 +174,15 @@
                       <span class="icon is-small is-left">
                         <i class="iconfont icon-net" />
                       </span>
+                    </div> -->
+                    <div class="control">
+                      <a
+                        v-if="user.homePage"
+                        target="_blank"
+                        rel="external nofollow"
+                        :href="user.homePage"
+                        >{{ user.homePage }}</a
+                      >
                     </div>
                   </div>
                 </div>
@@ -564,5 +576,9 @@ export default {
     margin: 0px;
     padding: 10px;
   }
+}
+
+.file-cta {
+  margin-top: 5px;
 }
 </style>

@@ -109,6 +109,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.avatar-size-150 {
+  width: 150px;
+  height: 150px;
+  min-width: 150px;
+  min-height: 150px;
+  border-radius: 2px;
+}
 .avatar-size-100 {
   width: 100px;
   height: 100px;
