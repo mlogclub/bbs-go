@@ -43,6 +43,18 @@ $sidebarZIndex: 50;
   .nav-center {
     display: flex;
 
+    @media screen and (max-width: 768px) {
+      & {
+        display: flex !important;
+      }
+    }
+
+    @media screen and (min-width: 768px) {
+      & {
+        display: none !important;
+      }
+    }
+
     .menu-item {
       font-size: 16px;
       // color: #999999;
