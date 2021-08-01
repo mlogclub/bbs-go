@@ -184,12 +184,11 @@
         </div>
 
         <div class="field is-horizontal">
+          <div class="field-label is-normal" />
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <button class="button is-primary" @click="submitForm">
-                  提交修改
-                </button>
+                <a class="button is-success" @click="submitForm">提交修改</a>
               </div>
             </div>
           </div>
