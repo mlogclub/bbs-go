@@ -29,37 +29,34 @@
     <div v-if="isOwner || isAdmin" class="widget">
       <div class="widget-header">操作</div>
       <div class="widget-content">
-        <ul class="operations">
-          <template v-if="isOwner">
+        <ul v-if="isOwner" class="operations">
+          <li>
+            <i class="iconfont icon-message" />
+            <nuxt-link to="/user/messages">&nbsp;消息</nuxt-link>
+          </li>
+          <li>
+            <i class="iconfont icon-favorites" />
+            <nuxt-link to="/user/favorites">&nbsp;收藏</nuxt-link>
+          </li>
+          <li>
+            <i class="iconfont icon-edit" />
+            <nuxt-link to="/user/profile">&nbsp;个人资料</nuxt-link>
+          </li>
+        </ul>
+        <ul v-else-if="isAdmin" class="operations">
+          <li v-if="localUser.forbidden">
+            <i class="iconfont icon-forbidden" />
+            <a @click="removeForbidden">&nbsp;取消禁言</a>
+          </li>
+          <template v-else>
             <li>
-              <i class="iconfont icon-message" />
-              <nuxt-link to="/user/messages">&nbsp;消息</nuxt-link>
-            </li>
-            <li>
-              <i class="iconfont icon-favorites" />
-              <nuxt-link to="/user/favorites">&nbsp;收藏</nuxt-link>
-            </li>
-            <li>
-              <i class="iconfont icon-edit" />
-              <nuxt-link to="/user/profile">&nbsp;个人资料</nuxt-link>
-            </li>
-          </template>
-          <template v-if="isAdmin">
-            <hr />
-            <li v-if="localUser.forbidden">
               <i class="iconfont icon-forbidden" />
-              <a @click="removeForbidden">&nbsp;取消禁言</a>
+              <a @click="forbidden(7)">&nbsp;禁言7天</a>
             </li>
-            <template v-else>
-              <li>
-                <i class="iconfont icon-forbidden" />
-                <a @click="forbidden(7)">&nbsp;禁言7天</a>
-              </li>
-              <li>
-                <i v-if="isSiteOwner" class="iconfont icon-forbidden" />
-                <a @click="forbidden(-1)">&nbsp;永久禁言</a>
-              </li>
-            </template>
+            <li>
+              <i v-if="isSiteOwner" class="iconfont icon-forbidden" />
+              <a @click="forbidden(-1)">&nbsp;永久禁言</a>
+            </li>
           </template>
         </ul>
       </div>
