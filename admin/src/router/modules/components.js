@@ -1,17 +1,17 @@
 /** When your routing table is too long, you can split it into small modules * */
 
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 const componentsRouter = {
-  path: '/components',
+  path: "/components",
   component: Layout,
-  redirect: 'noRedirect',
-  name: 'ComponentDemo',
+  redirect: "noRedirect",
+  name: "ComponentDemo",
   meta: {
-    title: 'Components',
-    icon: 'component'
+    title: "Components",
+    icon: "component",
   },
-  children: []
-}
+  children: [],
+};
 
-export default componentsRouter
+export default componentsRouter;

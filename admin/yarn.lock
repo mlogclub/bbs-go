@@ -1402,6 +1402,13 @@
   optionalDependencies:
     prettier "^1.18.2"
 
+"@vue/eslint-config-prettier@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npm.taobao.org/@vue/eslint-config-prettier/download/@vue/eslint-config-prettier-6.0.0.tgz#ad5912b308f4ae468458e02a2b05db0b9d246700"
+  integrity sha1-rVkSswj0rkaEWOAqKwXbC50kZwA=
+  dependencies:
+    eslint-config-prettier "^6.0.0"
+
 "@vue/eslint-config-standard@^5.1.2":
   version "5.1.2"
   resolved "https://registry.nlark.com/@vue/eslint-config-standard/download/@vue/eslint-config-standard-5.1.2.tgz?cache=0&sync_timestamp=1627637315759&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40vue%2Feslint-config-standard%2Fdownload%2F%40vue%2Feslint-config-standard-5.1.2.tgz#c5d55af894a3ae23b65b1af4a425777ac0170b42"
@@ -3619,6 +3626,13 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.nlark.com/escape-string-regexp/download/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+eslint-config-prettier@^6.0.0:
+  version "6.15.0"
+  resolved "https://registry.nlark.com/eslint-config-prettier/download/eslint-config-prettier-6.15.0.tgz#7f93f6cb7d45a92f1537a70ecc06366e1ac6fed9"
+  integrity sha1-f5P2y31FqS8VN6cOzAY2bhrG/tk=
+  dependencies:
+    get-stdin "^6.0.0"
+
 eslint-config-standard@^14.1.0:
   version "14.1.1"
   resolved "https://registry.nlark.com/eslint-config-standard/download/eslint-config-standard-14.1.1.tgz?cache=0&sync_timestamp=1621877447113&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-config-standard%2Fdownload%2Feslint-config-standard-14.1.1.tgz#830a8e44e7aef7de67464979ad06b406026c56ea"
@@ -3707,6 +3721,13 @@ eslint-plugin-node@^11.1.0:
     minimatch "^3.0.4"
     resolve "^1.10.1"
     semver "^6.1.0"
+
+eslint-plugin-prettier@^3.3.1:
+  version "3.4.1"
+  resolved "https://registry.nlark.com/eslint-plugin-prettier/download/eslint-plugin-prettier-3.4.1.tgz?cache=0&sync_timestamp=1630353166014&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-prettier%2Fdownload%2Feslint-plugin-prettier-3.4.1.tgz#e9ddb200efb6f3d05ffe83b1665a716af4a387e5"
+  integrity sha1-6d2yAO+289Bf/oOxZlpxavSjh+U=
+  dependencies:
+    prettier-linter-helpers "^1.0.0"
 
 eslint-plugin-promise@^4.2.1:
   version "4.3.1"
@@ -4031,6 +4052,11 @@ fast-deep-equal@^3.1.1:
   version "3.1.3"
   resolved "https://registry.npm.taobao.org/fast-deep-equal/download/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha1-On1WtVnWy8PrUSMlJE5hmmXGxSU=
+
+fast-diff@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/fast-diff/download/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
+  integrity sha1-c+4RmC2Gyq95WYKNUZz+kn+sXwM=
 
 fast-glob@^2.2.6:
   version "2.2.7"
@@ -4372,6 +4398,11 @@ get-stdin@^4.0.1:
   version "4.0.1"
   resolved "https://registry.nlark.com/get-stdin/download/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
   integrity sha1-uWjGsKBDhDJJAui/Gl3zJXmkUP4=
+
+get-stdin@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.nlark.com/get-stdin/download/get-stdin-6.0.0.tgz#9e09bf712b360ab9225e812048f71fde9c89657b"
+  integrity sha1-ngm/cSs2CrkiXoEgSPcf3pyJZXs=
 
 get-stream@^3.0.0:
   version "3.0.0"
@@ -7172,6 +7203,13 @@ prepend-http@^1.0.0:
   version "1.0.4"
   resolved "https://registry.nlark.com/prepend-http/download/prepend-http-1.0.4.tgz?cache=0&sync_timestamp=1628547439455&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprepend-http%2Fdownload%2Fprepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
+
+prettier-linter-helpers@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/prettier-linter-helpers/download/prettier-linter-helpers-1.0.0.tgz#d23d41fe1375646de2d0104d3454a3008802cf7b"
+  integrity sha1-0j1B/hN1ZG3i0BBNNFSjAIgCz3s=
+  dependencies:
+    fast-diff "^1.1.2"
 
 prettier@^1.18.2:
   version "1.19.1"

@@ -3,15 +3,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   components: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
-    ...mapGetters(['roles'])
-  }
-}
+    ...mapGetters(["roles"]),
+  },
+};
 </script>

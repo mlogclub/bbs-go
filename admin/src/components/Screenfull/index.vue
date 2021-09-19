@@ -5,47 +5,47 @@
 </template>
 
 <script>
-import screenfull from 'screenfull'
+import screenfull from "screenfull";
 
 export default {
-  name: 'Screenfull',
-  data () {
+  name: "Screenfull",
+  data() {
     return {
-      isFullscreen: false
-    }
+      isFullscreen: false,
+    };
   },
-  mounted () {
-    this.init()
+  mounted() {
+    this.init();
   },
-  beforeDestroy () {
-    this.destroy()
+  beforeDestroy() {
+    this.destroy();
   },
   methods: {
-    click () {
+    click() {
       if (!screenfull.enabled) {
         this.$message({
-          message: 'you browser can not work',
-          type: 'warning'
-        })
-        return false
+          message: "you browser can not work",
+          type: "warning",
+        });
+        return false;
       }
-      screenfull.toggle()
+      screenfull.toggle();
     },
-    change () {
-      this.isFullscreen = screenfull.isFullscreen
+    change() {
+      this.isFullscreen = screenfull.isFullscreen;
     },
-    init () {
+    init() {
       if (screenfull.enabled) {
-        screenfull.on('change', this.change)
+        screenfull.on("change", this.change);
       }
     },
-    destroy () {
+    destroy() {
       if (screenfull.enabled) {
-        screenfull.off('change', this.change)
+        screenfull.off("change", this.change);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

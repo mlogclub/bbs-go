@@ -12,19 +12,19 @@
 <script>
 export default {
   computed: {
-    roles () {
-      return this.$store.getters.roles
+    roles() {
+      return this.$store.getters.roles;
     },
     switchRoles: {
-      get () {
-        return this.roles[0]
+      get() {
+        return this.roles[0];
       },
-      set (val) {
-        this.$store.dispatch('user/changeRoles', val).then(() => {
-          this.$emit('change')
-        })
-      }
-    }
-  }
-}
+      set(val) {
+        this.$store.dispatch("user/changeRoles", val).then(() => {
+          this.$emit("change");
+        });
+      },
+    },
+  },
+};
 </script>

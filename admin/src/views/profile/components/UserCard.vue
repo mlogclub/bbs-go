@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
+import PanThumb from "@/components/PanThumb";
 
 export default {
   components: { PanThumb },
@@ -63,14 +63,14 @@ export default {
     user: {
       type: Object,
       default: () => ({
-        name: '',
-        email: '',
-        avatar: '',
-        roles: ''
-      })
-    }
-  }
-}
+        name: "",
+        email: "",
+        avatar: "",
+        roles: "",
+      }),
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

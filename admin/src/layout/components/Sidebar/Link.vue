@@ -6,30 +6,30 @@
 </template>
 
 <script>
-import { isExternal } from '@/utils/validate'
+import { isExternal } from "@/utils/validate";
 
 export default {
   props: {
     to: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    linkProps (url) {
+    linkProps(url) {
       if (isExternal(url)) {
         return {
-          is: 'a',
+          is: "a",
           href: url,
-          target: '_blank',
-          rel: 'noopener'
-        }
+          target: "_blank",
+          rel: "noopener",
+        };
       }
       return {
-        is: 'router-link',
-        to: url
-      }
-    }
-  }
-}
+        is: "router-link",
+        to: url,
+      };
+    },
+  },
+};
 </script>

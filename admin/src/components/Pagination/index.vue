@@ -15,79 +15,79 @@
 </template>
 
 <script>
-import { scrollTo } from '@/utils/scroll-to'
+import { scrollTo } from "@/utils/scroll-to";
 
 export default {
-  name: 'Pagination',
+  name: "Pagination",
   props: {
     total: {
       required: true,
-      type: Number
+      type: Number,
     },
     page: {
       type: Number,
-      default: 1
+      default: 1,
     },
     limit: {
       type: Number,
-      default: 20
+      default: 20,
     },
     pageSizes: {
       type: Array,
-      default () {
-        return [10, 20, 30, 50]
-      }
+      default() {
+        return [10, 20, 30, 50];
+      },
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper'
+      default: "total, sizes, prev, pager, next, jumper",
     },
     background: {
       type: Boolean,
-      default: true
+      default: true,
     },
     autoScroll: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hidden: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     currentPage: {
-      get () {
-        return this.page
+      get() {
+        return this.page;
       },
-      set (val) {
-        this.$emit('update:page', val)
-      }
+      set(val) {
+        this.$emit("update:page", val);
+      },
     },
     pageSize: {
-      get () {
-        return this.limit
+      get() {
+        return this.limit;
       },
-      set (val) {
-        this.$emit('update:limit', val)
-      }
-    }
+      set(val) {
+        this.$emit("update:limit", val);
+      },
+    },
   },
   methods: {
-    handleSizeChange (val) {
-      this.$emit('pagination', { page: this.currentPage, limit: val })
+    handleSizeChange(val) {
+      this.$emit("pagination", { page: this.currentPage, limit: val });
       if (this.autoScroll) {
-        scrollTo(0, 800)
+        scrollTo(0, 800);
       }
     },
-    handleCurrentChange (val) {
-      this.$emit('pagination', { page: val, limit: this.pageSize })
+    handleCurrentChange(val) {
+      this.$emit("pagination", { page: val, limit: this.pageSize });
       if (this.autoScroll) {
-        scrollTo(0, 800)
+        scrollTo(0, 800);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

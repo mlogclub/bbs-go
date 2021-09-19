@@ -12,17 +12,16 @@
 </template>
 
 <script>
-
 export default {
-  name: 'Guide',
-  data () {
+  name: "Guide",
+  data() {
     return {
-      driver: null
-    }
+      driver: null,
+    };
   },
-  mounted () {},
+  mounted() {},
   methods: {
-    guide () {}
-  }
-}
+    guide() {},
+  },
+};
 </script>

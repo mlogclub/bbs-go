@@ -18,19 +18,19 @@ export default {
     user: {
       type: Object,
       default: () => ({
-        name: '',
-        email: ''
-      })
-    }
+        name: "",
+        email: "",
+      }),
+    },
   },
   methods: {
-    submit () {
+    submit() {
       this.$message({
-        message: 'User information has been updated successfully',
-        type: 'success',
-        duration: 5 * 1000
-      })
-    }
-  }
-}
+        message: "User information has been updated successfully",
+        type: "success",
+        duration: 5 * 1000,
+      });
+    },
+  },
+};
 </script>

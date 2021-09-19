@@ -12,47 +12,47 @@
 </template>
 
 <script>
-import Sortable from 'sortablejs'
+import Sortable from "sortablejs";
 
 export default {
-  name: 'DragSelect',
+  name: "DragSelect",
   props: {
     value: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     selectVal: {
-      get () {
-        return [...this.value]
+      get() {
+        return [...this.value];
       },
-      set (val) {
-        this.$emit('input', [...val])
-      }
-    }
+      set(val) {
+        this.$emit("input", [...val]);
+      },
+    },
   },
-  mounted () {
-    this.setSort()
+  mounted() {
+    this.setSort();
   },
   methods: {
-    setSort () {
-      const el = this.$refs.dragSelect.$el.querySelectorAll('.el-select__tags > span')[0]
+    setSort() {
+      const el = this.$refs.dragSelect.$el.querySelectorAll(".el-select__tags > span")[0];
       this.sortable = Sortable.create(el, {
-        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
-        setData (dataTransfer) {
-          dataTransfer.setData('Text', '')
+        ghostClass: "sortable-ghost", // Class name for the drop placeholder,
+        setData(dataTransfer) {
+          dataTransfer.setData("Text", "");
           // to avoid Firefox bug
           // Detail see : https://github.com/RubaXa/Sortable/issues/1012
         },
         onEnd: (evt) => {
-          const targetRow = this.value.splice(evt.oldIndex, 1)[0]
-          this.value.splice(evt.newIndex, 0, targetRow)
-        }
-      })
-    }
-  }
-}
+          const targetRow = this.value.splice(evt.oldIndex, 1)[0];
+          this.value.splice(evt.newIndex, 0, targetRow);
+        },
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
