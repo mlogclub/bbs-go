@@ -15,20 +15,20 @@
 
 <script>
 export default {
-  name: "SidebarLogo",
+  name: 'SidebarLogo',
   props: {
     collapse: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
-      title: "Vue Element Admin",
-      logo: "https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png",
-    };
-  },
-};
+      title: 'Vue Element Admin',
+      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -29,27 +29,27 @@
 </template>
 
 <script>
-import errGif from "@/assets/401_images/401.gif";
+import errGif from '@/assets/401_images/401.gif'
 
 export default {
-  name: "Page401",
-  data() {
+  name: 'Page401',
+  data () {
     return {
       errGif: `${errGif}?${+new Date()}`,
-      ewizardClap: "https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646",
-      dialogVisible: false,
-    };
+      ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
+      dialogVisible: false
+    }
   },
   methods: {
-    back() {
+    back () {
       if (this.$route.query.noGoBack) {
-        this.$router.push({ path: "/dashboard" });
+        this.$router.push({ path: '/dashboard' })
       } else {
-        this.$router.go(-1);
+        this.$router.go(-1)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

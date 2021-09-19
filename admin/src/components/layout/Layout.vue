@@ -15,35 +15,35 @@
 </template>
 
 <script>
-import HeaderMenu from "@/components/layout/HeaderMenu.vue";
-import SideMenu from "@/components/layout/SideMenu.vue";
+import HeaderMenu from '@/components/layout/HeaderMenu.vue'
+import SideMenu from '@/components/layout/SideMenu.vue'
 
 export default {
   components: {
     HeaderMenu,
-    SideMenu,
+    SideMenu
   },
-  data() {
+  data () {
     return {
-      tabs: ["/"],
-      layoutContainerHeight: "100%",
-      routeConfigs: [],
-    };
+      tabs: ['/'],
+      layoutContainerHeight: '100%',
+      routeConfigs: []
+    }
   },
-  mounted() {
-    const me = this;
-    me.handleLayoutContainerHeight();
+  mounted () {
+    const me = this
+    me.handleLayoutContainerHeight()
     window.onresize = () => {
-      me.handleLayoutContainerHeight();
-    };
+      me.handleLayoutContainerHeight()
+    }
   },
   methods: {
-    handleLayoutContainerHeight() {
-      this.layoutContainerHeight = `${document.documentElement.offsetHeight - 60}px`;
-      console.log(document.documentElement.offsetHeight);
-    },
-  },
-};
+    handleLayoutContainerHeight () {
+      this.layoutContainerHeight = `${document.documentElement.offsetHeight - 60}px`
+      console.log(document.documentElement.offsetHeight)
+    }
+  }
+}
 </script>
 
 <style lang="scss">

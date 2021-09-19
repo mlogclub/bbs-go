@@ -30,57 +30,57 @@
 </template>
 
 <script>
-import ThemePicker from "@/components/ThemePicker";
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: { ThemePicker },
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     fixedHeader: {
-      get() {
-        return this.$store.state.settings.fixedHeader;
+      get () {
+        return this.$store.state.settings.fixedHeader
       },
-      set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "fixedHeader",
-          value: val,
-        });
-      },
+      set (val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'fixedHeader',
+          value: val
+        })
+      }
     },
     tagsView: {
-      get() {
-        return this.$store.state.settings.tagsView;
+      get () {
+        return this.$store.state.settings.tagsView
       },
-      set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "tagsView",
-          value: val,
-        });
-      },
+      set (val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'tagsView',
+          value: val
+        })
+      }
     },
     sidebarLogo: {
-      get() {
-        return this.$store.state.settings.sidebarLogo;
+      get () {
+        return this.$store.state.settings.sidebarLogo
       },
-      set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "sidebarLogo",
-          value: val,
-        });
-      },
-    },
+      set (val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'sidebarLogo',
+          value: val
+        })
+      }
+    }
   },
   methods: {
-    themeChange(val) {
-      this.$store.dispatch("settings/changeSetting", {
-        key: "theme",
-        value: val,
-      });
-    },
-  },
-};
+    themeChange (val) {
+      this.$store.dispatch('settings/changeSetting', {
+        key: 'theme',
+        value: val
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -11,14 +11,14 @@ export default {
   props: {
     className: {
       type: String,
-      default: "",
+      default: ''
     },
     text: {
       type: String,
-      default: "vue-element-admin",
-    },
-  },
-};
+      default: 'vue-element-admin'
+    }
+  }
+}
 </script>
 
 <style>

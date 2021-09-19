@@ -19,79 +19,79 @@
 
 <script>
 export default {
-  name: "Sticky",
+  name: 'Sticky',
   props: {
     stickyTop: {
       type: Number,
-      default: 0,
+      default: 0
     },
     zIndex: {
       type: Number,
-      default: 1,
+      default: 1
     },
     className: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
-  data() {
+  data () {
     return {
       active: false,
-      position: "",
+      position: '',
       width: undefined,
       height: undefined,
-      isSticky: false,
-    };
+      isSticky: false
+    }
   },
-  mounted() {
-    this.height = this.$el.getBoundingClientRect().height;
-    window.addEventListener("scroll", this.handleScroll);
-    window.addEventListener("resize", this.handleResize);
+  mounted () {
+    this.height = this.$el.getBoundingClientRect().height
+    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('resize', this.handleResize)
   },
-  activated() {
-    this.handleScroll();
+  activated () {
+    this.handleScroll()
   },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
-    window.removeEventListener("resize", this.handleResize);
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    sticky() {
+    sticky () {
       if (this.active) {
-        return;
+        return
       }
-      this.position = "fixed";
-      this.active = true;
-      this.width += "px";
-      this.isSticky = true;
+      this.position = 'fixed'
+      this.active = true
+      this.width += 'px'
+      this.isSticky = true
     },
-    handleReset() {
+    handleReset () {
       if (!this.active) {
-        return;
+        return
       }
-      this.reset();
+      this.reset()
     },
-    reset() {
-      this.position = "";
-      this.width = "auto";
-      this.active = false;
-      this.isSticky = false;
+    reset () {
+      this.position = ''
+      this.width = 'auto'
+      this.active = false
+      this.isSticky = false
     },
-    handleScroll() {
-      const { width } = this.$el.getBoundingClientRect();
-      this.width = width || "auto";
-      const offsetTop = this.$el.getBoundingClientRect().top;
+    handleScroll () {
+      const { width } = this.$el.getBoundingClientRect()
+      this.width = width || 'auto'
+      const offsetTop = this.$el.getBoundingClientRect().top
       if (offsetTop < this.stickyTop) {
-        this.sticky();
-        return;
+        this.sticky()
+        return
       }
-      this.handleReset();
+      this.handleReset()
     },
-    handleResize() {
+    handleResize () {
       if (this.isSticky) {
-        this.width = `${this.$el.getBoundingClientRect().width}px`;
+        this.width = `${this.$el.getBoundingClientRect().width}px`
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
