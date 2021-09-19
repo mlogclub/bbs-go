@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/layout'
+import adminRouter from './modules/admin'
 
 Vue.use(Router)
 
@@ -69,9 +70,13 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/Dashboard'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: {
+          title: '首页',
+          // icon: 'dashboard',
+          affix: true
+        }
       }
     ]
   },
@@ -97,6 +102,8 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   // TODO 添加自己的Routers
+  adminRouter,
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
