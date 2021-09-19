@@ -3,10 +3,7 @@
     <el-header class="layout-header">
       <header-menu />
     </el-header>
-    <el-container
-      class="layout-container"
-      :style="{height: layoutContainerHeight}"
-    >
+    <el-container class="layout-container" :style="{ height: layoutContainerHeight }">
       <el-aside class="layout-aside">
         <side-menu />
       </el-aside>
@@ -18,35 +15,35 @@
 </template>
 
 <script>
-import HeaderMenu from '@/components/layout/HeaderMenu.vue';
-import SideMenu from '@/components/layout/SideMenu.vue';
+import HeaderMenu from '@/components/layout/HeaderMenu.vue'
+import SideMenu from '@/components/layout/SideMenu.vue'
 
 export default {
   components: {
     HeaderMenu,
-    SideMenu,
+    SideMenu
   },
-  data() {
+  data () {
     return {
       tabs: ['/'],
       layoutContainerHeight: '100%',
-      routeConfigs: [],
-    };
+      routeConfigs: []
+    }
   },
-  mounted() {
-    const me = this;
-    me.handleLayoutContainerHeight();
+  mounted () {
+    const me = this
+    me.handleLayoutContainerHeight()
     window.onresize = () => {
-      me.handleLayoutContainerHeight();
-    };
+      me.handleLayoutContainerHeight()
+    }
   },
   methods: {
-    handleLayoutContainerHeight() {
-      this.layoutContainerHeight = `${document.documentElement.offsetHeight - 60}px`;
-      console.log(document.documentElement.offsetHeight);
-    },
-  },
-};
+    handleLayoutContainerHeight () {
+      this.layoutContainerHeight = `${document.documentElement.offsetHeight - 60}px`
+      console.log(document.documentElement.offsetHeight)
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -56,7 +53,6 @@ export default {
   }
 
   .layout-container {
-
     .layout-aside {
       width: 220px !important;
 
@@ -94,7 +90,6 @@ export default {
             padding: 20px;
           }
         }
-
       }
     }
   }

@@ -2,22 +2,20 @@ module.exports = {
   root: true,
 
   env: {
-    node: true,
+    node: true
   },
 
   extends: [
-    // 'plugin:vue/essential',
-    // '@vue/airbnb',
-    'plugin:vue/recommended',
-    '@vue/airbnb',
+    'plugin:vue/essential',
+    '@vue/standard'
   ],
 
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: 'babel-eslint'
   },
 
   rules: {
     'no-console': 'off',
-    'no-debugger': 'off',
+    'no-debugger': 'off'
   },
-};
+}

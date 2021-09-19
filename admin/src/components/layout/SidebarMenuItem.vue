@@ -1,5 +1,5 @@
 <template>
-  <div/>
+  <div />
 </template>
 
 <script>
@@ -8,20 +8,18 @@ export default {
     // route object
     item: {
       type: Object,
-      required: true,
+      required: true
     },
     isNest: {
       type: Boolean,
-      default: false,
+      default: false
     },
     basePath: {
       type: String,
-      default: '',
-    },
-  },
-};
+      default: ''
+    }
+  }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -251,10 +251,15 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/parser@^7.15.4", "@babel/parser@^7.15.5", "@babel/parser@^7.7.0":
+"@babel/parser@^7.15.4", "@babel/parser@^7.15.5":
   version "7.15.6"
   resolved "https://registry.nlark.com/@babel/parser/download/@babel/parser-7.15.6.tgz?cache=0&sync_timestamp=1631216210940&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40babel%2Fparser%2Fdownload%2F%40babel%2Fparser-7.15.6.tgz#043b9aa3c303c0722e5377fef9197f4cf1796549"
   integrity sha1-BDuao8MDwHIuU3f++Rl/TPF5ZUk=
+
+"@babel/parser@^7.7.0":
+  version "7.15.7"
+  resolved "https://registry.nlark.com/@babel/parser/download/@babel/parser-7.15.7.tgz#0c3ed4a2eb07b165dfa85b3cc45c727334c4edae"
+  integrity sha1-DD7UousHsWXfqFs8xFxyczTE7a4=
 
 "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@^7.15.4":
   version "7.15.4"
@@ -1397,15 +1402,14 @@
   optionalDependencies:
     prettier "^1.18.2"
 
-"@vue/eslint-config-airbnb@^5.0.2":
-  version "5.3.0"
-  resolved "https://registry.nlark.com/@vue/eslint-config-airbnb/download/@vue/eslint-config-airbnb-5.3.0.tgz#896551d600816a06dff13fdd7d04fd5153379817"
-  integrity sha1-iWVR1gCBagbf8T/dfQT9UVM3mBc=
+"@vue/eslint-config-standard@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.nlark.com/@vue/eslint-config-standard/download/@vue/eslint-config-standard-5.1.2.tgz?cache=0&sync_timestamp=1627637315759&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40vue%2Feslint-config-standard%2Fdownload%2F%40vue%2Feslint-config-standard-5.1.2.tgz#c5d55af894a3ae23b65b1af4a425777ac0170b42"
+  integrity sha1-xdVa+JSjriO2Wxr0pCV3esAXC0I=
   dependencies:
-    eslint-config-airbnb-base "^14.0.0"
-    eslint-import-resolver-node "^0.3.4"
-    eslint-import-resolver-webpack "^0.13.0"
-    eslint-plugin-import "^2.21.2"
+    eslint-config-standard "^14.1.0"
+    eslint-import-resolver-node "^0.3.3"
+    eslint-import-resolver-webpack "^0.12.1"
 
 "@vue/preload-webpack-plugin@^1.1.0":
   version "1.1.2"
@@ -1915,6 +1919,13 @@ aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.nlark.com/aws4/download/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha1-1h9G2DslGSUOJ4Ta9bCUeai0HFk=
+
+axios@^0.21.4:
+  version "0.21.4"
+  resolved "https://registry.nlark.com/axios/download/axios-0.21.4.tgz?cache=0&sync_timestamp=1630942656836&other_urls=https%3A%2F%2Fregistry.nlark.com%2Faxios%2Fdownload%2Faxios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
+  integrity sha1-xnuQ3AVo5cHPKwuFjEO6KOLtpXU=
+  dependencies:
+    follow-redirects "^1.14.0"
 
 babel-eslint@^10.1.0:
   version "10.1.0"
@@ -2733,11 +2744,6 @@ concat-stream@^1.5.0:
     inherits "^2.0.3"
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
-
-confusing-browser-globals@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.nlark.com/confusing-browser-globals/download/confusing-browser-globals-1.0.10.tgz#30d1e7f3d1b882b25ec4933d1d1adac353d20a59"
-  integrity sha1-MNHn89G4grJexJM9HRraw1PSClk=
 
 connect-history-api-fallback@^1.6.0:
   version "1.6.0"
@@ -3613,16 +3619,12 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   resolved "https://registry.nlark.com/escape-string-regexp/download/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-airbnb-base@^14.0.0:
-  version "14.2.1"
-  resolved "https://registry.nlark.com/eslint-config-airbnb-base/download/eslint-config-airbnb-base-14.2.1.tgz#8a2eb38455dc5a312550193b319cdaeef042cd1e"
-  integrity sha1-ii6zhFXcWjElUBk7MZza7vBCzR4=
-  dependencies:
-    confusing-browser-globals "^1.0.10"
-    object.assign "^4.1.2"
-    object.entries "^1.1.2"
+eslint-config-standard@^14.1.0:
+  version "14.1.1"
+  resolved "https://registry.nlark.com/eslint-config-standard/download/eslint-config-standard-14.1.1.tgz?cache=0&sync_timestamp=1621877447113&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-config-standard%2Fdownload%2Feslint-config-standard-14.1.1.tgz#830a8e44e7aef7de67464979ad06b406026c56ea"
+  integrity sha1-gwqOROeu995nRkl5rQa0BgJsVuo=
 
-eslint-import-resolver-node@^0.3.4, eslint-import-resolver-node@^0.3.6:
+eslint-import-resolver-node@^0.3.3, eslint-import-resolver-node@^0.3.6:
   version "0.3.6"
   resolved "https://registry.nlark.com/eslint-import-resolver-node/download/eslint-import-resolver-node-0.3.6.tgz?cache=0&sync_timestamp=1629046428620&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-import-resolver-node%2Fdownload%2Feslint-import-resolver-node-0.3.6.tgz#4048b958395da89668252001dbd9eca6b83bacbd"
   integrity sha1-QEi5WDldqJZoJSAB29nsprg7rL0=
@@ -3630,21 +3632,20 @@ eslint-import-resolver-node@^0.3.4, eslint-import-resolver-node@^0.3.6:
     debug "^3.2.7"
     resolve "^1.20.0"
 
-eslint-import-resolver-webpack@^0.13.0:
-  version "0.13.1"
-  resolved "https://registry.nlark.com/eslint-import-resolver-webpack/download/eslint-import-resolver-webpack-0.13.1.tgz#6d2fb928091daf2da46efa1e568055555b2de902"
-  integrity sha1-bS+5KAkdry2kbvoeVoBVVVst6QI=
+eslint-import-resolver-webpack@^0.12.1:
+  version "0.12.2"
+  resolved "https://registry.nlark.com/eslint-import-resolver-webpack/download/eslint-import-resolver-webpack-0.12.2.tgz#769e86cd0c752a1536c19855ebd90aa14ce384ee"
+  integrity sha1-dp6GzQx1KhU2wZhV69kKoUzjhO4=
   dependencies:
     array-find "^1.0.0"
-    debug "^3.2.7"
+    debug "^2.6.9"
     enhanced-resolve "^0.9.1"
     find-root "^1.1.0"
     has "^1.0.3"
-    interpret "^1.4.0"
-    is-core-module "^2.4.0"
-    is-regex "^1.1.3"
-    lodash "^4.17.21"
-    resolve "^1.20.0"
+    interpret "^1.2.0"
+    lodash "^4.17.15"
+    node-libs-browser "^1.0.0 || ^2.0.0"
+    resolve "^1.13.1"
     semver "^5.7.1"
 
 eslint-loader@^2.2.1:
@@ -3666,7 +3667,15 @@ eslint-module-utils@^2.6.2:
     debug "^3.2.7"
     pkg-dir "^2.0.0"
 
-eslint-plugin-import@^2.20.2, eslint-plugin-import@^2.21.2:
+eslint-plugin-es@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.nlark.com/eslint-plugin-es/download/eslint-plugin-es-3.0.1.tgz#75a7cdfdccddc0589934aeeb384175f221c57893"
+  integrity sha1-dafN/czdwFiZNK7rOEF18iHFeJM=
+  dependencies:
+    eslint-utils "^2.0.0"
+    regexpp "^3.0.0"
+
+eslint-plugin-import@^2.20.2:
   version "2.24.2"
   resolved "https://registry.nlark.com/eslint-plugin-import/download/eslint-plugin-import-2.24.2.tgz#2c8cd2e341f3885918ee27d18479910ade7bb4da"
   integrity sha1-LIzS40HziFkY7ifRhHmRCt57tNo=
@@ -3687,9 +3696,31 @@ eslint-plugin-import@^2.20.2, eslint-plugin-import@^2.21.2:
     resolve "^1.20.0"
     tsconfig-paths "^3.11.0"
 
+eslint-plugin-node@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.nlark.com/eslint-plugin-node/download/eslint-plugin-node-11.1.0.tgz#c95544416ee4ada26740a30474eefc5402dc671d"
+  integrity sha1-yVVEQW7kraJnQKMEdO78VALcZx0=
+  dependencies:
+    eslint-plugin-es "^3.0.0"
+    eslint-utils "^2.0.0"
+    ignore "^5.1.1"
+    minimatch "^3.0.4"
+    resolve "^1.10.1"
+    semver "^6.1.0"
+
+eslint-plugin-promise@^4.2.1:
+  version "4.3.1"
+  resolved "https://registry.nlark.com/eslint-plugin-promise/download/eslint-plugin-promise-4.3.1.tgz#61485df2a359e03149fdafc0a68b0e030ad2ac45"
+  integrity sha1-YUhd8qNZ4DFJ/a/AposOAwrSrEU=
+
+eslint-plugin-standard@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-standard/download/eslint-plugin-standard-4.1.0.tgz#0c3bf3a67e853f8bbbc580fb4945fbf16f41b7c5"
+  integrity sha1-DDvzpn6FP4u7xYD7SUX78W9Bt8U=
+
 eslint-plugin-vue@^6.2.2:
   version "6.2.2"
-  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-6.2.2.tgz?cache=0&sync_timestamp=1630038057187&other_urls=https%3A%2F%2Fregistry.nlark.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-6.2.2.tgz#27fecd9a3a24789b0f111ecdd540a9e56198e0fe"
+  resolved "https://registry.nlark.com/eslint-plugin-vue/download/eslint-plugin-vue-6.2.2.tgz#27fecd9a3a24789b0f111ecdd540a9e56198e0fe"
   integrity sha1-J/7NmjokeJsPER7N1UCp5WGY4P4=
   dependencies:
     natural-compare "^1.4.0"
@@ -3716,6 +3747,13 @@ eslint-utils@^1.4.3:
   version "1.4.3"
   resolved "https://registry.nlark.com/eslint-utils/download/eslint-utils-1.4.3.tgz#74fec7c54d0776b6f67e0251040b5806564e981f"
   integrity sha1-dP7HxU0Hdrb2fgJRBAtYBlZOmB8=
+  dependencies:
+    eslint-visitor-keys "^1.1.0"
+
+eslint-utils@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.nlark.com/eslint-utils/download/eslint-utils-2.1.0.tgz#d2de5e03424e707dc10c74068ddedae708741b27"
+  integrity sha1-0t5eA0JOcH3BDHQGjd7a5wh0Gyc=
   dependencies:
     eslint-visitor-keys "^1.1.0"
 
@@ -4179,6 +4217,11 @@ follow-redirects@^1.0.0:
   resolved "https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.3.tgz#6ada78118d8d24caee595595accdc0ac6abd022e"
   integrity sha1-atp4EY2NJMruWVWVrM3ArGq9Ai4=
 
+follow-redirects@^1.14.0:
+  version "1.14.4"
+  resolved "https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.4.tgz?cache=0&sync_timestamp=1631622129411&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffollow-redirects%2Fdownload%2Ffollow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
+  integrity sha1-g4/fSKi73XnlLuUfsclOPtmLk3k=
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/for-in/download/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -4279,6 +4322,11 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.nlark.com/functional-red-black-tree/download/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+
+fuse.js@3.4.4:
+  version "3.4.4"
+  resolved "https://registry.npm.taobao.org/fuse.js/download/fuse.js-3.4.4.tgz#f98f55fcb3b595cf6a3e629c5ffaf10982103e95"
+  integrity sha1-+Y9V/LO1lc9qPmKcX/rxCYIQPpU=
 
 gauge@~2.7.3:
   version "2.7.4"
@@ -4819,6 +4867,11 @@ ignore@^4.0.3, ignore@^4.0.6:
   resolved "https://registry.nlark.com/ignore/download/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha1-dQ49tYYgh7RzfrrIIH/9HvJ7Jfw=
 
+ignore@^5.1.1:
+  version "5.1.8"
+  resolved "https://registry.nlark.com/ignore/download/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
+  integrity sha1-8VCotQo0KJsz4i9YiavU2AFvDlc=
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.nlark.com/import-cwd/download/import-cwd-2.1.0.tgz?cache=0&sync_timestamp=1618846826220&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fimport-cwd%2Fdownload%2Fimport-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -4943,7 +4996,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-interpret@^1.4.0:
+interpret@^1.2.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/interpret/download/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha1-Zlq4vE2iendKQFhOgS4+D6RbGh4=
@@ -5063,7 +5116,7 @@ is-color-stop@^1.0.0:
     rgb-regex "^1.0.1"
     rgba-regex "^1.0.0"
 
-is-core-module@^2.2.0, is-core-module@^2.4.0, is-core-module@^2.6.0:
+is-core-module@^2.2.0, is-core-module@^2.6.0:
   version "2.6.0"
   resolved "https://registry.nlark.com/is-core-module/download/is-core-module-2.6.0.tgz?cache=0&sync_timestamp=1629224656971&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-core-module%2Fdownload%2Fis-core-module-2.6.0.tgz#d7553b2526fe59b92ba3e40c8df757ec8a709e19"
   integrity sha1-11U7JSb+Wbkro+QMjfdX7Ipwnhk=
@@ -5237,7 +5290,7 @@ is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   dependencies:
     isobject "^3.0.1"
 
-is-regex@^1.0.4, is-regex@^1.1.3, is-regex@^1.1.4:
+is-regex@^1.0.4, is-regex@^1.1.4:
   version "1.1.4"
   resolved "https://registry.nlark.com/is-regex/download/is-regex-1.1.4.tgz?cache=0&sync_timestamp=1628221853554&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-regex%2Fdownload%2Fis-regex-1.1.4.tgz#eef5663cd59fa4c0ae339505323df6854bb15958"
   integrity sha1-7vVmPNWfpMCuM5UFMj32hUuxWVg=
@@ -5337,6 +5390,11 @@ js-base64@^2.1.8:
   version "2.6.4"
   resolved "https://registry.nlark.com/js-base64/download/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
   integrity sha1-9OaGxd4eofhn28rT1G2WlCjfmMQ=
+
+js-cookie@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.nlark.com/js-cookie/download/js-cookie-2.2.0.tgz#1b2c279a6eece380a12168b92485265b35b1effb"
+  integrity sha1-Gywnmm7s44ChIWi5JIUmWzWx7/s=
 
 js-message@1.0.7:
   version "1.0.7"
@@ -6068,7 +6126,7 @@ node-ipc@^9.1.1:
     js-message "1.0.7"
     js-queue "2.0.2"
 
-node-libs-browser@^2.2.1:
+"node-libs-browser@^1.0.0 || ^2.0.0", node-libs-browser@^2.2.1:
   version "2.2.1"
   resolved "https://registry.nlark.com/node-libs-browser/download/node-libs-browser-2.2.1.tgz#b64f513d18338625f90346d27b0d235e631f6425"
   integrity sha1-tk9RPRgzhiX5A0bSew0jXmMfZCU=
@@ -6184,6 +6242,11 @@ normalize-wheel@^1.0.1:
   resolved "https://registry.nlark.com/normalize-wheel/download/normalize-wheel-1.0.1.tgz#aec886affdb045070d856447df62ecf86146ec45"
   integrity sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=
 
+normalize.css@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npm.taobao.org/normalize.css/download/normalize.css-7.0.0.tgz#abfb1dd82470674e0322b53ceb1aaf412938e4bf"
+  integrity sha1-q/sd2CRwZ04DIrU86xqvQSk45L8=
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.npm.taobao.org/npm-run-path/download/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"
@@ -6207,6 +6270,11 @@ npm-run-path@^4.0.0:
     console-control-strings "~1.1.0"
     gauge "~2.7.3"
     set-blocking "~2.0.0"
+
+nprogress@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.nlark.com/nprogress/download/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha1-y480xTIT2JVyP8urkH6UIq28r7E=
 
 nth-check@^1.0.2:
   version "1.0.2"
@@ -6290,15 +6358,6 @@ object.assign@^4.1.0, object.assign@^4.1.2:
     define-properties "^1.1.3"
     has-symbols "^1.0.1"
     object-keys "^1.1.1"
-
-object.entries@^1.1.2:
-  version "1.1.4"
-  resolved "https://registry.nlark.com/object.entries/download/object.entries-1.1.4.tgz?cache=0&sync_timestamp=1622071045693&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fobject.entries%2Fdownload%2Fobject.entries-1.1.4.tgz#43ccf9a50bc5fd5b649d45ab1a579f24e088cafd"
-  integrity sha1-Q8z5pQvF/VtknUWrGlefJOCIyv0=
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.2"
 
 object.getownpropertydescriptors@^2.0.3, object.getownpropertydescriptors@^2.1.0:
   version "2.1.2"
@@ -7119,6 +7178,11 @@ prettier@^1.18.2:
   resolved "https://registry.nlark.com/prettier/download/prettier-1.19.1.tgz?cache=0&sync_timestamp=1631179311919&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprettier%2Fdownload%2Fprettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha1-99f1/4qc2HKnvkyhQglZVqYHl8s=
 
+prettier@^2.2.1:
+  version "2.4.1"
+  resolved "https://registry.nlark.com/prettier/download/prettier-2.4.1.tgz?cache=0&sync_timestamp=1631777111780&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprettier%2Fdownload%2Fprettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
+  integrity sha1-Zx4RyJwUpM/Ids5WQQbEpnJsn1w=
+
 pretty-error@^2.0.2:
   version "2.1.2"
   resolved "https://registry.nlark.com/pretty-error/download/pretty-error-2.1.2.tgz#be89f82d81b1c86ec8fdfbc385045882727f93b6"
@@ -7430,6 +7494,11 @@ regexpp@^2.0.1:
   resolved "https://registry.nlark.com/regexpp/download/regexpp-2.0.1.tgz#8d19d31cf632482b589049f8281f93dbcba4d07f"
   integrity sha1-jRnTHPYySCtYkEn4KB+T28uk0H8=
 
+regexpp@^3.0.0:
+  version "3.2.0"
+  resolved "https://registry.nlark.com/regexpp/download/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
+  integrity sha1-BCWido2PI7rXDKS5BGH6LxIT4bI=
+
 regexpu-core@^4.7.1:
   version "4.7.1"
   resolved "https://registry.nlark.com/regexpu-core/download/regexpu-core-4.7.1.tgz#2dea5a9a07233298fbf0db91fa9abc4c6e0f8ad6"
@@ -7560,7 +7629,7 @@ resolve-url@^0.2.1:
   resolved "https://registry.nlark.com/resolve-url/download/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.20.0:
+resolve@^1.10.0, resolve@^1.10.1, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.14.2, resolve@^1.20.0:
   version "1.20.0"
   resolved "https://registry.nlark.com/resolve/download/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
   integrity sha1-YpoBP7P3B1XW8LeTXMHCxTeLGXU=
@@ -7717,6 +7786,11 @@ schema-utils@^2.0.0, schema-utils@^2.5.0, schema-utils@^2.6.1, schema-utils@^2.6
     "@types/json-schema" "^7.0.5"
     ajv "^6.12.4"
     ajv-keywords "^3.5.2"
+
+screenfull@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/screenfull/download/screenfull-4.2.0.tgz#d5252a5a0f56504719abbed9ebbcd9208115da03"
+  integrity sha1-1SUqWg9WUEcZq77Z67zZIIEV2gM=
 
 scss-tokenizer@^0.2.3:
   version "0.2.3"
@@ -8390,7 +8464,7 @@ table@^5.2.3:
 
 tapable@^0.1.8:
   version "0.1.10"
-  resolved "https://registry.nlark.com/tapable/download/tapable-0.1.10.tgz#29c35707c2b70e50d07482b5d202e8ed446dafd4"
+  resolved "https://registry.nlark.com/tapable/download/tapable-0.1.10.tgz?cache=0&sync_timestamp=1631526982870&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftapable%2Fdownload%2Ftapable-0.1.10.tgz#29c35707c2b70e50d07482b5d202e8ed446dafd4"
   integrity sha1-KcNXB8K3DlDQdIK10gLo7URtr9Q=
 
 tapable@^1.0.0, tapable@^1.1.3:
@@ -8931,14 +9005,6 @@ vue-loader@^15.9.2:
     loader-utils "^1.1.0"
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
-
-vue-router-tab@^1.2.7:
-  version "1.2.7"
-  resolved "https://registry.nlark.com/vue-router-tab/download/vue-router-tab-1.2.7.tgz#d242baa07ba8853a523e64a4298ba208116c4796"
-  integrity sha1-0kK6oHuohTpSPmSkKYuiCBFsR5Y=
-  dependencies:
-    vue "^2.6.11"
-    vue-router "^3.2.0"
 
 vue-router@^3.2.0:
   version "3.5.2"
