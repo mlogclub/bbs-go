@@ -2,39 +2,58 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import qs from 'qs'
+import Vue from 'vue'
+
+const formatFormDataKey = '__formData'
+
+function isFormData (data) {
+  return data && data[formatFormDataKey] === 'formData'
+}
 
 // create an axios instance
-const service = axios.create({
+Vue.prototype.$request = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 5000 // request timeout
+  timeout: 5000 // request timeout,
 })
 
+// 设置form请求
+Vue.prototype.$request.form = function (url, data, config) {
+  data[formatFormDataKey] = 'formData'
+  return this.post(url, data, config)
+}
+
 // request interceptor
-service.interceptors.request.use(
+Vue.prototype.$request.interceptors.request.use(
   (config) => {
     if (store.getters.token) {
-      config.headers['X-Token'] = getToken()
+      config.headers['X-User-Token'] = getToken()
     }
+
+    // 如果是form请求
+    if (isFormData(config.data)) {
+      delete config.data[formatFormDataKey]
+      config.data = qs.stringify(config.data) // 转为formdata数据格式
+    }
+
     return config
   },
   (error) => Promise.reject(error)
 )
 
 // response interceptor
-service.interceptors.response.use(
+Vue.prototype.$request.interceptors.response.use(
   (response) => {
     const res = response.data
 
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+    if (res.success !== true) {
+      // Message({
+      //   message: res.message || 'Error',
+      //   type: 'error',
+      //   duration: 5 * 1000
+      // })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.errorCode === 1) {
         MessageBox.confirm(
           'You have been logged out, you can cancel to stay on this page, or log in again',
           'Confirm logout',
@@ -49,9 +68,9 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(res)
     }
-    return res
+    return Promise.resolve(res.data)
   },
   (error) => {
     console.log(`err${error}`) // for debug
@@ -64,4 +83,4 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+export default Vue.prototype.$request

@@ -3,23 +3,19 @@
     <el-form
       ref="loginForm"
       :model="loginForm"
-      :rules="loginRules"
+      label-position="left"
       class="login-form"
       autocomplete="on"
-      label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登录</h3>
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -29,15 +25,11 @@
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
           <el-input
-            :key="passwordType"
             ref="password"
             v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="Password"
+            type="password"
+            placeholder="密码"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -45,12 +37,23 @@
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
       </el-tooltip>
 
+      <el-form-item prop="captchaCode" class="captcha-code">
+        <el-input
+          ref="username"
+          v-model="loginForm.captchaCode"
+          placeholder="验证码"
+          name="captchaCode"
+          type="text"
+          tabindex="3"
+          autocomplete="off"
+        />
+        <div v-if="loginForm.captchaUrl" class="captcha-code-img">
+          <a @click="showCaptcha"><img :src="loginForm.captchaUrl" /></a>
+        </div>
+      </el-form-item>
       <el-button
         :loading="loading"
         type="primary"
@@ -58,51 +61,22 @@
         @click.native.prevent="handleLogin"
         >Login</el-button
       >
-
-      <div style="position: relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right: 18px">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-      </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
 
 export default {
-  name: 'Login',
   data () {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: '',
+        captchaId: '',
+        captchaUrl: '',
+        captchaCode: ''
       },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      passwordType: 'password',
       capsTooltip: false,
       loading: false,
       redirect: undefined,
@@ -121,20 +95,28 @@ export default {
       immediate: true
     }
   },
-  created () {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
   mounted () {
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
-  },
-  destroyed () {
-    // window.removeEventListener('storage', this.afterQRScan)
+    this.showCaptcha()
   },
   methods: {
+    async showCaptcha () {
+      try {
+        const ret = await this.$request.get('/api/captcha/request', {
+          params: {
+            captchaId: this.loginForm.captchaId || ''
+          }
+        })
+        this.loginForm.captchaId = ret.captchaId
+        this.loginForm.captchaUrl = process.env.VUE_APP_BASE_API + '/api/captcha/show?captchaId=' + this.loginForm.captchaId + '&timestamp=' + new Date().getTime()
+      } catch (e) {
+        this.$message.error(e.message || e)
+      }
+    },
     checkCapslock ({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if ((shiftKey && key >= 'a' && key <= 'z') || (!shiftKey && key >= 'A' && key <= 'Z')) {
@@ -147,16 +129,6 @@ export default {
         this.capsTooltip = false
       }
     },
-    showPwd () {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
     handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -168,11 +140,11 @@ export default {
               this.loading = false
             })
             .catch(() => {
+              this.showCaptcha()
               this.loading = false
             })
           return true
         }
-        console.log('error submit!!')
         return false
       })
     },
@@ -184,84 +156,15 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-color: #fff;
   overflow: hidden;
 
   .login-form {
@@ -271,6 +174,18 @@ $light_gray: #eee;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+
+    .captcha-code {
+      &>div {
+        display: flex;
+        .captcha-code-img {
+          // margin-left: 10px;
+          img {
+            height: 36px;
+          }
+        }
+      }
+    }
   }
 
   .tips {
@@ -285,45 +200,15 @@ $light_gray: #eee;
     }
   }
 
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
   .title-container {
     position: relative;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #000;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
-    }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .thirdparty-button {
-    position: absolute;
-    right: 0;
-    bottom: 6px;
-  }
-
-  @media only screen and (max-width: 470px) {
-    .thirdparty-button {
-      display: none;
     }
   }
 }

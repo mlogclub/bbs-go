@@ -11,15 +11,6 @@ export function isExternal (path) {
 }
 
 /**
- * @param {string} str
- * @returns {Boolean}
- */
-export function validUsername (str) {
-  const validMap = ['admin', 'editor']
-  return validMap.indexOf(str.trim()) >= 0
-}
-
-/**
  * @param {string} url
  * @returns {Boolean}
  */

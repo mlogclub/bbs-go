@@ -1,6 +1,6 @@
-// import { login, logout, getInfo } from '@/api/user';
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import request from '@/utils/request'
 
 const state = {
   token: getToken(),
@@ -30,26 +30,26 @@ const mutations = {
 
 const actions = {
   // user login
-  login ({ commit }, userInfo) {
-    // const { username, password } = userInfo;
-    // return new Promise((resolve, reject) => {
-    //   login({ username: username.trim(), password }).then((response) => {
-    //     const { data } = response;
-    //     commit('SET_TOKEN', data.token);
-    //     setToken(data.token);
-    //     resolve();
-    //   }).catch((error) => {
-    //     reject(error);
-    //   });
-    // });
-
+  login ({ commit }, loginForm) {
+    const {
+      username,
+      password,
+      captchaId,
+      captchaCode
+    } = loginForm
     return new Promise((resolve, reject) => {
-      const data = {
-        token: 'fuckshit'
-      }
-      commit('SET_TOKEN', data.token)
-      setToken(data.token)
-      resolve()
+      request.form('/api/login/signin', {
+        username,
+        password,
+        captchaId,
+        captchaCode
+      }).then(data => {
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
 
