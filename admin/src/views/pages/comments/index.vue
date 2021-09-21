@@ -50,9 +50,9 @@
             <div class="content">
               <div class="meta">
                 <span class="nickname"
-                  ><nuxt-link :to="'/user/' + item.user.id" target="_blank">{{
+                  ><a :href="'/user/' + item.user.id" target="_blank">{{
                     item.user.nickname
-                  }}</nuxt-link></span
+                  }}</a></span
                 >
 
                 <span>ID: {{ item.id }}</span>
@@ -61,14 +61,14 @@
                   >@{{ item.createTime | formatDate }}</span
                 >
                 <span v-if="item.entityType === 'article'">
-                  <nuxt-link :to="'/article/' + item.entityId" target="_blank"
-                    >文章：{{ item.entityId }}</nuxt-link
+                  <a :href="'/article/' + item.entityId" target="_blank"
+                    >文章：{{ item.entityId }}</a
                   >
                 </span>
 
                 <span v-if="item.entityType === 'topic'">
-                  <nuxt-link :to="'/topic/' + item.entityId" target="_blank"
-                    >话题：{{ item.entityId }}</nuxt-link
+                  <a :href="'/topic/' + item.entityId" target="_blank"
+                    >话题：{{ item.entityId }}</a
                   >
                 </span>
 
@@ -104,8 +104,10 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar'
 export default {
   layout: 'admin',
+  components: { Avatar },
   data () {
     return {
       results: [],

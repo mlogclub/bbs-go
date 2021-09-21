@@ -6,6 +6,7 @@ import router from '@/router'
 import '@/plugins/element'
 import '@/plugins/axios'
 import '@/plugins/filters'
+import '@/plugins/lazyload'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import '@/styles/index.scss' // global css

@@ -29,6 +29,15 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-color: #f3f6fe;
+  // padding: 10px;
+  // margin-top: 10px;
+  padding: 0 12px;
+
+  .app-main-container {
+    background-color: #fff;
+    border-radius: 8px;
+  }
 }
 
 .fixed-header + .app-main {
@@ -38,11 +47,13 @@ export default {
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
+    // min-height: calc(100vh - 84px);
+    min-height: calc(100vh - 50px - 34px);
   }
 
   .fixed-header + .app-main {
-    padding-top: 84px;
+    // padding-top: 84px;
+    padding-top: calc(50px + 12px + 34px);
   }
 }
 </style>

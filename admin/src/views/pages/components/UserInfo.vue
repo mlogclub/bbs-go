@@ -9,16 +9,18 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar'
 export default {
+  components: { Avatar },
   props: {
     user: {
       type: Object,
       required: true,
-      default() {
+      default () {
         return null
-      },
-    },
-  },
+      }
+    }
+  }
 }
 </script>
 

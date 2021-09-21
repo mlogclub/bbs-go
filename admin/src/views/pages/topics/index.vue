@@ -46,11 +46,11 @@
         </div>
         <div class="topic-main">
           <div class="topic-header">
-            <nuxt-link
-              :to="'/user/' + item.user.id"
+            <a
+              :href="'/user/' + item.user.id"
               target="_blank"
               class="topic-nickname"
-              >{{ item.user.nickname }}</nuxt-link
+              >{{ item.user.nickname }}</a
             >
 
             <div class="topic-info">
@@ -80,9 +80,9 @@
           </div>
 
           <div class="topic-title">
-            <nuxt-link :to="'/topic/' + item.topicId" target="_blank">{{
+            <a :href="'/topic/' + item.topicId" target="_blank">{{
               item.title
-            }}</nuxt-link>
+            }}</a>
           </div>
 
           <template v-if="item.type === 0">
@@ -101,13 +101,13 @@
             class="topic-image-list"
           >
             <li v-for="(image, index) in item.imageList" :key="index">
-              <nuxt-link
-                :to="'/topic/' + item.topicId"
+              <a
+                :href="'/topic/' + item.topicId"
                 target="_blank"
                 class="image-item"
               >
                 <img v-lazy="image.preview" />
-              </nuxt-link>
+              </a>
             </li>
           </ul>
 
@@ -248,8 +248,9 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar'
 export default {
-  layout: 'admin',
+  components: { Avatar },
   data () {
     return {
       results: [],

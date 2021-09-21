@@ -319,7 +319,7 @@ export default {
 
 <style scoped lang="scss">
 .config-panel {
-  margin: 20px;
+  // margin: 20px;
   padding: 10px;
 }
 
