@@ -37,10 +37,7 @@ const actions = {
       captchaCode
     } = loginForm
     return new Promise((resolve, reject) => {
-      console.log(this)
-      console.log(this.$app)
-      console.log(this.$app.axios)
-      this.$app.axios.form('/api/login/signin', {
+      this._vm.axios.form('/api/login/signin', {
         username,
         password,
         captchaId,
@@ -57,49 +54,24 @@ const actions = {
 
   // get user info
   async getInfo ({ commit, state }) {
-    // return new Promise((resolve, reject) => {
-    //   getInfo(state.token).then((response) => {
-    //     const { data } = response;
-    //     if (!data) {
-    //       reject('Verification failed, please Login again.');
-    //     }
-    //     const {
-    //       roles, name, avatar, introduction,
-    //     } = data;
-    //     // roles must be a non-empty array
-    //     if (!roles || roles.length <= 0) {
-    //       reject('getInfo: roles must be a non-null array!');
-    //     }
-    //     commit('SET_ROLES', roles);
-    //     commit('SET_NAME', name);
-    //     commit('SET_AVATAR', avatar);
-    //     commit('SET_INTRODUCTION', introduction);
-    //     resolve(data);
-    //   }).catch((error) => {
-    //     reject(error);
-    //   });
-    // });
-
     return new Promise((resolve, reject) => {
-      const data = {
-        roles: 'admin',
-        name: 'hello',
-        avatar: '',
-        introduction: ''
-      }
-      if (!data) {
-        reject(new Error('Verification failed, please Login again.'))
-      }
-      const { roles, name, avatar, introduction } = data
-      // roles must be a non-empty array
-      if (!roles || roles.length <= 0) {
-        reject(new Error('getInfo: roles must be a non-null array!'))
-      }
-      commit('SET_ROLES', roles)
-      commit('SET_NAME', name)
-      commit('SET_AVATAR', avatar)
-      commit('SET_INTRODUCTION', introduction)
-      resolve(data)
+      this._vm.axios.get('/api/user/current').then((data) => {
+        console.log(data)
+        if (!data || !data.id) {
+          reject(new Error('Verification failed, please Login again.'))
+        }
+        // roles must be a non-empty array
+        if (!data.roles || data.roles.length <= 0) {
+          reject(new Error('getInfo: roles must be a non-null array!'))
+        }
+        commit('SET_ROLES', data.roles)
+        commit('SET_NAME', data.nickname)
+        commit('SET_AVATAR', data.avatar)
+        commit('SET_INTRODUCTION', data.description)
+        resolve(data)
+      }).catch((error) => {
+        reject(error)
+      })
     })
   },
 
