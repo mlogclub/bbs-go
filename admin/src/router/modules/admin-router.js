@@ -13,7 +13,8 @@ const adminRouter = [
       component: () => import('@/views/pages/users/index'),
       name: 'users',
       meta: {
-        title: '用户管理'
+        title: '用户管理',
+        icon: 'iconfont icon-username'
       }
     }]
   },
@@ -23,8 +24,8 @@ const adminRouter = [
     redirect: '/content/topics',
     name: 'content',
     meta: {
-      title: '内容管理'
-      // icon: 'table'
+      title: '内容管理',
+      icon: 'iconfont icon-topic'
     },
     children: [
       {
@@ -32,7 +33,8 @@ const adminRouter = [
         component: () => import('@/views/pages/topics/index'),
         name: 'topics',
         meta: {
-          title: '话题'
+          title: '话题',
+          icon: 'iconfont icon-topic'
         }
       },
       {
@@ -40,7 +42,8 @@ const adminRouter = [
         component: () => import('@/views/pages/articles/index'),
         name: 'articles',
         meta: {
-          title: '文章'
+          title: '文章',
+          icon: 'iconfont icon-article'
         }
       },
       {
@@ -48,7 +51,8 @@ const adminRouter = [
         component: () => import('@/views/pages/comments/index'),
         name: 'comments',
         meta: {
-          title: '评论'
+          title: '评论',
+          icon: 'iconfont icon-comments'
         }
       }
     ]
@@ -59,8 +63,8 @@ const adminRouter = [
     redirect: '/category/nodes',
     name: 'cocategoryntent',
     meta: {
-      title: '分类管理'
-      // icon: 'table'
+      title: '分类管理',
+      icon: 'iconfont icon-tags'
     },
     children: [
       {
@@ -68,7 +72,8 @@ const adminRouter = [
         component: () => import('@/views/pages/topics/nodes'),
         name: 'topics',
         meta: {
-          title: '节点'
+          title: '节点',
+          icon: 'iconfont icon-tag'
         }
       },
       {
@@ -76,7 +81,8 @@ const adminRouter = [
         component: () => import('@/views/pages/tags/index'),
         name: 'tags',
         meta: {
-          title: '标签'
+          title: '标签',
+          icon: 'iconfont icon-tags'
         }
       }
     ]
@@ -92,7 +98,8 @@ const adminRouter = [
         component: () => import('@/views/pages/links/index'),
         name: 'links',
         meta: {
-          title: '友情链接'
+          title: '友情链接',
+          icon: 'iconfont icon-link'
         }
       }
     ]
@@ -108,7 +115,8 @@ const adminRouter = [
         component: () => import('@/views/pages/settings/index'),
         name: 'settings',
         meta: {
-          title: '系统设置'
+          title: '系统设置',
+          icon: 'iconfont icon-setting'
         }
       }
     ]

@@ -74,7 +74,7 @@ export const constantRoutes = [
         name: 'Dashboard',
         meta: {
           title: '首页',
-          // icon: 'dashboard',
+          icon: 'iconfont icon-home',
           affix: true
         }
       }

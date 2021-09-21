@@ -18,7 +18,7 @@
 
 <script>
 import path from 'path'
-import SidebarMenuItem from '@/components/layout/SidebarMenuItem.vue'
+import SidebarMenuItem from '@/components/layout/SidebarMenuItem'
 
 export default {
   components: { SidebarMenuItem },

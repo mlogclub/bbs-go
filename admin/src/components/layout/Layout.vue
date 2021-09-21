@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import HeaderMenu from '@/components/layout/HeaderMenu.vue'
-import SideMenu from '@/components/layout/SideMenu.vue'
+import HeaderMenu from '@/components/layout/HeaderMenu'
+import SideMenu from '@/components/layout/SideMenu'
 
 export default {
   components: {
