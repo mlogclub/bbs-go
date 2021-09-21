@@ -297,7 +297,7 @@ export default {
         limit: me.page.limit
       })
       this.axios
-        .post('/api/admin/topic/list', params)
+        .form('/api/admin/topic/list', params)
         .then((data) => {
           me.results = data.results
           me.page = data.page
@@ -323,8 +323,8 @@ export default {
     },
     addSubmit () {
       const me = this
-      this.$axios
-        .post('/api/admin/topic/create', this.addForm)
+      this.axios
+        .form('/api/admin/topic/create', this.addForm)
         .then((data) => {
           me.$message({ message: '提交成功', type: 'success' })
           me.addFormVisible = false
@@ -336,7 +336,7 @@ export default {
     },
     handleEdit (index, row) {
       const me = this
-      this.$axios
+      this.axios
         .get(`/api/admin/topic/${row.id}`)
         .then((data) => {
           me.editForm = Object.assign({}, data)
@@ -348,8 +348,8 @@ export default {
     },
     editSubmit () {
       const me = this
-      this.$axios
-        .post('/api/admin/topic/update', me.editForm)
+      this.axios
+        .form('/api/admin/topic/update', me.editForm)
         .then((data) => {
           me.list()
           me.editFormVisible = false
@@ -366,7 +366,7 @@ export default {
         type: 'warning'
       })
         .then(function () {
-          me.$axios
+          me.axios
             .post('/api/admin/topic/delete', { id: topicId })
             .then(function () {
               me.$message({ message: '删除成功', type: 'success' })
@@ -385,7 +385,7 @@ export default {
     },
     async undeleteSubmit (topicId) {
       try {
-        await this.$axios.post('/api/admin/topic/undelete', { id: topicId })
+        await this.axios.form('/api/admin/topic/undelete', { id: topicId })
         this.list()
         this.$message({ message: '取消删除成功', type: 'success' })
       } catch (err) {
@@ -394,7 +394,7 @@ export default {
     },
     async recommend (id) {
       try {
-        await this.$axios.post('/api/admin/topic/recommend', {
+        await this.axios.form('/api/admin/topic/recommend', {
           id
         })
         this.$message({ message: '推荐成功', type: 'success' })
@@ -405,7 +405,7 @@ export default {
     },
     async cancelRecommend (id) {
       try {
-        await this.$axios.delete('/api/admin/topic/recommend', {
+        await this.axios.delete('/api/admin/topic/recommend', {
           params: {
             id
           }

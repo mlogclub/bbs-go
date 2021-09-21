@@ -3,6 +3,9 @@
     <div class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
+          <el-input v-model="filters.id" placeholder="编号"></el-input>
+        </el-form-item>
+        <el-form-item>
           <el-input v-model="filters.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
@@ -25,13 +28,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="logo" label="图标">
-        <template slot-scope="scope">
-          <img v-if="scope.row.logo" :src="scope.row.logo" class="node-logo" />
-        </template>
-      </el-table-column>
       <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column prop="sortNo" label="排序"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">{{
           scope.row.status === 0 ? '启用' : '禁用'
@@ -75,18 +72,12 @@
         <el-form-item label="名称">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="图标">
-          <upload v-model="addForm.logo" />
-        </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="addForm.description"
             type="textarea"
             auto-complete="off"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="addForm.sortNo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -103,16 +94,12 @@
     <el-dialog
       :visible.sync="editFormVisible"
       :close-on-click-modal="false"
-      :destroy-on-close="true"
       title="编辑"
     >
       <el-form ref="editForm" :model="editForm" label-width="80px">
         <el-input v-model="editForm.id" type="hidden"></el-input>
         <el-form-item label="名称">
           <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="图标">
-          <upload v-model="editForm.logo" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
@@ -121,15 +108,8 @@
             auto-complete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="editForm.sortNo"></el-input>
-        </el-form-item>
         <el-form-item label="状态">
-          <el-select
-            v-model="editForm.status"
-            clearable
-            placeholder="请选择状态"
-          >
+          <el-select v-model="editForm.status" placeholder="请选择状态">
             <el-option :value="0" label="启用"></el-option>
             <el-option :value="1" label="禁用"></el-option>
           </el-select>
@@ -151,7 +131,7 @@
 <script>
 export default {
   layout: 'admin',
-  data() {
+  data () {
     return {
       results: [],
       listLoading: false,
@@ -161,11 +141,9 @@ export default {
 
       addForm: {
         name: '',
-        logo: '',
         description: '',
         status: '',
-        sortNo: '',
-        createTime: '',
+        createTime: ''
       },
       addFormVisible: false,
       addLoading: false,
@@ -173,29 +151,27 @@ export default {
       editForm: {
         id: '',
         name: '',
-        logo: '',
         description: '',
         status: '',
-        sortNo: '',
-        createTime: '',
+        createTime: ''
       },
       editFormVisible: false,
-      editLoading: false,
+      editLoading: false
     }
   },
-  mounted() {
+  mounted () {
     this.list()
   },
   methods: {
-    list() {
+    list () {
       const me = this
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit,
+        limit: me.page.limit
       })
-      this.$axios
-        .post('/api/admin/topic-node/list', params)
+      this.axios
+        .form('/api/admin/tag/list', params)
         .then((data) => {
           me.results = data.results
           me.page = data.page
@@ -204,25 +180,28 @@ export default {
           me.listLoading = false
         })
     },
-    handlePageChange(val) {
+    handlePageChange (val) {
       this.page.page = val
       this.list()
     },
-    handleLimitChange(val) {
+    handleLimitChange (val) {
       this.page.limit = val
       this.list()
     },
-    handleAdd() {
+    handleSelectionChange (val) {
+      this.selectedRows = val
+    },
+    handleAdd () {
       this.addForm = {
         name: '',
-        description: '',
+        description: ''
       }
       this.addFormVisible = true
     },
-    addSubmit() {
+    addSubmit () {
       const me = this
-      this.$axios
-        .post('/api/admin/topic-node/create', this.addForm)
+      this.axios
+        .form('/api/admin/tag/create', this.addForm)
         .then((data) => {
           me.$message({ message: '提交成功', type: 'success' })
           me.addFormVisible = false
@@ -232,10 +211,10 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    handleEdit(index, row) {
+    handleEdit (index, row) {
       const me = this
-      this.$axios
-        .get('/api/admin/topic-node/' + row.id)
+      this.axios
+        .get('/api/admin/tag/' + row.id)
         .then((data) => {
           me.editForm = Object.assign({}, data)
           me.editFormVisible = true
@@ -244,10 +223,10 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    editSubmit() {
+    editSubmit () {
       const me = this
-      this.$axios
-        .post('/api/admin/topic-node/update', me.editForm)
+      this.axios
+        .form('/api/admin/tag/update', me.editForm)
         .then((data) => {
           me.list()
           me.editFormVisible = false
@@ -255,20 +234,9 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
-    },
-
-    handleSelectionChange(val) {
-      this.selectedRows = val
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" scoped>
-.node-logo {
-  width: 80px;
-  height: 80px;
-  max-height: 80px;
-  max-width: 80px;
-}
-</style>
+<style lang="scss" scoped></style>

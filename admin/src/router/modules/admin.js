@@ -14,7 +14,7 @@ const adminRouter = {
   children: [
     {
       path: 'topics',
-      component: () => import('@/views/topic/index'),
+      component: () => import('@/views/pages/topics/index'),
       name: 'topics',
       meta: {
         title: '话题',
@@ -23,7 +23,7 @@ const adminRouter = {
     },
     {
       path: 'articles',
-      component: () => import('@/views/topic/index'),
+      component: () => import('@/views/pages/articles/index'),
       name: 'articles',
       meta: {
         title: '文章',
