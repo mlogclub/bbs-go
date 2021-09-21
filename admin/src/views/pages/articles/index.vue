@@ -138,7 +138,6 @@
 <script>
 import Avatar from '@/components/Avatar'
 export default {
-  layout: 'admin',
   components: { Avatar },
   data () {
     return {

@@ -149,9 +149,10 @@
 </template>
 
 <script>
+import Upload from '@/components/Upload'
 export default {
-  layout: 'admin',
-  data() {
+  components: { Upload },
+  data () {
     return {
       results: [],
       listLoading: false,
@@ -165,7 +166,7 @@ export default {
         description: '',
         status: '',
         sortNo: '',
-        createTime: '',
+        createTime: ''
       },
       addFormVisible: false,
       addLoading: false,
@@ -177,22 +178,22 @@ export default {
         description: '',
         status: '',
         sortNo: '',
-        createTime: '',
+        createTime: ''
       },
       editFormVisible: false,
-      editLoading: false,
+      editLoading: false
     }
   },
-  mounted() {
+  mounted () {
     this.list()
   },
   methods: {
-    list() {
+    list () {
       const me = this
       me.listLoading = true
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit,
+        limit: me.page.limit
       })
       this.axios
         .form('/api/admin/topic-node/list', params)
@@ -204,22 +205,22 @@ export default {
           me.listLoading = false
         })
     },
-    handlePageChange(val) {
+    handlePageChange (val) {
       this.page.page = val
       this.list()
     },
-    handleLimitChange(val) {
+    handleLimitChange (val) {
       this.page.limit = val
       this.list()
     },
-    handleAdd() {
+    handleAdd () {
       this.addForm = {
         name: '',
-        description: '',
+        description: ''
       }
       this.addFormVisible = true
     },
-    addSubmit() {
+    addSubmit () {
       const me = this
       this.axios
         .form('/api/admin/topic-node/create', this.addForm)
@@ -232,7 +233,7 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    handleEdit(index, row) {
+    handleEdit (index, row) {
       const me = this
       this.axios
         .get('/api/admin/topic-node/' + row.id)
@@ -244,7 +245,7 @@ export default {
           me.$notify.error({ title: '错误', message: rsp.message })
         })
     },
-    editSubmit() {
+    editSubmit () {
       const me = this
       this.axios
         .form('/api/admin/topic-node/update', me.editForm)
@@ -257,10 +258,10 @@ export default {
         })
     },
 
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.selectedRows = val
-    },
-  },
+    }
+  }
 }
 </script>
 

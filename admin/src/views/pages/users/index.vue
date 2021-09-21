@@ -285,7 +285,6 @@ import Avatar from '@/components/Avatar'
 
 export default {
   components: { ScoreLog, Avatar },
-  layout: 'admin',
   data () {
     return {
       results: [],

@@ -56,7 +56,6 @@ const actions = {
   async getInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
       this._vm.axios.get('/api/user/current').then((data) => {
-        console.log(data)
         if (!data || !data.id) {
           reject(new Error('Verification failed, please Login again.'))
         }
