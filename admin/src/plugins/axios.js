@@ -48,11 +48,11 @@ axiosInstance.interceptors.response.use(
     const res = response.data
 
     if (res.success !== true) {
-      // Message({
-      //   message: res.message || 'Error',
-      //   type: 'error',
-      //   duration: 5 * 1000
-      // })
+      Message({
+        message: res.message || 'Error',
+        type: 'error',
+        duration: 5 * 1000
+      })
 
       if (res.errorCode === 1) {
         MessageBox.confirm(

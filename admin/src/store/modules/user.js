@@ -37,7 +37,10 @@ const actions = {
       captchaCode
     } = loginForm
     return new Promise((resolve, reject) => {
-      this.axios.form('/api/login/signin', {
+      console.log(this)
+      console.log(this.$app)
+      console.log(this.$app.axios)
+      this.$app.axios.form('/api/login/signin', {
         username,
         password,
         captchaId,

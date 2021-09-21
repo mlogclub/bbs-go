@@ -12,7 +12,6 @@
       border
     >
       <el-table-column prop="id" label="编号"></el-table-column>
-      <!-- <el-table-column prop="userId" label="用户编号"></el-table-column> -->
       <el-table-column prop="sourceType" label="来源类型"></el-table-column>
       <el-table-column prop="sourceId" label="来源编号"></el-table-column>
       <el-table-column prop="description" label="描述"></el-table-column>

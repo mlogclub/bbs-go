@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import * as filters from './filters' // global filters
+import * as filters from '@/filters' // global filters
 
 // register global utility filters
 Object.keys(filters).forEach((key) => {

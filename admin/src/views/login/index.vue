@@ -106,7 +106,7 @@ export default {
   methods: {
     async showCaptcha () {
       try {
-        const ret = await this.$request.get('/api/captcha/request', {
+        const ret = await this.axios.get('/api/captcha/request', {
           params: {
             captchaId: this.loginForm.captchaId || ''
           }
@@ -139,7 +139,8 @@ export default {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
-            .catch(() => {
+            .catch((e) => {
+              console.error(e)
               this.showCaptcha()
               this.loading = false
             })

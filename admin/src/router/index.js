@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/layout'
-import adminRouter from './modules/admin'
+import adminRouter from './modules/admin-router'
 
 Vue.use(Router)
 
@@ -101,11 +101,9 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  // TODO 添加自己的Routers
-  adminRouter,
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+  ...adminRouter
 ]
 
 const createRouter = () =>
