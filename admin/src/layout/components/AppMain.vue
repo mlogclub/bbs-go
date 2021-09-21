@@ -32,7 +32,7 @@ export default {
   background-color: #f3f6fe;
   // padding: 10px;
   // margin-top: 10px;
-  padding: 0 12px;
+  padding: 0 20px;
 
   .app-main-container {
     background-color: #fff;
@@ -53,7 +53,7 @@ export default {
 
   .fixed-header + .app-main {
     // padding-top: 84px;
-    padding-top: calc(50px + 12px + 34px);
+    padding-top: calc(50px + 24px + 34px);
   }
 }
 </style>
