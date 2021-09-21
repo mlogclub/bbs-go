@@ -3,21 +3,30 @@
 import Layout from '@/layout'
 
 const adminRouter = {
-  path: '/topic',
+  path: '/content',
   component: Layout,
-  redirect: '/list',
-  name: 'topic',
+  redirect: '/content/topics',
+  name: 'content',
   meta: {
-    title: '话题'
+    title: '内容管理'
     // icon: 'table'
   },
   children: [
     {
-      path: 'list',
+      path: 'topics',
       component: () => import('@/views/topic/index'),
-      name: 'list',
+      name: 'topics',
       meta: {
-        title: '列表',
+        title: '话题',
+        affix: true
+      }
+    },
+    {
+      path: 'articles',
+      component: () => import('@/views/topic/index'),
+      name: 'articles',
+      meta: {
+        title: '文章',
         affix: true
       }
     }

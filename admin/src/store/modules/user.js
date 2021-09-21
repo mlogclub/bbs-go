@@ -1,6 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
-import request from '@/utils/request'
 
 const state = {
   token: getToken(),
@@ -38,7 +37,7 @@ const actions = {
       captchaCode
     } = loginForm
     return new Promise((resolve, reject) => {
-      request.form('/api/login/signin', {
+      this.axios.form('/api/login/signin', {
         username,
         password,
         captchaId,
@@ -54,7 +53,7 @@ const actions = {
   },
 
   // get user info
-  getInfo ({ commit, state }) {
+  async getInfo ({ commit, state }) {
     // return new Promise((resolve, reject) => {
     //   getInfo(state.token).then((response) => {
     //     const { data } = response;

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import VueAxios from 'vue-axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -12,19 +13,19 @@ function isFormData (data) {
 }
 
 // create an axios instance
-Vue.prototype.$request = axios.create({
+const axiosInstance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000 // request timeout,
 })
 
 // 设置form请求
-Vue.prototype.$request.form = function (url, data, config) {
+axiosInstance.form = function (url, data, config) {
   data[formatFormDataKey] = 'formData'
   return this.post(url, data, config)
 }
 
 // request interceptor
-Vue.prototype.$request.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     if (store.getters.token) {
       config.headers['X-User-Token'] = getToken()
@@ -42,7 +43,7 @@ Vue.prototype.$request.interceptors.request.use(
 )
 
 // response interceptor
-Vue.prototype.$request.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   (response) => {
     const res = response.data
 
@@ -83,4 +84,5 @@ Vue.prototype.$request.interceptors.response.use(
   }
 )
 
-export default Vue.prototype.$request
+// export default axiosInstance
+Vue.use(VueAxios, axiosInstance)

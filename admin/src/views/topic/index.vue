@@ -248,8 +248,6 @@
 </template>
 
 <script>
-import request from '@/utils/request'
-
 export default {
   layout: 'admin',
   data () {
@@ -298,7 +296,7 @@ export default {
         page: me.page.page,
         limit: me.page.limit
       })
-      request
+      this.axios
         .post('/api/admin/topic/list', params)
         .then((data) => {
           me.results = data.results
