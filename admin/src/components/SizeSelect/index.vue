@@ -1,13 +1,7 @@
 <template>
-  <el-dropdown
-    trigger="click"
-    @command="handleSetSize"
-  >
+  <el-dropdown trigger="click" @command="handleSetSize">
     <div>
-      <svg-icon
-        class-name="size-icon"
-        icon-class="size"
-      />
+      <svg-icon class-name="size-icon" icon-class="size" />
     </div>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item
@@ -24,43 +18,43 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       sizeOptions: [
-        { label: 'Default', value: 'default' },
-        { label: 'Medium', value: 'medium' },
-        { label: 'Small', value: 'small' },
-        { label: 'Mini', value: 'mini' }
-      ]
-    }
+        { label: "Default", value: "default" },
+        { label: "Medium", value: "medium" },
+        { label: "Small", value: "small" },
+        { label: "Mini", value: "mini" },
+      ],
+    };
   },
   computed: {
-    size () {
-      return this.$store.getters.size
-    }
+    size() {
+      return this.$store.getters.size;
+    },
   },
   methods: {
-    handleSetSize (size) {
-      this.$ELEMENT.size = size
-      this.$store.dispatch('app/setSize', size)
-      this.refreshView()
+    handleSetSize(size) {
+      this.$ELEMENT.size = size;
+      this.$store.dispatch("app/setSize", size);
+      this.refreshView();
       this.$message({
-        message: 'Switch Size Success',
-        type: 'success'
-      })
+        message: "Switch Size Success",
+        type: "success",
+      });
     },
-    refreshView () {
+    refreshView() {
       // In order to make the cached page re-rendered
-      this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
+      this.$store.dispatch("tagsView/delAllCachedViews", this.$route);
 
-      const { fullPath } = this.$route
+      const { fullPath } = this.$route;
 
       this.$nextTick(() => {
         this.$router.replace({
-          path: `/redirect${fullPath}`
-        })
-      })
-    }
-  }
-}
+          path: `/redirect${fullPath}`,
+        });
+      });
+    },
+  },
+};
 </script>

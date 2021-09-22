@@ -1,13 +1,13 @@
-import defaultSettings from '@/settings'
+import defaultSettings from "@/settings";
 
-const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
+const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings;
 
 const state = {
   showSettings,
   tagsView,
   fixedHeader,
-  sidebarLogo
-}
+  sidebarLogo,
+};
 
 const mutations = {
   /* eslint-disable */

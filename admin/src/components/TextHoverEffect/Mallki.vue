@@ -1,9 +1,5 @@
 <template>
-  <a
-    :class="className"
-    class="link--mallki"
-    href="#"
-  >
+  <a :class="className" class="link--mallki" href="#">
     {{ text }}
     <span :data-letters="text" />
     <span :data-letters="text" />
@@ -15,14 +11,14 @@ export default {
   props: {
     className: {
       type: String,
-      default: ''
+      default: "",
     },
     text: {
       type: String,
-      default: 'vue-element-admin'
-    }
-  }
-}
+      default: "vue-element-admin",
+    },
+  },
+};
 </script>
 
 <style>

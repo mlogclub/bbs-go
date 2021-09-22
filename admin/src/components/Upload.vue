@@ -11,63 +11,54 @@
     :before-upload="startLoad"
     :on-success="handleSuccess"
   >
-    <img
-      v-if="value"
-      :src="value"
-      class="upload-image"
-      @load="finishLoad"
-      @error="finishLoad"
-    >
-    <i
-      class="el-icon-plus uploader-icon"
-      :class="{ show: !value }"
-    />
+    <img v-if="value" :src="value" class="upload-image" @load="finishLoad" @error="finishLoad" />
+    <i class="el-icon-plus uploader-icon" :class="{ show: !value }" />
   </el-upload>
 </template>
 
 <script>
-import { getToken } from '@/utils/auth'
+import { getToken } from "@/utils/auth";
 export default {
   props: {
     value: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
-  data () {
+  data() {
     return {
-      loading: false
-    }
+      loading: false,
+    };
   },
   computed: {
-    action () {
-      return process.env.VUE_APP_BASE_API + '/api/upload'
+    action() {
+      return process.env.VUE_APP_BASE_API + "/api/upload";
     },
-    headers () {
-      const userToken = getToken()
+    headers() {
+      const userToken = getToken();
       return {
-        'X-User-Token': userToken || ''
-      }
-    }
+        "X-User-Token": userToken || "",
+      };
+    },
   },
   methods: {
-    handleSuccess (res, file) {
+    handleSuccess(res, file) {
       if (!res.success) {
-        this.$message.error(res.message || '上传失败')
-        this.loading = false
-        return
+        this.$message.error(res.message || "上传失败");
+        this.loading = false;
+        return;
       }
-      this.$emit('input', res.data.url)
-      this.$message.success('上传成功')
+      this.$emit("input", res.data.url);
+      this.$message.success("上传成功");
     },
-    startLoad () {
-      this.loading = true
+    startLoad() {
+      this.loading = true;
     },
-    finishLoad () {
-      this.loading = false
-    }
-  }
-}
+    finishLoad() {
+      this.loading = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

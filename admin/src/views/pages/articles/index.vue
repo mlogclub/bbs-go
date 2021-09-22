@@ -1,102 +1,46 @@
 <template>
-  <section
-    v-loading="listLoading"
-    class="page-container"
-  >
+  <section v-loading="listLoading" class="page-container">
     <!--工具条-->
     <div class="toolbar">
-      <el-form
-        :inline="true"
-        :model="filters"
-      >
+      <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input
-            v-model="filters.id"
-            placeholder="编号"
-          />
+          <el-input v-model="filters.id" placeholder="编号" />
         </el-form-item>
         <el-form-item>
-          <el-input
-            v-model="filters.userId"
-            placeholder="用户编号"
-          />
+          <el-input v-model="filters.userId" placeholder="用户编号" />
         </el-form-item>
         <el-form-item>
-          <el-input
-            v-model="filters.title"
-            placeholder="标题"
-          />
+          <el-input v-model="filters.title" placeholder="标题" />
         </el-form-item>
         <el-form-item>
-          <el-select
-            v-model="filters.status"
-            clearable
-            placeholder="请选择状态"
-            @change="list"
-          >
-            <el-option
-              label="正常"
-              value="0"
-            />
-            <el-option
-              label="删除"
-              value="1"
-            />
-            <el-option
-              label="待审核"
-              value="2"
-            />
+          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+            <el-option label="正常" value="0" />
+            <el-option label="删除" value="1" />
+            <el-option label="待审核" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="list"
-          >
-            查询
-          </el-button>
+          <el-button type="primary" @click="list"> 查询 </el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <!--列表-->
-    <div
-      v-if="results && results.length > 0"
-      class="page-section articles"
-    >
-      <div
-        v-for="item in results"
-        :key="item.id"
-        class="article"
-      >
+    <div v-if="results && results.length > 0" class="page-section articles">
+      <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
           <avatar :user="item.user" />
           <div class="article-right">
             <div class="article-title">
-              <a
-                :href="'/article/' + item.id"
-                target="_blank"
-              >{{
-                item.title
-              }}</a>
+              <a :href="'/article/' + item.id" target="_blank">{{ item.title }}</a>
             </div>
             <div class="article-meta">
               <label class="action-item info">ID: {{ item.id }}</label>
-              <label
-                v-if="item.user"
-                class="author"
-              >{{
-                item.user.nickname
-              }}</label>
+              <label v-if="item.user" class="author">{{ item.user.nickname }}</label>
               <label>{{ item.createTime | formatDate }}</label>
 
               <div class="article-tags">
-                <el-tag
-                  v-for="tag in item.tags"
-                  :key="tag.tagId"
-                  type="info"
-                  size="mini"
-                >
+                <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
                   {{ tag.tagName }}
                 </el-tag>
               </div>
@@ -107,46 +51,24 @@
           {{ item.summary }}
         </div>
         <div class="actions">
-          <a
-            class="action-item btn"
-            @click="showUpdateTags(item)"
-          >修改标签</a>
-          <span
-            v-if="item.status === 1"
-            class="action-item danger"
-          >已删除</span>
-          <a
-            v-if="item.status !== 1"
-            class="action-item btn"
-            @click="deleteSubmit(item)"
-          >删除</a>
-          <a
-            v-if="item.status === 2"
-            :href="'/article/edit/' + item.id"
-            class="action-item btn"
-          >修改</a>
-          <a
-            v-if="item.status === 2"
-            class="action-item btn"
-            @click="pendingSubmit(item)"
-          >审核</a>
+          <a class="action-item btn" @click="showUpdateTags(item)">修改标签</a>
+          <span v-if="item.status === 1" class="action-item danger">已删除</span>
+          <a v-if="item.status !== 1" class="action-item btn" @click="deleteSubmit(item)">删除</a>
+          <a v-if="item.status === 2" :href="'/article/edit/' + item.id" class="action-item btn"
+            >修改</a
+          >
+          <a v-if="item.status === 2" class="action-item btn" @click="pendingSubmit(item)">审核</a>
         </div>
       </div>
     </div>
-    <div
-      v-else
-      class="page-section articles"
-    >
+    <div v-else class="page-section articles">
       <div class="notification is-primary">
         <strong>无数据</strong>
       </div>
     </div>
 
     <!--工具条-->
-    <div
-      v-if="page.total > 0"
-      class="pagebar"
-    >
+    <div v-if="page.total > 0" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -176,31 +98,19 @@
           />
         </el-form-item>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click.native="updateTagsDialogVisible = false"
-        >
-          取消
-        </el-button>
-        <el-button
-          type="primary"
-          @click.native="updateTags"
-        >
-          提交
-        </el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="updateTagsDialogVisible = false"> 取消 </el-button>
+        <el-button type="primary" @click.native="updateTags"> 提交 </el-button>
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import Avatar from '@/components/Avatar'
+import Avatar from "@/components/Avatar";
 export default {
   components: { Avatar },
-  data () {
+  data() {
     return {
       results: [],
       listLoading: false,
@@ -210,143 +120,141 @@ export default {
       updateTagsDialogVisible: false,
       updateTagForm: {
         articleId: 0,
-        tags: []
-      }
-    }
+        tags: [],
+      },
+    };
   },
-  mounted () {
-    this.recent()
+  mounted() {
+    this.recent();
   },
   methods: {
-    async list () {
-      this.listLoading = true
+    async list() {
+      this.listLoading = true;
       const params = Object.assign(this.filters, {
         page: this.page.page,
-        limit: this.page.limit
-      })
+        limit: this.page.limit,
+      });
       try {
-        const data = await this.axios.form('/api/admin/article/list', params)
-        this.results = data.results
-        this.page = data.page
+        const data = await this.axios.form("/api/admin/article/list", params);
+        this.results = data.results;
+        this.page = data.page;
       } catch (err) {
-        this.$message.error(err.message)
+        this.$message.error(err.message);
       } finally {
-        this.listLoading = false
+        this.listLoading = false;
       }
     },
-    async recent () {
-      this.listLoading = true
+    async recent() {
+      this.listLoading = true;
       try {
-        this.results = await this.axios.get('/api/admin/article/recent')
+        this.results = await this.axios.get("/api/admin/article/recent");
       } catch (err) {
-        this.$message.error(err.message)
+        this.$message.error(err.message);
       } finally {
-        this.listLoading = false
+        this.listLoading = false;
       }
     },
-    handlePageChange (val) {
-      this.page.page = val
-      this.list()
+    handlePageChange(val) {
+      this.page.page = val;
+      this.list();
     },
-    handleLimitChange (val) {
-      this.page.limit = val
-      this.list()
+    handleLimitChange(val) {
+      this.page.limit = val;
+      this.list();
     },
-    deleteSubmit (row) {
-      const me = this
-      this.$confirm('确认要删除文章？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+    deleteSubmit(row) {
+      const me = this;
+      this.$confirm("确认要删除文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(() => {
           this.axios
-            .form('/api/admin/article/delete', { id: row.id })
+            .form("/api/admin/article/delete", { id: row.id })
             .then((data) => {
-              me.$message({ message: '删除成功', type: 'success' })
-              me.list()
+              me.$message({ message: "删除成功", type: "success" });
+              me.list();
             })
             .catch((rsp) => {
-              me.$notify.error({ title: '错误', message: rsp.message })
-            })
+              me.$notify.error({ title: "错误", message: rsp.message });
+            });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
-    pendingSubmit (row) {
-      const me = this
-      this.$confirm('确认要过审文章？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+    pendingSubmit(row) {
+      const me = this;
+      this.$confirm("确认要过审文章？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
         .then(() => {
           this.axios
-            .form('/api/admin/article/pending', { id: row.id })
+            .form("/api/admin/article/pending", { id: row.id })
             .then((data) => {
-              me.$message({ message: '审核成功', type: 'success' })
-              me.list()
+              me.$message({ message: "审核成功", type: "success" });
+              me.list();
             })
             .catch((rsp) => {
-              me.$notify.error({ title: '错误', message: rsp.message })
-            })
+              me.$notify.error({ title: "错误", message: rsp.message });
+            });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消审核'
-          })
-        })
+            type: "info",
+            message: "已取消审核",
+          });
+        });
     },
-    async showUpdateTags (article) {
-      const tags = []
+    async showUpdateTags(article) {
+      const tags = [];
       try {
-        const tagObjs = await this.axios.get(
-          '/api/admin/article/tags?articleId=' + article.id
-        )
+        const tagObjs = await this.axios.get("/api/admin/article/tags?articleId=" + article.id);
         if (tagObjs && tagObjs.length) {
           for (let i = 0; i < tagObjs.length; i++) {
-            tags.push(tagObjs[i].tagName)
+            tags.push(tagObjs[i].tagName);
           }
         }
       } catch (e) {
         this.$message({
-          type: 'error',
-          message: e.message || e
-        })
+          type: "error",
+          message: e.message || e,
+        });
       }
 
-      this.updateTagForm.articleId = article.id
-      this.updateTagForm.tags = tags
-      this.updateTagsDialogVisible = true
+      this.updateTagForm.articleId = article.id;
+      this.updateTagForm.tags = tags;
+      this.updateTagsDialogVisible = true;
     },
-    async updateTags () {
+    async updateTags() {
       try {
-        const nowTags = await this.axios.put('/api/admin/article/tags', {
+        const nowTags = await this.axios.put("/api/admin/article/tags", {
           articleId: this.updateTagForm.articleId,
-          tags: (this.updateTagForm.tags || []).join(',')
-        })
+          tags: (this.updateTagForm.tags || []).join(","),
+        });
         if (this.results && this.results.length) {
           for (let i = 0; i < this.results.length; i++) {
             if (this.results[i].id === this.updateTagForm.articleId) {
-              this.results[i].tags = nowTags
+              this.results[i].tags = nowTags;
             }
           }
         }
-        this.updateTagsDialogVisible = false
+        this.updateTagsDialogVisible = false;
       } catch (e) {
         this.$message({
-          type: 'error',
-          message: e.message || e
-        })
+          type: "error",
+          message: e.message || e,
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

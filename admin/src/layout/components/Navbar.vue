@@ -7,52 +7,27 @@
       @toggleClick="toggleSideBar"
     />
 
-    <breadcrumb
-      id="breadcrumb-container"
-      class="breadcrumb-container"
-    />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
-        <search
-          id="header-search"
-          class="right-menu-item"
-        />
+        <search id="header-search" class="right-menu-item" />
 
-        <screenfull
-          id="screenfull"
-          class="right-menu-item hover-effect"
-        />
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <el-tooltip
-          content="Global Size"
-          effect="dark"
-          placement="bottom"
-        >
-          <size-select
-            id="size-select"
-            class="right-menu-item hover-effect"
-          />
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
 
-      <el-dropdown
-        class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img
-            :src="avatar"
-            class="user-avatar"
-          >
+          <img :src="avatar" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <span
-              style="display: block"
-              @click="logout"
-            >Log Out</span>
+            <span style="display: block" @click="logout">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -61,12 +36,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
+import Screenfull from "@/components/Screenfull";
+import SizeSelect from "@/components/SizeSelect";
+import Search from "@/components/HeaderSearch";
 
 export default {
   components: {
@@ -74,21 +49,21 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device'])
+    ...mapGetters(["sidebar", "avatar", "device"]),
   },
   methods: {
-    toggleSideBar () {
-      this.$store.dispatch('app/toggleSideBar')
+    toggleSideBar() {
+      this.$store.dispatch("app/toggleSideBar");
     },
-    async logout () {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
-  }
-}
+    async logout() {
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

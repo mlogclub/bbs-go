@@ -8,9 +8,7 @@
       autocomplete="on"
     >
       <div class="title-container">
-        <h3 class="title">
-          登录
-        </h3>
+        <h3 class="title">登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -25,12 +23,7 @@
         />
       </el-form-item>
 
-      <el-tooltip
-        v-model="capsTooltip"
-        content="Caps lock is On"
-        placement="right"
-        manual
-      >
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <el-input
             ref="password"
@@ -47,10 +40,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item
-        prop="captchaCode"
-        class="captcha-code"
-      >
+      <el-form-item prop="captchaCode" class="captcha-code">
         <el-input
           ref="username"
           v-model="loginForm.captchaCode"
@@ -60,11 +50,8 @@
           tabindex="3"
           autocomplete="off"
         />
-        <div
-          v-if="loginForm.captchaUrl"
-          class="captcha-code-img"
-        >
-          <a @click="showCaptcha"><img :src="loginForm.captchaUrl"></a>
+        <div v-if="loginForm.captchaUrl" class="captcha-code-img">
+          <a @click="showCaptcha"><img :src="loginForm.captchaUrl" /></a>
         </div>
       </el-form-item>
       <el-button
@@ -80,99 +67,103 @@
 </template>
 
 <script>
-
 export default {
-  data () {
+  data() {
     return {
       loginForm: {
-        username: '',
-        password: '',
-        captchaId: '',
-        captchaUrl: '',
-        captchaCode: ''
+        username: "",
+        password: "",
+        captchaId: "",
+        captchaUrl: "",
+        captchaCode: "",
       },
       capsTooltip: false,
       loading: false,
       redirect: undefined,
-      otherQuery: {}
-    }
+      otherQuery: {},
+    };
   },
   watch: {
     $route: {
-      handler (route) {
-        const { query } = route
+      handler(route) {
+        const { query } = route;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
-  mounted () {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+  mounted() {
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
-    this.showCaptcha()
+    this.showCaptcha();
   },
   methods: {
-    async showCaptcha () {
+    async showCaptcha() {
       try {
-        const ret = await this.axios.get('/api/captcha/request', {
+        const ret = await this.axios.get("/api/captcha/request", {
           params: {
-            captchaId: this.loginForm.captchaId || ''
-          }
-        })
-        this.loginForm.captchaId = ret.captchaId
-        this.loginForm.captchaUrl = process.env.VUE_APP_BASE_API + '/api/captcha/show?captchaId=' + this.loginForm.captchaId + '&timestamp=' + new Date().getTime()
+            captchaId: this.loginForm.captchaId || "",
+          },
+        });
+        this.loginForm.captchaId = ret.captchaId;
+        this.loginForm.captchaUrl =
+          process.env.VUE_APP_BASE_API +
+          "/api/captcha/show?captchaId=" +
+          this.loginForm.captchaId +
+          "&timestamp=" +
+          new Date().getTime();
       } catch (e) {
-        this.$message.error(e.message || e)
+        this.$message.error(e.message || e);
       }
     },
-    checkCapslock ({ shiftKey, key } = {}) {
+    checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if ((shiftKey && key >= 'a' && key <= 'z') || (!shiftKey && key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
+        if ((shiftKey && key >= "a" && key <= "z") || (!shiftKey && key >= "A" && key <= "Z")) {
+          this.capsTooltip = true;
         } else {
-          this.capsTooltip = false
+          this.capsTooltip = false;
         }
       }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
+      if (key === "CapsLock" && this.capsTooltip === true) {
+        this.capsTooltip = false;
       }
     },
-    handleLogin () {
+    handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('user/login', this.loginForm)
+            .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+              this.$router.push({ path: this.redirect || "/", query: this.otherQuery });
+              this.loading = false;
             })
             .catch((e) => {
-              console.error(e)
-              this.showCaptcha()
-              this.loading = false
-            })
-          return true
+              console.error(e);
+              this.showCaptcha();
+              this.loading = false;
+            });
+          return true;
         }
-        return false
-      })
+        return false;
+      });
     },
-    getOtherQuery (query) {
+    getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
-  }
-}
+        return acc;
+      }, {});
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -191,7 +182,7 @@ export default {
     overflow: hidden;
 
     .captcha-code {
-      &>div {
+      & > div {
         display: flex;
         .captcha-code-img {
           // margin-left: 10px;

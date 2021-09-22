@@ -13,7 +13,7 @@
       :class="[sizeClass, roundClass, borderClass]"
       :alt="user.nickname"
       @error="error"
-    >
+    />
     <span
       v-else-if="styleText"
       :class="['avatar', sizeClass, roundClass, borderClass]"
@@ -25,87 +25,83 @@
 </template>
 
 <script>
-import stringToColor from '@/utils/stringToColor'
+import stringToColor from "@/utils/stringToColor";
 
 export default {
-  name: 'Avatar',
+  name: "Avatar",
   props: {
     user: {
       type: [Object, String],
-      default: () => {}
+      default: () => {},
     },
     size: {
       type: [Number, String],
-      default: 50
+      default: 50,
     },
     round: {
       type: Boolean,
-      default: false
+      default: false,
     },
     hasBorder: {
       type: Boolean,
-      default: false
+      default: false,
     },
     extraStyle: {
       type: [Object],
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  data () {
+  data() {
     return {
       loadError: false,
       sizes: {
-        150: 'font-size: 60px;line-height: 150px;border-radius: 2px',
-        100: 'font-size: 40px;line-height: 100px;border-radius: 2px',
-        80: 'font-size: 32px;line-height: 80px;border-radius: 2px',
-        70: 'font-size: 28px;line-height: 70px;border-radius: 2px',
-        60: 'font-size: 26px;line-height: 60px;border-radius: 2px',
-        50: 'font-size: 24px;line-height: 50px;border-radius: 2px',
-        45: 'font-size: 22px;line-height: 45px;border-radius: 2px',
-        40: 'font-size: 20px;line-height: 40px;border-radius: 2px',
-        35: 'font-size: 18px;line-height: 30px;border-radius: 2px',
-        30: 'font-size: 18px;line-height: 30px;border-radius: 2px',
-        20: 'font-size: 10px;line-height: 20px;border-radius: 2px'
-      }
-    }
+        150: "font-size: 60px;line-height: 150px;border-radius: 2px",
+        100: "font-size: 40px;line-height: 100px;border-radius: 2px",
+        80: "font-size: 32px;line-height: 80px;border-radius: 2px",
+        70: "font-size: 28px;line-height: 70px;border-radius: 2px",
+        60: "font-size: 26px;line-height: 60px;border-radius: 2px",
+        50: "font-size: 24px;line-height: 50px;border-radius: 2px",
+        45: "font-size: 22px;line-height: 45px;border-radius: 2px",
+        40: "font-size: 20px;line-height: 40px;border-radius: 2px",
+        35: "font-size: 18px;line-height: 30px;border-radius: 2px",
+        30: "font-size: 18px;line-height: 30px;border-radius: 2px",
+        20: "font-size: 10px;line-height: 20px;border-radius: 2px",
+      },
+    };
   },
   computed: {
-    hasAvatarUrl () {
-      return this.avatarUrl
+    hasAvatarUrl() {
+      return this.avatarUrl;
     },
-    avatarUrl () {
-      return this.user.smallAvatar || this.user.avatar
+    avatarUrl() {
+      return this.user.smallAvatar || this.user.avatar;
     },
-    usernameAt () {
-      let c = this.user.nickname
-        ? this.user.nickname.charAt(0).toUpperCase()
-        : ''
+    usernameAt() {
+      let c = this.user.nickname ? this.user.nickname.charAt(0).toUpperCase() : "";
       if (!c) {
-        c = this.user.username ? this.user.username.charAt(0).toUpperCase() : ''
+        c = this.user.username ? this.user.username.charAt(0).toUpperCase() : "";
       }
-      return c
+      return c;
     },
-    styleText () {
-      return `background-color: #${stringToColor(this.usernameAt)};${
-        this.sizes[this.size]
-      }`
+    styleText() {
+      return `background-color: #${stringToColor(this.usernameAt)};${this.sizes[this.size]}`;
     },
-    sizeClass () {
-      return ['avatar-size-' + this.size]
+    sizeClass() {
+      return ["avatar-size-" + this.size];
     },
-    roundClass () {
-      return this.round ? 'round' : ''
+    roundClass() {
+      return this.round ? "round" : "";
     },
-    borderClass () {
-      return this.hasBorder ? 'has-border' : ''
-    }
+    borderClass() {
+      return this.hasBorder ? "has-border" : "";
+    },
   },
   methods: {
-    error () {
-      this.loadError = true
-    }
-  }
-}
+    error() {
+      this.loadError = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

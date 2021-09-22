@@ -1,44 +1,19 @@
 <template>
   <section class="page-container">
     <div class="toolbar">
-      <el-form
-        :inline="true"
-        :model="filters"
-      >
+      <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input
-            v-model="filters.userId"
-            placeholder="用户编号"
-          />
+          <el-input v-model="filters.userId" placeholder="用户编号" />
         </el-form-item>
         <el-form-item>
-          <el-select
-            v-model="filters.opType"
-            clearable
-            placeholder="操作类型"
-            @change="list"
-          >
-            <el-option
-              label="添加"
-              value="create"
-            />
-            <el-option
-              label="删除"
-              value="delete"
-            />
-            <el-option
-              label="修改"
-              value="update"
-            />
+          <el-select v-model="filters.opType" clearable placeholder="操作类型" @change="list">
+            <el-option label="添加" value="create" />
+            <el-option label="删除" value="delete" />
+            <el-option label="修改" value="update" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="list"
-          >
-            查询
-          </el-button>
+          <el-button type="primary" @click="list"> 查询 </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -57,34 +32,13 @@
           <div>{{ scope.row.referer }}</div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="id"
-        label="编号"
-        width="100"
-      />
-      <el-table-column
-        prop="userId"
-        label="用户编号"
-      />
-      <el-table-column
-        prop="opType"
-        label="操作类型"
-      />
-      <el-table-column
-        prop="dataType"
-        label="数据类型"
-      />
-      <el-table-column
-        prop="dataId"
-        label="数据编号"
-      />
-      <el-table-column
-        prop="createTime"
-        label="操作时间"
-      >
-        <template
-          slot-scope="scope"
-        >
+      <el-table-column prop="id" label="编号" width="100" />
+      <el-table-column prop="userId" label="用户编号" />
+      <el-table-column prop="opType" label="操作类型" />
+      <el-table-column prop="dataType" label="数据类型" />
+      <el-table-column prop="dataId" label="数据编号" />
+      <el-table-column prop="createTime" label="操作时间">
+        <template slot-scope="scope">
           {{ scope.row.createTime | formatDate }}
         </template>
       </el-table-column>
@@ -106,45 +60,45 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       results: [],
       listLoading: false,
       page: {},
-      filters: {}
-    }
+      filters: {},
+    };
   },
-  mounted () {
-    this.list()
+  mounted() {
+    this.list();
   },
   methods: {
-    list () {
-      const me = this
-      me.listLoading = true
+    list() {
+      const me = this;
+      me.listLoading = true;
       const params = Object.assign(me.filters, {
         page: me.page.page,
-        limit: me.page.limit
-      })
+        limit: me.page.limit,
+      });
       this.axios
-        .form('/api/admin/operate-log/list', params)
+        .form("/api/admin/operate-log/list", params)
         .then((data) => {
-          me.results = data.results
-          me.page = data.page
+          me.results = data.results;
+          me.page = data.page;
         })
         .finally(() => {
-          me.listLoading = false
-        })
+          me.listLoading = false;
+        });
     },
-    handlePageChange (val) {
-      this.page.page = val
-      this.list()
+    handlePageChange(val) {
+      this.page.page = val;
+      this.list();
     },
-    handleLimitChange (val) {
-      this.page.limit = val
-      this.list()
-    }
-  }
-}
+    handleLimitChange(val) {
+      this.page.limit = val;
+      this.list();
+    },
+  },
+};
 </script>
 
 <style scoped>

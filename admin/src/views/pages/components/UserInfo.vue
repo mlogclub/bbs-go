@@ -9,19 +9,19 @@
 </template>
 
 <script>
-import Avatar from '@/components/Avatar'
+import Avatar from "@/components/Avatar";
 export default {
   components: { Avatar },
   props: {
     user: {
       type: Object,
       required: true,
-      default () {
-        return null
-      }
-    }
-  }
-}
+      default() {
+        return null;
+      },
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
