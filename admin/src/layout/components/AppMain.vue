@@ -27,12 +27,14 @@ export default {
   /* 50= navbar  50  */
   min-height: calc(100vh - 50px);
   width: 100%;
+  height: 100%;
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
+  overflow-y: auto;
   background-color: #f3f6fe;
   // padding: 10px;
   // margin-top: 10px;
-  padding: 0 20px;
+  padding: 20px;
 
   .app-main-container {
     background-color: #fff;
