@@ -1,5 +1,8 @@
 <template>
-  <el-menu class="layout-menu" router>
+  <el-menu
+    class="layout-menu"
+    router
+  >
     <!--    <el-menu-item index="/home">-->
     <!--      首页-->
     <!--    </el-menu-item>-->

@@ -7,27 +7,52 @@
       @toggleClick="toggleSideBar"
     />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+    />
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search
+          id="header-search"
+          class="right-menu-item"
+        />
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull
+          id="screenfull"
+          class="right-menu-item hover-effect"
+        />
 
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+        <el-tooltip
+          content="Global Size"
+          effect="dark"
+          placement="bottom"
+        >
+          <size-select
+            id="size-select"
+            class="right-menu-item hover-effect"
+          />
         </el-tooltip>
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <img
+            :src="avatar"
+            class="user-avatar"
+          >
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <span style="display: block" @click="logout">Log Out</span>
+            <span
+              style="display: block"
+              @click="logout"
+            >Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

@@ -13,7 +13,7 @@
       :class="[sizeClass, roundClass, borderClass]"
       :alt="user.nickname"
       @error="error"
-    />
+    >
     <span
       v-else-if="styleText"
       :class="['avatar', sizeClass, roundClass, borderClass]"

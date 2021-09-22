@@ -11,20 +11,45 @@
       highlight-current-row
       border
     >
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="sourceType" label="来源类型"></el-table-column>
-      <el-table-column prop="sourceId" label="来源编号"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column prop="type" label="类型">
-        <template slot-scope="scope">{{
-          scope.row.type === 0 ? '增加' : '减少'
-        }}</template>
+      <el-table-column
+        prop="id"
+        label="编号"
+      />
+      <el-table-column
+        prop="sourceType"
+        label="来源类型"
+      />
+      <el-table-column
+        prop="sourceId"
+        label="来源编号"
+      />
+      <el-table-column
+        prop="description"
+        label="描述"
+      />
+      <el-table-column
+        prop="type"
+        label="类型"
+      >
+        <template slot-scope="scope">
+          {{
+            scope.row.type === 0 ? '增加' : '减少'
+          }}
+        </template>
       </el-table-column>
-      <el-table-column prop="score" label="积分"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{
-          scope.row.createTime | formatDate
-        }}</template>
+      <el-table-column
+        prop="score"
+        label="积分"
+      />
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+      >
+        <template slot-scope="scope">
+          {{
+            scope.row.createTime | formatDate
+          }}
+        </template>
       </el-table-column>
     </el-table>
 
@@ -37,8 +62,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      >
-      </el-pagination>
+      />
     </div>
   </el-dialog>
 </template>

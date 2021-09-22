@@ -8,7 +8,9 @@
       autocomplete="on"
     >
       <div class="title-container">
-        <h3 class="title">登录</h3>
+        <h3 class="title">
+          登录
+        </h3>
       </div>
 
       <el-form-item prop="username">
@@ -23,7 +25,12 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip
+        v-model="capsTooltip"
+        content="Caps lock is On"
+        placement="right"
+        manual
+      >
         <el-form-item prop="password">
           <el-input
             ref="password"
@@ -40,7 +47,10 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item prop="captchaCode" class="captcha-code">
+      <el-form-item
+        prop="captchaCode"
+        class="captcha-code"
+      >
         <el-input
           ref="username"
           v-model="loginForm.captchaCode"
@@ -50,8 +60,11 @@
           tabindex="3"
           autocomplete="off"
         />
-        <div v-if="loginForm.captchaUrl" class="captcha-code-img">
-          <a @click="showCaptcha"><img :src="loginForm.captchaUrl" /></a>
+        <div
+          v-if="loginForm.captchaUrl"
+          class="captcha-code-img"
+        >
+          <a @click="showCaptcha"><img :src="loginForm.captchaUrl"></a>
         </div>
       </el-form-item>
       <el-button
@@ -59,8 +72,9 @@
         type="primary"
         style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
-        >Login</el-button
       >
+        Login
+      </el-button>
     </el-form>
   </div>
 </template>

@@ -1,21 +1,43 @@
 <template>
   <section class="page-container">
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号"></el-input>
+          <el-input
+            v-model="filters.id"
+            placeholder="编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.username" placeholder="用户名"></el-input>
+          <el-input
+            v-model="filters.username"
+            placeholder="用户名"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.nickname" placeholder="昵称"></el-input>
+          <el-input
+            v-model="filters.nickname"
+            placeholder="昵称"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >
+            新增
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,7 +64,8 @@
                 :key="role"
                 size="mini"
                 style="margin-right: 3px"
-                >{{ role }}
+              >
+                {{ role }}
               </el-tag>
             </div>
           </div>
@@ -60,34 +83,68 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="编号" width="100"></el-table-column>
-      <el-table-column prop="avatar" label="头像" width="80">
+      <el-table-column
+        prop="id"
+        label="编号"
+        width="100"
+      />
+      <el-table-column
+        prop="avatar"
+        label="头像"
+        width="80"
+      >
         <template slot-scope="scope">
           <avatar :user="scope.row" />
         </template>
       </el-table-column>
-      <el-table-column prop="nickname" label="昵称"></el-table-column>
-      <el-table-column prop="email" label="邮箱"></el-table-column>
-      <el-table-column prop="score" label="积分"></el-table-column>
-      <el-table-column prop="forbidden" label="是否禁言">
+      <el-table-column
+        prop="nickname"
+        label="昵称"
+      />
+      <el-table-column
+        prop="email"
+        label="邮箱"
+      />
+      <el-table-column
+        prop="score"
+        label="积分"
+      />
+      <el-table-column
+        prop="forbidden"
+        label="是否禁言"
+      >
         <template slot-scope="scope">
-          <span v-if="scope.row.forbidden" class="tag is-warning">
-            <template v-if="scope.row.forbiddenEndTime === -1"
-              >永久禁言</template
-            >
-            <template v-else
-              >禁言至：{{ scope.row.forbiddenEndTime | formatDate }}</template
-            >
+          <span
+            v-if="scope.row.forbidden"
+            class="tag is-warning"
+          >
+            <template
+              v-if="scope.row.forbiddenEndTime === -1"
+            >永久禁言</template>
+            <template
+              v-else
+            >禁言至：{{ scope.row.forbiddenEndTime | formatDate }}</template>
           </span>
-          <span v-else class="tag is-success">正常</span>
+          <span
+            v-else
+            class="tag is-success"
+          >正常</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="注册时间">
-        <template slot-scope="scope">{{
-          scope.row.createTime | formatDate
-        }}</template>
+      <el-table-column
+        prop="createTime"
+        label="注册时间"
+      >
+        <template slot-scope="scope">
+          {{
+            scope.row.createTime | formatDate
+          }}
+        </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column
+        label="操作"
+        width="200"
+      >
         <template slot-scope="scope">
           <el-dropdown
             size="mini"
@@ -96,25 +153,31 @@
             @command="handleCommand"
           >
             <el-button type="primary">
-              操作<i class="el-icon-arrow-down el-icon--right"></i>
+              操作<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="{ cmd: 'edit', row: scope.row }"
-                >编辑</el-dropdown-item
+              <el-dropdown-item
+                :command="{ cmd: 'edit', row: scope.row }"
               >
+                编辑
+              </el-dropdown-item>
               <el-dropdown-item
                 v-if="scope.row.forbidden"
                 :command="{ cmd: 'removeForbidden', row: scope.row }"
-                >取消禁言</el-dropdown-item
               >
+                取消禁言
+              </el-dropdown-item>
               <el-dropdown-item
                 v-else
                 :command="{ cmd: 'forbidden', row: scope.row }"
-                >禁言</el-dropdown-item
               >
-              <el-dropdown-item :command="{ cmd: 'scoreLog', row: scope.row }"
-                >积分记录</el-dropdown-item
+                禁言
+              </el-dropdown-item>
+              <el-dropdown-item
+                :command="{ cmd: 'scoreLog', row: scope.row }"
               >
+                积分记录
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -130,8 +193,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      >
-      </el-pagination>
+      />
     </div>
 
     <el-dialog
@@ -145,30 +207,48 @@
         :rules="addFormRules"
         label-width="80px"
       >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="addForm.username"></el-input>
+        <el-form-item
+          label="用户名"
+          prop="username"
+        >
+          <el-input v-model="addForm.username" />
         </el-form-item>
 
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="addForm.nickname"></el-input>
+        <el-form-item
+          label="昵称"
+          prop="nickname"
+        >
+          <el-input v-model="addForm.nickname" />
         </el-form-item>
 
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="addForm.email"></el-input>
+        <el-form-item
+          label="邮箱"
+          prop="email"
+        >
+          <el-input v-model="addForm.email" />
         </el-form-item>
 
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="addForm.password"></el-input>
+        <el-form-item
+          label="密码"
+          prop="password"
+        >
+          <el-input v-model="addForm.password" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="addFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="addLoading"
           type="primary"
           @click.native="addSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
 
@@ -183,17 +263,32 @@
         :rules="editFormRules"
         label-width="80px"
       >
-        <el-input v-model="editForm.id" type="hidden"></el-input>
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="editForm.username"></el-input>
+        <el-input
+          v-model="editForm.id"
+          type="hidden"
+        />
+        <el-form-item
+          label="用户名"
+          prop="username"
+        >
+          <el-input v-model="editForm.username" />
         </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="editForm.nickname"></el-input>
+        <el-form-item
+          label="昵称"
+          prop="nickname"
+        >
+          <el-input v-model="editForm.nickname" />
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="editForm.email"></el-input>
+        <el-form-item
+          label="邮箱"
+          prop="email"
+        >
+          <el-input v-model="editForm.email" />
         </el-form-item>
-        <el-form-item label="角色" prop="roles">
+        <el-form-item
+          label="角色"
+          prop="roles"
+        >
           <el-select
             v-model="editForm.roles"
             multiple
@@ -208,32 +303,55 @@
               :key="item"
               :label="item"
               :value="item"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="密码" prop="password">
+        <el-form-item
+          label="密码"
+          prop="password"
+        >
           <el-input
             v-model="editForm.password"
             placeholder="不填写表示不更改密码"
-          ></el-input>
+          />
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="editForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
+        <el-form-item
+          label="状态"
+          prop="status"
+        >
+          <el-select
+            v-model="editForm.status"
+            placeholder="请选择"
+          >
+            <el-option
+              :key="0"
+              :value="0"
+              label="正常"
+            />
+            <el-option
+              :key="1"
+              :value="1"
+              label="删除"
+            />
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="editFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="editLoading"
           type="primary"
           @click.native="editSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
 
@@ -242,19 +360,50 @@
       :close-on-click-modal="false"
       title="禁言"
     >
-      <el-form ref="forbiddenForm" :model="forbiddenForm" label-width="80px">
-        <el-input v-model="forbiddenForm.userId" type="hidden"></el-input>
-        <el-form-item label="禁言时间" prop="reason">
+      <el-form
+        ref="forbiddenForm"
+        :model="forbiddenForm"
+        label-width="80px"
+      >
+        <el-input
+          v-model="forbiddenForm.userId"
+          type="hidden"
+        />
+        <el-form-item
+          label="禁言时间"
+          prop="reason"
+        >
           <el-select v-model="forbiddenForm.days">
-            <el-option label="3天" value="3" />
-            <el-option label="5天" value="3" />
-            <el-option label="7天" value="7" />
-            <el-option label="15天" value="15" />
-            <el-option label="30天" value="30" />
-            <el-option label="永久" value="-1" />
+            <el-option
+              label="3天"
+              value="3"
+            />
+            <el-option
+              label="5天"
+              value="3"
+            />
+            <el-option
+              label="7天"
+              value="7"
+            />
+            <el-option
+              label="15天"
+              value="15"
+            />
+            <el-option
+              label="30天"
+              value="30"
+            />
+            <el-option
+              label="永久"
+              value="-1"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="禁言原因" prop="reason">
+        <el-form-item
+          label="禁言原因"
+          prop="reason"
+        >
           <el-select v-model="forbiddenForm.reason">
             <el-option value="广告" />
             <el-option value="灌水" />
@@ -264,14 +413,20 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="forbiddenFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="forbiddenFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="forbiddenLoading"
           type="primary"
           @click.native="forbidden"
-          >禁言</el-button
         >
+          禁言
+        </el-button>
       </div>
     </el-dialog>
 

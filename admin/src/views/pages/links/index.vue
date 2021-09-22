@@ -1,12 +1,21 @@
 <template>
   <section class="page-container">
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.title" placeholder="标题"></el-input>
+          <el-input
+            v-model="filters.title"
+            placeholder="标题"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.url" placeholder="链接"></el-input>
+          <el-input
+            v-model="filters.url"
+            placeholder="链接"
+          />
         </el-form-item>
         <el-form-item>
           <el-select
@@ -15,15 +24,31 @@
             placeholder="请选择状态"
             @change="list"
           >
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="删除" value="1"></el-option>
+            <el-option
+              label="正常"
+              value="0"
+            />
+            <el-option
+              label="删除"
+              value="1"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >
+            新增
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -35,34 +60,79 @@
       stripe
       style="width: 100%"
     >
-      <el-table-column prop="id" label="编号" width="100"></el-table-column>
-      <el-table-column prop="title" label="标题"></el-table-column>
-      <el-table-column prop="url" label="链接">
+      <el-table-column
+        prop="id"
+        label="编号"
+        width="100"
+      />
+      <el-table-column
+        prop="title"
+        label="标题"
+      />
+      <el-table-column
+        prop="url"
+        label="链接"
+      >
         <template slot-scope="scope">
-          <a :href="scope.row.url" target="_blank">{{ scope.row.url }}</a>
+          <a
+            :href="scope.row.url"
+            target="_blank"
+          >{{ scope.row.url }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="logo" label="Logo" width="60">
+      <el-table-column
+        prop="logo"
+        label="Logo"
+        width="60"
+      >
         <template slot-scope="scope">
-          <img v-if="scope.row.logo" :src="scope.row.logo" class="link-logo" />
-          <img v-else src="@/assets/images/net.png" class="link-logo" />
+          <img
+            v-if="scope.row.logo"
+            :src="scope.row.logo"
+            class="link-logo"
+          >
+          <img
+            v-else
+            src="@/assets/images/net.png"
+            class="link-logo"
+          >
         </template>
       </el-table-column>
-      <el-table-column prop="summary" label="描述"></el-table-column>
-      <el-table-column prop="status" label="状态" width="50">
-        <template slot-scope="scope"
-          >{{ scope.row.status === 0 ? '正常' : '删除' }}
+      <el-table-column
+        prop="summary"
+        label="描述"
+      />
+      <el-table-column
+        prop="status"
+        label="状态"
+        width="50"
+      >
+        <template
+          slot-scope="scope"
+        >
+          {{ scope.row.status === 0 ? '正常' : '删除' }}
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope"
-          >{{ scope.row.createTime | formatDate }}
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+      >
+        <template
+          slot-scope="scope"
+        >
+          {{ scope.row.createTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column
+        label="操作"
+        width="150"
+      >
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-            >编辑
+          <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.row)"
+          >
+            编辑
           </el-button>
         </template>
       </el-table-column>
@@ -77,7 +147,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      ></el-pagination>
+      />
     </div>
 
     <el-dialog
@@ -85,31 +155,49 @@
       :close-on-click-modal="false"
       title="新增"
     >
-      <el-form ref="addForm" :model="addForm" label-width="80px">
+      <el-form
+        ref="addForm"
+        :model="addForm"
+        label-width="80px"
+      >
         <el-form-item label="链接">
-          <el-input v-model="addForm.url" style="width: 80%"></el-input>&nbsp;
-          <el-button type="primary" @click="detect">Detect</el-button>
+          <el-input
+            v-model="addForm.url"
+            style="width: 80%"
+          />&nbsp;
+          <el-button
+            type="primary"
+            @click="detect"
+          >
+            Detect
+          </el-button>
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="addForm.title"></el-input>
+          <el-input v-model="addForm.title" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input
             v-model="addForm.summary"
             :autosize="{ minRows: 2, maxRows: 4 }"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="Logo">
-          <el-input v-model="addForm.logo"></el-input>
+          <el-input v-model="addForm.logo" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="addFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="addLoading"
           type="primary"
           @click.native="addSubmit"
-          >提交
+        >
+          提交
         </el-button>
       </div>
     </el-dialog>
@@ -125,36 +213,59 @@
         :rules="editFormRules"
         label-width="80px"
       >
-        <el-input v-model="editForm.id" type="hidden"></el-input>
+        <el-input
+          v-model="editForm.id"
+          type="hidden"
+        />
         <el-form-item label="链接">
-          <el-input v-model="editForm.url"></el-input>
+          <el-input v-model="editForm.url" />
         </el-form-item>
         <el-form-item label="标题">
-          <el-input v-model="editForm.title"></el-input>
+          <el-input v-model="editForm.title" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input
             v-model="editForm.summary"
             :autosize="{ minRows: 2, maxRows: 4 }"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="Logo">
-          <el-input v-model="editForm.logo"></el-input>
+          <el-input v-model="editForm.logo" />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="editForm.status" placeholder="请选择">
-            <el-option :key="0" :value="0" label="正常"></el-option>
-            <el-option :key="1" :value="1" label="删除"></el-option>
+        <el-form-item
+          label="状态"
+          prop="status"
+        >
+          <el-select
+            v-model="editForm.status"
+            placeholder="请选择"
+          >
+            <el-option
+              :key="0"
+              :value="0"
+              label="正常"
+            />
+            <el-option
+              :key="1"
+              :value="1"
+              label="删除"
+            />
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="editFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="editLoading"
           type="primary"
           @click.native="editSubmit"
-          >提交
+        >
+          提交
         </el-button>
       </div>
     </el-dialog>

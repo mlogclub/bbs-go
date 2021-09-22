@@ -17,8 +17,11 @@
       class="upload-image"
       @load="finishLoad"
       @error="finishLoad"
+    >
+    <i
+      class="el-icon-plus uploader-icon"
+      :class="{ show: !value }"
     />
-    <i class="el-icon-plus uploader-icon" :class="{ show: !value }"></i>
   </el-upload>
 </template>
 

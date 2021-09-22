@@ -1,15 +1,30 @@
 <template>
-  <section v-loading="listLoading" class="page-container">
+  <section
+    v-loading="listLoading"
+    class="page-container"
+  >
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号"></el-input>
+          <el-input
+            v-model="filters.id"
+            placeholder="编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
+          <el-input
+            v-model="filters.userId"
+            placeholder="用户编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.title" placeholder="标题"></el-input>
+          <el-input
+            v-model="filters.title"
+            placeholder="标题"
+          />
         </el-form-item>
         <el-form-item>
           <el-select
@@ -18,8 +33,14 @@
             placeholder="是否推荐"
             @change="list"
           >
-            <el-option label="推荐" value="1"></el-option>
-            <el-option label="未推荐" value="0"></el-option>
+            <el-option
+              label="推荐"
+              value="1"
+            />
+            <el-option
+              label="未推荐"
+              value="0"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -29,18 +50,33 @@
             placeholder="请选择状态"
             @change="list"
           >
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="删除" value="1"></el-option>
+            <el-option
+              label="正常"
+              value="0"
+            />
+            <el-option
+              label="删除"
+              value="1"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <div class="page-section topics">
-      <div v-for="item in results" :key="item.topicId" class="topic-item">
+      <div
+        v-for="item in results"
+        :key="item.topicId"
+        class="topic-item"
+      >
         <div class="topic-avatar">
           <avatar :user="item.user" />
         </div>
@@ -50,37 +86,38 @@
               :href="'/user/' + item.user.id"
               target="_blank"
               class="topic-nickname"
-              >{{ item.user.nickname }}</a
-            >
+            >{{ item.user.nickname }}</a>
 
             <div class="topic-info">
               <span
                 v-if="item.status === 1"
                 style="color: red; font-weight: bold"
-                >已删除</span
-              >
-              <span v-if="item.recommend" style="color: red; font-weight: bold"
-                >已推荐</span
-              >
+              >已删除</span>
+              <span
+                v-if="item.recommend"
+                style="color: red; font-weight: bold"
+              >已推荐</span>
             </div>
           </div>
 
           <div class="topic-metadata">
             <span class="topic-metadata-item">ID: {{ item.topicId }}</span>
-            <span class="topic-metadata-item"
-              >发布于：{{ item.createTime | formatDate }}</span
-            >
+            <span
+              class="topic-metadata-item"
+            >发布于：{{ item.createTime | formatDate }}</span>
             <span class="node">{{ item.node ? item.node.name : '' }}</span>
             <span
               v-for="tag in item.tags"
               :key="tag.tagId"
               class="topic-metadata-item tag"
-              >#{{ tag.tagName }}</span
-            >
+            >#{{ tag.tagName }}</span>
           </div>
 
           <div class="topic-title">
-            <a :href="'/topic/' + item.topicId" target="_blank">{{
+            <a
+              :href="'/topic/' + item.topicId"
+              target="_blank"
+            >{{
               item.title
             }}</a>
           </div>
@@ -100,13 +137,16 @@
             v-if="item.imageList && item.imageList.length"
             class="topic-image-list"
           >
-            <li v-for="(image, index) in item.imageList" :key="index">
+            <li
+              v-for="(image, index) in item.imageList"
+              :key="index"
+            >
               <a
                 :href="'/topic/' + item.topicId"
                 target="_blank"
                 class="image-item"
               >
-                <img v-lazy="image.preview" />
+                <img v-lazy="image.preview">
               </a>
             </li>
           </ul>
@@ -116,27 +156,23 @@
               v-if="item.status === 0"
               class="action-item btn"
               @click="deleteSubmit(item.topicId)"
-              >删除</a
-            >
+            >删除</a>
             <a
               v-else
               class="action-item btn"
               @click="undeleteSubmit(item.topicId)"
-              >取消删除</a
-            >
+            >取消删除</a>
 
             <a
               v-if="!item.recommend"
               class="action-item btn"
               @click="recommend(item.topicId)"
-              >推荐</a
-            >
+            >推荐</a>
             <a
               v-else
               class="action-item btn"
               @click="cancelRecommend(item.topicId)"
-              >取消推荐</a
-            >
+            >取消推荐</a>
           </div>
         </div>
       </div>
@@ -151,8 +187,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      >
-      </el-pagination>
+      />
     </div>
 
     <el-dialog
@@ -166,34 +201,55 @@
         :rules="addFormRules"
         label-width="80px"
       >
-        <el-form-item label="userId" prop="rule">
-          <el-input v-model="addForm.userId"></el-input>
+        <el-form-item
+          label="userId"
+          prop="rule"
+        >
+          <el-input v-model="addForm.userId" />
         </el-form-item>
 
-        <el-form-item label="title" prop="rule">
-          <el-input v-model="addForm.title"></el-input>
+        <el-form-item
+          label="title"
+          prop="rule"
+        >
+          <el-input v-model="addForm.title" />
         </el-form-item>
 
-        <el-form-item label="content" prop="rule">
-          <el-input v-model="addForm.content"></el-input>
+        <el-form-item
+          label="content"
+          prop="rule"
+        >
+          <el-input v-model="addForm.content" />
         </el-form-item>
 
-        <el-form-item label="status" prop="rule">
-          <el-input v-model="addForm.status"></el-input>
+        <el-form-item
+          label="status"
+          prop="rule"
+        >
+          <el-input v-model="addForm.status" />
         </el-form-item>
 
-        <el-form-item label="createTime" prop="rule">
-          <el-input v-model="addForm.createTime"></el-input>
+        <el-form-item
+          label="createTime"
+          prop="rule"
+        >
+          <el-input v-model="addForm.createTime" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="addFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="addLoading"
           type="primary"
           @click.native="addSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
 
@@ -208,40 +264,67 @@
         :rules="editFormRules"
         label-width="80px"
       >
-        <el-input v-model="editForm.id" type="hidden"></el-input>
+        <el-input
+          v-model="editForm.id"
+          type="hidden"
+        />
 
-        <el-form-item label="forumId" prop="rule">
-          <el-input v-model="editForm.forumId"></el-input>
+        <el-form-item
+          label="forumId"
+          prop="rule"
+        >
+          <el-input v-model="editForm.forumId" />
         </el-form-item>
 
-        <el-form-item label="userId" prop="rule">
-          <el-input v-model="editForm.userId"></el-input>
+        <el-form-item
+          label="userId"
+          prop="rule"
+        >
+          <el-input v-model="editForm.userId" />
         </el-form-item>
 
-        <el-form-item label="title" prop="rule">
-          <el-input v-model="editForm.title"></el-input>
+        <el-form-item
+          label="title"
+          prop="rule"
+        >
+          <el-input v-model="editForm.title" />
         </el-form-item>
 
-        <el-form-item label="content" prop="rule">
-          <el-input v-model="editForm.content"></el-input>
+        <el-form-item
+          label="content"
+          prop="rule"
+        >
+          <el-input v-model="editForm.content" />
         </el-form-item>
 
-        <el-form-item label="status" prop="rule">
-          <el-input v-model="editForm.status"></el-input>
+        <el-form-item
+          label="status"
+          prop="rule"
+        >
+          <el-input v-model="editForm.status" />
         </el-form-item>
 
-        <el-form-item label="createTime" prop="rule">
-          <el-input v-model="editForm.createTime"></el-input>
+        <el-form-item
+          label="createTime"
+          prop="rule"
+        >
+          <el-input v-model="editForm.createTime" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="editFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="editLoading"
           type="primary"
           @click.native="editSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
   </section>

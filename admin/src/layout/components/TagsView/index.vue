@@ -1,6 +1,12 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+  <div
+    id="tags-view-container"
+    class="tags-view-container"
+  >
+    <scroll-pane
+      ref="scrollPane"
+      class="tags-view-wrapper"
+    >
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -20,11 +26,26 @@
         />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
-      <li @click="closeOthersTags">关闭其他</li>
-      <li @click="closeAllTags(selectedTag)">关闭全部</li>
+    <ul
+      v-show="visible"
+      :style="{ left: left + 'px', top: top + 'px' }"
+      class="contextmenu"
+    >
+      <li @click="refreshSelectedTag(selectedTag)">
+        刷新
+      </li>
+      <li
+        v-if="!isAffix(selectedTag)"
+        @click="closeSelectedTag(selectedTag)"
+      >
+        关闭
+      </li>
+      <li @click="closeOthersTags">
+        关闭其他
+      </li>
+      <li @click="closeAllTags(selectedTag)">
+        关闭全部
+      </li>
     </ul>
   </div>
 </template>

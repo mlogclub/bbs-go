@@ -1,18 +1,37 @@
 <template>
   <section class="page-container">
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号"></el-input>
+          <el-input
+            v-model="filters.id"
+            placeholder="编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="名称"></el-input>
+          <el-input
+            v-model="filters.name"
+            placeholder="名称"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >
+            新增
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -25,27 +44,55 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">{{
-          scope.row.status === 0 ? '启用' : '禁用'
-        }}</template>
-      </el-table-column>
-
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">{{
-          scope.row.createTime | formatDate
-        }}</template>
-      </el-table-column>
-
-      <el-table-column label="操作" width="150">
+      <el-table-column
+        type="selection"
+        width="55"
+      />
+      <el-table-column
+        prop="id"
+        label="编号"
+      />
+      <el-table-column
+        prop="name"
+        label="名称"
+      />
+      <el-table-column
+        prop="description"
+        label="描述"
+      />
+      <el-table-column
+        prop="status"
+        label="状态"
+      >
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
+          {{
+            scope.row.status === 0 ? '启用' : '禁用'
+          }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+      >
+        <template slot-scope="scope">
+          {{
+            scope.row.createTime | formatDate
+          }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="操作"
+        width="150"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.row)"
           >
+            编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,8 +106,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      >
-      </el-pagination>
+      />
     </div>
 
     <el-dialog
@@ -68,26 +114,39 @@
       :close-on-click-modal="false"
       title="新增"
     >
-      <el-form ref="addForm" :model="addForm" label-width="80px">
+      <el-form
+        ref="addForm"
+        :model="addForm"
+        label-width="80px"
+      >
         <el-form-item label="名称">
-          <el-input v-model="addForm.name"></el-input>
+          <el-input v-model="addForm.name" />
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item
+          label="描述"
+          prop="description"
+        >
           <el-input
             v-model="addForm.description"
             type="textarea"
             auto-complete="off"
-          ></el-input>
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="addFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="addLoading"
           type="primary"
           @click.native="addSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
 
@@ -96,33 +155,58 @@
       :close-on-click-modal="false"
       title="编辑"
     >
-      <el-form ref="editForm" :model="editForm" label-width="80px">
-        <el-input v-model="editForm.id" type="hidden"></el-input>
+      <el-form
+        ref="editForm"
+        :model="editForm"
+        label-width="80px"
+      >
+        <el-input
+          v-model="editForm.id"
+          type="hidden"
+        />
         <el-form-item label="名称">
-          <el-input v-model="editForm.name"></el-input>
+          <el-input v-model="editForm.name" />
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item
+          label="描述"
+          prop="description"
+        >
           <el-input
             v-model="editForm.description"
             type="textarea"
             auto-complete="off"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="editForm.status" placeholder="请选择状态">
-            <el-option :value="0" label="启用"></el-option>
-            <el-option :value="1" label="禁用"></el-option>
+          <el-select
+            v-model="editForm.status"
+            placeholder="请选择状态"
+          >
+            <el-option
+              :value="0"
+              label="启用"
+            />
+            <el-option
+              :value="1"
+              label="禁用"
+            />
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click.native="editFormVisible = false">
+          取消
+        </el-button>
         <el-button
           :loading="editLoading"
           type="primary"
           @click.native="editSubmit"
-          >提交</el-button
         >
+          提交
+        </el-button>
       </div>
     </el-dialog>
   </section>

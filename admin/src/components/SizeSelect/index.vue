@@ -1,7 +1,13 @@
 <template>
-  <el-dropdown trigger="click" @command="handleSetSize">
+  <el-dropdown
+    trigger="click"
+    @command="handleSetSize"
+  >
     <div>
-      <svg-icon class-name="size-icon" icon-class="size" />
+      <svg-icon
+        class-name="size-icon"
+        icon-class="size"
+      />
     </div>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item

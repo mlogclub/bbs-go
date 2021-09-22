@@ -1,16 +1,31 @@
 <template>
-  <section v-loading="listLoading" class="page-container">
+  <section
+    v-loading="listLoading"
+    class="page-container"
+  >
     <!--工具条-->
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号"></el-input>
+          <el-input
+            v-model="filters.id"
+            placeholder="编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
+          <el-input
+            v-model="filters.userId"
+            placeholder="用户编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.title" placeholder="标题"></el-input>
+          <el-input
+            v-model="filters.title"
+            placeholder="标题"
+          />
         </el-form-item>
         <el-form-item>
           <el-select
@@ -19,31 +34,58 @@
             placeholder="请选择状态"
             @change="list"
           >
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="删除" value="1"></el-option>
-            <el-option label="待审核" value="2"></el-option>
+            <el-option
+              label="正常"
+              value="0"
+            />
+            <el-option
+              label="删除"
+              value="1"
+            />
+            <el-option
+              label="待审核"
+              value="2"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <!--列表-->
-    <div v-if="results && results.length > 0" class="page-section articles">
-      <div v-for="item in results" :key="item.id" class="article">
+    <div
+      v-if="results && results.length > 0"
+      class="page-section articles"
+    >
+      <div
+        v-for="item in results"
+        :key="item.id"
+        class="article"
+      >
         <div class="article-header">
           <avatar :user="item.user" />
           <div class="article-right">
             <div class="article-title">
-              <a :href="'/article/' + item.id" target="_blank">{{
+              <a
+                :href="'/article/' + item.id"
+                target="_blank"
+              >{{
                 item.title
               }}</a>
             </div>
             <div class="article-meta">
               <label class="action-item info">ID: {{ item.id }}</label>
-              <label v-if="item.user" class="author">{{
+              <label
+                v-if="item.user"
+                class="author"
+              >{{
                 item.user.nickname
               }}</label>
               <label>{{ item.createTime | formatDate }}</label>
@@ -61,41 +103,50 @@
             </div>
           </div>
         </div>
-        <div class="summary">{{ item.summary }}</div>
+        <div class="summary">
+          {{ item.summary }}
+        </div>
         <div class="actions">
-          <a class="action-item btn" @click="showUpdateTags(item)">修改标签</a>
-          <span v-if="item.status === 1" class="action-item danger"
-            >已删除</span
-          >
+          <a
+            class="action-item btn"
+            @click="showUpdateTags(item)"
+          >修改标签</a>
+          <span
+            v-if="item.status === 1"
+            class="action-item danger"
+          >已删除</span>
           <a
             v-if="item.status !== 1"
             class="action-item btn"
             @click="deleteSubmit(item)"
-            >删除</a
-          >
+          >删除</a>
           <a
             v-if="item.status === 2"
             :href="'/article/edit/' + item.id"
             class="action-item btn"
-            >修改</a
-          >
+          >修改</a>
           <a
             v-if="item.status === 2"
             class="action-item btn"
             @click="pendingSubmit(item)"
-            >审核</a
-          >
+          >审核</a>
         </div>
       </div>
     </div>
-    <div v-else class="page-section articles">
+    <div
+      v-else
+      class="page-section articles"
+    >
       <div class="notification is-primary">
         <strong>无数据</strong>
       </div>
     </div>
 
     <!--工具条-->
-    <div v-if="page.total > 0" class="pagebar">
+    <div
+      v-if="page.total > 0"
+      class="pagebar"
+    >
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -104,7 +155,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      ></el-pagination>
+      />
     </div>
 
     <el-dialog
@@ -122,14 +173,24 @@
             allow-create
             default-first-option
             placeholder="标签"
-          ></el-select>
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="updateTagsDialogVisible = false"
-          >取消</el-button
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          @click.native="updateTagsDialogVisible = false"
         >
-        <el-button type="primary" @click.native="updateTags">提交 </el-button>
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="updateTags"
+        >
+          提交
+        </el-button>
       </div>
     </el-dialog>
   </section>

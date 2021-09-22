@@ -1,15 +1,21 @@
 <template>
-  <section v-loading="loading" class="page-container">
+  <section
+    v-loading="loading"
+    class="page-container"
+  >
     <div class="page-section config-panel">
       <el-tabs value="commonConfigTab">
-        <el-tab-pane label="通用配置" name="commonConfigTab">
+        <el-tab-pane
+          label="通用配置"
+          name="commonConfigTab"
+        >
           <el-form label-width="160px">
             <el-form-item label="网站名称">
               <el-input
                 v-model="config.siteTitle"
                 type="text"
                 placeholder="网站名称"
-              ></el-input>
+              />
             </el-form-item>
 
             <el-form-item label="网站描述">
@@ -18,7 +24,7 @@
                 type="textarea"
                 autosize
                 placeholder="网站描述"
-              ></el-input>
+              />
             </el-form-item>
 
             <el-form-item label="网站关键字">
@@ -30,7 +36,7 @@
                 allow-create
                 default-first-option
                 placeholder="网站关键字"
-              ></el-select>
+              />
             </el-form-item>
 
             <el-form-item label="网站公告">
@@ -39,7 +45,7 @@
                 type="textarea"
                 autosize
                 placeholder="网站公告（支持输入HTML）"
-              ></el-input>
+              />
             </el-form-item>
 
             <el-form-item label="推荐标签">
@@ -51,7 +57,7 @@
                 allow-create
                 default-first-option
                 placeholder="推荐标签"
-              ></el-select>
+              />
             </el-form-item>
 
             <el-form-item label="默认节点">
@@ -65,25 +71,32 @@
                   :key="node.id"
                   :label="node.name"
                   :value="node.id"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
 
             <template v-if="config.loginMethod">
               <el-form-item label="登录方式">
-                <el-checkbox v-model="config.loginMethod.password"
-                  >密码登录</el-checkbox
+                <el-checkbox
+                  v-model="config.loginMethod.password"
                 >
-                <el-checkbox v-model="config.loginMethod.qq"
-                  >QQ登录</el-checkbox
+                  密码登录
+                </el-checkbox>
+                <el-checkbox
+                  v-model="config.loginMethod.qq"
                 >
-                <el-checkbox v-model="config.loginMethod.github"
-                  >Github登录</el-checkbox
+                  QQ登录
+                </el-checkbox>
+                <el-checkbox
+                  v-model="config.loginMethod.github"
                 >
-                <el-checkbox v-model="config.loginMethod.osc"
-                  >OSChina登录</el-checkbox
+                  Github登录
+                </el-checkbox>
+                <el-checkbox
+                  v-model="config.loginMethod.osc"
                 >
+                  OSChina登录
+                </el-checkbox>
               </el-form-item>
             </template>
 
@@ -92,12 +105,16 @@
                 content="在跳转前需手动确认是否前往该站外链接"
                 placement="top"
               >
-                <el-switch v-model="config.urlRedirect"></el-switch>
+                <el-switch v-model="config.urlRedirect" />
               </el-tooltip>
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="导航配置" name="navConfigTab" class="nav-panel">
+        <el-tab-pane
+          label="导航配置"
+          name="navConfigTab"
+          class="nav-panel"
+        >
           <draggable
             v-model="config.siteNavs"
             draggable=".nav"
@@ -119,7 +136,7 @@
                     type="text"
                     size="small"
                     placeholder="标题"
-                  ></el-input>
+                  />
                 </el-col>
                 <el-col :span="11">
                   <el-input
@@ -127,7 +144,7 @@
                     type="text"
                     size="small"
                     placeholder="链接"
-                  ></el-input>
+                  />
                 </el-col>
                 <el-col :span="2">
                   <el-button
@@ -136,7 +153,7 @@
                     circle
                     size="small"
                     @click="delNav(index)"
-                  ></el-button>
+                  />
                 </el-col>
               </el-row>
             </div>
@@ -153,7 +170,7 @@
                 icon="el-icon-plus"
                 circle
                 @click="addNav"
-              ></el-button>
+              />
             </el-tooltip>
           </div>
         </el-tab-pane>
@@ -169,7 +186,7 @@
                 :min="1"
                 type="text"
                 placeholder="发帖获得积分"
-              ></el-input-number>
+              />
             </el-form-item>
             <el-form-item label="跟帖积分">
               <el-input-number
@@ -177,7 +194,7 @@
                 :min="1"
                 type="text"
                 placeholder="跟帖获得积分"
-              ></el-input-number>
+              />
             </el-form-item>
             <el-form-item label="签到积分">
               <el-input-number
@@ -185,45 +202,63 @@
                 :min="1"
                 type="text"
                 placeholder="签到获得积分"
-              ></el-input-number>
+              />
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="反作弊配置" name="spamConfigTab">
+        <el-tab-pane
+          label="反作弊配置"
+          name="spamConfigTab"
+        >
           <el-form label-width="160px">
             <el-form-item label="发帖验证码">
-              <el-tooltip content="发帖时是否开启验证码校验" placement="top">
-                <el-switch v-model="config.topicCaptcha"></el-switch>
+              <el-tooltip
+                content="发帖时是否开启验证码校验"
+                placement="top"
+              >
+                <el-switch v-model="config.topicCaptcha" />
               </el-tooltip>
             </el-form-item>
 
             <el-form-item label="邮箱验证后发帖">
-              <el-tooltip content="需要验证邮箱后才能发帖" placement="top">
+              <el-tooltip
+                content="需要验证邮箱后才能发帖"
+                placement="top"
+              >
                 <el-switch
                   v-model="config.createTopicEmailVerified"
-                ></el-switch>
+                />
               </el-tooltip>
             </el-form-item>
 
             <el-form-item label="邮箱验证后发表文章">
-              <el-tooltip content="需要验证邮箱后才能发表文章" placement="top">
+              <el-tooltip
+                content="需要验证邮箱后才能发表文章"
+                placement="top"
+              >
                 <el-switch
                   v-model="config.createArticleEmailVerified"
-                ></el-switch>
+                />
               </el-tooltip>
             </el-form-item>
 
             <el-form-item label="邮箱验证后评论">
-              <el-tooltip content="需要验证邮箱后才能发表评论" placement="top">
+              <el-tooltip
+                content="需要验证邮箱后才能发表评论"
+                placement="top"
+              >
                 <el-switch
                   v-model="config.createCommentEmailVerified"
-                ></el-switch>
+                />
               </el-tooltip>
             </el-form-item>
 
             <el-form-item label="发表文章审核">
-              <el-tooltip content="发布文章后是否开启审核" placement="top">
-                <el-switch v-model="config.articlePending"></el-switch>
+              <el-tooltip
+                content="发布文章后是否开启审核"
+                placement="top"
+              >
+                <el-switch v-model="config.articlePending" />
               </el-tooltip>
             </el-form-item>
 
@@ -236,7 +271,7 @@
                   v-model="config.userObserveSeconds"
                   :min="0"
                   :max="720"
-                ></el-input-number>
+                />
               </el-tooltip>
             </el-form-item>
           </el-form>
@@ -244,8 +279,12 @@
       </el-tabs>
 
       <div style="text-align: right">
-        <el-button :loading="loading" type="primary" @click="save"
-          >保存配置
+        <el-button
+          :loading="loading"
+          type="primary"
+          @click="save"
+        >
+          保存配置
         </el-button>
       </div>
     </div>

@@ -5,7 +5,12 @@
     class="svg-external-icon svg-icon"
     v-on="$listeners"
   />
-  <svg v-else :class="svgClass" aria-hidden="true" v-on="$listeners">
+  <svg
+    v-else
+    :class="svgClass"
+    aria-hidden="true"
+    v-on="$listeners"
+  >
     <use :href="iconName" />
   </svg>
 </template>

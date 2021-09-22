@@ -3,7 +3,10 @@
     <el-header class="layout-header">
       <header-menu />
     </el-header>
-    <el-container class="layout-container" :style="{ height: layoutContainerHeight }">
+    <el-container
+      class="layout-container"
+      :style="{ height: layoutContainerHeight }"
+    >
       <el-aside class="layout-aside">
         <side-menu />
       </el-aside>

@@ -1,5 +1,9 @@
 <template>
-  <div ref="rightPanel" :class="{ show: show }" class="rightPanel-container">
+  <div
+    ref="rightPanel"
+    :class="{ show: show }"
+    class="rightPanel-container"
+  >
     <div class="rightPanel-background" />
     <div class="rightPanel">
       <div

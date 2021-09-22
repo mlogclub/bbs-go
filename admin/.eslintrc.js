@@ -6,8 +6,9 @@ module.exports = {
   },
 
   extends: [
-    // 'plugin:vue/recommend',
-    'plugin:vue/essential',
+    // 'plugin:vue/essential',
+    // 'eslint:recommended',
+    'plugin:vue/recommended',
     '@vue/standard'
   ],
 
@@ -23,6 +24,7 @@ module.exports = {
       vue: 'never'
     }],
     'no-plusplus': 'off',
-    'no-continue': 'off'
+    'no-continue': 'off',
+    'vue/no-v-html': 'off'
   }
 }

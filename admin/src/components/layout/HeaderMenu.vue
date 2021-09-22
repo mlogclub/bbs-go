@@ -14,9 +14,14 @@
   </el-menu>
   -->
   <div class="header-menu">
-    <div class="header-menu-logo"><strong>BBS-GO</strong>&nbsp;管理平台</div>
+    <div class="header-menu-logo">
+      <strong>BBS-GO</strong>&nbsp;管理平台
+    </div>
     <div class="header-menu-user">
-      <div data-v-d3d800ae="" class="avatar" />
+      <div
+        data-v-d3d800ae=""
+        class="avatar"
+      />
       <el-dropdown>
         <span class="el-dropdown-link">
           用户名<i class="el-icon-arrow-down el-icon--right" />

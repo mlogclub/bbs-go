@@ -1,13 +1,25 @@
 <template>
-  <section v-loading="listLoading" class="page-container">
+  <section
+    v-loading="listLoading"
+    class="page-container"
+  >
     <!--工具条-->
     <div class="toolbar">
-      <el-form :inline="true" :model="filters">
+      <el-form
+        :inline="true"
+        :model="filters"
+      >
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号"></el-input>
+          <el-input
+            v-model="filters.id"
+            placeholder="编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.userId" placeholder="用户编号"></el-input>
+          <el-input
+            v-model="filters.userId"
+            placeholder="用户编号"
+          />
         </el-form-item>
         <el-form-item>
           <el-select
@@ -15,15 +27,21 @@
             clearable
             placeholder="评论对象"
           >
-            <el-option label="话题" value="topic"></el-option>
-            <el-option label="文章" value="article"></el-option>
+            <el-option
+              label="话题"
+              value="topic"
+            />
+            <el-option
+              label="文章"
+              value="article"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-input
             v-model="filters.entityId"
             placeholder="对象编号"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item>
           <el-select
@@ -32,64 +50,101 @@
             placeholder="请选择状态"
             @change="list"
           >
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="删除" value="1"></el-option>
+            <el-option
+              label="正常"
+              value="0"
+            />
+            <el-option
+              label="删除"
+              value="1"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button
+            type="primary"
+            @click="list"
+          >
+            查询
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <div v-if="results && results.length > 0" class="page-section comments-div">
+    <div
+      v-if="results && results.length > 0"
+      class="page-section comments-div"
+    >
       <ul class="comments">
-        <li v-for="item in results" :key="item.id">
+        <li
+          v-for="item in results"
+          :key="item.id"
+        >
           <div class="comment-item">
             <avatar :user="item.user" />
             <div class="content">
               <div class="meta">
-                <span class="nickname"
-                  ><a :href="'/user/' + item.user.id" target="_blank">{{
-                    item.user.nickname
-                  }}</a></span
-                >
+                <span
+                  class="nickname"
+                ><a
+                  :href="'/user/' + item.user.id"
+                  target="_blank"
+                >{{
+                  item.user.nickname
+                }}</a></span>
 
                 <span>ID: {{ item.id }}</span>
 
-                <span class="create-time"
-                  >@{{ item.createTime | formatDate }}</span
-                >
+                <span
+                  class="create-time"
+                >@{{ item.createTime | formatDate }}</span>
                 <span v-if="item.entityType === 'article'">
-                  <a :href="'/article/' + item.entityId" target="_blank"
-                    >文章：{{ item.entityId }}</a
-                  >
+                  <a
+                    :href="'/article/' + item.entityId"
+                    target="_blank"
+                  >文章：{{ item.entityId }}</a>
                 </span>
 
                 <span v-if="item.entityType === 'topic'">
-                  <a :href="'/topic/' + item.entityId" target="_blank"
-                    >话题：{{ item.entityId }}</a
-                  >
+                  <a
+                    :href="'/topic/' + item.entityId"
+                    target="_blank"
+                  >话题：{{ item.entityId }}</a>
                 </span>
 
                 <div class="tools">
-                  <span v-if="item.status === 1" class="item info">已删除</span>
-                  <a class="item" @click="handleDelete(item)">删除</a>
+                  <span
+                    v-if="item.status === 1"
+                    class="item info"
+                  >已删除</span>
+                  <a
+                    class="item"
+                    @click="handleDelete(item)"
+                  >删除</a>
                 </div>
               </div>
-              <div class="summary" v-html="item.content"></div>
+              <div
+                class="summary"
+                v-html="item.content"
+              />
             </div>
           </div>
         </li>
       </ul>
     </div>
-    <div v-else class="page-section comments-div">
+    <div
+      v-else
+      class="page-section comments-div"
+    >
       <div class="notification is-primary">
         <strong>无数据 或 输入相应参数进行查询</strong>
       </div>
     </div>
 
-    <div v-if="page.total > 0" class="pagebar">
+    <div
+      v-if="page.total > 0"
+      class="pagebar"
+    >
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -98,7 +153,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handlePageChange"
         @size-change="handleLimitChange"
-      ></el-pagination>
+      />
     </div>
   </section>
 </template>
