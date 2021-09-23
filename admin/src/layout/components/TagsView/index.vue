@@ -200,7 +200,6 @@ export default {
 
 <style lang="scss" scoped>
 .tags-view-container {
-  // height: 40px;
   width: 100%;
   background: #fff;
   // border-bottom: 1px solid #d8dce5;
@@ -219,21 +218,20 @@ export default {
       background: #fff;
       padding: 0 20px;
       &.active {
-        // border-color: #42b983;
         background-color: #f3f6fe;
         color: #000;
         border-bottom: none;
         font-weight: 700;
-        // &::before {
-        //   content: "";
-        //   background: #fff;
-        //   display: inline-block;
-        //   width: 8px;
-        //   height: 8px;
-        //   border-radius: 50%;
-        //   position: relative;
-        //   margin-right: 2px;
-        // }
+      }
+
+      .el-icon-close {
+        margin-left: 5px;
+        border-radius: 50%;
+        &:hover {
+          // color: red;
+          font-weight: 900;
+          transition: all 0.3s ease-in-out;
+        }
       }
     }
   }

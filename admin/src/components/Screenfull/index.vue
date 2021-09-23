@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <svg-icon :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" @click="click" />
+  <div class="fullscreen-icon" @click="click">
+    <i v-if="!isFullscreen" class="iconfont icon-fullscreen" />
+    <i v-else class="iconfont icon-exit-fullscreen" />
   </div>
 </template>
 
@@ -48,13 +49,12 @@ export default {
 };
 </script>
 
-<style scoped>
-.screenfull-svg {
-  display: inline-block;
+<style lang="scss" scoped>
+.fullscreen-icon {
   cursor: pointer;
-  fill: #5a5e66;
-  width: 20px;
-  height: 20px;
-  vertical-align: 10px;
+  i {
+    color: #5a5e66;
+    font-size: 24px;
+  }
 }
 </style>
