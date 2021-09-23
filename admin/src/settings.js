@@ -2,6 +2,11 @@ module.exports = {
   title: "BBS-GO管理系统",
 
   /**
+   * 页面切换的时候是否显示loading
+   */
+  showLoading: false,
+
+  /**
    * @type {boolean} true | false
    * @description Whether show the settings right-panel
    */

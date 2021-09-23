@@ -7,7 +7,6 @@ const adminRouter = [
     path: "/users",
     component: Layout,
     redirect: "/users",
-    name: "users",
     children: [
       {
         path: "",
@@ -72,7 +71,7 @@ const adminRouter = [
       {
         path: "nodes",
         component: () => import("@/views/pages/topics/nodes"),
-        name: "topics",
+        name: "nodes",
         meta: {
           title: "节点",
           icon: "iconfont icon-tag",
@@ -93,7 +92,6 @@ const adminRouter = [
     path: "/links",
     component: Layout,
     redirect: "/links",
-    name: "links",
     children: [
       {
         path: "",
@@ -110,7 +108,6 @@ const adminRouter = [
     path: "/settings",
     component: Layout,
     redirect: "/settings",
-    name: "settings",
     children: [
       {
         path: "",

@@ -1,10 +1,11 @@
 import { Message, Loading } from "element-ui";
 import NProgress from "nprogress"; // progress bar
-import router from "./router";
-import store from "./store";
 import "nprogress/nprogress.css"; // progress bar style
+import router from "@/router";
+import store from "@/store";
 import { getToken } from "@/utils/auth"; // get token from cookie
 import getPageTitle from "@/utils/get-page-title";
+import defaultSettings from "@/settings";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -15,10 +16,12 @@ let loadingInstance;
 
 router.beforeEach(async (to, from, next) => {
   // 显示加载框
-  loadingInstance = Loading.service({
-    fullscreen: true,
-    text: "加载中...",
-  });
+  if (defaultSettings.showLoading) {
+    loadingInstance = Loading.service({
+      fullscreen: true,
+      text: "加载中...",
+    });
+  }
 
   // start progress bar
   NProgress.start();
@@ -78,8 +81,10 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach(() => {
   setTimeout(() => {
-    loadingInstance.close();
-  }, 1000);
+    if (loadingInstance) {
+      loadingInstance.close();
+    }
+  }, 500);
 
   // finish progress bar
   NProgress.done();
