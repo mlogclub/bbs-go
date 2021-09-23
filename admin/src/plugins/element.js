@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Element from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
+import "@/styles/element-variables.scss";
 import Cookies from "js-cookie";
 
 Vue.use(Element, {

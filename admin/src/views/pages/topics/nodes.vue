@@ -18,7 +18,7 @@
       v-loading="listLoading"
       :data="results"
       highlight-current-row
-      border
+      stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
