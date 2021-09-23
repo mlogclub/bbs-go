@@ -65,10 +65,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [
-    'element-ui/lib/theme-chalk/index.css',
-    { src: '~/assets/styles/main.scss', lang: 'scss' },
-  ],
+  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
   /*
    ** Plugins to load before mounting the App
    */
