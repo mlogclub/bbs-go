@@ -74,9 +74,6 @@
               <nuxt-link class="navbar-item" to="/user/profile">
                 <i class="iconfont icon-username" />&nbsp;个人资料
               </nuxt-link>
-              <nuxt-link v-if="isOwnerOrAdmin" class="navbar-item" to="/admin">
-                <i class="iconfont icon-dashboard" />&nbsp;后台管理
-              </nuxt-link>
               <a class="navbar-item" @click="signout">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>

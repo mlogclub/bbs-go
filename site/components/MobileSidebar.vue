@@ -35,14 +35,6 @@
                 >个人资料</nuxt-link
               >
             </div>
-            <div class="sidebar-menu-item">
-              <nuxt-link
-                v-if="isOwnerOrAdmin"
-                class="sidebar-menu-item"
-                to="/admin"
-                >后台管理</nuxt-link
-              >
-            </div>
           </div>
         </template>
         <template v-else>
