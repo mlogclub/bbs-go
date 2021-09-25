@@ -2,7 +2,7 @@
   <a
     v-if="user"
     class="avatar-a"
-    :href="'/user/' + user.id"
+    :href="('/user/' + user.id) | siteUrl"
     :class="[sizeClass]"
     :style="extraStyle"
   >

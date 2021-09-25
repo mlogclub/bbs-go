@@ -37,23 +37,25 @@
             <avatar :user="item.user" />
             <div class="content">
               <div class="meta">
-                <span class="nickname"
-                  ><a :href="'/user/' + item.user.id" target="_blank">{{
+                <span class="nickname">
+                  <a :href="('/user/' + item.user.id) | siteUrl" target="_blank">{{
                     item.user.nickname
-                  }}</a></span
-                >
+                  }}</a>
+                </span>
 
                 <span>ID: {{ item.id }}</span>
 
                 <span class="create-time">@{{ item.createTime | formatDate }}</span>
                 <span v-if="item.entityType === 'article'">
-                  <a :href="'/article/' + item.entityId" target="_blank"
+                  <a :href="('/article/' + item.entityId) | siteUrl" target="_blank"
                     >文章：{{ item.entityId }}</a
                   >
                 </span>
 
                 <span v-if="item.entityType === 'topic'">
-                  <a :href="'/topic/' + item.entityId" target="_blank">话题：{{ item.entityId }}</a>
+                  <a :href="('/topic/' + item.entityId) | siteUrl" target="_blank"
+                    >话题：{{ item.entityId }}</a
+                  >
                 </span>
 
                 <div class="tools">

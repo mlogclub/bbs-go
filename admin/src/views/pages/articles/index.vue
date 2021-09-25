@@ -32,7 +32,7 @@
           <avatar :user="item.user" />
           <div class="article-right">
             <div class="article-title">
-              <a :href="'/article/' + item.id" target="_blank">{{ item.title }}</a>
+              <a :href="('/article/' + item.id) | siteUrl" target="_blank">{{ item.title }}</a>
             </div>
             <div class="article-meta">
               <label class="action-item info">ID: {{ item.id }}</label>
@@ -54,9 +54,6 @@
           <a class="action-item btn" @click="showUpdateTags(item)">修改标签</a>
           <span v-if="item.status === 1" class="action-item danger">已删除</span>
           <a v-if="item.status !== 1" class="action-item btn" @click="deleteSubmit(item)">删除</a>
-          <a v-if="item.status === 2" :href="'/article/edit/' + item.id" class="action-item btn"
-            >修改</a
-          >
           <a v-if="item.status === 2" class="action-item btn" @click="pendingSubmit(item)">审核</a>
         </div>
       </div>

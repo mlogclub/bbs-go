@@ -109,3 +109,7 @@ export function prettyDate(timestamp) {
   }
   return formatDate(timestamp, "yyyy-MM-dd HH:mm:ss");
 }
+
+export function siteUrl(url) {
+  return process.env.VUE_APP_BASE_URL + url;
+}
