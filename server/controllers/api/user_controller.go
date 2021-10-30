@@ -32,7 +32,7 @@ func (c *UserController) GetCurrent() *simple.JsonResult {
 func (c *UserController) GetBy(userId int64) *simple.JsonResult {
 	user := cache.UserCache.Get(userId)
 	if user != nil && user.Status != constants.StatusDeleted {
-		return simple.JsonData(render.BuildUser(user))
+		return simple.JsonData(render.BuildUserProfile(user))
 	}
 	return simple.JsonErrorMsg("用户不存在")
 }
@@ -229,12 +229,6 @@ func (c *UserController) GetMessages() *simple.JsonResult {
 	return simple.JsonPageData(render.BuildMessages(messages), paging)
 }
 
-// 最新用户
-func (c *UserController) GetNewest() *simple.JsonResult {
-	users := services.UserService.Find(simple.NewSqlCnd().Eq("type", constants.UserTypeNormal).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildUsers(users))
-}
-
 // 用户积分记录
 func (c *UserController) GetScorelogs() *simple.JsonResult {
 	page := simple.FormValueIntDefault(c.Ctx, "page", 1)
@@ -254,9 +248,9 @@ func (c *UserController) GetScorelogs() *simple.JsonResult {
 // 积分排行
 func (c *UserController) GetScoreRank() *simple.JsonResult {
 	users := cache.UserCache.GetScoreRank()
-	var results []*model.UserInfo
+	var results []*model.UserSimpleInfo
 	for _, user := range users {
-		results = append(results, render.BuildUser(&user))
+		results = append(results, render.BuildUserSimpleInfo(&user))
 	}
 	return simple.JsonData(results)
 }

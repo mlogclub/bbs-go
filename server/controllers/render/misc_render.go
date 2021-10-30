@@ -91,6 +91,6 @@ func BuildLoginSuccess(user *model.User, ref string) *simple.JsonResult {
 	}
 	return simple.NewEmptyRspBuilder().
 		Put("token", token).
-		Put("user", BuildUser(user)).
+		Put("user", BuildUserProfile(user)).
 		Put("ref", ref).JsonResult()
 }

@@ -50,7 +50,7 @@ func (c *CheckinController) GetRank() *simple.JsonResult {
 	var itemList []map[string]interface{}
 	for _, checkIn := range list {
 		itemList = append(itemList, simple.NewRspBuilder(checkIn).
-			Put("user", render.BuildUserById(checkIn.UserId)).
+			Put("user", render.BuildUserSimpleInfoDefaultIfNull(checkIn.UserId)).
 			Build())
 	}
 	return simple.JsonData(itemList)

@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func BuildUserDefaultIfNull(id int64) *model.UserInfo {
+func BuildUserSimpleInfoDefaultIfNull(id int64) *model.UserSimpleInfo {
 	user := cache.UserCache.Get(id)
 	if user == nil {
 		user = &model.User{}
@@ -18,12 +18,34 @@ func BuildUserDefaultIfNull(id int64) *model.UserInfo {
 		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
 		user.CreateTime = date.NowTimestamp()
 	}
-	return BuildUser(user)
+	return BuildUserSimpleInfo(user)
 }
 
-func BuildUserById(id int64) *model.UserInfo {
+func BuildUserSimpleInfoById(id int64) *model.UserSimpleInfo {
 	user := cache.UserCache.Get(id)
-	return BuildUser(user)
+	return BuildUserSimpleInfo(user)
+}
+
+func BuildUserSimpleInfo(user *model.User) *model.UserSimpleInfo {
+	if user == nil {
+		return nil
+	}
+	ret := &model.UserSimpleInfo{
+		Id:           user.Id,
+		Nickname:     user.Nickname,
+		Avatar:       user.Avatar,
+		SmallAvatar:  HandleOssImageStyleAvatar(user.Avatar),
+		TopicCount:   user.TopicCount,
+		CommentCount: user.CommentCount,
+		Score:        user.Score,
+		Description:  user.Description,
+		CreateTime:   user.CreateTime,
+	}
+	if user.Status == constants.StatusDeleted {
+		ret.Nickname = "黑名单用户"
+		ret.Description = ""
+	}
+	return ret
 }
 
 func BuildUser(user *model.User) *model.UserInfo {
@@ -32,52 +54,37 @@ func BuildUser(user *model.User) *model.UserInfo {
 	}
 	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserInfo{
-		Id:                   user.Id,
+		UserSimpleInfo:       *BuildUserSimpleInfo(user),
 		Username:             user.Username.String,
-		Nickname:             user.Nickname,
-		Avatar:               user.Avatar,
-		SmallAvatar:          HandleOssImageStyleAvatar(user.Avatar),
 		BackgroundImage:      user.BackgroundImage,
 		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
-		Email:                user.Email.String,
-		EmailVerified:        user.EmailVerified,
 		Type:                 user.Type,
 		Roles:                roles,
 		HomePage:             user.HomePage,
-		Description:          user.Description,
-		Score:                user.Score,
-		TopicCount:           user.TopicCount,
-		CommentCount:         user.CommentCount,
-		PasswordSet:          len(user.Password) > 0,
 		Forbidden:            user.IsForbidden(),
 		Status:               user.Status,
-		CreateTime:           user.CreateTime,
-	}
-	if user.Status == constants.StatusDeleted || user.IsForbidden() {
-		ret.Username = "blacklist"
-		ret.Nickname = "黑名单用户"
-		ret.Email = ""
-		ret.HomePage = ""
-		ret.Description = ""
-		ret.Score = 0
-		ret.Forbidden = true
 	}
 	if len(ret.Description) == 0 {
 		ret.Description = "这家伙很懒，什么都没留下"
 	}
+	if user.Status == constants.StatusDeleted {
+		ret.Username = "blacklist"
+		ret.HomePage = ""
+		ret.Score = 0
+		ret.Forbidden = true
+	}
 	return ret
 }
 
-func BuildUsers(users []model.User) []model.UserInfo {
-	if len(users) == 0 {
+func BuildUserProfile(user *model.User) *model.UserProfile {
+	if user == nil {
 		return nil
 	}
-	var responses []model.UserInfo
-	for _, user := range users {
-		item := BuildUser(&user)
-		if item != nil {
-			responses = append(responses, *item)
-		}
+	ret := &model.UserProfile{
+		UserInfo:      *BuildUser(user),
+		Email:         user.Email.String,
+		EmailVerified: user.EmailVerified,
+		PasswordSet:   len(user.Password) > 0,
 	}
-	return responses
+	return ret
 }

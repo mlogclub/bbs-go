@@ -10,7 +10,7 @@ func BuildMessage(msg *model.Message) *model.MessageResponse {
 		return nil
 	}
 
-	from := BuildUserDefaultIfNull(msg.FromId)
+	from := BuildUserSimpleInfoDefaultIfNull(msg.FromId)
 	if msg.FromId <= 0 {
 		from.Nickname = "系统通知"
 	}

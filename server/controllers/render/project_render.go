@@ -16,7 +16,7 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 	}
 	rsp := &model.ProjectResponse{}
 	rsp.ProjectId = project.Id
-	rsp.User = BuildUserDefaultIfNull(project.UserId)
+	rsp.User = BuildUserSimpleInfoDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
 	rsp.Title = project.Title
 	rsp.Logo = project.Logo
@@ -55,7 +55,7 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	}
 	rsp := &model.ProjectSimpleResponse{}
 	rsp.ProjectId = project.Id
-	rsp.User = BuildUserDefaultIfNull(project.UserId)
+	rsp.User = BuildUserSimpleInfoDefaultIfNull(project.UserId)
 	rsp.Name = project.Name
 	rsp.Title = project.Title
 	rsp.Logo = project.Logo
