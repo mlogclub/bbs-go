@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func BuildUserSimpleInfoDefaultIfNull(id int64) *model.UserSimpleInfo {
+func BuildUserInfoDefaultIfNull(id int64) *model.UserInfo {
 	user := cache.UserCache.Get(id)
 	if user == nil {
 		user = &model.User{}
@@ -19,14 +19,14 @@ func BuildUserSimpleInfoDefaultIfNull(id int64) *model.UserSimpleInfo {
 		user.Nickname = "匿名用户" + strconv.FormatInt(id, 10)
 		user.CreateTime = date.NowTimestamp()
 	}
-	return BuildUserSimpleInfo(user)
+	return BuildUserInfo(user)
 }
 
-func BuildUserSimpleInfo(user *model.User) *model.UserSimpleInfo {
+func BuildUserInfo(user *model.User) *model.UserInfo {
 	if user == nil {
 		return nil
 	}
-	ret := &model.UserSimpleInfo{
+	ret := &model.UserInfo{
 		Id:           user.Id,
 		Nickname:     user.Nickname,
 		Avatar:       user.Avatar,
@@ -44,18 +44,16 @@ func BuildUserSimpleInfo(user *model.User) *model.UserSimpleInfo {
 	return ret
 }
 
-func BuildUser(user *model.User) *model.UserInfo {
+func BuildUserDetail(user *model.User) *model.UserDetail {
 	if user == nil {
 		return nil
 	}
-	roles := strings.Split(user.Roles, ",")
-	ret := &model.UserInfo{
-		UserSimpleInfo:       *BuildUserSimpleInfo(user),
+	ret := &model.UserDetail{
+		UserInfo:             *BuildUserInfo(user),
 		Username:             user.Username.String,
 		BackgroundImage:      user.BackgroundImage,
 		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
 		Type:                 user.Type,
-		Roles:                roles,
 		HomePage:             user.HomePage,
 		Forbidden:            user.IsForbidden(),
 		Status:               user.Status,
@@ -76,8 +74,10 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 	if user == nil {
 		return nil
 	}
+	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserProfile{
-		UserInfo:      *BuildUser(user),
+		UserDetail:    *BuildUserDetail(user),
+		Roles:         roles,
 		Email:         user.Email.String,
 		EmailVerified: user.EmailVerified,
 		PasswordSet:   len(user.Password) > 0,

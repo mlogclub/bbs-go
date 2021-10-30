@@ -28,7 +28,7 @@ func (c *UserScoreLogController) AnyList() *simple.JsonResult {
 
 	var results []map[string]interface{}
 	for _, userScoreLog := range list {
-		user := render.BuildUserSimpleInfoDefaultIfNull(userScoreLog.UserId)
+		user := render.BuildUserInfoDefaultIfNull(userScoreLog.UserId)
 		item := simple.NewRspBuilder(userScoreLog).Put("user", user).Build()
 		results = append(results, item)
 	}

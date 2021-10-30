@@ -23,7 +23,7 @@ type UserController struct {
 func (c *UserController) GetCurrent() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user != nil {
-		return simple.JsonData(render.BuildUser(user))
+		return simple.JsonData(render.BuildUserDetail(user))
 	}
 	return simple.JsonSuccess()
 }
@@ -248,9 +248,9 @@ func (c *UserController) GetScorelogs() *simple.JsonResult {
 // 积分排行
 func (c *UserController) GetScoreRank() *simple.JsonResult {
 	users := cache.UserCache.GetScoreRank()
-	var results []*model.UserSimpleInfo
+	var results []*model.UserInfo
 	for _, user := range users {
-		results = append(results, render.BuildUserSimpleInfo(&user))
+		results = append(results, render.BuildUserInfo(&user))
 	}
 	return simple.JsonData(results)
 }

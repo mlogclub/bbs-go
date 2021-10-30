@@ -21,7 +21,7 @@ func BuildSearchTopic(doc es.TopicDocument) model.SearchTopicResponse {
 		Title:      doc.Title,
 		Summary:    doc.Content,
 		CreateTime: doc.CreateTime,
-		User:       BuildUserSimpleInfoDefaultIfNull(doc.UserId),
+		User:       BuildUserInfoDefaultIfNull(doc.UserId),
 	}
 
 	if doc.NodeId > 0 {

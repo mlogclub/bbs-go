@@ -191,9 +191,9 @@ func (c *TopicController) PostLikeBy(topicId int64) *simple.JsonResult {
 // 点赞用户
 func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
 	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 5)
-	var users []model.UserSimpleInfo
+	var users []model.UserInfo
 	for _, like := range likes {
-		userInfo := render.BuildUserSimpleInfoDefaultIfNull(like.UserId)
+		userInfo := render.BuildUserInfoDefaultIfNull(like.UserId)
 		if userInfo != nil {
 			users = append(users, *userInfo)
 		}

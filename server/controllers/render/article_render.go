@@ -23,7 +23,7 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	rsp.CreateTime = article.CreateTime
 	rsp.Status = article.Status
 
-	rsp.User = BuildUserSimpleInfoDefaultIfNull(article.UserId)
+	rsp.User = BuildUserInfoDefaultIfNull(article.UserId)
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
@@ -53,7 +53,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 	rsp.CreateTime = article.CreateTime
 	rsp.Status = article.Status
 
-	rsp.User = BuildUserSimpleInfoDefaultIfNull(article.UserId)
+	rsp.User = BuildUserInfoDefaultIfNull(article.UserId)
 
 	tagIds := cache.ArticleTagCache.Get(article.Id)
 	tags := cache.TagCache.GetList(tagIds)
