@@ -16,13 +16,9 @@ func BuildUserSimpleInfoDefaultIfNull(id int64) *model.UserSimpleInfo {
 		user = &model.User{}
 		user.Id = id
 		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
+		user.Nickname = "匿名用户" + strconv.FormatInt(id, 10)
 		user.CreateTime = date.NowTimestamp()
 	}
-	return BuildUserSimpleInfo(user)
-}
-
-func BuildUserSimpleInfoById(id int64) *model.UserSimpleInfo {
-	user := cache.UserCache.Get(id)
 	return BuildUserSimpleInfo(user)
 }
 
