@@ -2,7 +2,7 @@ package model
 
 import "bbs-go/model/constants"
 
-// 用户简单信息
+// UserInfo 用户简单信息
 type UserInfo struct {
 	Id           int64  `json:"id"`
 	Nickname     string `json:"nickname"`
@@ -13,6 +13,8 @@ type UserInfo struct {
 	Score        int    `json:"score"`        // 积分
 	Description  string `json:"description"`
 	CreateTime   int64  `json:"createTime"`
+
+	Followed bool `json:"followed"`
 }
 
 // UserDetail 用户详细信息

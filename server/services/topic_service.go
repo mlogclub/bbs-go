@@ -317,6 +317,17 @@ func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, 
 	return
 }
 
+func (s *topicService) GetTopicByIds(topicIds []int64) (topics []model.Topic) {
+	topicsMap := s.GetTopicInIds(topicIds)
+	for _, topicId := range topicIds {
+		topic, found := topicsMap[topicId]
+		if found {
+			topics = append(topics, topic)
+		}
+	}
+	return
+}
+
 // GetTopicInIds 根据编号批量获取主题
 func (s *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic {
 	if len(topicIds) == 0 {

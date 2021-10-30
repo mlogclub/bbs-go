@@ -8,7 +8,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
-	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{},
+	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{},
 }
 
 type Model struct {
@@ -266,4 +266,23 @@ type CheckIn struct {
 	ConsecutiveDays int   `gorm:"not null;" json:"consecutiveDays" form:"consecutiveDays"`      // 连续签到天数
 	CreateTime      int64 `json:"createTime" form:"createTime"`                                 // 创建时间
 	UpdateTime      int64 `gorm:"index:idx_latest" json:"updateTime" form:"updateTime"`         // 更新时间
+}
+
+// UserFollow 粉丝关注
+type UserFollow struct {
+	Model
+	UserId     int64 `gorm:"not null;uniqueIndex:idx_user_id" json:"userId"`           // 用户编号
+	OtherId    int64 `gorm:"not null;uniqueIndex:idx_user_id" json:"otherId"`          // 对方的ID（被关注用户编号）
+	Status     int   `gorm:"not null" json:"status"`                                   // 关注状态
+	CreateTime int64 `gorm:"type:bigint;not null" json:"createTime" form:"createTime"` // 创建时间
+}
+
+// UserFeed 用户信息流
+type UserFeed struct {
+	Model
+	UserId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_user_id" json:"userId"`                   // 用户编号
+	DataId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id" json:"dataId" form:"dataId"`     // 数据ID
+	DataType   string `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id" json:"dataType" form:"dataType"` // 数据类型
+	AuthorId   int64  `gorm:"not null;index:idx_user_id" json:"authorId" form:"authorId"`                      // 作者编号
+	CreateTime int64  `gorm:"type:bigint;not null" json:"createTime" form:"createTime"`                        // 创建时间
 }

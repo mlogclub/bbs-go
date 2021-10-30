@@ -14,6 +14,7 @@ require (
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
 	github.com/goburrow/cache v0.1.2
+	github.com/gookit/event v1.0.5 // indirect
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4
