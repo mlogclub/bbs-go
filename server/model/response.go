@@ -96,18 +96,6 @@ type TopicResponse struct {
 	RecommendTime   int64               `json:"recommendTime"`
 }
 
-// 帖子列表返回实体
-type TweetResponse struct {
-	TweetId      int64       `json:"tweetId"`
-	User         *UserInfo   `json:"user"`
-	Content      string      `json:"content"`
-	ImageList    []ImageInfo `json:"imageList"`
-	CommentCount int64       `json:"commentCount"`
-	LikeCount    int64       `json:"likeCount"`
-	Status       int         `json:"status"`
-	CreateTime   int64       `json:"createTime"`
-}
-
 // 项目简单返回
 type ProjectSimpleResponse struct {
 	ProjectId   int64     `json:"projectId"`
