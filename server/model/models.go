@@ -30,6 +30,8 @@ type User struct {
 	Status           int            `gorm:"index:idx_user_status;not null" json:"status" form:"status"`         // 状态
 	TopicCount       int            `gorm:"not null" json:"topicCount" form:"topicCount"`                       // 帖子数量
 	CommentCount     int            `gorm:"not null" json:"commentCount" form:"commentCount"`                   // 跟帖数量
+	FollowCount      int            `gorm:"not null" json:"followCount" form:"followCount"`                     // 关注数量
+	FansCount        int            `gorm:"not null" json:"fansCount" form:"fansCount"`                         // 粉丝数量
 	Roles            string         `gorm:"type:text" json:"roles" form:"roles"`                                // 角色
 	Type             int            `gorm:"not null" json:"type" form:"type"`                                   // 用户类型
 	ForbiddenEndTime int64          `gorm:"not null;default:0" json:"forbiddenEndTime" form:"forbiddenEndTime"` // 禁言结束时间
