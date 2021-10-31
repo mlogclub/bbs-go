@@ -14,7 +14,7 @@ var wg sync.WaitGroup
 
 func init() {
 	var err error
-	eventPool, err = ants.NewPoolWithFunc(4, dispatch)
+	eventPool, err = ants.NewPoolWithFunc(4, dispatch, ants.WithMaxBlockingTasks(1000), ants.WithLogger(logrus.New()))
 	if err != nil {
 		logrus.Error(err)
 	}
