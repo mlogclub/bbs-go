@@ -4,7 +4,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/config"
 	"bbs-go/pkg/es"
-	"bbs-go/pkg/seo"
+	"bbs-go/pkg/event"
 	"bbs-go/pkg/urls"
 	"errors"
 	"math"
@@ -84,8 +84,12 @@ func (s *topicService) UpdateColumn(id int64, name string, value interface{}) er
 	return nil
 }
 
-// 删除
+// Delete 删除
 func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) error {
+	topic := s.Get(topicId)
+	if topic == nil {
+		return nil
+	}
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), topicId, "status", constants.StatusDeleted)
 	if err == nil {
 		// 添加索引
@@ -94,13 +98,17 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 		TopicTagService.DeleteByTopicId(topicId)
 		// 发送消息
 		MessageService.SendTopicDeleteMsg(topicId, deleteUserId)
-		// 操作日志
-		OperateLogService.AddOperateLog(deleteUserId, constants.OpTypeDelete, constants.EntityTopic, topicId, "", r)
+		// 发送事件
+		event.Send(event.TopicDeleteEvent{
+			UserId:       topic.UserId,
+			TopicId:      topic.Id,
+			DeleteUserId: deleteUserId,
+		})
 	}
 	return err
 }
 
-// 取消删除
+// Undelete 取消删除
 func (s *topicService) Undelete(id int64) error {
 	err := repositories.TopicRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusOk)
 	if err == nil {
@@ -180,8 +188,11 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		UserService.IncrTopicCount(userId)
 		// 获得积分
 		UserService.IncrScoreForPostTopic(topic)
-		// 百度链接推送
-		seo.Push(urls.TopicUrl(topic.Id))
+		// 发送事件
+		event.Send(event.TopicCreateEvent{
+			UserId:  topic.UserId,
+			TopicId: topic.Id,
+		})
 	}
 	return topic, simple.FromError(err)
 }

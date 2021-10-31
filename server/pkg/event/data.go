@@ -1,17 +1,4 @@
-package mq
-
-type EventType string
-
-const (
-	EventTypeNone           EventType = "none"
-	EventTypeFollow         EventType = "follow"
-	EventTypeUnFollow       EventType = "unfollow"
-	EventTypeTopicCreate    EventType = "topicCreate"
-	EventTypeTopicDelete    EventType = "topicDelete"
-	EventTypeTopicLike      EventType = "topicLike"
-	EventTypeTopicFavorite  EventType = "topicFavorite"
-	EventTypeTopicRecommend EventType = "topicRecommend"
-)
+package event
 
 // 关注
 type FollowEvent struct {

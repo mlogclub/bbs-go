@@ -1,19 +1,18 @@
 package eventhandler
 
 import (
-	"bbs-go/pkg/mq"
+	"bbs-go/pkg/event"
 	"bbs-go/services"
+	"reflect"
 )
 
 func init() {
-	mq.AddEventHandler(mq.EventTypeUnFollow, HandleUnFollow)
+	event.RegHandler(reflect.TypeOf(event.UnFollowEvent{}), HandleUnFollow)
 }
 
-func HandleUnFollow(e interface{}) error {
-	event := e.(*mq.UnFollowEvent)
+func HandleUnFollow(e interface{}) {
+	evt := e.(event.UnFollowEvent)
 
 	// 清理该用户下的信息流
-	services.UserFeedService.DeleteByUser(event.UserId, event.OtherId)
-
-	return nil
+	services.UserFeedService.DeleteByUser(evt.UserId, evt.OtherId)
 }

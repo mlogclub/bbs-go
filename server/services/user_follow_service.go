@@ -4,7 +4,7 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/pkg/mq"
+	"bbs-go/pkg/event"
 	"bbs-go/repositories"
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/mlogclub/simple"
@@ -115,7 +115,7 @@ func (s *userFollowService) Follow(userId, otherId int64) error {
 	}
 
 	// 发送mq消息
-	mq.Send(mq.EventTypeFollow, mq.FollowEvent{
+	event.Send(event.FollowEvent{
 		UserId:  userId,
 		OtherId: otherId,
 	})
@@ -158,7 +158,7 @@ func (s *userFollowService) UnFollow(userId, otherId int64) error {
 	}
 
 	// 发送mq消息
-	mq.Send(mq.EventTypeUnFollow, mq.UnFollowEvent{
+	event.Send(event.UnFollowEvent{
 		UserId:  userId,
 		OtherId: otherId,
 	})

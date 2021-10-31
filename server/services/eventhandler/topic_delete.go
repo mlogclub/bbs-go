@@ -2,26 +2,25 @@ package eventhandler
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/pkg/mq"
+	"bbs-go/pkg/event"
 	"bbs-go/services"
+	"reflect"
 )
 
 func init() {
-	mq.AddEventHandler(mq.EventTypeTopicDelete, HandleTopicDelete)
+	event.RegHandler(reflect.TypeOf(event.TopicDeleteEvent{}), HandleTopicDelete)
 }
 
-func HandleTopicDelete(e interface{}) error {
-	event := e.(*mq.TopicDeleteEvent)
+func HandleTopicDelete(e interface{}) {
+	evt := e.(event.TopicDeleteEvent)
 
 	// 处理userFeed
-	services.UserFeedService.DeleteByDataId(event.TopicId, constants.EntityTopic)
+	services.UserFeedService.DeleteByDataId(evt.TopicId, constants.EntityTopic)
 
 	// 发送消息
-	services.MessageService.SendTopicDeleteMsg(event.TopicId, event.DeleteUserId)
+	services.MessageService.SendTopicDeleteMsg(evt.TopicId, evt.DeleteUserId)
 
 	// 操作日志
-	services.OperateLogService.AddOperateLog(event.DeleteUserId, constants.OpTypeDelete, constants.EntityTopic,
-		event.TopicId, "", nil)
-
-	return nil
+	services.OperateLogService.AddOperateLog(evt.DeleteUserId, constants.OpTypeDelete, constants.EntityTopic,
+		evt.TopicId, "", nil)
 }
