@@ -2,7 +2,7 @@
   <div
     class="profile"
     :class="{ background: backgroundImage }"
-    :style="{ backgroundImage: 'url(' + localUser.smallBackgroundImage + ')' }"
+    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
     <div v-if="isOwner" class="file is-light is-small change-bg">
       <label class="file-label">
@@ -63,7 +63,10 @@ export default {
   },
   computed: {
     backgroundImage() {
-      return this.localUser.backgroundImage
+      if (this.localUser.smallBackgroundImage) {
+        return this.localUser.smallBackgroundImage
+      }
+      return require('~/assets/images/my-default-header-img.jpeg')
     },
     currentUser() {
       return this.$store.state.user.current
