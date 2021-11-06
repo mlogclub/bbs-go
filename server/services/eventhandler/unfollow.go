@@ -7,12 +7,12 @@ import (
 )
 
 func init() {
-	event.RegHandler(reflect.TypeOf(event.UnFollowEvent{}), HandleUnFollow)
+	event.RegHandler(reflect.TypeOf(event.UnFollowEvent{}), handleUnFollowEvent)
 }
 
-func HandleUnFollow(e interface{}) {
-	evt := e.(event.UnFollowEvent)
+func handleUnFollowEvent(i interface{}) {
+	e := i.(event.UnFollowEvent)
 
 	// 清理该用户下的信息流
-	services.UserFeedService.DeleteByUser(evt.UserId, evt.OtherId)
+	services.UserFeedService.DeleteByUser(e.UserId, e.OtherId)
 }

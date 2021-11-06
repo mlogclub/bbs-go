@@ -13,25 +13,25 @@ import (
 )
 
 func init() {
-	event.RegHandler(reflect.TypeOf(event.TopicCreateEvent{}), HandleTopicCreate)
+	event.RegHandler(reflect.TypeOf(event.TopicCreateEvent{}), handleTopicCreateEvent)
 }
 
-func HandleTopicCreate(e interface{}) {
-	evt := e.(event.TopicCreateEvent)
+func handleTopicCreateEvent(i interface{}) {
+	e := i.(event.TopicCreateEvent)
 
 	// 百度链接推送
-	seo.Push(urls.TopicUrl(evt.TopicId))
+	seo.Push(urls.TopicUrl(e.TopicId))
 
-	services.UserFollowService.ScanFans(evt.UserId, func(fansId int64) {
-		logrus.WithField("topicId", evt.TopicId).
-			WithField("userId", evt.UserId).
+	services.UserFollowService.ScanFans(e.UserId, func(fansId int64) {
+		logrus.WithField("topicId", e.TopicId).
+			WithField("userId", e.UserId).
 			WithField("fansId", fansId).
 			Info("用户关注，处理帖子")
 		if err := services.UserFeedService.Create(&model.UserFeed{
 			UserId:     fansId,
-			DataId:     evt.TopicId,
+			DataId:     e.TopicId,
 			DataType:   constants.EntityTopic,
-			AuthorId:   evt.UserId,
+			AuthorId:   e.UserId,
 			CreateTime: date.NowTimestamp(),
 		}); err != nil {
 			logrus.Error(err)

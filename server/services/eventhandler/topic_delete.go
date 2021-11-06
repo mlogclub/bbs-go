@@ -8,19 +8,19 @@ import (
 )
 
 func init() {
-	event.RegHandler(reflect.TypeOf(event.TopicDeleteEvent{}), HandleTopicDelete)
+	event.RegHandler(reflect.TypeOf(event.TopicDeleteEvent{}), handleTopicDeleteEvent)
 }
 
-func HandleTopicDelete(e interface{}) {
-	evt := e.(event.TopicDeleteEvent)
+func handleTopicDeleteEvent(i interface{}) {
+	e := i.(event.TopicDeleteEvent)
 
 	// 处理userFeed
-	services.UserFeedService.DeleteByDataId(evt.TopicId, constants.EntityTopic)
+	services.UserFeedService.DeleteByDataId(e.TopicId, constants.EntityTopic)
 
 	// 发送消息
-	services.MessageService.SendTopicDeleteMsg(evt.TopicId, evt.DeleteUserId)
+	services.MessageService.SendTopicDeleteMsg(e.TopicId, e.DeleteUserId)
 
 	// 操作日志
-	services.OperateLogService.AddOperateLog(evt.DeleteUserId, constants.OpTypeDelete, constants.EntityTopic,
-		evt.TopicId, "", nil)
+	services.OperateLogService.AddOperateLog(e.DeleteUserId, constants.OpTypeDelete, constants.EntityTopic,
+		e.TopicId, "", nil)
 }

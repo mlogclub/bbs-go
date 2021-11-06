@@ -10,22 +10,20 @@ import (
 )
 
 func init() {
-	event.RegHandler(reflect.TypeOf(event.FollowEvent{}), HandleFollow)
+	event.RegHandler(reflect.TypeOf(event.FollowEvent{}), handleFollowEvent)
 }
 
-func HandleFollow(e interface{}) {
-	handleUserFeedOnFollow(e.(event.FollowEvent))
-}
+func handleFollowEvent(i interface{}) {
+	e := i.(event.FollowEvent)
 
-// 将该用户下的帖子添加到信息流
-func handleUserFeedOnFollow(evt event.FollowEvent) {
-	services.TopicService.ScanByUser(evt.OtherId, func(topics []model.Topic) {
+	// 将该用户下的帖子添加到信息流
+	services.TopicService.ScanByUser(e.OtherId, func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status != constants.StatusOk {
 				continue
 			}
 			_ = services.UserFeedService.Create(&model.UserFeed{
-				UserId:     evt.UserId,
+				UserId:     e.UserId,
 				DataType:   constants.EntityTopic,
 				DataId:     topic.Id,
 				AuthorId:   topic.UserId,
