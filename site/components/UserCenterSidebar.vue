@@ -26,6 +26,9 @@
       </div>
     </div>
 
+    <fans-widget :user="localUser" />
+    <follow-widget :user="localUser" />
+
     <div v-if="isOwner || isAdmin" class="widget">
       <div class="widget-header">操作</div>
       <div class="widget-content">

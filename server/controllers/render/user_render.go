@@ -4,10 +4,11 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
 	"strconv"
 	"strings"
+
+	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/date"
 )
 
 func BuildUserInfoDefaultIfNull(id int64) *model.UserInfo {
@@ -33,6 +34,8 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		SmallAvatar:  HandleOssImageStyleAvatar(user.Avatar),
 		TopicCount:   user.TopicCount,
 		CommentCount: user.CommentCount,
+		FansCount:    user.FansCount,
+		FollowCount:  user.FollowCount,
 		Score:        user.Score,
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,

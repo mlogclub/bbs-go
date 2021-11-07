@@ -209,13 +209,20 @@ $main-container-width: null; // 主栏目的宽度
     padding: 8px 0;
     font-size: 16px;
     font-weight: 700;
-    //border-bottom: 1px dashed #ddd;
     border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    align-items: center;
 
     .slot {
       float: right;
       font-size: 80%;
       font-weight: 400;
+    }
+
+    .count {
+      color: rgb(133, 144, 166);
+      margin-left: 8px;
+      font-size: 14px;
     }
 
     .delete {
@@ -226,6 +233,14 @@ $main-container-width: null; // 主栏目的宽度
   & > .widget-content {
     padding: 8px 0;
     word-break: break-all;
+
+    .widget-tips {
+      color:rgb(197, 198, 203);
+      font-size: 14px;
+      font-weight: 400;
+      text-align: center;
+      margin: 10px;
+    }
   }
 
   & > .widget-footer {

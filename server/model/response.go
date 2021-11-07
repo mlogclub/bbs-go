@@ -10,6 +10,8 @@ type UserInfo struct {
 	SmallAvatar  string `json:"smallAvatar"`
 	TopicCount   int    `json:"topicCount"`   // 话题数量
 	CommentCount int    `json:"commentCount"` // 跟帖数量
+	FansCount    int    `json:"fansCount"`    // 粉丝数量
+	FollowCount  int    `json:"followCount"`  // 关注数量
 	Score        int    `json:"score"`        // 积分
 	Description  string `json:"description"`
 	CreateTime   int64  `json:"createTime"`
