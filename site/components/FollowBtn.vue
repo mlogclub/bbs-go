@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="button is-success" @click="follow">
+    <button class="button is-success is-small" @click="follow">
       <i class="iconfont el-icon-plus" />
       <span>关注</span>
     </button>
@@ -24,13 +24,17 @@ export default {
   methods: {
     async follow() {
       if (!this.user) {
-        alert('请先登录')
+        this.$msgSignIn()
         return
       }
-      await this.$axios.post('/api/fans/follow', {
-        userId: this.userId,
-      })
-      alert('关注成功')
+      try {
+        await this.$axios.post('/api/fans/follow', {
+          userId: this.userId,
+        })
+        this.$message.success('关注成功')
+      } catch (e) {
+        this.$message.error(e.message || e)
+      }
     },
   },
 }
