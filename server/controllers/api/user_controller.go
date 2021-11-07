@@ -23,7 +23,7 @@ type UserController struct {
 func (c *UserController) GetCurrent() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user != nil {
-		return simple.JsonData(render.BuildUserDetail(user))
+		return simple.JsonData(render.BuildUserProfile(user))
 	}
 	return simple.JsonSuccess()
 }
