@@ -40,6 +40,9 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,
 	}
+	if len(ret.Description) == 0 {
+		ret.Description = "这家伙很懒，什么都没留下"
+	}
 	if user.Status == constants.StatusDeleted {
 		ret.Nickname = "黑名单用户"
 		ret.Description = ""
@@ -60,9 +63,6 @@ func BuildUserDetail(user *model.User) *model.UserDetail {
 		HomePage:             user.HomePage,
 		Forbidden:            user.IsForbidden(),
 		Status:               user.Status,
-	}
-	if len(ret.Description) == 0 {
-		ret.Description = "这家伙很懒，什么都没留下"
 	}
 	if user.Status == constants.StatusDeleted {
 		ret.Username = "blacklist"

@@ -5,7 +5,10 @@
       <span class="count">{{ user.fansCount }}</span>
     </div>
     <div class="widget-content">
-      <div class="widget-tips">没有更多内容了</div>
+      <div v-if="fansList && fansList.length">
+        <user-follow-list :users="fansList" @onFollowed="onFollowed" />
+      </div>
+      <div v-else class="widget-tips">没有更多内容了</div>
     </div>
   </div>
 </template>
@@ -16,6 +19,25 @@ export default {
     user: {
       type: Object,
       required: true,
+    },
+  },
+  data() {
+    return {
+      fansList: [],
+    }
+  },
+  mounted() {
+    this.loadData()
+  },
+  methods: {
+    async loadData() {
+      const data = await this.$axios.get(
+        '/api/fans/recent/fans?userId=' + this.user.id
+      )
+      this.fansList = data.results
+    },
+    async onFollowed(userId, followed) {
+      await this.loadData()
     },
   },
 }

@@ -44,7 +44,10 @@
         -->
       </div>
       <div class="action-btns">
-        <follow-btn :user-id="localUser.id" />
+        <follow-btn
+          v-if="!currentUser || currentUser.id !== localUser.id"
+          :user-id="localUser.id"
+        />
       </div>
     </div>
   </div>

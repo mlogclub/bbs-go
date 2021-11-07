@@ -6,6 +6,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/event"
 	"bbs-go/repositories"
+
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/date"
@@ -172,8 +173,7 @@ func (s *userFollowService) isFollow(userId, otherId int64) bool {
 }
 
 // GetFans 粉丝列表
-func (s *userFollowService) GetFans(userId int64, cursor int64) (itemList []int64, nextCursor int64, hasMore bool) {
-	limit := 20
+func (s *userFollowService) GetFans(userId int64, cursor int64, limit int) (itemList []int64, nextCursor int64, hasMore bool) {
 	cnd := simple.NewSqlCnd().Eq("other_id", userId)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
@@ -194,8 +194,7 @@ func (s *userFollowService) GetFans(userId int64, cursor int64) (itemList []int6
 }
 
 // GetFollows 关注列表
-func (s *userFollowService) GetFollows(userId int64, cursor int64) (itemList []int64, nextCursor int64, hasMore bool) {
-	limit := 20
+func (s *userFollowService) GetFollows(userId int64, cursor int64, limit int) (itemList []int64, nextCursor int64, hasMore bool) {
 	cnd := simple.NewSqlCnd().Eq("user_id", userId)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
