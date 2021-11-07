@@ -77,7 +77,7 @@ func (s *userFollowService) Follow(userId, otherId int64) error {
 		return nil
 	}
 
-	if s.isFollow(userId, otherId) {
+	if s.IsFollowed(userId, otherId) {
 		return nil
 	}
 
@@ -128,7 +128,7 @@ func (s *userFollowService) UnFollow(userId, otherId int64) error {
 		// 自己关注自己，不进行处理。
 		return nil
 	}
-	if !s.isFollow(userId, otherId) {
+	if !s.IsFollowed(userId, otherId) {
 		return nil
 	}
 	err := simple.DB().Transaction(func(tx *gorm.DB) error {
@@ -164,12 +164,6 @@ func (s *userFollowService) UnFollow(userId, otherId int64) error {
 		OtherId: otherId,
 	})
 	return nil
-}
-
-// isFollow 是否关注
-func (s *userFollowService) isFollow(userId, otherId int64) bool {
-	t := s.FindOne(simple.NewSqlCnd().Eq("user_id", userId).Eq("other_id", otherId))
-	return t != nil
 }
 
 // GetFans 粉丝列表

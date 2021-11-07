@@ -51,6 +51,16 @@ func (c *FansController) PostUnfollow() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
+func (c *FansController) GetIsfollowed() *simple.JsonResult {
+	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+	current := services.UserTokenService.GetCurrent(c.Ctx)
+	var followed = false
+	if current != nil && current.Id != userId {
+		followed = services.UserFollowService.IsFollowed(current.Id, userId)
+	}
+	return simple.JsonData(followed)
+}
+
 func (c *FansController) GetFans() *simple.JsonResult {
 	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
@@ -100,7 +110,7 @@ func (c *FansController) GetFollows() *simple.JsonResult {
 
 func (c *FansController) GetRecentFans() *simple.JsonResult {
 	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
-	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, 10, 20)
+	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, 0, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
 	var followedSet hashset.Set

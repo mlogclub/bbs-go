@@ -47,6 +47,8 @@
         <follow-btn
           v-if="!currentUser || currentUser.id !== localUser.id"
           :user-id="localUser.id"
+          :followed="followed"
+          @onFollowed="onFollowed"
         />
       </div>
     </div>
@@ -64,6 +66,7 @@ export default {
   data() {
     return {
       localUser: Object.assign({}, this.user),
+      followed: false,
     }
   },
   computed: {
@@ -81,6 +84,9 @@ export default {
       const current = this.$store.state.user.current
       return this.localUser && current && this.localUser.id === current.id
     },
+  },
+  mounted() {
+    this.loadIsFollowed()
   },
   methods: {
     async uploadBackground(e) {
@@ -110,6 +116,14 @@ export default {
         this.$message.error(e.message || e)
         console.error(e)
       }
+    },
+    async loadIsFollowed() {
+      this.followed = await this.$axios.get(
+        '/api/fans/isfollowed?userId=' + this.user.id
+      )
+    },
+    onFollowed(userId, followed) {
+      this.followed = followed
     },
   },
 }
