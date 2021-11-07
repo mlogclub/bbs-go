@@ -15,7 +15,6 @@
             <nuxt-link :to="'/user/' + topic.user.id">{{
               topic.user.nickname
             }}</nuxt-link>
-            <follow-btn :user-id="topic.user.id" />
           </div>
           <div class="topic-time">
             发布于{{ topic.createTime | prettyDate }}

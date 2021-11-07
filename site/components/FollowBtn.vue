@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button class="button is-primary" @click="follow">关注</button>
+    <button class="button is-success" @click="follow">
+      <i class="iconfont el-icon-plus" />
+      <span>关注</span>
+    </button>
   </div>
 </template>
 

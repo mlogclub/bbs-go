@@ -44,6 +44,9 @@
           >
         </div>
       </div>
+      <div class="action-btns">
+        <follow-btn user-id="localUser.id" />
+      </div>
     </div>
   </div>
 </template>
@@ -130,16 +133,11 @@ export default {
 
   .profile-info {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
     width: 100%;
     padding: 10px 30px;
     background: #fff;
-
-    // .avatar {
-    //   max-width: 66px;
-    //   max-height: 66px;
-    //   min-width: 66px;
-    //   min-height: 66px;
-    // }
 
     .meta {
       margin-left: 18px;
@@ -163,7 +161,7 @@ export default {
 
       .description {
         font-size: 14px;
-        color: 000;
+        color: #000;
         margin-bottom: 6px;
       }
 
