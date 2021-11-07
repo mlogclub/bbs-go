@@ -282,9 +282,9 @@ type UserFollow struct {
 // UserFeed 用户信息流
 type UserFeed struct {
 	Model
-	UserId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_user_id" json:"userId"`                   // 用户编号
-	DataId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id" json:"dataId" form:"dataId"`     // 数据ID
-	DataType   string `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id" json:"dataType" form:"dataType"` // 数据类型
-	AuthorId   int64  `gorm:"not null;index:idx_user_id" json:"authorId" form:"authorId"`                      // 作者编号
-	CreateTime int64  `gorm:"type:bigint;not null" json:"createTime" form:"createTime"`                        // 创建时间
+	UserId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_user_id;index:idx_search" json:"userId"`                   // 用户编号
+	DataId     int64  `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id" json:"dataId" form:"dataId"`                      // 数据ID
+	DataType   string `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id;index:idx_search" json:"dataType" form:"dataType"` // 数据类型
+	AuthorId   int64  `gorm:"not null;index:idx_user_id" json:"authorId" form:"authorId"`                                       // 作者编号
+	CreateTime int64  `gorm:"type:bigint;not null;index:idx_search" json:"createTime" form:"createTime"`                        // 数据的创建时间
 }

@@ -190,8 +190,9 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		UserService.IncrScoreForPostTopic(topic)
 		// 发送事件
 		event.Send(event.TopicCreateEvent{
-			UserId:  topic.UserId,
-			TopicId: topic.Id,
+			UserId:     topic.UserId,
+			TopicId:    topic.Id,
+			CreateTime: topic.CreateTime,
 		})
 	}
 	return topic, simple.FromError(err)

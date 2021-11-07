@@ -13,8 +13,9 @@ type UnFollowEvent struct {
 }
 
 type TopicCreateEvent struct {
-	UserId  int64 `json:"userId"`
-	TopicId int64 `json:"topicId"`
+	UserId     int64 `json:"userId"`
+	TopicId    int64 `json:"topicId"`
+	CreateTime int64 `json:"createTime"`
 }
 
 type TopicDeleteEvent struct {

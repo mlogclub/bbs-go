@@ -5,7 +5,6 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/event"
 	"bbs-go/services"
-	"github.com/mlogclub/simple/date"
 	"reflect"
 )
 
@@ -27,7 +26,7 @@ func handleFollowEvent(i interface{}) {
 				DataType:   constants.EntityTopic,
 				DataId:     topic.Id,
 				AuthorId:   topic.UserId,
-				CreateTime: date.NowTimestamp(),
+				CreateTime: topic.CreateTime,
 			})
 		}
 	})

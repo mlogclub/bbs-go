@@ -7,7 +7,6 @@ import (
 	"bbs-go/pkg/seo"
 	"bbs-go/pkg/urls"
 	"bbs-go/services"
-	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
 	"reflect"
 )
@@ -32,7 +31,7 @@ func handleTopicCreateEvent(i interface{}) {
 			DataId:     e.TopicId,
 			DataType:   constants.EntityTopic,
 			AuthorId:   e.UserId,
-			CreateTime: date.NowTimestamp(),
+			CreateTime: e.CreateTime,
 		}); err != nil {
 			logrus.Error(err)
 		}
