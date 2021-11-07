@@ -72,7 +72,8 @@ func (s *userFeedService) DeleteByDataId(dataId int64, dataType string) {
 	simple.DB().Where("data_id = ? and data_type = ?", dataId, dataType).Delete(model.UserFeed{})
 }
 
-func (s *userFeedService) GetTopics(userId int64, cursor int64) (topics []model.Topic, nextCursor int64) {
+func (s *userFeedService) GetTopics(userId int64, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	var limit = 20
 	cnd := simple.NewSqlCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
@@ -80,11 +81,12 @@ func (s *userFeedService) GetTopics(userId int64, cursor int64) (topics []model.
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	cnd.Eq("data_type", constants.EntityTopic).Desc("id").Limit(20)
+	cnd.Eq("data_type", constants.EntityTopic).Desc("id").Limit(limit)
 
 	userFeeds := repositories.UserFeedRepository.Find(simple.DB(), cnd)
 	if len(userFeeds) > 0 {
 		nextCursor = userFeeds[len(userFeeds)-1].Id
+		hasMore = len(userFeeds) >= limit
 	} else {
 		nextCursor = cursor
 	}
