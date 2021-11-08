@@ -11,7 +11,7 @@
               v-if="topicsPage"
               v-slot="{ results }"
               :init-data="topicsPage"
-              url="/api/topic/topics"
+              url="/api/feed/topics"
             >
               <topic-list :topics="results" :show-ad="true" />
             </load-more>
