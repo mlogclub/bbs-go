@@ -12,6 +12,11 @@
       "type": "long",
       "store": true
     },
+    "nickname": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_smart"
+    },
     "title": {
       "type": "text",
       "analyzer": "ik_max_word",
@@ -22,26 +27,22 @@
       "analyzer": "ik_max_word",
       "search_analyzer": "ik_smart"
     },
+    "tags": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_smart",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
     "recommend": {
       "type": "boolean"
     },
-    "lastCommentTime": {
-      "type": "long"
-    },
     "status": {
       "type": "integer"
-    },
-    "viewCount": {
-      "type": "long",
-      "store": true
-    },
-    "commentCount": {
-      "type": "long",
-      "store": true
-    },
-    "likeCount": {
-      "type": "long",
-      "store": true
     },
     "createTime": {
       "type": "long",

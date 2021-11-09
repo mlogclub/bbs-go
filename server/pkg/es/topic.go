@@ -1,30 +1,40 @@
 package es
 
 import (
+	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	html2 "bbs-go/pkg/html"
+	"bbs-go/pkg/markdown"
+	"bbs-go/repositories"
 	"context"
+	"html"
 	"strconv"
+	"time"
+
+	"github.com/mlogclub/simple/date"
+
+	"github.com/olivere/elastic/v7"
+	"github.com/panjf2000/ants/v2"
 
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/json"
-	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 )
 
+var indexPool, _ = ants.NewPool(8)
+
 type TopicDocument struct {
-	Id              int64  `json:"id"`
-	NodeId          int64  `json:"nodeId"`
-	UserId          int64  `json:"userId"`
-	Title           string `json:"title"`
-	Content         string `json:"content"`
-	Recommend       bool   `json:"recommend"`
-	LastCommentTime int64  `json:"lastCommentTime"`
-	Status          int    `json:"status"`
-	ViewCount       int64  `json:"viewCount"`
-	CommentCount    int64  `json:"commentCount"`
-	LikeCount       int64  `json:"likeCount"`
-	CreateTime      int64  `json:"createTime"`
+	Id         int64    `json:"id"`
+	NodeId     int64    `json:"nodeId"`
+	UserId     int64    `json:"userId"`
+	Nickname   string   `json:"nickname"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	Tags       []string `json:"tags"`
+	Recommend  bool     `json:"recommend"`
+	Status     int      `json:"status"`
+	CreateTime int64    `json:"createTime"`
 }
 
 func (t *TopicDocument) ToStr() string {
@@ -39,24 +49,60 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 	if topic == nil {
 		return nil
 	}
-	return &TopicDocument{
-		Id:              topic.Id,
-		NodeId:          topic.NodeId,
-		UserId:          topic.UserId,
-		Title:           topic.Title,
-		Content:         topic.Content,
-		Recommend:       topic.Recommend,
-		LastCommentTime: topic.LastCommentTime,
-		Status:          topic.Status,
-		ViewCount:       topic.ViewCount,
-		CommentCount:    topic.CommentCount,
-		LikeCount:       topic.LikeCount,
-		CreateTime:      topic.CreateTime,
+	doc := &TopicDocument{
+		Id:         topic.Id,
+		NodeId:     topic.NodeId,
+		UserId:     topic.UserId,
+		Title:      topic.Title,
+		Status:     topic.Status,
+		Recommend:  topic.Recommend,
+		CreateTime: topic.CreateTime,
+	}
+
+	// 处理内容
+	content := markdown.ToHTML(topic.Content)
+	content = simple.GetHtmlText(content)
+	content = html.EscapeString(content)
+
+	doc.Content = content
+
+	// 处理用户
+	user := cache.UserCache.Get(topic.UserId)
+	if user != nil {
+		doc.Nickname = user.Nickname
+	}
+
+	// 处理标签
+	tags := getTopicTags(topic.Id)
+	var tagsArr []string
+	for _, tag := range tags {
+		tagsArr = append(tagsArr, tag.Name)
+	}
+	doc.Tags = tagsArr
+
+	return doc
+}
+
+func getTopicTags(topicId int64) []model.Tag {
+	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
+
+	var tagIds []int64
+	for _, topicTag := range topicTags {
+		tagIds = append(tagIds, topicTag.TagId)
+	}
+	return cache.TagCache.GetList(tagIds)
+}
+
+func UpdateTopicIndexAsync(topic *model.Topic) {
+	if err := indexPool.Submit(func() {
+		UpdateTopicIndex(topic)
+	}); err != nil {
+		logrus.Error(err)
 	}
 }
 
 func UpdateTopicIndex(topic *model.Topic) {
-	if true { // 默认全部关闭
+	if topic == nil {
 		return
 	}
 	if initClient() == nil {
@@ -69,7 +115,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 		return
 	}
 	logrus.Infof("Es add index topic, id = %d", topic.Id)
-	if response, err := es.Index().
+	if response, err := client.Index().
 		Index(index).
 		BodyJson(doc).
 		Id(strconv.FormatInt(doc.Id, 10)).
@@ -80,7 +126,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 	}
 }
 
-func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging *simple.Paging, err error) {
+func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *simple.Paging, err error) {
 	if initClient() == nil {
 		err = errNoConfig
 		return
@@ -89,14 +135,35 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 	paging = &simple.Paging{Page: page, Limit: limit}
 
 	query := elastic.NewBoolQuery().
-		Must(elastic.NewTermQuery("status", constants.StatusOk)).
-		Must(elastic.NewMultiMatchQuery(keyword, "title", "content"))
+		Must(elastic.NewTermQuery("status", constants.StatusOk))
+	if nodeId != 0 {
+		if nodeId == -1 { // 推荐
+			query.Must(elastic.NewTermQuery("recommend", true))
+		} else {
+			query.Must(elastic.NewTermQuery("nodeId", nodeId))
+		}
+	}
+	if timeRange == 1 { // 一天内
+		beginTime := date.Timestamp(time.Now().Add(-24 * time.Hour))
+		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	} else if timeRange == 2 { // 一周内
+		beginTime := date.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
+		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	} else if timeRange == 3 { // 一月内
+		beginTime := date.Timestamp(time.Now().AddDate(0, -1, 0))
+		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	} else if timeRange == 4 { // 一年内
+		beginTime := date.Timestamp(time.Now().AddDate(-1, 0, 0))
+		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	}
+	query.Must(elastic.NewMultiMatchQuery(keyword, "title", "content", "nickname", "tags"))
 
 	highlight := elastic.NewHighlight().
 		PreTags("<span class='search-highlight'>").PostTags("</span>").
-		Fields(elastic.NewHighlighterField("title"), elastic.NewHighlighterField("content"))
+		Fields(elastic.NewHighlighterField("title"), elastic.NewHighlighterField("content"), elastic.NewHighlighterField("nickname"),
+			elastic.NewHighlighterField("tags"))
 
-	searchResult, err := es.Search().
+	searchResult, err := client.Search().
 		Index(index).
 		Query(query).
 		From(paging.Offset()).Size(paging.Limit).
@@ -105,7 +172,7 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 	if err != nil {
 		return
 	}
-	logrus.Infof("Query took %d milliseconds\n", searchResult.TookInMillis)
+	// logrus.Infof("Query took %d milliseconds\n", searchResult.TookInMillis)
 
 	if totalHits := searchResult.TotalHits(); totalHits > 0 {
 		paging.Total = totalHits
@@ -118,8 +185,12 @@ func SearchTopic(keyword string, page, limit int) (docs []TopicDocument, paging 
 				if len(hit.Highlight["content"]) > 0 && simple.IsNotBlank(hit.Highlight["content"][0]) {
 					doc.Content = hit.Highlight["content"][0]
 				} else {
-					// 如果内容没有高亮的，那么就不显示内容
-					doc.Content = ""
+					doc.Content = html2.GetSummary(doc.Content, 128)
+				}
+				if len(hit.Highlight["nickname"]) > 0 && simple.IsNotBlank(hit.Highlight["nickname"][0]) {
+					doc.Nickname = hit.Highlight["nickname"][0]
+				} else if len(hit.Highlight["tags"]) > 0 {
+					doc.Tags = hit.Highlight["tags"]
 				}
 				docs = append(docs, doc)
 			} else {
