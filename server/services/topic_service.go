@@ -358,11 +358,6 @@ func (s *topicService) GetTopicInIds(topicIds []int64) map[int64]model.Topic {
 // 浏览数+1
 func (s *topicService) IncrViewCount(topicId int64) {
 	simple.DB().Exec("update t_topic set view_count = view_count + 1 where id = ?", topicId)
-
-	go func() {
-		// 添加索引
-		es.UpdateTopicIndex(s.Get(topicId))
-	}()
 }
 
 // 当帖子被评论的时候，更新最后回复时间、回复数量+1
@@ -381,11 +376,6 @@ func (s *topicService) OnComment(topicId int64, comment *model.Comment) {
 		}
 		return nil
 	})
-
-	go func() {
-		// 添加索引
-		es.UpdateTopicIndex(s.Get(topicId))
-	}()
 }
 
 // rss

@@ -156,7 +156,7 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 		beginTime := date.Timestamp(time.Now().AddDate(-1, 0, 0))
 		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
 	}
-	query.Must(elastic.NewMultiMatchQuery(keyword, "title", "content", "nickname", "tags"))
+	query.Must(elastic.NewMultiMatchQuery(keyword, "title", "content", "tags"))
 
 	highlight := elastic.NewHighlight().
 		PreTags("<span class='search-highlight'>").PostTags("</span>").
