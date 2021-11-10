@@ -212,11 +212,15 @@ $main-container-width: null; // 主栏目的宽度
     border-bottom: 1px solid #f1f1f1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     .slot {
       float: right;
       font-size: 80%;
       font-weight: 400;
+      a {
+        color:#4a4a4a;
+      }
     }
 
     .count {

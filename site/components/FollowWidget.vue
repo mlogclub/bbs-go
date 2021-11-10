@@ -1,8 +1,13 @@
 <template>
   <div class="widget">
     <div class="widget-header">
-      <span>关注</span>
-      <span class="count">{{ user.followCount }}</span>
+      <div>
+        <span>关注</span>
+        <span class="count">{{ user.followCount }}</span>
+      </div>
+      <div class="slot">
+        <nuxt-link to="/">更多</nuxt-link>
+      </div>
     </div>
     <div class="widget-content">
       <div v-if="followList && followList.length">

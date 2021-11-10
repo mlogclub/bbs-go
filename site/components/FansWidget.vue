@@ -1,8 +1,13 @@
 <template>
   <div class="widget">
     <div class="widget-header">
-      <span>粉丝</span>
-      <span class="count">{{ user.fansCount }}</span>
+      <div>
+        <span>粉丝</span>
+        <span class="count">{{ user.fansCount }}</span>
+      </div>
+      <div class="slot">
+        <nuxt-link to="/">更多</nuxt-link>
+      </div>
     </div>
     <div class="widget-content">
       <div v-if="fansList && fansList.length">
