@@ -178,13 +178,14 @@ export default {
   }
 
   $search-box-width: 230px;
+  $search-focus-box-width: 430px;
   $border-color: #ebebeb;
   //$border-focus-color: #4e6ef2;
   $border-focus-color: #e7672e;
 
   &.input-focus {
     .input {
-      width: 430px;
+      width: $search-focus-box-width;
       // border-color: $border-color !important;
       opacity: 1;
       filter: alpha(opacity=100) \9;
@@ -195,21 +196,21 @@ export default {
     .input {
       border-radius: 6px 6px 0 0;
       border-bottom: 1px solid $border-color !important;
-      border-top: 1px solid $border-focus-color;
-      border-left: 1px solid $border-focus-color;
-      border-right: 1px solid $border-focus-color;
+      border-top: 2px solid $border-focus-color;
+      border-left: 2px solid $border-focus-color;
+      border-right: 2px solid $border-focus-color;
     }
     .histories {
-      width: 430px;
+      width: $search-focus-box-width;
       display: block;
     }
   }
 
   .input {
+    transition: width 0.4s;
     width: $search-box-width;
     box-shadow: none;
     background-color: #fff;
-    transition: all 0.4s;
     float: right;
     position: relative;
     border-radius: 6px;
@@ -217,13 +218,13 @@ export default {
   }
 
   .histories {
-    transition: all 10s;
+    transition: all 0.4s;
     display: none;
     height: auto;
     width: $search-box-width;
     top: 48px;
     border-radius: 0 0 6px 6px;
-    border: 1px solid $border-focus-color !important;
+    border: 2px solid $border-focus-color !important;
     border-top: 0 !important;
     box-shadow: none;
     font-family: Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -233,7 +234,7 @@ export default {
 
     ul {
       li {
-        padding: 5px 10px;
+        padding: 10px;
         color: #626675;
         display: flex;
         cursor: pointer;
