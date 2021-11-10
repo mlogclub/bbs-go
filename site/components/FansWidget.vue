@@ -6,7 +6,7 @@
         <span class="count">{{ user.fansCount }}</span>
       </div>
       <div class="slot">
-        <nuxt-link to="/">更多</nuxt-link>
+        <a @click="showMore">更多</a>
       </div>
     </div>
     <div class="widget-content">
@@ -15,6 +15,30 @@
       </div>
       <div v-else class="widget-tips">没有更多内容了</div>
     </div>
+
+    <el-dialog
+      title="粉丝"
+      :visible.sync="showFansDialog"
+      custom-class="fans-more-list-dialog"
+    >
+      <div
+        v-loading="fansDialogLoading"
+        height="550px"
+        style="overflow-y: scroll"
+      >
+        <load-more
+          v-if="fansPage"
+          ref="commentsLoadMore"
+          v-slot="{ results }"
+          :init-data="fansPage"
+          :params="{ userId: user.id }"
+          url="/api/fans/fans"
+        >
+          <user-follow-list :users="results" />
+        </load-more>
+        <div v-else>没数据</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -29,6 +53,9 @@ export default {
   data() {
     return {
       fansList: [],
+      showFansDialog: false,
+      fansDialogLoading: false,
+      fansPage: null,
     }
   },
   mounted() {
@@ -44,8 +71,31 @@ export default {
     async onFollowed(userId, followed) {
       await this.loadData()
     },
+    async showMore() {
+      this.showFansDialog = true
+      this.fansDialogLoading = true
+      try {
+        this.fansPage = await this.$axios.get('/api/fans/fans', {
+          params: {
+            userId: this.user.id,
+          },
+        })
+      } catch (e) {
+        this.$message.error(e.message || e)
+      } finally {
+        this.fansDialogLoading = false
+      }
+    },
   },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.fans-more-list-dialog {
+  width: 550px;
+  .el-dialog__body {
+    height: 600px;
+    overflow-y: scroll;
+  }
+}
+</style>

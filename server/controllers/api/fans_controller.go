@@ -64,7 +64,7 @@ func (c *FansController) GetIsfollowed() *simple.JsonResult {
 func (c *FansController) GetFans() *simple.JsonResult {
 	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, cursor, 20)
+	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, cursor, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
 	var followedSet hashset.Set
@@ -84,7 +84,7 @@ func (c *FansController) GetFans() *simple.JsonResult {
 func (c *FansController) GetFollows() *simple.JsonResult {
 	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
 	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
-	userIds, cursor, hasMore := services.UserFollowService.GetFollows(userId, cursor, 20)
+	userIds, cursor, hasMore := services.UserFollowService.GetFollows(userId, cursor, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
 	var followedSet hashset.Set
