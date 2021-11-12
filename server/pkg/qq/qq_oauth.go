@@ -3,10 +3,11 @@ package qq
 import (
 	"errors"
 	"fmt"
-	"github.com/mlogclub/simple/json"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple/json"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
@@ -84,7 +85,7 @@ func AuthorizationCode(code, state string) (*AccessToken, error) {
 	fmt.Println("token:" + content)
 
 	// qq返回的数据格式如下：
-	// access_token=BC6A85A56265EEA32A12DA61AD8C6154&expires_in=7776000&refresh_token=55CD278593E6519ACEE403C4A0A8AB22
+	// access_token=xxx&expires_in=7776000&refresh_token=xxx
 	ub := simple.ParseUrl("?" + content)
 	accessToken := ub.GetQuery().Get("access_token")
 	refreshToken := ub.GetQuery().Get("refresh_token")
