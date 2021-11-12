@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	es          *elastic.Client
+	client      *elastic.Client
 	index       string
 	once        sync.Once
 	errNoConfig = errors.New("es config not found. ")
@@ -22,7 +22,7 @@ func initClient() *elastic.Client {
 		var err error
 		if !simple.IsAnyBlank(config.Instance.Es.Url, config.Instance.Es.Index) {
 			index = config.Instance.Es.Index
-			es, err = elastic.NewClient(
+			client, err = elastic.NewClient(
 				elastic.SetURL(config.Instance.Es.Url),
 				elastic.SetHealthcheck(false),
 				elastic.SetSniff(false),
@@ -34,5 +34,5 @@ func initClient() *elastic.Client {
 			logrus.Error(err)
 		}
 	})
-	return es
+	return client
 }

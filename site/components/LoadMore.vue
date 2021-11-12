@@ -102,7 +102,7 @@ export default {
 .load-more {
   .has-more {
     text-align: center;
-    margin: 10px auto;
+    margin: 20px auto;
     button {
       width: 150px;
     }

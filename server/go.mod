@@ -14,6 +14,7 @@ require (
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
 	github.com/goburrow/cache v0.1.2
+	github.com/gookit/event v1.0.5 // indirect
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20200913183508-5d1bed0e6ea4
@@ -23,6 +24,7 @@ require (
 	github.com/mlogclub/simple v1.1.10
 	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/olivere/elastic/v7 v7.0.22
+	github.com/panjf2000/ants/v2 v2.4.6 // indirect
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2

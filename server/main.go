@@ -6,6 +6,7 @@ import (
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/config"
 	"bbs-go/scheduler"
+	_ "bbs-go/services/eventhandler"
 	"flag"
 	"io"
 	"log"

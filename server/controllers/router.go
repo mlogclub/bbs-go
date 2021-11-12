@@ -73,6 +73,8 @@ func Router() {
 		m.Party("/osc/login").Handle(new(api.OscLoginController))
 		m.Party("/search").Handle(new(api.SearchController))
 		m.Party("/spider").Handle(new(api.SpiderController))
+		m.Party("/fans").Handle(new(api.FansController))
+		m.Party("/feed").Handle(new(api.FeedController))
 	})
 
 	// admin

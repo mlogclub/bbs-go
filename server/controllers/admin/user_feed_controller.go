@@ -8,43 +8,43 @@ import (
 	"strconv"
 )
 
-type CheckInController struct {
+type UserFeedController struct {
 	Ctx             iris.Context
 }
 
-func (c *CheckInController) GetBy(id int64) *simple.JsonResult {
-	t := services.CheckInService.Get(id)
+func (c *UserFeedController) GetBy(id int64) *simple.JsonResult {
+	t := services.UserFeedService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
 
-func (c *CheckInController) AnyList() *simple.JsonResult {
-	list, paging := services.CheckInService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
+func (c *UserFeedController) AnyList() *simple.JsonResult {
+	list, paging := services.UserFeedService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (c *CheckInController) PostCreate() *simple.JsonResult {
-	t := &model.CheckIn{}
+func (c *UserFeedController) PostCreate() *simple.JsonResult {
+	t := &model.UserFeed{}
 	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.CheckInService.Create(t)
+	err = services.UserFeedService.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
 
-func (c *CheckInController) PostUpdate() *simple.JsonResult {
+func (c *UserFeedController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	t := services.CheckInService.Get(id)
+	t := services.UserFeedService.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("entity not found")
 	}
@@ -54,7 +54,7 @@ func (c *CheckInController) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.CheckInService.Update(t)
+	err = services.UserFeedService.Update(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

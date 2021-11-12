@@ -55,7 +55,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.TopicId = topic.Id
 	rsp.Type = topic.Type
 	rsp.Title = topic.Title
-	rsp.User = BuildUserDefaultIfNull(topic.UserId)
+	rsp.User = BuildUserInfoDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
 	rsp.CreateTime = topic.CreateTime
 	rsp.ViewCount = topic.ViewCount

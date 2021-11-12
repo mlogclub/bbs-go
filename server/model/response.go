@@ -2,27 +2,42 @@ package model
 
 import "bbs-go/model/constants"
 
+// UserInfo 用户简单信息
 type UserInfo struct {
-	Id                   int64    `json:"id"`
-	Username             string   `json:"username"`
-	Email                string   `json:"email"`
-	EmailVerified        bool     `json:"emailVerified"`
-	Nickname             string   `json:"nickname"`
-	Avatar               string   `json:"avatar"`
-	SmallAvatar          string   `json:"smallAvatar"`
-	BackgroundImage      string   `json:"backgroundImage"`
-	SmallBackgroundImage string   `json:"smallBackgroundImage"`
-	Type                 int      `json:"type"`
-	Roles                []string `json:"roles"`
-	HomePage             string   `json:"homePage"`
-	Description          string   `json:"description"`
-	Score                int      `json:"score"`        // 积分
-	TopicCount           int      `json:"topicCount"`   // 话题数量
-	CommentCount         int      `json:"commentCount"` // 跟帖数量
-	PasswordSet          bool     `json:"passwordSet"`  // 密码已设置
-	Forbidden            bool     `json:"forbidden"`    // 是否禁言
-	Status               int      `json:"status"`
-	CreateTime           int64    `json:"createTime"`
+	Id           int64  `json:"id"`
+	Nickname     string `json:"nickname"`
+	Avatar       string `json:"avatar"`
+	SmallAvatar  string `json:"smallAvatar"`
+	TopicCount   int    `json:"topicCount"`   // 话题数量
+	CommentCount int    `json:"commentCount"` // 跟帖数量
+	FansCount    int    `json:"fansCount"`    // 粉丝数量
+	FollowCount  int    `json:"followCount"`  // 关注数量
+	Score        int    `json:"score"`        // 积分
+	Description  string `json:"description"`
+	CreateTime   int64  `json:"createTime"`
+
+	Followed bool `json:"followed"`
+}
+
+// UserDetail 用户详细信息
+type UserDetail struct {
+	UserInfo
+	Username             string `json:"username"`
+	BackgroundImage      string `json:"backgroundImage"`
+	SmallBackgroundImage string `json:"smallBackgroundImage"`
+	Type                 int    `json:"type"`
+	HomePage             string `json:"homePage"`
+	Forbidden            bool   `json:"forbidden"` // 是否禁言
+	Status               int    `json:"status"`
+}
+
+// UserProfile 用户个人信息
+type UserProfile struct {
+	UserDetail
+	Roles         []string `json:"roles"`
+	PasswordSet   bool     `json:"passwordSet"` // 密码已设置
+	Email         string   `json:"email"`
+	EmailVerified bool     `json:"emailVerified"`
 }
 
 type TagResponse struct {
@@ -83,18 +98,6 @@ type TopicResponse struct {
 	CreateTime      int64               `json:"createTime"`
 	Recommend       bool                `json:"recommend"`
 	RecommendTime   int64               `json:"recommendTime"`
-}
-
-// 帖子列表返回实体
-type TweetResponse struct {
-	TweetId      int64       `json:"tweetId"`
-	User         *UserInfo   `json:"user"`
-	Content      string      `json:"content"`
-	ImageList    []ImageInfo `json:"imageList"`
-	CommentCount int64       `json:"commentCount"`
-	LikeCount    int64       `json:"likeCount"`
-	Status       int         `json:"status"`
-	CreateTime   int64       `json:"createTime"`
 }
 
 // 项目简单返回

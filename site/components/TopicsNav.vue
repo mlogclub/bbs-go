@@ -13,6 +13,12 @@
           <span class="node-name">推荐</span>
         </nuxt-link>
       </li>
+      <li :class="{ active: currentNodeId === -2 }">
+        <nuxt-link to="/topics/node/feed">
+          <img class="node-logo" src="~/assets/images/feed.png" />
+          <span class="node-name">关注</span>
+        </nuxt-link>
+      </li>
       <li class="dock-nav-divider"></li>
       <li
         v-for="node in nodes"

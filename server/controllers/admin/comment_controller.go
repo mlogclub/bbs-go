@@ -57,7 +57,7 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		builder := simple.NewRspBuilderExcludes(comment, "content")
 
 		// 用户
-		builder = builder.Put("user", render.BuildUserDefaultIfNull(comment.UserId))
+		builder = builder.Put("user", render.BuildUserInfoDefaultIfNull(comment.UserId))
 
 		// 简介
 		content := markdown.ToHTML(comment.Content)

@@ -21,9 +21,8 @@ func BuildSearchTopic(doc es.TopicDocument) model.SearchTopicResponse {
 		Title:      doc.Title,
 		Summary:    doc.Content,
 		CreateTime: doc.CreateTime,
+		User:       BuildUserInfoDefaultIfNull(doc.UserId),
 	}
-
-	rsp.User = BuildUserDefaultIfNull(doc.UserId)
 
 	if doc.NodeId > 0 {
 		node := services.TopicNodeService.Get(doc.NodeId)

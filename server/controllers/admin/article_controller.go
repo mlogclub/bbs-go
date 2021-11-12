@@ -73,7 +73,7 @@ func (c *ArticleController) buildArticles(articles []model.Article) []map[string
 		builder := simple.NewRspBuilderExcludes(article, "content")
 
 		// 用户
-		builder = builder.Put("user", render.BuildUserDefaultIfNull(article.UserId))
+		builder = builder.Put("user", render.BuildUserInfoDefaultIfNull(article.UserId))
 
 		// 简介
 		builder.Put("summary", common.GetSummary(article.ContentType, article.Content))

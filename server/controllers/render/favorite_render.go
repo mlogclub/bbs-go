@@ -24,7 +24,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.ArticleUrl(article.Id)
-			rsp.User = BuildUserById(article.UserId)
+			rsp.User = BuildUserInfoDefaultIfNull(article.UserId)
 			rsp.Title = article.Title
 			if article.ContentType == constants.ContentTypeMarkdown {
 				rsp.Content = common.GetMarkdownSummary(article.Content)
@@ -42,7 +42,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 			rsp.Deleted = true
 		} else {
 			rsp.Url = urls.TopicUrl(topic.Id)
-			rsp.User = BuildUserById(topic.UserId)
+			rsp.User = BuildUserInfoDefaultIfNull(topic.UserId)
 			rsp.Title = topic.Title
 			rsp.Content = common.GetMarkdownSummary(topic.Content)
 		}

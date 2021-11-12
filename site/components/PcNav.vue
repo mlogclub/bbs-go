@@ -33,21 +33,8 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item searchFormDiv">
-            <form id="searchForm" action="/search">
-              <div class="control has-icons-right">
-                <input
-                  name="q"
-                  class="input"
-                  type="text"
-                  maxlength="30"
-                  placeholder="搜索"
-                />
-                <span class="icon is-medium is-right">
-                  <i class="iconfont icon-search" />
-                </span>
-              </div>
-            </form>
+          <div class="navbar-item">
+            <search-input />
           </div>
 
           <div class="navbar-item">
@@ -159,28 +146,6 @@ export default {
 .user-menus {
   .user-menus-nickname {
     margin-left: 5px;
-  }
-}
-
-.searchFormDiv {
-  @media screen and (max-width: 1024px) {
-    display: none;
-  }
-  #searchForm {
-    .input {
-      box-shadow: none;
-      border-radius: 2px;
-      background-color: #fff;
-      transition: all 0.4s;
-      float: right;
-      position: relative;
-
-      &:focus {
-        background-color: #fff;
-        border-color: #e7672e;
-        outline: none;
-      }
-    }
   }
 }
 </style>

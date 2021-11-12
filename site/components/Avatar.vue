@@ -207,6 +207,7 @@ export default {
 img.avatar {
   object-fit: cover;
   transition: all 0.5s ease-out 0.1s;
+  background-color: #fff;
 
   &:hover {
     transform: matrix(1.04, 0, 0, 1.04, 0, 0);

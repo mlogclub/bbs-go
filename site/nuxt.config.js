@@ -149,19 +149,19 @@ export default {
       plugins: {},
       preset: {},
     },
-  },
-  babel: {
-    plugins: [
-      [
-        'component',
-        {
-          libraryName: 'element-ui',
-          styleLibraryName: 'theme-chalk',
-        },
+    babel: {
+      plugins: [
+        [
+          'component',
+          {
+            libraryName: 'element-ui',
+            styleLibraryName: 'theme-chalk',
+          },
+        ],
       ],
-    ],
-    presets(env, [preset, options]) {
-      return [['@nuxt/babel-preset-app', options]]
+      presets(env, [preset, options]) {
+        return [['@nuxt/babel-preset-app', options]]
+      },
     },
   },
 }

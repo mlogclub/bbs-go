@@ -1,8 +1,7 @@
 <template>
   <div
     class="profile"
-    :class="{ background: backgroundImage }"
-    :style="{ backgroundImage: 'url(' + localUser.smallBackgroundImage + ')' }"
+    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
     <div v-if="isOwner" class="file is-light is-small change-bg">
       <label class="file-label">
@@ -15,18 +14,16 @@
         </span>
       </label>
     </div>
+    <avatar
+      :user="localUser"
+      :round="true"
+      :has-border="true"
+      size="100"
+      class="profile-avatar"
+    />
     <div class="profile-info">
-      <avatar
-        v-if="backgroundImage"
-        :user="localUser"
-        :round="true"
-        :has-border="true"
-        size="100"
-        :extra-style="{ position: 'absolute', top: '50px' }"
-      />
-      <avatar v-else :user="localUser" :round="true" size="100" />
-      <div class="meta">
-        <h1>
+      <div class="metas">
+        <h1 class="nickname">
           <nuxt-link :to="'/user/' + localUser.id">{{
             localUser.nickname
           }}</nuxt-link>
@@ -34,6 +31,7 @@
         <div v-if="localUser.description" class="description">
           <p>{{ localUser.description }}</p>
         </div>
+        <!--
         <div v-if="localUser.homePage" class="homepage">
           <i class="iconfont icon-home"></i>
           <a
@@ -43,6 +41,15 @@
             >{{ localUser.homePage }}</a
           >
         </div>
+        -->
+      </div>
+      <div class="action-btns">
+        <follow-btn
+          v-if="!currentUser || currentUser.id !== localUser.id"
+          :user-id="localUser.id"
+          :followed="followed"
+          @onFollowed="onFollowed"
+        />
       </div>
     </div>
   </div>
@@ -59,11 +66,15 @@ export default {
   data() {
     return {
       localUser: Object.assign({}, this.user),
+      followed: false,
     }
   },
   computed: {
     backgroundImage() {
-      return this.localUser.backgroundImage
+      if (this.localUser.smallBackgroundImage) {
+        return this.localUser.smallBackgroundImage
+      }
+      return require('~/assets/images/default-user-bg.jpg')
     },
     currentUser() {
       return this.$store.state.user.current
@@ -73,6 +84,9 @@ export default {
       const current = this.$store.state.user.current
       return this.localUser && current && this.localUser.id === current.id
     },
+  },
+  mounted() {
+    this.loadIsFollowed()
   },
   methods: {
     async uploadBackground(e) {
@@ -103,6 +117,14 @@ export default {
         console.error(e)
       }
     },
+    async loadIsFollowed() {
+      this.followed = await this.$axios.get(
+        '/api/fans/isfollowed?userId=' + this.user.id
+      )
+    },
+    onFollowed(userId, followed) {
+      this.followed = followed
+    },
   },
 }
 </script>
@@ -111,9 +133,21 @@ export default {
 .profile {
   display: flex;
   margin-bottom: 10px;
-  position: relative;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+  background-size: cover;
+  background-position: 50%;
+  height: 220px;
+
+  // filter: blur(2px) contrast(0.8);
+
+  position: relative;
+
+  .profile-avatar {
+    position: absolute;
+    top: 90px;
+    left: 10px;
+  }
 
   .change-bg {
     position: absolute;
@@ -127,28 +161,27 @@ export default {
 
   .profile-info {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: 10px 30px;
-    background: #fff;
+    margin-top: 150px;
+    padding: 10px 10px 10px 120px;
+    background-image: linear-gradient(
+      90deg,
+      #ffffffff,
+      rgba(255, 255, 255, 0.5),
+      #dce9f200
+    );
 
-    // .avatar {
-    //   max-width: 66px;
-    //   max-height: 66px;
-    //   min-width: 66px;
-    //   min-height: 66px;
-    // }
+    .metas {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      width: 100%;
 
-    .meta {
-      margin-left: 18px;
-
-      i {
-        margin-right: 6px;
-      }
-
-      h1 {
-        font-size: 28px;
+      .nickname {
+        font-size: 18px;
         font-weight: 700;
-        margin-bottom: 6px;
         a {
           color: #000;
           &:hover {
@@ -160,8 +193,7 @@ export default {
 
       .description {
         font-size: 14px;
-        color: 000;
-        margin-bottom: 6px;
+        color: #4a4a4a;
       }
 
       .homepage {
@@ -175,28 +207,8 @@ export default {
         }
       }
     }
-  }
-
-  &.background {
-    //background-image: url('http://file.mlog.club/bg1.jpg!768_auto');
-    background-size: cover;
-    background-position: 50%;
-    // filter: blur(2px) contrast(0.8);
-
-    .profile-info {
-      margin-top: 100px;
-      background-color: unset;
-      background-image: linear-gradient(
-        90deg,
-        // #dce9f25c
-        #ffffffff,
-        rgba(255, 255, 255, 0.5),
-        #dce9f200
-      );
-
-      .meta {
-        margin-left: 138px;
-      }
+    .action-btns {
+      margin-left: 10px;
     }
   }
 }

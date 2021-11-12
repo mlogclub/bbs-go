@@ -193,7 +193,7 @@ func (c *TopicController) GetRecentlikesBy(topicId int64) *simple.JsonResult {
 	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 5)
 	var users []model.UserInfo
 	for _, like := range likes {
-		userInfo := render.BuildUserById(like.UserId)
+		userInfo := render.BuildUserInfoDefaultIfNull(like.UserId)
 		if userInfo != nil {
 			users = append(users, *userInfo)
 		}

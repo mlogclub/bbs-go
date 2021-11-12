@@ -114,3 +114,9 @@ const (
 	LoginMethodGithub   LoginMethod = "github"
 	LoginMethodPassword LoginMethod = "password"
 )
+
+const (
+	FollowStatusNONE   = 0
+	FollowStatusFollow = 1
+	FollowStatusBoth   = 2
+)

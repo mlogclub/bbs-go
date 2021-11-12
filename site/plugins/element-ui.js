@@ -1,12 +1,10 @@
 import Vue from 'vue'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
 
 import {
   Dialog,
   Button,
-  ButtonGroup,
   Alert,
-  Upload,
   Dropdown,
   DropdownMenu,
   DropdownItem,
@@ -19,9 +17,7 @@ import {
 
 Vue.use(Dialog)
 Vue.use(Button)
-Vue.use(ButtonGroup)
 Vue.use(Alert)
-Vue.use(Upload)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
