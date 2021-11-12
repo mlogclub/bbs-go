@@ -13,7 +13,7 @@ features:
 footer: Copyright © 2020
 ---
 
-![bbs-go功能简介](https://file.mlog.club/mlog.club/naotu.png!detail)
+![bbs-go功能简介](https://file.mlog.club/images/2021/11/12/8754103189670afe659f88d5596c8f2a.png)
 
 ## 官网
 
