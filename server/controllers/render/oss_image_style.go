@@ -3,8 +3,9 @@ package render
 import (
 	"bbs-go/pkg/config"
 	"bbs-go/pkg/uploader"
-	"github.com/mlogclub/simple"
 	"strings"
+
+	"github.com/mlogclub/simple"
 )
 
 func HandleOssImageStyleAvatar(url string) string {
@@ -40,6 +41,9 @@ func HandleOssImageStyle(url, style string) string {
 		return url
 	}
 	if !uploader.IsOssImageUrl(url) {
+		return url
+	}
+	if strings.HasSuffix(strings.ToLower(url), ".gif") {
 		return url
 	}
 	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
