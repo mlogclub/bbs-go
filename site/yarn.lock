@@ -10020,11 +10020,6 @@ vm-browserify@^1.0.1:
   resolved "https://registry.nlark.com/vm-browserify/download/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha1-eGQcSIuObKkadfUR56OzKobl3aA=
 
-vue-click-outside@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.nlark.com/vue-click-outside/download/vue-click-outside-1.1.0.tgz#48b7680b518923e701643cccb3e165854aad99eb"
-  integrity sha1-SLdoC1GJI+cBZDzMs+FlhUqtmes=
-
 vue-client-only@^2.0.0:
   version "2.1.0"
   resolved "https://registry.nlark.com/vue-client-only/download/vue-client-only-2.1.0.tgz?cache=0&sync_timestamp=1622713628563&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue-client-only%2Fdownload%2Fvue-client-only-2.1.0.tgz#1a67a47b8ecacfa86d75830173fffee3bf8a4ee3"

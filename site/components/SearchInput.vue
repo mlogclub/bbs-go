@@ -1,9 +1,8 @@
 <template>
   <div
     ref="searchForm"
-    v-click-outside="onBlur"
     class="searchFormDiv"
-    :class="{ 'input-focus': inputFoucs, 'show-histories': showHistories }"
+    :class="{ 'input-focus': inputFocus, 'show-histories': showHistories }"
   >
     <div class="control has-icons-right">
       <input
@@ -15,7 +14,9 @@
         placeholder="搜索"
         autocomplete="off"
         @focus="onFocus"
+        @blur="onBlur"
         @input="onInput"
+        @keyup.esc="onBlur"
         @keyup.down="changeSelect(1)"
         @keyup.up="changeSelect(-1)"
         @keyup.enter="searchBoxOnEnter"
@@ -42,25 +43,21 @@
 </template>
 
 <script>
-import ClickOutside from 'vue-click-outside'
 const localStorageKey = 'search.histories'
 const maxHistoryLen = 10
 
 export default {
-  directives: {
-    ClickOutside,
-  },
   data() {
     return {
       keyword: '',
-      inputFoucs: false,
+      inputFocus: false,
       selectedIndex: -1,
       allHistories: [],
     }
   },
   computed: {
     showHistories() {
-      return this.inputFoucs && this.histories && this.histories.length
+      return this.inputFocus && this.histories && this.histories.length
     },
     histories() {
       if (this.keyword) {
@@ -99,10 +96,12 @@ export default {
       window.location = '/search?q=' + encodeURIComponent(this.keyword)
     },
     onFocus() {
-      this.inputFoucs = true
+      console.log('onFocus')
+      this.inputFocus = true
     },
     onBlur() {
-      this.inputFoucs = false
+      console.log('onBlur')
+      this.inputFocus = false
     },
     onInput() {
       this.selectedIndex = -1

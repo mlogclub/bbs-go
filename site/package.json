@@ -27,7 +27,6 @@
     "ufo": "^0.7.7",
     "v-viewer": "^1.6.4",
     "vditor": "^3.8.6",
-    "vue-click-outside": "^1.1.0",
     "vue2-animate": "^2.1.4",
     "vuedraggable": "^2.24.3"
   },
