@@ -1,30 +1,7 @@
 <template>
   <div class="left-container">
-    <div class="widget">
-      <div class="widget-header">个人成就</div>
-      <div class="widget-content extra-info">
-        <ul>
-          <li>
-            <span>积分</span><br />
-            <nuxt-link to="/user/scores">
-              <b>{{ localUser.score }}</b>
-            </nuxt-link>
-          </li>
-          <li>
-            <span>文章</span><br />
-            <b>{{ localUser.topicCount }}</b>
-          </li>
-          <li>
-            <span>评论</span><br />
-            <b>{{ localUser.commentCount }}</b>
-          </li>
-          <li>
-            <span>注册排名</span><br />
-            <b>{{ localUser.id }}</b>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <my-counts :user="localUser" />
+    <my-profile />
 
     <fans-widget :user="localUser" />
     <follow-widget :user="localUser" />
@@ -73,8 +50,10 @@
 </template>
 
 <script>
+import MyCounts from './MyCounts.vue'
 import UserHelper from '~/common/UserHelper'
 export default {
+  components: { MyCounts },
   props: {
     user: {
       type: Object,
@@ -148,25 +127,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.extra-info {
-  ul {
-    display: flex;
-    li {
-      width: 100%;
-      text-align: center;
-      span {
-        font-size: 13px;
-        font-weight: 400;
-        color: #868e96;
-      }
-      a,
-      b {
-        color: #000;
-      }
-    }
-  }
-}
-
 .img-avatar {
   margin-top: 5px;
   border: 1px dotted #eeeeee;
