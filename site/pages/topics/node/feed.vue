@@ -32,17 +32,25 @@
 export default {
   async asyncData({ $axios, store }) {
     store.commit('env/setCurrentNodeId', -2) // 设置当前所在node
+    let topicsPage, nodes, scoreRank, links
     try {
-      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
+      // TODO 这里没登陆，或者没有数据的时候页面上要显示相应的引导内容
+      if (store.state.user.current) {
+        topicsPage = await $axios.get('/api/feed/topics')
+      }
+    } catch (e) {
+      console.log(e.message || e)
+    }
+    try {
+      ;[nodes, scoreRank, links] = await Promise.all([
         $axios.get('/api/topic/nodes'),
-        $axios.get('/api/feed/topics'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
       ])
-      return { nodes, topicsPage, scoreRank, links }
     } catch (e) {
       console.error(e)
     }
+    return { nodes, topicsPage, scoreRank, links }
   },
   head() {
     return {
@@ -56,6 +64,11 @@ export default {
         { hid: 'keywords', name: 'keywords', content: this.$siteKeywords() },
       ],
     }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.current
+    },
   },
   methods: {
     twitterCreated(data) {

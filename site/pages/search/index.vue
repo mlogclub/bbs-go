@@ -27,24 +27,7 @@
 </template>
 
 <script>
-import CheckIn from '~/components/CheckIn'
-import SiteNotice from '~/components/SiteNotice'
-import ScoreRank from '~/components/ScoreRank'
-import FriendLinks from '~/components/FriendLinks'
-import SearchTopicsNav from '~/components/SearchTopicsNav'
-import SearchTopicList from '~/components/SearchTopicList'
-import Pagination from '~/components/Pagination'
-
 export default {
-  components: {
-    CheckIn,
-    SiteNotice,
-    ScoreRank,
-    FriendLinks,
-    SearchTopicsNav,
-    SearchTopicList,
-    Pagination,
-  },
   async asyncData({ $axios, query, store }) {
     const keyword = query.q || ''
     const [nodes, scoreRank, links] = await Promise.all([
