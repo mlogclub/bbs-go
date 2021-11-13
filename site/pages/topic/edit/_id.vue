@@ -33,7 +33,6 @@
           <div class="control">
             <markdown-editor
               v-model="postForm.content"
-              editor-id="topicEditEditor"
               placeholder="可空，将图片复制或拖入编辑器可上传"
             />
           </div>

@@ -4196,11 +4196,6 @@ devalue@^2.0.1:
   resolved "https://registry.npm.taobao.org/devalue/download/devalue-2.0.1.tgz#5d368f9adc0928e47b77eea53ca60d2f346f9762"
   integrity sha1-XTaPmtwJKOR7d+6lPKYNLzRvl2I=
 
-diff-match-patch@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npm.taobao.org/diff-match-patch/download/diff-match-patch-1.0.5.tgz#abb584d5f10cd1196dfc55aa03701592ae3f7b37"
-  integrity sha1-q7WE1fEM0Rlt/FWqA3AVkq4/ezc=
-
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.nlark.com/diffie-hellman/download/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -9109,11 +9104,6 @@ sort-keys@^2.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@1.10.2:
-  version "1.10.2"
-  resolved "https://registry.nlark.com/sortablejs/download/sortablejs-1.10.2.tgz#6e40364d913f98b85a14f6678f92b5c1221f5290"
-  integrity sha1-bkA2TZE/mLhaFPZnj5K1wSIfUpA=
-
 source-list-map@^2.0.0:
   version "2.0.1"
   resolved "https://registry.nlark.com/source-list-map/download/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
@@ -9998,13 +9988,6 @@ vary@^1.1.2, vary@~1.1.2:
   resolved "https://registry.nlark.com/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vditor@^3.8.6:
-  version "3.8.6"
-  resolved "https://registry.nlark.com/vditor/download/vditor-3.8.6.tgz#95a89c4865efa740bf55f2a7e3f968b395987a60"
-  integrity sha1-laicSGXvp0C/VfKn4/los5WYemA=
-  dependencies:
-    diff-match-patch "^1.0.5"
-
 vendors@^1.0.0:
   version "1.0.4"
   resolved "https://registry.nlark.com/vendors/download/vendors-1.0.4.tgz#e2b800a53e7a29b93506c3cf41100d16c4c4ad8e"
@@ -10120,13 +10103,6 @@ vue@^2.6.12:
   version "2.6.14"
   resolved "https://registry.nlark.com/vue/download/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=
-
-vuedraggable@^2.24.3:
-  version "2.24.3"
-  resolved "https://registry.nlark.com/vuedraggable/download/vuedraggable-2.24.3.tgz?cache=0&sync_timestamp=1623379001749&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvuedraggable%2Fdownload%2Fvuedraggable-2.24.3.tgz#43c93849b746a24ce503e123d5b259c701ba0d19"
-  integrity sha1-Q8k4SbdGokzlA+Ej1bJZxwG6DRk=
-  dependencies:
-    sortablejs "1.10.2"
 
 vuex@^3.6.2:
   version "3.6.2"

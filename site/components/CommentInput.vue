@@ -11,7 +11,6 @@
           v-if="inputMode === 'markdown'"
           ref="mdEditor"
           v-model="value.content"
-          editor-id="commentCreateEditor"
           height="200px"
           placeholder="请发表你的观点..."
           @submit="create"

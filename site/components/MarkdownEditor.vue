@@ -34,10 +34,6 @@ Vue.use(VMdEditor)
 
 export default {
   props: {
-    editorId: {
-      type: String,
-      default: 'vditor',
-    },
     value: {
       type: String,
       default: '',
@@ -53,9 +49,7 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
       width: '100%',
-      myId: this.editorId + '-' + new Date().getTime(),
       content: this.value,
     }
   },

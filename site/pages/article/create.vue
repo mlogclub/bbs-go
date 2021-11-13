@@ -33,7 +33,6 @@
             <markdown-editor
               ref="mdEditor"
               v-model="postForm.content"
-              editor-id="articleCreateEditor"
               placeholder="请输入内容，将图片复制或拖入编辑器可上传"
             />
           </div>

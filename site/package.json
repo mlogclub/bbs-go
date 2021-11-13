@@ -26,9 +26,7 @@
     "qs": "^6.10.1",
     "ufo": "^0.7.7",
     "v-viewer": "^1.6.4",
-    "vditor": "^3.8.6",
-    "vue2-animate": "^2.1.4",
-    "vuedraggable": "^2.24.3"
+    "vue2-animate": "^2.1.4"
   },
   "devDependencies": {
     "@babel/runtime-corejs3": "^7.14.8",

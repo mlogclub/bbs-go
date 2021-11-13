@@ -48,7 +48,6 @@
             <markdown-editor
               ref="mdEditor"
               v-model="postForm.content"
-              editor-id="topicCreateEditor"
               placeholder="请输入你要发表的内容..."
             />
           </div>
