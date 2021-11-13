@@ -21,11 +21,7 @@
       :visible.sync="showFansDialog"
       custom-class="fans-more-list-dialog"
     >
-      <div
-        v-loading="fansDialogLoading"
-        height="550px"
-        style="overflow-y: scroll"
-      >
+      <div v-loading="fansDialogLoading">
         <load-more
           v-if="fansPage"
           ref="commentsLoadMore"
@@ -93,9 +89,12 @@ export default {
 <style lang="scss">
 .fans-more-list-dialog {
   width: 550px;
+  .el-dialog__header {
+    border-bottom: 1px solid rgb(229, 230, 235);
+  }
   .el-dialog__body {
     height: 600px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 }
 </style>

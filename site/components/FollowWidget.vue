@@ -89,9 +89,12 @@ export default {
 <style lang="scss">
 .follow-more-list-dialog {
   width: 550px;
+  .el-dialog__header {
+    border-bottom: 1px solid rgb(229, 230, 235);
+  }
   .el-dialog__body {
     height: 600px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 }
 </style>
