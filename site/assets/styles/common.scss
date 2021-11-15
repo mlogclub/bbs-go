@@ -282,6 +282,17 @@ $main-container-width: null; // 主栏目的宽度
   }
 }
 
+.my-dialog {
+  width: 550px;
+  .el-dialog__header {
+    border-bottom: 1px solid rgb(229, 230, 235);
+  }
+  .el-dialog__body {
+    height: 600px;
+    overflow-y: auto;
+  }
+}
+
 img[lazy='loading'] {
   background-color: #e8e8e8;
 }
