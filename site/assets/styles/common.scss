@@ -265,8 +265,13 @@ $main-container-width: null; // 主栏目的宽度
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 12px 0;
     font-size: 14px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #f5f7f8;
+    }
+
     .slabel {
       color: #4f5a70;
       flex-shrink: 0;
