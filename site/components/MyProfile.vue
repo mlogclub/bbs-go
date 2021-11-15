@@ -3,16 +3,31 @@
     <div class="widget-header">
       <span>个人资料</span>
       <div class="slot">
-        <a>编辑资料</a>
+        <nuxt-link to="/user/profile">编辑资料</nuxt-link>
       </div>
     </div>
-    <div class="widget-content"></div>
+    <div class="widget-content stable">
+      <div class="str">
+        <div class="slabel">昵称</div>
+        <div class="svalue">{{ user.nickname }}</div>
+      </div>
+      <div class="str">
+        <div class="slabel">签名</div>
+        <div class="svalue">{{ user.description }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'MyProfile',
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 }
 </script>
 

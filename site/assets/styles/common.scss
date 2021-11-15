@@ -1,6 +1,8 @@
 html,
 body {
-  font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+  font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', PingFang SC,
+    Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif,
+    WenQuanYi Micro Hei, sans-serif;
   // background: #e5e5e5;
   // background: #f7f7f7;
   background: url(../images/bg.gif) repeat;
@@ -47,9 +49,7 @@ $main-container-width: null; // 主栏目的宽度
   // 侧边栏宽度
   $sidebar-width: $side-width;
   // 主栏目的宽度
-  $main-container-width: calc(
-    100% - #{$side-width} - #{$sidebar-margin}
-  );
+  $main-container-width: calc(100% - #{$side-width} - #{$sidebar-margin});
 
   &.left-main {
     .left-container {
@@ -191,7 +191,7 @@ $main-container-width: null; // 主栏目的宽度
   background: #fff;
   padding: 0 12px;
   margin-top: 10px;
-  border-radius: calc(.25rem - 1px);
+  border-radius: calc(0.25rem - 1px);
 
   &:first-child {
     margin: 0;
@@ -219,7 +219,10 @@ $main-container-width: null; // 主栏目的宽度
       font-size: 80%;
       font-weight: 400;
       a {
-        color:#4a4a4a;
+        color: #4a4a4a;
+        &:hover {
+          color: #2469f6;
+        }
       }
     }
 
@@ -239,7 +242,7 @@ $main-container-width: null; // 主栏目的宽度
     word-break: break-all;
 
     .widget-tips {
-      color:rgb(197, 198, 203);
+      color: rgb(197, 198, 203);
       font-size: 14px;
       font-weight: 400;
       text-align: center;
@@ -257,15 +260,37 @@ $main-container-width: null; // 主栏目的宽度
   }
 }
 
-img[lazy=loading] {
+.stable {
+  .str {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    font-size: 14px;
+    .slabel {
+      color: #4f5a70;
+      flex-shrink: 0;
+    }
+    .svalue {
+      margin-left: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      color: #0b0b37;
+    }
+  }
+}
+
+img[lazy='loading'] {
   background-color: #e8e8e8;
 }
 
-img[lazy=error] {
+img[lazy='error'] {
   background-color: #e8e8e8;
 }
 
-img[lazy=loaded] {
+img[lazy='loaded'] {
   /* your style here */
 }
 
@@ -352,5 +377,5 @@ img[lazy=loaded] {
 }
 
 span.search-highlight {
-  color: #CC0000;
+  color: #cc0000;
 }

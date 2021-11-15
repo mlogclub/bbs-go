@@ -1,29 +1,15 @@
 <template>
   <div class="left-container">
     <my-counts :user="localUser" />
-    <my-profile />
+    <my-profile :user="localUser" />
 
     <fans-widget :user="localUser" />
     <follow-widget :user="localUser" />
 
-    <div v-if="isOwner || isAdmin" class="widget">
+    <div v-if="isAdmin" class="widget">
       <div class="widget-header">操作</div>
       <div class="widget-content">
-        <ul v-if="isOwner" class="operations">
-          <li>
-            <i class="iconfont icon-message" />
-            <nuxt-link to="/user/messages">&nbsp;消息</nuxt-link>
-          </li>
-          <li>
-            <i class="iconfont icon-favorites" />
-            <nuxt-link to="/user/favorites">&nbsp;收藏</nuxt-link>
-          </li>
-          <li>
-            <i class="iconfont icon-edit" />
-            <nuxt-link to="/user/profile">&nbsp;个人资料</nuxt-link>
-          </li>
-        </ul>
-        <ul v-else-if="isAdmin" class="operations">
+        <ul class="operations">
           <li v-if="localUser.forbidden">
             <i class="iconfont icon-forbidden" />
             <a @click="removeForbidden">&nbsp;取消禁言</a>
