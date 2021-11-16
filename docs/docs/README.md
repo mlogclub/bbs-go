@@ -2,7 +2,7 @@
 home: true
 heroImage: https://file.mlog.club/mlog.club/logo_364x200.png
 actionText: 快速上手 →
-actionLink: https://mianbaoduo.com/o/bread/YZiZl5xy
+actionLink: /guide/
 features:
 - title: 简洁至上
   details: BBS-GO 包含一个论坛的必要功能，简约而不简单，同时页面浏览有非常快速的响应。
