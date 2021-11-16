@@ -7,26 +7,30 @@
       <div class="widget-content profile-edit-table">
         <div class="edit-row">
           <div class="edit-label">用户名</div>
-          <div>
-            <div class="svalue">{{ user.username }}</div>
+          <div class="edit-content">
+            <div>{{ user.username }}</div>
+            <div><a>编辑</a></div>
           </div>
         </div>
         <div class="edit-row">
           <div class="edit-label">昵称</div>
-          <div>
-            <div class="svalue">{{ user.nickname }}</div>
+          <div class="edit-content">
+            <div>{{ user.nickname }}</div>
+            <div><a>编辑</a></div>
           </div>
         </div>
         <div class="edit-row">
           <div class="edit-label">个人简介</div>
-          <div>
-            <div class="svalue">{{ user.description }}</div>
+          <div class="edit-content">
+            <div>{{ user.description }}</div>
+            <div><a>编辑</a></div>
           </div>
         </div>
         <div class="edit-row">
           <div class="edit-label">邮箱</div>
-          <div>
-            <div class="svalue">{{ user.email }}</div>
+          <div class="edit-content">
+            <div>{{ user.email }}</div>
+            <div><a>编辑</a></div>
           </div>
         </div>
       </div>
@@ -58,18 +62,42 @@ export default {
 
 <style lang="scss" scoped>
 .profile-edit-table {
-  margin: 30px;
+  padding: 30px;
   .edit-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    line-height: 70px;
 
     .edit-label {
-      text-align: right;
       min-width: 70px;
+      text-align: right;
       font-size: 16px;
+      margin-right: 42px;
       font-weight: 500;
       color: #8590a6;
+    }
+
+    &:not(:last-child) {
+      .edit-content {
+        border-bottom: 1px solid #eee;
+      }
+    }
+    .edit-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      color: #0b0b37;
+      font-size: 16px;
+      font-weight: 500;
+
+      a {
+        color: #2469f6;
+        font-weight: 400;
+        font-size: 14px;
+      }
     }
   }
 }
