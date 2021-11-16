@@ -59,7 +59,7 @@
                 <i class="iconfont icon-favorites" />&nbsp;我的收藏
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/profile">
-                <i class="iconfont icon-username" />&nbsp;个人资料
+                <i class="iconfont icon-username" />&nbsp;编辑资料
               </nuxt-link>
               <a class="navbar-item" @click="signout">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
