@@ -2,8 +2,10 @@
   <div>
     <div class="widget">
       <div class="widget-header">
-        <i class="iconfont icon-setting" />
-        <span>编辑资料</span>
+        <span>
+          <i class="iconfont icon-setting" />
+          <span>编辑资料</span>
+        </span>
       </div>
       <div class="widget-content">
         <div class="field is-horizontal">
