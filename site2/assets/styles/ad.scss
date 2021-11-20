@@ -1,0 +1,11 @@
+.ad {
+  margin: 10px 0;
+
+  &.no-margin-top {
+    margin-top: 0;
+  }
+
+  &.no-margin-bottom {
+    margin-bottom: 0;
+  }
+}

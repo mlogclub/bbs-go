@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   parserOptions: {
     parser: '@babel/eslint-parser',
@@ -11,10 +11,19 @@ module.exports = {
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended',
-    'prettier'
-  ],
-  plugins: [
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        args: 'none',
+      },
+    ],
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'vue/no-v-html': 'off',
+    'array-callback-return': 'off',
+  },
 }

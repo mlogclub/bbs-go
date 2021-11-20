@@ -1,0 +1,42 @@
+@import "./variable";
+@import "./topic-list";
+@import "./topic-detail";
+
+.topics-wrapper {
+  display: flex;
+
+  .topics-nav {
+    margin-right: 10px;
+  }
+
+  .topics-main {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .topics-nav {
+      display: none;
+    }
+  }
+}
+
+.topic-create-form {
+  background: #ffffff;
+  padding: 30px;
+
+  .tag {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #777;
+
+    &.selected {
+      color: #fff;
+      background: #1878f3;
+    }
+  }
+}
+
+
