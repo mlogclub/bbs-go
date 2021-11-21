@@ -99,6 +99,19 @@ export default {
     }
   },
 
+  windicss: {
+    analyze: {
+      analysis: {
+        interpretUtilities: false
+      },
+      // see https://github.com/unjs/listhen#options
+      server: {
+        port: 4444,
+        open: true
+      }
+    }
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     babel: {
