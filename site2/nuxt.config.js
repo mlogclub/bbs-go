@@ -8,17 +8,18 @@ export default {
       lang: 'zh-cmn-Hans',
       xmlns: 'http://www.w3.org/1999/xhtml'
     },
-    meta: [{
-      charset: 'utf-8'
-    },
-    {
-      name: 'viewport',
-      content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
-    },
-    {
-      name: 'window-target',
-      content: '_top'
-    }
+    meta: [
+      {
+        charset: 'utf-8'
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
+      },
+      {
+        name: 'window-target',
+        content: '_top'
+      }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -36,10 +37,9 @@ export default {
   loading: { color: '#FFB90F' },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [{
-    src: '~/assets/styles/main.scss',
-    lang: 'scss'
-  }],
+  css: [
+    { src: '~/assets/styles/main.scss', lang: 'scss' }
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -47,14 +47,8 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/bbs-go',
-    {
-      src: '~/plugins/vue-lazyload',
-      ssr: false
-    },
-    {
-      src: '~/plugins/viewer.js',
-      ssr: false
-    }
+    { src: '~/plugins/vue-lazyload', ssr: false },
+    { src: '~/plugins/viewer.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -80,16 +74,8 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
-    ['cookie-universal-nuxt', {
-      alias: 'cookies'
-    }],
-    [
-      '@nuxtjs/google-adsense',
-      {
-        id: 'ca-pub-5683711753850351',
-        pageLevelAds: true
-      }
-    ]
+    ['cookie-universal-nuxt', { alias: 'cookies' }],
+    ['@nuxtjs/google-adsense', { id: 'ca-pub-5683711753850351', pageLevelAds: true }]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -114,5 +100,22 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {
+    babel: {
+      plugins: [
+        [
+          'component',
+          {
+            libraryName: 'element-ui',
+            styleLibraryName: 'theme-chalk'
+          }
+        ]
+      ],
+      presets (env, [preset, options]) {
+        return [
+          ['@nuxt/babel-preset-app', options]
+        ]
+      }
+    }
+  }
 }
