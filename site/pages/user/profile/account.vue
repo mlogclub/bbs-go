@@ -13,6 +13,15 @@
             </span>
           </div>
           <div class="widget-content">
+            <!-- <div class="my-field">
+              <div>用户名</div>
+              <div>
+                <span v-if="user.username">{{ user.username }}</span>
+              </div>
+              <div>
+                <a @click="showSetUsername = true">点击设置</a>
+              </div>
+            </div> -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">用户名：</label>
@@ -27,7 +36,6 @@
               </div>
             </div>
 
-            <!-- 邮箱 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">邮箱：</label>
@@ -54,7 +62,6 @@
               </div>
             </div>
 
-            <!-- 密码 -->
             <div class="field is-horizontal">
               <div class="field-label is-normal">
                 <label class="label">密码：</label>
@@ -377,6 +384,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.my-field {
+  display: flex;
+}
 .control {
   a,
   label {
