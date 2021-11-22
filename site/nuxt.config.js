@@ -2,31 +2,25 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isDocker = process.env.NODE_ENV === 'docker'
 
 export default {
-  server: {
-    port: 3000,
-    host: '0.0.0.0',
-    timing: {
-      total: true,
-    },
-  },
-  modern: true,
-  /*
-   ** Headers of the page
-   */
+  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     htmlAttrs: {
       lang: 'zh-cmn-Hans',
       xmlns: 'http://www.w3.org/1999/xhtml',
     },
-    title: '',
     meta: [
-      { charset: 'utf-8' },
+      {
+        charset: 'utf-8',
+      },
       {
         name: 'viewport',
         content:
           'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui',
       },
-      { name: 'window-target', content: '_top' },
+      {
+        name: 'window-target',
+        content: '_top',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -58,17 +52,16 @@ export default {
       },
     ],
   },
+
   /*
    ** Customize the progress-bar color
    */
   loading: { color: '#FFB90F' },
-  /*
-   ** Global CSS
-   */
+
+  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
-  /*
-   ** Plugins to load before mounting the App
-   */
+
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/element-ui',
     '~/plugins/filters',
@@ -77,10 +70,8 @@ export default {
     { src: '~/plugins/vue-lazyload', ssr: false },
     { src: '~/plugins/viewer.js', ssr: false },
   ],
-  /*
-   ** Auto import components
-   ** See https://nuxtjs.org/api/configuration-components
-   */
+
+  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   /*
    ** Router property -  https://nuxtjs.org/docs/2.x/features/file-system-routing#the-router-property
@@ -88,35 +79,29 @@ export default {
   router: {
     middleware: ['resetEnv'],
   },
-  /*
-   ** Nuxt.js dev-modules
-   */
+
+  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
+    // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
+    'nuxt-windicss',
   ],
-  /*
-   ** Nuxt.js modules
-   */
+
+  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // Doc:https://github.com/nuxt-community/modules/tree/master/packages/bulma
-    // '@nuxtjs/bulma',
-    // Doc: https://axios.nuxtjs.org/usage
+    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    // https://go.nuxtjs.dev/pwa
+    '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
     [
       '@nuxtjs/google-adsense',
-      {
-        id: 'ca-pub-5683711753850351',
-        pageLevelAds: true,
-      },
+      { id: 'ca-pub-5683711753850351', pageLevelAds: true },
     ],
   ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
+
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     proxy: true,
     credentials: true,
@@ -130,25 +115,28 @@ export default {
       : 'http://127.0.0.1:8082',
   },
 
-  /*
-   ** Build configuration
-   */
+  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  pwa: {
+    manifest: {
+      lang: 'en',
+    },
+  },
+
+  windicss: {
+    analyze: {
+      analysis: {
+        interpretUtilities: false,
+      },
+      // see https://github.com/unjs/listhen#options
+      server: {
+        port: 4444,
+        open: true,
+      },
+    },
+  },
+
+  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    // publicPath: 'https://file.mlog.club/static/nuxtclient/',
-    analyze: false,
-    optimizeCSS: true,
-    extractCSS: true,
-    splitChunks: {
-      layouts: true,
-      pages: true,
-      commons: true,
-    },
-    postcss: {
-      // Add plugin names as key and arguments as value
-      // Install them before as dependencies with npm or yarn
-      plugins: {},
-      preset: {},
-    },
     babel: {
       plugins: [
         [
