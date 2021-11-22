@@ -1,116 +1,105 @@
 <template>
-  <section class="main">
-    <div class="container main-container right-main">
-      <div class="left-container">
-        <profile-left-menu active="edit" />
+  <div class="widget no-margin">
+    <div class="widget-header">
+      <div>
+        <i class="iconfont icon-setting" />
+        <span>个人资料</span>
       </div>
-      <div class="right-container">
-        <div class="widget">
-          <div class="widget-header">
-            <div>
-              <i class="iconfont icon-setting" />
-              <span>个人资料</span>
+      <nuxt-link :to="'/user/' + user.id" style="font-size: 13px">
+        <i class="iconfont icon-return" />
+        <span>返回个人主页</span>
+      </nuxt-link>
+    </div>
+    <div class="widget-content">
+      <!-- 头像 -->
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">头像</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <avatar-edit
+                v-model="user.avatar"
+                @success="onAvatarUpdateSuccess"
+                @error="onAvatarUpdateError"
+              />
             </div>
-            <nuxt-link :to="'/user/' + user.id">
-              <i class="iconfont icon-return" />
-              <span>返回个人主页</span>
-            </nuxt-link>
           </div>
-          <div class="widget-content">
-            <!-- 头像 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">头像</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <avatar-edit
-                      v-model="user.avatar"
-                      @success="onAvatarUpdateSuccess"
-                      @error="onAvatarUpdateError"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+        </div>
+      </div>
 
-            <!-- 昵称 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">昵称</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input
-                      v-model="form.nickname"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="请输入昵称"
-                    />
-                  </div>
-                </div>
-              </div>
+      <!-- 昵称 -->
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">昵称</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <input
+                v-model="form.nickname"
+                class="input"
+                type="text"
+                autocomplete="off"
+                placeholder="请输入昵称"
+              />
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- 个性签名 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">个性签名</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <textarea
-                      v-model="form.description"
-                      class="textarea"
-                      rows="2"
-                      placeholder="一句话介绍你自己"
-                    />
-                  </div>
-                </div>
-              </div>
+      <!-- 个性签名 -->
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">个性签名</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <textarea
+                v-model="form.description"
+                class="textarea"
+                rows="2"
+                placeholder="一句话介绍你自己"
+              />
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- 个人主页 -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">个人主页</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input
-                      v-model="form.homePage"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="请输入个人主页"
-                    />
-                  </div>
-                </div>
-              </div>
+      <!-- 个人主页 -->
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">个人主页</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <input
+                v-model="form.homePage"
+                class="input"
+                type="text"
+                autocomplete="off"
+                placeholder="请输入个人主页"
+              />
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label is-normal" />
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <a class="button is-success" @click="submitForm"
-                      >保存修改</a
-                    >
-                  </div>
-                </div>
-              </div>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal" />
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <a class="button is-success" @click="submitForm">保存修改</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
