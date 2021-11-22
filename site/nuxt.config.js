@@ -48,7 +48,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_q49if9pd6wo.css',
+        href: '//at.alicdn.com/t/font_1142441_acczfu1wn6r.css',
       },
     ],
   },
@@ -84,7 +84,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    'nuxt-windicss',
+    // 'nuxt-windicss',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -122,18 +122,18 @@ export default {
     },
   },
 
-  windicss: {
-    analyze: {
-      analysis: {
-        interpretUtilities: false,
-      },
-      // see https://github.com/unjs/listhen#options
-      server: {
-        port: 4444,
-        open: true,
-      },
-    },
-  },
+  // windicss: {
+  //   analyze: {
+  //     analysis: {
+  //       interpretUtilities: false,
+  //     },
+  //     // see https://github.com/unjs/listhen#options
+  //     server: {
+  //       port: 4444,
+  //       open: true,
+  //     },
+  //   },
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

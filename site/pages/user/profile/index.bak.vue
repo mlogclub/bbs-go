@@ -1,85 +1,196 @@
 <template>
-  <section class="main">
-    <div class="container main-container right-main">
-      <div class="left-container">
-        <profile-left-menu active="account" />
+  <div>
+    <div class="widget">
+      <div class="widget-header">
+        <span>
+          <i class="iconfont icon-setting" />
+          <span>编辑资料</span>
+        </span>
       </div>
-      <div class="right-container">
-        <div class="widget">
-          <div class="widget-header">
-            <div>
-              <i class="iconfont icon-setting" />
-              <span>编辑资料</span>
-            </div>
-            <nuxt-link :to="'/user/' + user.id">
-              <i class="iconfont icon-return" />
-              <span>返回个人主页</span>
-            </nuxt-link>
+      <div class="widget-content">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">用户名：</label>
           </div>
-          <div class="widget-content">
-            <!-- <div class="my-field">
-              <div>用户名</div>
-              <div>
-                <span v-if="user.username">{{ user.username }}</span>
-              </div>
-              <div>
-                <a @click="showSetUsername = true">点击设置</a>
-              </div>
-            </div> -->
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">用户名：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <label v-if="user.username">{{ user.username }}</label>
-                    <a v-else @click="showSetUsername = true">点击设置</a>
-                  </div>
-                </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <label v-if="user.username">{{ user.username }}</label>
+                <a v-else @click="showSetUsername = true">点击设置</a>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">邮箱：</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <template v-if="user.email">
-                      <label>{{ user.email }}</label>
-                      <a @click="showSetEmail = true">修改</a>
-                      <a
-                        v-if="!user.emailVerified"
-                        class="has-text-danger"
-                        style="font-weight: 700"
-                        @click="requestEmailVerify"
-                        >验证&gt;&gt;</a
-                      >
-                    </template>
-                    <template v-else>
-                      <a @click="showSetEmail = true">点击设置</a>
-                    </template>
-                  </div>
-                </div>
+        <!-- 邮箱 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">邮箱：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <template v-if="user.email">
+                  <label>{{ user.email }}</label>
+                  <a @click="showSetEmail = true">修改</a>
+                  <a
+                    v-if="!user.emailVerified"
+                    class="has-text-danger"
+                    style="font-weight: 700"
+                    @click="requestEmailVerify"
+                    >验证&gt;&gt;</a
+                  >
+                </template>
+                <template v-else>
+                  <a @click="showSetEmail = true">点击设置</a>
+                </template>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">密码：</label>
+        <!-- 密码 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">密码：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <template v-if="user.passwordSet">
+                  <label>密码已设置&nbsp;</label>
+                  <a @click="showUpdatePassword = true">点击修改</a>
+                </template>
+                <a v-else @click="showSetPassword = true">点击设置</a>
               </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icons-left">
-                    <template v-if="user.passwordSet">
-                      <label>密码已设置&nbsp;</label>
-                      <a @click="showUpdatePassword = true">点击修改</a>
-                    </template>
-                    <a v-else @click="showSetPassword = true">点击设置</a>
-                  </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 头像 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">头像：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <!-- <img
+                        v-if="user.avatar"
+                        :src="user.avatar"
+                        style="width: 150px; height: 150px"
+                      /> -->
+                <avatar :user="user" :size="150" />
+                <div class="file">
+                  <label class="file-label">
+                    <input
+                      class="file-input"
+                      type="file"
+                      accept="image/png,image/jpeg,image/gif"
+                      @change="uploadAvatar"
+                    />
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="iconfont icon-upload" />
+                      </span>
+                      <span class="file-label">修改头像</span>
+                    </span>
+                  </label>
                 </div>
+                <span style="font-weight: bold; color: red"
+                  >*图像必须为正方形，大小不要超过1M。</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 昵称 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">昵称：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="form.nickname"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="请输入昵称"
+                />
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-username" />
+                </span>
+              </div>
+              <!-- <div class="control">
+                <label>{{ user.nickname || '' }}</label>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 简介 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">简介：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <textarea
+                  v-model="form.description"
+                  class="textarea"
+                  rows="2"
+                  placeholder="一句话介绍你自己"
+                />
+              </div>
+              <!-- <div class="control">
+                <div>{{ user.description || '' }}</div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 个人主页 -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">个人主页：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <input
+                  v-model="form.homePage"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="请输入个人主页"
+                />
+                <span class="icon is-small is-left">
+                  <i class="iconfont icon-net" />
+                </span>
+              </div>
+              <!-- <div class="control">
+                <a
+                  v-if="user.homePage"
+                  target="_blank"
+                  rel="external nofollow"
+                  :href="user.homePage"
+                  >{{ user.homePage }}</a
+                >
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal" />
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <a class="button is-success" @click="submitForm">提交修改</a>
               </div>
             </div>
           </div>
@@ -276,11 +387,12 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
 export default {
+  layout: 'ucenter',
   middleware: 'authenticated',
   async asyncData({ $axios }) {
     const user = await $axios.get('/api/user/current')
@@ -295,22 +407,76 @@ export default {
       form: {
         username: '',
         email: '',
+        nickname: '',
+        avatar: '',
+        homePage: '',
+        description: '',
         password: '',
         rePassword: '',
         oldPassword: '',
       },
+
       showSetUsername: false,
+      // username: '',
+
       showSetEmail: false,
+      // email: '',
+
       showSetPassword: false, // 显示设置密码
       showUpdatePassword: false, // 显示修改密码
+      // password: '',
+      // rePassword: '',
+      // oldPassword: ''
     }
   },
   head() {
     return {
-      title: this.$siteTitle(this.user.nickname + ' - 账号设置'),
+      title: this.$siteTitle(this.user.nickname + ' - 编辑资料'),
     }
   },
   methods: {
+    async submitForm() {
+      try {
+        await this.$axios.post('/api/user/edit/' + this.user.id, {
+          nickname: this.form.nickname,
+          avatar: this.form.avatar,
+          homePage: this.form.homePage,
+          description: this.form.description,
+        })
+        await this.reload()
+        this.$message.success('资料修改成功')
+      } catch (e) {
+        console.error(e)
+        this.$message.error('资料修改失败：' + (e.message || e))
+      }
+    },
+    async uploadAvatar(e) {
+      const files = e.target.files
+      if (files.length <= 0) {
+        return
+      }
+      try {
+        // 上传头像
+        const file = files[0]
+        const formData = new FormData()
+        formData.append('image', file, file.name)
+        const ret = await this.$axios.post('/api/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+
+        // 设置头像
+        await this.$axios.post('/api/user/update/avatar', {
+          avatar: ret.url,
+        })
+
+        // 重新加载数据
+        await this.reload()
+
+        this.$message.success('头像更新成功')
+      } catch (e) {
+        console.error(e)
+      }
+    },
     async setUsername() {
       try {
         const me = this
@@ -366,6 +532,10 @@ export default {
         this.$message.error('密码修改失败：' + (err.message || err))
       }
     },
+    async reload() {
+      this.user = await this.$axios.get('/api/user/current')
+      this.form = { ...this.user }
+    },
     async requestEmailVerify() {
       this.$nuxt.$loading.start()
       try {
@@ -379,18 +549,11 @@ export default {
         this.$nuxt.$loading.finish()
       }
     },
-    async reload() {
-      this.user = await this.$axios.get('/api/user/current')
-      this.form = { ...this.user }
-    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.my-field {
-  display: flex;
-}
 .control {
   a,
   label {

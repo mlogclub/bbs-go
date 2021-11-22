@@ -1,7 +1,7 @@
 <template>
   <div class="profile-edit-tabs">
     <div class="profile-edit-tab-item">
-      <nuxt-link to="/user/profile/edit" :class="{ active: active === 'edit' }">
+      <nuxt-link to="/user/profile" :class="{ active: active === 'edit' }">
         <i class="iconfont icon-username" />
         <span>个人资料</span>
       </nuxt-link>
