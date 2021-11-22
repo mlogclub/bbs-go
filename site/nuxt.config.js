@@ -84,7 +84,6 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    // 'nuxt-windicss',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -121,19 +120,6 @@ export default {
       lang: 'en',
     },
   },
-
-  // windicss: {
-  //   analyze: {
-  //     analysis: {
-  //       interpretUtilities: false,
-  //     },
-  //     // see https://github.com/unjs/listhen#options
-  //     server: {
-  //       port: 4444,
-  //       open: true,
-  //     },
-  //   },
-  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
