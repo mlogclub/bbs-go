@@ -6,29 +6,51 @@ export default {
   head: {
     htmlAttrs: {
       lang: 'zh-cmn-Hans',
-      xmlns: 'http://www.w3.org/1999/xhtml'
+      xmlns: 'http://www.w3.org/1999/xhtml',
     },
     meta: [
       {
-        charset: 'utf-8'
+        charset: 'utf-8',
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui'
+        content:
+          'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui',
       },
       {
         name: 'window-target',
-        content: '_top'
-      }
+        content: '_top',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '文章', href: '/atom.xml' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '话题', href: '/topic_atom.xml' },
-      { rel: 'alternate', type: 'application/atom+xml', title: '开源项目', href: '/project_atom.xml' },
-      { rel: 'stylesheet', href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css' },
-      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_1142441_q49if9pd6wo.css' }
-    ]
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '文章',
+        href: '/atom.xml',
+      },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '话题',
+        href: '/topic_atom.xml',
+      },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: '开源项目',
+        href: '/project_atom.xml',
+      },
+      {
+        rel: 'stylesheet',
+        href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        href: '//at.alicdn.com/t/font_1142441_q49if9pd6wo.css',
+      },
+    ],
   },
 
   /*
@@ -37,9 +59,7 @@ export default {
   loading: { color: '#FFB90F' },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    { src: '~/assets/styles/main.scss', lang: 'scss' }
-  ],
+  css: [{ src: '~/assets/styles/main.scss', lang: 'scss' }],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -48,7 +68,7 @@ export default {
     '~/plugins/axios',
     '~/plugins/bbs-go',
     { src: '~/plugins/vue-lazyload', ssr: false },
-    { src: '~/plugins/viewer.js', ssr: false }
+    { src: '~/plugins/viewer.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -57,14 +77,14 @@ export default {
    ** Router property -  https://nuxtjs.org/docs/2.x/features/file-system-routing#the-router-property
    */
   router: {
-    middleware: ['resetEnv']
+    middleware: ['resetEnv'],
   },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    'nuxt-windicss'
+    'nuxt-windicss',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -75,41 +95,44 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
-    ['@nuxtjs/google-adsense', { id: 'ca-pub-5683711753850351', pageLevelAds: true }]
+    [
+      '@nuxtjs/google-adsense',
+      { id: 'ca-pub-5683711753850351', pageLevelAds: true },
+    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     proxy: true,
-    credentials: true
+    credentials: true,
   },
 
   proxy: {
     '/api/': isProduction
       ? 'https://mlog.club'
       : isDocker
-        ? 'http://bbs-go-server:8082'
-        : 'http://127.0.0.1:8082'
+      ? 'http://bbs-go-server:8082'
+      : 'http://127.0.0.1:8082',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en'
-    }
+      lang: 'en',
+    },
   },
 
   windicss: {
     analyze: {
       analysis: {
-        interpretUtilities: false
+        interpretUtilities: false,
       },
       // see https://github.com/unjs/listhen#options
       server: {
         port: 4444,
-        open: true
-      }
-    }
+        open: true,
+      },
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -120,15 +143,13 @@ export default {
           'component',
           {
             libraryName: 'element-ui',
-            styleLibraryName: 'theme-chalk'
-          }
-        ]
+            styleLibraryName: 'theme-chalk',
+          },
+        ],
       ],
-      presets (env, [preset, options]) {
-        return [
-          ['@nuxt/babel-preset-app', options]
-        ]
-      }
-    }
-  }
+      presets(env, [preset, options]) {
+        return [['@nuxt/babel-preset-app', options]]
+      },
+    },
+  },
 }
