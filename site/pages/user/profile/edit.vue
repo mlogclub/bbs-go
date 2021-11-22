@@ -2,20 +2,7 @@
   <section class="main">
     <div class="container main-container right-main">
       <div class="left-container">
-        <div class="profile-edit-tabs">
-          <div class="profile-edit-tab-item">
-            <nuxt-link to="/user/profile/edit">
-              <i class="iconfont icon-username" />
-              <span>个人资料</span>
-            </nuxt-link>
-          </div>
-          <div class="profile-edit-tab-item">
-            <nuxt-link to="/user/profile/account">
-              <i class="iconfont icon-username" />
-              <span>账号设置</span>
-            </nuxt-link>
-          </div>
-        </div>
+        <profile-left-menu active="edit" />
       </div>
       <div class="right-container">
         <div class="widget">
@@ -178,23 +165,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.profile-edit-tabs {
-  background-color: #fff;
-  padding: 10px;
-
-  .profile-edit-tab-item {
-    width: 100%;
-
-    a {
-      display: block;
-      padding: 10px;
-
-      &:hover {
-        background: #e8f3ff;
-        color: #1d7dfa;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
