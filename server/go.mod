@@ -27,7 +27,7 @@ require (
 	github.com/robfig/cron v1.2.0
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
-	github.com/tidwall/gjson v1.3.4
+	github.com/tidwall/gjson v1.9.3
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	gopkg.in/yaml.v2 v2.3.0
 	gorm.io/gorm v1.20.1
