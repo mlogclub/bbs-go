@@ -19,7 +19,7 @@
     <el-dialog
       title="关注"
       :visible.sync="showFollowDialog"
-      custom-class="follow-more-list-dialog"
+      custom-class="my-dialog"
     >
       <div v-loading="followDialogLoading">
         <load-more
@@ -86,15 +86,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.follow-more-list-dialog {
-  width: 550px;
-  .el-dialog__header {
-    border-bottom: 1px solid rgb(229, 230, 235);
-  }
-  .el-dialog__body {
-    height: 600px;
-    overflow-y: auto;
-  }
-}
-</style>
+<style lang="scss"></style>

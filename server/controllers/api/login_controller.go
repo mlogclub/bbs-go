@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/controllers/render"
+
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
@@ -49,10 +50,10 @@ func (c *LoginController) PostSignin() *simple.JsonResult {
 		password    = c.Ctx.PostValueTrim("password")
 		ref         = c.Ctx.FormValue("ref")
 	)
-	loginMethod := services.SysConfigService.GetLoginMethod()
-	if !loginMethod.Password {
-		return simple.JsonErrorMsg("账号密码登录/注册已禁用")
-	}
+	// loginMethod := services.SysConfigService.GetLoginMethod()
+	// if !loginMethod.Password {
+	// 	return simple.JsonErrorMsg("账号密码登录/注册已禁用")
+	// }
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return simple.JsonError(common.CaptchaError)
 	}

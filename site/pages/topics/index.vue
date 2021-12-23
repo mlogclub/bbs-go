@@ -1,6 +1,6 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main size-360">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <div class="main-content no-padding no-bg topics-wrapper">
           <div class="topics-nav"><topics-nav :nodes="nodes" /></div>

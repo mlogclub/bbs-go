@@ -19,7 +19,7 @@
     <el-dialog
       title="粉丝"
       :visible.sync="showFansDialog"
-      custom-class="fans-more-list-dialog"
+      custom-class="my-dialog"
     >
       <div v-loading="fansDialogLoading">
         <load-more
@@ -86,15 +86,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.fans-more-list-dialog {
-  width: 550px;
-  .el-dialog__header {
-    border-bottom: 1px solid rgb(229, 230, 235);
-  }
-  .el-dialog__body {
-    height: 600px;
-    overflow-y: auto;
-  }
-}
-</style>
+<style lang="scss"></style>
