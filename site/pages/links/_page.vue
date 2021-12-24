@@ -53,7 +53,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle('好博客'),
+      title: this.$siteTitle('友情链接'),
       meta: [
         {
           hid: 'description',

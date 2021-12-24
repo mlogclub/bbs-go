@@ -11,10 +11,9 @@
           <span class="score-type">{{
             scoreLog.type === 0 ? '获得积分' : '减少积分'
           }}</span>
-          <span class="score-score"
-            ><i class="iconfont icon-score" /><span>{{
-              scoreLog.score
-            }}</span></span
+          <span class="score-score">
+            <i class="iconfont icon-score" />
+            <span>{{ scoreLog.score }}</span></span
           >
           <span class="score-description">{{ scoreLog.description }}</span>
           <span class="score-time"
@@ -48,12 +47,14 @@ export default {
   font-size: 1rem;
   li {
     line-height: 2;
+    margin-bottom: 10px;
 
     .score-type {
       color: green;
     }
 
     .score-score {
+      margin: 0 3px;
       span {
         font-weight: bold;
       }

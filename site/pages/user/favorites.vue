@@ -1,8 +1,10 @@
 <template>
   <div class="widget">
     <div class="widget-header">
-      <i class="iconfont icon-favorite" />
-      <span>收藏列表</span>
+      <span>
+        <i class="iconfont icon-favorite" />
+        <span>收藏列表</span>
+      </span>
     </div>
 
     <div class="widget-content">

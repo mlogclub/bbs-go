@@ -1,8 +1,10 @@
 <template>
   <div class="widget">
     <div class="widget-header">
-      <i class="iconfont icon-message" />
-      <span>消息</span>
+      <span>
+        <i class="iconfont icon-message" />
+        <span>消息</span>
+      </span>
     </div>
 
     <div class="widget-content">

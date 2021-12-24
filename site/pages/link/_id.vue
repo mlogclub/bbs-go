@@ -34,7 +34,7 @@ export default {
     }
   },
   head() {
-    const title = this.link.title + ' - 好博客'
+    const title = this.link.title + ' - 友情链接'
     return {
       title: this.$siteTitle(title),
       meta: [
