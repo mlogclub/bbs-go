@@ -93,7 +93,7 @@
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <a class="button is-success" @click="submitForm">保存修改</a>
+              <a class="button is-success" @click="submitForm">保存</a>
             </div>
           </div>
         </div>
@@ -117,7 +117,6 @@ export default {
     return {
       form: {
         nickname: '',
-        avatar: '',
         homePage: '',
         description: '',
       },
@@ -133,7 +132,6 @@ export default {
       try {
         await this.$axios.post('/api/user/edit/' + this.user.id, {
           nickname: this.form.nickname,
-          avatar: this.form.avatar,
           homePage: this.form.homePage,
           description: this.form.description,
         })
