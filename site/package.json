@@ -23,6 +23,7 @@
     "nuxt": "^2.15.7",
     "qs": "^6.10.1",
     "v-viewer": "^1.6.4",
+    "vue-click-outside": "^1.1.0",
     "vue2-animate": "^2.1.4"
   },
   "devDependencies": {

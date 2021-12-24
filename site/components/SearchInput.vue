@@ -1,27 +1,26 @@
 <template>
   <div
     ref="searchForm"
+    v-click-outside="onBlur"
     class="searchFormDiv"
     :class="{ 'input-focus': inputFocus, 'show-histories': showHistories }"
   >
-    <div class="control has-icons-right">
+    <div class="search-input">
       <input
         v-model="keyword"
         name="q"
         class="input"
         type="text"
         maxlength="30"
-        placeholder="搜索"
+        placeholder="输入你想查找的内容"
         autocomplete="off"
         @focus="onFocus"
-        @blur="onBlur"
         @input="onInput"
-        @keyup.esc="onBlur"
         @keyup.down="changeSelect(1)"
         @keyup.up="changeSelect(-1)"
         @keyup.enter="searchBoxOnEnter"
       />
-      <span class="icon is-medium is-right">
+      <span>
         <i class="iconfont icon-search" />
       </span>
     </div>
@@ -35,7 +34,7 @@
           @mouseout="historyItemMouseOut()"
         >
           <span @click="historyItemClick(item)">{{ item }}</span>
-          <i class="iconfont icon-delete" @click="deleteHistory(item)" />
+          <i class="iconfont icon-close" @click="deleteHistory(item)" />
         </li>
       </ul>
     </div>
@@ -43,10 +42,14 @@
 </template>
 
 <script>
-const localStorageKey = 'search.histories'
+import ClickOutside from 'vue-click-outside'
+const localStorageKey = 'bbsgo.search.histories'
 const maxHistoryLen = 10
 
 export default {
+  directives: {
+    ClickOutside,
+  },
   data() {
     return {
       keyword: '',
@@ -96,11 +99,9 @@ export default {
       window.location = '/search?q=' + encodeURIComponent(this.keyword)
     },
     onFocus() {
-      console.log('onFocus')
       this.inputFocus = true
     },
     onBlur() {
-      console.log('onBlur')
       this.inputFocus = false
     },
     onInput() {
@@ -176,89 +177,118 @@ export default {
     }
   }
 
-  $search-box-width: 230px;
-  $search-focus-box-width: 430px;
-  $border-color: #ebebeb;
-  //$border-focus-color: #4e6ef2;
-  $border-focus-color: #e7672e;
+  $search-box-width: 380px;
+  $border-color: #4e6ef2;
 
   &.input-focus {
-    .input {
-      width: $search-focus-box-width;
-      // border-color: $border-color !important;
-      opacity: 1;
-      filter: alpha(opacity=100) \9;
+    .search-input {
+      background-color: #fff;
+      border: 1px solid #8590a6;
+    }
+    .icon-search {
+      color: #0065ff;
     }
   }
 
   &.show-histories {
-    .input {
-      border-radius: 6px 6px 0 0;
-      border-bottom: 1px solid $border-color !important;
-      border-top: 2px solid $border-focus-color;
-      border-left: 2px solid $border-focus-color;
-      border-right: 2px solid $border-focus-color;
-    }
     .histories {
-      width: $search-focus-box-width;
       display: block;
     }
   }
 
-  .input {
-    transition: width 0.4s;
+  .search-input {
     width: $search-box-width;
-    box-shadow: none;
-    background-color: #fff;
-    float: right;
-    position: relative;
-    border-radius: 6px;
-    border: 1px solid $border-color;
+    background-color: #f6f6f6;
+    border: 1px solid #ebebeb;
+    height: 34px;
+    border-radius: 17px;
+    padding: 4px 10px;
+    font-size: 14px;
+    display: flex;
+    transition-property: background-color, border, color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-in;
+
+    input {
+      color: #121212;
+      font-weight: 400;
+      font-size: 13px;
+      height: 24px;
+      line-height: 24px;
+      flex: 1 1;
+      padding: 0;
+      margin: 0 5px;
+      overflow: hidden;
+      background: transparent;
+      border: none;
+      resize: none;
+      box-shadow: none;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 
   .histories {
-    transition: all 0.4s;
+    width: $search-box-width;
     display: none;
     height: auto;
-    width: $search-box-width;
     top: 48px;
-    border-radius: 0 0 6px 6px;
-    border: 2px solid $border-focus-color !important;
-    border-top: 0 !important;
-    box-shadow: none;
-    font-family: Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    z-index: 1;
-    position: absolute;
-    background: #fff;
+    position: fixed;
 
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgb(18 18 18 / 10%);
+    z-index: 203;
+
+    animation: showHistoriesAnimation 0.3s;
+    -moz-animation: showHistoriesAnimation 0.3s; /* Firefox */
+    -webkit-animation: showHistoriesAnimation 0.3s; /* Safari and Chrome */
+    -o-animation: showHistoriesAnimation 0.3s; /* Opera */
+
+    @keyframes showHistoriesAnimation {
+      0% {
+        opacity: 0;
+        transform: translate(1px, 30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
     ul {
       li {
-        padding: 10px;
-        color: #626675;
-        display: flex;
+        padding: 7px 16px;
+        width: 100%;
+        text-align: left;
         cursor: pointer;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+
+        display: flex;
         span {
           width: 100%;
           font-size: 13px;
+          font-weight: 400;
+          color: #121212;
         }
         &:hover {
-          i.icon-delete {
+          i.iconfont {
             display: block;
           }
         }
-        i.icon-delete {
+        i.iconfont {
           display: none;
           font-size: 13px;
-          padding: 0px 6px;
+          padding: 0 6px;
           &:hover {
             color: #4e6ef2;
           }
         }
         &.selected {
-          span {
-            color: #4e6ef2;
-          }
-          background-color: #f5f5f6;
+          background-color: #f6f6f6;
         }
       }
     }
