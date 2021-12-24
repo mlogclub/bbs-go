@@ -61,20 +61,18 @@
                 </div>
               </div>
 
-              <div class="field login-button">
+              <div class="field">
                 <button class="button is-success" @click="submitLogin">
                   登录
                 </button>
-                <nuxt-link class="to-reg is-text" to="/user/signup">
+                <nuxt-link class="button is-text" to="/user/signup">
                   没有账号？点击这里去注册&gt;&gt;
                 </nuxt-link>
               </div>
             </template>
 
             <div
-              v-if="
-                loginMethod.password && (loginMethod.qq || loginMethod.github)
-              "
+              v-if="loginMethod.qq || loginMethod.github || loginMethod.osc"
               class="third-party-line"
             >
               <div class="third-party-title">
@@ -203,61 +201,3 @@ export default {
   },
 }
 </script>
-<style scoped lang="scss">
-.signin {
-  max-width: 500px;
-  margin: auto;
-  padding: 0 20px;
-
-  .login-captcha-input {
-    width: 100%;
-    margin-right: 20px;
-
-    .input {
-      width: 100% !important;
-    }
-  }
-
-  .login-captcha-img {
-    img {
-      height: 40px;
-    }
-  }
-
-  .login-button {
-    .button {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    .to-reg {
-      color: #363636;
-      text-decoration: underline;
-    }
-  }
-
-  .third-party-line {
-    border-bottom: 1px solid #dedede;
-    margin-bottom: 24px;
-
-    .third-party-title {
-      margin-bottom: -12px;
-      text-align: center;
-
-      span {
-        background-color: #fff;
-        padding: 0 10px;
-        font-size: 13px;
-      }
-    }
-  }
-
-  .third-parties {
-    text-align: center;
-    margin: 10px 0;
-
-    a:not(:last-child) {
-      margin-right: 10px;
-    }
-  }
-}
-</style>

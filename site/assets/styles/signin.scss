@@ -1,0 +1,45 @@
+.signin {
+  max-width: 500px;
+  margin: auto!important;
+  padding: 0 20px;
+
+  .login-captcha-input {
+    width: 100%;
+    margin-right: 20px;
+
+    .input {
+      width: 100% !important;
+    }
+  }
+
+  .login-captcha-img {
+    img {
+      height: 40px;
+    }
+  }
+
+  .third-party-line {
+    border-bottom: 1px solid #dedede;
+    margin-bottom: 24px;
+
+    .third-party-title {
+      margin-bottom: -12px;
+      text-align: center;
+
+      span {
+        background-color: #fff;
+        padding: 0 10px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .third-parties {
+    text-align: center;
+    margin: 10px 0;
+
+    a:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+}

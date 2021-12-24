@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="main-body no-bg">
-        <div class="widget signup">
+        <div class="widget signin">
           <div class="widget-header">注册</div>
           <div class="widget-content">
             <div class="field">
@@ -73,7 +73,7 @@
               <label class="label">验证码</label>
               <div class="control has-icons-left">
                 <div class="field is-horizontal">
-                  <div class="field" style="width: 100%">
+                  <div class="field login-captcha-input">
                     <input
                       v-model="captchaCode"
                       class="input"
@@ -85,10 +85,8 @@
                       ><i class="iconfont icon-captcha"
                     /></span>
                   </div>
-                  <div v-if="captchaUrl" class="field">
-                    <a @click="showCaptcha"
-                      ><img :src="captchaUrl" style="height: 40px"
-                    /></a>
+                  <div v-if="captchaUrl" class="field login-captcha-img">
+                    <a @click="showCaptcha"><img :src="captchaUrl" /></a>
                   </div>
                 </div>
               </div>
@@ -97,15 +95,25 @@
             <div class="field">
               <div class="control">
                 <button class="button is-success" @click="signup">注册</button>
-                <github-login :ref-url="ref" />
-                <qq-login :ref-url="ref" />
+                <nuxt-link class="button is-text" to="/user/signin">
+                  已有账号，前往登录&gt;&gt;
+                </nuxt-link>
               </div>
             </div>
 
-            <div class="field">
-              <nuxt-link class="button is-text" to="/user/signin">
-                已有账号，前往登录&gt;&gt;
-              </nuxt-link>
+            <div
+              v-if="loginMethod.qq || loginMethod.github || loginMethod.osc"
+              class="third-party-line"
+            >
+              <div class="third-party-title">
+                <span>第三方账号登录</span>
+              </div>
+            </div>
+
+            <div class="third-parties">
+              <github-login v-if="loginMethod.github" :ref-url="ref" />
+              <osc-login v-if="loginMethod.osc" :ref-url="ref" />
+              <qq-login v-if="loginMethod.qq" :ref-url="ref" />
             </div>
           </div>
         </div>
@@ -136,6 +144,11 @@ export default {
     return {
       title: this.$siteTitle('注册'),
     }
+  },
+  computed: {
+    loginMethod() {
+      return this.$store.state.config.config.loginMethod
+    },
   },
   mounted() {
     this.showCaptcha()
@@ -178,10 +191,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.signup {
-  max-width: 480px;
-  margin: auto;
-  padding: 0 20px;
-}
-</style>
+<style lang="scss" scoped></style>

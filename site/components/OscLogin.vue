@@ -1,6 +1,6 @@
 <template>
   <a :class="{ button: isButton }" class="is-link" @click="oscLogin">
-    <i class="iconfont icon-github" />&nbsp;
+    <i class="iconfont icon-open-source" />&nbsp;
     <strong>{{ title }}</strong>
   </a>
 </template>
