@@ -95,7 +95,7 @@ export default {
     display: flex;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #f2f2f2;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .message-item-left {
@@ -117,7 +117,7 @@ export default {
           a {
             font-size: 16px;
             font-weight: 700;
-            color: #1e70bf;
+            color: var(--text-link-color);
           }
         }
 
@@ -143,7 +143,7 @@ export default {
 
         .message-content {
           font-size: 15px;
-          color: #000;
+          color: var(--text-color);
         }
 
         .message-quote {
@@ -151,8 +151,8 @@ export default {
           padding: 8px 15px;
           border-radius: 1px;
           background: #f2f2f2;
-          border: 1px solid #eaeaea;
-          color: #292929;
+          border: 1px solid var(--border-color2);
+          color: var(--text-color);
 
           &:before {
             box-sizing: inherit;
@@ -163,7 +163,8 @@ export default {
             top: -7px;
             border-width: 0 7px 7px 7px;
             border-style: solid;
-            border-color: transparent transparent #f2f2f2 transparent;
+            border-color: transparent transparent var(--border-color)
+              transparent;
             z-index: 1;
           }
         }
@@ -171,7 +172,7 @@ export default {
         .message-show-more {
           a {
             &:hover {
-              color: #3273dc;
+              color: var(--text-link-color);
               text-decoration: underline;
             }
           }

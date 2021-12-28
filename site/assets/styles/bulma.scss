@@ -1,0 +1,8 @@
+//@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+//$family-sans-serif: 'Source Code Pro', monospace;
+
+$widescreen-enabled: true;
+$fullhd-enabled: false;
+$body-background-color: var(--body-bg-color);
+
+@import '/node_modules/bulma/bulma.sass';

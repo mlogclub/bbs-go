@@ -8,7 +8,7 @@
         <div class="message-body">
           发表文章前，请先前往
           <strong
-            ><nuxt-link to="/user/profile" style="color: #1878f3"
+            ><nuxt-link to="/user/profile" style="color: var(--text-link-color)"
               >个人中心 &gt; 个人资料</nuxt-link
             ></strong
           >
@@ -123,7 +123,7 @@ export default {
 
 <style lang="scss" scoped>
 .article-create-form {
-  background: #ffffff;
+  background-color: var(--bg-color);
   padding: 30px;
 }
 </style>

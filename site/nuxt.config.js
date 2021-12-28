@@ -37,16 +37,6 @@ export default {
         href: '/topic_atom.xml',
       },
       {
-        rel: 'alternate',
-        type: 'application/atom+xml',
-        title: '开源项目',
-        href: '/project_atom.xml',
-      },
-      {
-        rel: 'stylesheet',
-        href: '//cdn.staticfile.org/bulma/0.8.0/css/bulma.min.css',
-      },
-      {
         rel: 'stylesheet',
         href: '//at.alicdn.com/t/font_1142441_acczfu1wn6r.css',
       },

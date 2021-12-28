@@ -47,11 +47,11 @@ export default {
       span {
         font-size: 13px;
         font-weight: 400;
-        color: #868e96;
+        color: var(--text-color3);
       }
       a,
       b {
-        color: #000;
+        color: var(--text-color);
       }
     }
   }

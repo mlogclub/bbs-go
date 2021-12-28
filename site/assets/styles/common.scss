@@ -1,14 +1,3 @@
-html,
-body {
-  font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', PingFang SC,
-    Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif,
-    WenQuanYi Micro Hei, sans-serif;
-  // background: #e5e5e5;
-  // background: #f7f7f7;
-  background: url(../images/bg.gif) repeat;
-  color: #222831;
-}
-
 .column {
   padding: 3px !important;
 }
@@ -31,7 +20,7 @@ body {
 
 .main-body,
 .main-aside {
-  background: #fff;
+  background: var(--bg-color);
   padding: 10px;
 
   &.no-bg {
@@ -91,7 +80,7 @@ $main-container-width: null; // 主栏目的宽度
   }
 
   .main-content {
-    background-color: #fff;
+    background-color: var(--bg-color);
     padding: 0 10px 10px 10px;
     margin-bottom: 10px;
 
@@ -100,8 +89,8 @@ $main-container-width: null; // 主栏目的宽度
     }
 
     .main-content-footer {
-      border-top: 1px solid #eff2f6;
-      background: #f9f9f9;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-color2);
       padding: 5px 15px 5px 15px;
       margin: 0 -10px -10px -10px;
     }
@@ -126,7 +115,7 @@ $main-container-width: null; // 主栏目的宽度
 
   &.is-white.left-main {
     .left-container {
-      background: #fff;
+      background: var(--bg-color);
       padding: 0 10px 10px 10px;
       // padding: 0 0 10px 0;
     }
@@ -134,7 +123,7 @@ $main-container-width: null; // 主栏目的宽度
 
   &.is-white.right-main {
     .right-container {
-      background: #fff;
+      background: var(--bg-color);
       padding: 0 10px 10px 10px;
       // padding: 0 0 10px 0;
     }
@@ -188,7 +177,7 @@ $main-container-width: null; // 主栏目的宽度
 }
 
 .widget {
-  background: #fff;
+  background: var(--bg-color);
   padding: 0 12px;
   margin-top: 10px;
   border-radius: calc(0.25rem - 1px);
@@ -209,7 +198,7 @@ $main-container-width: null; // 主栏目的宽度
     padding: 8px 0;
     font-size: 16px;
     font-weight: 700;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -218,16 +207,18 @@ $main-container-width: null; // 主栏目的宽度
       float: right;
       font-size: 80%;
       font-weight: 400;
+
       a {
-        color: #4a4a4a;
+        color: var(--text-color);
+
         &:hover {
-          color: #2469f6;
+          color: var(--text-link-hover-color);
         }
       }
     }
 
     .count {
-      color: rgb(133, 144, 166);
+      color: var(--text-color3);
       margin-left: 8px;
       font-size: 14px;
     }
@@ -242,7 +233,7 @@ $main-container-width: null; // 主栏目的宽度
     word-break: break-all;
 
     .widget-tips {
-      color: rgb(197, 198, 203);
+      color: var(--text-color4);
       font-size: 14px;
       font-weight: 400;
       text-align: center;
@@ -251,7 +242,7 @@ $main-container-width: null; // 主栏目的宽度
   }
 
   & > .widget-footer {
-    border-top: 1px dashed #ddd;
+    border-top: 1px dashed var(--border-color2);
     padding: 10px 0 10px 0;
 
     &.is-right {
@@ -269,29 +260,32 @@ $main-container-width: null; // 主栏目的宽度
     font-size: 14px;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #f5f7f8;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .slabel {
-      color: #4f5a70;
+      color: var(--text-color);
       flex-shrink: 0;
     }
+
     .svalue {
       margin-left: 4px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       word-break: break-all;
-      color: #0b0b37;
+      color: var(--text-color);
     }
   }
 }
 
 .my-dialog {
   width: 550px;
+
   .el-dialog__header {
-    border-bottom: 1px solid rgb(229, 230, 235);
+    border-bottom: 1px solid var(--border-color);
   }
+
   .el-dialog__body {
     height: 600px;
     overflow-y: auto;
@@ -299,11 +293,11 @@ $main-container-width: null; // 主栏目的宽度
 }
 
 img[lazy='loading'] {
-  background-color: #e8e8e8;
+  background-color: var(--bg-color2);
 }
 
 img[lazy='error'] {
-  background-color: #e8e8e8;
+  background-color: var(--bg-color2);
 }
 
 img[lazy='loaded'] {
@@ -311,15 +305,15 @@ img[lazy='loaded'] {
 }
 
 .footer {
-  background: #fff;
+  background: var(--bg-color);
   padding: 20px 0 20px 0;
 
   .hide {
     a {
-      color: #efeaea;
+      color: var(--text-color4);
 
       &:hover {
-        color: #746f6f;
+        color: var(--text-color3);
       }
     }
   }
@@ -333,6 +327,7 @@ img[lazy='loaded'] {
   width: 20px;
   height: 20px;
   display: inline-block;
+  // TODO
   color: red;
   vertical-align: middle;
   pointer-events: none;
@@ -389,9 +384,34 @@ img[lazy='loaded'] {
   padding: 10px 0;
   margin: 0;
   font-weight: 700;
-  border-bottom: 1px dashed #ddd;
+  border-bottom: 1px dashed var(--border-color2);
 }
 
 span.search-highlight {
+  // TODO
   color: #cc0000;
+}
+
+.ad {
+  margin: 10px 0;
+
+  &.no-margin-top {
+    margin-top: 0;
+  }
+
+  &.no-margin-bottom {
+    margin-bottom: 0;
+  }
+}
+
+
+@keyframes rotating {
+  0% {
+    transform: rotate(
+        0deg);
+  }
+  100% {
+    transform: rotate(
+        1turn);
+  }
 }

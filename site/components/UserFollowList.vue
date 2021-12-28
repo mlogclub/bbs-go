@@ -55,12 +55,12 @@ export default {
     .nickname {
       font-size: 14px;
       a {
-        color: rgb(11, 11, 55);
+        color: var(--text-color);
       }
     }
     .description {
       font-size: 12px;
-      color: rgb(133, 144, 166);
+      color: var(--text-color3);
 
       overflow: hidden;
       display: -webkit-box;

@@ -67,9 +67,9 @@ export default {
   .summary {
     font-size: 16px;
     padding: 10px 15px;
-    border: 1px dotted #eeeeee;
-    border-left: 3px solid #eeeeee;
-    background-color: #fbfbfb;
+    border: 1px dotted var(--border-color);
+    border-left: 3px solid var(--border-color);
+    background-color: var(--bg-color2);
   }
   .link {
     font-size: 16px;

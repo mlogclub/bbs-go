@@ -69,13 +69,12 @@
                 v-lazy-container="{ selector: 'img' }"
                 class="comment-image-list"
               >
-                <div
+                <img
                   v-for="(image, imageIndex) in comment.quote.imageList"
                   :key="imageIndex"
-                  class="comment-image small"
-                >
-                  <img :data-src="image.url" />
-                </div>
+                  class="small"
+                  :data-src="image.url"
+                />
               </div>
             </blockquote>
             <div
@@ -87,13 +86,11 @@
               v-lazy-container="{ selector: 'img' }"
               class="comment-image-list"
             >
-              <div
+              <img
                 v-for="(image, imageIndex) in comment.imageList"
                 :key="imageIndex"
-                class="comment-image"
-              >
-                <img :data-src="image.url" />
-              </div>
+                :data-src="image.url"
+              />
             </div>
           </div>
         </li>

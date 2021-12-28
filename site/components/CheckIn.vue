@@ -178,7 +178,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './assets/styles/variable';
 .checkin {
   .checkedin {
     display: flex;
@@ -187,7 +186,7 @@ export default {
     .gold-icon-box {
       width: 25%;
       span {
-        color: #8e959f;
+        color: var(--text-color4);
         font-size: 0.875rem;
         line-height: 1.25rem;
         display: flex;
@@ -200,7 +199,7 @@ export default {
     .gold-info-box {
       width: 25%;
       .gold-info {
-        color: #8e959f;
+        color: var(--text-color4);
         font-size: 0.875rem;
         line-height: 1.25rem;
         display: flex;
@@ -221,12 +220,12 @@ export default {
         font-weight: 500;
         white-space: nowrap;
         border-radius: 0.25rem;
-        background-color: #fff;
-        border: 1px solid #dae4f1;
-        color: #626f84;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color2);
+        color: var(--text-color3);
         &:hover {
-          background-color: #f5f9ff;
-          border-color: #dae4f1;
+          background-color: var(--bg-color2);
+          border-color: var(--border-color2);
         }
         .checkedin-btn-icon {
           margin-right: 0.5rem;
@@ -245,13 +244,13 @@ export default {
     justify-content: center;
     text-align: center;
     align-items: center;
-    color: #9ca3af;
+    color: var(--text-color3);
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     border-radius: 0.25rem;
-    background: #e1e7ef;
+    background: var(--bg-color2);
     .checkedin-tips-icon {
       margin-right: 0.5rem;
       display: flex;
@@ -265,12 +264,12 @@ export default {
       line-height: 1.25rem;
       display: flex;
       .checkedin-tips-day {
-        color: #00a1d6;
+        color: #00a1d6; // TODO
       }
     }
   }
   .rank {
-    border-top: 1px solid $border-color;
+    border-top: 1px solid var(--border-color);
     margin-top: 10px;
     padding-top: 10px;
     .rank-title {
@@ -283,17 +282,17 @@ export default {
       margin: 8px 0;
       font-size: 13px;
       position: relative;
-      background: #f7f7f7;
+      background: var(--bg-color);
       padding: 0.5rem;
       border-radius: 0.25rem;
       cursor: pointer;
 
       &:hover {
-        background: #e8f1f7;
+        background: var(--bg-color2);
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid #f7f7f7;
+        border-bottom: 1px solid var(--border-color);
       }
 
       .rank-user-avatar {
@@ -307,10 +306,10 @@ export default {
         line-height: 1.4;
         font-size: 12px;
         a {
-          color: #575759;
+          color: var(--text-color2);
           font-weight: 700;
           &:hover {
-            color: #252526;
+            color: var(--text-color1);
             text-decoration: none;
           }
         }

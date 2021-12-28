@@ -136,7 +136,7 @@ export default {
 <style lang="scss" scoped>
 .el-dropdown-link {
   cursor: pointer;
-  color: #909399;
+  color: var(--text-color3);
   font-size: 12px;
 }
 .el-dropdown-menu__item {

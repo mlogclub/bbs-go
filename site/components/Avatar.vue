@@ -200,14 +200,14 @@ export default {
 
 .avatar {
   &.has-border {
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--border-color);
   }
 }
 
 img.avatar {
   object-fit: cover;
   transition: all 0.5s ease-out 0.1s;
-  background-color: #fff;
+  background-color: var(--bg-color);
 
   &:hover {
     transform: matrix(1.04, 0, 0, 1.04, 0, 0);
@@ -215,7 +215,7 @@ img.avatar {
   }
 }
 span.avatar {
-  color: #fff;
+  color: var(--text-color5);
   display: flex;
   justify-content: center;
   align-items: center;

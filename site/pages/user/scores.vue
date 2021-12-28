@@ -61,11 +61,11 @@ export default {
     }
 
     .score-time {
-      color: #777;
+      color: var(--text-color3);
     }
 
     .score-description {
-      color: #777;
+      color: var(--text-color3);
     }
 
     &.plus {

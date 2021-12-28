@@ -65,7 +65,7 @@ export default {
 .topics-nav {
   font-size: 16px;
   font-weight: bold;
-  border-bottom: 1px solid #e6ecf0 !important;
+  border-bottom: 1px solid var(--border-color) !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,16 +82,16 @@ export default {
         line-height: 22px;
         text-align: center;
         font-weight: 500;
-        color: #8590a6;
+        color: var(--text-color3);
 
         &:hover {
-          color: #343a40;
+          color: var(--text-color);
         }
       }
 
       &.active {
         a {
-          color: #343a40;
+          color: var(--text-color);
           font-weight: 700;
 
           &:after {

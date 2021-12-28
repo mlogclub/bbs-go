@@ -67,7 +67,7 @@ export default {
     width: 120px;
     height: 120px;
     background-size: cover;
-    background-color: #eee;
+    background-color: var(--bg-color2);
     border-radius: 50%;
     position: relative;
 
@@ -83,13 +83,13 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      color: #fff;
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       border-radius: 50%;
-      background-color: rgba(29, 33, 41, 0.5);
+      background-color: var(--bg-color-alpha);
       visibility: hidden;
       cursor: pointer;
 

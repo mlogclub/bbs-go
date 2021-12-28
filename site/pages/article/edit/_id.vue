@@ -123,7 +123,7 @@ export default {
 
 <style lang="scss" scoped>
 .article-create-form {
-  background: #ffffff;
+  background-color: var(--bg-color);
   padding: 30px;
 }
 </style>

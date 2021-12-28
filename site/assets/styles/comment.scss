@@ -1,10 +1,9 @@
 .comment-form {
-  background-color: #fff;
+  background-color: var(--bg-color);
   padding: 10px;
   margin-bottom: 10px;
 
   .comment-create {
-    /*border: 1px solid #f0f0f0;*/
     border-radius: 4px;
     overflow: hidden;
     position: relative;
@@ -13,13 +12,13 @@
 
     .comment-quote-info {
       font-size: 13px;
-      color: #000;
+      color: var(--text-color);
       margin-bottom: 3px;
       font-weight: 600;
 
       i {
         font-size: 12px !important;
-        color: blue;
+        color: var(--text-link-color);
         cursor: pointer;
       }
 
@@ -37,11 +36,11 @@
         height: 85px;
         font-size: 14px;
         padding: 10px 40px 10px 10px;
-        color: #54412e;
+        color: var(--text-color);
         line-height: 16px;
         max-width: 100%;
         resize: none;
-        border: 1px solid #e9e9e9;
+        border: 1px solid var(--border-color);
         box-sizing: border-box;
         border-radius: var(--jinsom-border-radius);
       }
@@ -55,7 +54,7 @@
       line-height: 30px;
 
       span {
-        color: #c2c2c2;
+        color: var(--text-color4);
         font-size: 13px;
         margin-right: 5px;
       }
@@ -68,7 +67,6 @@
 }
 
 .comments {
-  background-color: #fff;
   padding: 10px;
 
   .comment {
@@ -76,7 +74,7 @@
     overflow: hidden;
 
     &:not(:last-child) {
-      border-bottom: 1px dashed #d1d1d1;
+      border-bottom: 1px dashed var(--border-color2);
     }
 
     .comment-avatar {
@@ -95,6 +93,7 @@
         font-weight: 800;
         margin-right: 5px;
         cursor: pointer;
+        // TODO
         color: #1abc9c;
         text-decoration: none;
         display: inline-block;
@@ -102,7 +101,7 @@
 
       .comment-time {
         font-size: 12px;
-        color: #999999;
+        color: var(--text-color3);
         line-height: 1;
         display: inline-block;
         position: relative;
@@ -118,7 +117,7 @@
       word-wrap: break-word;
       word-break: break-all;
       text-align: justify;
-      color: #4a4a4a;
+      color: var(--text-color);
       font-size: 14px;
       line-height: 1.6;
       position: relative;
@@ -131,50 +130,27 @@
 
       .comment-image-list {
         margin-top: 10px;
+        display: flex;
 
-        .comment-image {
-          cursor: pointer;
-          text-align: center;
-
-          display: inline-block;
-          vertical-align: middle;
+        & > img {
           margin: 0 8px 8px 0;
-          background-color: #e8e8e8;
-          background-size: 32px 32px;
-          background-position: 50%;
-          background-repeat: no-repeat;
-          overflow: hidden;
-          position: relative;
-
           width: 120px;
           height: 120px;
           line-height: 120px;
-
-          &>img {
-            width: 120px;
-            height: 120px;
-            line-height: 120px;
-            max-width: 120px;
-            object-fit: cover;
-            transition: all 0.5s ease-out 0.1s;
-
-            &:hover {
-              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-              backface-visibility: hidden;
-            }
-          }
+          max-width: 120px;
+          object-fit: cover;
+          transition: all 0.5s ease-out 0.1s;
 
           &.small {
             width: 90px;
             height: 90px;
             line-height: 90px;
+            max-width: 90px;
+          }
 
-            &>img {
-              width: 90px;
-              height: 90px;
-              line-height: 90px;
-              max-width: 90px;
-            }
+          &:hover {
+            transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+            backface-visibility: hidden;
           }
         }
       }
@@ -187,12 +163,11 @@
 
       &::after {
         content: '\201D';
-        font-family: Georgia, serif;
         font-size: 60px;
         font-weight: bold;
-        color: #aaa;
+        color: var(--text-color3);
         position: absolute;
-        right: 0px;
+        right: 0;
         top: -18px;
       }
 
@@ -209,7 +184,7 @@
         .quote-time {
           line-height: 20px;
           margin-left: 5px;
-          color: rgba(134, 142, 150, 0.8);
+          color: var(--text-color3);
         }
       }
     }

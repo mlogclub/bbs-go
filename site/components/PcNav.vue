@@ -125,20 +125,20 @@ export default {
   }
 
   .publish {
-    color: #fff;
+    color: var(--text-color);
     background-color: #3174dc;
     width: 100px;
     &:hover {
-      color: #fff;
+      color: var(--text-color);
       background-color: #4d91fa;
     }
   }
 
   .login-btn {
-    border-color: #000;
+    border-color: #000; // TODO
     &:hover {
-      color: #7e7e7e;
-      border-color: #7e7e7e;
+      color: var(--text-color3);
+      border-color: var(--text-color3);
     }
   }
 }

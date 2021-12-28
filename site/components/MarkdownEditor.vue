@@ -118,11 +118,10 @@ export default {
 .bbsgoEditor {
   .v-md-editor {
     box-shadow: none !important;
-    // box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color2);
 
     .v-md-editor__toolbar {
-      background-color: #fff;
+      background-color: var(--text-color5);
       padding: 3px;
 
       .v-md-editor__toolbar-item {
@@ -131,7 +130,7 @@ export default {
     }
 
     .v-md-editor__editor-wrapper {
-      background-color: #fff !important;
+      background-color: var(--text-color5) !important;
     }
 
     .v-md-editor__preview-wrapper {

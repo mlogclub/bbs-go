@@ -115,7 +115,7 @@ export default {
 <style lang="scss" scoped>
 .img-avatar {
   margin-top: 5px;
-  border: 1px dotted #eeeeee;
+  border: 1px dotted var(--border-color);
   border-radius: 5%;
 }
 
@@ -134,7 +134,7 @@ export default {
     }
 
     a {
-      color: #3273dc;
+      color: var(--text-link-color);
     }
   }
 }

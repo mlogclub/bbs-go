@@ -50,7 +50,7 @@ export default {
 
 <style lang="scss" scoped>
 .profile-edit-tabs-pc {
-  background-color: #fff;
+  background-color: var(--bg-color);
   padding: 10px;
 
   .profile-edit-tab-item {
@@ -64,13 +64,13 @@ export default {
       &.active,
       &.nuxt-link-exact-active {
         background: #e8f3ff;
-        color: #1d7dfa;
+        color: var(--text-link-color);
       }
     }
   }
 }
 .profile-edit-tabs-mobile {
-  background-color: #fff;
+  background-color: var(--bg-color);
   margin-bottom: 10px !important;
   display: none;
 }
