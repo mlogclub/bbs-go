@@ -2,13 +2,12 @@ package services
 
 import (
 	"bbs-go/model"
+	"bbs-go/pkg/common"
 	"bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/date"
 	"github.com/sirupsen/logrus"
-	"net"
 	"net/http"
-	"strings"
 )
 
 var OperateLogService = newOperateLogService()
@@ -80,31 +79,11 @@ func (s *operateLogService) AddOperateLog(userId int64, opType, dataType string,
 		CreateTime:  date.NowTimestamp(),
 	}
 	if r != nil {
-		operateLog.Ip = ClientIP(r)
-		operateLog.UserAgent = r.Header.Get("User-Agent")
+		operateLog.Ip = common.GetRequestIP(r)
+		operateLog.UserAgent = common.GetUserAgent(r)
 		operateLog.Referer = r.Header.Get("Referer")
 	}
 	if err := repositories.OperateLogRepository.Create(simple.DB(), operateLog); err != nil {
 		logrus.Error(err)
 	}
-}
-
-// ClientIP 尽最大努力实现获取客户端 IP 的算法。
-// 解析 X-Real-IP 和 X-Forwarded-For 以便于反向代理（nginx 或 haproxy）可以正常工作。
-func ClientIP(r *http.Request) string {
-	xForwardedFor := r.Header.Get("X-Forwarded-For")
-	ip := strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
-	if ip != "" {
-		return ip
-	}
-
-	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
-	if ip != "" {
-		return ip
-	}
-
-	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
-		return ip
-	}
-	return ""
 }

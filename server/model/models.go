@@ -105,6 +105,8 @@ type Comment struct {
 	ImageList   string `gorm:"type:longtext" json:"imageList" form:"imageList"`                            // 图片
 	ContentType string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`            // 内容类型：markdown、html
 	QuoteId     int64  `gorm:"not null"  json:"quoteId" form:"quoteId"`                                    // 引用的评论编号
+	UserAgent   string `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                // UserAgent
+	Ip          string `gorm:"size:128" json:"ip" form:"ip"`                                               // IP
 	Status      int    `gorm:"int;index:idx_comment_status" json:"status" form:"status"`                   // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
 	CreateTime  int64  `json:"createTime" form:"createTime"`                                               // 创建时间
 }
@@ -146,6 +148,8 @@ type Topic struct {
 	Status            int                 `gorm:"index:idx_topic_status;" json:"status" form:"status"`                             // 状态：0：正常、1：删除
 	LastCommentTime   int64               `gorm:"index:idx_topic_last_comment_time" json:"lastCommentTime" form:"lastCommentTime"` // 最后回复时间
 	LastCommentUserId int64               `json:"lastCommentUserId" form:"lastCommentUserId"`                                      // 最后回复用户
+	UserAgent         string              `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                     // UserAgent
+	Ip                string              `gorm:"size:128" json:"ip" form:"ip"`                                                    // IP
 	CreateTime        int64               `gorm:"index:idx_topic_create_time" json:"createTime" form:"createTime"`                 // 创建时间
 	ExtraData         string              `gorm:"type:text" json:"extraData" form:"extraData"`                                     // 扩展数据
 }

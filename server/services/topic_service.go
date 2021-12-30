@@ -159,6 +159,8 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		Title:           form.Title,
 		Content:         form.Content,
 		Status:          constants.StatusOk,
+		UserAgent:       form.UserAgent,
+		Ip:              form.Ip,
 		LastCommentTime: now,
 		CreateTime:      now,
 	}

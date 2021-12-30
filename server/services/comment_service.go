@@ -93,6 +93,8 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		ContentType: simple.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
 		Status:      constants.StatusOk,
+		UserAgent:   form.UserAgent,
+		Ip:          form.Ip,
 		CreateTime:  date.NowTimestamp(),
 	}
 
