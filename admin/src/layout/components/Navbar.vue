@@ -22,7 +22,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <avatar :user="{ nickname: name, avatar: '' }" size="40" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -42,6 +42,7 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
+import Avatar from "@/components/Avatar";
 
 export default {
   components: {
@@ -50,9 +51,10 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
+    Avatar,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters(["sidebar", "avatar", "device", "name"]),
   },
   methods: {
     toggleSideBar() {
