@@ -61,7 +61,7 @@
               <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
             </div>
             <div class="btn" @click="toTopicDetail(topic.topicId)">
-              <i class="iconfont icon-comments" />评论
+              <i class="iconfont icon-comment" />评论
               <span v-if="topic.commentCount > 0">{{
                 topic.commentCount
               }}</span>

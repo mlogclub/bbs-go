@@ -47,6 +47,16 @@
               />
             </div>
           </div>
+          <div class="comment-actions">
+            <div class="comment-action-item">
+              <i class="iconfont icon-like"></i>
+              <span>点赞</span>
+            </div>
+            <div class="comment-action-item">
+              <i class="iconfont icon-comment"></i>
+              <span>评论</span>
+            </div>
+          </div>
         </div>
       </div>
     </load-more>
@@ -156,6 +166,27 @@ export default {
               transform: matrix(1.04, 0, 0, 1.04, 0, 0);
               backface-visibility: hidden;
             }
+          }
+        }
+      }
+
+      .comment-actions {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+
+        .comment-action-item {
+          line-height: 22px;
+          font-size: 14px;
+          cursor: pointer;
+          color: var(--text-color3);
+
+          &:hover {
+            color: var(--text-link-color);
+          }
+
+          &:not(:last-child) {
+            margin-right: 16px;
           }
         }
       }
