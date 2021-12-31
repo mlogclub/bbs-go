@@ -150,4 +150,129 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.comments {
+  padding: 10px;
+
+  .comment {
+    padding: 8px 0;
+    overflow: hidden;
+
+    &:not(:last-child) {
+      border-bottom: 1px dashed var(--border-color2);
+    }
+
+    .comment-avatar {
+      float: left;
+      padding: 3px;
+      margin-right: 10px;
+    }
+
+    .comment-meta {
+      position: relative;
+      height: 36px;
+
+      .comment-nickname {
+        position: relative;
+        font-size: 14px;
+        font-weight: 800;
+        margin-right: 5px;
+        cursor: pointer;
+        // TODO
+        color: #1abc9c;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .comment-time {
+        font-size: 12px;
+        color: var(--text-color3);
+        line-height: 1;
+        display: inline-block;
+        position: relative;
+      }
+
+      .comment-reply {
+        float: right;
+        font-size: 12px;
+      }
+    }
+
+    .comment-content {
+      word-wrap: break-word;
+      word-break: break-all;
+      text-align: justify;
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.6;
+      position: relative;
+      padding-left: 45px;
+      margin-top: -5px;
+
+      img {
+        max-width: 50%;
+      }
+
+      .comment-image-list {
+        margin-top: 10px;
+        display: flex;
+
+        & > img {
+          margin: 0 8px 8px 0;
+          width: 120px;
+          height: 120px;
+          line-height: 120px;
+          max-width: 120px;
+          object-fit: cover;
+          transition: all 0.5s ease-out 0.1s;
+
+          &.small {
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            max-width: 90px;
+          }
+
+          &:hover {
+            transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+            backface-visibility: hidden;
+          }
+        }
+      }
+    }
+
+    .comment-quote {
+      font-size: 12px;
+      padding: 10px 10px;
+      border-left: 2px solid #5978f3;
+
+      &::after {
+        content: '\201D';
+        font-size: 60px;
+        font-weight: bold;
+        color: var(--text-color3);
+        position: absolute;
+        right: 0;
+        top: -18px;
+      }
+
+      .comment-quote-user {
+        display: flex;
+        margin-bottom: 6px;
+
+        .quote-nickname {
+          line-height: 20px;
+          font-weight: 700;
+          margin-left: 5px;
+        }
+
+        .quote-time {
+          line-height: 20px;
+          margin-left: 5px;
+          color: var(--text-color3);
+        }
+      }
+    }
+  }
+}
+</style>
