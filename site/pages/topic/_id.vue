@@ -107,6 +107,7 @@
                   :key="likeUser.id"
                   :user="likeUser"
                   :round="true"
+                  :has-border="true"
                   size="30"
                 />
               </div>
