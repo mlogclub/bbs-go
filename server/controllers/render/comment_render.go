@@ -6,12 +6,29 @@ import (
 	"bbs-go/pkg/markdown"
 	"bbs-go/services"
 	"html"
+
+	"github.com/mlogclub/simple"
 )
 
-func BuildComments(comments []model.Comment) []model.CommentResponse {
+func BuildComments(comments []model.Comment, currentUser *model.User) []model.CommentResponse {
+	if len(comments) == 0 {
+		return nil
+	}
+
+	var likedCommentIds []int64
+	if currentUser != nil {
+		var commentIds []int64
+		for _, comment := range comments {
+			commentIds = append(commentIds, comment.Id)
+		}
+		likedCommentIds = services.UserLikeService.IsLiked(currentUser.Id, constants.EntityComment, commentIds)
+	}
+
 	var ret []model.CommentResponse
 	for _, comment := range comments {
-		ret = append(ret, *BuildComment(comment))
+		item := BuildComment(comment)
+		item.Liked = simple.Contains(comment.Id, likedCommentIds)
+		ret = append(ret, *item)
 	}
 	return ret
 }

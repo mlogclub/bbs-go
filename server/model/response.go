@@ -129,6 +129,7 @@ type CommentResponse struct {
 	Content    string           `json:"content"`
 	ImageList  []ImageInfo      `json:"imageList"`
 	LikeCount  int64            `json:"likeCount"`
+	Liked      bool             `json:"liked"`
 	QuoteId    int64            `json:"quoteId"`
 	Quote      *CommentResponse `json:"quote"`
 	Status     int              `json:"status"`

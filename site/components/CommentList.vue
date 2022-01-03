@@ -48,9 +48,13 @@
             </div>
           </div>
           <div class="comment-actions">
-            <div class="comment-action-item" @click="like(comment)">
+            <div
+              class="comment-action-item"
+              :class="{ active: comment.liked }"
+              @click="like(comment)"
+            >
               <i class="iconfont icon-like"></i>
-              <span>点赞</span>
+              <span>{{ comment.liked ? '已赞' : '点赞' }}</span>
               <span v-if="comment.likeCount > 0">{{ comment.likeCount }}</span>
             </div>
             <div
@@ -123,8 +127,14 @@ export default {
       try {
         await this.$axios.post(`/api/comment/like/${comment.commentId}`)
         comment.liked = true
+        comment.likeCount = comment.likeCount + 1
+        this.$message.success('点赞成功')
       } catch (e) {
-        console.log(e)
+        if (e.errorCode === 1) {
+          this.$msgSignIn()
+        } else {
+          this.$message.error(e.message || e)
+        }
       }
     },
     switchShowReply(comment) {

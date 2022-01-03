@@ -31,9 +31,10 @@ func (c *CommentController) GetList() *simple.JsonResult {
 	if entityId, err = simple.FormValueInt64(c.Ctx, "entityId"); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	currentUser := services.UserTokenService.GetCurrent(c.Ctx)
 
 	comments, cursor, hasMore := services.CommentService.GetComments(entityType, entityId, cursor)
-	return simple.JsonCursorData(render.BuildComments(comments), strconv.FormatInt(cursor, 10), hasMore)
+	return simple.JsonCursorData(render.BuildComments(comments, currentUser), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 func (c *CommentController) PostCreate() *simple.JsonResult {
