@@ -15,14 +15,15 @@
           placeholder="请发表你的观点..."
           @submit="create"
         />
-        <simple-editor
+        <text-editor v-else />
+        <!-- <simple-editor
           v-else
           ref="simpleEditor"
           v-model="value"
           :max-word-count="500"
           height="150px"
           @submit="create"
-        />
+        /> -->
       </div>
       <div class="comment-button-wrapper">
         <span>Ctrl or ⌘ + Enter</span>
