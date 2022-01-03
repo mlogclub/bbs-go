@@ -8,6 +8,7 @@ import (
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"github.com/mlogclub/simple"
 
@@ -107,12 +108,21 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		}
 	}
 
-	if err := s.Create(comment); err != nil {
-		return nil, err
-	}
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
+		if err := repositories.CommentRepository.Create(tx, comment); err != nil {
+			return err
+		}
 
-	if form.EntityType == constants.EntityTopic {
-		TopicService.OnComment(form.EntityId, comment)
+		if form.EntityType == constants.EntityTopic {
+			TopicService.onComment(tx, form.EntityId, comment)
+		} else if form.EntityType == constants.EntityComment { // 二级评论
+			s.onComment(tx, comment)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
 	}
 
 	UserService.IncrCommentCount(userId)         // 用户跟帖计数
@@ -120,6 +130,11 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 	MessageService.SendCommentMsg(comment)       // 发送消息
 
 	return comment, nil
+}
+
+// onComment 评论被回复（二级评论）
+func (s *commentService) onComment(tx *gorm.DB, comment *model.Comment) error {
+	return repositories.CommentRepository.UpdateColumn(tx, comment.EntityId, "comment_count", gorm.Expr("comment_count + 1"))
 }
 
 // // 统计数量

@@ -73,12 +73,9 @@ func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
 		ImageList:   GetImageList(ctx, "imageList"),
 		QuoteId:     simple.FormValueInt64Default(ctx, "quoteId", 0),
-		ContentType: simple.FormValue(ctx, "contentType"),
+		ContentType: simple.FormValueDefault(ctx, "contentType", constants.ContentTypeText),
 		UserAgent:   common.GetUserAgent(ctx.Request()),
 		Ip:          common.GetRequestIP(ctx.Request()),
-	}
-	if simple.IsBlank(form.ContentType) {
-		form.ContentType = constants.ContentTypeText
 	}
 	return form
 }

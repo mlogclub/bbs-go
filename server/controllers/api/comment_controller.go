@@ -32,7 +32,6 @@ func (c *CommentController) GetList() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	currentUser := services.UserTokenService.GetCurrent(c.Ctx)
-
 	comments, cursor, hasMore := services.CommentService.GetComments(entityType, entityId, cursor)
 	return simple.JsonCursorData(render.BuildComments(comments, currentUser), strconv.FormatInt(cursor, 10), hasMore)
 }

@@ -72,7 +72,11 @@
             v-if="reply.commentId === comment.commentId"
             class="comment-reply"
           >
-            <text-editor :height="100" />
+            <text-editor
+              v-model="reply.value"
+              :height="100"
+              @submit="submitReply"
+            />
           </div>
         </div>
       </div>
@@ -105,7 +109,10 @@ export default {
       showReplyCommentId: 0,
       reply: {
         commentId: 0,
-        content: '',
+        value: {
+          content: '',
+          imageList: [],
+        },
       },
     }
   },
@@ -146,7 +153,22 @@ export default {
     },
     hideReply(comment) {
       this.reply.commentId = 0
-      this.reply.content = ''
+      this.reply.value.content = ''
+      this.reply.value.imageList = []
+    },
+    async submitReply() {
+      try {
+        await this.$axios.post('/api/comment/create', {
+          entityType: 'comment',
+          entityId: this.reply.commentId,
+          content: this.reply.value.content,
+          imageList: this.reply.value.imageList,
+        })
+        this.$message.success('发布成功')
+      } catch (e) {
+        console.error(e)
+        this.$message.error(e.message || e)
+      }
     },
   },
 }
