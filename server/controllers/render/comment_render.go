@@ -31,6 +31,7 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 		EntityType: comment.EntityType,
 		EntityId:   comment.EntityId,
 		QuoteId:    comment.QuoteId,
+		LikeCount:  comment.LikeCount,
 		Status:     comment.Status,
 		CreateTime: comment.CreateTime,
 	}

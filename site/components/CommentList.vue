@@ -48,9 +48,10 @@
             </div>
           </div>
           <div class="comment-actions">
-            <div class="comment-action-item">
+            <div class="comment-action-item" @click="like(comment)">
               <i class="iconfont icon-like"></i>
               <span>点赞</span>
+              <span v-if="comment.likeCount > 0">{{ comment.likeCount }}</span>
             </div>
             <div
               class="comment-action-item"
@@ -116,6 +117,14 @@ export default {
     append(data) {
       if (data) {
         this.$refs.commentsLoadMore.unshiftResults(data)
+      }
+    },
+    async like(comment) {
+      try {
+        await this.$axios.post(`/api/comment/like/${comment.commentId}`)
+        comment.liked = true
+      } catch (e) {
+        console.log(e)
       }
     },
     switchShowReply(comment) {

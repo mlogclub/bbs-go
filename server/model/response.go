@@ -128,6 +128,7 @@ type CommentResponse struct {
 	EntityId   int64            `json:"entityId"`
 	Content    string           `json:"content"`
 	ImageList  []ImageInfo      `json:"imageList"`
+	LikeCount  int64            `json:"likeCount"`
 	QuoteId    int64            `json:"quoteId"`
 	Quote      *CommentResponse `json:"quote"`
 	Status     int              `json:"status"`
