@@ -12,7 +12,7 @@
         <div class="comment-item-left">
           <avatar :user="comment.user" size="40" round has-border />
         </div>
-        <div class="comment-item-right">
+        <div class="comment-item-main">
           <div class="comment-meta">
             <nuxt-link
               :to="'/user/' + comment.user.id"
@@ -52,10 +52,22 @@
               <i class="iconfont icon-like"></i>
               <span>点赞</span>
             </div>
-            <div class="comment-action-item">
+            <div
+              class="comment-action-item"
+              :class="{ active: reply.commentId === comment.commentId }"
+              @click="switchShowReply(comment)"
+            >
               <i class="iconfont icon-comment"></i>
-              <span>评论</span>
+              <span>{{
+                reply.commentId === comment.commentId ? '取消评论' : '评论'
+              }}</span>
             </div>
+          </div>
+          <div
+            v-if="reply.commentId === comment.commentId"
+            class="comment-reply"
+          >
+            <simple-editor height="120px" />
           </div>
         </div>
       </div>
@@ -83,6 +95,15 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      showReplyCommentId: 0,
+      reply: {
+        commentId: 0,
+        content: '',
+      },
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.current
@@ -97,14 +118,16 @@ export default {
         this.$refs.commentsLoadMore.unshiftResults(data)
       }
     },
-    reply(quote) {
-      if (!this.isLogin) {
-        this.$toSignin()
+    switchShowReply(comment) {
+      if (this.reply.commentId === comment.commentId) {
+        this.hideReply(comment)
+      } else {
+        this.reply.commentId = comment.commentId
       }
-      this.$emit('reply', quote)
     },
-    cancelReply() {
-      this.quote = null
+    hideReply(comment) {
+      this.reply.commentId = 0
+      this.reply.content = ''
     },
   },
 }
@@ -112,13 +135,16 @@ export default {
 
 <style scoped lang="scss">
 .comments {
-  margin: 20px;
+  padding: 20px;
   .comment {
     display: flex;
     padding: 16px 0;
-    .comment-item-left {
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
     }
-    .comment-item-right {
+
+    .comment-item-main {
       flex: 1 1 auto;
       margin-left: 16px;
 
@@ -180,15 +206,25 @@ export default {
           font-size: 14px;
           cursor: pointer;
           color: var(--text-color3);
+          user-select: none;
 
           &:hover {
             color: var(--text-link-color);
+          }
+
+          &.active {
+            color: var(--text-link-color);
+            font-weight: 500;
           }
 
           &:not(:last-child) {
             margin-right: 16px;
           }
         }
+      }
+
+      .comment-reply {
+        margin-top: 10px;
       }
     }
   }
