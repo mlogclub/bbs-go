@@ -146,12 +146,28 @@ func (s *commentService) onComment(tx *gorm.DB, comment *model.Comment) error {
 
 // GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64, hasMore bool) {
-	limit := 50
+	limit := 20
 	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
 	comments = repositories.CommentRepository.Find(simple.DB(), cnd)
+	if len(comments) > 0 {
+		nextCursor = comments[len(comments)-1].Id
+		hasMore = len(comments) >= limit
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
+// GetReplies 二级回复列表
+func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (comments []model.Comment, nextCursor int64, hasMore bool) {
+	cnd := simple.NewSqlCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
+	if cursor > 0 {
+		cnd.Gt("id", cursor)
+	}
+	comments = s.Find(cnd)
 	if len(comments) > 0 {
 		nextCursor = comments[len(comments)-1].Id
 		hasMore = len(comments) >= limit

@@ -6,6 +6,7 @@ import (
 	"bbs-go/pkg/markdown"
 	"bbs-go/services"
 	"html"
+	"strconv"
 
 	"github.com/mlogclub/simple"
 )
@@ -15,14 +16,7 @@ func BuildComments(comments []model.Comment, currentUser *model.User) []model.Co
 		return nil
 	}
 
-	var likedCommentIds []int64
-	if currentUser != nil {
-		var commentIds []int64
-		for _, comment := range comments {
-			commentIds = append(commentIds, comment.Id)
-		}
-		likedCommentIds = services.UserLikeService.IsLiked(currentUser.Id, constants.EntityComment, commentIds)
-	}
+	likedCommentIds := getLikedCommentIds(comments, currentUser)
 
 	var ret []model.CommentResponse
 	for _, comment := range comments {
@@ -33,24 +27,40 @@ func BuildComments(comments []model.Comment, currentUser *model.User) []model.Co
 	return ret
 }
 
-func BuildComment(comment model.Comment) *model.CommentResponse {
-	return _buildComment(&comment, true)
+func getLikedCommentIds(comments []model.Comment, currentUser *model.User) (likedCommentIds []int64) {
+	if currentUser == nil || len(comments) == 0 {
+		return
+	}
+	var commentIds []int64
+	for _, comment := range comments {
+		commentIds = append(commentIds, comment.Id)
+	}
+	likedCommentIds = services.UserLikeService.IsLiked(currentUser.Id, constants.EntityComment, commentIds)
+	return
 }
 
-func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentResponse {
+func BuildComment(comment model.Comment) *model.CommentResponse {
+	return doBuildComment(&comment, true, false)
+}
+
+// doBuildComment 渲染评论
+// isBuildReplies 是否渲染评论的二级回复，一级评论时要设置为true，其他时候都为false
+// isBuildQuote 是否渲染评论的引用，二级回复时要设置为true，其他时候都为false
+func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *model.CommentResponse {
 	if comment == nil {
 		return nil
 	}
 
 	ret := &model.CommentResponse{
-		CommentId:  comment.Id,
-		User:       BuildUserInfoDefaultIfNull(comment.UserId),
-		EntityType: comment.EntityType,
-		EntityId:   comment.EntityId,
-		QuoteId:    comment.QuoteId,
-		LikeCount:  comment.LikeCount,
-		Status:     comment.Status,
-		CreateTime: comment.CreateTime,
+		CommentId:    comment.Id,
+		User:         BuildUserInfoDefaultIfNull(comment.UserId),
+		EntityType:   comment.EntityType,
+		EntityId:     comment.EntityId,
+		QuoteId:      comment.QuoteId,
+		LikeCount:    comment.LikeCount,
+		CommentCount: comment.CommentCount,
+		Status:       comment.Status,
+		CreateTime:   comment.CreateTime,
 	}
 
 	if comment.Status == constants.StatusOk {
@@ -67,11 +77,25 @@ func _buildComment(comment *model.Comment, buildQuote bool) *model.CommentRespon
 		ret.Content = "内容已删除"
 	}
 
-	if buildQuote && comment.QuoteId > 0 {
-		quote := _buildComment(services.CommentService.Get(comment.QuoteId), false)
+	if isBuildReplies {
+		replies, nextCursor, hasMore := services.CommentService.GetReplies(comment.Id, 0, 3)
+		var replyResults []model.CommentResponse
+		for _, reply := range replies {
+			replyResults = append(replyResults, *doBuildComment(&reply, false, true))
+		}
+		ret.Replies = &simple.CursorResult{
+			Results: replyResults,
+			Cursor:  strconv.FormatInt(nextCursor, 10),
+			HasMore: hasMore,
+		}
+	}
+
+	if isBuildQuote && comment.QuoteId > 0 {
+		quote := doBuildComment(services.CommentService.Get(comment.QuoteId), false, false)
 		if quote != nil {
 			ret.Quote = quote
 		}
 	}
+
 	return ret
 }
