@@ -1,6 +1,7 @@
 <template>
   <div class="text-editor">
     <textarea
+      v-model="post.content"
       placeholder="请输入您要发表的内容 ..."
       :style="{ 'min-height': height + 'px', height: height + 'px' }"
       @input="onInput"
@@ -9,15 +10,30 @@
       @keydown.ctrl.enter="doSubmit"
       @keydown.meta.enter="doSubmit"
     ></textarea>
+    <div v-show="showImageUpload" class="text-editor-image-uploader">
+      <image-upload
+        ref="imageUploader"
+        v-model="post.imageList"
+        :on-upload.sync="imageUploading"
+        @input="onInput"
+      />
+    </div>
     <div class="text-editor-bar">
       <div class="text-editor-actions">
-        <div class="text-editor-action-item">
+        <div
+          class="text-editor-action-item"
+          :class="{ active: showImageUpload }"
+          @click="switchImageUpload"
+        >
           <i class="iconfont icon-image" />
           <span>图片</span>
         </div>
       </div>
-      <div>
-        <button class="button is-primary is-small">发布</button>
+      <div class="text-editor-btn">
+        <span>Ctrl/⌘ + Enter</span>
+        <button class="button is-success is-small" @click="doSubmit">
+          发布
+        </button>
       </div>
     </div>
   </div>
@@ -43,15 +59,15 @@ export default {
   data() {
     return {
       post: this.value,
+      showImageUpload: false, // 是否显示图片上传
+      imageUploading: false, // 图片上传中
     }
   },
   methods: {
     doSubmit() {
-      console.log('submit...')
       this.$emit('submit')
     },
     onInput() {
-      console.log('input...')
       this.$emit('input', this.post)
     },
     isOnUpload() {
@@ -97,6 +113,20 @@ export default {
         this.$refs.imageUploader.addFiles(files)
       }
     },
+    switchImageUpload() {
+      if (!this.showImageUpload) {
+        // 打开文件弹窗
+        // this.$refs.imageUploader.onClick()
+      }
+      this.showImageUpload = !this.showImageUpload
+    },
+    clear() {
+      this.post.content = ''
+      this.post.imageList = []
+      this.showImageUpload = false
+      this.$refs.imageUploader.clear()
+      this.onInput()
+    },
   },
 }
 </script>
@@ -119,10 +149,14 @@ export default {
     transition: all 100ms linear;
   }
 
+  .text-editor-image-uploader {
+    padding: 10px;
+  }
+
   .text-editor-bar {
     background-color: var(--bg-color);
     border-top: 1px solid var(--border-color);
-    padding: 10px;
+    padding: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -146,6 +180,13 @@ export default {
           color: var(--text-link-color);
           font-weight: 500;
         }
+      }
+    }
+    .text-editor-btn {
+      span {
+        font-size: 12px;
+        color: var(--text-color3);
+        margin-right: 5px;
       }
     }
   }

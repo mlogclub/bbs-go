@@ -72,7 +72,7 @@
             v-if="reply.commentId === comment.commentId"
             class="comment-reply"
           >
-            <simple-editor height="120px" />
+            <text-editor :height="100" />
           </div>
         </div>
       </div>

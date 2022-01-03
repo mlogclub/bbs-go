@@ -15,22 +15,11 @@
           placeholder="请发表你的观点..."
           @submit="create"
         />
-        <text-editor v-else />
-        <!-- <simple-editor
+        <text-editor
           v-else
           ref="simpleEditor"
           v-model="value"
-          :max-word-count="500"
-          height="150px"
           @submit="create"
-        /> -->
-      </div>
-      <div class="comment-button-wrapper">
-        <span>Ctrl or ⌘ + Enter</span>
-        <button
-          class="button is-small is-success"
-          @click="create"
-          v-text="btnName"
         />
       </div>
     </div>
@@ -121,6 +110,7 @@ export default {
         if (this.$refs.simpleEditor) {
           this.$refs.simpleEditor.clear()
         }
+        this.$message.success('发布成功')
       } catch (e) {
         console.error(e)
         this.$message.error(e.message || e)
