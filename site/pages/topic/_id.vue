@@ -213,7 +213,7 @@ export default {
           entityId: params.id,
         },
       }),
-      $axios.get('/api/comment/list', {
+      $axios.get('/api/comment/comments', {
         params: {
           entityType: 'topic',
           entityId: params.id,

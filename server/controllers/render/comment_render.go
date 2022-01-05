@@ -15,7 +15,7 @@ func BuildComment(comment *model.Comment) *model.CommentResponse {
 	return doBuildComment(comment, true, true)
 }
 
-func BuildComments(comments []model.Comment, currentUser *model.User) []model.CommentResponse {
+func BuildComments(comments []model.Comment, currentUser *model.User, isBuildReplies, isBuildQuote bool) []model.CommentResponse {
 	if len(comments) == 0 {
 		return nil
 	}
@@ -24,7 +24,7 @@ func BuildComments(comments []model.Comment, currentUser *model.User) []model.Co
 
 	var ret []model.CommentResponse
 	for _, comment := range comments {
-		item := doBuildComment(&comment, true, false)
+		item := doBuildComment(&comment, isBuildReplies, isBuildQuote)
 		item.Liked = simple.Contains(comment.Id, likedCommentIds)
 		ret = append(ret, *item)
 	}
@@ -78,7 +78,8 @@ func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *
 	}
 
 	if isBuildReplies && comment.CommentCount > 0 {
-		replies, nextCursor, hasMore := services.CommentService.GetReplies(comment.Id, 0, 3)
+		var repliesLimit int64 = 3
+		replies, nextCursor, _ := services.CommentService.GetReplies(comment.Id, 0, int(repliesLimit))
 		var replyResults []model.CommentResponse
 		for _, reply := range replies {
 			replyResults = append(replyResults, *doBuildComment(&reply, false, true))
@@ -86,7 +87,7 @@ func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *
 		ret.Replies = &simple.CursorResult{
 			Results: replyResults,
 			Cursor:  strconv.FormatInt(nextCursor, 10),
-			HasMore: hasMore,
+			HasMore: comment.CommentCount > repliesLimit,
 		}
 	}
 

@@ -6,7 +6,7 @@
       v-slot="{ results }"
       :init-data="commentsPage"
       :params="{ entityType: entityType, entityId: entityId }"
-      url="/api/comment/list"
+      url="/api/comment/comments"
     >
       <div v-for="comment in results" :key="comment.commentId" class="comment">
         <div class="comment-item-left">
@@ -81,7 +81,7 @@
           </div>
           <sub-comment-list
             :comment-id="comment.commentId"
-            :replies="comment.replies"
+            :data="comment.replies"
             @reply="onReply(comment, $event)"
           />
         </div>
@@ -153,6 +153,11 @@ export default {
       }
     },
     switchShowReply(comment) {
+      if (!this.user) {
+        this.$msgSignIn()
+        return
+      }
+
       if (this.reply.commentId === comment.commentId) {
         this.hideReply(comment)
       } else {
@@ -182,8 +187,11 @@ export default {
         this.appendReply(parent, ret)
         this.$message.success('发布成功')
       } catch (e) {
-        console.error(e)
-        this.$message.error(e.message || e)
+        if (e.errorCode === 1) {
+          this.$msgSignIn()
+        } else {
+          this.$message.error(e.message || e)
+        }
       }
     },
     onReply(parent, comment) {

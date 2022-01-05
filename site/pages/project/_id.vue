@@ -82,7 +82,7 @@ export default {
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
       $axios.get('/api/project/' + params.id),
-      $axios.get('/api/comment/list', {
+      $axios.get('/api/comment/comments', {
         params: {
           entityType: 'project',
           entityId: params.id,

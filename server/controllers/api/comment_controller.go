@@ -16,7 +16,7 @@ type CommentController struct {
 	Ctx iris.Context
 }
 
-func (c *CommentController) GetList() *simple.JsonResult {
+func (c *CommentController) GetComments() *simple.JsonResult {
 	var (
 		err        error
 		cursor     int64
@@ -33,7 +33,17 @@ func (c *CommentController) GetList() *simple.JsonResult {
 	}
 	currentUser := services.UserTokenService.GetCurrent(c.Ctx)
 	comments, cursor, hasMore := services.CommentService.GetComments(entityType, entityId, cursor)
-	return simple.JsonCursorData(render.BuildComments(comments, currentUser), strconv.FormatInt(cursor, 10), hasMore)
+	return simple.JsonCursorData(render.BuildComments(comments, currentUser, true, false), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+func (c *CommentController) GetReplies() *simple.JsonResult {
+	var (
+		cursor    = simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+		commentId = simple.FormValueInt64Default(c.Ctx, "commentId", 0)
+	)
+	currentUser := services.UserTokenService.GetCurrent(c.Ctx)
+	comments, cursor, hasMore := services.CommentService.GetReplies(commentId, cursor, 10)
+	return simple.JsonCursorData(render.BuildComments(comments, currentUser, false, true), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 func (c *CommentController) PostCreate() *simple.JsonResult {

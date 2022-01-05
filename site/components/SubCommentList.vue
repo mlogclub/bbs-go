@@ -92,6 +92,9 @@
         </div>
       </div>
     </div>
+    <div v-if="replies.hasMore === true" class="comment-more">
+      <a @click="loadMore">查看更多回复...</a>
+    </div>
   </div>
 </template>
 
@@ -102,13 +105,14 @@ export default {
       type: Number,
       required: true,
     },
-    replies: {
+    data: {
       type: Object,
       default: null,
     },
   },
   data() {
     return {
+      replies: this.data,
       showReplyCommentId: 0,
       reply: {
         quoteId: 0,
@@ -119,7 +123,23 @@ export default {
       },
     }
   },
+  computed: {
+    user() {
+      return this.$store.state.user.current
+    },
+  },
   methods: {
+    async loadMore() {
+      const ret = await this.$axios.get('/api/comment/replies', {
+        params: {
+          commentId: this.commentId,
+          cursor: this.replies.cursor,
+        },
+      })
+      this.replies.cursor = ret.cursor
+      this.replies.hasMore = ret.hasMore
+      this.replies.results.push(...ret.results)
+    },
     async like(comment) {
       try {
         await this.$axios.post(`/api/comment/like/${comment.commentId}`)
@@ -135,6 +155,11 @@ export default {
       }
     },
     switchShowReply(comment) {
+      if (!this.user) {
+        this.$msgSignIn()
+        return
+      }
+
       if (this.reply.quoteId === comment.commentId) {
         this.hideReply(comment)
       } else {
@@ -165,8 +190,11 @@ export default {
         this.$emit('reply', ret)
         this.$message.success('发布成功')
       } catch (e) {
-        console.error(e)
-        this.$message.error(e.message || e)
+        if (e.errorCode === 1) {
+          this.$msgSignIn()
+        } else {
+          this.$message.error(e.message || e)
+        }
       }
     },
   },
@@ -323,6 +351,13 @@ export default {
 
   .reply {
     display: flex;
+  }
+
+  .comment-more {
+    margin: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-link-color);
   }
 }
 </style>
