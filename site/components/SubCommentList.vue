@@ -86,7 +86,7 @@
           <text-editor
             v-model="reply.value"
             :height="80"
-            @submit="submitReply"
+            @submit="submitReply()"
           />
         </div>
       </div>
@@ -145,9 +145,9 @@ export default {
       this.reply.value.content = ''
       this.reply.value.imageList = []
     },
-    async submitReply() {
+    async submitReply(parent) {
       try {
-        await this.$axios.post('/api/comment/create', {
+        const ret = await this.$axios.post('/api/comment/create', {
           entityType: 'comment',
           entityId: this.commentId,
           quoteId: this.reply.quoteId,
@@ -157,6 +157,8 @@ export default {
               ? JSON.stringify(this.reply.value.imageList)
               : '',
         })
+        this.hideReply()
+        this.$emit('reply', ret)
         this.$message.success('发布成功')
       } catch (e) {
         console.error(e)
@@ -254,8 +256,7 @@ export default {
           }
 
           .comment-quote-content {
-            margin-top: 5px;
-            margin-bottom: 0;
+            margin: 5px 0;
             color: var(--text-color3);
           }
 

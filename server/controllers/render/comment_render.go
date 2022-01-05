@@ -11,6 +11,10 @@ import (
 	"github.com/mlogclub/simple"
 )
 
+func BuildComment(comment *model.Comment) *model.CommentResponse {
+	return doBuildComment(comment, true, true)
+}
+
 func BuildComments(comments []model.Comment, currentUser *model.User) []model.CommentResponse {
 	if len(comments) == 0 {
 		return nil
@@ -20,7 +24,7 @@ func BuildComments(comments []model.Comment, currentUser *model.User) []model.Co
 
 	var ret []model.CommentResponse
 	for _, comment := range comments {
-		item := BuildComment(comment)
+		item := doBuildComment(&comment, true, false)
 		item.Liked = simple.Contains(comment.Id, likedCommentIds)
 		ret = append(ret, *item)
 	}
@@ -37,10 +41,6 @@ func getLikedCommentIds(comments []model.Comment, currentUser *model.User) (like
 	}
 	likedCommentIds = services.UserLikeService.IsLiked(currentUser.Id, constants.EntityComment, commentIds)
 	return
-}
-
-func BuildComment(comment model.Comment) *model.CommentResponse {
-	return doBuildComment(&comment, true, false)
 }
 
 // doBuildComment 渲染评论
@@ -77,7 +77,7 @@ func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *
 		ret.Content = "内容已删除"
 	}
 
-	if isBuildReplies {
+	if isBuildReplies && comment.CommentCount > 0 {
 		replies, nextCursor, hasMore := services.CommentService.GetReplies(comment.Id, 0, 3)
 		var replyResults []model.CommentResponse
 		for _, reply := range replies {

@@ -75,12 +75,13 @@
             <text-editor
               v-model="reply.value"
               :height="100"
-              @submit="submitReply"
+              @submit="submitReply(comment)"
             />
           </div>
           <sub-comment-list
             :comment-id="comment.commentId"
             :replies="comment.replies"
+            @reply="onReply(comment, $event)"
           />
         </div>
       </div>
@@ -162,21 +163,35 @@ export default {
       this.reply.value.content = ''
       this.reply.value.imageList = []
     },
-    async submitReply() {
+    async submitReply(parent) {
       try {
-        await this.$axios.post('/api/comment/create', {
+        const ret = await this.$axios.post('/api/comment/create', {
           entityType: 'comment',
-          entityId: this.reply.commentId,
+          entityId: parent.commentId,
           content: this.reply.value.content,
           imageList:
             this.reply.value.imageList && this.reply.value.imageList.length
               ? JSON.stringify(this.reply.value.imageList)
               : '',
         })
+        this.hideReply()
+        this.appendReply(parent, ret)
         this.$message.success('发布成功')
       } catch (e) {
         console.error(e)
         this.$message.error(e.message || e)
+      }
+    },
+    onReply(parent, comment) {
+      this.appendReply(parent, comment)
+    },
+    appendReply(parent, comment) {
+      if (parent.replies && parent.replies.results) {
+        parent.replies.results.push(comment)
+      } else {
+        parent.replies = {
+          results: [comment],
+        }
       }
     },
   },

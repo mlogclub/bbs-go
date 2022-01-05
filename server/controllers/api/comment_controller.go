@@ -51,7 +51,7 @@ func (c *CommentController) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	return simple.JsonData(render.BuildComment(*comment))
+	return simple.JsonData(render.BuildComment(comment))
 }
 
 func (c *CommentController) PostLikeBy(commentId int64) *simple.JsonResult {
