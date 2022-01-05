@@ -140,7 +140,7 @@ export default {
   textarea {
     width: 100%;
     font-family: inherit;
-    background: var(--bg-color);
+    background: var(--bg-color2);
     border: 0;
     outline: 0;
     display: block;

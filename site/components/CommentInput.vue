@@ -62,11 +62,13 @@ export default {
       return this.$store.state.user.current
     },
     inputMode() {
-      if (this.$store.state.env.isMobile) {
-        // 手机中，强制使用普通文本编辑器
-        return 'text'
-      }
-      return this.mode
+      // if (this.$store.state.env.isMobile) {
+      //   // 手机中，强制使用普通文本编辑器
+      //   return 'text'
+      // }
+      // return this.mode
+      // 强制text模式
+      return 'text'
     },
     contentType() {
       return this.inputMode === 'markdown' ? 'markdown' : 'text'
