@@ -17,7 +17,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  asyncData({ query }) {
+    return {
+      url: query.url,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
