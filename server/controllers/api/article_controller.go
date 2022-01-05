@@ -4,13 +4,11 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/urls"
 	"bbs-go/spam"
-	"math/rand"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 
-	"bbs-go/cache"
 	"bbs-go/controllers/render"
 	"bbs-go/model"
 	"bbs-go/services"
@@ -186,12 +184,6 @@ func (c *ArticleController) GetRedirectBy(articleId int64) *simple.JsonResult {
 	return simple.NewEmptyRspBuilder().Put("url", urls.ArticleUrl(articleId)).JsonResult()
 }
 
-// 最近文章
-func (c *ArticleController) GetRecent() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
-	return simple.JsonData(render.BuildSimpleArticles(articles))
-}
-
 // 用户文章列表
 func (c *ArticleController) GetUserArticles() *simple.JsonResult {
 	userId, err := simple.FormValueInt64(c.Ctx, "userId")
@@ -218,12 +210,6 @@ func (c *ArticleController) GetTagArticles() *simple.JsonResult {
 	return simple.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
 }
 
-// 用户最新的文章
-func (c *ArticleController) GetUserNewestBy(userId int64) *simple.JsonResult {
-	articles := services.ArticleService.GetUserNewestArticles(userId)
-	return simple.JsonData(render.BuildSimpleArticles(articles))
-}
-
 // 近期文章
 func (c *ArticleController) GetNearlyBy(articleId int64) *simple.JsonResult {
 	articles := services.ArticleService.GetNearlyArticles(articleId)
@@ -234,36 +220,4 @@ func (c *ArticleController) GetNearlyBy(articleId int64) *simple.JsonResult {
 func (c *ArticleController) GetRelatedBy(articleId int64) *simple.JsonResult {
 	relatedArticles := services.ArticleService.GetRelatedArticles(articleId)
 	return simple.JsonData(render.BuildSimpleArticles(relatedArticles))
-}
-
-// 推荐
-func (c *ArticleController) GetRecommend() *simple.JsonResult {
-	articles := cache.ArticleCache.GetRecommendArticles()
-	if len(articles) == 0 {
-		return simple.JsonSuccess()
-	} else {
-		dest := make([]model.Article, len(articles))
-		perm := rand.Perm(len(articles))
-		for i, v := range perm {
-			dest[v] = articles[i]
-		}
-		end := 10
-		if end > len(articles) {
-			end = len(articles)
-		}
-		ret := dest[0:end]
-		return simple.JsonData(render.BuildSimpleArticles(ret))
-	}
-}
-
-// 最新文章
-func (c *ArticleController) GetNewest() *simple.JsonResult {
-	articles := services.ArticleService.Find(simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(5))
-	return simple.JsonData(render.BuildSimpleArticles(articles))
-}
-
-// 热门文章
-func (c *ArticleController) GetHot() *simple.JsonResult {
-	articles := cache.ArticleCache.GetHotArticles()
-	return simple.JsonData(render.BuildSimpleArticles(articles))
 }
