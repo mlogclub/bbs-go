@@ -73,6 +73,7 @@
             class="comment-reply-form"
           >
             <text-editor
+              :ref="`editor${comment.commentId}`"
               v-model="reply.value"
               :height="100"
               @submit="submitReply(comment)"
@@ -156,6 +157,9 @@ export default {
         this.hideReply(comment)
       } else {
         this.reply.commentId = comment.commentId
+        setTimeout(() => {
+          this.$refs[`editor${comment.commentId}`][0].focus()
+        }, 0)
       }
     },
     hideReply(comment) {

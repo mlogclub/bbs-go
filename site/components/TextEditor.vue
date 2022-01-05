@@ -1,6 +1,7 @@
 <template>
   <div class="text-editor">
     <textarea
+      ref="textarea"
       v-model="post.content"
       placeholder="请输入您要发表的内容 ..."
       :style="{ 'min-height': height + 'px', height: height + 'px' }"
@@ -127,6 +128,9 @@ export default {
       this.$refs.imageUploader.clear()
       this.onInput()
     },
+    focus() {
+      this.$refs.textarea.focus()
+    },
   },
 }
 </script>
@@ -136,7 +140,6 @@ export default {
   textarea {
     width: 100%;
     font-family: inherit;
-    // background: var(--bg-color2);
     background: var(--bg-color);
     border: 0;
     outline: 0;
