@@ -12,7 +12,7 @@ import (
 )
 
 func BuildComment(comment *model.Comment) *model.CommentResponse {
-	return doBuildComment(comment, true, true)
+	return doBuildComment(comment, nil, true, true)
 }
 
 func BuildComments(comments []model.Comment, currentUser *model.User, isBuildReplies, isBuildQuote bool) []model.CommentResponse {
@@ -24,7 +24,7 @@ func BuildComments(comments []model.Comment, currentUser *model.User, isBuildRep
 
 	var ret []model.CommentResponse
 	for _, comment := range comments {
-		item := doBuildComment(&comment, isBuildReplies, isBuildQuote)
+		item := doBuildComment(&comment, currentUser, isBuildReplies, isBuildQuote)
 		item.Liked = simple.Contains(comment.Id, likedCommentIds)
 		ret = append(ret, *item)
 	}
@@ -46,7 +46,7 @@ func getLikedCommentIds(comments []model.Comment, currentUser *model.User) (like
 // doBuildComment 渲染评论
 // isBuildReplies 是否渲染评论的二级回复，一级评论时要设置为true，其他时候都为false
 // isBuildQuote 是否渲染评论的引用，二级回复时要设置为true，其他时候都为false
-func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *model.CommentResponse {
+func doBuildComment(comment *model.Comment, currentUser *model.User, isBuildReplies, isBuildQuote bool) *model.CommentResponse {
 	if comment == nil {
 		return nil
 	}
@@ -80,10 +80,11 @@ func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *
 	if isBuildReplies && comment.CommentCount > 0 {
 		var repliesLimit int64 = 3
 		replies, nextCursor, _ := services.CommentService.GetReplies(comment.Id, 0, int(repliesLimit))
-		var replyResults []model.CommentResponse
-		for _, reply := range replies {
-			replyResults = append(replyResults, *doBuildComment(&reply, false, true))
-		}
+		//var replyResults []model.CommentResponse
+		//for _, reply := range replies {
+		//	replyResults = append(replyResults, *doBuildComment(&reply, false, true))
+		//}
+		replyResults := BuildComments(replies, currentUser, false, true)
 		ret.Replies = &simple.CursorResult{
 			Results: replyResults,
 			Cursor:  strconv.FormatInt(nextCursor, 10),
@@ -92,7 +93,7 @@ func doBuildComment(comment *model.Comment, isBuildReplies, isBuildQuote bool) *
 	}
 
 	if isBuildQuote && comment.QuoteId > 0 {
-		quote := doBuildComment(services.CommentService.Get(comment.QuoteId), false, false)
+		quote := doBuildComment(services.CommentService.Get(comment.QuoteId), currentUser, false, false)
 		if quote != nil {
 			ret.Quote = quote
 		}

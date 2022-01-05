@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="replies && replies.results && replies.results.length"
-    class="replies"
-  >
+  <div class="replies">
     <div
       v-for="comment in replies.results"
       :key="comment.commentId"
@@ -13,9 +10,23 @@
       </div>
       <div class="comment-item-main">
         <div class="comment-meta">
-          <nuxt-link :to="'/user/' + comment.user.id" class="comment-nickname">
-            {{ comment.user.nickname }}
-          </nuxt-link>
+          <div>
+            <nuxt-link
+              :to="'/user/' + comment.user.id"
+              class="comment-nickname"
+            >
+              {{ comment.user.nickname }}
+            </nuxt-link>
+            <template v-if="comment.quote">
+              <span>回复</span>
+              <nuxt-link
+                :to="'/user/' + comment.quote.user.id"
+                class="comment-nickname"
+              >
+                {{ comment.quote.user.nickname }}
+              </nuxt-link>
+            </template>
+          </div>
           <time
             class="comment-time"
             :datetime="comment.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"
@@ -107,7 +118,7 @@ export default {
     },
     data: {
       type: Object,
-      default: null,
+      required: true,
     },
   },
   data() {
@@ -242,7 +253,7 @@ export default {
         .comment-content {
           margin-top: 5px;
           margin-bottom: 0;
-          color: var(--text-color3);
+          color: var(--text-color2);
         }
         .comment-image-list {
           margin-top: 5px;

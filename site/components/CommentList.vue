@@ -80,6 +80,11 @@
             />
           </div>
           <sub-comment-list
+            v-if="
+              comment.replies &&
+              comment.replies.results &&
+              comment.replies.results.length
+            "
             :comment-id="comment.commentId"
             :data="comment.replies"
             @reply="onReply(comment, $event)"
@@ -250,7 +255,7 @@ export default {
         .comment-content {
           margin-top: 10px;
           margin-bottom: 0;
-          color: var(--text-color3);
+          color: var(--text-color);
         }
         .comment-image-list {
           margin-top: 10px;
