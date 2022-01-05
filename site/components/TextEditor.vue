@@ -136,7 +136,8 @@ export default {
   textarea {
     width: 100%;
     font-family: inherit;
-    background: var(--bg-color2);
+    // background: var(--bg-color2);
+    background: var(--bg-color);
     border: 0;
     outline: 0;
     display: block;
@@ -183,6 +184,8 @@ export default {
       }
     }
     .text-editor-btn {
+      display: flex;
+      align-items: center;
       span {
         font-size: 12px;
         color: var(--text-color3);

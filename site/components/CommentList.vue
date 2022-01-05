@@ -70,7 +70,7 @@
           </div>
           <div
             v-if="reply.commentId === comment.commentId"
-            class="comment-reply"
+            class="comment-reply-form"
           >
             <text-editor
               v-model="reply.value"
@@ -78,6 +78,10 @@
               @submit="submitReply"
             />
           </div>
+          <sub-comment-list
+            :comment-id="comment.commentId"
+            :replies="comment.replies"
+          />
         </div>
       </div>
     </load-more>
@@ -85,7 +89,9 @@
 </template>
 
 <script>
+import SubCommentList from './SubCommentList.vue'
 export default {
+  components: { SubCommentList },
   props: {
     entityType: {
       type: String,
@@ -162,7 +168,10 @@ export default {
           entityType: 'comment',
           entityId: this.reply.commentId,
           content: this.reply.value.content,
-          imageList: this.reply.value.imageList,
+          imageList:
+            this.reply.value.imageList && this.reply.value.imageList.length
+              ? JSON.stringify(this.reply.value.imageList)
+              : '',
         })
         this.$message.success('发布成功')
       } catch (e) {
@@ -177,6 +186,8 @@ export default {
 <style scoped lang="scss">
 .comments {
   padding: 20px;
+  font-size: 14px;
+
   .comment {
     display: flex;
     padding: 16px 0;
@@ -193,7 +204,7 @@ export default {
         display: flex;
         justify-content: space-between;
         .comment-nickname {
-          font-size: 15px;
+          font-size: 14px;
           font-weight: 600;
           color: var(--text-color);
 
@@ -203,7 +214,7 @@ export default {
         }
 
         .comment-time {
-          font-size: 14px;
+          font-size: 13px;
           color: var(--text-color3);
         }
       }
@@ -244,7 +255,7 @@ export default {
 
         .comment-action-item {
           line-height: 22px;
-          font-size: 14px;
+          font-size: 13px;
           cursor: pointer;
           color: var(--text-color3);
           user-select: none;
@@ -264,10 +275,20 @@ export default {
         }
       }
 
-      .comment-reply {
+      .comment-reply-form {
         margin-top: 10px;
       }
+
+      .comment-replies {
+        margin-top: 10px;
+        // padding: 10px;
+        background-color: var(--bg-color2);
+      }
     }
+  }
+
+  .reply {
+    display: flex;
   }
 }
 </style>
