@@ -54,8 +54,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './assets/styles/variable';
-
 .dock-nav {
   display: block;
   position: -webkit-sticky;
@@ -64,7 +62,7 @@ export default {
 
   width: 150px;
   border-radius: 2px;
-  background-color: #fff;
+  background-color: var(--bg-color);
   transition: all 0.2s linear;
 
   ul {
@@ -81,7 +79,7 @@ export default {
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      color: #2e3135;
+      color: var(--text-color);
       //padding: 0 12px;
       border-radius: 3px;
       transition: background-color 0.2s, color 0.2s;
@@ -93,10 +91,10 @@ export default {
 
       &.active {
         background-color: #ea6f5a;
-        color: #fff;
+        color: var(--text-color5);
 
         a {
-          color: #fff;
+          color: var(--text-color5);
         }
       }
 
@@ -107,7 +105,7 @@ export default {
       a {
         text-decoration: none;
         cursor: pointer;
-        color: #909090;
+        color: var(--text-color3);
         width: 100%;
         height: 100%;
         text-align: center;
@@ -122,14 +120,14 @@ export default {
           height: 24px;
           border-radius: 4px;
           margin-right: 10px;
-          background: #fff;
+          background-color: var(--bg-color);
         }
       }
     }
 
     li.dock-nav-divider {
       height: 15px;
-      border-bottom: 1px solid $border-color-base;
+      border-bottom: 1px solid var(--border-color);
     }
   }
 }

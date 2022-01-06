@@ -1,5 +1,3 @@
-@import "./variable";
-
 .topic-list {
   .topic-item {
     padding: 12px 12px;
@@ -9,14 +7,14 @@
     transition: background 0.5s;
     // border-bottom: 1px solid #f2f2f2;
     border-radius: 6px;
-    background: #ffffff;
+    background: var(--bg-color);
 
     &:not(:last-child) {
       margin-bottom: 10px;
     }
 
     &:hover {
-      background: #f3f6f9;
+      background: var(--bg-color2);
     }
 
     .topic-main-content {
@@ -33,7 +31,7 @@
           a {
             font-weight: 700;
             font-size: 16px;
-            color: #606266;
+            color: var(--text-color3);
             display: flex;
             max-width: 250px;
             overflow: hidden;
@@ -46,7 +44,7 @@
         }
 
         .topic-time {
-          color: #8590a6;
+          color: var(--text-color3);
           font-size: 12px;
           float: right;
         }
@@ -71,7 +69,7 @@
             // color: #3273dc;
             font-size: 16px;
             font-weight: 600;
-            color: #000000;
+            color: var(--text-color);
 
             &:hover {
               //color: #3273dc;
@@ -86,7 +84,7 @@
           margin-bottom: 6px;
           width: 100%;
           text-decoration: none;
-          color: #525252;
+          color: var(--text-color2);
           word-wrap: break-word;
 
           overflow: hidden;
@@ -100,7 +98,7 @@
 
         &.topic-tweet {
           .topic-summary {
-            color: #000;
+            color: var(--text-color);
             white-space: pre-line;
           }
         }
@@ -115,7 +113,7 @@
             display: inline-block;
             vertical-align: middle;
             margin: 0 8px 8px 0;
-            background-color: #e8e8e8;
+            background-color: var(--bg-color2);
             background-size: 32px 32px;
             background-position: 50%;
             background-repeat: no-repeat;
@@ -192,7 +190,7 @@
           flex: 1;
 
           .btn {
-            color: #8590a6;
+            color: var(--text-color3);
             cursor: pointer;
 
             &:not(:last-child) {
@@ -200,7 +198,7 @@
             }
 
             &:hover {
-              color: #1878f3;
+              color: var(--text-link-color);
             }
 
             i {
@@ -215,6 +213,7 @@
           span {
             font-size: 11px;
             margin-left: 6px;
+
             a {
               //height: 25px;
               padding: 0 8px;
@@ -223,15 +222,15 @@
               align-items: center;
               border-radius: 12.5px;
               margin-right: 10px;
-              background: #ebeef5;
-              border: 1px solid #dcdfe6;
-              color: #777;
+              background: var(--bg-color2);
+              border: 1px solid var(--border-color2);
+              color: var(--text-color3);
               font-size: 12px;
 
               &:hover {
-                color: #1878f3;
-                background: #fff;
-                border: 1px solid #1878f3;
+                color: var(--text-link-color);
+                background: var(--bg-color);
+                border: 1px solid var(--border-hover-color);
               }
             }
           }
@@ -239,7 +238,7 @@
       }
 
       .liked {
-        color: $color-red !important;
+        color: var(--color-red) !important;
       }
     }
 

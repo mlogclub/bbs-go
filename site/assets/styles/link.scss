@@ -5,15 +5,8 @@
     padding-top: 5px;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #eeeeee;
+      border-bottom: 1px solid var(--border-color);
     }
-
-    //&:hover {
-    //  cursor: pointer;
-    //  // background-color: #f7f5ee;
-    //  background-color: #fafafa;
-    //  border: none;
-    //}
 
     .link-logo {
       display: inline-block;
@@ -33,7 +26,7 @@
       .link-title {
         font-size: 15px;
         font-weight: 600;
-        color: #3273dc;
+        color: var(--text-link-color);
 
         overflow: hidden;
         word-break: break-all;

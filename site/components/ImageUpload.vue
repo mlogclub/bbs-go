@@ -271,21 +271,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './assets/styles/variable.scss';
-
 .image-uploads {
   display: flex;
   flex-wrap: wrap;
 
   .preview-item {
     position: relative;
-    // border-radius: 5px;
-    // border: 1px solid $border-color-base;
-    border: 2px dashed #e8e8e8;
-    // margin-right: 10px;
-    // margin-bottom: 10px;
-    // width: 94px;
-    // height: 94px;
+    border: 2px dashed var(--border-color);
 
     &.deleted {
       transition: 1s all;
@@ -315,7 +307,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      color: #6d6d6d;
+      color: var(--text-color2);
       background: rgba(255, 255, 255, 0.5);
       font-size: 12px;
       display: flex;
@@ -341,7 +333,7 @@ export default {
       i.iconfont {
         font-size: 14px;
         fill: white;
-        color: #fff;
+        color: var(--text-color5);
         font-weight: 700;
       }
     }
@@ -355,11 +347,7 @@ export default {
 
   .add-image-btn {
     cursor: pointer;
-    // width: 94px;
-    // height: 94px;
-    // border-radius: 5px;
-    // border: 1px dashed $color-blue-base;
-    border: 2px dashed #e8e8e8;
+    border: 2px dashed var(--border-color);
     position: relative;
 
     input[type='file'] {
@@ -373,7 +361,7 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #1878f3;
+      color: #1878f3; // TODO
     }
   }
 }

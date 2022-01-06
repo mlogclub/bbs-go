@@ -67,7 +67,7 @@ export default {
 .projects {
   .project {
     &:not(:last-child) {
-      border-bottom: 1px dashed #f4f4f5;
+      border-bottom: 1px dashed var(--border-color);
     }
     padding-top: 5px;
     padding-bottom: 5px;
@@ -99,7 +99,7 @@ export default {
       span {
         display: inline-block;
         font-size: 13px;
-        color: #999;
+        color: var(--text-color3);
         padding-top: 6px;
 
         &:not(:first-child) {
@@ -107,11 +107,11 @@ export default {
         }
 
         a {
-          color: #999;
+          color: var(--text-color3);
           cursor: pointer;
 
           &:hover {
-            color: #3273dc;
+            color: var(--text-link-color);
             font-weight: 500;
           }
         }

@@ -8,6 +8,7 @@ import (
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"github.com/mlogclub/simple"
 
@@ -93,6 +94,8 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		ContentType: simple.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
 		Status:      constants.StatusOk,
+		UserAgent:   form.UserAgent,
+		Ip:          form.Ip,
 		CreateTime:  date.NowTimestamp(),
 	}
 
@@ -105,12 +108,21 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		}
 	}
 
-	if err := s.Create(comment); err != nil {
-		return nil, err
-	}
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
+		if err := repositories.CommentRepository.Create(tx, comment); err != nil {
+			return err
+		}
 
-	if form.EntityType == constants.EntityTopic {
-		TopicService.OnComment(form.EntityId, comment)
+		if form.EntityType == constants.EntityTopic {
+			TopicService.onComment(tx, form.EntityId, comment)
+		} else if form.EntityType == constants.EntityComment { // 二级评论
+			s.onComment(tx, comment)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
 	}
 
 	UserService.IncrCommentCount(userId)         // 用户跟帖计数
@@ -118,6 +130,11 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 	MessageService.SendCommentMsg(comment)       // 发送消息
 
 	return comment, nil
+}
+
+// onComment 评论被回复（二级评论）
+func (s *commentService) onComment(tx *gorm.DB, comment *model.Comment) error {
+	return repositories.CommentRepository.UpdateColumn(tx, comment.EntityId, "comment_count", gorm.Expr("comment_count + 1"))
 }
 
 // // 统计数量
@@ -129,12 +146,28 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 
 // GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64, hasMore bool) {
-	limit := 50
+	limit := 20
 	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
 	comments = repositories.CommentRepository.Find(simple.DB(), cnd)
+	if len(comments) > 0 {
+		nextCursor = comments[len(comments)-1].Id
+		hasMore = len(comments) >= limit
+	} else {
+		nextCursor = cursor
+	}
+	return
+}
+
+// GetReplies 二级回复列表
+func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (comments []model.Comment, nextCursor int64, hasMore bool) {
+	cnd := simple.NewSqlCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
+	if cursor > 0 {
+		cnd.Gt("id", cursor)
+	}
+	comments = s.Find(cnd)
 	if len(comments) > 0 {
 		nextCursor = comments[len(comments)-1].Id
 		hasMore = len(comments) >= limit

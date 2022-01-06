@@ -23,17 +23,17 @@ export default {}
 <style lang="scss" scoped>
 .footer {
   font-size: 14px;
-  color: #666;
+  color: var(--text-color3);
   background: none;
   text-align: left;
   margin: 0 10px;
   a {
-    color: #666;
+    color: var(--text-color3);
     text-decoration: none;
   }
 
   .light {
-    color: #eb5424;
+    color: #eb5424; // TODO
     font-weight: bold;
   }
 }

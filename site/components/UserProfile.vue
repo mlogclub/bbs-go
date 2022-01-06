@@ -183,9 +183,9 @@ export default {
         font-size: 18px;
         font-weight: 700;
         a {
-          color: #000;
+          color: var(--text-color);
           &:hover {
-            color: #000;
+            color: var(--text-color);
             text-decoration: underline;
           }
         }
@@ -193,15 +193,15 @@ export default {
 
       .description {
         font-size: 14px;
-        color: #4a4a4a;
+        color: var(--text-color);
       }
 
       .homepage {
         font-size: 14px;
         a {
-          color: #555;
+          color: var(--color2);
           &:hover {
-            color: #3273dc;
+            color: var(--text-link-color);
             text-decoration: underline;
           }
         }

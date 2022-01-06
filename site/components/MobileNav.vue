@@ -22,7 +22,7 @@
       </div>
       <div class="nav-right">
         <create-topic-btn class="create-topic-btn">
-          <i class="iconfont icon-plus" style="color: #4a4a4a" />
+          <i class="iconfont icon-plus" style="color: var(--text-color)" />
         </create-topic-btn>
       </div>
     </nav>

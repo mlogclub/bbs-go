@@ -141,10 +141,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './assets/styles/variable.scss';
-
 .simple-editor {
-  border: 1px solid hsla(0, 0%, 89.4%, 0.6);
+  border: 1px solid var(--border-color);
   border-radius: 3px;
   position: relative;
   width: 100%;
@@ -155,11 +153,10 @@ export default {
     display: flex;
     padding: 0 10px;
     align-items: center;
-    background: #ffffff;
-    // position: sticky;
+    background-color: var(--bg-color);
     top: 65px;
     z-index: 6;
-    border-bottom: 1px solid $border-color-base;
+    border-bottom: 1px solid var(--border-color);
 
     .act-btn {
       display: flex;
@@ -190,7 +187,7 @@ export default {
       > .tip {
         font-size: 14px;
         margin-right: 10px;
-        color: #d0d4dc;
+        color: var(--text-color4);
       }
     }
   }
@@ -200,7 +197,7 @@ export default {
 
     textarea {
       font-family: inherit;
-      background: $background-color-editor;
+      background: var(--bg-color2);
       width: 100%;
       // min-height: 200px;
       border: 0;
@@ -217,7 +214,7 @@ export default {
   }
 
   .simple-editor-image-upload {
-    background: $background-color-editor;
+    background: var(--bg-color2);
     padding: 20px 20px 20px;
   }
 }

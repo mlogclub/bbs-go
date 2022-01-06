@@ -20,6 +20,9 @@ const axiosInstance = axios.create({
 
 // 设置form请求
 axiosInstance.form = function (url, data, config) {
+  if (!data) {
+    data = {};
+  }
   data[formatFormDataKey] = "formData";
   return this.post(url, data, config);
 };

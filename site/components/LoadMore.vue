@@ -2,14 +2,16 @@
   <div class="load-more">
     <slot :results="results" />
     <div class="has-more">
-      <el-button
-        size="small"
-        :type="hasMore ? 'primary' : 'info'"
-        :loading="loading"
-        :disabled="!hasMore"
+      <button
+        class="button is-primary is-small"
+        :disabled="!hasMore || loading"
         @click="loadMore"
-        >{{ hasMore ? '查看更多' : '到底啦' }}</el-button
       >
+        <span v-if="loading" class="icon">
+          <i class="iconfont icon-loading"></i>
+        </span>
+        <span>{{ hasMore ? '查看更多' : '到底啦' }}</span>
+      </button>
     </div>
   </div>
 </template>
@@ -111,8 +113,12 @@ export default {
   .no-more {
     text-align: center;
     padding: 10px 0;
-    color: #8590a6;
+    color: var(--text-color3);
     font-size: 14px;
+  }
+
+  .icon-loading {
+    animation: rotating 3s infinite linear;
   }
 }
 </style>

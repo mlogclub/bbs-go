@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-input {
-  background: #fff;
+  background-color: var(--bg-color);
   padding: 10px;
   text-align: center;
 }

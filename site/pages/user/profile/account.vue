@@ -395,8 +395,8 @@ export default {
 
 .modal {
   .widget {
-    background: #ffffff;
-    margin: 0px;
+    background-color: var(--bg-color);
+    margin: 0;
     padding: 10px;
   }
 }

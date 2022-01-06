@@ -15,21 +15,11 @@
           placeholder="请发表你的观点..."
           @submit="create"
         />
-        <simple-editor
+        <text-editor
           v-else
           ref="simpleEditor"
           v-model="value"
-          :max-word-count="500"
-          height="150px"
           @submit="create"
-        />
-      </div>
-      <div class="comment-button-wrapper">
-        <span>Ctrl or ⌘ + Enter</span>
-        <button
-          class="button is-small is-success"
-          @click="create"
-          v-text="btnName"
         />
       </div>
     </div>
@@ -72,11 +62,13 @@ export default {
       return this.$store.state.user.current
     },
     inputMode() {
-      if (this.$store.state.env.isMobile) {
-        // 手机中，强制使用普通文本编辑器
-        return 'text'
-      }
-      return this.mode
+      // if (this.$store.state.env.isMobile) {
+      //   // 手机中，强制使用普通文本编辑器
+      //   return 'text'
+      // }
+      // return this.mode
+      // 强制text模式
+      return 'text'
     },
     contentType() {
       return this.inputMode === 'markdown' ? 'markdown' : 'text'
@@ -120,6 +112,7 @@ export default {
         if (this.$refs.simpleEditor) {
           this.$refs.simpleEditor.clear()
         }
+        this.$message.success('发布成功')
       } catch (e) {
         console.error(e)
         this.$message.error(e.message || e)
@@ -141,4 +134,72 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.comment-form {
+  background-color: var(--bg-color);
+  padding: 10px;
+  margin-bottom: 10px;
+
+  .comment-create {
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    padding: 0;
+    box-sizing: border-box;
+
+    .comment-quote-info {
+      font-size: 13px;
+      color: var(--text-color);
+      margin-bottom: 3px;
+      font-weight: 600;
+
+      i {
+        font-size: 12px !important;
+        color: var(--text-link-color);
+        cursor: pointer;
+      }
+
+      i:hover {
+        color: red;
+      }
+    }
+
+    .comment-input-wrapper {
+      margin-bottom: 8px;
+
+      .text-input {
+        outline: none;
+        width: 100%;
+        height: 85px;
+        font-size: 14px;
+        padding: 10px 40px 10px 10px;
+        color: var(--text-color);
+        line-height: 16px;
+        max-width: 100%;
+        resize: none;
+        border: 1px solid var(--border-color);
+        box-sizing: border-box;
+        border-radius: var(--jinsom-border-radius);
+      }
+    }
+
+    .comment-button-wrapper {
+      user-select: none;
+      display: flex;
+      float: right;
+      height: 30px;
+      line-height: 30px;
+
+      span {
+        color: var(--text-color4);
+        font-size: 13px;
+        margin-right: 5px;
+      }
+
+      button {
+        font-weight: 500;
+      }
+    }
+  }
+}
+</style>
