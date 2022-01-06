@@ -178,12 +178,12 @@ export default {
   }
 
   $search-box-width: 380px;
-  $border-color: #4e6ef2;
+  $border-color: #4e6ef2; // TODO
 
   &.input-focus {
     .search-input {
-      background-color: #fff;
-      border: 1px solid #8590a6;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color3);
     }
     .icon-search {
       color: #0065ff;
@@ -198,8 +198,8 @@ export default {
 
   .search-input {
     width: $search-box-width;
-    background-color: #f6f6f6;
-    border: 1px solid #ebebeb;
+    background-color: var(--bg-color2);
+    border: 1px solid var(--border-color);
     height: 34px;
     border-radius: 17px;
     padding: 4px 10px;
@@ -210,7 +210,7 @@ export default {
     transition-timing-function: ease-in;
 
     input {
-      color: #121212;
+      color: var(--text-color);
       font-weight: 400;
       font-size: 13px;
       height: 24px;
@@ -237,8 +237,8 @@ export default {
     top: 48px;
     position: fixed;
 
-    background: #fff;
-    border: 1px solid #ebebeb;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     box-shadow: 0 5px 20px rgb(18 18 18 / 10%);
     z-index: 203;
@@ -272,7 +272,7 @@ export default {
           width: 100%;
           font-size: 13px;
           font-weight: 400;
-          color: #121212;
+          color: var(--text-color);
         }
         &:hover {
           i.iconfont {
@@ -288,7 +288,7 @@ export default {
           }
         }
         &.selected {
-          background-color: #f6f6f6;
+          background-color: var(--bg-color2);
         }
       }
     }

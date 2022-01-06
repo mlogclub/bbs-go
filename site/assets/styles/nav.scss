@@ -8,7 +8,7 @@ $sidebarZIndex: 50;
   top: 0;
   right: 0;
   left: 0;
-  background-color: #fff;
+  background-color: var(--bg-color);
   box-shadow: 0 2px 0 0 #f5f5f5;
   padding: 0 16px;
 }
@@ -35,7 +35,7 @@ $sidebarZIndex: 50;
 
       i {
         font-size: 24px;
-        color: #D8D8D8;
+        color: var(--text-color4)
       }
     }
   }
@@ -57,8 +57,7 @@ $sidebarZIndex: 50;
 
     .menu-item {
       font-size: 16px;
-      // color: #999999;
-      color: #333333;
+      color: var(--text-color);
       font-weight: 500;
       letter-spacing: 0;
       text-align: left;
@@ -68,7 +67,7 @@ $sidebarZIndex: 50;
       user-select: none;
 
       a {
-        color: #333333;
+        color: var(--text-color);
       }
 
       .iconfont {
@@ -101,12 +100,12 @@ $sidebarZIndex: 50;
 
 .mobile-nodes {
   .nodes {
-    background: #fff;
+    background: var(--bg-color);
     position: fixed;
     z-index: $navZIndex;
     width: 100%;
     padding: 18px;
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid var(--border-color);
     left: 0;
     top: 46px;
 
@@ -120,8 +119,7 @@ $sidebarZIndex: 50;
     }
 
     .node-item {
-      background: #f6f6f7;
-      border-radius: 4px;
+      background: var(--bg-color2);
       border-radius: 4px;
       min-width: 108px;
       height: 40px;
@@ -133,18 +131,19 @@ $sidebarZIndex: 50;
       flex-wrap: wrap;
       font-weight: 400;
       font-size: 14px;
-      color: #333333;
+      color: var(--text-color);
       letter-spacing: 0.5px;
       text-align: center;
       cursor: pointer;
 
       a {
-        color: #333333;
+        color: var(--text-color);
       }
 
-      &.active {
-        background: #faeee1;
-      }
+      //&.active {
+      //  // TODO
+      //  background: #faeee1;
+      //}
     }
   }
 }
@@ -156,7 +155,7 @@ $sidebarZIndex: 50;
   .sidebar-container {
     opacity: 1;
     height: 100vh;
-    background-color: #fff;
+    background-color: var(--bg-color);
     width: 220px;
     position: fixed;
     z-index: 50;
@@ -164,13 +163,11 @@ $sidebarZIndex: 50;
     top: 0;
 
     padding: 32px 24px;
-
     font-size: 14px;
-    color: #333333;
     letter-spacing: 0.5px;
 
     a {
-      color: #333333;
+      color: var(--text-color);
     }
 
     .sidebar-message,
@@ -187,7 +184,7 @@ $sidebarZIndex: 50;
     .sidebar-message,
     .sidebar-navs {
       padding-bottom: 15px;
-      border-bottom: 1px solid #F6F6F6;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .sidebar-navs {

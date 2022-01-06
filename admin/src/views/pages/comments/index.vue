@@ -60,7 +60,7 @@
 
                 <div class="tools">
                   <span v-if="item.status === 1" class="item info">已删除</span>
-                  <a class="item" @click="handleDelete(item)">删除</a>
+                  <a v-else class="item" @click="handleDelete(item)">删除</a>
                 </div>
               </div>
               <div class="summary" v-html="item.content" />

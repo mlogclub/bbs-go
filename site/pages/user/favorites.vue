@@ -96,7 +96,7 @@ export default {
     overflow: hidden;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #f2f2f2;
+      border-bottom: 1px solid var(--border-color);
     }
 
     &.more {
@@ -110,7 +110,7 @@ export default {
 
     .favorite-title {
       a {
-        color: #999;
+        color: var(--text-color3);
         font-weight: normal;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -120,7 +120,7 @@ export default {
     }
 
     .favorite-summary {
-      color: #000;
+      color: var(--text-color);
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -142,11 +142,11 @@ export default {
       }
 
       a {
-        color: #3273dc;
+        color: var(--text-link-color);
       }
 
       span {
-        color: #999;
+        color: var(--text-color3);
       }
     }
   }

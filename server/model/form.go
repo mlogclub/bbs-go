@@ -2,6 +2,7 @@ package model
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -18,6 +19,8 @@ type CreateTopicForm struct {
 	Content     string
 	Tags        []string
 	ImageList   []ImageDTO
+	UserAgent   string
+	Ip          string
 }
 
 type CreateArticleForm struct {
@@ -37,6 +40,8 @@ type CreateCommentForm struct {
 	ImageList   []ImageDTO `form:"imageList"`
 	QuoteId     int64      `form:"quoteId"`
 	ContentType string     `form:"contentType"`
+	UserAgent   string     `form:"userAgent"`
+	Ip          string     `form:"ip"`
 }
 
 type ImageDTO struct {
@@ -56,6 +61,8 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
 		Tags:        simple.FormValueStringArray(ctx, "tags"),
 		ImageList:   GetImageList(ctx, "imageList"),
+		UserAgent:   common.GetUserAgent(ctx.Request()),
+		Ip:          common.GetRequestIP(ctx.Request()),
 	}
 }
 
@@ -66,10 +73,9 @@ func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
 		ImageList:   GetImageList(ctx, "imageList"),
 		QuoteId:     simple.FormValueInt64Default(ctx, "quoteId", 0),
-		ContentType: simple.FormValue(ctx, "contentType"),
-	}
-	if simple.IsBlank(form.ContentType) {
-		form.ContentType = constants.ContentTypeText
+		ContentType: simple.FormValueDefault(ctx, "contentType", constants.ContentTypeText),
+		UserAgent:   common.GetUserAgent(ctx.Request()),
+		Ip:          common.GetRequestIP(ctx.Request()),
 	}
 	return form
 }

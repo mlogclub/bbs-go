@@ -82,7 +82,7 @@ export default {
   async asyncData({ $axios, params, store }) {
     const [project, commentsPage] = await Promise.all([
       $axios.get('/api/project/' + params.id),
-      $axios.get('/api/comment/list', {
+      $axios.get('/api/comment/comments', {
         params: {
           entityType: 'project',
           entityId: params.id,
@@ -129,7 +129,7 @@ export default {
 
   .project-header {
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     .project-name {
       font-size: 18px;
       font-weight: 700;
@@ -145,7 +145,7 @@ export default {
     .project-meta {
       span {
         font-size: 14px;
-        color: #999;
+        color: var(--text-color3);
         padding-top: 6px;
 
         &:not(:first-child) {
@@ -153,11 +153,11 @@ export default {
         }
 
         a {
-          color: #999;
+          color: var(--text-color3);
           cursor: pointer;
 
           &:hover {
-            color: #3273dc;
+            color: var(--text-link-color);
             font-weight: 500;
           }
         }
@@ -167,7 +167,7 @@ export default {
 
   .footer {
     .homepage {
-      border: 1px solid #f4f4f5;
+      border: 1px solid var(--border-color);
       padding: 10px;
       border-radius: 3px;
       font-weight: 900;

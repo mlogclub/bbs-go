@@ -261,11 +261,11 @@ export default {
 <style lang="scss" scoped>
 .select-tags {
   display: flex;
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color2);
   border-radius: 4px;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
-  color: #363636;
+  color: var(--text-color);
   padding: 0 8px;
 
   .input {
@@ -282,7 +282,7 @@ export default {
       margin: 5px;
       padding: 0 10px;
       background: #eee;
-      color: #000;
+      color: var(--text-color);
       line-height: 30px;
       border-radius: 5px;
 
@@ -319,9 +319,9 @@ export default {
       scroll-behavior: smooth;
       position: relative;
       background: #f7f7f7;
-      border-left: 1px solid #dbdbdb;
-      border-right: 1px solid #dbdbdb;
-      border-bottom: 1px solid #dbdbdb;
+      border-left: 1px solid var(--border-color2);
+      border-right: 1px solid var(--border-color2);
+      border-bottom: 1px solid var(--border-color2);
 
       .tag-section {
         font-size: 14px;
@@ -333,7 +333,7 @@ export default {
 
           &.active,
           &:hover {
-            color: #fff;
+            color: var(--text-color5);
             background: #006bde;
           }
         }
@@ -353,16 +353,16 @@ export default {
       scroll-behavior: smooth;
       position: relative;
       background: #f7f7f7;
-      border-left: 1px solid #dbdbdb;
-      border-right: 1px solid #dbdbdb;
-      border-bottom: 1px solid #dbdbdb;
+      border-left: 1px solid var(--border-color2);
+      border-right: 1px solid var(--border-color2);
+      border-bottom: 1px solid var(--border-color2);
       padding: 0 10px 10px 10px;
 
       .header {
         font-weight: bold;
         font-size: 15px;
         color: #017e66;
-        border-bottom: 1px solid #dbdbdb;
+        border-bottom: 1px solid var(--border-color2);
         margin-bottom: 5px;
         padding-top: 5px;
         padding-bottom: 5px;
@@ -404,7 +404,7 @@ export default {
       .tag-item:hover,
       .tag-item:focus {
         background-color: #017e66;
-        color: #fff;
+        color: var(--text-color5);
         text-decoration: none;
       }
     }

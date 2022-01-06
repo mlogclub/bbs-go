@@ -61,13 +61,13 @@ export default {
 .follow-btn {
   font-size: 12px;
   height: 25px;
-  background-color: #2469f6;
+  background-color: #2469f6; // TODO
   border-color: #2469f6;
-  color: #ffffff;
+  color: var(--text-color5);
 
   &:hover,
   &.is-followed {
-    background-color: #7ba5f9;
+    background-color: #7ba5f9; // TODO
     border-color: #7ba5f9;
   }
   i {

@@ -109,14 +109,13 @@ export default {
   display: flex;
   padding-top: 20px;
   margin: 0 10px;
-  // border-top: 1px solid rgba(228, 228, 228, 0.6);
-  color: #6d6d6d;
+  color: var(--text-color3);
   font-size: 16px;
 }
 
 .comment-not-login {
   margin: 10px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--border-color);
   border-radius: 0;
   overflow: hidden;
   position: relative;
@@ -124,7 +123,7 @@ export default {
   box-sizing: border-box;
 
   .comment-login-div {
-    color: #d5d5d5;
+    color: var(--text-color4);
     cursor: pointer;
     border-radius: 3px;
     padding: 0 10px;

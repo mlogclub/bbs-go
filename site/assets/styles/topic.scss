@@ -1,4 +1,3 @@
-@import "./variable";
 @import "./topic-list";
 @import "./topic-detail";
 
@@ -21,7 +20,7 @@
 }
 
 .topic-create-form {
-  background: #ffffff;
+  background: var(--bg-color);
   padding: 30px;
 
   .tag {
@@ -30,11 +29,11 @@
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #777;
+    color: var(--text-color3);
 
     &.selected {
-      color: #fff;
-      background: #1878f3;
+      color: var(--text-color5);
+      background: var(--text-link-color);
     }
   }
 }

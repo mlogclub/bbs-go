@@ -51,7 +51,7 @@ export default {
     padding: 10px 0;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .score-user-info {
@@ -61,7 +61,7 @@ export default {
       font-size: 12px;
       .score-nickname {
         font-size: 14px;
-        color: #333;
+        color: var(--text-color);
         line-height: 20px;
 
         &:hover {
@@ -70,7 +70,7 @@ export default {
       }
       .score-desc {
         font-size: 11px;
-        color: #999;
+        color: var(--text-color3);
         line-height: 20px;
         display: block;
       }
@@ -81,12 +81,12 @@ export default {
       .score-user-score {
         float: right;
         border-radius: 12px;
-        color: #778087;
+        color: var(--text-color3);
         height: 21px;
         line-height: 21px;
         padding: 0 6px;
         text-shadow: 0 0 1px #fff;
-        background-color: #f5f5f5;
+        background-color: var(--bg-color2);
         font-size: 0.75rem;
         align-items: center;
         i {

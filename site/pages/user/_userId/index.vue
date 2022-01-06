@@ -130,7 +130,7 @@ export default {
 
 <style lang="scss" scoped>
 .tabs-warp {
-  background: #fff;
+  background-color: var(--bg-color);
   padding: 0 10px 10px;
 
   .tabs {

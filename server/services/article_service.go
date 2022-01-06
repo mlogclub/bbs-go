@@ -249,12 +249,6 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 	return s.GetArticleInIds(articleIds)
 }
 
-// 用户最新文章
-func (s *articleService) GetUserNewestArticles(userId int64) []model.Article {
-	return repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("user_id = ? and status = ?",
-		userId, constants.StatusOk).Desc("id").Limit(10))
-}
-
 // 近期文章
 func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
 	articles := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))

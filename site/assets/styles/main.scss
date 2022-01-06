@@ -1,12 +1,13 @@
-@import './common';
-@import './topic';
-@import './article';
-@import './comment';
-@import './link';
-@import './highlightjs';
-@import './nav';
-@import './ad';
-@import './signin';
+@charset "UTF-8";
+@import './variable';
+@import "./bulma";
+@import "./common";
+@import "./topic";
+@import "./article";
+@import "./link";
+@import "./highlightjs";
+@import "./nav";
+@import "./signin";
 
 $animationDuration: 0.3s;
-@import 'vue2-animate/src/sass/vue2-animate.scss';
+@import "vue2-animate/src/sass/vue2-animate.scss";

@@ -38,7 +38,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .user-simple {
-  background: #fff;
+  background-color: var(--bg-color);
   padding: 0;
   margin: 0 0 10px 0;
 
@@ -78,7 +78,7 @@ export default {
   .extra-info {
     padding: 0 10px;
     background: rgba(0, 0, 0, 0.01);
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid var(--border-color);
     ul.extra-data {
       display: flex;
       li {
@@ -87,7 +87,7 @@ export default {
         span {
           font-size: 13px;
           font-weight: 400;
-          color: #868e96;
+          color: var(--text-color3);
         }
       }
     }

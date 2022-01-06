@@ -35,11 +35,8 @@ func BuildSimpleTopics(topics []model.Topic, currentUser *model.User) []model.To
 
 	var responses []model.TopicResponse
 	for _, topic := range topics {
-		var (
-			liked = simple.Contains(topic.Id, likedTopicIds)
-			item  = BuildSimpleTopic(&topic)
-		)
-		item.Liked = liked
+		item := BuildSimpleTopic(&topic)
+		item.Liked = simple.Contains(topic.Id, likedTopicIds)
 		responses = append(responses, *item)
 	}
 	return responses

@@ -65,7 +65,7 @@ export default {
 .msg-notice {
   .msgicon {
     font-size: 16px;
-    color: #4a4a4a;
+    color: var(--text-color);
 
     &:hover {
       color: red;
@@ -99,12 +99,12 @@ export default {
         -webkit-box-orient: vertical;
         display: -webkit-box;
         &:not(:last-child) {
-          border-bottom: 1px solid #f7f7f7;
+          border-bottom: 1px solid var(--border-color);
         }
       }
     }
     .msgfooter {
-      border-top: 1px solid #f7f7f7;
+      border-top: 1px solid var(--border-color);
       text-align: right;
       a {
         font-size: 13px;

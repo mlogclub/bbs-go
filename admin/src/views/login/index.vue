@@ -20,6 +20,7 @@
           type="text"
           tabindex="1"
           autocomplete="on"
+          @keyup.enter.native="handleLogin"
         />
       </el-form-item>
 
@@ -49,6 +50,7 @@
           type="text"
           tabindex="3"
           autocomplete="off"
+          @keyup.enter.native="handleLogin"
         />
         <div v-if="loginForm.captchaUrl" class="captcha-code-img">
           <a @click="showCaptcha"><img :src="loginForm.captchaUrl" /></a>
@@ -212,7 +214,7 @@ export default {
     .title {
       font-size: 26px;
       color: #000;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
     }

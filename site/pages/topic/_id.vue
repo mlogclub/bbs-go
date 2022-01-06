@@ -107,6 +107,7 @@
                   :key="likeUser.id"
                   :user="likeUser"
                   :round="true"
+                  :has-border="true"
                   size="30"
                 />
               </div>
@@ -212,7 +213,7 @@ export default {
           entityId: params.id,
         },
       }),
-      $axios.get('/api/comment/list', {
+      $axios.get('/api/comment/comments', {
         params: {
           entityType: 'topic',
           entityId: params.id,

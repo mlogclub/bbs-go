@@ -44,11 +44,11 @@ export default {
 
 <style lang="scss" scoped>
 .topic-search-items {
-  background: #fff;
+  background-color: var(--bg-color);
   .topic-search-item {
     padding: 10px;
     margin-bottom: 8px;
-    background: #fff;
+    background-color: var(--bg-color);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     .topic-search-item-title {
       font-weight: bold;
@@ -59,7 +59,7 @@ export default {
     }
     .topic-mates {
       font-size: 80%;
-      color: #8a9aa9;
+      color: var(--text-color3);
       span {
         margin-right: 10px;
       }

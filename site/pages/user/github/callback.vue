@@ -68,11 +68,11 @@ export default {
 <style lang="scss" scoped>
 .loading {
   .modal-background {
-    background-color: rgba(10, 10, 10, 0.6);
+    background-color: var(--bg-color-alpha);
   }
   .modal-content {
     text-align: center;
-    color: #fdfdfd;
+    color: var(--text-color5);
     font-weight: bold;
     font-size: 18px;
   }

@@ -6,11 +6,12 @@ import (
 	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
 	"github.com/mlogclub/simple"
-	"math/rand"
-	"strconv"
+	"net"
+	"net/http"
+	"strings"
 )
 
-// 是否是正式环境
+// IsProd 是否是正式环境
 func IsProd() bool {
 	return config.Instance.Env == "prod"
 }
@@ -26,19 +27,31 @@ func GetSummary(contentType string, content string) (summary string) {
 	return
 }
 
-// 截取markdown摘要
+// GetMarkdownSummary 截取markdown摘要
 func GetMarkdownSummary(markdownStr string) string {
 	return markdown.GetSummary(markdownStr, constants.SummaryLen)
 }
 
-// 生成随机验证码
-func RandomCode(len int) string {
-	if len <= 0 {
-		len = 4
+// GetRequestIP 尽最大努力实现获取客户端 IP 的算法。
+// 解析 X-Real-IP 和 X-Forwarded-For 以便于反向代理（nginx 或 haproxy）可以正常工作。
+func GetRequestIP(r *http.Request) string {
+	xForwardedFor := r.Header.Get("X-Forwarded-For")
+	ip := strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
+	if ip != "" {
+		return ip
 	}
-	var code string
-	for i := 0; i < len; i++ {
-		code += strconv.Itoa(rand.Intn(10))
+
+	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
+	if ip != "" {
+		return ip
 	}
-	return code
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
+		return ip
+	}
+	return ""
+}
+
+func GetUserAgent(r *http.Request) string {
+	return r.Header.Get("User-Agent")
 }

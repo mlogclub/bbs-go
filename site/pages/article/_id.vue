@@ -179,7 +179,7 @@ export default {
     }
     const [commentsPage, favorited, nearlyArticles, relatedArticles] =
       await Promise.all([
-        $axios.get('/api/comment/list', {
+        $axios.get('/api/comment/comments', {
           params: {
             entityType: 'article',
             entityId: article.articleId,

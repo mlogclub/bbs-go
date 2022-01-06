@@ -19,7 +19,7 @@
   }
 
   .third-party-line {
-    border-bottom: 1px solid #dedede;
+    border-bottom: 1px solid var(--border-color2);
     margin-bottom: 24px;
 
     .third-party-title {
@@ -27,7 +27,7 @@
       text-align: center;
 
       span {
-        background-color: #fff;
+        background-color: var(--bg-color);
         padding: 0 10px;
         font-size: 13px;
       }
