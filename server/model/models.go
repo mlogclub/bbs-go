@@ -106,7 +106,7 @@ type Comment struct {
 	ContentType  string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`            // 内容类型：markdown、html
 	QuoteId      int64  `gorm:"not null"  json:"quoteId" form:"quoteId"`                                    // 引用的评论编号
 	LikeCount    int64  `gorm:"not null;default:0" json:"likeCount" form:"likeCount"`                       // 点赞数量
-	CommentCount int64  `gorm:"not null" json:"commentCount" form:"commentCount"`                           // 评论数量
+	CommentCount int64  `gorm:"not null;default:0" json:"commentCount" form:"commentCount"`                 // 评论数量
 	UserAgent    string `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                // UserAgent
 	Ip           string `gorm:"size:128" json:"ip" form:"ip"`                                               // IP
 	Status       int    `gorm:"int;index:idx_comment_status" json:"status" form:"status"`                   // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
