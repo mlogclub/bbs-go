@@ -217,12 +217,12 @@ export default {
 
 <style scoped lang="scss">
 .comments {
-  padding: 20px;
+  padding: 10px;
   font-size: 14px;
 
   .comment {
     display: flex;
-    padding: 16px 0;
+    padding: 10px 0;
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--border-color);
