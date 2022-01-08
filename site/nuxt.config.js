@@ -1,6 +1,3 @@
-const isProduction = process.env.NODE_ENV === 'production'
-const isDocker = process.env.NODE_ENV === 'docker'
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -97,11 +94,7 @@ export default {
   },
 
   proxy: {
-    '/api/': isProduction
-      ? 'https://mlog.club'
-      : isDocker
-      ? 'http://bbs-go-server:8082'
-      : 'http://127.0.0.1:8082',
+    '/api/': 'http://127.0.0.1:8082',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
