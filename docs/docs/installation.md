@@ -24,7 +24,7 @@ bbs-go数据库使用的是MySQL，MySQL最低版本要求为5.7（或者MariaDB
 
 数据库成功安装之后，请通过工具（工具自行选择，我喜欢用mysql-cli，也可以用Navicat、TablePlus、MySQLWorkbench...）连接数据库，然后使用以下Sql脚本初始化`bbs-go`必须需的数据库表：
 
-<div style="background-color: #F7EABC; padding: 10px;">
+<div style="background-color: #F7EABC; padding: 20px;">
  <div><strong>⚠️注意⚠️</strong></div>
  <div>一、Sql脚本会初始化默认管理员用户，用户名：<span style="color:red;">admin</span>，密码：<span style="color:red;">123456</span></div>
  <div>二、该Sql脚本只会创建启动时必须的表，bbs-go系统使用的其他表会在系统正确启动后自动创建；</div>
