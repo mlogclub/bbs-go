@@ -33,10 +33,6 @@ export default {
         title: '话题',
         href: '/topic_atom.xml',
       },
-      {
-        rel: 'stylesheet',
-        href: '//at.alicdn.com/t/font_1142441_mzbbxjvb41r.css',
-      },
     ],
   },
 
