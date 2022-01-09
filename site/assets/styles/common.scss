@@ -266,6 +266,7 @@ $main-container-width: null; // 主栏目的宽度
     .slabel {
       color: var(--text-color);
       flex-shrink: 0;
+      margin-right: 18px;
     }
 
     .svalue {
@@ -404,14 +405,11 @@ span.search-highlight {
   }
 }
 
-
 @keyframes rotating {
   0% {
-    transform: rotate(
-        0deg);
+    transform: rotate(0deg);
   }
   100% {
-    transform: rotate(
-        1turn);
+    transform: rotate(1turn);
   }
 }

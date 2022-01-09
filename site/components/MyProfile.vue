@@ -13,7 +13,15 @@
       </div>
       <div class="str">
         <div class="slabel">签名</div>
-        <div class="svalue">{{ user.description }}</div>
+        <div class="svalue">
+          {{ user.description }}
+        </div>
+      </div>
+      <div v-if="user.homePage" class="str">
+        <div class="slabel">主页</div>
+        <div class="svalue">
+          <a :href="user.homePage" rel="nofollow">{{ user.homePage }}</a>
+        </div>
       </div>
     </div>
   </div>
