@@ -301,7 +301,7 @@ site模块的配置很简单，只需要配置：server端服务地址即可。�
 
 ```js
 proxy: {
-  '/api/': 'http://localhost:8082'
+    '/api/': 'http://localhost:8082'
 },
 ```
 
@@ -342,7 +342,40 @@ cnpm install
 
 ### 配置
 
+admin 模块的配置文件分为开发环境和生产环境，文件分别为：
+
+```
+/admin/.env.development
+/admin/.env.production
+```
+
+在使用开发模式运行服务时使用`/admin/.env.development`配置文件，在打包时使用`/admin/.env.production`配置文件。
+
+配置文件中主要有两个配置项：
+
+```
+# 接口请求地址HOST，用于admin模块请求服务端接口
+# 该配置的值一般设置为server端的HOST，或者site端的HOST（因为site端代理了server端的所有接口）
+VUE_APP_BASE_API = 'http://localhost:8082'
+
+# site模块访问根目录，作用：例如后台点击帖子标题时，能够正确跳转到帖子site端的访问路径
+VUE_APP_BASE_URL = 'https://mlog.club'
+```
+
 ### 运行
+
+确保依赖安装成功、配置正确后，可以使用命令：
+```bash
+npm run serve
+```
+来启动admin服务，使用该命令启动服务，会使用配置：`/admin/.env.development`
 
 ### 打包
 
+确保依赖安装成功、配置正确后，可以使用命令：
+```bash
+npm run build
+```
+来打包`bbs-go-admin`模块，打包时会使用配置：`/admin/.env.production`
+
+打包的成果为：`/admin/dist/`文件夹，将该文件夹部署到nginx或者其他web容器中即可正常访问。
