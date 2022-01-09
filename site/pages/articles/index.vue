@@ -1,30 +1,11 @@
 <template>
-  <section class="main">
-    <div class="container main-container is-white left-main size-320">
-      <div class="left-container">
-        <load-more
-          v-slot="{ results }"
-          :init-data="articlesPage"
-          url="/api/article/articles"
-        >
-          <article-list :articles="results" :show-ad="true" />
-        </load-more>
-      </div>
-      <div class="right-container">
-        <site-notice />
-
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
-
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
-      </div>
-    </div>
-  </section>
+  <load-more
+    v-slot="{ results }"
+    :init-data="articlesPage"
+    url="/api/article/articles"
+  >
+    <article-list :articles="results" :show-ad="true" />
+  </load-more>
 </template>
 
 <script>

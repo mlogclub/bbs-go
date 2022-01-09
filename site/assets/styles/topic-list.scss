@@ -5,8 +5,7 @@
     position: relative;
     overflow: hidden;
     transition: background 0.5s;
-    // border-bottom: 1px solid #f2f2f2;
-    border-radius: 6px;
+    border-radius: 3px;
     background: var(--bg-color);
 
     &:not(:last-child) {

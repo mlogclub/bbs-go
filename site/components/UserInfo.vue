@@ -41,6 +41,7 @@ export default {
   background-color: var(--bg-color);
   padding: 0;
   margin: 0 0 10px 0;
+  border-radius: 3px;
 
   .user-background {
     text-align: center;
