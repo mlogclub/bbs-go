@@ -2,13 +2,25 @@ module.exports = {
     title: 'BBS-GO',
     description: '基于Go语言的开源BBS系统',
     themeConfig: {
-        search: true,
         nav: [
             {text: 'Home', link: '/'},
-            {text: 'Guide', link: '/guide/'},
-            {text: '码农俱乐部', link: 'https://mlog.club'},
+            {text: '文档', link: '/introduction'},
+            {text: '官网', link: 'https://mlog.club'},
         ],
-
+        sidebar: [
+            {
+                title: '简介',
+                path: '/introduction',
+                collapsable: true,
+            },
+            {
+                title: '安装',
+                path: '/installation',
+                collapsable: true,
+            },
+        ],
+        sidebarDepth: 2,
+        search: true,
         // 以下为可选的编辑链接选项
         // 假如你的文档仓库和项目本身不在一个仓库：
         repo: 'mlogclub/bbs-go',
