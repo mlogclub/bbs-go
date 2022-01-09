@@ -359,7 +359,7 @@ admin 模块的配置文件分为开发环境和生产环境，文件分别为�
 VUE_APP_BASE_API = 'http://localhost:8082'
 
 # site模块访问根目录，作用：例如后台点击帖子标题时，能够正确跳转到帖子site端的访问路径
-VUE_APP_BASE_URL = 'https://mlog.club'
+VUE_APP_BASE_URL = 'http://localhost:3000'
 ```
 
 ### 运行
