@@ -1,38 +1,21 @@
 <template>
-  <section class="main">
-    <div class="container main-container left-main size-360">
-      <div class="left-container">
-        <div class="main-content no-padding no-bg topics-wrapper">
-          <div class="topics-nav">
-            <topics-nav :nodes="nodes" />
-          </div>
-          <div class="topics-main">
-            <load-more
-              v-if="topicsPage"
-              v-slot="{ results }"
-              :init-data="topicsPage"
-              url="/api/feed/topics"
-            >
-              <topic-list :topics="results" :show-ad="true" />
-            </load-more>
-          </div>
-        </div>
-      </div>
-      <div class="right-container">
-        <check-in />
-        <site-notice />
-        <score-rank :score-rank="scoreRank" />
-        <friend-links :links="links" />
-      </div>
-    </div>
-  </section>
+  <div class="topics-main">
+    <load-more
+      v-if="topicsPage"
+      v-slot="{ results }"
+      :init-data="topicsPage"
+      url="/api/feed/topics"
+    >
+      <topic-list :topics="results" :show-ad="true" />
+    </load-more>
+  </div>
 </template>
 
 <script>
 export default {
   async asyncData({ $axios, store }) {
     store.commit('env/setCurrentNodeId', -2) // 设置当前所在node
-    let topicsPage, nodes, scoreRank, links
+    let topicsPage
     try {
       // TODO 这里没登陆，或者没有数据的时候页面上要显示相应的引导内容
       if (store.state.user.current) {
@@ -41,16 +24,7 @@ export default {
     } catch (e) {
       console.log(e.message || e)
     }
-    try {
-      ;[nodes, scoreRank, links] = await Promise.all([
-        $axios.get('/api/topic/nodes'),
-        $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks'),
-      ])
-    } catch (e) {
-      console.error(e)
-    }
-    return { nodes, topicsPage, scoreRank, links }
+    return { topicsPage }
   },
   head() {
     return {

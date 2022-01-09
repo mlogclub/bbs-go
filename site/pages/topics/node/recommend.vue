@@ -1,31 +1,14 @@
 <template>
-  <section class="main">
-    <div class="container main-container left-main size-360">
-      <div class="left-container">
-        <div class="main-content no-padding no-bg topics-wrapper">
-          <div class="topics-nav">
-            <topics-nav :nodes="nodes" />
-          </div>
-          <div class="topics-main">
-            <load-more
-              v-if="topicsPage"
-              v-slot="{ results }"
-              :init-data="topicsPage"
-              url="/api/topic/topics?recommend=true"
-            >
-              <topic-list :topics="results" :show-ad="true" />
-            </load-more>
-          </div>
-        </div>
-      </div>
-      <div class="right-container">
-        <check-in />
-        <site-notice />
-        <score-rank :score-rank="scoreRank" />
-        <friend-links :links="links" />
-      </div>
-    </div>
-  </section>
+  <div class="topics-main">
+    <load-more
+      v-if="topicsPage"
+      v-slot="{ results }"
+      :init-data="topicsPage"
+      url="/api/topic/topics?recommend=true"
+    >
+      <topic-list :topics="results" :show-ad="true" />
+    </load-more>
+  </div>
 </template>
 
 <script>
@@ -33,13 +16,10 @@ export default {
   async asyncData({ $axios, store }) {
     store.commit('env/setCurrentNodeId', -1) // 设置当前所在node
     try {
-      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
-        $axios.get('/api/topic/nodes'),
+      const [topicsPage] = await Promise.all([
         $axios.get('/api/topic/topics?recommend=true'),
-        $axios.get('/api/user/score/rank'),
-        $axios.get('/api/link/toplinks'),
       ])
-      return { nodes, topicsPage, scoreRank, links }
+      return { topicsPage }
     } catch (e) {
       console.error(e)
     }
