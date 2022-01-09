@@ -4,5 +4,18 @@
 $widescreen-enabled: true;
 $fullhd-enabled: false;
 $body-background-color: var(--body-bg-color);
+$body-background-dark: var(--body-bg-color);
 
 @import '/node_modules/bulma/bulma.sass';
+@import "/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
+
+.dark-mode {
+  a.navbar-item, .navbar-link {
+    &:focus,
+    &:focus-within,
+    &:hover,
+    &.is-active {
+      background-color: var(--bg-color);
+    }
+  }
+}

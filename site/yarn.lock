@@ -1387,7 +1387,7 @@
 
 "@nuxtjs/color-mode@^2.1.1":
   version "2.1.1"
-  resolved "https://registry.npmmirror.com/@nuxtjs/color-mode/download/@nuxtjs/color-mode-2.1.1.tgz#374f995f56a8fe27c6263ab865a034a50e90c1ea"
+  resolved "https://registry.nlark.com/@nuxtjs/color-mode/download/@nuxtjs/color-mode-2.1.1.tgz#374f995f56a8fe27c6263ab865a034a50e90c1ea"
   integrity sha1-N0+ZX1ao/ifGJjq4ZaA0pQ6Qweo=
   dependencies:
     defu "^5.0.0"
