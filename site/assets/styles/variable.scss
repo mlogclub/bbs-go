@@ -22,21 +22,21 @@
   --color-red: #fa5151;
 }
 
-// .dark-mode {
-//   --text-color: findColorInvert(#4a4a4a);
-//   --text-color2: findColorInvert(#555);
-//   --text-color3: findColorInvert(#70727c);
-//   --text-color4: findColorInvert(#d8d8d8);
-//   --text-color5: findColorInvert(#fff);
-//   --text-link-color: findColorInvert(#3273dc);
-//   --text-link-hover-color: findColorInvert(#363636);
+.dark-mode {
+  --text-color: findColorInvert(#4a4a4a);
+  --text-color2: findColorInvert(#555);
+  --text-color3: findColorInvert(#70727c);
+  --text-color4: findColorInvert(#d8d8d8);
+  --text-color5: findColorInvert(#fff);
+  --text-link-color: findColorInvert(#3273dc);
+  --text-link-hover-color: findColorInvert(#363636);
 
-//   --body-bg-color: #2b2b2b;
-//   --bg-color: #3b3f41;
-//   --bg-color2: findColorInvert(#f7f7f7);
-//   --bg-color-alpha: rgba(29, 33, 41, 0.5); // 50%透明
+  --body-bg-color: #2b2b2b;
+  --bg-color: #3b3f41;
+  --bg-color2: findColorInvert(#f7f7f7);
+  --bg-color-alpha: rgba(29, 33, 41, 0.5); // 50%透明
 
-//   --border-color: #4a4a4a;
-//   --border-color2: #4a4a4a;
-//   --border-hover-color: findColorInvert(#1878f3);
-// }
+  --border-color: #4a4a4a;
+  --border-color2: #4a4a4a;
+  --border-hover-color: findColorInvert(#1878f3);
+}
