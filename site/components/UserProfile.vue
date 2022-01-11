@@ -31,17 +31,6 @@
         <div v-if="localUser.description" class="description">
           <p>{{ localUser.description }}</p>
         </div>
-        <!--
-        <div v-if="localUser.homePage" class="homepage">
-          <i class="iconfont icon-home"></i>
-          <a
-            :href="localUser.homePage"
-            target="_blank"
-            rel="external nofollow"
-            >{{ localUser.homePage }}</a
-          >
-        </div>
-        -->
       </div>
       <div class="action-btns">
         <follow-btn
