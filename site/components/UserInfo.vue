@@ -18,6 +18,14 @@
           <b>{{ user.score }}</b>
         </li>
         <li>
+          <span>话题</span><br />
+          <b>{{ user.topicCount }}</b>
+        </li>
+        <li>
+          <span>评论</span><br />
+          <b>{{ user.commentCount }}</b>
+        </li>
+        <li>
           <span>注册排名</span><br />
           <b>{{ user.id }}</b>
         </li>
@@ -77,7 +85,7 @@ export default {
   }
 
   .extra-info {
-    padding: 0 10px;
+    padding: 5px 0;
     background: rgba(0, 0, 0, 0.01);
     border-top: 1px solid var(--border-color);
     ul.extra-data {

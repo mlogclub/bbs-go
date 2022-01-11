@@ -10,7 +10,7 @@
           </nuxt-link>
         </li>
         <li>
-          <span>文章</span><br />
+          <span>话题</span><br />
           <b>{{ user.topicCount }}</b>
         </li>
         <li>
