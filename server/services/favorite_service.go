@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/event"
 	"errors"
 	"github.com/mlogclub/simple/date"
 
@@ -14,8 +15,7 @@ import (
 var FavoriteService = newFavoriteService()
 
 func newFavoriteService() *favoriteService {
-	return &favoriteService{
-	}
+	return &favoriteService{}
 }
 
 type favoriteService struct {
@@ -70,7 +70,7 @@ func (s *favoriteService) GetBy(userId int64, entityType string, entityId int64)
 		userId, entityType, entityId)
 }
 
-// 收藏文章
+// AddArticleFavorite 收藏文章
 func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 	article := repositories.ArticleRepository.Get(simple.DB(), articleId)
 	if article == nil || article.Status != constants.StatusOk {
@@ -79,19 +79,13 @@ func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 	return s.addFavorite(userId, constants.EntityArticle, articleId)
 }
 
-// 收藏主题
+// AddTopicFavorite 收藏主题
 func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("收藏的话题不存在")
 	}
-	if err := s.addFavorite(userId, constants.EntityTopic, topicId); err != nil {
-		return err
-	}
-
-	// 发送消息
-	MessageService.SendTopicFavoriteMsg(topicId, userId)
-	return nil
+	return s.addFavorite(userId, constants.EntityTopic, topicId)
 }
 
 func (s *favoriteService) addFavorite(userId int64, entityType string, entityId int64) error {
@@ -99,10 +93,20 @@ func (s *favoriteService) addFavorite(userId int64, entityType string, entityId 
 	if temp != nil { // 已经收藏
 		return nil
 	}
-	return repositories.FavoriteRepository.Create(simple.DB(), &model.Favorite{
+	if err := repositories.FavoriteRepository.Create(simple.DB(), &model.Favorite{
 		UserId:     userId,
 		EntityType: entityType,
 		EntityId:   entityId,
 		CreateTime: date.NowTimestamp(),
+	}); err != nil {
+		return err
+	}
+
+	// 发送事件
+	event.Send(event.UserFavoriteEvent{
+		UserId:     userId,
+		EntityId:   entityId,
+		EntityType: entityType,
 	})
+	return nil
 }

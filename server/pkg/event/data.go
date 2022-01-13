@@ -30,7 +30,7 @@ type UserLikeEvent struct {
 	EntityType string `json:"entityType"`
 }
 
-type FavoriteFavoriteEvent struct {
+type UserFavoriteEvent struct {
 	UserId     int64  `json:"userId"`
 	EntityId   int64  `json:"entityId"`
 	EntityType string `json:"entityType"`
