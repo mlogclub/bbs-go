@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/event"
 	"errors"
 	"strings"
 
@@ -114,9 +115,13 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		}
 
 		if form.EntityType == constants.EntityTopic {
-			TopicService.onComment(tx, form.EntityId, comment)
+			if err := TopicService.onComment(tx, form.EntityId, comment); err != nil {
+				return err
+			}
 		} else if form.EntityType == constants.EntityComment { // 二级评论
-			s.onComment(tx, comment)
+			if err := s.onComment(tx, comment); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
@@ -125,9 +130,15 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		return nil, err
 	}
 
-	UserService.IncrCommentCount(userId)         // 用户跟帖计数
-	UserService.IncrScoreForPostComment(comment) // 获得积分
-	MessageService.SendCommentMsg(comment)       // 发送消息
+	// 用户跟帖计数
+	UserService.IncrCommentCount(userId)
+	// 获得积分
+	UserService.IncrScoreForPostComment(comment)
+	// 发送事件
+	event.Send(event.CommentCreateEvent{
+		UserId:    userId,
+		CommentId: comment.Id,
+	})
 
 	return comment, nil
 }
