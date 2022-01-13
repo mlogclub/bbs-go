@@ -1,12 +1,12 @@
 package event
 
-// 关注
+// FollowEvent 关注
 type FollowEvent struct {
 	UserId  int64 `json:"userId"`
 	OtherId int64 `json:"otherId"`
 }
 
-// 取消关注
+// UnFollowEvent 取消关注
 type UnFollowEvent struct {
 	UserId  int64 `json:"userId"`
 	OtherId int64 `json:"otherId"`
@@ -24,17 +24,18 @@ type TopicDeleteEvent struct {
 	DeleteUserId int64 `json:"deleteUserId"`
 }
 
-type TopicLikeEvent struct {
-	UserId  int64 `json:"userId"`
-	TopicId int64 `json:"topicId"`
+type UserLikeEvent struct {
+	UserId     int64  `json:"userId"`
+	EntityId   int64  `json:"entityId"`
+	EntityType string `json:"entityType"`
 }
 
-type TopicFavoriteEvent struct {
-	UserId  int64 `json:"userId"`
-	TopicId int64 `json:"topicId"`
+type FavoriteFavoriteEvent struct {
+	UserId     int64  `json:"userId"`
+	EntityId   int64  `json:"entityId"`
+	EntityType string `json:"entityType"`
 }
 
-type TopicRecommendEvent struct {
-	UserId  int64 `json:"userId"`
-	TopicId int64 `json:"topicId"`
+type CommentCreateEvent struct {
+	CommentId int64 `json:"commentId"`
 }

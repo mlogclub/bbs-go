@@ -79,13 +79,13 @@ func (s *messageService) Delete(id int64) {
 	repositories.MessageRepository.Delete(simple.DB(), id)
 }
 
-// 获取未读消息数量
+// GetUnReadCount 获取未读消息数量
 func (s *messageService) GetUnReadCount(userId int64) (count int64) {
 	simple.DB().Where("user_id = ? and status = ?", userId, constants.MsgStatusUnread).Model(&model.Message{}).Count(&count)
 	return
 }
 
-// 将所有消息标记为已读
+// MarkRead 将所有消息标记为已读
 func (s *messageService) MarkRead(userId int64) {
 	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", constants.MsgStatusHaveRead,
 		userId, constants.MsgStatusUnread)
