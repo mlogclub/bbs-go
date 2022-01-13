@@ -129,7 +129,7 @@ func (s *messageService) SendTopicFavoriteMsg(topicId, favoriteUserId int64) {
 	})
 }
 
-// 话题被设为推荐
+// SendTopicRecommendMsg 话题被设为推荐
 func (s *messageService) SendTopicRecommendMsg(topicId int64) {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil {
@@ -144,7 +144,7 @@ func (s *messageService) SendTopicRecommendMsg(topicId int64) {
 	})
 }
 
-// 话题被删除消息
+// SendTopicDeleteMsg 话题被删除消息
 func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
 	if topic == nil {
@@ -163,7 +163,7 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 	})
 }
 
-// 评论被回复消息
+// SendCommentMsg 评论被回复消息
 func (s *messageService) SendCommentMsg(comment *model.Comment) {
 	var (
 		fromId       = comment.UserId                                          // 消息发送人
