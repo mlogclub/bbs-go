@@ -96,8 +96,6 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 		es.UpdateTopicIndex(s.Get(topicId))
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(topicId)
-		// 发送消息
-		MessageService.SendTopicDeleteMsg(topicId, deleteUserId)
 		// 发送事件
 		event.Send(event.TopicDeleteEvent{
 			UserId:       topic.UserId,
