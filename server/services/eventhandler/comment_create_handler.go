@@ -20,5 +20,4 @@ func handleCommentCreate(i interface{}) {
 
 	// 发送消息
 	services.MessageService.SendCommentMsg(comment)
-
 }
