@@ -227,18 +227,19 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 }
 
 // SendMsg 发送消息
-func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
+func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteContent string, msgType int, extraData map[string]interface{}) {
 	to := cache.UserCache.Get(toId)
 	if to == nil || to.Type != constants.UserTypeNormal {
 		return
 	}
 
 	var (
-		extraData string
-		err       error
+		err          error
+		extraDataStr string
 	)
-	if extraData, err = json.ToStr(extraDataMap); err != nil {
+	if extraDataStr, err = json.ToStr(extraData); err != nil {
 		logrus.Error(err)
+		return
 	}
 	msg := &model.Message{
 		FromId:       fromId,
@@ -247,11 +248,10 @@ func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteConten
 		Content:      content,
 		QuoteContent: quoteContent,
 		Type:         msgType,
-		ExtraData:    extraData,
+		ExtraData:    extraDataStr,
 		Status:       constants.MsgStatusUnread,
 		CreateTime:   date.NowTimestamp(),
 	}
-
 	if err = s.Create(msg); err != nil {
 		logrus.Error(err)
 	} else {
