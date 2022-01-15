@@ -77,14 +77,16 @@ const (
 	MsgStatusHaveRead = 1 // 消息已读
 )
 
+type MsgType int
+
 // 消息类型
 const (
-	MsgTypeTopicComment   = 0 // 收到话题评论
-	MsgTypeCommentReply   = 1 // 收到他人回复
-	MsgTypeTopicLike      = 2 // 收到点赞
-	MsgTypeTopicFavorite  = 3 // 话题被收藏
-	MsgTypeTopicRecommend = 4 // 话题被设为推荐
-	MsgTypeTopicDelete    = 5 // 话题被删除
+	MsgTypeTopicComment   MsgType = 0 // 收到话题评论
+	MsgTypeCommentReply   MsgType = 1 // 收到他人回复
+	MsgTypeTopicLike      MsgType = 2 // 收到点赞
+	MsgTypeTopicFavorite  MsgType = 3 // 话题被收藏
+	MsgTypeTopicRecommend MsgType = 4 // 话题被设为推荐
+	MsgTypeTopicDelete    MsgType = 5 // 话题被删除
 )
 
 // 第三方账号类型

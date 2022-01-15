@@ -1,19 +1,17 @@
 package services
 
 import (
+	"bbs-go/cache"
+	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/urls"
+	"bbs-go/repositories"
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/date"
 	"github.com/mlogclub/simple/json"
 	"github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
-
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/pkg/common"
-	"bbs-go/repositories"
 )
 
 var MessageService = newMessageService()
@@ -227,7 +225,7 @@ func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
 }
 
 // SendMsg 发送消息
-func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteContent string, msgType int, extraData map[string]interface{}) {
+func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteContent string, msgType constants.MsgType, extraData map[string]interface{}) {
 	to := cache.UserCache.Get(toId)
 	if to == nil || to.Type != constants.UserTypeNormal {
 		return
@@ -247,7 +245,7 @@ func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteConten
 		Title:        title,
 		Content:      content,
 		QuoteContent: quoteContent,
-		Type:         msgType,
+		Type:         int(msgType),
 		ExtraData:    extraDataStr,
 		Status:       constants.MsgStatusUnread,
 		CreateTime:   date.NowTimestamp(),
@@ -261,8 +259,10 @@ func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteConten
 
 // SendEmailNotice 发送邮件通知
 func (s *messageService) SendEmailNotice(msg *model.Message) {
+	msgType := constants.MsgType(msg.Type)
+
 	// 话题被删除不发送邮件提醒
-	if msg.Type == constants.MsgTypeTopicDelete {
+	if msgType == constants.MsgTypeTopicDelete {
 		return
 	}
 	user := cache.UserCache.Get(msg.UserId)
@@ -274,17 +274,17 @@ func (s *messageService) SendEmailNotice(msg *model.Message) {
 		emailTitle = siteTitle + " - 新消息提醒"
 	)
 
-	if msg.Type == constants.MsgTypeTopicComment {
+	if msgType == constants.MsgTypeTopicComment {
 		emailTitle = siteTitle + " - 收到话题评论"
-	} else if msg.Type == constants.MsgTypeCommentReply {
+	} else if msgType == constants.MsgTypeCommentReply {
 		emailTitle = siteTitle + " - 收到他人回复"
-	} else if msg.Type == constants.MsgTypeTopicLike {
+	} else if msgType == constants.MsgTypeTopicLike {
 		emailTitle = siteTitle + " - 收到点赞"
-	} else if msg.Type == constants.MsgTypeTopicFavorite {
+	} else if msgType == constants.MsgTypeTopicFavorite {
 		emailTitle = siteTitle + " - 话题被收藏"
-	} else if msg.Type == constants.MsgTypeTopicRecommend {
+	} else if msgType == constants.MsgTypeTopicRecommend {
 		emailTitle = siteTitle + " - 话题被设为推荐"
-	} else if msg.Type == constants.MsgTypeTopicDelete {
+	} else if msgType == constants.MsgTypeTopicDelete {
 		emailTitle = siteTitle + " - 话题被删除"
 	}
 
@@ -300,27 +300,4 @@ func (s *messageService) SendEmailNotice(msg *model.Message) {
 	if err != nil {
 		logrus.Error(err)
 	}
-}
-
-// 查看消息详情链接地址
-func (s *messageService) GetMessageDetailUrl(msg *model.Message) string {
-	if msg.Type == constants.MsgTypeTopicComment ||
-		msg.Type == constants.MsgTypeCommentReply {
-		entityType := gjson.Get(msg.ExtraData, "entityType")
-		entityId := gjson.Get(msg.ExtraData, "entityId")
-
-		if entityType.String() == constants.EntityArticle {
-			return urls.ArticleUrl(entityId.Int())
-		} else if entityType.String() == constants.EntityTopic {
-			return urls.TopicUrl(entityId.Int())
-		}
-	} else if msg.Type == constants.MsgTypeTopicLike ||
-		msg.Type == constants.MsgTypeTopicFavorite ||
-		msg.Type == constants.MsgTypeTopicRecommend {
-		topicId := gjson.Get(msg.ExtraData, "topicId")
-		if topicId.Exists() && topicId.Int() > 0 {
-			return urls.TopicUrl(topicId.Int())
-		}
-	}
-	return urls.AbsUrl("/user/messages")
 }
