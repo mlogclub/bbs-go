@@ -9,7 +9,7 @@ $sidebarZIndex: 50;
   right: 0;
   left: 0;
   background-color: var(--bg-color);
-  box-shadow: 0 2px 0 0 #f5f5f5;
+  box-shadow: 0 2px 0 0 var(--border-color);
   padding: 0 16px;
 }
 
@@ -183,7 +183,7 @@ $sidebarZIndex: 50;
 
     .sidebar-message,
     .sidebar-navs {
-      padding-bottom: 15px;
+      padding: 7px 0;
       border-bottom: 1px solid var(--border-color);
     }
 

@@ -119,6 +119,7 @@ export default {
 .navbar {
   /*opacity: 0.99;*/
   /*border-bottom: 1px solid #e7edf3;*/
+  background-color: var(--bg-color);
 
   .navbar-item {
     font-weight: 700;
