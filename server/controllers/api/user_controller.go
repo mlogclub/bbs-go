@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/msg"
 	"bbs-go/pkg/validate"
 	"strconv"
 	"strings"
@@ -199,7 +200,7 @@ func (c *UserController) GetMsgrecent() *simple.JsonResult {
 	if user != nil {
 		count = services.MessageService.GetUnReadCount(user.Id)
 		messages = services.MessageService.Find(simple.NewSqlCnd().Eq("user_id", user.Id).
-			Eq("status", constants.MsgStatusUnread).Limit(3).Desc("id"))
+			Eq("status", msg.StatusUnread).Limit(3).Desc("id"))
 	}
 	return simple.NewEmptyRspBuilder().Put("count", count).Put("messages", render.BuildMessages(messages)).JsonResult()
 }

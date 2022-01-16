@@ -3,6 +3,7 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/msg"
 	"bbs-go/pkg/urls"
 	"github.com/tidwall/gjson"
 )
@@ -46,22 +47,22 @@ func BuildMessages(messages []model.Message) []model.MessageResponse {
 }
 
 // getMessageDetailUrl 查看消息详情链接地址
-func getMessageDetailUrl(msg *model.Message) string {
-	msgType := constants.MsgType(msg.Type)
-	if msgType == constants.MsgTypeTopicComment ||
-		msgType == constants.MsgTypeCommentReply {
-		entityType := gjson.Get(msg.ExtraData, "entityType")
-		entityId := gjson.Get(msg.ExtraData, "entityId")
+func getMessageDetailUrl(t *model.Message) string {
+	msgType := msg.Type(t.Type)
+	if msgType == msg.TypeTopicComment ||
+		msgType == msg.TypeCommentReply {
+		entityType := gjson.Get(t.ExtraData, "entityType")
+		entityId := gjson.Get(t.ExtraData, "entityId")
 
 		if entityType.String() == constants.EntityArticle {
 			return urls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == constants.EntityTopic {
 			return urls.TopicUrl(entityId.Int())
 		}
-	} else if msgType == constants.MsgTypeTopicLike ||
-		msgType == constants.MsgTypeTopicFavorite ||
-		msgType == constants.MsgTypeTopicRecommend {
-		topicId := gjson.Get(msg.ExtraData, "topicId")
+	} else if msgType == msg.TypeTopicLike ||
+		msgType == msg.TypeTopicFavorite ||
+		msgType == msg.TypeTopicRecommend {
+		topicId := gjson.Get(t.ExtraData, "topicId")
 		if topicId.Exists() && topicId.Int() > 0 {
 			return urls.TopicUrl(topicId.Int())
 		}

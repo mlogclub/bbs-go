@@ -71,24 +71,6 @@ const (
 	ContentTypeText     = "text"
 )
 
-// 消息状态
-const (
-	MsgStatusUnread   = 0 // 消息未读
-	MsgStatusHaveRead = 1 // 消息已读
-)
-
-type MsgType int
-
-// 消息类型
-const (
-	MsgTypeTopicComment   MsgType = 0 // 收到话题评论
-	MsgTypeCommentReply   MsgType = 1 // 收到他人回复
-	MsgTypeTopicLike      MsgType = 2 // 收到点赞
-	MsgTypeTopicFavorite  MsgType = 3 // 话题被收藏
-	MsgTypeTopicRecommend MsgType = 4 // 话题被设为推荐
-	MsgTypeTopicDelete    MsgType = 5 // 话题被删除
-)
-
 // 第三方账号类型
 const (
 	ThirdAccountTypeGithub = "github"
