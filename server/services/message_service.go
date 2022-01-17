@@ -79,90 +79,13 @@ func (s *messageService) MarkRead(userId int64) {
 		userId, msg.StatusUnread)
 }
 
-// SendTopicLikeMsg 话题收到点赞
-func (s *messageService) SendTopicLikeMsg(topicId, likeUserId int64) {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil {
-		return
-	}
-	if topic.UserId == likeUserId {
-		return
-	}
-	var (
-		title        = "点赞了你的话题"
-		quoteContent = "《" + topic.GetTitle() + "》"
-	)
-	s.SendMsg(likeUserId, topic.UserId, title, "", quoteContent, msg.TypeTopicLike, &msg.TopicLikeExtraData{
-		TopicId:    topicId,
-		LikeUserId: likeUserId,
-	})
-}
-
-// SendTopicFavoriteMsg 话题被收藏
-func (s *messageService) SendTopicFavoriteMsg(topicId, favoriteUserId int64) {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil {
-		return
-	}
-	if topic.UserId == favoriteUserId {
-		return
-	}
-	var (
-		title        = "收藏了你的话题"
-		quoteContent = "《" + topic.GetTitle() + "》"
-	)
-	s.SendMsg(favoriteUserId, topic.UserId, title, "", quoteContent, msg.TypeTopicFavorite, &msg.TopicFavoriteExtraData{
-		TopicId:        topicId,
-		FavoriteUserId: favoriteUserId,
-	})
-}
-
-// SendTopicRecommendMsg 话题被设为推荐
-func (s *messageService) SendTopicRecommendMsg(topicId int64) {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil {
-		return
-	}
-	var (
-		title        = "你的话题被设为推荐"
-		quoteContent = "《" + topic.GetTitle() + "》"
-	)
-	s.SendMsg(0, topic.UserId, title, "", quoteContent, msg.TypeTopicRecommend, &msg.TopicRecommendExtraData{
-		TopicId: topicId,
-	})
-}
-
-// SendTopicDeleteMsg 话题被删除消息
-func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
-	if topic == nil {
-		return
-	}
-	if topic.UserId == deleteUserId {
-		return
-	}
-	var (
-		title        = "你的话题被删除"
-		quoteContent = "《" + topic.GetTitle() + "》"
-	)
-	s.SendMsg(0, topic.UserId, title, "", quoteContent, msg.TypeTopicDelete,
-		&msg.TopicDeleteExtraData{
-			TopicId:      topicId,
-			DeleteUserId: deleteUserId,
-		},
-	)
-}
-
 // SendMsg 发送消息
-func (s *messageService) SendMsg(fromId, toId int64, title, content, quoteContent string, msgType msg.Type, extraData interface{}) {
-	to := cache.UserCache.Get(toId)
-	if to == nil || to.Type != constants.UserTypeNormal {
-		return
-	}
+func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
+	title, content, quoteContent string, extraData interface{}) {
 
 	t := &model.Message{
-		FromId:       fromId,
-		UserId:       toId,
+		FromId:       from,
+		UserId:       to,
 		Title:        title,
 		Content:      content,
 		QuoteContent: quoteContent,
@@ -207,6 +130,8 @@ func (s *messageService) SendEmailNotice(t *model.Message) {
 		emailTitle = siteTitle + " - 话题被设为推荐"
 	} else if msgType == msg.TypeTopicDelete {
 		emailTitle = siteTitle + " - 话题被删除"
+	} else if msgType == msg.TypeArticleComment {
+		emailTitle = siteTitle + " - 收到文章评论"
 	}
 
 	var from *model.User

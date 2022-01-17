@@ -55,10 +55,10 @@ func handleEntityMsg(comment *model.Comment, commentMsg *CommentMsg) {
 	}
 
 	services.MessageService.SendMsg(from, to,
+		commentMsg.msgType(),
 		commentMsg.msgTitle(),
 		commentMsg.msgContent(),
 		commentMsg.msgRepliedContent(),
-		commentMsg.msgType(),
 		&msg.CommentExtraData{
 			EntityType: comment.EntityType,
 			EntityId:   comment.EntityId,
@@ -92,7 +92,7 @@ func handleReplyMsg(comment *model.Comment, commentMsg *CommentMsg) {
 		repliedContent = common.GetSummary(commentMsg.FirstComment.ContentType, commentMsg.FirstComment.Content)
 	)
 
-	services.MessageService.SendMsg(from, to, title, content, repliedContent, msg.TypeCommentReply,
+	services.MessageService.SendMsg(from, to, msg.TypeCommentReply, title, content, repliedContent,
 		&msg.CommentExtraData{
 			EntityType: comment.EntityType,
 			EntityId:   comment.EntityId,
@@ -119,7 +119,7 @@ func handleQuoteMsg(comment *model.Comment, commentMsg *CommentMsg) {
 		return
 	}
 
-	services.MessageService.SendMsg(from, to, title, content, repliedContent, msg.TypeCommentReply,
+	services.MessageService.SendMsg(from, to, msg.TypeCommentReply, title, content, repliedContent,
 		&msg.CommentExtraData{
 			EntityType: comment.EntityType,
 			EntityId:   comment.EntityId,
