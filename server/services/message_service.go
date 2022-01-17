@@ -4,7 +4,6 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/pkg/common"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/msg"
 	"bbs-go/pkg/urls"
@@ -152,82 +151,6 @@ func (s *messageService) SendTopicDeleteMsg(topicId, deleteUserId int64) {
 			DeleteUserId: deleteUserId,
 		},
 	)
-}
-
-// SendCommentMsg 评论被回复消息
-func (s *messageService) SendCommentMsg(comment *model.Comment) {
-	var (
-		fromId       = comment.UserId                                          // 消息发送人
-		toId         int64                                                     // 消息接收人
-		title        string                                                    // 消息的标题
-		content      = common.GetSummary(comment.ContentType, comment.Content) // 消息内容
-		quoteContent string                                                    // 引用内容
-	)
-
-	if comment.EntityType == constants.EntityArticle { // 文章被评论
-		article := repositories.ArticleRepository.Get(simple.DB(), comment.EntityId)
-		if article != nil {
-			toId = article.UserId
-			title = "回复了你的文章"
-			quoteContent = "《" + article.Title + "》"
-		}
-	} else if comment.EntityType == constants.EntityTopic { // 话题被评论
-		topic := repositories.TopicRepository.Get(simple.DB(), comment.EntityId)
-		if topic != nil {
-			toId = topic.UserId
-			title = "回复了你的话题"
-			quoteContent = "《" + topic.GetTitle() + "》"
-		}
-	}
-
-	if toId <= 0 {
-		return
-	}
-
-	quote := s.getQuoteComment(comment.QuoteId)
-	if quote != nil { // 回复跟帖
-		// 回复人和帖子作者不是同一个人，并且引用的用户不是帖子作者，需要给帖子作者也发送一下消息
-		if fromId != toId && quote.UserId != toId {
-			// 给帖子作者发消息（收到话题评论）
-			s.SendMsg(fromId, toId, title, content, quoteContent, msg.TypeTopicComment,
-				&msg.CommentExtraData{
-					EntityType: comment.EntityType,
-					EntityId:   comment.EntityId,
-					CommentId:  comment.Id,
-					QuoteId:    comment.QuoteId,
-				},
-			)
-		}
-
-		// 给被引用的人发消息（收到他人回复）
-		if fromId != quote.UserId {
-			s.SendMsg(fromId, quote.UserId, "回复了你的评论", content, common.GetMarkdownSummary(quote.Content),
-				msg.TypeCommentReply, &msg.CommentExtraData{
-					EntityType: comment.EntityType,
-					EntityId:   comment.EntityId,
-					CommentId:  comment.Id,
-					QuoteId:    comment.QuoteId,
-				},
-			)
-		}
-	} else if fromId != toId { // 回复主贴，并且不是自己回复自己
-		// 给帖子作者发消息（收到话题评论）
-		s.SendMsg(fromId, toId, title, content, quoteContent, msg.TypeTopicComment,
-			&msg.CommentExtraData{
-				EntityType: comment.EntityType,
-				EntityId:   comment.EntityId,
-				CommentId:  comment.Id,
-				QuoteId:    comment.QuoteId,
-			},
-		)
-	}
-}
-
-func (s *messageService) getQuoteComment(quoteId int64) *model.Comment {
-	if quoteId <= 0 {
-		return nil
-	}
-	return repositories.CommentRepository.Get(simple.DB(), quoteId)
 }
 
 // SendMsg 发送消息

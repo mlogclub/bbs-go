@@ -61,6 +61,7 @@ require (
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/kataras/blocks v0.0.4 // indirect
 	github.com/kataras/golog v0.1.6 // indirect
 	github.com/kataras/neffos v0.0.18 // indirect

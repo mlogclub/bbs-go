@@ -18,9 +18,6 @@ func init() {
 func handleTopicCreateEvent(i interface{}) {
 	e := i.(event.TopicCreateEvent)
 
-	// 百度链接推送
-	seo.Push(urls.TopicUrl(e.TopicId))
-
 	services.UserFollowService.ScanFans(e.UserId, func(fansId int64) {
 		logrus.WithField("topicId", e.TopicId).
 			WithField("userId", e.UserId).
@@ -36,4 +33,7 @@ func handleTopicCreateEvent(i interface{}) {
 			logrus.Error(err)
 		}
 	})
+
+	// 百度链接推送
+	seo.Push(urls.TopicUrl(e.TopicId))
 }
