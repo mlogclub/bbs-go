@@ -186,6 +186,8 @@ func getCommentMsg(comment *model.Comment) *CommentMsg {
 				ret.QuoteComment = quoteComment
 			}
 		}
+
+		return ret
 	}
 	return nil
 }
@@ -227,11 +229,11 @@ func (c *CommentMsg) msgContent() string {
 
 // msgRepliedContent 被回复的内容
 func (c *CommentMsg) msgRepliedContent() string {
-	if c.EntityType == constants.EntityTopic {
-		article := c.Entity.(model.Article)
+	if c.EntityType == constants.EntityArticle {
+		article := c.Entity.(*model.Article)
 		return "《" + article.Title + "》"
-	} else if c.EntityType == constants.EntityArticle {
-		topic := c.Entity.(model.Topic)
+	} else if c.EntityType == constants.EntityTopic {
+		topic := c.Entity.(*model.Topic)
 		return "《" + topic.GetTitle() + "》"
 	}
 	return ""
