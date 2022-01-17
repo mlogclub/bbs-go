@@ -7,10 +7,12 @@ import (
 	"sync"
 )
 
-var m sync.RWMutex
-var eventPool *ants.PoolWithFunc
-var handlers map[reflect.Type][]func(i interface{})
-var wg sync.WaitGroup
+var (
+	m         sync.RWMutex
+	eventPool *ants.PoolWithFunc
+	handlers  map[reflect.Type][]func(i interface{})
+	// wg        sync.WaitGroup
+)
 
 func init() {
 	var err error
@@ -28,7 +30,7 @@ func dispatch(i interface{}) {
 	}
 	for _, handler := range handlerList {
 		handler(i)
-		wg.Done()
+		// wg.Done()
 	}
 }
 
@@ -36,8 +38,8 @@ func Send(e interface{}) {
 	if err := eventPool.Invoke(e); err != nil {
 		logrus.Error(err)
 	} else {
-		wg.Add(len(getHandlerList(e)))
-		wg.Wait()
+		// wg.Add(len(getHandlerList(e)))
+		// wg.Wait()
 	}
 }
 
