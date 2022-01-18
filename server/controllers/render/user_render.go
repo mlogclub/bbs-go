@@ -59,7 +59,6 @@ func BuildUserDetail(user *model.User) *model.UserDetail {
 		Username:             user.Username.String,
 		BackgroundImage:      user.BackgroundImage,
 		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
-		Type:                 user.Type,
 		HomePage:             user.HomePage,
 		Forbidden:            user.IsForbidden(),
 		Status:               user.Status,

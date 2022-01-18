@@ -33,7 +33,6 @@ type User struct {
 	FollowCount      int            `gorm:"not null" json:"followCount" form:"followCount"`                     // 关注数量
 	FansCount        int            `gorm:"not null" json:"fansCount" form:"fansCount"`                         // 粉丝数量
 	Roles            string         `gorm:"type:text" json:"roles" form:"roles"`                                // 角色
-	Type             int            `gorm:"not null" json:"type" form:"type"`                                   // 用户类型
 	ForbiddenEndTime int64          `gorm:"not null;default:0" json:"forbiddenEndTime" form:"forbiddenEndTime"` // 禁言结束时间
 	CreateTime       int64          `json:"createTime" form:"createTime"`                                       // 创建时间
 	UpdateTime       int64          `json:"updateTime" form:"updateTime"`                                       // 更新时间

@@ -29,7 +29,6 @@ type UserDetail struct {
 	Username             string `json:"username"`
 	BackgroundImage      string `json:"backgroundImage"`
 	SmallBackgroundImage string `json:"smallBackgroundImage"`
-	Type                 int    `json:"type"`
 	HomePage             string `json:"homePage"`
 	Forbidden            bool   `json:"forbidden"` // 是否禁言
 	Status               int    `json:"status"`
