@@ -60,8 +60,8 @@ func handleEntityMsg(comment *model.Comment, commentMsg *CommentMsg) {
 		commentMsg.msgContent(),
 		commentMsg.msgRepliedContent(),
 		&msg.CommentExtraData{
-			EntityType: comment.EntityType,
-			EntityId:   comment.EntityId,
+			EntityType: commentMsg.EntityType,
+			EntityId:   commentMsg.EntityId,
 			CommentId:  comment.Id,
 			QuoteId:    comment.QuoteId,
 		})
