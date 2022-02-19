@@ -6,7 +6,6 @@ require (
 	github.com/88250/lute v1.7.3
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.3+incompatible
-	github.com/blevesearch/bleve/v2 v2.3.0
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/emirpasic/gods v1.12.0
 	github.com/go-resty/resty/v2 v2.1.0
@@ -32,7 +31,6 @@ require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/CloudyKit/jet/v5 v5.1.1 // indirect
-	github.com/RoaringBitmap/roaring v0.9.4 // indirect
 	github.com/Shopify/goreferrer v0.0.0-20210630161223-536fa16abd6f // indirect
 	github.com/alecthomas/chroma v0.9.2 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
@@ -41,21 +39,7 @@ require (
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible // indirect
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/beevik/etree v1.1.0 // indirect
-	github.com/bits-and-blooms/bitset v1.2.0 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/blevesearch/bleve_index_api v1.0.1 // indirect
-	github.com/blevesearch/go-porterstemmer v1.0.3 // indirect
-	github.com/blevesearch/mmap-go v1.0.3 // indirect
-	github.com/blevesearch/scorch_segment_api/v2 v2.1.0 // indirect
-	github.com/blevesearch/segment v0.9.0 // indirect
-	github.com/blevesearch/snowballstem v0.9.0 // indirect
-	github.com/blevesearch/upsidedown_store_api v1.0.1 // indirect
-	github.com/blevesearch/vellum v1.0.7 // indirect
-	github.com/blevesearch/zapx/v11 v11.3.2 // indirect
-	github.com/blevesearch/zapx/v12 v12.3.2 // indirect
-	github.com/blevesearch/zapx/v13 v13.3.2 // indirect
-	github.com/blevesearch/zapx/v14 v14.3.2 // indirect
-	github.com/blevesearch/zapx/v15 v15.3.2 // indirect
 	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
@@ -66,7 +50,6 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.1.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20210619142842-05447a1fa367 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
@@ -90,7 +73,6 @@ require (
 	github.com/mediocregopher/radix/v3 v3.8.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/nats-io/nats-server/v2 v2.6.5 // indirect
 	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
@@ -99,7 +81,6 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
-	github.com/steveyen/gtreap v0.1.0 // indirect
 	github.com/tdewolff/minify/v2 v2.9.22 // indirect
 	github.com/tdewolff/parse/v2 v2.5.22 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
@@ -108,7 +89,6 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
-	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
 	golang.org/x/net v0.0.0-20211201190559-0a0e4e1bb54c // indirect
 	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
