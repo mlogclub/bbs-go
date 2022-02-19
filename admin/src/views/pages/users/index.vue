@@ -233,6 +233,7 @@
 <script>
 import ScoreLog from "./score-log";
 import Avatar from "@/components/Avatar";
+import mainHeight from "@/utils/mainHeight";
 
 export default {
   name: "Users",
@@ -285,27 +286,10 @@ export default {
     };
   },
   mounted() {
+    mainHeight(this);
     this.list();
-    this.calcMainHeight();
   },
   methods: {
-    calcMainHeight() {
-      const that = this;
-      calc();
-      window.onresize = calc;
-      function calc() {
-        const magicHeight = 156; // 需要减去的其他高度，这些高度可能是一些边边角角的margin/padding
-        const minHeight = 300;
-        const height = Math.max(
-          document.documentElement.clientHeight -
-            that.$refs.toolbar.clientHeight -
-            that.$refs.pagebar.clientHeight -
-            magicHeight,
-          minHeight
-        );
-        that.mainHeight = `${height}px`;
-      }
-    },
     list() {
       const me = this;
       me.listLoading = true;

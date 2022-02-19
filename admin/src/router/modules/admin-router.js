@@ -30,9 +30,9 @@ const adminRouter = [
     },
     children: [
       {
+        name: "Topics",
         path: "topics",
         component: () => import("@/views/pages/topics/index"),
-        name: "topics",
         meta: {
           title: "话题",
           icon: "iconfont icon-topic",

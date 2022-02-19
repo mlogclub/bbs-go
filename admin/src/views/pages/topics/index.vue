@@ -1,6 +1,6 @@
 <template>
   <section v-loading="listLoading" class="page-container">
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号" />
@@ -29,7 +29,7 @@
       </el-form>
     </div>
 
-    <div class="page-section topics">
+    <div ref="mainContent" :style="{ height: mainHeight }" class="page-section topics">
       <div v-for="item in results" :key="item.topicId" class="topic-item">
         <div class="topic-avatar">
           <avatar :user="item.user" />
@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div class="pagebar">
+    <div ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -173,10 +173,14 @@
 
 <script>
 import Avatar from "@/components/Avatar";
+import mainHeight from "@/utils/mainHeight";
+
 export default {
+  name: "Topics",
   components: { Avatar },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
@@ -211,6 +215,7 @@ export default {
     };
   },
   mounted() {
+    mainHeight(this);
     this.list();
   },
   methods: {
@@ -351,6 +356,7 @@ export default {
 <style scoped lang="scss">
 .topics {
   width: 100%;
+  overflow-y: auto;
 
   .topic-item:not(:last-child) {
     border-bottom: solid 1px rgba(140, 147, 157, 0.14);
