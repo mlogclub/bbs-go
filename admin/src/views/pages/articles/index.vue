@@ -1,7 +1,7 @@
 <template>
   <section v-loading="listLoading" class="page-container">
     <!--工具条-->
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号" />
@@ -26,7 +26,12 @@
     </div>
 
     <!--列表-->
-    <div v-if="results && results.length > 0" class="page-section articles">
+    <div
+      v-if="results && results.length > 0"
+      ref="mainContent"
+      :style="{ height: mainHeight }"
+      class="page-section articles"
+    >
       <div v-for="item in results" :key="item.id" class="article">
         <div class="article-header">
           <avatar :user="item.user" />
@@ -65,7 +70,7 @@
     </div>
 
     <!--工具条-->
-    <div v-if="page.total > 0" class="pagebar">
+    <div v-if="page.total > 0" ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -105,10 +110,14 @@
 
 <script>
 import Avatar from "@/components/Avatar";
+import mainHeight from "@/utils/mainHeight";
+
 export default {
+  name: "Articles",
   components: { Avatar },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
@@ -122,6 +131,7 @@ export default {
     };
   },
   mounted() {
+    mainHeight(this);
     this.recent();
   },
   methods: {
@@ -256,8 +266,8 @@ export default {
 
 <style scoped lang="scss">
 .articles {
-  display: table;
   width: 100%;
+  overflow-y: auto;
 
   .notification {
     margin: 20px;

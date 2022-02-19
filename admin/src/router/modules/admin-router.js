@@ -39,9 +39,9 @@ const adminRouter = [
         },
       },
       {
+        name: "Articles",
         path: "articles",
         component: () => import("@/views/pages/articles/index"),
-        name: "articles",
         meta: {
           title: "文章",
           icon: "iconfont icon-article",
