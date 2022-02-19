@@ -9,9 +9,9 @@ const adminRouter = [
     redirect: "/users",
     children: [
       {
+        name: "Users",
         path: "",
         component: () => import("@/views/pages/users/index"),
-        name: "users",
         meta: {
           title: "用户管理",
           icon: "iconfont icon-username",

@@ -1,6 +1,6 @@
 <template>
   <section class="page-container">
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号" />
@@ -20,97 +20,101 @@
       </el-form>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :data="results"
-      highlight-current-row
-      stripe
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <div v-if="scope.row.username">
-            <span>用户名：</span>
-            {{ scope.row.username }}
-          </div>
-          <div v-if="scope.row.roles && scope.row.roles.length">
-            <div>
-              <span>角色：</span>
-              <el-tag
-                v-for="role in scope.row.roles"
-                :key="role"
-                size="mini"
-                style="margin-right: 3px"
-              >
-                {{ role }}
-              </el-tag>
+    <div ref="mainContent" :style="{ height: mainHeight }">
+      <el-table
+        v-loading="listLoading"
+        :data="results"
+        height="100%"
+        highlight-current-row
+        stripe
+        border
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <div v-if="scope.row.username">
+              <span>用户名：</span>
+              {{ scope.row.username }}
             </div>
-          </div>
-          <div>
-            <span>状态：</span>
-            {{ scope.row.status === 0 ? "正常" : "删除" }}
-          </div>
-          <div>
-            <span>注册时间：</span>
+            <div v-if="scope.row.roles && scope.row.roles.length">
+              <div>
+                <span>角色：</span>
+                <el-tag
+                  v-for="role in scope.row.roles"
+                  :key="role"
+                  size="mini"
+                  style="margin-right: 3px"
+                >
+                  {{ role }}
+                </el-tag>
+              </div>
+            </div>
+            <div>
+              <span>状态：</span>
+              {{ scope.row.status === 0 ? "正常" : "删除" }}
+            </div>
+            <div>
+              <span>注册时间：</span>
+              {{ scope.row.createTime | formatDate }}
+            </div>
+            <div>
+              <span>更新时间：</span>
+              {{ scope.row.updateTime | formatDate }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="编号" width="100" />
+        <el-table-column prop="avatar" label="头像" width="80">
+          <template slot-scope="scope">
+            <avatar :user="scope.row" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="nickname" label="昵称" />
+        <el-table-column prop="email" label="邮箱" />
+        <el-table-column prop="score" label="积分" />
+        <el-table-column prop="forbidden" label="是否禁言">
+          <template slot-scope="scope">
+            <span v-if="scope.row.forbidden" class="tag is-warning">
+              <template v-if="scope.row.forbiddenEndTime === -1">永久禁言</template>
+              <template v-else>禁言至：{{ scope.row.forbiddenEndTime | formatDate }}</template>
+            </span>
+            <span v-else class="tag is-success">正常</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="注册时间">
+          <template slot-scope="scope">
             {{ scope.row.createTime | formatDate }}
-          </div>
-          <div>
-            <span>更新时间：</span>
-            {{ scope.row.updateTime | formatDate }}
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" label="编号" width="100" />
-      <el-table-column prop="avatar" label="头像" width="80">
-        <template slot-scope="scope">
-          <avatar :user="scope.row" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="nickname" label="昵称" />
-      <el-table-column prop="email" label="邮箱" />
-      <el-table-column prop="score" label="积分" />
-      <el-table-column prop="forbidden" label="是否禁言">
-        <template slot-scope="scope">
-          <span v-if="scope.row.forbidden" class="tag is-warning">
-            <template v-if="scope.row.forbiddenEndTime === -1">永久禁言</template>
-            <template v-else>禁言至：{{ scope.row.forbiddenEndTime | formatDate }}</template>
-          </span>
-          <span v-else class="tag is-success">正常</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="注册时间">
-        <template slot-scope="scope">
-          {{ scope.row.createTime | formatDate }}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="200">
-        <template slot-scope="scope">
-          <el-dropdown size="mini" trigger="hover" placement="bottom" @command="handleCommand">
-            <el-button type="primary">
-              操作<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="{ cmd: 'edit', row: scope.row }"> 编辑 </el-dropdown-item>
-              <el-dropdown-item
-                v-if="scope.row.forbidden"
-                :command="{ cmd: 'removeForbidden', row: scope.row }"
-              >
-                取消禁言
-              </el-dropdown-item>
-              <el-dropdown-item v-else :command="{ cmd: 'forbidden', row: scope.row }">
-                禁言
-              </el-dropdown-item>
-              <el-dropdown-item :command="{ cmd: 'scoreLog', row: scope.row }">
-                积分记录
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagebar">
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="200">
+          <template slot-scope="scope">
+            <el-dropdown size="mini" trigger="hover" placement="bottom" @command="handleCommand">
+              <el-button type="primary">
+                操作<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="{ cmd: 'edit', row: scope.row }">
+                  编辑
+                </el-dropdown-item>
+                <el-dropdown-item
+                  v-if="scope.row.forbidden"
+                  :command="{ cmd: 'removeForbidden', row: scope.row }"
+                >
+                  取消禁言
+                </el-dropdown-item>
+                <el-dropdown-item v-else :command="{ cmd: 'forbidden', row: scope.row }">
+                  禁言
+                </el-dropdown-item>
+                <el-dropdown-item :command="{ cmd: 'scoreLog', row: scope.row }">
+                  积分记录
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -231,9 +235,11 @@ import ScoreLog from "./score-log";
 import Avatar from "@/components/Avatar";
 
 export default {
+  name: "Users",
   components: { ScoreLog, Avatar },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
@@ -280,8 +286,26 @@ export default {
   },
   mounted() {
     this.list();
+    this.calcMainHeight();
   },
   methods: {
+    calcMainHeight() {
+      const that = this;
+      calc();
+      window.onresize = calc;
+      function calc() {
+        const magicHeight = 156; // 需要减去的其他高度，这些高度可能是一些边边角角的margin/padding
+        const minHeight = 300;
+        const height = Math.max(
+          document.documentElement.clientHeight -
+            that.$refs.toolbar.clientHeight -
+            that.$refs.pagebar.clientHeight -
+            magicHeight,
+          minHeight
+        );
+        that.mainHeight = `${height}px`;
+      }
+    },
     list() {
       const me = this;
       me.listLoading = true;
