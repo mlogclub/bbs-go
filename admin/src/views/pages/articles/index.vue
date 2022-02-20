@@ -146,7 +146,7 @@ export default {
         this.results = data.results;
         this.page = data.page;
       } catch (err) {
-        this.$message.error(err.message);
+        // this.$message.error(err.message);
       } finally {
         this.listLoading = false;
       }

@@ -30,53 +30,50 @@
       </el-form>
     </div>
 
-    <div
-      v-if="results && results.length > 0"
-      ref="mainContent"
-      :style="{ height: mainHeight }"
-      class="page-section comments-div"
-    >
-      <ul class="comments">
-        <li v-for="item in results" :key="item.id">
-          <div class="comment-item">
-            <avatar :user="item.user" />
-            <div class="content">
-              <div class="meta">
-                <span class="nickname">
-                  <a :href="('/user/' + item.user.id) | siteUrl" target="_blank">{{
-                    item.user.nickname
-                  }}</a>
-                </span>
+    <div ref="mainContent" :style="{ height: mainHeight }">
+      <div v-if="results && results.length > 0" class="page-section comments-div">
+        <ul class="comments">
+          <li v-for="item in results" :key="item.id">
+            <div class="comment-item">
+              <avatar :user="item.user" />
+              <div class="content">
+                <div class="meta">
+                  <span class="nickname">
+                    <a :href="('/user/' + item.user.id) | siteUrl" target="_blank">{{
+                      item.user.nickname
+                    }}</a>
+                  </span>
 
-                <span>ID: {{ item.id }}</span>
+                  <span>ID: {{ item.id }}</span>
 
-                <span class="create-time">@{{ item.createTime | formatDate }}</span>
-                <span v-if="item.entityType === 'article'">
-                  <a :href="('/article/' + item.entityId) | siteUrl" target="_blank"
-                    >文章：{{ item.entityId }}</a
-                  >
-                </span>
+                  <span class="create-time">@{{ item.createTime | formatDate }}</span>
+                  <span v-if="item.entityType === 'article'">
+                    <a :href="('/article/' + item.entityId) | siteUrl" target="_blank"
+                      >文章：{{ item.entityId }}</a
+                    >
+                  </span>
 
-                <span v-if="item.entityType === 'topic'">
-                  <a :href="('/topic/' + item.entityId) | siteUrl" target="_blank"
-                    >话题：{{ item.entityId }}</a
-                  >
-                </span>
+                  <span v-if="item.entityType === 'topic'">
+                    <a :href="('/topic/' + item.entityId) | siteUrl" target="_blank"
+                      >话题：{{ item.entityId }}</a
+                    >
+                  </span>
 
-                <div class="tools">
-                  <span v-if="item.status === 1" class="item info">已删除</span>
-                  <a v-else class="item" @click="handleDelete(item)">删除</a>
+                  <div class="tools">
+                    <span v-if="item.status === 1" class="item info">已删除</span>
+                    <a v-else class="item" @click="handleDelete(item)">删除</a>
+                  </div>
                 </div>
+                <div class="summary" v-html="item.content" />
               </div>
-              <div class="summary" v-html="item.content" />
             </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="page-section comments-div">
-      <div class="notification is-primary">
-        <strong>无数据 或 输入相应参数进行查询</strong>
+          </li>
+        </ul>
+      </div>
+      <div v-else class="page-section comments-div">
+        <div class="notification is-primary">
+          <strong>无数据 或 输入相应参数进行查询</strong>
+        </div>
       </div>
     </div>
 
@@ -97,6 +94,7 @@
 <script>
 import Avatar from "@/components/Avatar";
 import mainHeight from "@/utils/mainHeight";
+
 export default {
   name: "Comments",
   components: { Avatar },
@@ -126,7 +124,12 @@ export default {
         this.results = data.results || [];
         this.page = data.page || {};
       } finally {
-        this.listLoading = false;
+        const me = this;
+        // 因为这个时候界面上的pagebar显示出来了，所以需要重新计算一下高度
+        setTimeout(function () {
+          mainHeight(me);
+          me.listLoading = false;
+        }, 100);
       }
     },
     handlePageChange(val) {
@@ -158,7 +161,9 @@ export default {
 
 <style scoped lang="scss">
 .comments-div {
-  padding: 10px 20px;
+  //padding: 10px 20px;
+  height: 100%;
+  overflow-y: auto;
 
   .notification {
     margin: 10px;
