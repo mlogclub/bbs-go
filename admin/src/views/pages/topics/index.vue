@@ -47,12 +47,23 @@
           </div>
 
           <div class="topic-metadata">
-            <span class="topic-metadata-item">ID: {{ item.topicId }}</span>
-            <span class="topic-metadata-item">发布于：{{ item.createTime | formatDate }}</span>
-            <span class="node">{{ item.node ? item.node.name : "" }}</span>
-            <span v-for="tag in item.tags" :key="tag.tagId" class="topic-metadata-item tag"
-              >#{{ tag.tagName }}</span
+            <a
+              class="topic-metadata-item topic-title-link"
+              :href="('/topic/' + item.topicId) | siteUrl"
+              target="_blank"
             >
+              ID: {{ item.topicId }}
+            </a>
+            <span class="topic-metadata-item">发布于：{{ item.createTime | formatDate }}</span>
+            <span class="topic-metadata-item">查看：{{ item.viewCount }}</span>
+            <span class="topic-metadata-item">点赞：{{ item.likeCount }}</span>
+            <span class="topic-metadata-item">评论：{{ item.commentCount }}</span>
+            <span v-if="item.node" class="topic-metadata-item node">{{ item.node.name }}</span>
+            <template v-if="item.tags && item.tags.length">
+              <span v-for="tag in item.tags" :key="tag.tagId" class="topic-metadata-item tag"
+                >#{{ tag.tagName }}</span
+              >
+            </template>
           </div>
 
           <div class="topic-title">
@@ -104,70 +115,6 @@
         @size-change="handleLimitChange"
       />
     </div>
-
-    <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false" title="新增">
-      <el-form ref="addForm" :model="addForm" :rules="addFormRules" label-width="80px">
-        <el-form-item label="userId" prop="rule">
-          <el-input v-model="addForm.userId" />
-        </el-form-item>
-
-        <el-form-item label="title" prop="rule">
-          <el-input v-model="addForm.title" />
-        </el-form-item>
-
-        <el-form-item label="content" prop="rule">
-          <el-input v-model="addForm.content" />
-        </el-form-item>
-
-        <el-form-item label="status" prop="rule">
-          <el-input v-model="addForm.status" />
-        </el-form-item>
-
-        <el-form-item label="createTime" prop="rule">
-          <el-input v-model="addForm.createTime" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false"> 取消 </el-button>
-        <el-button :loading="addLoading" type="primary" @click.native="addSubmit"> 提交 </el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="editFormVisible" :close-on-click-modal="false" title="编辑">
-      <el-form ref="editForm" :model="editForm" :rules="editFormRules" label-width="80px">
-        <el-input v-model="editForm.id" type="hidden" />
-
-        <el-form-item label="forumId" prop="rule">
-          <el-input v-model="editForm.forumId" />
-        </el-form-item>
-
-        <el-form-item label="userId" prop="rule">
-          <el-input v-model="editForm.userId" />
-        </el-form-item>
-
-        <el-form-item label="title" prop="rule">
-          <el-input v-model="editForm.title" />
-        </el-form-item>
-
-        <el-form-item label="content" prop="rule">
-          <el-input v-model="editForm.content" />
-        </el-form-item>
-
-        <el-form-item label="status" prop="rule">
-          <el-input v-model="editForm.status" />
-        </el-form-item>
-
-        <el-form-item label="createTime" prop="rule">
-          <el-input v-model="editForm.createTime" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false"> 取消 </el-button>
-        <el-button :loading="editLoading" type="primary" @click.native="editSubmit">
-          提交
-        </el-button>
-      </div>
-    </el-dialog>
   </section>
 </template>
 
@@ -188,30 +135,6 @@ export default {
         status: "0",
       },
       selectedRows: [],
-      addForm: {
-        forumId: "",
-        userId: "",
-        title: "",
-        content: "",
-        status: "",
-        createTime: "",
-      },
-      addFormVisible: false,
-      addFormRules: {},
-      addLoading: false,
-
-      editForm: {
-        id: "",
-        forumId: "",
-        userId: "",
-        title: "",
-        content: "",
-        status: "",
-        createTime: "",
-      },
-      editFormVisible: false,
-      editFormRules: {},
-      editLoading: false,
     };
   },
   mounted() {
@@ -244,50 +167,6 @@ export default {
       this.page.limit = val;
       this.list();
     },
-    handleAdd() {
-      this.addForm = {
-        name: "",
-        description: "",
-      };
-      this.addFormVisible = true;
-    },
-    addSubmit() {
-      const me = this;
-      this.axios
-        .form("/api/admin/topic/create", this.addForm)
-        .then((data) => {
-          me.$message({ message: "提交成功", type: "success" });
-          me.addFormVisible = false;
-          me.list();
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
-    },
-    handleEdit(index, row) {
-      const me = this;
-      this.axios
-        .get(`/api/admin/topic/${row.id}`)
-        .then((data) => {
-          me.editForm = Object.assign({}, data);
-          me.editFormVisible = true;
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
-    },
-    editSubmit() {
-      const me = this;
-      this.axios
-        .form("/api/admin/topic/update", me.editForm)
-        .then((data) => {
-          me.list();
-          me.editFormVisible = false;
-        })
-        .catch((rsp) => {
-          me.$notify.error({ title: "错误", message: rsp.message });
-        });
-    },
     deleteSubmit(topicId) {
       const me = this;
       this.$confirm("是否确认删除该话题?", "提示", {
@@ -297,7 +176,7 @@ export default {
       })
         .then(function () {
           me.axios
-            .post("/api/admin/topic/delete", { id: topicId })
+            .form("/api/admin/topic/delete", { id: topicId })
             .then(function () {
               me.$message({ message: "删除成功", type: "success" });
               me.list();
@@ -356,6 +235,8 @@ export default {
 <style scoped lang="scss">
 .topics {
   width: 100%;
+  padding: 0;
+  margin: 0;
   overflow-y: auto;
 
   .topic-item:not(:last-child) {
@@ -364,7 +245,7 @@ export default {
 
   .topic-item {
     width: 100%;
-    padding: 10px;
+    padding: 20px 10px;
     display: flex;
     flex: 1;
 
@@ -390,8 +271,25 @@ export default {
         }
       }
 
+      .topic-metadata {
+        margin: 12px 0;
+        color: #8590a6;
+
+        .topic-metadata-item {
+          margin-right: 12px;
+
+          &.topic-title-link {
+            color: #1482f0;
+          }
+          &.node {
+          }
+          &.tag {
+          }
+        }
+      }
+
       .topic-title {
-        margin-top: 6px;
+        margin: 12px 0;
         a {
           font-size: 16px;
           font-weight: 600;
@@ -399,22 +297,14 @@ export default {
         }
       }
 
-      .topic-metadata {
-        margin-top: 6px;
-        color: #8590a6;
-
-        .topic-metadata-item {
-          margin-right: 12px;
-        }
-      }
-
       .topic-summary {
-        margin-top: 6px;
+        margin: 12px 0;
         color: #525252;
       }
 
       .topic-image-list {
-        margin-top: 6px;
+        margin: 12px 0;
+        padding: 0;
         li {
           cursor: pointer;
           border: 1px dashed #ddd;
@@ -459,7 +349,12 @@ export default {
       }
 
       .topic-actions {
-        margin-top: 6px;
+        margin-top: 20px;
+        .action-item {
+          margin-right: 20px;
+          color: #1482f0;
+          font-weight: 500;
+        }
       }
     }
   }
