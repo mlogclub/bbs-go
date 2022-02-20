@@ -25,10 +25,11 @@
 
     <el-table
       v-loading="listLoading"
+      height="100%"
       :data="results"
       highlight-current-row
       stripe
-      style="width: 100%"
+      border
     >
       <el-table-column prop="id" label="编号" width="100" />
       <el-table-column prop="title" label="标题" />

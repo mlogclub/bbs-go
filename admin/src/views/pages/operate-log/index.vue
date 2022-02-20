@@ -20,10 +20,11 @@
 
     <el-table
       v-loading="listLoading"
+      height="100%"
       :data="results"
       highlight-current-row
       stripe
-      style="width: 100%"
+      border
     >
       <el-table-column type="expand">
         <template slot-scope="scope">

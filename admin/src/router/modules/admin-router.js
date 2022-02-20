@@ -78,9 +78,9 @@ const adminRouter = [
         },
       },
       {
+        name: "Tags",
         path: "tags",
         component: () => import("@/views/pages/tags/index"),
-        name: "tags",
         meta: {
           title: "标签",
           icon: "iconfont icon-tags",

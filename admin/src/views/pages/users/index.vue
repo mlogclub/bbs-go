@@ -23,8 +23,8 @@
     <div ref="mainContent" :style="{ height: mainHeight }">
       <el-table
         v-loading="listLoading"
-        :data="results"
         height="100%"
+        :data="results"
         highlight-current-row
         stripe
         border
