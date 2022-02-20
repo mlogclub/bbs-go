@@ -48,9 +48,9 @@ const adminRouter = [
         },
       },
       {
+        name: "Comments",
         path: "comments",
         component: () => import("@/views/pages/comments/index"),
-        name: "comments",
         meta: {
           title: "评论",
           icon: "iconfont icon-comments",

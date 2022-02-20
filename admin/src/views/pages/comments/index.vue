@@ -1,7 +1,7 @@
 <template>
   <section v-loading="listLoading" class="page-container">
     <!--工具条-->
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="编号" />
@@ -30,7 +30,12 @@
       </el-form>
     </div>
 
-    <div v-if="results && results.length > 0" class="page-section comments-div">
+    <div
+      v-if="results && results.length > 0"
+      ref="mainContent"
+      :style="{ height: mainHeight }"
+      class="page-section comments-div"
+    >
       <ul class="comments">
         <li v-for="item in results" :key="item.id">
           <div class="comment-item">
@@ -75,7 +80,7 @@
       </div>
     </div>
 
-    <div v-if="page.total > 0" class="pagebar">
+    <div v-if="page.total > 0" ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -91,10 +96,13 @@
 
 <script>
 import Avatar from "@/components/Avatar";
+import mainHeight from "@/utils/mainHeight";
 export default {
+  name: "Comments",
   components: { Avatar },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
@@ -103,7 +111,7 @@ export default {
     };
   },
   mounted() {
-    // this.list()
+    mainHeight(this);
   },
   methods: {
     async list() {
