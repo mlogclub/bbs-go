@@ -1,6 +1,6 @@
 <template>
   <section class="page-container">
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="名称" />
@@ -14,44 +14,47 @@
       </el-form>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :data="results"
-      highlight-current-row
-      stripe
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" />
-      <el-table-column prop="id" label="编号" />
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="logo" label="图标">
-        <template slot-scope="scope">
-          <img v-if="scope.row.logo" :src="scope.row.logo" class="node-logo" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="description" label="描述" />
-      <el-table-column prop="sortNo" label="排序" />
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">
-          {{ scope.row.status === 0 ? "启用" : "禁用" }}
-        </template>
-      </el-table-column>
+    <div ref="mainContent" :style="{ height: mainHeight }">
+      <el-table
+        v-loading="listLoading"
+        height="100%"
+        :data="results"
+        highlight-current-row
+        stripe
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="编号" />
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="logo" label="图标">
+          <template slot-scope="scope">
+            <img v-if="scope.row.logo" :src="scope.row.logo" class="node-logo" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="描述" />
+        <el-table-column prop="sortNo" label="排序" />
+        <el-table-column prop="status" label="状态">
+          <template slot-scope="scope">
+            {{ scope.row.status === 0 ? "启用" : "禁用" }}
+          </template>
+        </el-table-column>
 
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">
-          {{ scope.row.createTime | formatDate }}
-        </template>
-      </el-table-column>
+        <el-table-column prop="createTime" label="创建时间">
+          <template slot-scope="scope">
+            {{ scope.row.createTime | formatDate }}
+          </template>
+        </el-table-column>
 
-      <el-table-column label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> 编辑 </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> 编辑 </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
 
-    <div class="pagebar">
+    <div ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -123,10 +126,13 @@
 
 <script>
 import Upload from "@/components/Upload";
+import mainHeight from "@/utils/mainHeight";
 export default {
+  name: "Nodes",
   components: { Upload },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
@@ -158,6 +164,7 @@ export default {
     };
   },
   mounted() {
+    mainHeight(this);
     this.list();
   },
   methods: {

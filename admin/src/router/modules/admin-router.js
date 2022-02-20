@@ -69,9 +69,9 @@ const adminRouter = [
     },
     children: [
       {
+        name: "Nodes",
         path: "nodes",
         component: () => import("@/views/pages/topics/nodes"),
-        name: "nodes",
         meta: {
           title: "节点",
           icon: "iconfont icon-tag",
