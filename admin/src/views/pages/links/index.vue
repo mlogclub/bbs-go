@@ -137,6 +137,7 @@ export default {
   name: "Links",
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
