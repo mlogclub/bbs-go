@@ -33,33 +33,55 @@
       class="page-section articles"
     >
       <div v-for="item in results" :key="item.id" class="article">
-        <div class="article-header">
-          <avatar :user="item.user" />
-          <div class="article-right">
-            <div class="article-title">
-              <a :href="('/article/' + item.id) | siteUrl" target="_blank">{{ item.title }}</a>
-            </div>
-            <div class="article-meta">
-              <label class="action-item info">ID: {{ item.id }}</label>
-              <label v-if="item.user" class="author">{{ item.user.nickname }}</label>
-              <label>{{ item.createTime | formatDate }}</label>
+        <avatar :user="item.user" />
+        <div class="article-right">
+          <a class="article-title" :href="('/article/' + item.id) | siteUrl" target="_blank">{{
+            item.title
+          }}</a>
+          <div class="article-meta">
+            <label class="action-item info">ID: {{ item.id }}</label>
+            <label v-if="item.user" class="author">{{ item.user.nickname }}</label>
+            <label>{{ item.createTime | formatDate }}</label>
 
-              <div class="article-tags">
-                <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
-                  {{ tag.tagName }}
-                </el-tag>
-              </div>
+            <div class="article-tags">
+              <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
+                {{ tag.tagName }}
+              </el-tag>
             </div>
           </div>
-        </div>
-        <div class="summary">
-          {{ item.summary }}
-        </div>
-        <div class="actions">
-          <a class="action-item btn" @click="showUpdateTags(item)">修改标签</a>
-          <span v-if="item.status === 1" class="action-item danger">已删除</span>
-          <a v-if="item.status !== 1" class="action-item btn" @click="deleteSubmit(item)">删除</a>
-          <a v-if="item.status === 2" class="action-item btn" @click="pendingSubmit(item)">审核</a>
+
+          <div class="article-info">
+            <span v-if="item.sticky">已推荐</span>
+            <span v-if="item.status === 1">已删除</span>
+          </div>
+
+          <div class="summary">{{ item.summary }}</div>
+          <div class="actions">
+            <el-button
+              v-if="item.status !== 1"
+              type="text"
+              class="action-item"
+              @click="deleteSubmit(item)"
+              >删除</el-button
+            >
+            <el-button
+              v-if="item.status === 2"
+              type="text"
+              class="action-item"
+              @click="pendingSubmit(item)"
+              >审核</el-button
+            >
+            <el-button
+              v-if="item.sticky"
+              type="text"
+              class="action-item"
+              @click="setSticky(item, false)"
+              >取消置顶</el-button
+            >
+            <el-button v-else type="text" class="action-item" @click="setSticky(item, true)"
+              >置顶</el-button
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -181,7 +203,7 @@ export default {
             .form("/api/admin/article/delete", { id: row.id })
             .then((data) => {
               me.$message({ message: "删除成功", type: "success" });
-              me.list();
+              // me.list();
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
@@ -206,7 +228,7 @@ export default {
             .form("/api/admin/article/pending", { id: row.id })
             .then((data) => {
               me.$message({ message: "审核成功", type: "success" });
-              me.list();
+              // me.list();
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
@@ -281,90 +303,91 @@ export default {
   .article {
     width: 100%;
     padding: 10px;
+    display: flex;
 
-    .article-header {
-      display: flex;
+    .article-right {
+      width: 100%;
+      margin-left: 10px;
+      position: relative;
 
-      .article-right {
-        display: block;
-        margin-left: 10px;
-
-        .article-title a {
-          color: #555;
-          font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-          text-decoration: none;
-        }
-
-        .article-meta {
-          display: flex;
-          font-size: 12px;
-
-          label:not(:last-child) {
-            margin-right: 8px;
-          }
-
-          label {
-            color: #999;
-            font-size: 12px;
-          }
-
-          .article-tags {
-            .el-tag + .el-tag {
-              margin-left: 5px;
-            }
-
-            .button-new-tag {
-              margin-left: 10px;
-              height: 32px;
-              line-height: 30px;
-              padding-top: 0;
-              padding-bottom: 0;
-            }
-
-            .input-new-tag {
-              width: 90px;
-              margin-left: 10px;
-              vertical-align: bottom;
-            }
-          }
-        }
-      }
-    }
-
-    .summary {
-      margin-left: 60px;
-      word-break: break-all;
-      -webkit-line-clamp: 2;
-      overflow: hidden !important;
-      text-overflow: ellipsis;
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-      color: #4a4a4a;
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 1.5;
-    }
-
-    .actions {
-      text-align: right;
-      font-size: 12px;
-      font-weight: 400;
-
-      .action-item {
-        margin-right: 9px;
-      }
-
-      span.danger {
-        background: #eee;
-        color: red;
-        padding: 2px 5px 2px 5px;
-      }
-
-      a.btn {
-        color: blue;
+      .article-title {
+        color: #555;
+        font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
+        text-decoration: none;
+      }
+
+      .article-meta {
+        margin-top: 10px;
+        display: flex;
+        font-size: 12px;
+
+        label:not(:last-child) {
+          margin-right: 8px;
+        }
+
+        label {
+          color: #999;
+          font-size: 12px;
+        }
+
+        .article-tags {
+          .el-tag + .el-tag {
+            margin-left: 5px;
+          }
+
+          .button-new-tag {
+            margin-left: 10px;
+            height: 32px;
+            line-height: 30px;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+
+          .input-new-tag {
+            width: 90px;
+            margin-left: 10px;
+            vertical-align: bottom;
+          }
+        }
+      }
+
+      .article-info {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        min-width: max-content;
+
+        span {
+          margin-left: 10px;
+          color: red;
+          font-size: 13px;
+          font-weight: bold;
+        }
+      }
+
+      .summary {
+        margin-top: 10px;
+        word-break: break-all;
+        -webkit-line-clamp: 2;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        color: #4a4a4a;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+
+      .actions {
+        margin-top: 10px;
+        .action-item {
+          margin-right: 5px;
+        }
       }
     }
   }
