@@ -16,6 +16,9 @@ const mutations = {
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction;
   },
+  SET_USER_ID: (state, id) => {
+    state.id = id;
+  },
   SET_NAME: (state, name) => {
     state.name = name;
   },
@@ -63,6 +66,7 @@ const actions = {
           if (!data.roles || data.roles.length <= 0) {
             reject(new Error("getInfo: roles must be a non-null array!"));
           }
+          commit("SET_USER_ID", data.id);
           commit("SET_ROLES", data.roles);
           commit("SET_NAME", data.nickname);
           commit("SET_AVATAR", data.avatar);

@@ -3,6 +3,7 @@
     v-if="user"
     class="avatar-a"
     :href="('/user/' + user.id) | siteUrl"
+    target="_blank"
     :class="[sizeClass]"
     :style="extraStyle"
   >
