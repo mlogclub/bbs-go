@@ -94,9 +94,9 @@ const adminRouter = [
     redirect: "/links",
     children: [
       {
+        name: "Links",
         path: "",
         component: () => import("@/views/pages/links/index"),
-        name: "links",
         meta: {
           title: "友情链接",
           icon: "iconfont icon-link",
