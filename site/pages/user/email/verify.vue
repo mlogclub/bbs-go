@@ -11,10 +11,7 @@
           </div>
           <div class="message-body">
             <div v-if="success">
-              恭喜，邮箱验证成功。你的邮箱为：{{ email }}，<nuxt-link
-                to="/user/profile"
-                >点击前往资料页</nuxt-link
-              >
+              恭喜，邮箱验证成功。你的邮箱为：{{ email }}
             </div>
             <div v-else>
               邮箱验证失败<span v-if="message" class="has-text-danger"
