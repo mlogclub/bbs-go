@@ -1,39 +1,48 @@
 <template>
-  <div class="widget">
-    <div class="widget-header">邮箱验证</div>
-    <div class="widget-content">
-      <div v-if="success">
-        恭喜，邮箱验证成功。你的邮箱为：{{ currentUser.email }}，<nuxt-link
-          to="/user/profile"
-          >点击前往资料页</nuxt-link
+  <section class="main">
+    <div class="container">
+      <div class="main-body no-bg">
+        <article
+          class="message"
+          :class="{ 'is-success': success, 'is-warning': !success }"
         >
-      </div>
-      <div v-else>
-        邮箱验证失败<span v-if="message" class="has-text-danger"
-          >&nbsp;原因：{{ message }}</span
-        >，请前往&nbsp;<nuxt-link to="/user/profile">个人资料</nuxt-link
-        >&nbsp;页面尝试重新发送验证邮件。
+          <div class="message-header">
+            <p>邮箱验证</p>
+          </div>
+          <div class="message-body">
+            <div v-if="success">
+              恭喜，邮箱验证成功。你的邮箱为：{{ email }}，<nuxt-link
+                to="/user/profile"
+                >点击前往资料页</nuxt-link
+              >
+            </div>
+            <div v-else>
+              邮箱验证失败<span v-if="message" class="has-text-danger"
+                >&nbsp;原因：{{ message }}</span
+              >，请前往&nbsp;<nuxt-link
+                to="/user/profile"
+                style="font-weight: 700"
+                >个人资料 &gt; 账号设置</nuxt-link
+              >&nbsp;页面尝试重新发送验证邮件。
+            </div>
+          </div>
+        </article>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
 export default {
-  layout: 'ucenter',
-  middleware: 'authenticated',
   async asyncData({ $axios, query }) {
     try {
-      await $axios.get('/api/user/email/verify?token=' + query.token)
-      return { success: true }
+      const data = await $axios.post(
+        '/api/user/verify_email?token=' + query.token
+      )
+      return { success: true, email: data.email }
     } catch (e) {
       return { success: false, message: e.message || '' }
     }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.state.user.current
-    },
   },
 }
 </script>

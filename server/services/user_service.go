@@ -510,29 +510,30 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 }
 
 // VerifyEmail 验证邮箱
-func (s *userService) VerifyEmail(userId int64, token string) error {
+func (s *userService) VerifyEmail(token string) (string, error) {
 	emailCode := EmailCodeService.FindOne(simple.NewSqlCnd().Eq("token", token))
 	if emailCode == nil || emailCode.Used {
-		return errors.New("非法请求")
-	}
-	if emailCode.UserId != userId {
-		return errors.New("非法验证码")
+		return "", errors.New("非法请求")
 	}
 
-	user := s.Get(userId)
+	user := s.Get(emailCode.UserId)
 	if user == nil || emailCode.Email != user.Email.String {
-		return errors.New("验证码过期")
+		return "", errors.New("验证码过期")
 	}
 	if date.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
-		return errors.New("验证邮件已过期")
+		return "", errors.New("验证邮件已过期")
 	}
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	err := simple.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.UpdateColumn(tx, emailCode.UserId, "email_verified", true); err != nil {
 			return err
 		}
 		cache.UserCache.Invalidate(emailCode.UserId)
 		return repositories.EmailCodeRepository.UpdateColumn(tx, emailCode.Id, "used", true)
 	})
+	if err != nil {
+		return "", err
+	}
+	return emailCode.Email, nil
 }
 
 // CheckPostStatus 用于在发表内容时检查用户状态

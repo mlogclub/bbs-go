@@ -362,7 +362,7 @@ export default {
     async requestEmailVerify() {
       this.$nuxt.$loading.start()
       try {
-        await this.$axios.post('/api/user/email/verify')
+        await this.$axios.post('/api/user/send_verify_email')
         this.$message.success(
           '邮件已经发送到你的邮箱：' + this.user.email + '，请注意查收。'
         )

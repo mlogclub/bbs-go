@@ -8,8 +8,8 @@
       <div v-if="isNeedEmailVerify" class="comment-not-login">
         <div class="comment-login-div">
           请先前往
-          <nuxt-link style="font-weight: 700" to="/user/profile"
-            >个人中心 &gt; 个人资料</nuxt-link
+          <nuxt-link style="font-weight: 700" to="/user/profile/account"
+            >个人中心 &gt; 账号设置</nuxt-link
           >页面设置邮箱，并完成邮箱认证。
         </div>
       </div>

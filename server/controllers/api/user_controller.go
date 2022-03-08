@@ -281,8 +281,8 @@ func (c *UserController) PostForbidden() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-// PostEmailVerify 请求邮箱验证邮件S
-func (c *UserController) PostEmailVerify() *simple.JsonResult {
+// PostEmailVerify 请求邮箱验证邮件
+func (c *UserController) PostSend_verify_email() *simple.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return simple.JsonError(simple.ErrorNotLogin)
@@ -293,18 +293,18 @@ func (c *UserController) PostEmailVerify() *simple.JsonResult {
 	return simple.JsonSuccess()
 }
 
-// GetEmailVerify 获取邮箱验证码
-func (c *UserController) GetEmailVerify() *simple.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
-	}
+// PostVerify_email 获取邮箱验证码
+func (c *UserController) PostVerify_email() *simple.JsonResult {
 	token := simple.FormValue(c.Ctx, "token")
 	if simple.IsBlank(token) {
-		return simple.JsonErrorMsg("非法请求")
+		return simple.JsonErrorMsg("Illegal request")
 	}
-	if err := services.UserService.VerifyEmail(user.Id, token); err != nil {
+	var (
+		email string
+		err   error
+	)
+	if email, err = services.UserService.VerifyEmail(token); err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonSuccess()
+	return simple.NewEmptyRspBuilder().Put("email", email).JsonResult()
 }
