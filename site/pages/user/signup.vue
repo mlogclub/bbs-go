@@ -6,13 +6,13 @@
           <div class="widget-header">注册</div>
           <div class="widget-content">
             <div class="field">
-              <label class="label">昵称</label>
+              <label class="label">用户名</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="nickname"
+                  v-model="username"
                   class="input is-success"
                   type="text"
-                  placeholder="请输入昵称"
+                  placeholder="请输入用户名"
                   @keyup.enter="signup"
                 />
                 <span class="icon is-small is-left">
@@ -159,7 +159,7 @@ export default {
         await this.$store.dispatch('user/signup', {
           captchaId: this.captchaId,
           captchaCode: this.captchaCode,
-          nickname: this.nickname,
+          username: this.username,
           email: this.email,
           password: this.password,
           rePassword: this.rePassword,
