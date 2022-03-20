@@ -65,6 +65,7 @@ export default {
         40: 'font-size: 20px;line-height: 40px;border-radius: 2px',
         35: 'font-size: 18px;line-height: 30px;border-radius: 2px',
         30: 'font-size: 18px;line-height: 30px;border-radius: 2px',
+        24: 'font-size: 12px;line-height: 24px;border-radius: 2px',
         20: 'font-size: 10px;line-height: 20px;border-radius: 2px',
       },
     }
@@ -179,6 +180,13 @@ export default {
   height: 30px;
   min-width: 30px;
   min-height: 30px;
+  border-radius: 2px;
+}
+.avatar-size-24 {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   border-radius: 2px;
 }
 .avatar-size-20 {

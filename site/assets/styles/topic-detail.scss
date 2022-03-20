@@ -1,9 +1,19 @@
 .topic-detail {
   margin-bottom: 20px;
+  background-color: var(--bg-color);
+  border-radius: 3px;
+
+  .topic-header,
+  .topic-content,
+  .topic-tags,
+  .topic-like-users,
+  .topic-actions {
+    margin: 0 16px 16px 16px;
+  }
 
   .topic-header {
     display: flex;
-    margin: 0 10px;
+    // margin: 0 10px;
 
     // @media screen and (max-width: 768px) {
     //   .topic-header-right {
@@ -48,13 +58,6 @@
     }
   }
 
-  .topic-content,
-  .topic-tags,
-  .topic-like-users,
-  .topic-actions {
-    margin: 20px 12px;
-  }
-
   .topic-content {
     font-size: 15px;
     color: var(--text-color);
@@ -62,7 +65,6 @@
     word-break: break-all;
     word-wrap: break-word;
     padding-top: 0 !important;
-    margin: 0 12px;
 
     .topic-title {
       font-weight: 700;
@@ -192,30 +194,37 @@
 
   .topic-like-users {
     width: 80%;
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    margin-bottom: 10px;
 
     .avatar-a {
-      margin-right: 3px;
+      margin-right: -3px;
+    }
+
+    .like-count {
+      margin-left: 8px;
+      font-size: 14px;
+      color: var(--text-color);
     }
   }
 
   .topic-actions {
-    margin: 20px auto;
-    padding: 0 25px;
+    padding: 10px 0;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-top: 1px solid var(--border-color);
 
     .action {
-      background: var(--bg-color);
-      cursor: pointer;
       flex: 1;
       display: flex;
       align-items: center;
-      flex-direction: column;
+      justify-content: center;
+      background: var(--bg-color);
+      cursor: pointer;
       color: var(--text-color3);
+      font-size: 14px;
 
       .checked-icon {
         color: var(--color-red);
@@ -234,8 +243,12 @@
       }
 
       > .action-icon {
-        font-size: 30px;
         fill: #8590a6;
+      }
+
+      .action-text {
+        color: var(--text-color);
+        margin-left: 5px;
       }
 
       &:hover {
@@ -244,11 +257,6 @@
         > .action-icon {
           fill: var(--text-link-color);
         }
-      }
-
-      > .content {
-        margin-top: 10px;
-        font-size: 12px;
       }
     }
   }

@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div class="comment-component">
     <div class="comment-header">
-      评论<span v-if="commentCount > 0">({{ commentCount }})</span>
+      <span v-if="commentCount > 0">{{ commentCount }}条评论</span>
+      <span v-else>评论</span>
     </div>
 
     <template v-if="isLogin">
@@ -105,32 +106,37 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.comment-header {
-  display: flex;
-  padding-top: 20px;
-  margin: 0 10px;
-  color: var(--text-color3);
-  font-size: 16px;
-}
+.comment-component {
+  background-color: var(--bg-color);
+  border-radius: 3px;
+  .comment-header {
+    display: flex;
+    padding-top: 20px;
+    margin: 0 10px;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 500;
+  }
 
-.comment-not-login {
-  margin: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 0;
-  overflow: hidden;
-  position: relative;
-  padding: 10px;
-  box-sizing: border-box;
+  .comment-not-login {
+    margin: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
 
-  .comment-login-div {
-    color: var(--text-color4);
-    cursor: pointer;
-    border-radius: 3px;
-    padding: 0 10px;
+    .comment-login-div {
+      color: var(--text-color4);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 0 10px;
 
-    a {
-      margin-left: 10px;
-      margin-right: 10px;
+      a {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
     }
   }
 }

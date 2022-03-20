@@ -3,7 +3,7 @@
     <section class="main">
       <div class="container main-container left-main size-360">
         <div class="left-container">
-          <div class="main-content no-padding">
+          <div class="main-content no-padding no-bg">
             <article
               class="topic-detail"
               itemscope
@@ -108,22 +108,23 @@
                   :user="likeUser"
                   :round="true"
                   :has-border="true"
-                  size="30"
+                  size="24"
                 />
+                <span class="like-count">{{ topic.likeCount }}</span>
               </div>
 
               <!-- 功能按钮 -->
               <div class="topic-actions">
-                <a class="action disabled">
+                <div class="action disabled">
                   <i class="action-icon iconfont icon-read" />
-                  <span class="content">
+                  <div class="action-text">
                     <span>浏览</span>
-                    <span v-if="topic.viewCount > 0">
+                    <span v-if="topic.viewCount > 0" class="action-text">
                       ({{ topic.viewCount }})
                     </span>
-                  </span>
-                </a>
-                <a
+                  </div>
+                </div>
+                <div
                   class="action"
                   :class="{ disabled: liked }"
                   @click="like(topic)"
@@ -132,14 +133,14 @@
                     class="action-icon iconfont icon-like"
                     :class="{ 'checked-icon': liked }"
                   />
-                  <span class="content">
+                  <div class="action-text">
                     <span>点赞</span>
                     <span v-if="topic.likeCount > 0">
                       ({{ topic.likeCount }})
                     </span>
-                  </span>
-                </a>
-                <a class="action" @click="addFavorite(topic.topicId)">
+                  </div>
+                </div>
+                <div class="action" @click="addFavorite(topic.topicId)">
                   <i
                     class="action-icon iconfont"
                     :class="{
@@ -148,22 +149,22 @@
                       'checked-icon': favorited,
                     }"
                   />
-                  <span class="content">
+                  <div class="action-text">
                     <span>收藏</span>
-                  </span>
-                </a>
+                  </div>
+                </div>
               </div>
-
-              <!-- 评论 -->
-              <comment
-                :entity-id="topic.topicId"
-                :comments-page="commentsPage"
-                :comment-count="topic.commentCount"
-                :show-ad="false"
-                :mode="topic.type === 1 ? 'text' : 'markdown'"
-                entity-type="topic"
-              />
             </article>
+
+            <!-- 评论 -->
+            <comment
+              :entity-id="topic.topicId"
+              :comments-page="commentsPage"
+              :comment-count="topic.commentCount"
+              :show-ad="false"
+              :mode="topic.type === 1 ? 'text' : 'markdown'"
+              entity-type="topic"
+            />
           </div>
         </div>
         <div class="right-container">
@@ -172,11 +173,6 @@
           <div class="ad">
             <!-- 展示广告 -->
             <adsbygoogle ad-slot="1742173616" />
-          </div>
-
-          <div v-if="topic.toc" ref="toc" class="widget no-bg toc">
-            <div class="widget-header">目录</div>
-            <div class="widget-content" v-html="topic.toc" />
           </div>
         </div>
       </div>
