@@ -24,3 +24,5 @@ cscope.files
 tags
 
 logs/*.log
+
+go.work
