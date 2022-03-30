@@ -5,9 +5,8 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
-	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -17,56 +16,56 @@ type TopicNodeController struct {
 	Ctx iris.Context
 }
 
-func (c *TopicNodeController) GetBy(id int64) *mvc.JsonResult {
+func (c *TopicNodeController) GetBy(id int64) *web.JsonResult {
 	t := services.TopicNodeService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *TopicNodeController) AnyList() *mvc.JsonResult {
+func (c *TopicNodeController) AnyList() *web.JsonResult {
 	list, paging := services.TopicNodeService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("name").PageByReq().Asc("sort_no").Desc("id"))
-	return mvc.JsonData(&sqls.PageResult{Results: list, Page: paging})
+	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
-func (c *TopicNodeController) PostCreate() *mvc.JsonResult {
+func (c *TopicNodeController) PostCreate() *web.JsonResult {
 	t := &model.TopicNode{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	t.CreateTime = dates.NowTimestamp()
 	err = services.TopicNodeService.Create(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *TopicNodeController) PostUpdate() *mvc.JsonResult {
+func (c *TopicNodeController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	t := services.TopicNodeService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg("entity not found")
 	}
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 
 	err = services.TopicNodeService.Update(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *TopicNodeController) GetNodes() *mvc.JsonResult {
+func (c *TopicNodeController) GetNodes() *web.JsonResult {
 	list := services.TopicNodeService.GetNodes()
-	return mvc.JsonData(list)
+	return web.JsonData(list)
 }

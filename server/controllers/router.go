@@ -13,8 +13,8 @@ import (
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/kataras/iris/v12/mvc"
-	mvc2 "github.com/mlogclub/simple/mvc"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/controllers/api"
@@ -42,7 +42,7 @@ func Router() {
 		path := ctx.Path()
 		var err error
 		if strings.Contains(path, "/api/admin/") {
-			_, err = ctx.JSON(mvc2.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
+			_, err = ctx.JSON(web.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		}
 		if err != nil {
 			logrus.Error(err)
@@ -138,7 +138,7 @@ func handleSignal(server *http.Server) {
 			logrus.Errorf("server close failed: " + err.Error())
 		}
 
-		sqls.CloseDB()
+		sqls.Close()
 
 		logrus.Infof("Exited")
 		os.Exit(0)

@@ -7,7 +7,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 )
 
 var (
@@ -59,13 +59,13 @@ func getPathRoles(ctx iris.Context) []string {
 
 // notLogin 未登录返回
 func notLogin(ctx iris.Context) {
-	_, _ = ctx.JSON(mvc.JsonError(simple.ErrorNotLogin))
+	_, _ = ctx.JSON(web.JsonError(simple.ErrorNotLogin))
 	ctx.StopExecution()
 }
 
 // noPermission 无权限返回
 func noPermission(ctx iris.Context) {
-	_, _ = ctx.JSON(mvc.JsonErrorCode(2, "无权限"))
+	_, _ = ctx.JSON(web.JsonErrorCode(2, "无权限"))
 	ctx.StopExecution()
 }
 

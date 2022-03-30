@@ -7,25 +7,25 @@ import (
 	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 )
 
 type SearchController struct {
 	Ctx iris.Context
 }
 
-func (c *SearchController) AnyReindex() *mvc.JsonResult {
+func (c *SearchController) AnyReindex() *web.JsonResult {
 	go services.TopicService.ScanDesc(func(topics []model.Topic) {
 		for _, t := range topics {
 			topic := services.TopicService.Get(t.Id)
 			es.UpdateTopicIndex(topic)
 		}
 	})
-	return mvc.JsonSuccess()
+	return web.JsonSuccess()
 }
 
-func (c *SearchController) PostTopic() *mvc.JsonResult {
+func (c *SearchController) PostTopic() *web.JsonResult {
 	var (
 		page      = params.FormValueIntDefault(c.Ctx, "page", 1)
 		keyword   = params.FormValue(c.Ctx, "keyword")
@@ -35,9 +35,9 @@ func (c *SearchController) PostTopic() *mvc.JsonResult {
 
 	docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 
 	items := render.BuildSearchTopics(docs)
-	return mvc.JsonPageData(items, paging)
+	return web.JsonPageData(items, paging)
 }

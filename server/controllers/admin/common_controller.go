@@ -5,16 +5,16 @@ import (
 	"runtime"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 )
 
 type CommonController struct {
 	Ctx iris.Context
 }
 
-func (c *CommonController) GetSysteminfo() *mvc.JsonResult {
+func (c *CommonController) GetSysteminfo() *web.JsonResult {
 	hostname, _ := os.Hostname()
-	return mvc.NewEmptyRspBuilder().
+	return web.NewEmptyRspBuilder().
 		Put("os", runtime.GOOS).
 		Put("arch", runtime.GOARCH).
 		Put("numCpu", runtime.NumCPU()).

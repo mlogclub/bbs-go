@@ -4,8 +4,8 @@ import (
 	"bbs-go/model"
 	"bbs-go/repositories"
 
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 )
 
 var EmailCodeService = newEmailCodeService()

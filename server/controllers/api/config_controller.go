@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 
 	"bbs-go/services"
 )
@@ -11,7 +11,7 @@ type ConfigController struct {
 	Ctx iris.Context
 }
 
-func (c *ConfigController) GetConfigs() *mvc.JsonResult {
+func (c *ConfigController) GetConfigs() *web.JsonResult {
 	config := services.SysConfigService.GetConfig()
-	return mvc.JsonData(config)
+	return web.JsonData(config)
 }

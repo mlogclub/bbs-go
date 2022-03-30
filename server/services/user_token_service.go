@@ -8,8 +8,8 @@ import (
 	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/cache"
 	"bbs-go/model"

@@ -5,8 +5,8 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/repositories"
 
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 )
 
 var UserFeedService = newUserFeedService()

@@ -46,7 +46,7 @@ func init() {
 	}
 
 	// 连接数据库
-	if err := sqls.OpenDB(conf.MySqlUrl, gormConf, 10, 20, model.Models...); err != nil {
+	if err := sqls.Open(conf.MySqlUrl, gormConf, 10, 20, model.Models...); err != nil {
 		logrus.Error(err)
 	}
 }

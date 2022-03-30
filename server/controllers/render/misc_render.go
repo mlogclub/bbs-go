@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/common/urls"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -86,12 +86,12 @@ Parameter:
 	user - login user
 	ref - 登录来源地址，需要控制登录成功之后跳转到该地址
 */
-func BuildLoginSuccess(user *model.User, ref string) *mvc.JsonResult {
+func BuildLoginSuccess(user *model.User, ref string) *web.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.NewEmptyRspBuilder().
+	return web.NewEmptyRspBuilder().
 		Put("token", token).
 		Put("user", BuildUserProfile(user)).
 		Put("ref", ref).JsonResult()

@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
 	"bbs-go/model"

@@ -7,20 +7,20 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 )
 
 type FeedController struct {
 	Ctx iris.Context
 }
 
-func (c *FeedController) GetTopics() *mvc.JsonResult {
+func (c *FeedController) GetTopics() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return mvc.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(simple.ErrorNotLogin)
 	}
 	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
 	topics, cursor, hasMore := services.UserFeedService.GetTopics(user.Id, cursor)
-	return mvc.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
+	return web.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
 }

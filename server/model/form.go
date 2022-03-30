@@ -7,7 +7,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/web/params"
 	"github.com/tidwall/gjson"
 )
 

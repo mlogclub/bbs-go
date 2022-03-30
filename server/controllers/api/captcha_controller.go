@@ -6,7 +6,7 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,7 +14,7 @@ type CaptchaController struct {
 	Ctx iris.Context
 }
 
-func (c *CaptchaController) GetRequest() *mvc.JsonResult {
+func (c *CaptchaController) GetRequest() *web.JsonResult {
 	captchaId := c.Ctx.FormValue("captchaId")
 	if strs.IsNotBlank(captchaId) { // reload
 		if !captcha.Reload(captchaId) {
@@ -25,7 +25,7 @@ func (c *CaptchaController) GetRequest() *mvc.JsonResult {
 		captchaId = captcha.NewLen(4)
 	}
 	captchaUrl := bbsurls.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + strs.UUID())
-	return mvc.NewEmptyRspBuilder().
+	return web.NewEmptyRspBuilder().
 		Put("captchaId", captchaId).
 		Put("captchaUrl", captchaUrl).
 		JsonResult()
@@ -50,9 +50,9 @@ func (c *CaptchaController) GetShow() {
 	}
 }
 
-func (c *CaptchaController) GetVerify() *mvc.JsonResult {
+func (c *CaptchaController) GetVerify() *web.JsonResult {
 	captchaId := c.Ctx.URLParam("captchaId")
 	captchaCode := c.Ctx.URLParam("captchaCode")
 	success := captcha.VerifyString(captchaId, captchaCode)
-	return mvc.NewEmptyRspBuilder().Put("success", success).JsonResult()
+	return web.NewEmptyRspBuilder().Put("success", success).JsonResult()
 }

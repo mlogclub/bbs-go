@@ -4,8 +4,8 @@ import (
 	"bbs-go/model/constants"
 	"strings"
 
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/cache"
 	"bbs-go/model"

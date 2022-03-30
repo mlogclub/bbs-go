@@ -4,15 +4,15 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/msg"
-	"bbs-go/pkg/bbsurls"
 	"bbs-go/repositories"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/json"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 )
 

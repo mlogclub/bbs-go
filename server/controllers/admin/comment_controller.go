@@ -8,8 +8,8 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/services"
 )
@@ -18,15 +18,15 @@ type CommentController struct {
 	Ctx iris.Context
 }
 
-func (c *CommentController) GetBy(id int64) *mvc.JsonResult {
+func (c *CommentController) GetBy(id int64) *web.JsonResult {
 	t := services.CommentService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *CommentController) AnyList() *mvc.JsonResult {
+func (c *CommentController) AnyList() *web.JsonResult {
 	var (
 		id         = params.FormValueInt64Default(c.Ctx, "id", 0)
 		userId     = params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -48,15 +48,15 @@ func (c *CommentController) AnyList() *mvc.JsonResult {
 	}
 
 	if id <= 0 && userId <= 0 && (strs.IsBlank(entityType) || entityId <= 0) {
-		// return mvc.JsonErrorMsg("请输入必要的查询参数。")
-		return mvc.JsonSuccess()
+		// return web.JsonErrorMsg("请输入必要的查询参数。")
+		return web.JsonSuccess()
 	}
 
 	list, paging := services.CommentService.FindPageByParams(params)
 
 	var results []map[string]interface{}
 	for _, comment := range list {
-		builder := mvc.NewRspBuilderExcludes(comment, "content")
+		builder := web.NewRspBuilderExcludes(comment, "content")
 
 		// 用户
 		builder = builder.Put("user", render.BuildUserInfoDefaultIfNull(comment.UserId))
@@ -68,13 +68,13 @@ func (c *CommentController) AnyList() *mvc.JsonResult {
 		results = append(results, builder.Build())
 	}
 
-	return mvc.JsonPageData(results, paging)
+	return web.JsonPageData(results, paging)
 }
 
-func (c *CommentController) PostDeleteBy(id int64) *mvc.JsonResult {
+func (c *CommentController) PostDeleteBy(id int64) *web.JsonResult {
 	if err := services.CommentService.Delete(id); err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	} else {
-		return mvc.JsonSuccess()
+		return web.JsonSuccess()
 	}
 }

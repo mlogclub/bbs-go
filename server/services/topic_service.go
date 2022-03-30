@@ -16,8 +16,8 @@ import (
 	"github.com/mlogclub/simple/common/files"
 	"github.com/mlogclub/simple/common/json"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple"

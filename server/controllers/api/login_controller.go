@@ -5,7 +5,7 @@ import (
 
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/web"
 
 	"bbs-go/pkg/common"
 	"bbs-go/services"
@@ -16,7 +16,7 @@ type LoginController struct {
 }
 
 // 注册
-func (c *LoginController) PostSignup() *mvc.JsonResult {
+func (c *LoginController) PostSignup() *web.JsonResult {
 	var (
 		captchaId   = c.Ctx.PostValueTrim("captchaId")
 		captchaCode = c.Ctx.PostValueTrim("captchaCode")
@@ -29,20 +29,20 @@ func (c *LoginController) PostSignup() *mvc.JsonResult {
 	)
 	loginMethod := services.SysConfigService.GetLoginMethod()
 	if !loginMethod.Password {
-		return mvc.JsonErrorMsg("账号密码登录/注册已禁用")
+		return web.JsonErrorMsg("账号密码登录/注册已禁用")
 	}
 	if !captcha.VerifyString(captchaId, captchaCode) {
-		return mvc.JsonError(common.CaptchaError)
+		return web.JsonError(common.CaptchaError)
 	}
 	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	return render.BuildLoginSuccess(user, ref)
 }
 
 // 用户名密码登录
-func (c *LoginController) PostSignin() *mvc.JsonResult {
+func (c *LoginController) PostSignin() *web.JsonResult {
 	var (
 		captchaId   = c.Ctx.PostValueTrim("captchaId")
 		captchaCode = c.Ctx.PostValueTrim("captchaCode")
@@ -52,23 +52,23 @@ func (c *LoginController) PostSignin() *mvc.JsonResult {
 	)
 	// loginMethod := services.SysConfigService.GetLoginMethod()
 	// if !loginMethod.Password {
-	// 	return mvc.JsonErrorMsg("账号密码登录/注册已禁用")
+	// 	return web.JsonErrorMsg("账号密码登录/注册已禁用")
 	// }
 	if !captcha.VerifyString(captchaId, captchaCode) {
-		return mvc.JsonError(common.CaptchaError)
+		return web.JsonError(common.CaptchaError)
 	}
 	user, err := services.UserService.SignIn(username, password)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	return render.BuildLoginSuccess(user, ref)
 }
 
 // 退出登录
-func (c *LoginController) GetSignout() *mvc.JsonResult {
+func (c *LoginController) GetSignout() *web.JsonResult {
 	err := services.UserTokenService.Signout(c.Ctx)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonSuccess()
+	return web.JsonSuccess()
 }

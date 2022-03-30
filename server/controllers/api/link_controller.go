@@ -4,9 +4,9 @@ import (
 	"bbs-go/model/constants"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -16,16 +16,16 @@ type LinkController struct {
 	Ctx iris.Context
 }
 
-func (c *LinkController) GetBy(id int64) *mvc.JsonResult {
+func (c *LinkController) GetBy(id int64) *web.JsonResult {
 	link := services.LinkService.Get(id)
 	if link == nil || link.Status == constants.StatusDeleted {
-		return mvc.JsonErrorMsg("数据不存在")
+		return web.JsonErrorMsg("数据不存在")
 	}
-	return mvc.JsonData(c.buildLink(*link))
+	return web.JsonData(c.buildLink(*link))
 }
 
 // 列表
-func (c *LinkController) GetLinks() *mvc.JsonResult {
+func (c *LinkController) GetLinks() *web.JsonResult {
 	page := params.FormValueIntDefault(c.Ctx, "page", 1)
 
 	links, paging := services.LinkService.FindPageByCnd(sqls.NewSqlCnd().
@@ -35,11 +35,11 @@ func (c *LinkController) GetLinks() *mvc.JsonResult {
 	for _, v := range links {
 		itemList = append(itemList, c.buildLink(v))
 	}
-	return mvc.JsonPageData(itemList, paging)
+	return web.JsonPageData(itemList, paging)
 }
 
 // 前10个链接
-func (c *LinkController) GetToplinks() *mvc.JsonResult {
+func (c *LinkController) GetToplinks() *web.JsonResult {
 	links := services.LinkService.Find(sqls.NewSqlCnd().
 		Eq("status", constants.StatusOk).Limit(10).Asc("id"))
 
@@ -47,7 +47,7 @@ func (c *LinkController) GetToplinks() *mvc.JsonResult {
 	for _, v := range links {
 		itemList = append(itemList, c.buildLink(v))
 	}
-	return mvc.JsonData(itemList)
+	return web.JsonData(itemList)
 }
 
 func (c *LinkController) buildLink(link model.Link) map[string]interface{} {

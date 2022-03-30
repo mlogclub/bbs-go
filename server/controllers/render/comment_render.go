@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 )
 
 func BuildComment(comment *model.Comment) *model.CommentResponse {
@@ -86,7 +86,7 @@ func doBuildComment(comment *model.Comment, currentUser *model.User, isBuildRepl
 		//	replyResults = append(replyResults, *doBuildComment(&reply, false, true))
 		//}
 		replyResults := BuildComments(replies, currentUser, false, true)
-		ret.Replies = &sqls.CursorResult{
+		ret.Replies = &web.CursorResult{
 			Results: replyResults,
 			Cursor:  strconv.FormatInt(nextCursor, 10),
 			HasMore: comment.CommentCount > repliesLimit,

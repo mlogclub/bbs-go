@@ -7,9 +7,9 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/controllers/render"
 	"bbs-go/model"
@@ -20,35 +20,35 @@ type TagController struct {
 	Ctx iris.Context
 }
 
-func (c *TagController) GetBy(id int64) *mvc.JsonResult {
+func (c *TagController) GetBy(id int64) *web.JsonResult {
 	t := services.TagService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *TagController) AnyList() *mvc.JsonResult {
+func (c *TagController) AnyList() *web.JsonResult {
 	list, paging := services.TagService.FindPageByParams(params.NewQueryParams(c.Ctx).
 		LikeByReq("id").
 		LikeByReq("name").
 		EqByReq("status").
 		PageByReq().Desc("id"))
-	return mvc.JsonData(&sqls.PageResult{Results: list, Page: paging})
+	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
-func (c *TagController) PostCreate() *mvc.JsonResult {
+func (c *TagController) PostCreate() *web.JsonResult {
 	t := &model.Tag{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return mvc.JsonErrorMsg("name is required")
+		return web.JsonErrorMsg("name is required")
 	}
 	if services.TagService.GetByName(t.Name) != nil {
-		return mvc.JsonErrorMsg("标签「" + t.Name + "」已存在")
+		return web.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
 	t.Status = constants.StatusOk
@@ -57,43 +57,43 @@ func (c *TagController) PostCreate() *mvc.JsonResult {
 
 	err = services.TagService.Create(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *TagController) PostUpdate() *mvc.JsonResult {
+func (c *TagController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	t := services.TagService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg("entity not found")
 	}
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 
 	if len(t.Name) == 0 {
-		return mvc.JsonErrorMsg("name is required")
+		return web.JsonErrorMsg("name is required")
 	}
 	if tmp := services.TagService.GetByName(t.Name); tmp != nil && tmp.Id != id {
-		return mvc.JsonErrorMsg("标签「" + t.Name + "」已存在")
+		return web.JsonErrorMsg("标签「" + t.Name + "」已存在")
 	}
 
 	t.UpdateTime = dates.NowTimestamp()
 	err = services.TagService.Update(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
 // 自动完成
-func (c *TagController) GetAutocomplete() *mvc.JsonResult {
+func (c *TagController) GetAutocomplete() *web.JsonResult {
 	keyword := strings.TrimSpace(c.Ctx.URLParam("keyword"))
 	var tags []model.Tag
 	if len(keyword) > 0 {
@@ -101,11 +101,11 @@ func (c *TagController) GetAutocomplete() *mvc.JsonResult {
 	} else {
 		tags = services.TagService.Find(sqls.NewSqlCnd().Desc("id").Limit(10))
 	}
-	return mvc.JsonData(render.BuildTags(tags))
+	return web.JsonData(render.BuildTags(tags))
 }
 
 // 根据标签编号批量获取
-func (c *TagController) GetTags() *mvc.JsonResult {
+func (c *TagController) GetTags() *web.JsonResult {
 	tagIds := params.FormValueInt64Array(c.Ctx, "tagIds")
 	var tags *[]model.TagResponse
 	if len(tagIds) > 0 {
@@ -114,5 +114,5 @@ func (c *TagController) GetTags() *mvc.JsonResult {
 			tags = render.BuildTags(tagArr)
 		}
 	}
-	return mvc.JsonData(tags)
+	return web.JsonData(tags)
 }

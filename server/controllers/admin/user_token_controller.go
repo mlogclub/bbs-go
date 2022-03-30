@@ -4,9 +4,8 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
-	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/services"
 )
@@ -15,15 +14,15 @@ type UserTokenController struct {
 	Ctx iris.Context
 }
 
-func (c *UserTokenController) GetBy(id int64) *mvc.JsonResult {
+func (c *UserTokenController) GetBy(id int64) *web.JsonResult {
 	t := services.UserTokenService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *UserTokenController) AnyList() *mvc.JsonResult {
+func (c *UserTokenController) AnyList() *web.JsonResult {
 	list, paging := services.UserTokenService.FindPageByParams(params.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
-	return mvc.JsonData(&sqls.PageResult{Results: list, Page: paging})
+	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }

@@ -4,9 +4,8 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/mvc"
-	"github.com/mlogclub/simple/mvc/params"
-	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -16,45 +15,45 @@ type MessageController struct {
 	Ctx iris.Context
 }
 
-func (c *MessageController) GetBy(id int64) *mvc.JsonResult {
+func (c *MessageController) GetBy(id int64) *web.JsonResult {
 	t := services.MessageService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *MessageController) AnyList() *mvc.JsonResult {
+func (c *MessageController) AnyList() *web.JsonResult {
 	list, paging := services.MessageService.FindPageByParams(params.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
-	return mvc.JsonData(&sqls.PageResult{Results: list, Page: paging})
+	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
-func (c *MessageController) PostCreate() *mvc.JsonResult {
+func (c *MessageController) PostCreate() *web.JsonResult {
 	t := &model.Message{}
 	params.ReadForm(c.Ctx, t)
 
 	err := services.MessageService.Create(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
 
-func (c *MessageController) PostUpdate() *mvc.JsonResult {
+func (c *MessageController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
 	t := services.MessageService.Get(id)
 	if t == nil {
-		return mvc.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg("entity not found")
 	}
 
 	params.ReadForm(c.Ctx, t)
 
 	err = services.MessageService.Update(t)
 	if err != nil {
-		return mvc.JsonErrorMsg(err.Error())
+		return web.JsonErrorMsg(err.Error())
 	}
-	return mvc.JsonData(t)
+	return web.JsonData(t)
 }
