@@ -6,7 +6,8 @@ import (
 	"strings"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc/params"
 	"github.com/tidwall/gjson"
 )
 
@@ -50,16 +51,16 @@ type ImageDTO struct {
 
 func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 	var (
-		topicType = simple.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))
+		topicType = params.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))
 	)
 	return CreateTopicForm{
 		Type:        constants.TopicType(topicType),
-		CaptchaId:   simple.FormValue(ctx, "captchaId"),
-		CaptchaCode: simple.FormValue(ctx, "captchaCode"),
-		NodeId:      simple.FormValueInt64Default(ctx, "nodeId", 0),
-		Title:       strings.TrimSpace(simple.FormValue(ctx, "title")),
-		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
-		Tags:        simple.FormValueStringArray(ctx, "tags"),
+		CaptchaId:   params.FormValue(ctx, "captchaId"),
+		CaptchaCode: params.FormValue(ctx, "captchaCode"),
+		NodeId:      params.FormValueInt64Default(ctx, "nodeId", 0),
+		Title:       strings.TrimSpace(params.FormValue(ctx, "title")),
+		Content:     strings.TrimSpace(params.FormValue(ctx, "content")),
+		Tags:        params.FormValueStringArray(ctx, "tags"),
 		ImageList:   GetImageList(ctx, "imageList"),
 		UserAgent:   common.GetUserAgent(ctx.Request()),
 		Ip:          common.GetRequestIP(ctx.Request()),
@@ -68,12 +69,12 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 
 func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 	form := CreateCommentForm{
-		EntityType:  simple.FormValue(ctx, "entityType"),
-		EntityId:    simple.FormValueInt64Default(ctx, "entityId", 0),
-		Content:     strings.TrimSpace(simple.FormValue(ctx, "content")),
+		EntityType:  params.FormValue(ctx, "entityType"),
+		EntityId:    params.FormValueInt64Default(ctx, "entityId", 0),
+		Content:     strings.TrimSpace(params.FormValue(ctx, "content")),
 		ImageList:   GetImageList(ctx, "imageList"),
-		QuoteId:     simple.FormValueInt64Default(ctx, "quoteId", 0),
-		ContentType: simple.FormValueDefault(ctx, "contentType", constants.ContentTypeText),
+		QuoteId:     params.FormValueInt64Default(ctx, "quoteId", 0),
+		ContentType: params.FormValueDefault(ctx, "contentType", constants.ContentTypeText),
 		UserAgent:   common.GetUserAgent(ctx.Request()),
 		Ip:          common.GetRequestIP(ctx.Request()),
 	}
@@ -81,9 +82,9 @@ func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 }
 
 func GetImageList(ctx iris.Context, paramName string) []ImageDTO {
-	imageListStr := simple.FormValue(ctx, paramName)
+	imageListStr := params.FormValue(ctx, paramName)
 	var imageList []ImageDTO
-	if simple.IsNotBlank(imageListStr) {
+	if strs.IsNotBlank(imageListStr) {
 		ret := gjson.Parse(imageListStr)
 		if ret.IsArray() {
 			for _, item := range ret.Array() {

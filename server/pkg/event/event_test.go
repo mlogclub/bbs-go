@@ -3,10 +3,11 @@ package event
 import (
 	"bbs-go/model"
 	"fmt"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/json"
 	"reflect"
 	"testing"
+
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/sqls"
 )
 
 func TestEvent(t *testing.T) {
@@ -21,7 +22,7 @@ func TestEvent(t *testing.T) {
 		fmt.Println(json.ToStr(i))
 	})
 	Send(model.User{
-		Username: simple.SqlNullString("test"),
+		Username: sqls.SqlNullString("test"),
 	})
 	//w.Wait()
 }

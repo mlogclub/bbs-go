@@ -2,28 +2,29 @@ package uploader
 
 import (
 	"bbs-go/pkg/config"
-	"github.com/mlogclub/simple/date"
 	"mime"
 	"time"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 // generateKey 生成图片Key
 func generateImageKey(data []byte, contentType string) string {
 	md5 := simple.MD5Bytes(data)
 	ext := ""
-	if simple.IsNotBlank(contentType) {
+	if strs.IsNotBlank(contentType) {
 		exts, err := mime.ExtensionsByType(contentType)
 		if err == nil || len(exts) > 0 {
 			ext = exts[0]
 		}
 	}
 	if config.Instance.Env == "dev" {
-		return "test/images/" + date.Format(time.Now(), "2006/01/02/") + md5 + ext
+		return "test/images/" + dates.Format(time.Now(), "2006/01/02/") + md5 + ext
 	} else {
-		return "images/" + date.Format(time.Now(), "2006/01/02/") + md5 + ext
+		return "images/" + dates.Format(time.Now(), "2006/01/02/") + md5 + ext
 	}
 }
 

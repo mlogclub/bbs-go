@@ -1,7 +1,8 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -32,12 +33,12 @@ func (r *thirdAccountRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (r *thirdAccountRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount) {
+func (r *thirdAccountRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ThirdAccount) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ThirdAccount {
+func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.ThirdAccount {
 	ret := &model.ThirdAccount{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,15 +46,15 @@ func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model
 	return ret
 }
 
-func (r *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
+func (r *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.ThirdAccount, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
+func (r *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ThirdAccount, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.ThirdAccount{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,

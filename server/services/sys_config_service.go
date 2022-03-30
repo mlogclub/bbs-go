@@ -6,11 +6,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/simple/date"
-	"github.com/mlogclub/simple/json"
-	"github.com/mlogclub/simple/number"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/numbers"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
@@ -30,31 +32,31 @@ type sysConfigService struct {
 }
 
 func (s *sysConfigService) Get(id int64) *model.SysConfig {
-	return repositories.SysConfigRepository.Get(simple.DB(), id)
+	return repositories.SysConfigRepository.Get(sqls.DB(), id)
 }
 
 func (s *sysConfigService) Take(where ...interface{}) *model.SysConfig {
-	return repositories.SysConfigRepository.Take(simple.DB(), where...)
+	return repositories.SysConfigRepository.Take(sqls.DB(), where...)
 }
 
-func (s *sysConfigService) Find(cnd *simple.SqlCnd) []model.SysConfig {
-	return repositories.SysConfigRepository.Find(simple.DB(), cnd)
+func (s *sysConfigService) Find(cnd *sqls.SqlCnd) []model.SysConfig {
+	return repositories.SysConfigRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *sysConfigService) FindOne(cnd *simple.SqlCnd) *model.SysConfig {
-	return repositories.SysConfigRepository.FindOne(simple.DB(), cnd)
+func (s *sysConfigService) FindOne(cnd *sqls.SqlCnd) *model.SysConfig {
+	return repositories.SysConfigRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *sysConfigService) FindPageByParams(params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
-	return repositories.SysConfigRepository.FindPageByParams(simple.DB(), params)
+func (s *sysConfigService) FindPageByParams(params *params.QueryParams) (list []model.SysConfig, paging *sqls.Paging) {
+	return repositories.SysConfigRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *sysConfigService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
-	return repositories.SysConfigRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *sysConfigService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.SysConfig, paging *sqls.Paging) {
+	return repositories.SysConfigRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *sysConfigService) GetAll() []model.SysConfig {
-	return repositories.SysConfigRepository.Find(simple.DB(), simple.NewSqlCnd().Asc("id"))
+	return repositories.SysConfigRepository.Find(sqls.DB(), sqls.NewSqlCnd().Asc("id"))
 }
 
 func (s *sysConfigService) SetAll(configStr string) error {
@@ -63,7 +65,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	if !ok {
 		return errors.New("配置数据格式错误")
 	}
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		for k, _ := range configs {
 			v := json.Get(k).String()
 			if err := s.setSingle(tx, k, v, "", ""); err != nil {
@@ -76,7 +78,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 
 // Set 设置配置，如果配置不存在，那么创建
 func (s *sysConfigService) Set(key, value, name, description string) error {
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := s.setSingle(tx, key, value, name, description); err != nil {
 			return err
 		}
@@ -91,17 +93,17 @@ func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description 
 	sysConfig := repositories.SysConfigRepository.GetByKey(db, key)
 	if sysConfig == nil {
 		sysConfig = &model.SysConfig{
-			CreateTime: date.NowTimestamp(),
+			CreateTime: dates.NowTimestamp(),
 		}
 	}
 	sysConfig.Key = key
 	sysConfig.Value = value
-	sysConfig.UpdateTime = date.NowTimestamp()
+	sysConfig.UpdateTime = dates.NowTimestamp()
 
-	if simple.IsNotBlank(name) {
+	if strs.IsNotBlank(name) {
 		sysConfig.Name = name
 	}
-	if simple.IsNotBlank(description) {
+	if strs.IsNotBlank(description) {
 		sysConfig.Description = description
 	}
 
@@ -136,7 +138,7 @@ func (s *sysConfigService) GetLoginMethod() model.LoginMethod {
 
 	useDefault := true
 	var loginMethod model.LoginMethod
-	if simple.IsNotBlank(loginMethodStr) {
+	if strs.IsNotBlank(loginMethodStr) {
 		if err := json.Parse(loginMethodStr, &loginMethod); err != nil {
 			logrus.Warn("登录方式数据错误", err)
 		} else {
@@ -155,23 +157,23 @@ func (s *sysConfigService) GetLoginMethod() model.LoginMethod {
 
 func (s *sysConfigService) IsCreateTopicEmailVerified() bool {
 	value := cache.SysConfigCache.GetValue(constants.SysConfigCreateTopicEmailVerified)
-	return simple.EqualsIgnoreCase(value, "true") || simple.EqualsIgnoreCase(value, "1")
+	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
 }
 
 func (s *sysConfigService) IsCreateArticleEmailVerified() bool {
 	value := cache.SysConfigCache.GetValue(constants.SysConfigCreateArticleEmailVerified)
-	return simple.EqualsIgnoreCase(value, "true") || simple.EqualsIgnoreCase(value, "1")
+	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
 }
 
 func (s *sysConfigService) IsCreateCommentEmailVerified() bool {
 	value := cache.SysConfigCache.GetValue(constants.SysConfigCreateCommentEmailVerified)
-	return simple.EqualsIgnoreCase(value, "true") || simple.EqualsIgnoreCase(value, "1")
+	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
 }
 
 func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
 	siteNavs := cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
 	var siteNavsArr []model.ActionLink
-	if simple.IsNotBlank(siteNavs) {
+	if strs.IsNotBlank(siteNavs) {
 		if err := json.Parse(siteNavs, &siteNavsArr); err != nil {
 			logrus.Warn("站点导航数据错误", err)
 		}
@@ -201,29 +203,29 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	)
 
 	var siteKeywordsArr []string
-	if simple.IsNotBlank(siteKeywords) {
+	if strs.IsNotBlank(siteKeywords) {
 		if err := json.Parse(siteKeywords, &siteKeywordsArr); err != nil {
 			logrus.Warn("站点关键词数据错误", err)
 		}
 	}
 
 	var recommendTagsArr []string
-	if simple.IsNotBlank(recommendTags) {
+	if strs.IsNotBlank(recommendTags) {
 		if err := json.Parse(recommendTags, &recommendTagsArr); err != nil {
 			logrus.Warn("推荐标签数据错误", err)
 		}
 	}
 
 	var scoreConfig model.ScoreConfig
-	if simple.IsNotBlank(scoreConfigStr) {
+	if strs.IsNotBlank(scoreConfigStr) {
 		if err := json.Parse(scoreConfigStr, &scoreConfig); err != nil {
 			logrus.Warn("积分配置错误", err)
 		}
 	}
 
 	var (
-		defaultNodeId      = number.ToInt64(defaultNodeIdStr)
-		userObserveSeconds = number.ToInt(userObserveSecondsStr)
+		defaultNodeId      = numbers.ToInt64(defaultNodeIdStr)
+		userObserveSeconds = numbers.ToInt(userObserveSecondsStr)
 	)
 
 	if tokenExpireDays <= 0 {
@@ -253,7 +255,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 
 func (s *sysConfigService) GetInt(key string) int {
 	value := cache.SysConfigCache.GetValue(key)
-	if simple.IsBlank(value) {
+	if strs.IsBlank(value) {
 		return 0
 	}
 	ret, _ := strconv.Atoi(value)

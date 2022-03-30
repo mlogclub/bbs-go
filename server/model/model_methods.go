@@ -2,10 +2,12 @@ package model
 
 import (
 	"bbs-go/model/constants"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 // IsForbidden 是否禁言
@@ -18,7 +20,7 @@ func (u *User) IsForbidden() bool {
 		return true
 	}
 	// 判断禁言时间
-	return u.ForbiddenEndTime > date.NowTimestamp()
+	return u.ForbiddenEndTime > dates.NowTimestamp()
 }
 
 // HasRole 是否有指定角色
@@ -45,7 +47,7 @@ func (u *User) HasAnyRole(roles ...string) bool {
 
 // GetRoles 获取角色
 func (u *User) GetRoles() []string {
-	if simple.IsBlank(u.Roles) {
+	if strs.IsBlank(u.Roles) {
 		return nil
 	}
 	ss := strings.Split(u.Roles, ",")
@@ -55,7 +57,7 @@ func (u *User) GetRoles() []string {
 	var roles []string
 	for _, s := range ss {
 		s = strings.TrimSpace(s)
-		if simple.IsNotBlank(s) {
+		if strs.IsNotBlank(s) {
 			roles = append(roles, s)
 		}
 	}
@@ -68,13 +70,13 @@ func (u *User) InObservationPeriod(observeSeconds int) bool {
 	if observeSeconds <= 0 {
 		return false
 	}
-	return date.FromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
+	return dates.FromTimestamp(u.CreateTime).Add(time.Second * time.Duration(observeSeconds)).After(time.Now())
 }
 
 // GetTitle 获取帖子的标题
 func (t *Topic) GetTitle() string {
 	if t.Type == constants.TopicTypeTweet {
-		if simple.IsNotBlank(t.Content) {
+		if strs.IsNotBlank(t.Content) {
 			return t.Content
 		} else {
 			return "分享图片"

@@ -9,61 +9,63 @@ import (
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/mvc/params"
 )
 
 type FansController struct {
 	Ctx iris.Context
 }
 
-func (c *FansController) PostFollow() *simple.JsonResult {
+func (c *FansController) PostFollow() *mvc.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
+		return mvc.JsonError(simple.ErrorNotLogin)
 	}
 
-	otherId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	if otherId <= 0 {
-		return simple.JsonErrorMsg("param: userId required")
+		return mvc.JsonErrorMsg("param: userId required")
 	}
 
 	err := services.UserFollowService.Follow(user.Id, otherId)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonSuccess()
+	return mvc.JsonSuccess()
 }
 
-func (c *FansController) PostUnfollow() *simple.JsonResult {
+func (c *FansController) PostUnfollow() *mvc.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return simple.JsonError(simple.ErrorNotLogin)
+		return mvc.JsonError(simple.ErrorNotLogin)
 	}
 
-	otherId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	if otherId <= 0 {
-		return simple.JsonErrorMsg("param: userId required")
+		return mvc.JsonErrorMsg("param: userId required")
 	}
 
 	err := services.UserFollowService.UnFollow(user.Id, otherId)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonSuccess()
+	return mvc.JsonSuccess()
 }
 
-func (c *FansController) GetIsfollowed() *simple.JsonResult {
-	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+func (c *FansController) GetIsfollowed() *mvc.JsonResult {
+	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	current := services.UserTokenService.GetCurrent(c.Ctx)
 	var followed = false
 	if current != nil && current.Id != userId {
 		followed = services.UserFollowService.IsFollowed(current.Id, userId)
 	}
-	return simple.JsonData(followed)
+	return mvc.JsonData(followed)
 }
 
-func (c *FansController) GetFans() *simple.JsonResult {
-	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
-	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+func (c *FansController) GetFans() *mvc.JsonResult {
+	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
+	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
 	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, cursor, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
@@ -78,12 +80,12 @@ func (c *FansController) GetFans() *simple.JsonResult {
 		item.Followed = followedSet.Contains(id)
 		itemList = append(itemList, item)
 	}
-	return simple.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
+	return mvc.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
 }
 
-func (c *FansController) GetFollows() *simple.JsonResult {
-	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
-	cursor := simple.FormValueInt64Default(c.Ctx, "cursor", 0)
+func (c *FansController) GetFollows() *mvc.JsonResult {
+	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
+	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
 	userIds, cursor, hasMore := services.UserFollowService.GetFollows(userId, cursor, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
@@ -105,11 +107,11 @@ func (c *FansController) GetFollows() *simple.JsonResult {
 		item.Followed = followedSet.Contains(id)
 		itemList = append(itemList, item)
 	}
-	return simple.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
+	return mvc.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
 }
 
-func (c *FansController) GetRecentFans() *simple.JsonResult {
-	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+func (c *FansController) GetRecentFans() *mvc.JsonResult {
+	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	userIds, cursor, hasMore := services.UserFollowService.GetFans(userId, 0, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
@@ -124,11 +126,11 @@ func (c *FansController) GetRecentFans() *simple.JsonResult {
 		item.Followed = followedSet.Contains(id)
 		itemList = append(itemList, item)
 	}
-	return simple.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
+	return mvc.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
 }
 
-func (c *FansController) GetRecentFollow() *simple.JsonResult {
-	userId := simple.FormValueInt64Default(c.Ctx, "userId", 0)
+func (c *FansController) GetRecentFollow() *mvc.JsonResult {
+	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	userIds, cursor, hasMore := services.UserFollowService.GetFollows(userId, 0, 10)
 
 	current := services.UserTokenService.GetCurrent(c.Ctx)
@@ -150,5 +152,5 @@ func (c *FansController) GetRecentFollow() *simple.JsonResult {
 		item.Followed = followedSet.Contains(id)
 		itemList = append(itemList, item)
 	}
-	return simple.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
+	return mvc.JsonCursorData(itemList, strconv.FormatInt(cursor, 10), hasMore)
 }

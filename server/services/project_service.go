@@ -2,16 +2,17 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/config"
-	"bbs-go/pkg/urls"
 	"math"
 	"path"
 	"time"
 
-	"github.com/mlogclub/simple/date"
-
 	"github.com/gorilla/feeds"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/files"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/cache"
@@ -30,47 +31,47 @@ type projectService struct {
 }
 
 func (s *projectService) Get(id int64) *model.Project {
-	return repositories.ProjectRepository.Get(simple.DB(), id)
+	return repositories.ProjectRepository.Get(sqls.DB(), id)
 }
 
 func (s *projectService) Take(where ...interface{}) *model.Project {
-	return repositories.ProjectRepository.Take(simple.DB(), where...)
+	return repositories.ProjectRepository.Take(sqls.DB(), where...)
 }
 
-func (s *projectService) Find(cnd *simple.SqlCnd) []model.Project {
-	return repositories.ProjectRepository.Find(simple.DB(), cnd)
+func (s *projectService) Find(cnd *sqls.SqlCnd) []model.Project {
+	return repositories.ProjectRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *projectService) FindOne(cnd *simple.SqlCnd) *model.Project {
-	return repositories.ProjectRepository.FindOne(simple.DB(), cnd)
+func (s *projectService) FindOne(cnd *sqls.SqlCnd) *model.Project {
+	return repositories.ProjectRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *projectService) FindPageByParams(params *simple.QueryParams) (list []model.Project, paging *simple.Paging) {
-	return repositories.ProjectRepository.FindPageByParams(simple.DB(), params)
+func (s *projectService) FindPageByParams(params *params.QueryParams) (list []model.Project, paging *sqls.Paging) {
+	return repositories.ProjectRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *projectService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Project, paging *simple.Paging) {
-	return repositories.ProjectRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *projectService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Project, paging *sqls.Paging) {
+	return repositories.ProjectRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *projectService) Create(t *model.Project) error {
-	return repositories.ProjectRepository.Create(simple.DB(), t)
+	return repositories.ProjectRepository.Create(sqls.DB(), t)
 }
 
 func (s *projectService) Update(t *model.Project) error {
-	return repositories.ProjectRepository.Update(simple.DB(), t)
+	return repositories.ProjectRepository.Update(sqls.DB(), t)
 }
 
 func (s *projectService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ProjectRepository.Updates(simple.DB(), id, columns)
+	return repositories.ProjectRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *projectService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.ProjectRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.ProjectRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *projectService) Delete(id int64) {
-	repositories.ProjectRepository.Delete(simple.DB(), id)
+	repositories.ProjectRepository.Delete(sqls.DB(), id)
 }
 
 // 发布
@@ -86,9 +87,9 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 		DownloadUrl: downloadUrl,
 		ContentType: contentType,
 		Content:     content,
-		CreateTime:  date.NowTimestamp(),
+		CreateTime:  dates.NowTimestamp(),
 	}
-	err := repositories.ProjectRepository.Create(simple.DB(), project)
+	err := repositories.ProjectRepository.Create(sqls.DB(), project)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,7 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewSqlCnd().Lt("id", cursor).
 			Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -111,7 +112,7 @@ func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ProjectRepository.Find(simple.DB(), simple.NewSqlCnd().Lt("id", cursor).
+		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewSqlCnd().Lt("id", cursor).
 			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -123,12 +124,12 @@ func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 
 // rss
 func (s *projectService) GenerateRss() {
-	projects := repositories.ProjectRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("1 = 1").Desc("id").Limit(200))
+	projects := repositories.ProjectRepository.Find(sqls.DB(),
+		sqls.NewSqlCnd().Where("1 = 1").Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, project := range projects {
-		projectUrl := urls.ProjectUrl(project.Id)
+		projectUrl := bbsurls.ProjectUrl(project.Id)
 		user := cache.UserCache.Get(project.UserId)
 		if user == nil {
 			continue
@@ -139,7 +140,7 @@ func (s *projectService) GenerateRss() {
 			Link:        &feeds.Link{Href: projectUrl},
 			Description: description,
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     date.FromTimestamp(project.CreateTime),
+			Created:     dates.FromTimestamp(project.CreateTime),
 		}
 		items = append(items, item)
 	}
@@ -157,13 +158,13 @@ func (s *projectService) GenerateRss() {
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "project_atom.xml"), atom, false)
+		_ = files.WriteString(path.Join(config.Instance.StaticPath, "project_atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "project_rss.xml"), rss, false)
+		_ = files.WriteString(path.Join(config.Instance.StaticPath, "project_rss.xml"), rss, false)
 	}
 }

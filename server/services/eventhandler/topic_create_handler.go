@@ -5,7 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/event"
 	"bbs-go/pkg/seo"
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/services"
 	"github.com/sirupsen/logrus"
 	"reflect"
@@ -35,5 +35,5 @@ func handleTopicCreateEvent(i interface{}) {
 	})
 
 	// 百度链接推送
-	seo.Push(urls.TopicUrl(e.TopicId))
+	seo.Push(bbsurls.TopicUrl(e.TopicId))
 }

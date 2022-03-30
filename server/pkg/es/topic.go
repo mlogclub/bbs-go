@@ -12,13 +12,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/sqls"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/panjf2000/ants/v2"
 
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/json"
+	"github.com/mlogclub/simple/common/json"
 	"github.com/sirupsen/logrus"
 )
 
@@ -61,7 +62,7 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 
 	// 处理内容
 	content := markdown.ToHTML(topic.Content)
-	content = simple.GetHtmlText(content)
+	content = html2.GetHtmlText(content)
 	content = html.EscapeString(content)
 
 	doc.Content = content
@@ -84,7 +85,7 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 }
 
 func getTopicTags(topicId int64) []model.Tag {
-	topicTags := repositories.TopicTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("topic_id = ?", topicId))
+	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("topic_id = ?", topicId))
 
 	var tagIds []int64
 	for _, topicTag := range topicTags {
@@ -126,13 +127,13 @@ func UpdateTopicIndex(topic *model.Topic) {
 	}
 }
 
-func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *simple.Paging, err error) {
+func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	if initClient() == nil {
 		err = errNoConfig
 		return
 	}
 
-	paging = &simple.Paging{Page: page, Limit: limit}
+	paging = &sqls.Paging{Page: page, Limit: limit}
 
 	query := elastic.NewBoolQuery().
 		Must(elastic.NewTermQuery("status", constants.StatusOk))
@@ -144,16 +145,16 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 		}
 	}
 	if timeRange == 1 { // 一天内
-		beginTime := date.Timestamp(time.Now().Add(-24 * time.Hour))
+		beginTime := dates.Timestamp(time.Now().Add(-24 * time.Hour))
 		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
 	} else if timeRange == 2 { // 一周内
-		beginTime := date.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
+		beginTime := dates.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
 		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
 	} else if timeRange == 3 { // 一月内
-		beginTime := date.Timestamp(time.Now().AddDate(0, -1, 0))
+		beginTime := dates.Timestamp(time.Now().AddDate(0, -1, 0))
 		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
 	} else if timeRange == 4 { // 一年内
-		beginTime := date.Timestamp(time.Now().AddDate(-1, 0, 0))
+		beginTime := dates.Timestamp(time.Now().AddDate(-1, 0, 0))
 		query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
 	}
 	query.Must(elastic.NewMultiMatchQuery(keyword, "title", "content", "tags"))
@@ -179,15 +180,15 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 		for _, hit := range searchResult.Hits.Hits {
 			var doc TopicDocument
 			if err := json.Parse(string(hit.Source), &doc); err == nil {
-				if len(hit.Highlight["title"]) > 0 && simple.IsNotBlank(hit.Highlight["title"][0]) {
+				if len(hit.Highlight["title"]) > 0 && strs.IsNotBlank(hit.Highlight["title"][0]) {
 					doc.Title = hit.Highlight["title"][0]
 				}
-				if len(hit.Highlight["content"]) > 0 && simple.IsNotBlank(hit.Highlight["content"][0]) {
+				if len(hit.Highlight["content"]) > 0 && strs.IsNotBlank(hit.Highlight["content"][0]) {
 					doc.Content = hit.Highlight["content"][0]
 				} else {
 					doc.Content = html2.GetSummary(doc.Content, 128)
 				}
-				if len(hit.Highlight["nickname"]) > 0 && simple.IsNotBlank(hit.Highlight["nickname"][0]) {
+				if len(hit.Highlight["nickname"]) > 0 && strs.IsNotBlank(hit.Highlight["nickname"][0]) {
 					doc.Nickname = hit.Highlight["nickname"][0]
 				} else if len(hit.Highlight["tags"]) > 0 {
 					doc.Tags = hit.Highlight["tags"]

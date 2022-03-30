@@ -3,7 +3,7 @@ package model
 import (
 	"bbs-go/model/constants"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 )
 
 // UserInfo 用户简单信息
@@ -125,20 +125,20 @@ type ProjectResponse struct {
 
 // CommentResponse 评论返回数据
 type CommentResponse struct {
-	CommentId    int64                `json:"commentId"`
-	User         *UserInfo            `json:"user"`
-	EntityType   string               `json:"entityType"`
-	EntityId     int64                `json:"entityId"`
-	Content      string               `json:"content"`
-	ImageList    []ImageInfo          `json:"imageList"`
-	LikeCount    int64                `json:"likeCount"`
-	CommentCount int64                `json:"commentCount"`
-	Liked        bool                 `json:"liked"`
-	QuoteId      int64                `json:"quoteId"`
-	Quote        *CommentResponse     `json:"quote"`
-	Replies      *simple.CursorResult `json:"replies"`
-	Status       int                  `json:"status"`
-	CreateTime   int64                `json:"createTime"`
+	CommentId    int64              `json:"commentId"`
+	User         *UserInfo          `json:"user"`
+	EntityType   string             `json:"entityType"`
+	EntityId     int64              `json:"entityId"`
+	Content      string             `json:"content"`
+	ImageList    []ImageInfo        `json:"imageList"`
+	LikeCount    int64              `json:"likeCount"`
+	CommentCount int64              `json:"commentCount"`
+	Liked        bool               `json:"liked"`
+	QuoteId      int64              `json:"quoteId"`
+	Quote        *CommentResponse   `json:"quote"`
+	Replies      *sqls.CursorResult `json:"replies"`
+	Status       int                `json:"status"`
+	CreateTime   int64              `json:"createTime"`
 }
 
 // 收藏返回数据

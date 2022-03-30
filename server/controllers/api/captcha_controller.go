@@ -1,11 +1,12 @@
 package api
 
 import (
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,9 +14,9 @@ type CaptchaController struct {
 	Ctx iris.Context
 }
 
-func (c *CaptchaController) GetRequest() *simple.JsonResult {
+func (c *CaptchaController) GetRequest() *mvc.JsonResult {
 	captchaId := c.Ctx.FormValue("captchaId")
-	if simple.IsNotBlank(captchaId) { // reload
+	if strs.IsNotBlank(captchaId) { // reload
 		if !captcha.Reload(captchaId) {
 			// reload 失败，重新加载验证码
 			captchaId = captcha.NewLen(4)
@@ -23,8 +24,8 @@ func (c *CaptchaController) GetRequest() *simple.JsonResult {
 	} else {
 		captchaId = captcha.NewLen(4)
 	}
-	captchaUrl := urls.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + simple.UUID())
-	return simple.NewEmptyRspBuilder().
+	captchaUrl := bbsurls.AbsUrl("/api/captcha/show?captchaId=" + captchaId + "&r=" + strs.UUID())
+	return mvc.NewEmptyRspBuilder().
 		Put("captchaId", captchaId).
 		Put("captchaUrl", captchaUrl).
 		JsonResult()
@@ -49,9 +50,9 @@ func (c *CaptchaController) GetShow() {
 	}
 }
 
-func (c *CaptchaController) GetVerify() *simple.JsonResult {
+func (c *CaptchaController) GetVerify() *mvc.JsonResult {
 	captchaId := c.Ctx.URLParam("captchaId")
 	captchaCode := c.Ctx.URLParam("captchaCode")
 	success := captcha.VerifyString(captchaId, captchaCode)
-	return simple.NewEmptyRspBuilder().Put("success", success).JsonResult()
+	return mvc.NewEmptyRspBuilder().Put("success", success).JsonResult()
 }

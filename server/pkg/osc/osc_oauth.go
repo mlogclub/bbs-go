@@ -1,15 +1,18 @@
 package osc
 
 import (
-	"github.com/mlogclub/simple/json"
-	"github.com/tidwall/gjson"
 	"time"
+
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/common/urls"
+	"github.com/tidwall/gjson"
 
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/config"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 )
 
@@ -27,11 +30,11 @@ type UserInfo struct {
 
 func AuthCodeURL(params map[string]string) string {
 	var (
-		state       = simple.UUID()
+		state       = strs.UUID()
 		redirectUrl = getRedirectUrl(params)
 	)
 	ctxCache.Put(state, redirectUrl) // 将跳转地址写入上线文
-	return simple.ParseUrl("https://www.oschina.net/action/oauth2/authorize").AddQueries(map[string]string{
+	return urls.ParseUrl("https://www.oschina.net/action/oauth2/authorize").AddQueries(map[string]string{
 		"client_id":     config.Instance.OSChina.ClientID,
 		"response_type": "code",
 		"redirect_uri":  redirectUrl,
@@ -90,7 +93,7 @@ func getRedirectUrl(params map[string]string) string {
 		redirectUrl = "http://localhost:3000/user/osc/callback"
 	}
 	if len(params) > 0 {
-		ub := simple.ParseUrl(redirectUrl)
+		ub := urls.ParseUrl(redirectUrl)
 		for k, v := range params {
 			ub.AddQuery(k, v)
 		}

@@ -4,8 +4,10 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/urls"
 	"bbs-go/services"
+
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc"
 )
 
 var (
@@ -57,13 +59,13 @@ func getPathRoles(ctx iris.Context) []string {
 
 // notLogin 未登录返回
 func notLogin(ctx iris.Context) {
-	_, _ = ctx.JSON(simple.JsonError(simple.ErrorNotLogin))
+	_, _ = ctx.JSON(mvc.JsonError(simple.ErrorNotLogin))
 	ctx.StopExecution()
 }
 
 // noPermission 无权限返回
 func noPermission(ctx iris.Context) {
-	_, _ = ctx.JSON(simple.JsonErrorCode(2, "无权限"))
+	_, _ = ctx.JSON(mvc.JsonErrorCode(2, "无权限"))
 	ctx.StopExecution()
 }
 

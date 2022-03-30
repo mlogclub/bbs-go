@@ -2,7 +2,9 @@ package repositories
 
 import (
 	"bbs-go/model"
-	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 )
 
@@ -31,12 +33,12 @@ func (r *userFeedRepository) Take(db *gorm.DB, where ...interface{}) *model.User
 	return ret
 }
 
-func (r *userFeedRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserFeed) {
+func (r *userFeedRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserFeed) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.UserFeed {
+func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserFeed {
 	ret := &model.UserFeed{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -44,15 +46,15 @@ func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Use
 	return ret
 }
 
-func (r *userFeedRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.UserFeed, paging *simple.Paging) {
+func (r *userFeedRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserFeed, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserFeed, paging *simple.Paging) {
+func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserFeed, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserFeed{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -60,7 +62,7 @@ func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (lis
 	return
 }
 
-func (r *userFeedRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
+func (r *userFeedRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
 	return cnd.Count(db, &model.UserFeed{})
 }
 
@@ -87,4 +89,3 @@ func (r *userFeedRepository) UpdateColumn(db *gorm.DB, id int64, name string, va
 func (r *userFeedRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.UserFeed{}, "id = ?", id)
 }
-

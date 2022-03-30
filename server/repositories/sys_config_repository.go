@@ -1,7 +1,8 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -32,12 +33,12 @@ func (r *sysConfigRepository) Take(db *gorm.DB, where ...interface{}) *model.Sys
 	return ret
 }
 
-func (r *sysConfigRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig) {
+func (r *sysConfigRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.SysConfig) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *sysConfigRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.SysConfig {
+func (r *sysConfigRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.SysConfig {
 	ret := &model.SysConfig{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,15 +46,15 @@ func (r *sysConfigRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Sy
 	return ret
 }
 
-func (r *sysConfigRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.SysConfig, paging *simple.Paging) {
+func (r *sysConfigRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.SysConfig, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *sysConfigRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.SysConfig, paging *simple.Paging) {
+func (r *sysConfigRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.SysConfig, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.SysConfig{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,

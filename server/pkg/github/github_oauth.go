@@ -2,12 +2,14 @@ package github
 
 import (
 	"context"
-	"github.com/mlogclub/simple/json"
 	"time"
+
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/common/urls"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 
@@ -48,7 +50,7 @@ func newOauthConfig(redirectUrl string) *oauth2.Config {
 
 func AuthCodeURL(params map[string]string) string {
 	// 将跳转地址写入上线文
-	state := simple.UUID()
+	state := strs.UUID()
 	redirectUrl := getRedirectUrl(params)
 	ctxCache.Put(state, redirectUrl)
 
@@ -96,7 +98,7 @@ func getRedirectUrl(params map[string]string) string {
 		redirectUrl = "http://localhost:3000/user/github/callback"
 	}
 	if len(params) > 0 {
-		ub := simple.ParseUrl(redirectUrl)
+		ub := urls.ParseUrl(redirectUrl)
 		for k, v := range params {
 			ub.AddQuery(k, v)
 		}

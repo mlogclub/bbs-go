@@ -4,9 +4,10 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/event"
 	"errors"
-	"github.com/mlogclub/simple/date"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -22,57 +23,57 @@ type favoriteService struct {
 }
 
 func (s *favoriteService) Get(id int64) *model.Favorite {
-	return repositories.FavoriteRepository.Get(simple.DB(), id)
+	return repositories.FavoriteRepository.Get(sqls.DB(), id)
 }
 
 func (s *favoriteService) Take(where ...interface{}) *model.Favorite {
-	return repositories.FavoriteRepository.Take(simple.DB(), where...)
+	return repositories.FavoriteRepository.Take(sqls.DB(), where...)
 }
 
-func (s *favoriteService) Find(cnd *simple.SqlCnd) []model.Favorite {
-	return repositories.FavoriteRepository.Find(simple.DB(), cnd)
+func (s *favoriteService) Find(cnd *sqls.SqlCnd) []model.Favorite {
+	return repositories.FavoriteRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *favoriteService) FindOne(cnd *simple.SqlCnd) *model.Favorite {
-	return repositories.FavoriteRepository.FindOne(simple.DB(), cnd)
+func (s *favoriteService) FindOne(cnd *sqls.SqlCnd) *model.Favorite {
+	return repositories.FavoriteRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *favoriteService) FindPageByParams(params *simple.QueryParams) (list []model.Favorite, paging *simple.Paging) {
-	return repositories.FavoriteRepository.FindPageByParams(simple.DB(), params)
+func (s *favoriteService) FindPageByParams(params *params.QueryParams) (list []model.Favorite, paging *sqls.Paging) {
+	return repositories.FavoriteRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *favoriteService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Favorite, paging *simple.Paging) {
-	return repositories.FavoriteRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *favoriteService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Favorite, paging *sqls.Paging) {
+	return repositories.FavoriteRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *favoriteService) Create(t *model.Favorite) error {
-	return repositories.FavoriteRepository.Create(simple.DB(), t)
+	return repositories.FavoriteRepository.Create(sqls.DB(), t)
 }
 
 func (s *favoriteService) Update(t *model.Favorite) error {
-	return repositories.FavoriteRepository.Update(simple.DB(), t)
+	return repositories.FavoriteRepository.Update(sqls.DB(), t)
 }
 
 func (s *favoriteService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.FavoriteRepository.Updates(simple.DB(), id, columns)
+	return repositories.FavoriteRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *favoriteService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.FavoriteRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.FavoriteRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *favoriteService) Delete(id int64) {
-	repositories.FavoriteRepository.Delete(simple.DB(), id)
+	repositories.FavoriteRepository.Delete(sqls.DB(), id)
 }
 
 func (s *favoriteService) GetBy(userId int64, entityType string, entityId int64) *model.Favorite {
-	return repositories.FavoriteRepository.Take(simple.DB(), "user_id = ? and entity_type = ? and entity_id = ?",
+	return repositories.FavoriteRepository.Take(sqls.DB(), "user_id = ? and entity_type = ? and entity_id = ?",
 		userId, entityType, entityId)
 }
 
 // AddArticleFavorite 收藏文章
 func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
-	article := repositories.ArticleRepository.Get(simple.DB(), articleId)
+	article := repositories.ArticleRepository.Get(sqls.DB(), articleId)
 	if article == nil || article.Status != constants.StatusOk {
 		return errors.New("收藏的文章不存在")
 	}
@@ -81,7 +82,7 @@ func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 
 // AddTopicFavorite 收藏主题
 func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
 		return errors.New("收藏的话题不存在")
 	}
@@ -93,11 +94,11 @@ func (s *favoriteService) addFavorite(userId int64, entityType string, entityId 
 	if temp != nil { // 已经收藏
 		return nil
 	}
-	if err := repositories.FavoriteRepository.Create(simple.DB(), &model.Favorite{
+	if err := repositories.FavoriteRepository.Create(sqls.DB(), &model.Favorite{
 		UserId:     userId,
 		EntityType: entityType,
 		EntityId:   entityId,
-		CreateTime: date.NowTimestamp(),
+		CreateTime: dates.NowTimestamp(),
 	}); err != nil {
 		return err
 	}

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/sqls"
 )
 
 func BuildUserInfoDefaultIfNull(id int64) *model.UserInfo {
@@ -16,9 +16,9 @@ func BuildUserInfoDefaultIfNull(id int64) *model.UserInfo {
 	if user == nil {
 		user = &model.User{}
 		user.Id = id
-		user.Username = simple.SqlNullString(strconv.FormatInt(id, 10))
+		user.Username = sqls.SqlNullString(strconv.FormatInt(id, 10))
 		user.Nickname = "匿名用户" + strconv.FormatInt(id, 10)
-		user.CreateTime = date.NowTimestamp()
+		user.CreateTime = dates.NowTimestamp()
 	}
 	return BuildUserInfo(user)
 }

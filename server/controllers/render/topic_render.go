@@ -8,6 +8,7 @@ import (
 	"html"
 
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 func BuildTopic(topic *model.Topic) *model.TopicResponse {
@@ -74,7 +75,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	}
 
 	if topic.Type == constants.TopicTypeTweet {
-		if simple.IsBlank(topic.Content) {
+		if strs.IsBlank(topic.Content) {
 			rsp.Content = "分享图片"
 		} else {
 			rsp.Content = html.EscapeString(topic.Content)

@@ -4,9 +4,9 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
-
-	"github.com/mlogclub/simple"
+	"bbs-go/pkg/text"
 )
 
 func BuildArticle(article *model.Article) *model.ArticleResponse {
@@ -65,7 +65,7 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 		}
 	} else if article.ContentType == constants.ContentTypeHtml {
 		if len(rsp.Summary) == 0 {
-			rsp.Summary = simple.GetSummary(simple.GetHtmlText(article.Content), constants.SummaryLen)
+			rsp.Summary = text.GetSummary(html.GetHtmlText(article.Content), constants.SummaryLen)
 		}
 	}
 

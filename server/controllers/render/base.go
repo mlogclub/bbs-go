@@ -3,13 +3,13 @@ package render
 import (
 	"bbs-go/model"
 
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/json"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/sirupsen/logrus"
 )
 
 func buildImageList(imageListStr string) (imageList []model.ImageInfo) {
-	if simple.IsNotBlank(imageListStr) {
+	if strs.IsNotBlank(imageListStr) {
 		var images []model.ImageDTO
 		if err := json.Parse(imageListStr, &images); err == nil {
 			if len(images) > 0 {

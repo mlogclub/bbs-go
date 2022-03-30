@@ -13,7 +13,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -46,7 +46,7 @@ func init() {
 	}
 
 	// 连接数据库
-	if err := simple.OpenDB(conf.MySqlUrl, gormConf, 10, 20, model.Models...); err != nil {
+	if err := sqls.OpenDB(conf.MySqlUrl, gormConf, 10, 20, model.Models...); err != nil {
 		logrus.Error(err)
 	}
 }

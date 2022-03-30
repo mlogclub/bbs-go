@@ -1,7 +1,8 @@
 package services
 
 import (
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -17,45 +18,45 @@ type userScoreLogService struct {
 }
 
 func (s *userScoreLogService) Get(id int64) *model.UserScoreLog {
-	return repositories.UserScoreLogRepository.Get(simple.DB(), id)
+	return repositories.UserScoreLogRepository.Get(sqls.DB(), id)
 }
 
 func (s *userScoreLogService) Take(where ...interface{}) *model.UserScoreLog {
-	return repositories.UserScoreLogRepository.Take(simple.DB(), where...)
+	return repositories.UserScoreLogRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userScoreLogService) Find(cnd *simple.SqlCnd) []model.UserScoreLog {
-	return repositories.UserScoreLogRepository.Find(simple.DB(), cnd)
+func (s *userScoreLogService) Find(cnd *sqls.SqlCnd) []model.UserScoreLog {
+	return repositories.UserScoreLogRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userScoreLogService) FindOne(cnd *simple.SqlCnd) *model.UserScoreLog {
-	return repositories.UserScoreLogRepository.FindOne(simple.DB(), cnd)
+func (s *userScoreLogService) FindOne(cnd *sqls.SqlCnd) *model.UserScoreLog {
+	return repositories.UserScoreLogRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *userScoreLogService) FindPageByParams(params *simple.QueryParams) (list []model.UserScoreLog, paging *simple.Paging) {
-	return repositories.UserScoreLogRepository.FindPageByParams(simple.DB(), params)
+func (s *userScoreLogService) FindPageByParams(params *params.QueryParams) (list []model.UserScoreLog, paging *sqls.Paging) {
+	return repositories.UserScoreLogRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userScoreLogService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.UserScoreLog, paging *simple.Paging) {
-	return repositories.UserScoreLogRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *userScoreLogService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserScoreLog, paging *sqls.Paging) {
+	return repositories.UserScoreLogRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *userScoreLogService) Create(t *model.UserScoreLog) error {
-	return repositories.UserScoreLogRepository.Create(simple.DB(), t)
+	return repositories.UserScoreLogRepository.Create(sqls.DB(), t)
 }
 
 func (s *userScoreLogService) Update(t *model.UserScoreLog) error {
-	return repositories.UserScoreLogRepository.Update(simple.DB(), t)
+	return repositories.UserScoreLogRepository.Update(sqls.DB(), t)
 }
 
 func (s *userScoreLogService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.UserScoreLogRepository.Updates(simple.DB(), id, columns)
+	return repositories.UserScoreLogRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *userScoreLogService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.UserScoreLogRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.UserScoreLogRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *userScoreLogService) Delete(id int64) {
-	repositories.UserScoreLogRepository.Delete(simple.DB(), id)
+	repositories.UserScoreLogRepository.Delete(sqls.DB(), id)
 }

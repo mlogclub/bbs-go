@@ -4,7 +4,7 @@ import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
 	"bbs-go/pkg/msg"
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"github.com/tidwall/gjson"
 )
 
@@ -53,17 +53,17 @@ func getMessageDetailUrl(t *model.Message) string {
 		entityType := gjson.Get(t.ExtraData, "entityType")
 		entityId := gjson.Get(t.ExtraData, "entityId")
 		if entityType.String() == constants.EntityArticle {
-			return urls.ArticleUrl(entityId.Int())
+			return bbsurls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == constants.EntityTopic {
-			return urls.TopicUrl(entityId.Int())
+			return bbsurls.TopicUrl(entityId.Int())
 		}
 	} else if msgType == msg.TypeTopicLike ||
 		msgType == msg.TypeTopicFavorite ||
 		msgType == msg.TypeTopicRecommend {
 		topicId := gjson.Get(t.ExtraData, "topicId")
 		if topicId.Exists() && topicId.Int() > 0 {
-			return urls.TopicUrl(topicId.Int())
+			return bbsurls.TopicUrl(topicId.Int())
 		}
 	}
-	return urls.AbsUrl("/user/messages")
+	return bbsurls.AbsUrl("/user/messages")
 }

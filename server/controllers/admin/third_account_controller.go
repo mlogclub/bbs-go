@@ -4,7 +4,9 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -14,51 +16,51 @@ type ThirdAccountController struct {
 	Ctx iris.Context
 }
 
-func (c *ThirdAccountController) GetBy(id int64) *simple.JsonResult {
+func (c *ThirdAccountController) GetBy(id int64) *mvc.JsonResult {
 	t := services.ThirdAccountService.Get(id)
 	if t == nil {
-		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return simple.JsonData(t)
+	return mvc.JsonData(t)
 }
 
-func (c *ThirdAccountController) AnyList() *simple.JsonResult {
-	list, paging := services.ThirdAccountService.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
-	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
+func (c *ThirdAccountController) AnyList() *mvc.JsonResult {
+	list, paging := services.ThirdAccountService.FindPageByParams(params.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
+	return mvc.JsonData(&sqls.PageResult{Results: list, Page: paging})
 }
 
-func (c *ThirdAccountController) PostCreate() *simple.JsonResult {
+func (c *ThirdAccountController) PostCreate() *mvc.JsonResult {
 	t := &model.ThirdAccount{}
-	err := simple.ReadForm(c.Ctx, t)
+	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
 
 	err = services.ThirdAccountService.Create(t)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonData(t)
+	return mvc.JsonData(t)
 }
 
-func (c *ThirdAccountController) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(c.Ctx, "id")
+func (c *ThirdAccountController) PostUpdate() *mvc.JsonResult {
+	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
 	t := services.ThirdAccountService.Get(id)
 	if t == nil {
-		return simple.JsonErrorMsg("entity not found")
+		return mvc.JsonErrorMsg("entity not found")
 	}
 
-	err = simple.ReadForm(c.Ctx, t)
+	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
 
 	err = services.ThirdAccountService.Update(t)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
-	return simple.JsonData(t)
+	return mvc.JsonData(t)
 }

@@ -3,7 +3,9 @@ package services
 import (
 	"bbs-go/model"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 )
 
 var EmailCodeService = newEmailCodeService()
@@ -16,49 +18,49 @@ type emailCodeService struct {
 }
 
 func (s *emailCodeService) Get(id int64) *model.EmailCode {
-	return repositories.EmailCodeRepository.Get(simple.DB(), id)
+	return repositories.EmailCodeRepository.Get(sqls.DB(), id)
 }
 
 func (s *emailCodeService) Take(where ...interface{}) *model.EmailCode {
-	return repositories.EmailCodeRepository.Take(simple.DB(), where...)
+	return repositories.EmailCodeRepository.Take(sqls.DB(), where...)
 }
 
-func (s *emailCodeService) Find(cnd *simple.SqlCnd) []model.EmailCode {
-	return repositories.EmailCodeRepository.Find(simple.DB(), cnd)
+func (s *emailCodeService) Find(cnd *sqls.SqlCnd) []model.EmailCode {
+	return repositories.EmailCodeRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *emailCodeService) FindOne(cnd *simple.SqlCnd) *model.EmailCode {
-	return repositories.EmailCodeRepository.FindOne(simple.DB(), cnd)
+func (s *emailCodeService) FindOne(cnd *sqls.SqlCnd) *model.EmailCode {
+	return repositories.EmailCodeRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *emailCodeService) FindPageByParams(params *simple.QueryParams) (list []model.EmailCode, paging *simple.Paging) {
-	return repositories.EmailCodeRepository.FindPageByParams(simple.DB(), params)
+func (s *emailCodeService) FindPageByParams(params *params.QueryParams) (list []model.EmailCode, paging *sqls.Paging) {
+	return repositories.EmailCodeRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *emailCodeService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.EmailCode, paging *simple.Paging) {
-	return repositories.EmailCodeRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *emailCodeService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.EmailCode, paging *sqls.Paging) {
+	return repositories.EmailCodeRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *emailCodeService) Count(cnd *simple.SqlCnd) int64 {
-	return repositories.EmailCodeRepository.Count(simple.DB(), cnd)
+func (s *emailCodeService) Count(cnd *sqls.SqlCnd) int64 {
+	return repositories.EmailCodeRepository.Count(sqls.DB(), cnd)
 }
 
 func (s *emailCodeService) Create(t *model.EmailCode) error {
-	return repositories.EmailCodeRepository.Create(simple.DB(), t)
+	return repositories.EmailCodeRepository.Create(sqls.DB(), t)
 }
 
 func (s *emailCodeService) Update(t *model.EmailCode) error {
-	return repositories.EmailCodeRepository.Update(simple.DB(), t)
+	return repositories.EmailCodeRepository.Update(sqls.DB(), t)
 }
 
 func (s *emailCodeService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.EmailCodeRepository.Updates(simple.DB(), id, columns)
+	return repositories.EmailCodeRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *emailCodeService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.EmailCodeRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.EmailCodeRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *emailCodeService) Delete(id int64) {
-	repositories.EmailCodeRepository.Delete(simple.DB(), id)
+	repositories.EmailCodeRepository.Delete(sqls.DB(), id)
 }

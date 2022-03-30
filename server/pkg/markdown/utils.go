@@ -2,9 +2,10 @@ package markdown
 
 import (
 	"bbs-go/pkg/html"
-	"github.com/88250/lute"
-	"github.com/mlogclub/simple"
 	"sync"
+
+	"github.com/88250/lute"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 var (
@@ -24,7 +25,7 @@ func getEngine() *lute.Lute {
 }
 
 func ToHTML(markdownStr string) string {
-	if simple.IsBlank(markdownStr) {
+	if strs.IsBlank(markdownStr) {
 		return ""
 	}
 	return getEngine().MarkdownStr("", markdownStr)

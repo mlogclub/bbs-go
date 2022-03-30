@@ -2,37 +2,40 @@ package api
 
 import (
 	"bbs-go/services"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/mvc/params"
 )
 
 type LikeController struct {
 	Ctx iris.Context
 }
 
-func (c *LikeController) GetIsLiked() *simple.JsonResult {
+func (c *LikeController) GetIsLiked() *mvc.JsonResult {
 	var (
 		user           = services.UserTokenService.GetCurrent(c.Ctx)
-		entityType     = simple.FormValue(c.Ctx, "entityType")
-		entityIds      = simple.FormValueInt64Array(c.Ctx, "entityIds")
+		entityType     = params.FormValue(c.Ctx, "entityType")
+		entityIds      = params.FormValueInt64Array(c.Ctx, "entityIds")
 		likedEntityIds []int64
 	)
 	if user != nil {
 		likedEntityIds = services.UserLikeService.IsLiked(user.Id, entityType, entityIds)
 	}
-	return simple.NewEmptyRspBuilder().Put("liked", likedEntityIds).JsonResult()
+	return mvc.NewEmptyRspBuilder().Put("liked", likedEntityIds).JsonResult()
 }
 
-func (c *LikeController) GetLiked() *simple.JsonResult {
+func (c *LikeController) GetLiked() *mvc.JsonResult {
 	var (
 		user       = services.UserTokenService.GetCurrent(c.Ctx)
-		entityType = simple.FormValue(c.Ctx, "entityType")
-		entityId   = simple.FormValueInt64Default(c.Ctx, "entityId", 0)
+		entityType = params.FormValue(c.Ctx, "entityType")
+		entityId   = params.FormValueInt64Default(c.Ctx, "entityId", 0)
 	)
-	if user == nil || simple.IsBlank(entityType) || entityId <= 0 {
-		return simple.NewEmptyRspBuilder().Put("liked", false).JsonResult()
+	if user == nil || strs.IsBlank(entityType) || entityId <= 0 {
+		return mvc.NewEmptyRspBuilder().Put("liked", false).JsonResult()
 	} else {
 		liked := services.UserLikeService.Exists(user.Id, entityType, entityId)
-		return simple.NewEmptyRspBuilder().Put("liked", liked).JsonResult()
+		return mvc.NewEmptyRspBuilder().Put("liked", liked).JsonResult()
 	}
 }

@@ -6,12 +6,13 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/mlogclub/simple/date"
-	"github.com/mlogclub/simple/json"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-
-	"github.com/mlogclub/simple"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -27,63 +28,63 @@ type commentService struct {
 }
 
 func (s *commentService) Get(id int64) *model.Comment {
-	return repositories.CommentRepository.Get(simple.DB(), id)
+	return repositories.CommentRepository.Get(sqls.DB(), id)
 }
 
 func (s *commentService) Take(where ...interface{}) *model.Comment {
-	return repositories.CommentRepository.Take(simple.DB(), where...)
+	return repositories.CommentRepository.Take(sqls.DB(), where...)
 }
 
-func (s *commentService) Find(cnd *simple.SqlCnd) []model.Comment {
-	return repositories.CommentRepository.Find(simple.DB(), cnd)
+func (s *commentService) Find(cnd *sqls.SqlCnd) []model.Comment {
+	return repositories.CommentRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *commentService) FindOne(cnd *simple.SqlCnd) *model.Comment {
-	return repositories.CommentRepository.FindOne(simple.DB(), cnd)
+func (s *commentService) FindOne(cnd *sqls.SqlCnd) *model.Comment {
+	return repositories.CommentRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *commentService) FindPageByParams(params *simple.QueryParams) (list []model.Comment, paging *simple.Paging) {
-	return repositories.CommentRepository.FindPageByParams(simple.DB(), params)
+func (s *commentService) FindPageByParams(params *params.QueryParams) (list []model.Comment, paging *sqls.Paging) {
+	return repositories.CommentRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *commentService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Comment, paging *simple.Paging) {
-	return repositories.CommentRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *commentService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Comment, paging *sqls.Paging) {
+	return repositories.CommentRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *commentService) Count(cnd *simple.SqlCnd) int64 {
-	return repositories.CommentRepository.Count(simple.DB(), cnd)
+func (s *commentService) Count(cnd *sqls.SqlCnd) int64 {
+	return repositories.CommentRepository.Count(sqls.DB(), cnd)
 }
 
 func (s *commentService) Create(t *model.Comment) error {
-	return repositories.CommentRepository.Create(simple.DB(), t)
+	return repositories.CommentRepository.Create(sqls.DB(), t)
 }
 
 func (s *commentService) Update(t *model.Comment) error {
-	return repositories.CommentRepository.Update(simple.DB(), t)
+	return repositories.CommentRepository.Update(sqls.DB(), t)
 }
 
 func (s *commentService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.CommentRepository.Updates(simple.DB(), id, columns)
+	return repositories.CommentRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *commentService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.CommentRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *commentService) Delete(id int64) error {
-	return repositories.CommentRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
+	return repositories.CommentRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
 }
 
 // Publish 发表评论
 func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*model.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
-	if simple.IsBlank(form.EntityType) {
+	if strs.IsBlank(form.EntityType) {
 		return nil, errors.New("参数非法")
 	}
 	if form.EntityId <= 0 {
 		return nil, errors.New("参数非法")
 	}
-	if simple.IsBlank(form.Content) {
+	if strs.IsBlank(form.Content) {
 		return nil, errors.New("请输入评论内容")
 	}
 
@@ -92,12 +93,12 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		EntityType:  form.EntityType,
 		EntityId:    form.EntityId,
 		Content:     form.Content,
-		ContentType: simple.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
+		ContentType: strs.DefaultIfBlank(form.ContentType, constants.ContentTypeMarkdown),
 		QuoteId:     form.QuoteId,
 		Status:      constants.StatusOk,
 		UserAgent:   form.UserAgent,
 		Ip:          form.Ip,
-		CreateTime:  date.NowTimestamp(),
+		CreateTime:  dates.NowTimestamp(),
 	}
 
 	if len(form.ImageList) > 0 {
@@ -109,7 +110,7 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		}
 	}
 
-	err := simple.DB().Transaction(func(tx *gorm.DB) error {
+	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.CommentRepository.Create(tx, comment); err != nil {
 			return err
 		}
@@ -151,18 +152,18 @@ func (s *commentService) onComment(tx *gorm.DB, comment *model.Comment) error {
 // // 统计数量
 // func (s *commentService) Count(entityType string, entityId int64) int64 {
 // 	var count int64 = 0
-// 	simple.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
+// 	sqls.DB().Model(&model.Comment{}).Where("entity_type = ? and entity_id = ?", entityType, entityId).Count(&count)
 // 	return count
 // }
 
 // GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := simple.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	comments = repositories.CommentRepository.Find(simple.DB(), cnd)
+	comments = repositories.CommentRepository.Find(sqls.DB(), cnd)
 	if len(comments) > 0 {
 		nextCursor = comments[len(comments)-1].Id
 		hasMore = len(comments) >= limit
@@ -174,7 +175,7 @@ func (s *commentService) GetComments(entityType string, entityId int64, cursor i
 
 // GetReplies 二级回复列表
 func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (comments []model.Comment, nextCursor int64, hasMore bool) {
-	cnd := simple.NewSqlCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
+	cnd := sqls.NewSqlCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Gt("id", cursor)
 	}
@@ -192,7 +193,7 @@ func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (c
 func (s *commentService) ScanByUser(userId int64, callback func(comments []model.Comment)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.CommentRepository.Find(simple.DB(), simple.NewSqlCnd().
+		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewSqlCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break

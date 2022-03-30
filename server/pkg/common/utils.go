@@ -5,7 +5,7 @@ import (
 	"bbs-go/pkg/config"
 	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
-	"github.com/mlogclub/simple"
+	"bbs-go/pkg/text"
 	"net"
 	"net/http"
 	"strings"
@@ -22,7 +22,7 @@ func GetSummary(contentType string, content string) (summary string) {
 	} else if contentType == constants.ContentTypeHtml {
 		summary = html.GetSummary(content, constants.SummaryLen)
 	} else {
-		summary = simple.GetSummary(content, constants.SummaryLen)
+		summary = text.GetSummary(content, constants.SummaryLen)
 	}
 	return
 }

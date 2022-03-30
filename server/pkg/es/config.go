@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 )
@@ -20,7 +20,7 @@ var (
 func initClient() *elastic.Client {
 	once.Do(func() {
 		var err error
-		if !simple.IsAnyBlank(config.Instance.Es.Url, config.Instance.Es.Index) {
+		if !strs.IsAnyBlank(config.Instance.Es.Url, config.Instance.Es.Index) {
 			index = config.Instance.Es.Index
 			client, err = elastic.NewClient(
 				elastic.SetURL(config.Instance.Es.Url),

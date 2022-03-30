@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -26,8 +26,8 @@ func newTopicCache() *topicCache {
 	return &topicCache{
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.TopicRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
+				value = repositories.TopicRepository.Find(sqls.DB(),
+					sqls.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}

@@ -1,10 +1,11 @@
 package uploader
 
 import (
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"bytes"
-	"github.com/mlogclub/simple"
 	"sync"
+
+	"github.com/mlogclub/simple/common/strs"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/sirupsen/logrus"
@@ -19,7 +20,7 @@ type aliyunOssUploader struct {
 }
 
 func (aliyun *aliyunOssUploader) PutImage(data []byte, contentType string) (string, error) {
-	if simple.IsBlank(contentType) {
+	if strs.IsBlank(contentType) {
 		contentType = "image/jpeg"
 	}
 	key := generateImageKey(data, contentType)
@@ -29,14 +30,14 @@ func (aliyun *aliyunOssUploader) PutImage(data []byte, contentType string) (stri
 func (aliyun *aliyunOssUploader) PutObject(key string, data []byte, contentType string) (string, error) {
 	bucket := aliyun.getBucket()
 	var options []oss.Option
-	if simple.IsNotBlank(contentType) {
+	if strs.IsNotBlank(contentType) {
 		options = append(options, oss.ContentType(contentType))
 	}
 	if err := bucket.PutObject(key, bytes.NewReader(data), options...); err != nil {
 		return "", err
 	}
 	c := config.Instance.Uploader.AliyunOss
-	return urls.UrlJoin(c.Host, key), nil
+	return bbsurls.UrlJoin(c.Host, key), nil
 }
 
 func (aliyun *aliyunOssUploader) CopyImage(originUrl string) (string, error) {

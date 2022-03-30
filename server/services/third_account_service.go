@@ -6,12 +6,13 @@ import (
 	"bbs-go/pkg/osc"
 	"bbs-go/pkg/qq"
 	"database/sql"
-	"github.com/mlogclub/simple/date"
-	"github.com/mlogclub/simple/json"
 	"strconv"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -27,51 +28,51 @@ type thirdAccountService struct {
 }
 
 func (s *thirdAccountService) Get(id int64) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Get(simple.DB(), id)
+	return repositories.ThirdAccountRepository.Get(sqls.DB(), id)
 }
 
 func (s *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Take(simple.DB(), where...)
+	return repositories.ThirdAccountRepository.Take(sqls.DB(), where...)
 }
 
-func (s *thirdAccountService) Find(cnd *simple.SqlCnd) []model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Find(simple.DB(), cnd)
+func (s *thirdAccountService) Find(cnd *sqls.SqlCnd) []model.ThirdAccount {
+	return repositories.ThirdAccountRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *thirdAccountService) FindOne(cnd *simple.SqlCnd) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.FindOne(simple.DB(), cnd)
+func (s *thirdAccountService) FindOne(cnd *sqls.SqlCnd) *model.ThirdAccount {
+	return repositories.ThirdAccountRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *thirdAccountService) FindPageByParams(params *simple.QueryParams) (list []model.ThirdAccount, paging *simple.Paging) {
-	return repositories.ThirdAccountRepository.FindPageByParams(simple.DB(), params)
+func (s *thirdAccountService) FindPageByParams(params *params.QueryParams) (list []model.ThirdAccount, paging *sqls.Paging) {
+	return repositories.ThirdAccountRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *thirdAccountService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.ThirdAccount, paging *simple.Paging) {
-	return repositories.ThirdAccountRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *thirdAccountService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.ThirdAccount, paging *sqls.Paging) {
+	return repositories.ThirdAccountRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *thirdAccountService) Create(t *model.ThirdAccount) error {
-	return repositories.ThirdAccountRepository.Create(simple.DB(), t)
+	return repositories.ThirdAccountRepository.Create(sqls.DB(), t)
 }
 
 func (s *thirdAccountService) Update(t *model.ThirdAccount) error {
-	return repositories.ThirdAccountRepository.Update(simple.DB(), t)
+	return repositories.ThirdAccountRepository.Update(sqls.DB(), t)
 }
 
 func (s *thirdAccountService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ThirdAccountRepository.Updates(simple.DB(), id, columns)
+	return repositories.ThirdAccountRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *thirdAccountService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.ThirdAccountRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.ThirdAccountRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *thirdAccountService) Delete(id int64) {
-	repositories.ThirdAccountRepository.Delete(simple.DB(), id)
+	repositories.ThirdAccountRepository.Delete(sqls.DB(), id)
 }
 
 func (s *thirdAccountService) GetThirdAccount(thirdType string, thirdId string) *model.ThirdAccount {
-	return repositories.ThirdAccountRepository.Take(simple.DB(), "third_type = ? and third_id = ?", thirdType, thirdId)
+	return repositories.ThirdAccountRepository.Take(sqls.DB(), "third_type = ? and third_id = ?", thirdType, thirdId)
 }
 
 func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.ThirdAccount, error) {
@@ -98,8 +99,8 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		ThirdType:  constants.ThirdAccountTypeGithub,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
 		ExtraData:  userInfoJson,
-		CreateTime: date.NowTimestamp(),
-		UpdateTime: date.NowTimestamp(),
+		CreateTime: dates.NowTimestamp(),
+		UpdateTime: dates.NowTimestamp(),
 	}
 	err = s.Create(account)
 	if err != nil {
@@ -132,8 +133,8 @@ func (s *thirdAccountService) GetOrCreateByOSC(code, state string) (*model.Third
 		ThirdType:  constants.ThirdAccountTypeOSC,
 		ThirdId:    strconv.FormatInt(userInfo.Id, 10),
 		ExtraData:  userInfoJson,
-		CreateTime: date.NowTimestamp(),
-		UpdateTime: date.NowTimestamp(),
+		CreateTime: dates.NowTimestamp(),
+		UpdateTime: dates.NowTimestamp(),
 	}
 	err = s.Create(account)
 	if err != nil {
@@ -161,8 +162,8 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		ThirdType:  constants.ThirdAccountTypeQQ,
 		ThirdId:    userInfo.Unionid,
 		ExtraData:  userInfoJson,
-		CreateTime: date.NowTimestamp(),
-		UpdateTime: date.NowTimestamp(),
+		CreateTime: dates.NowTimestamp(),
+		UpdateTime: dates.NowTimestamp(),
 	}
 	err = s.Create(account)
 	if err != nil {

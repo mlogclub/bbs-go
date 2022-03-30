@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -33,12 +34,12 @@ func (r *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model.Ar
 	return ret
 }
 
-func (r *articleTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag) {
+func (r *articleTagRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ArticleTag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.ArticleTag {
+func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -46,15 +47,15 @@ func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.A
 	return ret
 }
 
-func (r *articleTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.ArticleTag, paging *simple.Paging) {
+func (r *articleTagRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.ArticleTag, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.ArticleTag, paging *simple.Paging) {
+func (r *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ArticleTag, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.ArticleTag{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -95,7 +96,7 @@ func (r *articleTagRepository) AddArticleTags(db *gorm.DB, articleId int64, tagI
 		_ = r.Create(db, &model.ArticleTag{
 			ArticleId:  articleId,
 			TagId:      tagId,
-			CreateTime: date.NowTimestamp(),
+			CreateTime: dates.NowTimestamp(),
 		})
 	}
 }
@@ -115,5 +116,5 @@ func (r *articleTagRepository) DeleteArticleTag(db *gorm.DB, articleId, tagId in
 }
 
 func (r *articleTagRepository) FindByArticleId(db *gorm.DB, articleId int64) []model.ArticleTag {
-	return r.Find(db, simple.NewSqlCnd().Where("article_id = ?", articleId))
+	return r.Find(db, sqls.NewSqlCnd().Where("article_id = ?", articleId))
 }

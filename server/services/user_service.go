@@ -2,10 +2,10 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/uploader"
-	"bbs-go/pkg/urls"
 	"bbs-go/pkg/validate"
 	"database/sql"
 	"errors"
@@ -15,7 +15,11 @@ import (
 	"time"
 
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/passwd"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
@@ -39,31 +43,31 @@ type userService struct {
 }
 
 func (s *userService) Get(id int64) *model.User {
-	return repositories.UserRepository.Get(simple.DB(), id)
+	return repositories.UserRepository.Get(sqls.DB(), id)
 }
 
 func (s *userService) Take(where ...interface{}) *model.User {
-	return repositories.UserRepository.Take(simple.DB(), where...)
+	return repositories.UserRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userService) Find(cnd *simple.SqlCnd) []model.User {
-	return repositories.UserRepository.Find(simple.DB(), cnd)
+func (s *userService) Find(cnd *sqls.SqlCnd) []model.User {
+	return repositories.UserRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userService) FindOne(cnd *simple.SqlCnd) *model.User {
-	return repositories.UserRepository.FindOne(simple.DB(), cnd)
+func (s *userService) FindOne(cnd *sqls.SqlCnd) *model.User {
+	return repositories.UserRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *userService) FindPageByParams(params *simple.QueryParams) (list []model.User, paging *simple.Paging) {
-	return repositories.UserRepository.FindPageByParams(simple.DB(), params)
+func (s *userService) FindPageByParams(params *params.QueryParams) (list []model.User, paging *sqls.Paging) {
+	return repositories.UserRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.User, paging *simple.Paging) {
-	return repositories.UserRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *userService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.User, paging *sqls.Paging) {
+	return repositories.UserRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *userService) Create(t *model.User) error {
-	err := repositories.UserRepository.Create(simple.DB(), t)
+	err := repositories.UserRepository.Create(sqls.DB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
 	}
@@ -71,25 +75,25 @@ func (s *userService) Create(t *model.User) error {
 }
 
 func (s *userService) Update(t *model.User) error {
-	err := repositories.UserRepository.Update(simple.DB(), t)
+	err := repositories.UserRepository.Update(sqls.DB(), t)
 	cache.UserCache.Invalidate(t.Id)
 	return err
 }
 
 func (s *userService) Updates(id int64, columns map[string]interface{}) error {
-	err := repositories.UserRepository.Updates(simple.DB(), id, columns)
+	err := repositories.UserRepository.Updates(sqls.DB(), id, columns)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (s *userService) UpdateColumn(id int64, name string, value interface{}) error {
-	err := repositories.UserRepository.UpdateColumn(simple.DB(), id, name, value)
+	err := repositories.UserRepository.UpdateColumn(sqls.DB(), id, name, value)
 	cache.UserCache.Invalidate(id)
 	return err
 }
 
 func (s *userService) Delete(id int64) {
-	repositories.UserRepository.Delete(simple.DB(), id)
+	repositories.UserRepository.Delete(sqls.DB(), id)
 	cache.UserCache.Invalidate(id)
 }
 
@@ -97,7 +101,7 @@ func (s *userService) Delete(id int64) {
 func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
 	for {
-		list := repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
+		list := repositories.UserRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}
@@ -112,14 +116,14 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 	if days == -1 { // 永久禁言
 		forbiddenEndTime = -1
 	} else if days > 0 {
-		forbiddenEndTime = date.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
+		forbiddenEndTime = dates.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
 	} else {
 		return errors.New("禁言时间错误")
 	}
-	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
+	if repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
 		cache.UserCache.Invalidate(userId)
 		description := ""
-		if simple.IsNotBlank(reason) {
+		if strs.IsNotBlank(reason) {
 			description = "禁言原因：" + reason
 		}
 		OperateLogService.AddOperateLog(operatorId, constants.OpTypeForbidden, constants.EntityUser, userId,
@@ -169,7 +173,7 @@ func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request)
 	if user == nil || !user.IsForbidden() {
 		return
 	}
-	if repositories.UserRepository.UpdateColumn(simple.DB(), userId, "forbidden_end_time", 0) == nil {
+	if repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "forbidden_end_time", 0) == nil {
 		cache.UserCache.Invalidate(user.Id)
 		OperateLogService.AddOperateLog(operatorId, constants.OpTypeRemoveForbidden, constants.EntityUser, userId, "", r)
 	}
@@ -177,12 +181,12 @@ func (s *userService) RemoveForbidden(operatorId, userId int64, r *http.Request)
 
 // GetByEmail 根据邮箱查找
 func (s *userService) GetByEmail(email string) *model.User {
-	return repositories.UserRepository.GetByEmail(simple.DB(), email)
+	return repositories.UserRepository.GetByEmail(sqls.DB(), email)
 }
 
 // GetByUsername 根据用户名查找
 func (s *userService) GetByUsername(username string) *model.User {
-	return repositories.UserRepository.GetByUsername(simple.DB(), username)
+	return repositories.UserRepository.GetByUsername(sqls.DB(), username)
 }
 
 // SignUp 注册
@@ -225,16 +229,16 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	}
 
 	user := &model.User{
-		Username:   simple.SqlNullString(username),
-		Email:      simple.SqlNullString(email),
+		Username:   sqls.SqlNullString(username),
+		Email:      sqls.SqlNullString(email),
 		Nickname:   nickname,
-		Password:   simple.EncodePassword(password),
+		Password:   passwd.EncodePassword(password),
 		Status:     constants.StatusOk,
-		CreateTime: date.NowTimestamp(),
-		UpdateTime: date.NowTimestamp(),
+		CreateTime: dates.NowTimestamp(),
+		UpdateTime: dates.NowTimestamp(),
 	}
 
-	err = repositories.UserRepository.Create(simple.DB(), user)
+	err = repositories.UserRepository.Create(sqls.DB(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +262,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	if user == nil || user.Status != constants.StatusOk {
 		return nil, errors.New("用户不存在或被禁用")
 	}
-	if !simple.ValidatePassword(user.Password, password) {
+	if !passwd.ValidatePassword(user.Password, password) {
 		return nil, errors.New("密码错误")
 	}
 	return user, nil
@@ -292,10 +296,10 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		Status:      constants.StatusOk,
 		HomePage:    homePage,
 		Description: description,
-		CreateTime:  date.NowTimestamp(),
-		UpdateTime:  date.NowTimestamp(),
+		CreateTime:  dates.NowTimestamp(),
+		UpdateTime:  dates.NowTimestamp(),
 	}
-	err := simple.DB().Transaction(func(tx *gorm.DB) error {
+	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.Create(tx, user); err != nil {
 			return err
 		}
@@ -320,7 +324,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 
 // HandleThirdAvatar 处理第三方头像
 func (s *userService) HandleThirdAvatar(thirdAvatar string) string {
-	if simple.IsBlank(thirdAvatar) {
+	if strs.IsBlank(thirdAvatar) {
 		return ""
 	}
 	avatar, err := uploader.CopyImage(thirdAvatar)
@@ -402,7 +406,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 	if len(user.Password) > 0 {
 		return errors.New("你已设置了密码，如需修改请前往修改页面。")
 	}
-	password = simple.EncodePassword(password)
+	password = passwd.EncodePassword(password)
 	return s.UpdateColumn(userId, "password", password)
 }
 
@@ -417,21 +421,21 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 		return errors.New("你没设置密码，请先设置密码")
 	}
 
-	if !simple.ValidatePassword(user.Password, oldPassword) {
+	if !passwd.ValidatePassword(user.Password, oldPassword) {
 		return errors.New("旧密码验证失败")
 	}
 
-	return s.UpdateColumn(userId, "password", simple.EncodePassword(password))
+	return s.UpdateColumn(userId, "password", passwd.EncodePassword(password))
 }
 
 // IncrTopicCount topic_count + 1
 func (s *userService) IncrTopicCount(userId int64) int {
-	t := repositories.UserRepository.Get(simple.DB(), userId)
+	t := repositories.UserRepository.Get(sqls.DB(), userId)
 	if t == nil {
 		return 0
 	}
 	topicCount := t.TopicCount + 1
-	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "topic_count", topicCount); err != nil {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", topicCount); err != nil {
 		logrus.Error(err)
 	} else {
 		cache.UserCache.Invalidate(userId)
@@ -441,12 +445,12 @@ func (s *userService) IncrTopicCount(userId int64) int {
 
 // IncrCommentCount comment_count + 1
 func (s *userService) IncrCommentCount(userId int64) int {
-	t := repositories.UserRepository.Get(simple.DB(), userId)
+	t := repositories.UserRepository.Get(sqls.DB(), userId)
 	if t == nil {
 		return 0
 	}
 	commentCount := t.CommentCount + 1
-	if err := repositories.UserRepository.UpdateColumn(simple.DB(), userId, "comment_count", commentCount); err != nil {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
 		logrus.Error(err)
 	} else {
 		cache.UserCache.Invalidate(userId)
@@ -458,10 +462,10 @@ func (s *userService) IncrCommentCount(userId int64) int {
 func (s *userService) SyncUserCount() {
 	s.Scan(func(users []model.User) {
 		for _, user := range users {
-			topicCount := repositories.TopicRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
-			commentCount := repositories.CommentRepository.Count(simple.DB(), simple.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
-			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "topic_count", topicCount)
-			_ = repositories.UserRepository.UpdateColumn(simple.DB(), user.Id, "comment_count", commentCount)
+			topicCount := repositories.TopicRepository.Count(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+			commentCount := repositories.CommentRepository.Count(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "topic_count", topicCount)
+			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "comment_count", commentCount)
 			cache.UserCache.Invalidate(user.Id)
 		}
 	})
@@ -480,15 +484,15 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		return err
 	}
 	var (
-		token     = simple.UUID()
-		url       = urls.AbsUrl("/user/email/verify?token=" + token)
+		token     = strs.UUID()
+		url       = bbsurls.AbsUrl("/user/email/verify?token=" + token)
 		link      = &model.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
 		siteTitle = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		subject   = "邮箱验证 - " + siteTitle
 		title     = "邮箱验证 - " + siteTitle
 		content   = "该邮件用于验证你在 " + siteTitle + " 中设置邮箱的正确性，请在" + strconv.Itoa(emailVerifyExpireHour) + "小时内完成验证。验证链接：" + url
 	)
-	return simple.DB().Transaction(func(tx *gorm.DB) error {
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.EmailCodeRepository.Create(tx, &model.EmailCode{
 			Model:      model.Model{},
 			UserId:     userId,
@@ -498,7 +502,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 			Title:      title,
 			Content:    content,
 			Used:       false,
-			CreateTime: date.NowTimestamp(),
+			CreateTime: dates.NowTimestamp(),
 		}); err != nil {
 			return nil
 		}
@@ -511,7 +515,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 
 // VerifyEmail 验证邮箱
 func (s *userService) VerifyEmail(token string) (string, error) {
-	emailCode := EmailCodeService.FindOne(simple.NewSqlCnd().Eq("token", token))
+	emailCode := EmailCodeService.FindOne(sqls.NewSqlCnd().Eq("token", token))
 	if emailCode == nil || emailCode.Used {
 		return "", errors.New("非法请求")
 	}
@@ -520,10 +524,10 @@ func (s *userService) VerifyEmail(token string) (string, error) {
 	if user == nil || emailCode.Email != user.Email.String {
 		return "", errors.New("验证码过期")
 	}
-	if date.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
+	if dates.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
 		return "", errors.New("验证邮件已过期")
 	}
-	err := simple.DB().Transaction(func(tx *gorm.DB) error {
+	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.UpdateColumn(tx, emailCode.UserId, "email_verified", true); err != nil {
 			return err
 		}
@@ -613,7 +617,7 @@ func (s *userService) addScore(userId int64, score int, sourceType, sourceId, de
 	}
 	if err := s.Updates(userId, map[string]interface{}{
 		"score":       gorm.Expr("score + ?", score),
-		"update_time": date.NowTimestamp(),
+		"update_time": dates.NowTimestamp(),
 	}); err != nil {
 		return err
 	}
@@ -629,7 +633,7 @@ func (s *userService) addScore(userId int64, score int, sourceType, sourceId, de
 		Description: description,
 		Type:        scoreType,
 		Score:       score,
-		CreateTime:  date.NowTimestamp(),
+		CreateTime:  dates.NowTimestamp(),
 	})
 	if err == nil {
 		cache.UserCache.Invalidate(userId)

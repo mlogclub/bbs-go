@@ -2,7 +2,9 @@ package repositories
 
 import (
 	"bbs-go/model"
-	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 )
 
@@ -31,12 +33,12 @@ func (r *checkInRepository) Take(db *gorm.DB, where ...interface{}) *model.Check
 	return ret
 }
 
-func (r *checkInRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CheckIn) {
+func (r *checkInRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.CheckIn) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *checkInRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.CheckIn {
+func (r *checkInRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.CheckIn {
 	ret := &model.CheckIn{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -44,15 +46,15 @@ func (r *checkInRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Chec
 	return ret
 }
 
-func (r *checkInRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.CheckIn, paging *simple.Paging) {
+func (r *checkInRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.CheckIn, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.CheckIn, paging *simple.Paging) {
+func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.CheckIn, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.CheckIn{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -60,7 +62,7 @@ func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list
 	return
 }
 
-func (r *checkInRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
+func (r *checkInRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
 	return cnd.Count(db, &model.CheckIn{})
 }
 

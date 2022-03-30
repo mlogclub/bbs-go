@@ -2,14 +2,14 @@ package cache
 
 import (
 	"errors"
-	"github.com/mlogclub/simple/date"
 	"time"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/sqls"
 )
 
 type userCache struct {
@@ -24,7 +24,7 @@ func newUserCache() *userCache {
 	return &userCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.UserRepository.Get(simple.DB(), key2Int64(key))
+				value = repositories.UserRepository.Get(sqls.DB(), key2Int64(key))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}
@@ -35,7 +35,7 @@ func newUserCache() *userCache {
 		),
 		scoreRankCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.UserRepository.Find(simple.DB(), simple.NewSqlCnd().Desc("score").Limit(10))
+				value = repositories.UserRepository.Find(sqls.DB(), sqls.NewSqlCnd().Desc("score").Limit(10))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}
@@ -46,9 +46,9 @@ func newUserCache() *userCache {
 		),
 		checkInRankCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				today := date.GetDay(time.Now())
-				value = repositories.CheckInRepository.Find(simple.DB(),
-					simple.NewSqlCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
+				today := dates.GetDay(time.Now())
+				value = repositories.CheckInRepository.Find(sqls.DB(),
+					sqls.NewSqlCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
 				return
 			},
 			cache.WithMaximumSize(10),
@@ -81,7 +81,7 @@ func (c *userCache) GetScoreRank() []model.User {
 }
 
 func (c *userCache) GetCheckInRank() []model.CheckIn {
-	today := date.GetDay(time.Now())
+	today := dates.GetDay(time.Now())
 	val, err := c.checkInRankCache.Get(today)
 	if err != nil {
 		return nil
@@ -90,5 +90,5 @@ func (c *userCache) GetCheckInRank() []model.CheckIn {
 }
 
 func (c *userCache) RefreshCheckInRank() {
-	c.checkInRankCache.Refresh(date.GetDay(time.Now()))
+	c.checkInRankCache.Refresh(dates.GetDay(time.Now()))
 }

@@ -3,14 +3,14 @@ package sitemap
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/uploader"
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"bytes"
 	"compress/gzip"
-	"github.com/mlogclub/simple/date"
 	"strings"
 	"time"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/model"
@@ -59,41 +59,41 @@ func Generate() {
 	sm.Create()
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/")},
+		{"loc", bbsurls.AbsUrl("/")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/topics")},
+		{"loc", bbsurls.AbsUrl("/topics")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqHourly},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/articles")},
+		{"loc", bbsurls.AbsUrl("/articles")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqAlways},
 	})
 
 	sm.Add(stm.URL{
-		{"loc", urls.AbsUrl("/projects")},
+		{"loc", bbsurls.AbsUrl("/projects")},
 		{"lastmod", time.Now()},
 		{"changefreq", changefreqDaily},
 	})
 
 	// var (
-	// 	dateFrom = date.Timestamp(time.Now().AddDate(0, -1, 0))
-	// 	dateTo   = date.NowTimestamp()
+	// 	dateFrom = dates.Timestamp(time.Now().AddDate(0, -1, 0))
+	// 	dateTo   = dates.NowTimestamp()
 	// )
 
 	services.ArticleService.ScanDesc(func(articles []model.Article) {
 		for _, article := range articles {
 			if article.Status == constants.StatusOk {
-				articleUrl := urls.ArticleUrl(article.Id)
+				articleUrl := bbsurls.ArticleUrl(article.Id)
 				sm.Add(stm.URL{
 					{"loc", articleUrl},
-					{"lastmod", date.FromTimestamp(article.UpdateTime)},
+					{"lastmod", dates.FromTimestamp(article.UpdateTime)},
 					{"changefreq", changefreqMonthly},
 					{"priority", 0.6},
 				})
@@ -104,10 +104,10 @@ func Generate() {
 	services.TopicService.ScanDesc(func(topics []model.Topic) {
 		for _, topic := range topics {
 			if topic.Status == constants.StatusOk {
-				topicUrl := urls.TopicUrl(topic.Id)
+				topicUrl := bbsurls.TopicUrl(topic.Id)
 				sm.Add(stm.URL{
 					{"loc", topicUrl},
-					{"lastmod", date.FromTimestamp(topic.LastCommentTime)},
+					{"lastmod", dates.FromTimestamp(topic.LastCommentTime)},
 					{"changefreq", changefreqDaily},
 					{"priority", 0.6},
 				})
@@ -118,8 +118,8 @@ func Generate() {
 	services.ProjectService.ScanDesc(func(projects []model.Project) {
 		for _, project := range projects {
 			sm.Add(stm.URL{
-				{"loc", urls.ProjectUrl(project.Id)},
-				{"lastmod", date.FromTimestamp(project.CreateTime)},
+				{"loc", bbsurls.ProjectUrl(project.Id)},
+				{"lastmod", dates.FromTimestamp(project.CreateTime)},
 				{"changefreq", changefreqMonthly},
 			})
 		}
@@ -127,7 +127,7 @@ func Generate() {
 
 	services.TagService.Scan(func(tags []model.Tag) {
 		for _, tag := range tags {
-			tagUrl := urls.TagArticlesUrl(tag.Id)
+			tagUrl := bbsurls.TagArticlesUrl(tag.Id)
 			sm.Add(stm.URL{
 				{"loc", tagUrl},
 				{"lastmod", time.Now()},
@@ -139,7 +139,7 @@ func Generate() {
 	services.UserService.Scan(func(users []model.User) {
 		for _, user := range users {
 			sm.Add(stm.URL{
-				{"loc", urls.UserUrl(user.Id)},
+				{"loc", bbsurls.UserUrl(user.Id)},
 				{"lastmod", time.Now()},
 				{"changefreq", changefreqWeekly},
 			})

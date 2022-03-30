@@ -1,13 +1,15 @@
 package render
 
 import (
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/common/urls"
+	"github.com/mlogclub/simple/mvc"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -30,18 +32,18 @@ func handleHtmlContent(htmlContent string) string {
 	doc.Find("a").Each(func(i int, selection *goquery.Selection) {
 		href := selection.AttrOr("href", "")
 
-		if simple.IsBlank(href) {
+		if strs.IsBlank(href) {
 			return
 		}
 
 		// 不是内部链接
-		if !urls.IsInternalUrl(href) {
+		if !bbsurls.IsInternalUrl(href) {
 			selection.SetAttr("target", "_blank")
 			selection.SetAttr("rel", "external nofollow") // 标记站外链接，搜索引擎爬虫不传递权重值
 
 			_config := services.SysConfigService.GetConfig()
 			if _config.UrlRedirect { // 开启非内部链接跳转
-				newHref := simple.ParseUrl(urls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
+				newHref := urls.ParseUrl(bbsurls.AbsUrl("/redirect")).AddQuery("url", href).BuildStr()
 				selection.SetAttr("href", newHref)
 			}
 		}
@@ -59,7 +61,7 @@ func handleHtmlContent(htmlContent string) string {
 
 		// 处理第三方图片
 		if strings.Contains(src, "qpic.cn") {
-			src = simple.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
+			src = urls.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
 			// selection.SetAttr("src", src)
 		}
 
@@ -84,12 +86,12 @@ Parameter:
 	user - login user
 	ref - 登录来源地址，需要控制登录成功之后跳转到该地址
 */
-func BuildLoginSuccess(user *model.User, ref string) *simple.JsonResult {
+func BuildLoginSuccess(user *model.User, ref string) *mvc.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
-	return simple.NewEmptyRspBuilder().
+	return mvc.NewEmptyRspBuilder().
 		Put("token", token).
 		Put("user", BuildUserProfile(user)).
 		Put("ref", ref).JsonResult()

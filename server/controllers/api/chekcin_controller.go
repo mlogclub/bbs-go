@@ -4,10 +4,11 @@ import (
 	"bbs-go/cache"
 	"bbs-go/controllers/render"
 	"bbs-go/services"
-	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
 	"time"
+
+	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/mvc"
 )
 
 type CheckinController struct {
@@ -15,43 +16,43 @@ type CheckinController struct {
 }
 
 // PostCheckin 签到
-func (c *CheckinController) PostCheckin() *simple.JsonResult {
+func (c *CheckinController) PostCheckin() *mvc.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if err := services.UserService.CheckPostStatus(user); err != nil {
-		return simple.JsonError(err)
+		return mvc.JsonError(err)
 	}
 	err := services.CheckInService.CheckIn(user.Id)
 	if err == nil {
-		return simple.JsonSuccess()
+		return mvc.JsonSuccess()
 	} else {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	}
 }
 
 // GetCheckin 获取签到信息
-func (c *CheckinController) GetCheckin() *simple.JsonResult {
+func (c *CheckinController) GetCheckin() *mvc.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return simple.JsonSuccess()
+		return mvc.JsonSuccess()
 	}
 	checkIn := services.CheckInService.GetByUserId(user.Id)
 	if checkIn != nil {
-		today := date.GetDay(time.Now())
-		return simple.NewRspBuilder(checkIn).
+		today := dates.GetDay(time.Now())
+		return mvc.NewRspBuilder(checkIn).
 			Put("checkIn", checkIn.LatestDayName == today). // 今日是否已签到
 			JsonResult()
 	}
-	return simple.JsonSuccess()
+	return mvc.JsonSuccess()
 }
 
 // GetRank 获取当天签到排行榜（最早签到的排在最前面）
-func (c *CheckinController) GetRank() *simple.JsonResult {
+func (c *CheckinController) GetRank() *mvc.JsonResult {
 	list := cache.UserCache.GetCheckInRank()
 	var itemList []map[string]interface{}
 	for _, checkIn := range list {
-		itemList = append(itemList, simple.NewRspBuilder(checkIn).
+		itemList = append(itemList, mvc.NewRspBuilder(checkIn).
 			Put("user", render.BuildUserInfoDefaultIfNull(checkIn.UserId)).
 			Build())
 	}
-	return simple.JsonData(itemList)
+	return mvc.JsonData(itemList)
 }

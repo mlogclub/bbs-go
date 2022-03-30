@@ -1,7 +1,8 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -32,12 +33,12 @@ func (r *userScoreLogRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (r *userScoreLogRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserScoreLog) {
+func (r *userScoreLogRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserScoreLog) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.UserScoreLog {
+func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserScoreLog {
 	ret := &model.UserScoreLog{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,15 +46,15 @@ func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model
 	return ret
 }
 
-func (r *userScoreLogRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.UserScoreLog, paging *simple.Paging) {
+func (r *userScoreLogRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserScoreLog, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *userScoreLogRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.UserScoreLog, paging *simple.Paging) {
+func (r *userScoreLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserScoreLog, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserScoreLog{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,

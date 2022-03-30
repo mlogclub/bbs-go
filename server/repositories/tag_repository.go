@@ -3,10 +3,11 @@ package repositories
 import (
 	"bbs-go/model/constants"
 	"errors"
-	"github.com/mlogclub/simple/date"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -37,12 +38,12 @@ func (r *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
 	return ret
 }
 
-func (r *tagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag) {
+func (r *tagRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Tag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
+func (r *tagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Tag {
 	ret := &model.Tag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -50,15 +51,15 @@ func (r *tagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Tag {
 	return ret
 }
 
-func (r *tagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Tag, paging *simple.Paging) {
+func (r *tagRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.Tag, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *tagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Tag, paging *simple.Paging) {
+func (r *tagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Tag, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Tag{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -95,7 +96,7 @@ func (r *tagRepository) GetTagInIds(tagIds []int64) []model.Tag {
 		return nil
 	}
 	var tags []model.Tag
-	simple.DB().Where("id in (?)", tagIds).Find(&tags)
+	sqls.DB().Where("id in (?)", tagIds).Find(&tags)
 	return tags
 }
 
@@ -103,7 +104,7 @@ func (r *tagRepository) GetByName(name string) *model.Tag {
 	if len(name) == 0 {
 		return nil
 	}
-	return r.Take(simple.DB(), "name = ?", name)
+	return r.Take(sqls.DB(), "name = ?", name)
 }
 
 func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error) {
@@ -117,8 +118,8 @@ func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error
 		tag = &model.Tag{
 			Name:       name,
 			Status:     constants.StatusOk,
-			CreateTime: date.NowTimestamp(),
-			UpdateTime: date.NowTimestamp(),
+			CreateTime: dates.NowTimestamp(),
+			UpdateTime: dates.NowTimestamp(),
 		}
 		err := r.Create(db, tag)
 		if err != nil {

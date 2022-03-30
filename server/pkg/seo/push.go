@@ -3,7 +3,8 @@ package seo
 import (
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/common/urls"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
@@ -37,22 +38,22 @@ func PushUrls(urls []string) {
 }
 
 // 神马链接推送
-func PushSmUrls(urls []string) {
-	if len(urls) == 0 {
+func PushSmUrls(urlList []string) {
+	if len(urlList) == 0 {
 		return
 	}
 	conf := config.Instance.SmSEO
-	if simple.IsBlank(conf.Site) || simple.IsBlank(conf.UserName) || simple.IsBlank(conf.Token) {
+	if strs.IsBlank(conf.Site) || strs.IsBlank(conf.UserName) || strs.IsBlank(conf.Token) {
 		return
 	}
 
-	u := simple.ParseUrl("https://data.zhanzhang.sm.cn/push")
+	u := urls.ParseUrl("https://data.zhanzhang.sm.cn/push")
 	u.AddQuery("site", conf.Site)
 	u.AddQuery("user_name", conf.UserName)
 	u.AddQuery("resource_name", "mip_add")
 	u.AddQuery("token", conf.Token)
 
-	body := strings.Join(urls, "\n")
+	body := strings.Join(urlList, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(u.BuildStr()); err != nil {
 		logrus.Error(err)
 	} else {

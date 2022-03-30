@@ -1,7 +1,7 @@
 package uploader
 
 import (
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -29,7 +29,7 @@ func (local *localUploader) PutObject(key string, data []byte, contentType strin
 	if err := ioutil.WriteFile(filename, data, os.ModePerm); err != nil {
 		return "", err
 	}
-	return urls.UrlJoin(c.Host, key), nil
+	return bbsurls.UrlJoin(c.Host, key), nil
 }
 
 func (local *localUploader) CopyImage(originUrl string) (string, error) {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/model"
@@ -22,7 +22,7 @@ func newTagCache() *tagCache {
 	return &tagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.TagRepository.Get(simple.DB(), key2Int64(key))
+				value = repositories.TagRepository.Get(sqls.DB(), key2Int64(key))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}

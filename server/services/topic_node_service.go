@@ -2,7 +2,9 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -18,49 +20,49 @@ type topicNodeService struct {
 }
 
 func (s *topicNodeService) Get(id int64) *model.TopicNode {
-	return repositories.TopicNodeRepository.Get(simple.DB(), id)
+	return repositories.TopicNodeRepository.Get(sqls.DB(), id)
 }
 
 func (s *topicNodeService) Take(where ...interface{}) *model.TopicNode {
-	return repositories.TopicNodeRepository.Take(simple.DB(), where...)
+	return repositories.TopicNodeRepository.Take(sqls.DB(), where...)
 }
 
-func (s *topicNodeService) Find(cnd *simple.SqlCnd) []model.TopicNode {
-	return repositories.TopicNodeRepository.Find(simple.DB(), cnd)
+func (s *topicNodeService) Find(cnd *sqls.SqlCnd) []model.TopicNode {
+	return repositories.TopicNodeRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *topicNodeService) FindOne(cnd *simple.SqlCnd) *model.TopicNode {
-	return repositories.TopicNodeRepository.FindOne(simple.DB(), cnd)
+func (s *topicNodeService) FindOne(cnd *sqls.SqlCnd) *model.TopicNode {
+	return repositories.TopicNodeRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *topicNodeService) FindPageByParams(params *simple.QueryParams) (list []model.TopicNode, paging *simple.Paging) {
-	return repositories.TopicNodeRepository.FindPageByParams(simple.DB(), params)
+func (s *topicNodeService) FindPageByParams(params *params.QueryParams) (list []model.TopicNode, paging *sqls.Paging) {
+	return repositories.TopicNodeRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *topicNodeService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.TopicNode, paging *simple.Paging) {
-	return repositories.TopicNodeRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *topicNodeService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.TopicNode, paging *sqls.Paging) {
+	return repositories.TopicNodeRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *topicNodeService) Create(t *model.TopicNode) error {
-	return repositories.TopicNodeRepository.Create(simple.DB(), t)
+	return repositories.TopicNodeRepository.Create(sqls.DB(), t)
 }
 
 func (s *topicNodeService) Update(t *model.TopicNode) error {
-	return repositories.TopicNodeRepository.Update(simple.DB(), t)
+	return repositories.TopicNodeRepository.Update(sqls.DB(), t)
 }
 
 func (s *topicNodeService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.TopicNodeRepository.Updates(simple.DB(), id, columns)
+	return repositories.TopicNodeRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *topicNodeService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.TopicNodeRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.TopicNodeRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *topicNodeService) Delete(id int64) {
-	repositories.TopicNodeRepository.Delete(simple.DB(), id)
+	repositories.TopicNodeRepository.Delete(sqls.DB(), id)
 }
 
 func (s *topicNodeService) GetNodes() []model.TopicNode {
-	return repositories.TopicNodeRepository.Find(simple.DB(), simple.NewSqlCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+	return repositories.TopicNodeRepository.Find(sqls.DB(), sqls.NewSqlCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 }

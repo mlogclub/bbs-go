@@ -3,13 +3,13 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/common"
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/text"
 	"bbs-go/services"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mlogclub/simple"
 )
 
 func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
@@ -23,7 +23,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if article == nil || article.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = urls.ArticleUrl(article.Id)
+			rsp.Url = bbsurls.ArticleUrl(article.Id)
 			rsp.User = BuildUserInfoDefaultIfNull(article.UserId)
 			rsp.Title = article.Title
 			if article.ContentType == constants.ContentTypeMarkdown {
@@ -31,8 +31,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 			} else if article.ContentType == constants.ContentTypeHtml {
 				doc, err := goquery.NewDocumentFromReader(strings.NewReader(article.Content))
 				if err == nil {
-					text := doc.Text()
-					rsp.Content = simple.GetSummary(text, constants.SummaryLen)
+					rsp.Content = text.GetSummary(doc.Text(), constants.SummaryLen)
 				}
 			}
 		}
@@ -41,7 +40,7 @@ func BuildFavorite(favorite *model.Favorite) *model.FavoriteResponse {
 		if topic == nil || topic.Status != constants.StatusOk {
 			rsp.Deleted = true
 		} else {
-			rsp.Url = urls.TopicUrl(topic.Id)
+			rsp.Url = bbsurls.TopicUrl(topic.Id)
 			rsp.User = BuildUserInfoDefaultIfNull(topic.UserId)
 			rsp.Title = topic.Title
 			rsp.Content = common.GetMarkdownSummary(topic.Content)

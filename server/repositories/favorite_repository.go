@@ -1,7 +1,8 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -32,12 +33,12 @@ func (r *favoriteRepository) Take(db *gorm.DB, where ...interface{}) *model.Favo
 	return ret
 }
 
-func (r *favoriteRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Favorite) {
+func (r *favoriteRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Favorite) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Favorite {
+func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Favorite {
 	ret := &model.Favorite{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -45,15 +46,15 @@ func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Fav
 	return ret
 }
 
-func (r *favoriteRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.Favorite, paging *simple.Paging) {
+func (r *favoriteRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.Favorite, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *favoriteRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.Favorite, paging *simple.Paging) {
+func (r *favoriteRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Favorite, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Favorite{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/repositories"
 )
@@ -20,7 +20,7 @@ func newArticleTagCache() *articleTagCache {
 	return &articleTagCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				articleTags := repositories.ArticleTagRepository.FindByArticleId(simple.DB(), key2Int64(key))
+				articleTags := repositories.ArticleTagRepository.FindByArticleId(sqls.DB(), key2Int64(key))
 				if len(articleTags) > 0 {
 					var tagIds []int64
 					for _, articleTag := range articleTags {

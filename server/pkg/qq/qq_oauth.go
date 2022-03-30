@@ -7,11 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple/json"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/common/urls"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -46,11 +47,11 @@ var ctxCache = cache.New(cache.WithMaximumSize(1000), cache.WithExpireAfterAcces
 // 接口：https://graph.qq.com/oauth2.0/authorize
 func AuthorizeUrl(params map[string]string) string {
 	// 将跳转地址写入上线文
-	state := simple.UUID()
+	state := strs.UUID()
 	redirectUrl := getRedirectUrl(params)
 	ctxCache.Put(state, redirectUrl)
 
-	return simple.ParseUrl("https://graph.qq.com/oauth2.0/authorize").
+	return urls.ParseUrl("https://graph.qq.com/oauth2.0/authorize").
 		AddQuery("response_type", "code").
 		AddQuery("client_id", config.Instance.QQConnect.AppId).
 		AddQuery("redirect_uri", redirectUrl).
@@ -86,7 +87,7 @@ func AuthorizationCode(code, state string) (*AccessToken, error) {
 
 	// qq返回的数据格式如下：
 	// access_token=xxx&expires_in=7776000&refresh_token=xxx
-	ub := simple.ParseUrl("?" + content)
+	ub := urls.ParseUrl("?" + content)
 	accessToken := ub.GetQuery().Get("access_token")
 	refreshToken := ub.GetQuery().Get("refresh_token")
 	expiresIn, _ := strconv.Atoi(ub.GetQuery().Get("expires_in"))
@@ -172,7 +173,7 @@ func getRedirectUrl(params map[string]string) string {
 		redirectUrl = "http://localhost:3000/user/qq/callback"
 	}
 	if len(params) > 0 {
-		ub := simple.ParseUrl(redirectUrl)
+		ub := urls.ParseUrl(redirectUrl)
 		for k, v := range params {
 			ub.AddQuery(k, v)
 		}

@@ -2,14 +2,15 @@ package validate
 
 import (
 	"errors"
-	"github.com/mlogclub/simple"
 	"regexp"
 	"strings"
+
+	"github.com/mlogclub/simple/common/strs"
 )
 
 // IsUsername 验证用户名合法性，用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。
 func IsUsername(username string) error {
-	if simple.IsBlank(username) {
+	if strs.IsBlank(username) {
 		return errors.New("请输入用户名")
 	}
 	matched, err := regexp.MatchString("^[0-9a-zA-Z_-]{5,12}$", username)
@@ -25,7 +26,7 @@ func IsUsername(username string) error {
 
 // IsEmail 验证是否是合法的邮箱
 func IsEmail(email string) (err error) {
-	if simple.IsBlank(email) {
+	if strs.IsBlank(email) {
 		err = errors.New("邮箱格式不符合规范")
 		return
 	}
@@ -39,10 +40,10 @@ func IsEmail(email string) (err error) {
 
 // IsPassword 是否是合法的密码
 func IsPassword(password, rePassword string) error {
-	if simple.IsBlank(password) {
+	if strs.IsBlank(password) {
 		return errors.New("请输入密码")
 	}
-	if simple.RuneLen(password) < 6 {
+	if strs.RuneLen(password) < 6 {
 		return errors.New("密码过于简单")
 	}
 	if password != rePassword {
@@ -53,7 +54,7 @@ func IsPassword(password, rePassword string) error {
 
 // IsURL 是否是合法的URL
 func IsURL(url string) error {
-	if simple.IsBlank(url) {
+	if strs.IsBlank(url) {
 		return errors.New("URL格式错误")
 	}
 	indexOfHttp := strings.Index(url, "http://")

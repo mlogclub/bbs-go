@@ -5,7 +5,7 @@ import (
 	"bbs-go/pkg/uploader"
 	"strings"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 func HandleOssImageStyleAvatar(url string) string {
@@ -37,7 +37,7 @@ func HandleOssImageStylePreview(url string) string {
 }
 
 func HandleOssImageStyle(url, style string) string {
-	if simple.IsBlank(style) || simple.IsBlank(url) {
+	if strs.IsBlank(style) || strs.IsBlank(url) {
 		return url
 	}
 	if !uploader.IsOssImageUrl(url) {
@@ -47,7 +47,7 @@ func HandleOssImageStyle(url, style string) string {
 		return url
 	}
 	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
-	if simple.IsBlank(sep) {
+	if strs.IsBlank(sep) {
 		return url
 	}
 	return strings.Join([]string{url, style}, sep)

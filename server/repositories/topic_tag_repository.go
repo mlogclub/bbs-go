@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
 	"bbs-go/model"
@@ -33,12 +34,12 @@ func (r *topicTagRepository) Take(db *gorm.DB, where ...interface{}) *model.Topi
 	return ret
 }
 
-func (r *topicTagRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag) {
+func (r *topicTagRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.TopicTag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *topicTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.TopicTag {
+func (r *topicTagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.TopicTag {
 	ret := &model.TopicTag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -46,15 +47,15 @@ func (r *topicTagRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Top
 	return ret
 }
 
-func (r *topicTagRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.TopicTag, paging *simple.Paging) {
+func (r *topicTagRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.TopicTag, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *topicTagRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.TopicTag, paging *simple.Paging) {
+func (r *topicTagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.TopicTag, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.TopicTag{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -94,7 +95,7 @@ func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []i
 		_ = r.Create(db, &model.TopicTag{
 			TopicId:    topicId,
 			TagId:      tagId,
-			CreateTime: date.NowTimestamp(),
+			CreateTime: dates.NowTimestamp(),
 		})
 	}
 }

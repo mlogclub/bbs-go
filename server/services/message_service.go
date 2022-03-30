@@ -6,11 +6,13 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/msg"
-	"bbs-go/pkg/urls"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/repositories"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/date"
-	"github.com/mlogclub/simple/json"
+
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,58 +26,58 @@ type messageService struct {
 }
 
 func (s *messageService) Get(id int64) *model.Message {
-	return repositories.MessageRepository.Get(simple.DB(), id)
+	return repositories.MessageRepository.Get(sqls.DB(), id)
 }
 
 func (s *messageService) Take(where ...interface{}) *model.Message {
-	return repositories.MessageRepository.Take(simple.DB(), where...)
+	return repositories.MessageRepository.Take(sqls.DB(), where...)
 }
 
-func (s *messageService) Find(cnd *simple.SqlCnd) []model.Message {
-	return repositories.MessageRepository.Find(simple.DB(), cnd)
+func (s *messageService) Find(cnd *sqls.SqlCnd) []model.Message {
+	return repositories.MessageRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *messageService) FindOne(cnd *simple.SqlCnd) *model.Message {
-	return repositories.MessageRepository.FindOne(simple.DB(), cnd)
+func (s *messageService) FindOne(cnd *sqls.SqlCnd) *model.Message {
+	return repositories.MessageRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *messageService) FindPageByParams(params *simple.QueryParams) (list []model.Message, paging *simple.Paging) {
-	return repositories.MessageRepository.FindPageByParams(simple.DB(), params)
+func (s *messageService) FindPageByParams(params *params.QueryParams) (list []model.Message, paging *sqls.Paging) {
+	return repositories.MessageRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *messageService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Message, paging *simple.Paging) {
-	return repositories.MessageRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *messageService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Message, paging *sqls.Paging) {
+	return repositories.MessageRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *messageService) Create(t *model.Message) error {
-	return repositories.MessageRepository.Create(simple.DB(), t)
+	return repositories.MessageRepository.Create(sqls.DB(), t)
 }
 
 func (s *messageService) Update(t *model.Message) error {
-	return repositories.MessageRepository.Update(simple.DB(), t)
+	return repositories.MessageRepository.Update(sqls.DB(), t)
 }
 
 func (s *messageService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.MessageRepository.Updates(simple.DB(), id, columns)
+	return repositories.MessageRepository.Updates(sqls.DB(), id, columns)
 }
 
 func (s *messageService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.MessageRepository.UpdateColumn(simple.DB(), id, name, value)
+	return repositories.MessageRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
 func (s *messageService) Delete(id int64) {
-	repositories.MessageRepository.Delete(simple.DB(), id)
+	repositories.MessageRepository.Delete(sqls.DB(), id)
 }
 
 // GetUnReadCount 获取未读消息数量
 func (s *messageService) GetUnReadCount(userId int64) (count int64) {
-	simple.DB().Where("user_id = ? and status = ?", userId, msg.StatusUnread).Model(&model.Message{}).Count(&count)
+	sqls.DB().Where("user_id = ? and status = ?", userId, msg.StatusUnread).Model(&model.Message{}).Count(&count)
 	return
 }
 
 // MarkRead 将所有消息标记为已读
 func (s *messageService) MarkRead(userId int64) {
-	simple.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", msg.StatusHaveRead,
+	sqls.DB().Exec("update t_message set status = ? where user_id = ? and status = ?", msg.StatusHaveRead,
 		userId, msg.StatusUnread)
 }
 
@@ -92,7 +94,7 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 		Type:         int(msgType),
 		ExtraData:    json.ToJsonStr(extraData),
 		Status:       msg.StatusUnread,
-		CreateTime:   date.NowTimestamp(),
+		CreateTime:   dates.NowTimestamp(),
 	}
 	if err := s.Create(t); err != nil {
 		logrus.Error(err)
@@ -141,7 +143,7 @@ func (s *messageService) SendEmailNotice(t *model.Message) {
 	err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
 		t.QuoteContent, &model.ActionLink{
 			Title: "点击查看详情",
-			Url:   urls.AbsUrl("/user/messages"),
+			Url:   bbsurls.AbsUrl("/user/messages"),
 		})
 	if err != nil {
 		logrus.Error(err)

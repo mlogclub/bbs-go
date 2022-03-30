@@ -2,15 +2,13 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/seo"
-	"bbs-go/pkg/urls"
 	"errors"
 	"math"
 	"path"
 	"strings"
 	"time"
-
-	"github.com/mlogclub/simple/date"
 
 	"github.com/emirpasic/gods/sets/hashset"
 
@@ -20,6 +18,11 @@ import (
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/files"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
@@ -37,46 +40,46 @@ type articleService struct {
 }
 
 func (s *articleService) Get(id int64) *model.Article {
-	return repositories.ArticleRepository.Get(simple.DB(), id)
+	return repositories.ArticleRepository.Get(sqls.DB(), id)
 }
 
 func (s *articleService) Take(where ...interface{}) *model.Article {
-	return repositories.ArticleRepository.Take(simple.DB(), where...)
+	return repositories.ArticleRepository.Take(sqls.DB(), where...)
 }
 
-func (s *articleService) Find(cnd *simple.SqlCnd) []model.Article {
-	return repositories.ArticleRepository.Find(simple.DB(), cnd)
+func (s *articleService) Find(cnd *sqls.SqlCnd) []model.Article {
+	return repositories.ArticleRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *articleService) FindOne(cnd *simple.SqlCnd) *model.Article {
-	return repositories.ArticleRepository.FindOne(simple.DB(), cnd)
+func (s *articleService) FindOne(cnd *sqls.SqlCnd) *model.Article {
+	return repositories.ArticleRepository.FindOne(sqls.DB(), cnd)
 }
 
-func (s *articleService) FindPageByParams(params *simple.QueryParams) (list []model.Article, paging *simple.Paging) {
-	return repositories.ArticleRepository.FindPageByParams(simple.DB(), params)
+func (s *articleService) FindPageByParams(params *params.QueryParams) (list []model.Article, paging *sqls.Paging) {
+	return repositories.ArticleRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *articleService) FindPageByCnd(cnd *simple.SqlCnd) (list []model.Article, paging *simple.Paging) {
-	return repositories.ArticleRepository.FindPageByCnd(simple.DB(), cnd)
+func (s *articleService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Article, paging *sqls.Paging) {
+	return repositories.ArticleRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *articleService) Update(t *model.Article) error {
-	err := repositories.ArticleRepository.Update(simple.DB(), t)
+	err := repositories.ArticleRepository.Update(sqls.DB(), t)
 	return err
 }
 
 func (s *articleService) Updates(id int64, columns map[string]interface{}) error {
-	err := repositories.ArticleRepository.Updates(simple.DB(), id, columns)
+	err := repositories.ArticleRepository.Updates(sqls.DB(), id, columns)
 	return err
 }
 
 func (s *articleService) UpdateColumn(id int64, name string, value interface{}) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, name, value)
+	err := repositories.ArticleRepository.UpdateColumn(sqls.DB(), id, name, value)
 	return err
 }
 
 func (s *articleService) Delete(id int64) error {
-	err := repositories.ArticleRepository.UpdateColumn(simple.DB(), id, "status", constants.StatusDeleted)
+	err := repositories.ArticleRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
 		// 删掉标签文章
 		ArticleTagService.DeleteByArticleId(id)
@@ -90,13 +93,13 @@ func (s *articleService) GetArticleInIds(articleIds []int64) []model.Article {
 		return nil
 	}
 	var articles []model.Article
-	simple.DB().Where("id in (?)", articleIds).Order("id desc").Find(&articles)
+	sqls.DB().Where("id in (?)", articleIds).Order("id desc").Find(&articles)
 	return articles
 }
 
 // 获取文章对应的标签
 func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
-	articleTags := repositories.ArticleTagRepository.Find(simple.DB(), simple.NewSqlCnd().Where("article_id = ?", articleId))
+	articleTags := repositories.ArticleTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("article_id = ?", articleId))
 	var tagIds []int64
 	for _, articleTag := range articleTags {
 		tagIds = append(tagIds, articleTag.TagId)
@@ -107,11 +110,11 @@ func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
 // 文章列表
 func (s *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := simple.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
+	articles = repositories.ArticleRepository.Find(sqls.DB(), cnd)
 	if len(articles) > 0 {
 		nextCursor = articles[len(articles)-1].Id
 		hasMore = len(articles) >= limit
@@ -124,12 +127,12 @@ func (s *articleService) GetArticles(cursor int64) (articles []model.Article, ne
 // 标签文章列表
 func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := simple.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
 	nextCursor = cursor
-	articleTags := repositories.ArticleTagRepository.Find(simple.DB(), cnd)
+	articleTags := repositories.ArticleTagRepository.Find(sqls.DB(), cnd)
 	if len(articleTags) > 0 {
 		var articleIds []int64
 		for _, articleTag := range articleTags {
@@ -148,10 +151,10 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 	form.Summary = strings.TrimSpace(form.Summary)
 	form.Content = strings.TrimSpace(form.Content)
 
-	if simple.IsBlank(form.Title) {
+	if strs.IsBlank(form.Title) {
 		return nil, errors.New("标题不能为空")
 	}
-	if simple.IsBlank(form.Content) {
+	if strs.IsBlank(form.Content) {
 		return nil, errors.New("内容不能为空")
 	}
 
@@ -170,11 +173,11 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 		ContentType: form.ContentType,
 		Status:      status,
 		SourceUrl:   form.SourceUrl,
-		CreateTime:  date.NowTimestamp(),
-		UpdateTime:  date.NowTimestamp(),
+		CreateTime:  dates.NowTimestamp(),
+		UpdateTime:  dates.NowTimestamp(),
 	}
 
-	err = simple.DB().Transaction(func(tx *gorm.DB) error {
+	err = sqls.DB().Transaction(func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
 		err := repositories.ArticleRepository.Create(tx, article)
 		if err != nil {
@@ -185,7 +188,7 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 	})
 
 	if err == nil {
-		seo.Push(urls.ArticleUrl(article.Id))
+		seo.Push(bbsurls.ArticleUrl(article.Id))
 	}
 	return
 }
@@ -199,8 +202,8 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return simple.NewErrorMsg("请填写文章内容")
 	}
 
-	err := simple.DB().Transaction(func(tx *gorm.DB) error {
-		err := repositories.ArticleRepository.Updates(simple.DB(), articleId, map[string]interface{}{
+	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		err := repositories.ArticleRepository.Updates(sqls.DB(), articleId, map[string]interface{}{
 			"title":   title,
 			"content": content,
 		})
@@ -217,9 +220,9 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 }
 
 func (s *articleService) PutTags(articleId int64, tags []string) {
-	tagIds := repositories.TagRepository.GetOrCreates(simple.DB(), tags)             // 创建文章对应标签
-	repositories.ArticleTagRepository.DeleteArticleTags(simple.DB(), articleId)      // 先删掉所有的标签
-	repositories.ArticleTagRepository.AddArticleTags(simple.DB(), articleId, tagIds) // 然后重新添加标签
+	tagIds := repositories.TagRepository.GetOrCreates(sqls.DB(), tags)             // 创建文章对应标签
+	repositories.ArticleTagRepository.DeleteArticleTags(sqls.DB(), articleId)      // 先删掉所有的标签
+	repositories.ArticleTagRepository.AddArticleTags(sqls.DB(), articleId, tagIds) // 然后重新添加标签
 	cache.ArticleTagCache.Invalidate(articleId)
 }
 
@@ -230,7 +233,7 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 		return nil
 	}
 	var articleTags []model.ArticleTag
-	simple.DB().Where("tag_id in (?)", tagIds).Limit(30).Find(&articleTags)
+	sqls.DB().Where("tag_id in (?)", tagIds).Limit(30).Find(&articleTags)
 
 	set := hashset.New()
 	if len(articleTags) > 0 {
@@ -251,7 +254,7 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 
 // 近期文章
 func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
-	articles := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))
+	articles := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))
 	var ret []model.Article
 	for _, article := range articles {
 		if article.Status == constants.StatusOk {
@@ -265,7 +268,7 @@ func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
 func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -279,7 +282,7 @@ func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 func (s *articleService) ScanByUser(userId int64, callback func(articles []model.Article)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -293,7 +296,7 @@ func (s *articleService) ScanByUser(userId int64, callback func(articles []model
 func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(simple.DB(), simple.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -306,12 +309,12 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 
 // rss
 func (s *articleService) GenerateRss() {
-	articles := repositories.ArticleRepository.Find(simple.DB(),
-		simple.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
+	articles := repositories.ArticleRepository.Find(sqls.DB(),
+		sqls.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, article := range articles {
-		articleUrl := urls.ArticleUrl(article.Id)
+		articleUrl := bbsurls.ArticleUrl(article.Id)
 		user := cache.UserCache.Get(article.UserId)
 		if user == nil {
 			continue
@@ -322,7 +325,7 @@ func (s *articleService) GenerateRss() {
 			Link:        &feeds.Link{Href: articleUrl},
 			Description: description,
 			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     date.FromTimestamp(article.CreateTime),
+			Created:     dates.FromTimestamp(article.CreateTime),
 		}
 		items = append(items, item)
 	}
@@ -341,25 +344,25 @@ func (s *articleService) GenerateRss() {
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "atom.xml"), atom, false)
+		_ = files.WriteString(path.Join(config.Instance.StaticPath, "atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
 		logrus.Error(err)
 	} else {
-		_ = simple.WriteString(path.Join(config.Instance.StaticPath, "rss.xml"), rss, false)
+		_ = files.WriteString(path.Join(config.Instance.StaticPath, "rss.xml"), rss, false)
 	}
 }
 
 // 浏览数+1
 func (s *articleService) IncrViewCount(articleId int64) {
-	simple.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
+	sqls.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
 }
 
 func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := simple.NewSqlCnd()
+	cnd := sqls.NewSqlCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
 	}
@@ -367,7 +370,7 @@ func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model
 		cnd.Lt("id", cursor)
 	}
 	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(limit)
-	articles = repositories.ArticleRepository.Find(simple.DB(), cnd)
+	articles = repositories.ArticleRepository.Find(sqls.DB(), cnd)
 	if len(articles) > 0 {
 		nextCursor = articles[len(articles)-1].Id
 		hasMore = len(articles) >= limit

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/sqls"
 
 	"bbs-go/model"
 	"bbs-go/repositories"
@@ -21,7 +21,7 @@ func newSysConfigCache() *sysConfigCache {
 	return &sysConfigCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.SysConfigRepository.GetByKey(simple.DB(), key.(string))
+				value = repositories.SysConfigRepository.GetByKey(sqls.DB(), key.(string))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}

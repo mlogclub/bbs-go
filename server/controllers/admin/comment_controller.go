@@ -7,7 +7,9 @@ import (
 	"bbs-go/controllers/render"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/mvc"
+	"github.com/mlogclub/simple/mvc/params"
 
 	"bbs-go/services"
 )
@@ -16,22 +18,22 @@ type CommentController struct {
 	Ctx iris.Context
 }
 
-func (c *CommentController) GetBy(id int64) *simple.JsonResult {
+func (c *CommentController) GetBy(id int64) *mvc.JsonResult {
 	t := services.CommentService.Get(id)
 	if t == nil {
-		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return mvc.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return simple.JsonData(t)
+	return mvc.JsonData(t)
 }
 
-func (c *CommentController) AnyList() *simple.JsonResult {
+func (c *CommentController) AnyList() *mvc.JsonResult {
 	var (
-		id         = simple.FormValueInt64Default(c.Ctx, "id", 0)
-		userId     = simple.FormValueInt64Default(c.Ctx, "userId", 0)
-		entityType = simple.FormValueDefault(c.Ctx, "entityType", "")
-		entityId   = simple.FormValueInt64Default(c.Ctx, "entityId", 0)
+		id         = params.FormValueInt64Default(c.Ctx, "id", 0)
+		userId     = params.FormValueInt64Default(c.Ctx, "userId", 0)
+		entityType = params.FormValueDefault(c.Ctx, "entityType", "")
+		entityId   = params.FormValueInt64Default(c.Ctx, "entityId", 0)
 	)
-	params := simple.NewQueryParams(c.Ctx).
+	params := params.NewQueryParams(c.Ctx).
 		EqByReq("status").
 		PageByReq().Desc("id")
 
@@ -41,20 +43,20 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 	if userId > 0 {
 		params.Eq("user_id", userId)
 	}
-	if simple.IsNotBlank(entityType) && entityId > 0 {
+	if strs.IsNotBlank(entityType) && entityId > 0 {
 		params.Eq("entity_type", entityType).Eq("entity_id", entityId)
 	}
 
-	if id <= 0 && userId <= 0 && (simple.IsBlank(entityType) || entityId <= 0) {
-		// return simple.JsonErrorMsg("请输入必要的查询参数。")
-		return simple.JsonSuccess()
+	if id <= 0 && userId <= 0 && (strs.IsBlank(entityType) || entityId <= 0) {
+		// return mvc.JsonErrorMsg("请输入必要的查询参数。")
+		return mvc.JsonSuccess()
 	}
 
 	list, paging := services.CommentService.FindPageByParams(params)
 
 	var results []map[string]interface{}
 	for _, comment := range list {
-		builder := simple.NewRspBuilderExcludes(comment, "content")
+		builder := mvc.NewRspBuilderExcludes(comment, "content")
 
 		// 用户
 		builder = builder.Put("user", render.BuildUserInfoDefaultIfNull(comment.UserId))
@@ -66,13 +68,13 @@ func (c *CommentController) AnyList() *simple.JsonResult {
 		results = append(results, builder.Build())
 	}
 
-	return simple.JsonPageData(results, paging)
+	return mvc.JsonPageData(results, paging)
 }
 
-func (c *CommentController) PostDeleteBy(id int64) *simple.JsonResult {
+func (c *CommentController) PostDeleteBy(id int64) *mvc.JsonResult {
 	if err := services.CommentService.Delete(id); err != nil {
-		return simple.JsonErrorMsg(err.Error())
+		return mvc.JsonErrorMsg(err.Error())
 	} else {
-		return simple.JsonSuccess()
+		return mvc.JsonSuccess()
 	}
 }

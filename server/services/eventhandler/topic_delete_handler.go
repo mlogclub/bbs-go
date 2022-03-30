@@ -6,8 +6,9 @@ import (
 	"bbs-go/pkg/msg"
 	"bbs-go/repositories"
 	"bbs-go/services"
-	"github.com/mlogclub/simple"
 	"reflect"
+
+	"github.com/mlogclub/simple/sqls"
 )
 
 func init() {
@@ -30,7 +31,7 @@ func handleTopicDeleteEvent(i interface{}) {
 
 // sendTopicDeleteMsg 话题被删除消息
 func sendTopicDeleteMsg(topicId, deleteUserId int64) {
-	topic := repositories.TopicRepository.Get(simple.DB(), topicId)
+	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
 	if topic == nil {
 		return
 	}

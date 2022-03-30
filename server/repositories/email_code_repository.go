@@ -2,7 +2,9 @@ package repositories
 
 import (
 	"bbs-go/model"
-	"github.com/mlogclub/simple"
+
+	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 )
 
@@ -31,12 +33,12 @@ func (r *emailCodeRepository) Take(db *gorm.DB, where ...interface{}) *model.Ema
 	return ret
 }
 
-func (r *emailCodeRepository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.EmailCode) {
+func (r *emailCodeRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.EmailCode) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.EmailCode {
+func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.EmailCode {
 	ret := &model.EmailCode{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -44,15 +46,15 @@ func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.Em
 	return ret
 }
 
-func (r *emailCodeRepository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.EmailCode, paging *simple.Paging) {
+func (r *emailCodeRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.EmailCode, paging *sqls.Paging) {
 	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.EmailCode, paging *simple.Paging) {
+func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.EmailCode, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.EmailCode{})
 
-	paging = &simple.Paging{
+	paging = &sqls.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
@@ -60,7 +62,7 @@ func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (li
 	return
 }
 
-func (r *emailCodeRepository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
+func (r *emailCodeRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
 	return cnd.Count(db, &model.EmailCode{})
 }
 

@@ -6,8 +6,7 @@ import (
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
-
-	"github.com/mlogclub/simple"
+	"bbs-go/pkg/text"
 )
 
 func BuildProject(project *model.Project) *model.ProjectResponse {
@@ -27,7 +26,7 @@ func BuildProject(project *model.Project) *model.ProjectResponse {
 
 	if project.ContentType == constants.ContentTypeHtml {
 		rsp.Content = handleHtmlContent(project.Content)
-		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), constants.SummaryLen)
+		rsp.Summary = text.GetSummary(html.GetHtmlText(project.Content), constants.SummaryLen)
 	} else {
 		content := markdown.ToHTML(project.Content)
 		summary := html.GetSummary(content, constants.SummaryLen)
@@ -65,7 +64,7 @@ func BuildSimpleProject(project *model.Project) *model.ProjectSimpleResponse {
 	rsp.CreateTime = project.CreateTime
 
 	if project.ContentType == constants.ContentTypeHtml {
-		rsp.Summary = simple.GetSummary(simple.GetHtmlText(project.Content), constants.SummaryLen)
+		rsp.Summary = text.GetSummary(html.GetHtmlText(project.Content), constants.SummaryLen)
 	} else {
 		rsp.Summary = common.GetMarkdownSummary(project.Content)
 	}

@@ -1,4 +1,4 @@
-package urls
+package bbsurls
 
 import (
 	"net/url"
