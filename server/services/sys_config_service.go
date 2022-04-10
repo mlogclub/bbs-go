@@ -66,7 +66,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 		return errors.New("配置数据格式错误")
 	}
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
-		for k, _ := range configs {
+		for k := range configs {
 			v := json.Get(k).String()
 			if err := s.setSingle(tx, k, v, "", ""); err != nil {
 				return err
