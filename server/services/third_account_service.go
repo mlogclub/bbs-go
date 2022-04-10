@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
@@ -91,7 +91,7 @@ func (s *thirdAccountService) GetOrCreateByGithub(code, state string) (*model.Th
 		nickname = strings.TrimSpace(userInfo.Name)
 	}
 
-	userInfoJson, _ := json.ToStr(userInfo)
+	userInfoJson, _ := jsons.ToStr(userInfo)
 	account = &model.ThirdAccount{
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.AvatarUrl,
@@ -125,7 +125,7 @@ func (s *thirdAccountService) GetOrCreateByOSC(code, state string) (*model.Third
 		nickname = strings.TrimSpace(userInfo.Name)
 	}
 
-	userInfoJson, _ := json.ToStr(userInfo)
+	userInfoJson, _ := jsons.ToStr(userInfo)
 	account = &model.ThirdAccount{
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.Avatar,
@@ -154,7 +154,7 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 		return account, nil
 	}
 
-	userInfoJson, _ := json.ToStr(userInfo)
+	userInfoJson, _ := jsons.ToStr(userInfo)
 	account = &model.ThirdAccount{
 		UserId:     sql.NullInt64{},
 		Avatar:     userInfo.FigureurlQQ1,

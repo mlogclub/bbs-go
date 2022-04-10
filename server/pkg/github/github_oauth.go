@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/common/urls"
 
@@ -84,7 +84,7 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 	content := string(response.Body())
 
 	userInfo := &UserInfo{}
-	err = json.Parse(content, userInfo)
+	err = jsons.Parse(content, userInfo)
 	if err != nil {
 		return nil, err
 	}

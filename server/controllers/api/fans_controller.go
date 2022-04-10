@@ -3,12 +3,12 @@ package api
 import (
 	"bbs-go/controllers/render"
 	"bbs-go/model"
+	"bbs-go/pkg/common"
 	"bbs-go/services"
 	"strconv"
 
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -20,7 +20,7 @@ type FansController struct {
 func (c *FansController) PostFollow() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 
 	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -38,7 +38,7 @@ func (c *FansController) PostFollow() *web.JsonResult {
 func (c *FansController) PostUnfollow() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 
 	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)

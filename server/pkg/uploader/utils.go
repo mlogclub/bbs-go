@@ -6,14 +6,14 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/digests"
 	"github.com/mlogclub/simple/common/strs"
 )
 
 // generateKey 生成图片Key
 func generateImageKey(data []byte, contentType string) string {
-	md5 := simple.MD5Bytes(data)
+	md5 := digests.MD5Bytes(data)
 	ext := ""
 	if strs.IsNotBlank(contentType) {
 		exts, err := mime.ExtensionsByType(contentType)

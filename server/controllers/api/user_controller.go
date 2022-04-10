@@ -2,13 +2,13 @@ package api
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"bbs-go/pkg/msg"
 	"bbs-go/pkg/validate"
 	"strconv"
 	"strings"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
@@ -46,7 +46,7 @@ func (c *UserController) GetBy(userId int64) *web.JsonResult {
 func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	if user.Id != userId {
 		return web.JsonErrorMsg("无权限")
@@ -78,7 +78,7 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	avatar := strings.TrimSpace(params.FormValue(c.Ctx, "avatar"))
 	if len(avatar) == 0 {
@@ -95,7 +95,7 @@ func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 func (c *UserController) PostSetUsername() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	username := strings.TrimSpace(params.FormValue(c.Ctx, "username"))
 	err := services.UserService.SetUsername(user.Id, username)
@@ -109,7 +109,7 @@ func (c *UserController) PostSetUsername() *web.JsonResult {
 func (c *UserController) PostSetEmail() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	email := strings.TrimSpace(params.FormValue(c.Ctx, "email"))
 	err := services.UserService.SetEmail(user.Id, email)
@@ -123,7 +123,7 @@ func (c *UserController) PostSetEmail() *web.JsonResult {
 func (c *UserController) PostSetPassword() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	password := params.FormValue(c.Ctx, "password")
 	rePassword := params.FormValue(c.Ctx, "rePassword")
@@ -138,7 +138,7 @@ func (c *UserController) PostSetPassword() *web.JsonResult {
 func (c *UserController) PostUpdatePassword() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	var (
 		oldPassword = params.FormValue(c.Ctx, "oldPassword")
@@ -155,7 +155,7 @@ func (c *UserController) PostUpdatePassword() *web.JsonResult {
 func (c *UserController) PostSetBackgroundImage() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	backgroundImage := params.FormValue(c.Ctx, "backgroundImage")
 	if strs.IsBlank(backgroundImage) {
@@ -174,7 +174,7 @@ func (c *UserController) GetFavorites() *web.JsonResult {
 
 	// 用户必须登录
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 
 	// 查询列表
@@ -216,7 +216,7 @@ func (c *UserController) GetMessages() *web.JsonResult {
 
 	// 用户必须登录
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 
 	messages, paging := services.MessageService.FindPageByCnd(sqls.NewSqlCnd().
@@ -235,7 +235,7 @@ func (c *UserController) GetScorelogs() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	// 用户必须登录
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 
 	logs, paging := services.UserScoreLogService.FindPageByCnd(sqls.NewSqlCnd().
@@ -259,7 +259,7 @@ func (c *UserController) GetScoreRank() *web.JsonResult {
 func (c *UserController) PostForbidden() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
 		return web.JsonErrorMsg("无权限")
@@ -289,7 +289,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 func (c *UserController) PostSend_verify_email() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	if err := services.UserService.SendEmailVerifyEmail(user.Id); err != nil {
 		return web.JsonErrorMsg(err.Error())

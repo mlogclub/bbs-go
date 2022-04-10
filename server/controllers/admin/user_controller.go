@@ -2,13 +2,13 @@ package admin
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"strconv"
 	"strings"
 
 	"bbs-go/model"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/passwd"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
@@ -96,7 +96,7 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 func (c *UserController) PostForbidden() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
 		return web.JsonErrorMsg("无权限")

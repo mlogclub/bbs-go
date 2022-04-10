@@ -13,13 +13,13 @@ import (
 	"time"
 
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/panjf2000/ants/v2"
 
-	"github.com/mlogclub/simple/common/json"
 	"github.com/sirupsen/logrus"
 )
 
@@ -39,7 +39,7 @@ type TopicDocument struct {
 }
 
 func (t *TopicDocument) ToStr() string {
-	str, err := json.ToStr(t)
+	str, err := jsons.ToStr(t)
 	if err != nil {
 		logrus.Error(err)
 	}
@@ -179,7 +179,7 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 		paging.Total = totalHits
 		for _, hit := range searchResult.Hits.Hits {
 			var doc TopicDocument
-			if err := json.Parse(string(hit.Source), &doc); err == nil {
+			if err := jsons.Parse(string(hit.Source), &doc); err == nil {
 				if len(hit.Highlight["title"]) > 0 && strs.IsNotBlank(hit.Highlight["title"][0]) {
 					doc.Title = hit.Highlight["title"][0]
 				}

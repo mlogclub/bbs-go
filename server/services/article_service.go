@@ -17,11 +17,11 @@ import (
 	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/files"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -194,12 +194,12 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 }
 
 // 修改文章
-func (s *articleService) Edit(articleId int64, tags []string, title, content string) *simple.CodeError {
+func (s *articleService) Edit(articleId int64, tags []string, title, content string) *web.CodeError {
 	if len(title) == 0 {
-		return simple.NewErrorMsg("请输入标题")
+		return web.NewErrorMsg("请输入标题")
 	}
 	if len(content) == 0 {
-		return simple.NewErrorMsg("请填写文章内容")
+		return web.NewErrorMsg("请填写文章内容")
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
@@ -216,7 +216,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return nil
 	})
 	cache.ArticleTagCache.Invalidate(articleId)
-	return simple.FromError(err)
+	return web.FromError(err)
 }
 
 func (s *articleService) PutTags(articleId int64, tags []string) {

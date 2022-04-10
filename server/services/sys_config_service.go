@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/numbers"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/tidwall/gjson"
 
 	"github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
 
 	"bbs-go/cache"
@@ -139,7 +139,7 @@ func (s *sysConfigService) GetLoginMethod() model.LoginMethod {
 	useDefault := true
 	var loginMethod model.LoginMethod
 	if strs.IsNotBlank(loginMethodStr) {
-		if err := json.Parse(loginMethodStr, &loginMethod); err != nil {
+		if err := jsons.Parse(loginMethodStr, &loginMethod); err != nil {
 			logrus.Warn("登录方式数据错误", err)
 		} else {
 			useDefault = false
@@ -174,7 +174,7 @@ func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
 	siteNavs := cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
 	var siteNavsArr []model.ActionLink
 	if strs.IsNotBlank(siteNavs) {
-		if err := json.Parse(siteNavs, &siteNavsArr); err != nil {
+		if err := jsons.Parse(siteNavs, &siteNavsArr); err != nil {
 			logrus.Warn("站点导航数据错误", err)
 		}
 	}
@@ -204,21 +204,21 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 
 	var siteKeywordsArr []string
 	if strs.IsNotBlank(siteKeywords) {
-		if err := json.Parse(siteKeywords, &siteKeywordsArr); err != nil {
+		if err := jsons.Parse(siteKeywords, &siteKeywordsArr); err != nil {
 			logrus.Warn("站点关键词数据错误", err)
 		}
 	}
 
 	var recommendTagsArr []string
 	if strs.IsNotBlank(recommendTags) {
-		if err := json.Parse(recommendTags, &recommendTagsArr); err != nil {
+		if err := jsons.Parse(recommendTags, &recommendTagsArr); err != nil {
 			logrus.Warn("推荐标签数据错误", err)
 		}
 	}
 
 	var scoreConfig model.ScoreConfig
 	if strs.IsNotBlank(scoreConfigStr) {
-		if err := json.Parse(scoreConfigStr, &scoreConfig); err != nil {
+		if err := jsons.Parse(scoreConfigStr, &scoreConfig); err != nil {
 			logrus.Warn("积分配置错误", err)
 		}
 	}

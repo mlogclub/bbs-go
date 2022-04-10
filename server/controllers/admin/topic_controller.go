@@ -4,11 +4,11 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/controllers/render"
+	"bbs-go/pkg/common"
 	"bbs-go/services"
 )
 
@@ -72,7 +72,7 @@ func (c *TopicController) PostDelete() *web.JsonResult {
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	err = services.TopicService.Delete(id, user.Id, c.Ctx.Request())
 	if err != nil {

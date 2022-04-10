@@ -3,11 +3,11 @@ package api
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/common"
 	"bbs-go/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
@@ -168,7 +168,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 func (c *ArticleController) PostFavoriteBy(articleId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	err := services.FavoriteService.AddArticleFavorite(user.Id, articleId)
 	if err != nil {

@@ -2,13 +2,14 @@ package services
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/cache"
@@ -78,10 +79,10 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 }
 
 // CheckLogin 检查登录状态
-func (s *userTokenService) CheckLogin(ctx iris.Context) (*model.User, *simple.CodeError) {
+func (s *userTokenService) CheckLogin(ctx iris.Context) (*model.User, *web.CodeError) {
 	user := s.GetCurrent(ctx)
 	if user == nil {
-		return nil, simple.ErrorNotLogin
+		return nil, common.ErrorNotLogin
 	}
 	return user, nil
 }

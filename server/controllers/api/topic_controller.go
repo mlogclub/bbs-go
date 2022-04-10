@@ -2,13 +2,13 @@ package api
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"bbs-go/spam"
 	"math/rand"
 	"strconv"
 	"strings"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
@@ -155,7 +155,7 @@ func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
 		return web.JsonErrorMsg("无权限")
@@ -182,7 +182,7 @@ func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 func (c *TopicController) PostLikeBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	err := services.UserLikeService.TopicLike(user.Id, topicId)
 	if err != nil {
@@ -253,7 +253,7 @@ func (c *TopicController) GetTagTopics() *web.JsonResult {
 func (c *TopicController) GetFavoriteBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(simple.ErrorNotLogin)
+		return web.JsonError(common.ErrorNotLogin)
 	}
 	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {

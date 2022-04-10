@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"bbs-go/pkg/urls"
 	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/web"
 )
 
@@ -59,7 +59,7 @@ func getPathRoles(ctx iris.Context) []string {
 
 // notLogin 未登录返回
 func notLogin(ctx iris.Context) {
-	_, _ = ctx.JSON(web.JsonError(simple.ErrorNotLogin))
+	_, _ = ctx.JSON(web.JsonError(common.ErrorNotLogin))
 	ctx.StopExecution()
 }
 

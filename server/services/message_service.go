@@ -10,7 +10,7 @@ import (
 	"bbs-go/repositories"
 
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
@@ -92,7 +92,7 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 		Content:      content,
 		QuoteContent: quoteContent,
 		Type:         int(msgType),
-		ExtraData:    json.ToJsonStr(extraData),
+		ExtraData:    jsons.ToJsonStr(extraData),
 		Status:       msg.StatusUnread,
 		CreateTime:   dates.NowTimestamp(),
 	}

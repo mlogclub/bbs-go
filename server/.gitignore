@@ -26,3 +26,4 @@ tags
 logs/*.log
 
 go.work
+go.work.sum

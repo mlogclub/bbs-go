@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
@@ -102,7 +102,7 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 	}
 
 	if len(form.ImageList) > 0 {
-		imageListStr, err := json.ToStr(form.ImageList)
+		imageListStr, err := jsons.ToStr(form.ImageList)
 		if err == nil {
 			comment.ImageList = imageListStr
 		} else {

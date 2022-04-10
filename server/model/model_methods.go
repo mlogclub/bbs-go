@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/arrays"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 )
@@ -29,7 +29,7 @@ func (u *User) HasRole(role string) bool {
 	if len(roles) == 0 {
 		return false
 	}
-	return simple.Contains(role, roles)
+	return arrays.Contains(role, roles)
 }
 
 // HasAnyRole 是否有指定的任意角色

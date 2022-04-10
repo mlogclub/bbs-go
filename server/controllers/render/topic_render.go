@@ -7,7 +7,7 @@ import (
 	"bbs-go/services"
 	"html"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/arrays"
 	"github.com/mlogclub/simple/common/strs"
 )
 
@@ -37,7 +37,7 @@ func BuildSimpleTopics(topics []model.Topic, currentUser *model.User) []model.To
 	var responses []model.TopicResponse
 	for _, topic := range topics {
 		item := BuildSimpleTopic(&topic)
-		item.Liked = simple.Contains(topic.Id, likedTopicIds)
+		item.Liked = arrays.Contains(topic.Id, likedTopicIds)
 		responses = append(responses, *item)
 	}
 	return responses

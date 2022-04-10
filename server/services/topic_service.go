@@ -14,13 +14,13 @@ import (
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/files"
-	"github.com/mlogclub/simple/common/json"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
 	"github.com/gorilla/feeds"
-	"github.com/mlogclub/simple"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
@@ -123,34 +123,34 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // Publish 发表
-func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model.Topic, *simple.CodeError) {
+func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model.Topic, *web.CodeError) {
 	if form.Type == constants.TopicTypeTweet {
 		if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
-			return nil, simple.NewErrorMsg("内容或图片不能为空")
+			return nil, web.NewErrorMsg("内容或图片不能为空")
 		}
 	} else {
 		if strs.IsBlank(form.Title) {
-			return nil, simple.NewErrorMsg("标题不能为空")
+			return nil, web.NewErrorMsg("标题不能为空")
 		}
 
 		if strs.IsBlank(form.Content) {
-			return nil, simple.NewErrorMsg("内容不能为空")
+			return nil, web.NewErrorMsg("内容不能为空")
 		}
 
 		if strs.RuneLen(form.Title) > 128 {
-			return nil, simple.NewErrorMsg("标题长度不能超过128")
+			return nil, web.NewErrorMsg("标题长度不能超过128")
 		}
 	}
 
 	if form.NodeId <= 0 {
 		form.NodeId = SysConfigService.GetConfig().DefaultNodeId
 		if form.NodeId <= 0 {
-			return nil, simple.NewErrorMsg("请选择节点")
+			return nil, web.NewErrorMsg("请选择节点")
 		}
 	}
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return nil, simple.NewErrorMsg("节点不存在")
+		return nil, web.NewErrorMsg("节点不存在")
 	}
 
 	now := dates.NowTimestamp()
@@ -168,7 +168,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 	}
 
 	if len(form.ImageList) > 0 {
-		imageListStr, err := json.ToStr(form.ImageList)
+		imageListStr, err := jsons.ToStr(form.ImageList)
 		if err == nil {
 			topic.ImageList = imageListStr
 		} else {
@@ -199,22 +199,22 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 			CreateTime: topic.CreateTime,
 		})
 	}
-	return topic, simple.FromError(err)
+	return topic, web.FromError(err)
 }
 
 // 更新
-func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *simple.CodeError {
+func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *web.CodeError {
 	if len(title) == 0 {
-		return simple.NewErrorMsg("标题不能为空")
+		return web.NewErrorMsg("标题不能为空")
 	}
 
 	if strs.RuneLen(title) > 128 {
-		return simple.NewErrorMsg("标题长度不能超过128")
+		return web.NewErrorMsg("标题长度不能超过128")
 	}
 
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), nodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return simple.NewErrorMsg("节点不存在")
+		return web.NewErrorMsg("节点不存在")
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
@@ -236,7 +236,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 	// 添加索引
 	es.UpdateTopicIndex(s.Get(topicId))
 
-	return simple.FromError(err)
+	return web.FromError(err)
 }
 
 // 推荐

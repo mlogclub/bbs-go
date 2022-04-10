@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/passwd"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
@@ -269,11 +269,11 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 }
 
 // SignInByThirdAccount 第三方账号登录
-func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *simple.CodeError) {
+func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *web.CodeError) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		if user.Status != constants.StatusOk {
-			return nil, simple.NewErrorMsg("用户已被禁用")
+			return nil, web.NewErrorMsg("用户已被禁用")
 		}
 		return user, nil
 	}
@@ -316,7 +316,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		return nil
 	})
 	if err != nil {
-		return nil, simple.FromError(err)
+		return nil, web.FromError(err)
 	}
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil
@@ -541,9 +541,9 @@ func (s *userService) VerifyEmail(token string) (string, error) {
 }
 
 // CheckPostStatus 用于在发表内容时检查用户状态
-func (s *userService) CheckPostStatus(user *model.User) *simple.CodeError {
+func (s *userService) CheckPostStatus(user *model.User) *web.CodeError {
 	if user == nil {
-		return simple.ErrorNotLogin
+		return common.ErrorNotLogin
 	}
 	if user.Status != constants.StatusOk {
 		return common.UserDisabled
@@ -553,7 +553,7 @@ func (s *userService) CheckPostStatus(user *model.User) *simple.CodeError {
 	}
 	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds)
 	if user.InObservationPeriod(observeSeconds) {
-		return simple.NewError(common.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
+		return web.NewError(common.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
 	}
 	return nil
 }

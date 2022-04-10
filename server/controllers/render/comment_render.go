@@ -8,7 +8,7 @@ import (
 	"html"
 	"strconv"
 
-	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/arrays"
 	"github.com/mlogclub/simple/web"
 )
 
@@ -26,7 +26,7 @@ func BuildComments(comments []model.Comment, currentUser *model.User, isBuildRep
 	var ret []model.CommentResponse
 	for _, comment := range comments {
 		item := doBuildComment(&comment, currentUser, isBuildReplies, isBuildQuote)
-		item.Liked = simple.Contains(comment.Id, likedCommentIds)
+		item.Liked = arrays.Contains(comment.Id, likedCommentIds)
 		ret = append(ret, *item)
 	}
 	return ret
