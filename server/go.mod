@@ -16,7 +16,6 @@ require (
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.0-alpha9
 	github.com/microcosm-cc/bluemonday v1.0.18
-	github.com/mlogclub/simple v1.1.15
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/panjf2000/ants/v2 v2.4.8
 	github.com/robfig/cron v1.2.0
@@ -44,7 +43,6 @@ require (
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.1.0 // indirect
@@ -100,5 +98,4 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	gorm.io/driver/mysql v1.3.3 // indirect
 )
