@@ -27,7 +27,7 @@ func newTopicCache() *topicCache {
 		recommendCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TopicRepository.Find(sqls.DB(),
-					sqls.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
+					sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}

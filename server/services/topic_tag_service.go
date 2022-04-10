@@ -27,11 +27,11 @@ func (s *topicTagService) Take(where ...interface{}) *model.TopicTag {
 	return repositories.TopicTagRepository.Take(sqls.DB(), where...)
 }
 
-func (s *topicTagService) Find(cnd *sqls.SqlCnd) []model.TopicTag {
+func (s *topicTagService) Find(cnd *sqls.Cnd) []model.TopicTag {
 	return repositories.TopicTagRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *topicTagService) FindOne(cnd *sqls.SqlCnd) *model.TopicTag {
+func (s *topicTagService) FindOne(cnd *sqls.Cnd) *model.TopicTag {
 	return repositories.TopicTagRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -39,7 +39,7 @@ func (s *topicTagService) FindPageByParams(params *params.QueryParams) (list []m
 	return repositories.TopicTagRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *topicTagService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.TopicTag, paging *sqls.Paging) {
+func (s *topicTagService) FindPageByCnd(cnd *sqls.Cnd) (list []model.TopicTag, paging *sqls.Paging) {
 	return repositories.TopicTagRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

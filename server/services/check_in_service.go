@@ -34,11 +34,11 @@ func (s *checkInService) Take(where ...interface{}) *model.CheckIn {
 	return repositories.CheckInRepository.Take(sqls.DB(), where...)
 }
 
-func (s *checkInService) Find(cnd *sqls.SqlCnd) []model.CheckIn {
+func (s *checkInService) Find(cnd *sqls.Cnd) []model.CheckIn {
 	return repositories.CheckInRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *checkInService) FindOne(cnd *sqls.SqlCnd) *model.CheckIn {
+func (s *checkInService) FindOne(cnd *sqls.Cnd) *model.CheckIn {
 	return repositories.CheckInRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -46,11 +46,11 @@ func (s *checkInService) FindPageByParams(params *params.QueryParams) (list []mo
 	return repositories.CheckInRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *checkInService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.CheckIn, paging *sqls.Paging) {
+func (s *checkInService) FindPageByCnd(cnd *sqls.Cnd) (list []model.CheckIn, paging *sqls.Paging) {
 	return repositories.CheckInRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *checkInService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *checkInService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.CheckInRepository.Count(sqls.DB(), cnd)
 }
 
@@ -124,5 +124,5 @@ func (s *checkInService) CheckIn(userId int64) error {
 }
 
 func (s *checkInService) GetByUserId(userId int64) *model.CheckIn {
-	return s.FindOne(sqls.NewSqlCnd().Eq("user_id", userId))
+	return s.FindOne(sqls.NewCnd().Eq("user_id", userId))
 }

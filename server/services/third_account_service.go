@@ -35,11 +35,11 @@ func (s *thirdAccountService) Take(where ...interface{}) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Take(sqls.DB(), where...)
 }
 
-func (s *thirdAccountService) Find(cnd *sqls.SqlCnd) []model.ThirdAccount {
+func (s *thirdAccountService) Find(cnd *sqls.Cnd) []model.ThirdAccount {
 	return repositories.ThirdAccountRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *thirdAccountService) FindOne(cnd *sqls.SqlCnd) *model.ThirdAccount {
+func (s *thirdAccountService) FindOne(cnd *sqls.Cnd) *model.ThirdAccount {
 	return repositories.ThirdAccountRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -47,7 +47,7 @@ func (s *thirdAccountService) FindPageByParams(params *params.QueryParams) (list
 	return repositories.ThirdAccountRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *thirdAccountService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.ThirdAccount, paging *sqls.Paging) {
+func (s *thirdAccountService) FindPageByCnd(cnd *sqls.Cnd) (list []model.ThirdAccount, paging *sqls.Paging) {
 	return repositories.ThirdAccountRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

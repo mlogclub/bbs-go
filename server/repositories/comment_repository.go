@@ -33,12 +33,12 @@ func (r *commentRepository) Take(db *gorm.DB, where ...interface{}) *model.Comme
 	return ret
 }
 
-func (r *commentRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Comment) {
+func (r *commentRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.Comment) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *commentRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Comment {
+func (r *commentRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.Comment {
 	ret := &model.Comment{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *commentRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Commen
 }
 
 func (r *commentRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.Comment, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *commentRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Comment, paging *sqls.Paging) {
+func (r *commentRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.Comment, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Comment{})
 
@@ -62,7 +62,7 @@ func (r *commentRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list [
 	return
 }
 
-func (r *commentRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
+func (r *commentRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.Comment{})
 }
 

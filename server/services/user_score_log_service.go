@@ -25,11 +25,11 @@ func (s *userScoreLogService) Take(where ...interface{}) *model.UserScoreLog {
 	return repositories.UserScoreLogRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userScoreLogService) Find(cnd *sqls.SqlCnd) []model.UserScoreLog {
+func (s *userScoreLogService) Find(cnd *sqls.Cnd) []model.UserScoreLog {
 	return repositories.UserScoreLogRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userScoreLogService) FindOne(cnd *sqls.SqlCnd) *model.UserScoreLog {
+func (s *userScoreLogService) FindOne(cnd *sqls.Cnd) *model.UserScoreLog {
 	return repositories.UserScoreLogRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -37,7 +37,7 @@ func (s *userScoreLogService) FindPageByParams(params *params.QueryParams) (list
 	return repositories.UserScoreLogRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userScoreLogService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserScoreLog, paging *sqls.Paging) {
+func (s *userScoreLogService) FindPageByCnd(cnd *sqls.Cnd) (list []model.UserScoreLog, paging *sqls.Paging) {
 	return repositories.UserScoreLogRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

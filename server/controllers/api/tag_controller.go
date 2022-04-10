@@ -29,7 +29,7 @@ func (c *TagController) GetBy(tagId int64) *web.JsonResult {
 // 标签列表
 func (c *TagController) GetTags() *web.JsonResult {
 	page := params.FormValueIntDefault(c.Ctx, "page", 1)
-	tags, paging := services.TagService.FindPageByCnd(sqls.NewSqlCnd().
+	tags, paging := services.TagService.FindPageByCnd(sqls.NewCnd().
 		Eq("status", constants.StatusOk).
 		Page(page, 200).Desc("id"))
 

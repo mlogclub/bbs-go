@@ -30,11 +30,11 @@ func (s *favoriteService) Take(where ...interface{}) *model.Favorite {
 	return repositories.FavoriteRepository.Take(sqls.DB(), where...)
 }
 
-func (s *favoriteService) Find(cnd *sqls.SqlCnd) []model.Favorite {
+func (s *favoriteService) Find(cnd *sqls.Cnd) []model.Favorite {
 	return repositories.FavoriteRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *favoriteService) FindOne(cnd *sqls.SqlCnd) *model.Favorite {
+func (s *favoriteService) FindOne(cnd *sqls.Cnd) *model.Favorite {
 	return repositories.FavoriteRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -42,7 +42,7 @@ func (s *favoriteService) FindPageByParams(params *params.QueryParams) (list []m
 	return repositories.FavoriteRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *favoriteService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Favorite, paging *sqls.Paging) {
+func (s *favoriteService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Favorite, paging *sqls.Paging) {
 	return repositories.FavoriteRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

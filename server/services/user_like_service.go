@@ -31,11 +31,11 @@ func (s *userLikeService) Take(where ...interface{}) *model.UserLike {
 	return repositories.UserLikeRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userLikeService) Find(cnd *sqls.SqlCnd) []model.UserLike {
+func (s *userLikeService) Find(cnd *sqls.Cnd) []model.UserLike {
 	return repositories.UserLikeRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userLikeService) FindOne(cnd *sqls.SqlCnd) *model.UserLike {
+func (s *userLikeService) FindOne(cnd *sqls.Cnd) *model.UserLike {
 	return repositories.UserLikeRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -43,7 +43,7 @@ func (s *userLikeService) FindPageByParams(params *params.QueryParams) (list []m
 	return repositories.UserLikeRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userLikeService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserLike, paging *sqls.Paging) {
+func (s *userLikeService) FindPageByCnd(cnd *sqls.Cnd) (list []model.UserLike, paging *sqls.Paging) {
 	return repositories.UserLikeRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -76,18 +76,18 @@ func (s *userLikeService) Count(entityType string, entityId int64) int64 {
 
 // 最近点赞
 func (s *userLikeService) Recent(entityType string, entityId int64, count int) []model.UserLike {
-	return s.Find(sqls.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Desc("id").Limit(count))
+	return s.Find(sqls.NewCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Desc("id").Limit(count))
 }
 
 // Exists 是否点赞
 func (s *userLikeService) Exists(userId int64, entityType string, entityId int64) bool {
-	return repositories.UserLikeRepository.FindOne(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", userId).
+	return repositories.UserLikeRepository.FindOne(sqls.DB(), sqls.NewCnd().Eq("user_id", userId).
 		Eq("entity_type", entityType).Eq("entity_id", entityId)) != nil
 }
 
 // 是否点赞，返回已点赞实体编号
 func (s *userLikeService) IsLiked(userId int64, entityType string, entityIds []int64) (likedEntityIds []int64) {
-	list := repositories.UserLikeRepository.Find(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", userId).
+	list := repositories.UserLikeRepository.Find(sqls.DB(), sqls.NewCnd().Eq("user_id", userId).
 		Eq("entity_type", entityType).In("entity_id", entityIds))
 	for _, like := range list {
 		likedEntityIds = append(likedEntityIds, like.EntityId)

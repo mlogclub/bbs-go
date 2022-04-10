@@ -26,11 +26,11 @@ func (s *userFeedService) Take(where ...interface{}) *model.UserFeed {
 	return repositories.UserFeedRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userFeedService) Find(cnd *sqls.SqlCnd) []model.UserFeed {
+func (s *userFeedService) Find(cnd *sqls.Cnd) []model.UserFeed {
 	return repositories.UserFeedRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userFeedService) FindOne(cnd *sqls.SqlCnd) *model.UserFeed {
+func (s *userFeedService) FindOne(cnd *sqls.Cnd) *model.UserFeed {
 	return repositories.UserFeedRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -38,11 +38,11 @@ func (s *userFeedService) FindPageByParams(params *params.QueryParams) (list []m
 	return repositories.UserFeedRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userFeedService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserFeed, paging *sqls.Paging) {
+func (s *userFeedService) FindPageByCnd(cnd *sqls.Cnd) (list []model.UserFeed, paging *sqls.Paging) {
 	return repositories.UserFeedRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *userFeedService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *userFeedService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.UserFeedRepository.Count(sqls.DB(), cnd)
 }
 
@@ -76,7 +76,7 @@ func (s *userFeedService) DeleteByDataId(dataId int64, dataType string) {
 
 func (s *userFeedService) GetTopics(userId int64, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
 	var limit = 20
-	cnd := sqls.NewSqlCnd().Eq("user_id", userId)
+	cnd := sqls.NewCnd().Eq("user_id", userId)
 	cnd.Eq("data_type", constants.EntityTopic)
 	if cursor > 0 {
 		cnd.Lt("create_time", cursor)

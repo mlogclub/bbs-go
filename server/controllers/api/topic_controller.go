@@ -207,7 +207,7 @@ func (c *TopicController) GetRecentlikesBy(topicId int64) *web.JsonResult {
 // 最新帖子
 func (c *TopicController) GetRecent() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
-	topics := services.TopicService.Find(sqls.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
+	topics := services.TopicService.Find(sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
 	return web.JsonData(render.BuildSimpleTopics(topics, user))
 }
 
@@ -284,6 +284,6 @@ func (c *TopicController) GetRecommend() *web.JsonResult {
 
 // 最新话题
 func (c *TopicController) GetNewest() *web.JsonResult {
-	topics := services.TopicService.Find(sqls.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
+	topics := services.TopicService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
 	return web.JsonData(render.BuildSimpleTopics(topics, nil))
 }

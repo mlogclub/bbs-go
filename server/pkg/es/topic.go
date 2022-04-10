@@ -85,7 +85,7 @@ func NewTopicDoc(topic *model.Topic) *TopicDocument {
 }
 
 func getTopicTags(topicId int64) []model.Tag {
-	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("topic_id = ?", topicId))
+	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewCnd().Where("topic_id = ?", topicId))
 
 	var tagIds []int64
 	for _, topicTag := range topicTags {

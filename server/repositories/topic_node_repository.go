@@ -33,12 +33,12 @@ func (r *topicNodeRepository) Take(db *gorm.DB, where ...interface{}) *model.Top
 	return ret
 }
 
-func (r *topicNodeRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.TopicNode) {
+func (r *topicNodeRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.TopicNode) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *topicNodeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.TopicNode {
+func (r *topicNodeRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.TopicNode {
 	ret := &model.TopicNode{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *topicNodeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Topi
 }
 
 func (r *topicNodeRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.TopicNode, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *topicNodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.TopicNode, paging *sqls.Paging) {
+func (r *topicNodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.TopicNode, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.TopicNode{})
 

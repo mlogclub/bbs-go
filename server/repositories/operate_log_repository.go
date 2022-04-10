@@ -33,12 +33,12 @@ func (r *operateLogRepository) Take(db *gorm.DB, where ...interface{}) *model.Op
 	return ret
 }
 
-func (r *operateLogRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.OperateLog) {
+func (r *operateLogRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.OperateLog) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *operateLogRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.OperateLog {
+func (r *operateLogRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.OperateLog {
 	ret := &model.OperateLog{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *operateLogRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Ope
 }
 
 func (r *operateLogRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.OperateLog, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *operateLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.OperateLog, paging *sqls.Paging) {
+func (r *operateLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.OperateLog, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.OperateLog{})
 
@@ -62,7 +62,7 @@ func (r *operateLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (lis
 	return
 }
 
-func (r *operateLogRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
+func (r *operateLogRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.OperateLog{})
 }
 

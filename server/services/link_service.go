@@ -25,11 +25,11 @@ func (s *linkService) Take(where ...interface{}) *model.Link {
 	return repositories.LinkRepository.Take(sqls.DB(), where...)
 }
 
-func (s *linkService) Find(cnd *sqls.SqlCnd) []model.Link {
+func (s *linkService) Find(cnd *sqls.Cnd) []model.Link {
 	return repositories.LinkRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *linkService) FindOne(cnd *sqls.SqlCnd) *model.Link {
+func (s *linkService) FindOne(cnd *sqls.Cnd) *model.Link {
 	return repositories.LinkRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -37,7 +37,7 @@ func (s *linkService) FindPageByParams(params *params.QueryParams) (list []model
 	return repositories.LinkRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *linkService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Link, paging *sqls.Paging) {
+func (s *linkService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Link, paging *sqls.Paging) {
 	return repositories.LinkRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

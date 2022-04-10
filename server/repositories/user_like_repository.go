@@ -33,12 +33,12 @@ func (r *userLikeRepository) Take(db *gorm.DB, where ...interface{}) *model.User
 	return ret
 }
 
-func (r *userLikeRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserLike) {
+func (r *userLikeRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserLike) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userLikeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserLike {
+func (r *userLikeRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.UserLike {
 	ret := &model.UserLike{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *userLikeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserL
 }
 
 func (r *userLikeRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserLike, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *userLikeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserLike, paging *sqls.Paging) {
+func (r *userLikeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserLike, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserLike{})
 

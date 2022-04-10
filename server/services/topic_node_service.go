@@ -27,11 +27,11 @@ func (s *topicNodeService) Take(where ...interface{}) *model.TopicNode {
 	return repositories.TopicNodeRepository.Take(sqls.DB(), where...)
 }
 
-func (s *topicNodeService) Find(cnd *sqls.SqlCnd) []model.TopicNode {
+func (s *topicNodeService) Find(cnd *sqls.Cnd) []model.TopicNode {
 	return repositories.TopicNodeRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *topicNodeService) FindOne(cnd *sqls.SqlCnd) *model.TopicNode {
+func (s *topicNodeService) FindOne(cnd *sqls.Cnd) *model.TopicNode {
 	return repositories.TopicNodeRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -39,7 +39,7 @@ func (s *topicNodeService) FindPageByParams(params *params.QueryParams) (list []
 	return repositories.TopicNodeRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *topicNodeService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.TopicNode, paging *sqls.Paging) {
+func (s *topicNodeService) FindPageByCnd(cnd *sqls.Cnd) (list []model.TopicNode, paging *sqls.Paging) {
 	return repositories.TopicNodeRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -64,5 +64,5 @@ func (s *topicNodeService) Delete(id int64) {
 }
 
 func (s *topicNodeService) GetNodes() []model.TopicNode {
-	return repositories.TopicNodeRepository.Find(sqls.DB(), sqls.NewSqlCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+	return repositories.TopicNodeRepository.Find(sqls.DB(), sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 }

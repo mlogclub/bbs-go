@@ -34,12 +34,12 @@ func (r *articleTagRepository) Take(db *gorm.DB, where ...interface{}) *model.Ar
 	return ret
 }
 
-func (r *articleTagRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ArticleTag) {
+func (r *articleTagRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.ArticleTag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.ArticleTag {
+func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.ArticleTag {
 	ret := &model.ArticleTag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -48,10 +48,10 @@ func (r *articleTagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Art
 }
 
 func (r *articleTagRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.ArticleTag, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ArticleTag, paging *sqls.Paging) {
+func (r *articleTagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.ArticleTag, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.ArticleTag{})
 
@@ -116,5 +116,5 @@ func (r *articleTagRepository) DeleteArticleTag(db *gorm.DB, articleId, tagId in
 }
 
 func (r *articleTagRepository) FindByArticleId(db *gorm.DB, articleId int64) []model.ArticleTag {
-	return r.Find(db, sqls.NewSqlCnd().Where("article_id = ?", articleId))
+	return r.Find(db, sqls.NewCnd().Where("article_id = ?", articleId))
 }

@@ -33,12 +33,12 @@ func (r *userFeedRepository) Take(db *gorm.DB, where ...interface{}) *model.User
 	return ret
 }
 
-func (r *userFeedRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserFeed) {
+func (r *userFeedRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserFeed) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserFeed {
+func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.UserFeed {
 	ret := &model.UserFeed{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *userFeedRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserF
 }
 
 func (r *userFeedRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserFeed, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserFeed, paging *sqls.Paging) {
+func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserFeed, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserFeed{})
 
@@ -62,7 +62,7 @@ func (r *userFeedRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list 
 	return
 }
 
-func (r *userFeedRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
+func (r *userFeedRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.UserFeed{})
 }
 

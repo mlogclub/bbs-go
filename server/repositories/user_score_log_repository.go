@@ -33,12 +33,12 @@ func (r *userScoreLogRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (r *userScoreLogRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserScoreLog) {
+func (r *userScoreLogRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserScoreLog) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserScoreLog {
+func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.UserScoreLog {
 	ret := &model.UserScoreLog{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *userScoreLogRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.U
 }
 
 func (r *userScoreLogRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserScoreLog, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *userScoreLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserScoreLog, paging *sqls.Paging) {
+func (r *userScoreLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserScoreLog, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserScoreLog{})
 

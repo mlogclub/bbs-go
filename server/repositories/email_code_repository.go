@@ -33,12 +33,12 @@ func (r *emailCodeRepository) Take(db *gorm.DB, where ...interface{}) *model.Ema
 	return ret
 }
 
-func (r *emailCodeRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.EmailCode) {
+func (r *emailCodeRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.EmailCode) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.EmailCode {
+func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.EmailCode {
 	ret := &model.EmailCode{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *emailCodeRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Emai
 }
 
 func (r *emailCodeRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.EmailCode, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.EmailCode, paging *sqls.Paging) {
+func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.EmailCode, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.EmailCode{})
 
@@ -62,7 +62,7 @@ func (r *emailCodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list
 	return
 }
 
-func (r *emailCodeRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
+func (r *emailCodeRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.EmailCode{})
 }
 

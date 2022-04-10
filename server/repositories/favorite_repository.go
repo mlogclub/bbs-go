@@ -33,12 +33,12 @@ func (r *favoriteRepository) Take(db *gorm.DB, where ...interface{}) *model.Favo
 	return ret
 }
 
-func (r *favoriteRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Favorite) {
+func (r *favoriteRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.Favorite) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Favorite {
+func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.Favorite {
 	ret := &model.Favorite{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *favoriteRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Favor
 }
 
 func (r *favoriteRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.Favorite, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *favoriteRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Favorite, paging *sqls.Paging) {
+func (r *favoriteRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.Favorite, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Favorite{})
 

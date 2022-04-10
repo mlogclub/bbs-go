@@ -40,12 +40,12 @@ func (r *userTokenRepository) Take(db *gorm.DB, where ...interface{}) *model.Use
 	return ret
 }
 
-func (r *userTokenRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserToken) {
+func (r *userTokenRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserToken) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *userTokenRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.UserToken {
+func (r *userTokenRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.UserToken {
 	ret := &model.UserToken{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -54,10 +54,10 @@ func (r *userTokenRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.User
 }
 
 func (r *userTokenRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.UserToken, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *userTokenRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.UserToken, paging *sqls.Paging) {
+func (r *userTokenRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.UserToken, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.UserToken{})
 

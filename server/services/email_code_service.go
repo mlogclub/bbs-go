@@ -25,11 +25,11 @@ func (s *emailCodeService) Take(where ...interface{}) *model.EmailCode {
 	return repositories.EmailCodeRepository.Take(sqls.DB(), where...)
 }
 
-func (s *emailCodeService) Find(cnd *sqls.SqlCnd) []model.EmailCode {
+func (s *emailCodeService) Find(cnd *sqls.Cnd) []model.EmailCode {
 	return repositories.EmailCodeRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *emailCodeService) FindOne(cnd *sqls.SqlCnd) *model.EmailCode {
+func (s *emailCodeService) FindOne(cnd *sqls.Cnd) *model.EmailCode {
 	return repositories.EmailCodeRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -37,11 +37,11 @@ func (s *emailCodeService) FindPageByParams(params *params.QueryParams) (list []
 	return repositories.EmailCodeRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *emailCodeService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.EmailCode, paging *sqls.Paging) {
+func (s *emailCodeService) FindPageByCnd(cnd *sqls.Cnd) (list []model.EmailCode, paging *sqls.Paging) {
 	return repositories.EmailCodeRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *emailCodeService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *emailCodeService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.EmailCodeRepository.Count(sqls.DB(), cnd)
 }
 

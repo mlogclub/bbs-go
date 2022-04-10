@@ -97,9 +97,9 @@ func (c *TagController) GetAutocomplete() *web.JsonResult {
 	keyword := strings.TrimSpace(c.Ctx.URLParam("keyword"))
 	var tags []model.Tag
 	if len(keyword) > 0 {
-		tags = services.TagService.Find(sqls.NewSqlCnd().Starting("name", keyword).Desc("id"))
+		tags = services.TagService.Find(sqls.NewCnd().Starting("name", keyword).Desc("id"))
 	} else {
-		tags = services.TagService.Find(sqls.NewSqlCnd().Desc("id").Limit(10))
+		tags = services.TagService.Find(sqls.NewCnd().Desc("id").Limit(10))
 	}
 	return web.JsonData(render.BuildTags(tags))
 }
@@ -109,7 +109,7 @@ func (c *TagController) GetTags() *web.JsonResult {
 	tagIds := params.FormValueInt64Array(c.Ctx, "tagIds")
 	var tags *[]model.TagResponse
 	if len(tagIds) > 0 {
-		tagArr := services.TagService.Find(sqls.NewSqlCnd().In("id", tagIds))
+		tagArr := services.TagService.Find(sqls.NewCnd().In("id", tagIds))
 		if len(tagArr) > 0 {
 			tags = render.BuildTags(tagArr)
 		}

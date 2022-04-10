@@ -39,11 +39,11 @@ func (s *sysConfigService) Take(where ...interface{}) *model.SysConfig {
 	return repositories.SysConfigRepository.Take(sqls.DB(), where...)
 }
 
-func (s *sysConfigService) Find(cnd *sqls.SqlCnd) []model.SysConfig {
+func (s *sysConfigService) Find(cnd *sqls.Cnd) []model.SysConfig {
 	return repositories.SysConfigRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *sysConfigService) FindOne(cnd *sqls.SqlCnd) *model.SysConfig {
+func (s *sysConfigService) FindOne(cnd *sqls.Cnd) *model.SysConfig {
 	return repositories.SysConfigRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -51,12 +51,12 @@ func (s *sysConfigService) FindPageByParams(params *params.QueryParams) (list []
 	return repositories.SysConfigRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *sysConfigService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.SysConfig, paging *sqls.Paging) {
+func (s *sysConfigService) FindPageByCnd(cnd *sqls.Cnd) (list []model.SysConfig, paging *sqls.Paging) {
 	return repositories.SysConfigRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
 func (s *sysConfigService) GetAll() []model.SysConfig {
-	return repositories.SysConfigRepository.Find(sqls.DB(), sqls.NewSqlCnd().Asc("id"))
+	return repositories.SysConfigRepository.Find(sqls.DB(), sqls.NewCnd().Asc("id"))
 }
 
 func (s *sysConfigService) SetAll(configStr string) error {

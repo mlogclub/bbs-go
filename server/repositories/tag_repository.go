@@ -38,12 +38,12 @@ func (r *tagRepository) Take(db *gorm.DB, where ...interface{}) *model.Tag {
 	return ret
 }
 
-func (r *tagRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Tag) {
+func (r *tagRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.Tag) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *tagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Tag {
+func (r *tagRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.Tag {
 	ret := &model.Tag{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -52,10 +52,10 @@ func (r *tagRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.Tag {
 }
 
 func (r *tagRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.Tag, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *tagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.Tag, paging *sqls.Paging) {
+func (r *tagRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.Tag, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Tag{})
 

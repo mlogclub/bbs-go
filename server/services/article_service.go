@@ -47,11 +47,11 @@ func (s *articleService) Take(where ...interface{}) *model.Article {
 	return repositories.ArticleRepository.Take(sqls.DB(), where...)
 }
 
-func (s *articleService) Find(cnd *sqls.SqlCnd) []model.Article {
+func (s *articleService) Find(cnd *sqls.Cnd) []model.Article {
 	return repositories.ArticleRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *articleService) FindOne(cnd *sqls.SqlCnd) *model.Article {
+func (s *articleService) FindOne(cnd *sqls.Cnd) *model.Article {
 	return repositories.ArticleRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -59,7 +59,7 @@ func (s *articleService) FindPageByParams(params *params.QueryParams) (list []mo
 	return repositories.ArticleRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *articleService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Article, paging *sqls.Paging) {
+func (s *articleService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Article, paging *sqls.Paging) {
 	return repositories.ArticleRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -99,7 +99,7 @@ func (s *articleService) GetArticleInIds(articleIds []int64) []model.Article {
 
 // 获取文章对应的标签
 func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
-	articleTags := repositories.ArticleTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("article_id = ?", articleId))
+	articleTags := repositories.ArticleTagRepository.Find(sqls.DB(), sqls.NewCnd().Where("article_id = ?", articleId))
 	var tagIds []int64
 	for _, articleTag := range articleTags {
 		tagIds = append(tagIds, articleTag.TagId)
@@ -110,7 +110,7 @@ func (s *articleService) GetArticleTags(articleId int64) []model.Tag {
 // 文章列表
 func (s *articleService) GetArticles(cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd().Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -127,7 +127,7 @@ func (s *articleService) GetArticles(cursor int64) (articles []model.Article, ne
 // 标签文章列表
 func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewCnd().Eq("tag_id", tagId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -254,7 +254,7 @@ func (s *articleService) GetRelatedArticles(articleId int64) []model.Article {
 
 // 近期文章
 func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
-	articles := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("id < ?", articleId).Desc("id").Limit(10))
+	articles := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().Where("id < ?", articleId).Desc("id").Limit(10))
 	var ret []model.Article
 	for _, article := range articles {
 		if article.Status == constants.StatusOk {
@@ -268,7 +268,7 @@ func (s *articleService) GetNearlyArticles(articleId int64) []model.Article {
 func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -282,7 +282,7 @@ func (s *articleService) ScanDesc(callback func(articles []model.Article)) {
 func (s *articleService) ScanByUser(userId int64, callback func(articles []model.Article)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -296,7 +296,7 @@ func (s *articleService) ScanByUser(userId int64, callback func(articles []model
 func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -310,7 +310,7 @@ func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 // rss
 func (s *articleService) GenerateRss() {
 	articles := repositories.ArticleRepository.Find(sqls.DB(),
-		sqls.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
+		sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, article := range articles {
@@ -362,7 +362,7 @@ func (s *articleService) IncrViewCount(articleId int64) {
 
 func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd()
+	cnd := sqls.NewCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
 	}

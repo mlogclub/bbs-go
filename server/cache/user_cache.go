@@ -35,7 +35,7 @@ func newUserCache() *userCache {
 		),
 		scoreRankCache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.UserRepository.Find(sqls.DB(), sqls.NewSqlCnd().Desc("score").Limit(10))
+				value = repositories.UserRepository.Find(sqls.DB(), sqls.NewCnd().Desc("score").Limit(10))
 				if value == nil {
 					e = errors.New("数据不存在")
 				}
@@ -48,7 +48,7 @@ func newUserCache() *userCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				today := dates.GetDay(time.Now())
 				value = repositories.CheckInRepository.Find(sqls.DB(),
-					sqls.NewSqlCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
+					sqls.NewCnd().Eq("latest_day_name", today).Asc("update_time").Limit(10))
 				return
 			},
 			cache.WithMaximumSize(10),

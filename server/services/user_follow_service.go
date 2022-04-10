@@ -31,11 +31,11 @@ func (s *userFollowService) Take(where ...interface{}) *model.UserFollow {
 	return repositories.UserFollowRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userFollowService) Find(cnd *sqls.SqlCnd) []model.UserFollow {
+func (s *userFollowService) Find(cnd *sqls.Cnd) []model.UserFollow {
 	return repositories.UserFollowRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userFollowService) FindOne(cnd *sqls.SqlCnd) *model.UserFollow {
+func (s *userFollowService) FindOne(cnd *sqls.Cnd) *model.UserFollow {
 	return repositories.UserFollowRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -43,11 +43,11 @@ func (s *userFollowService) FindPageByParams(params *params.QueryParams) (list [
 	return repositories.UserFollowRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userFollowService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserFollow, paging *sqls.Paging) {
+func (s *userFollowService) FindPageByCnd(cnd *sqls.Cnd) (list []model.UserFollow, paging *sqls.Paging) {
 	return repositories.UserFollowRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *userFollowService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *userFollowService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.UserFollowRepository.Count(sqls.DB(), cnd)
 }
 
@@ -169,7 +169,7 @@ func (s *userFollowService) UnFollow(userId, otherId int64) error {
 
 // GetFans 粉丝列表
 func (s *userFollowService) GetFans(userId int64, cursor int64, limit int) (itemList []int64, nextCursor int64, hasMore bool) {
-	cnd := sqls.NewSqlCnd().Eq("other_id", userId)
+	cnd := sqls.NewCnd().Eq("other_id", userId)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -190,7 +190,7 @@ func (s *userFollowService) GetFans(userId int64, cursor int64, limit int) (item
 
 // GetFollows 关注列表
 func (s *userFollowService) GetFollows(userId int64, cursor int64, limit int) (itemList []int64, nextCursor int64, hasMore bool) {
-	cnd := sqls.NewSqlCnd().Eq("user_id", userId)
+	cnd := sqls.NewCnd().Eq("user_id", userId)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -213,7 +213,7 @@ func (s *userFollowService) GetFollows(userId int64, cursor int64, limit int) (i
 func (s *userFollowService) ScanFans(userId int64, handle func(fansId int64)) {
 	var cursor int64 = 0
 	for {
-		list := s.Find(sqls.NewSqlCnd().Eq("other_id", userId).Gt("id", cursor).Asc("id").Limit(100))
+		list := s.Find(sqls.NewCnd().Eq("other_id", userId).Gt("id", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}
@@ -228,7 +228,7 @@ func (s *userFollowService) ScanFans(userId int64, handle func(fansId int64)) {
 func (s *userFollowService) ScanFollowed(userId int64, handle func(followUserId int64)) {
 	var cursor int64 = 0
 	for {
-		list := s.Find(sqls.NewSqlCnd().Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(100))
+		list := s.Find(sqls.NewCnd().Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}
@@ -249,7 +249,7 @@ func (s *userFollowService) IsFollowed(userId, otherId int64) bool {
 
 func (s *userFollowService) IsFollowedUsers(userId int64, otherIds ...int64) hashset.Set {
 	set := hashset.New()
-	list := s.Find(sqls.NewSqlCnd().Eq("user_id", userId).In("other_id", otherIds))
+	list := s.Find(sqls.NewCnd().Eq("user_id", userId).In("other_id", otherIds))
 	for _, follow := range list {
 		set.Add(follow.OtherId)
 	}

@@ -29,11 +29,11 @@ func (s *operateLogService) Take(where ...interface{}) *model.OperateLog {
 	return repositories.OperateLogRepository.Take(sqls.DB(), where...)
 }
 
-func (s *operateLogService) Find(cnd *sqls.SqlCnd) []model.OperateLog {
+func (s *operateLogService) Find(cnd *sqls.Cnd) []model.OperateLog {
 	return repositories.OperateLogRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *operateLogService) FindOne(cnd *sqls.SqlCnd) *model.OperateLog {
+func (s *operateLogService) FindOne(cnd *sqls.Cnd) *model.OperateLog {
 	return repositories.OperateLogRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -41,11 +41,11 @@ func (s *operateLogService) FindPageByParams(params *params.QueryParams) (list [
 	return repositories.OperateLogRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *operateLogService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.OperateLog, paging *sqls.Paging) {
+func (s *operateLogService) FindPageByCnd(cnd *sqls.Cnd) (list []model.OperateLog, paging *sqls.Paging) {
 	return repositories.OperateLogRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *operateLogService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *operateLogService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.OperateLogRepository.Count(sqls.DB(), cnd)
 }
 

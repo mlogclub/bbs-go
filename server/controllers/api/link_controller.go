@@ -28,7 +28,7 @@ func (c *LinkController) GetBy(id int64) *web.JsonResult {
 func (c *LinkController) GetLinks() *web.JsonResult {
 	page := params.FormValueIntDefault(c.Ctx, "page", 1)
 
-	links, paging := services.LinkService.FindPageByCnd(sqls.NewSqlCnd().
+	links, paging := services.LinkService.FindPageByCnd(sqls.NewCnd().
 		Eq("status", constants.StatusOk).Page(page, 20).Asc("id"))
 
 	var itemList []map[string]interface{}
@@ -40,7 +40,7 @@ func (c *LinkController) GetLinks() *web.JsonResult {
 
 // 前10个链接
 func (c *LinkController) GetToplinks() *web.JsonResult {
-	links := services.LinkService.Find(sqls.NewSqlCnd().
+	links := services.LinkService.Find(sqls.NewCnd().
 		Eq("status", constants.StatusOk).Limit(10).Asc("id"))
 
 	var itemList []map[string]interface{}

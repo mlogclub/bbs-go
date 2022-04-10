@@ -33,12 +33,12 @@ func (r *checkInRepository) Take(db *gorm.DB, where ...interface{}) *model.Check
 	return ret
 }
 
-func (r *checkInRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.CheckIn) {
+func (r *checkInRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.CheckIn) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *checkInRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.CheckIn {
+func (r *checkInRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.CheckIn {
 	ret := &model.CheckIn{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *checkInRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.CheckI
 }
 
 func (r *checkInRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.CheckIn, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.CheckIn, paging *sqls.Paging) {
+func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.CheckIn, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.CheckIn{})
 
@@ -62,7 +62,7 @@ func (r *checkInRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list [
 	return
 }
 
-func (r *checkInRepository) Count(db *gorm.DB, cnd *sqls.SqlCnd) int64 {
+func (r *checkInRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.CheckIn{})
 }
 

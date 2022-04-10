@@ -46,11 +46,11 @@ func (s *topicService) Take(where ...interface{}) *model.Topic {
 	return repositories.TopicRepository.Take(sqls.DB(), where...)
 }
 
-func (s *topicService) Find(cnd *sqls.SqlCnd) []model.Topic {
+func (s *topicService) Find(cnd *sqls.Cnd) []model.Topic {
 	return repositories.TopicRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *topicService) FindOne(cnd *sqls.SqlCnd) *model.Topic {
+func (s *topicService) FindOne(cnd *sqls.Cnd) *model.Topic {
 	return repositories.TopicRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -58,11 +58,11 @@ func (s *topicService) FindPageByParams(params *params.QueryParams) (list []mode
 	return repositories.TopicRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *topicService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Topic, paging *sqls.Paging) {
+func (s *topicService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Topic, paging *sqls.Paging) {
 	return repositories.TopicRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *topicService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *topicService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.TopicRepository.Count(sqls.DB(), cnd)
 }
 
@@ -275,7 +275,7 @@ func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
 
 // GetTopicTags 话题的标签
 func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
-	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("topic_id = ?", topicId))
+	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewCnd().Where("topic_id = ?", topicId))
 
 	var tagIds []int64
 	for _, topicTag := range topicTags {
@@ -287,7 +287,7 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 // GetTopics 获取帖子分页列表
 func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd()
+	cnd := sqls.NewCnd()
 	if nodeId > 0 {
 		cnd.Eq("node_id", nodeId)
 	}
@@ -311,7 +311,7 @@ func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics [
 // 指定标签下话题列表
 func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
 	limit := 20
-	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewCnd().
 		Eq("tag_id", tagId).
 		Eq("status", constants.StatusOk).
 		Desc("last_comment_time").Limit(limit))
@@ -388,7 +388,7 @@ func (s *topicService) onComment(tx *gorm.DB, topicId int64, comment *model.Comm
 // rss
 func (s *topicService) GenerateRss() {
 	topics := repositories.TopicRepository.Find(sqls.DB(),
-		sqls.NewSqlCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
+		sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, topic := range topics {
@@ -434,7 +434,7 @@ func (s *topicService) GenerateRss() {
 func (s *topicService) ScanByUser(userId int64, callback func(topics []model.Topic)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -447,7 +447,7 @@ func (s *topicService) ScanByUser(userId int64, callback func(topics []model.Top
 func (s *topicService) Scan(callback func(topics []model.Topic)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
 			Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -461,7 +461,7 @@ func (s *topicService) Scan(callback func(topics []model.Topic)) {
 func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
 			Cols("id", "status", "create_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -476,7 +476,7 @@ func (s *topicService) ScanDesc(callback func(topics []model.Topic)) {
 func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(topics []model.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
 			Cols("id", "status", "create_time", "update_time").
 			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if len(list) == 0 {
@@ -489,7 +489,7 @@ func (s *topicService) ScanDescWithDate(dateFrom, dateTo int64, callback func(to
 
 func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd()
+	cnd := sqls.NewCnd()
 	if userId > 0 {
 		cnd.Eq("user_id", userId)
 	}

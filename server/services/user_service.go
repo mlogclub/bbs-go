@@ -50,11 +50,11 @@ func (s *userService) Take(where ...interface{}) *model.User {
 	return repositories.UserRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userService) Find(cnd *sqls.SqlCnd) []model.User {
+func (s *userService) Find(cnd *sqls.Cnd) []model.User {
 	return repositories.UserRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userService) FindOne(cnd *sqls.SqlCnd) *model.User {
+func (s *userService) FindOne(cnd *sqls.Cnd) *model.User {
 	return repositories.UserRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -62,7 +62,7 @@ func (s *userService) FindPageByParams(params *params.QueryParams) (list []model
 	return repositories.UserRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.User, paging *sqls.Paging) {
+func (s *userService) FindPageByCnd(cnd *sqls.Cnd) (list []model.User, paging *sqls.Paging) {
 	return repositories.UserRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -101,7 +101,7 @@ func (s *userService) Delete(id int64) {
 func (s *userService) Scan(callback func(users []model.User)) {
 	var cursor int64
 	for {
-		list := repositories.UserRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
+		list := repositories.UserRepository.Find(sqls.DB(), sqls.NewCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}
@@ -462,8 +462,8 @@ func (s *userService) IncrCommentCount(userId int64) int {
 func (s *userService) SyncUserCount() {
 	s.Scan(func(users []model.User) {
 		for _, user := range users {
-			topicCount := repositories.TopicRepository.Count(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
-			commentCount := repositories.CommentRepository.Count(sqls.DB(), sqls.NewSqlCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+			topicCount := repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+			commentCount := repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
 			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "topic_count", topicCount)
 			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "comment_count", commentCount)
 			cache.UserCache.Invalidate(user.Id)
@@ -515,7 +515,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 
 // VerifyEmail 验证邮箱
 func (s *userService) VerifyEmail(token string) (string, error) {
-	emailCode := EmailCodeService.FindOne(sqls.NewSqlCnd().Eq("token", token))
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
 	if emailCode == nil || emailCode.Used {
 		return "", errors.New("非法请求")
 	}

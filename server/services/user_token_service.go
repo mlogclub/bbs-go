@@ -34,11 +34,11 @@ func (s *userTokenService) Take(where ...interface{}) *model.UserToken {
 	return repositories.UserTokenRepository.Take(sqls.DB(), where...)
 }
 
-func (s *userTokenService) Find(cnd *sqls.SqlCnd) []model.UserToken {
+func (s *userTokenService) Find(cnd *sqls.Cnd) []model.UserToken {
 	return repositories.UserTokenRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *userTokenService) FindOne(cnd *sqls.SqlCnd) *model.UserToken {
+func (s *userTokenService) FindOne(cnd *sqls.Cnd) *model.UserToken {
 	return repositories.UserTokenRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -46,7 +46,7 @@ func (s *userTokenService) FindPageByParams(params *params.QueryParams) (list []
 	return repositories.UserTokenRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *userTokenService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.UserToken, paging *sqls.Paging) {
+func (s *userTokenService) FindPageByCnd(cnd *sqls.Cnd) (list []model.UserToken, paging *sqls.Paging) {
 	return repositories.UserTokenRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

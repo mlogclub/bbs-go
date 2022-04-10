@@ -33,11 +33,11 @@ func (s *messageService) Take(where ...interface{}) *model.Message {
 	return repositories.MessageRepository.Take(sqls.DB(), where...)
 }
 
-func (s *messageService) Find(cnd *sqls.SqlCnd) []model.Message {
+func (s *messageService) Find(cnd *sqls.Cnd) []model.Message {
 	return repositories.MessageRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *messageService) FindOne(cnd *sqls.SqlCnd) *model.Message {
+func (s *messageService) FindOne(cnd *sqls.Cnd) *model.Message {
 	return repositories.MessageRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -45,7 +45,7 @@ func (s *messageService) FindPageByParams(params *params.QueryParams) (list []mo
 	return repositories.MessageRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *messageService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Message, paging *sqls.Paging) {
+func (s *messageService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Message, paging *sqls.Paging) {
 	return repositories.MessageRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

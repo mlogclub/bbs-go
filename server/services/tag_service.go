@@ -29,11 +29,11 @@ func (s *tagService) Take(where ...interface{}) *model.Tag {
 	return repositories.TagRepository.Take(sqls.DB(), where...)
 }
 
-func (s *tagService) Find(cnd *sqls.SqlCnd) []model.Tag {
+func (s *tagService) Find(cnd *sqls.Cnd) []model.Tag {
 	return repositories.TagRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *tagService) FindOne(cnd *sqls.SqlCnd) *model.Tag {
+func (s *tagService) FindOne(cnd *sqls.Cnd) *model.Tag {
 	return repositories.TagRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -41,7 +41,7 @@ func (s *tagService) FindPageByParams(params *params.QueryParams) (list []model.
 	return repositories.TagRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *tagService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Tag, paging *sqls.Paging) {
+func (s *tagService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Tag, paging *sqls.Paging) {
 	return repositories.TagRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -75,7 +75,7 @@ func (s *tagService) Autocomplete(input string) []model.Tag {
 	if len(input) == 0 {
 		return nil
 	}
-	return repositories.TagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("status = ? and name like ?",
+	return repositories.TagRepository.Find(sqls.DB(), sqls.NewCnd().Where("status = ? and name like ?",
 		constants.StatusOk, "%"+input+"%").Limit(6))
 }
 
@@ -88,7 +88,7 @@ func (s *tagService) GetByName(name string) *model.Tag {
 }
 
 func (s *tagService) GetTags() []model.TagResponse {
-	list := repositories.TagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("status = ?", constants.StatusOk))
+	list := repositories.TagRepository.Find(sqls.DB(), sqls.NewCnd().Where("status = ?", constants.StatusOk))
 
 	var tags []model.TagResponse
 	for _, tag := range list {
@@ -105,7 +105,7 @@ func (s *tagService) GetTagInIds(tagIds []int64) []model.Tag {
 func (s *tagService) Scan(callback func(tags []model.Tag)) {
 	var cursor int64
 	for {
-		list := repositories.TagRepository.Find(sqls.DB(), sqls.NewSqlCnd().Where("id > ?", cursor).Asc("id").Limit(100))
+		list := repositories.TagRepository.Find(sqls.DB(), sqls.NewCnd().Where("id > ?", cursor).Asc("id").Limit(100))
 		if len(list) == 0 {
 			break
 		}

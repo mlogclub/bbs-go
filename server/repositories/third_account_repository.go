@@ -33,12 +33,12 @@ func (r *thirdAccountRepository) Take(db *gorm.DB, where ...interface{}) *model.
 	return ret
 }
 
-func (r *thirdAccountRepository) Find(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ThirdAccount) {
+func (r *thirdAccountRepository) Find(db *gorm.DB, cnd *sqls.Cnd) (list []model.ThirdAccount) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.ThirdAccount {
+func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *sqls.Cnd) *model.ThirdAccount {
 	ret := &model.ThirdAccount{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -47,10 +47,10 @@ func (r *thirdAccountRepository) FindOne(db *gorm.DB, cnd *sqls.SqlCnd) *model.T
 }
 
 func (r *thirdAccountRepository) FindPageByParams(db *gorm.DB, params *params.QueryParams) (list []model.ThirdAccount, paging *sqls.Paging) {
-	return r.FindPageByCnd(db, &params.SqlCnd)
+	return r.FindPageByCnd(db, &params.Cnd)
 }
 
-func (r *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.SqlCnd) (list []model.ThirdAccount, paging *sqls.Paging) {
+func (r *thirdAccountRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model.ThirdAccount, paging *sqls.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.ThirdAccount{})
 

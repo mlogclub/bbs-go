@@ -27,7 +27,7 @@ func (s *articleTagService) Take(where ...interface{}) *model.ArticleTag {
 	return repositories.ArticleTagRepository.Take(sqls.DB(), where...)
 }
 
-func (s *articleTagService) Find(cnd *sqls.SqlCnd) []model.ArticleTag {
+func (s *articleTagService) Find(cnd *sqls.Cnd) []model.ArticleTag {
 	return repositories.ArticleTagRepository.Find(sqls.DB(), cnd)
 }
 
@@ -35,7 +35,7 @@ func (s *articleTagService) FindPageByParams(params *params.QueryParams) (list [
 	return repositories.ArticleTagRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *articleTagService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.ArticleTag, paging *sqls.Paging) {
+func (s *articleTagService) FindPageByCnd(cnd *sqls.Cnd) (list []model.ArticleTag, paging *sqls.Paging) {
 	return repositories.ArticleTagRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 

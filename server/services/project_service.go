@@ -38,11 +38,11 @@ func (s *projectService) Take(where ...interface{}) *model.Project {
 	return repositories.ProjectRepository.Take(sqls.DB(), where...)
 }
 
-func (s *projectService) Find(cnd *sqls.SqlCnd) []model.Project {
+func (s *projectService) Find(cnd *sqls.Cnd) []model.Project {
 	return repositories.ProjectRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *projectService) FindOne(cnd *sqls.SqlCnd) *model.Project {
+func (s *projectService) FindOne(cnd *sqls.Cnd) *model.Project {
 	return repositories.ProjectRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -50,7 +50,7 @@ func (s *projectService) FindPageByParams(params *params.QueryParams) (list []mo
 	return repositories.ProjectRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *projectService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Project, paging *sqls.Paging) {
+func (s *projectService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Project, paging *sqls.Paging) {
 	return repositories.ProjectRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
@@ -99,7 +99,7 @@ func (s *projectService) Publish(userId int64, name, title, logo, url, docUrl, d
 func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewSqlCnd().Lt("id", cursor).
+		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewCnd().Lt("id", cursor).
 			Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -112,7 +112,7 @@ func (s *projectService) ScanDesc(callback func(projects []model.Project)) {
 func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(projects []model.Project)) {
 	var cursor int64 = math.MaxInt64
 	for {
-		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewSqlCnd().Lt("id", cursor).
+		list := repositories.ProjectRepository.Find(sqls.DB(), sqls.NewCnd().Lt("id", cursor).
 			Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break
@@ -125,7 +125,7 @@ func (s *projectService) ScanDescWithDate(dateFrom, dateTo int64, callback func(
 // rss
 func (s *projectService) GenerateRss() {
 	projects := repositories.ProjectRepository.Find(sqls.DB(),
-		sqls.NewSqlCnd().Where("1 = 1").Desc("id").Limit(200))
+		sqls.NewCnd().Where("1 = 1").Desc("id").Limit(200))
 
 	var items []*feeds.Item
 	for _, project := range projects {

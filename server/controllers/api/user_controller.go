@@ -181,10 +181,10 @@ func (c *UserController) GetFavorites() *web.JsonResult {
 	limit := 20
 	var favorites []model.Favorite
 	if cursor > 0 {
-		favorites = services.FavoriteService.Find(sqls.NewSqlCnd().Where("user_id = ? and id < ?",
+		favorites = services.FavoriteService.Find(sqls.NewCnd().Where("user_id = ? and id < ?",
 			user.Id, cursor).Desc("id").Limit(20))
 	} else {
-		favorites = services.FavoriteService.Find(sqls.NewSqlCnd().Where("user_id = ?", user.Id).Desc("id").Limit(limit))
+		favorites = services.FavoriteService.Find(sqls.NewCnd().Where("user_id = ?", user.Id).Desc("id").Limit(limit))
 	}
 
 	hasMore := false
@@ -203,7 +203,7 @@ func (c *UserController) GetMsgrecent() *web.JsonResult {
 	var messages []model.Message
 	if user != nil {
 		count = services.MessageService.GetUnReadCount(user.Id)
-		messages = services.MessageService.Find(sqls.NewSqlCnd().Eq("user_id", user.Id).
+		messages = services.MessageService.Find(sqls.NewCnd().Eq("user_id", user.Id).
 			Eq("status", msg.StatusUnread).Limit(3).Desc("id"))
 	}
 	return web.NewEmptyRspBuilder().Put("count", count).Put("messages", render.BuildMessages(messages)).JsonResult()
@@ -219,7 +219,7 @@ func (c *UserController) GetMessages() *web.JsonResult {
 		return web.JsonError(common.ErrorNotLogin)
 	}
 
-	messages, paging := services.MessageService.FindPageByCnd(sqls.NewSqlCnd().
+	messages, paging := services.MessageService.FindPageByCnd(sqls.NewCnd().
 		Eq("user_id", user.Id).
 		Page(page, 20).Desc("id"))
 
@@ -238,7 +238,7 @@ func (c *UserController) GetScorelogs() *web.JsonResult {
 		return web.JsonError(common.ErrorNotLogin)
 	}
 
-	logs, paging := services.UserScoreLogService.FindPageByCnd(sqls.NewSqlCnd().
+	logs, paging := services.UserScoreLogService.FindPageByCnd(sqls.NewCnd().
 		Eq("user_id", user.Id).
 		Page(page, 20).Desc("id"))
 

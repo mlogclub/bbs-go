@@ -35,11 +35,11 @@ func (s *commentService) Take(where ...interface{}) *model.Comment {
 	return repositories.CommentRepository.Take(sqls.DB(), where...)
 }
 
-func (s *commentService) Find(cnd *sqls.SqlCnd) []model.Comment {
+func (s *commentService) Find(cnd *sqls.Cnd) []model.Comment {
 	return repositories.CommentRepository.Find(sqls.DB(), cnd)
 }
 
-func (s *commentService) FindOne(cnd *sqls.SqlCnd) *model.Comment {
+func (s *commentService) FindOne(cnd *sqls.Cnd) *model.Comment {
 	return repositories.CommentRepository.FindOne(sqls.DB(), cnd)
 }
 
@@ -47,11 +47,11 @@ func (s *commentService) FindPageByParams(params *params.QueryParams) (list []mo
 	return repositories.CommentRepository.FindPageByParams(sqls.DB(), params)
 }
 
-func (s *commentService) FindPageByCnd(cnd *sqls.SqlCnd) (list []model.Comment, paging *sqls.Paging) {
+func (s *commentService) FindPageByCnd(cnd *sqls.Cnd) (list []model.Comment, paging *sqls.Paging) {
 	return repositories.CommentRepository.FindPageByCnd(sqls.DB(), cnd)
 }
 
-func (s *commentService) Count(cnd *sqls.SqlCnd) int64 {
+func (s *commentService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.CommentRepository.Count(sqls.DB(), cnd)
 }
 
@@ -159,7 +159,7 @@ func (s *commentService) onComment(tx *gorm.DB, comment *model.Comment) error {
 // GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []model.Comment, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewSqlCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd := sqls.NewCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
@@ -175,7 +175,7 @@ func (s *commentService) GetComments(entityType string, entityId int64, cursor i
 
 // GetReplies 二级回复列表
 func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (comments []model.Comment, nextCursor int64, hasMore bool) {
-	cnd := sqls.NewSqlCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
+	cnd := sqls.NewCnd().Eq("entity_type", constants.EntityComment).Eq("entity_id", commentId).Eq("status", constants.StatusOk).Asc("id").Limit(limit)
 	if cursor > 0 {
 		cnd.Gt("id", cursor)
 	}
@@ -193,7 +193,7 @@ func (s *commentService) GetReplies(commentId int64, cursor int64, limit int) (c
 func (s *commentService) ScanByUser(userId int64, callback func(comments []model.Comment)) {
 	var cursor int64 = 0
 	for {
-		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewSqlCnd().
+		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewCnd().
 			Eq("user_id", userId).Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
