@@ -23,6 +23,7 @@ const (
 	SysConfigUserObserveSeconds         = "userObserveSeconds"         // 新用户观察期
 	SysConfigTokenExpireDays            = "tokenExpireDays"            // 登录Token有效天数
 	SysConfigLoginMethod                = "loginMethod"                // 登录方式
+	SysConfigEnableHideContent          = "enableHideContent"          // 启用回复可见功能
 	SysConfigCreateTopicEmailVerified   = "createTopicEmailVerified"   // 发话题需要邮箱认证
 	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
 	SysConfigCreateCommentEmailVerified = "createCommentEmailVerified" // 发话题需要邮箱认证

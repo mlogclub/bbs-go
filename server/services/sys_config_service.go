@@ -170,6 +170,11 @@ func (s *sysConfigService) IsCreateCommentEmailVerified() bool {
 	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
 }
 
+func (s *sysConfigService) IsEnableHideContent() bool {
+	value := cache.SysConfigCache.GetValue(constants.SysConfigEnableHideContent)
+	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
+}
+
 func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
 	siteNavs := cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
 	var siteNavsArr []model.ActionLink
@@ -200,6 +205,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		createTopicEmailVerified   = s.IsCreateTopicEmailVerified()
 		createArticleEmailVerified = s.IsCreateArticleEmailVerified()
 		createCommentEmailVerified = s.IsCreateCommentEmailVerified()
+		enableHideContent          = s.IsEnableHideContent()
 	)
 
 	var siteKeywordsArr []string
@@ -250,6 +256,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		CreateTopicEmailVerified:   createTopicEmailVerified,
 		CreateArticleEmailVerified: createArticleEmailVerified,
 		CreateCommentEmailVerified: createCommentEmailVerified,
+		EnableHideContent:          enableHideContent,
 	}
 }
 

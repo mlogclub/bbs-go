@@ -160,6 +160,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		NodeId:          form.NodeId,
 		Title:           form.Title,
 		Content:         form.Content,
+		HideContent:     form.HideContent,
 		Status:          constants.StatusOk,
 		UserAgent:       form.UserAgent,
 		Ip:              form.Ip,
@@ -203,7 +204,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 }
 
 // 更新
-func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *web.CodeError {
+func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content, hideContent string) *web.CodeError {
 	if len(title) == 0 {
 		return web.NewErrorMsg("标题不能为空")
 	}
@@ -219,9 +220,10 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		err := repositories.TopicRepository.Updates(sqls.DB(), topicId, map[string]interface{}{
-			"node_id": nodeId,
-			"title":   title,
-			"content": content,
+			"node_id":      nodeId,
+			"title":        title,
+			"content":      content,
+			"hide_content": hideContent,
 		})
 		if err != nil {
 			return err

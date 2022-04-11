@@ -78,6 +78,24 @@
                     </div>
                   </li>
                 </ul>
+                <div
+                  v-if="hideContent && hideContent.exists"
+                  class="topic-content-detail hide-content"
+                >
+                  <div v-if="hideContent.show" class="widget has-border">
+                    <div class="widget-header">
+                      <span>
+                        <i class="iconfont icon-lock" />
+                        <span>隐藏内容</span>
+                      </span>
+                    </div>
+                    <div class="widget-content" v-html="hideContent.content" />
+                  </div>
+                  <div v-else class="hide-content-tip">
+                    <i class="iconfont icon-lock" />
+                    <span>隐藏内容，请回复后查看</span>
+                  </div>
+                </div>
               </div>
 
               <!--节点、标签-->
@@ -164,6 +182,7 @@
               :show-ad="false"
               :mode="topic.type === 1 ? 'text' : 'markdown'"
               entity-type="topic"
+              @created="commentCreated"
             />
           </div>
         </div>
@@ -226,6 +245,11 @@ export default {
       likeUsers,
     }
   },
+  data() {
+    return {
+      hideContent: null,
+    }
+  },
   head() {
     return {
       title: this.$topicSiteTitle(this.topic),
@@ -253,11 +277,16 @@ export default {
     },
   },
   mounted() {
+    // 加载隐藏内容
+    this.getHideContent()
     // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
     // 所以服务端渲染时会调用这里的方法进行代码高亮
     CommonHelper.initHighlight(this)
   },
   methods: {
+    commentCreated() {
+      this.getHideContent()
+    },
     async addFavorite(topicId) {
       try {
         if (this.favorited) {
@@ -296,6 +325,17 @@ export default {
           this.liked = true
           this.$message.error(e.message || e)
         }
+      }
+    },
+    async getHideContent() {
+      try {
+        this.hideContent = await this.$axios.get('/api/topic/hide_content', {
+          params: {
+            topicId: this.topic.topicId,
+          },
+        })
+      } catch (e) {
+        console.log(e)
       }
     },
   },
