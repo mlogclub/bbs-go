@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <div class="topic-header-right">
-                  <topic-manage-menu :topic="topic" />
+                  <topic-manage-menu v-model="topic" />
                 </div>
               </div>
 
