@@ -13,6 +13,12 @@
       <el-dropdown-item v-if="isOwner || isAdmin" command="recommend">{{
         topic.recommend ? '取消推荐' : '推荐'
       }}</el-dropdown-item>
+      <el-dropdown-item v-if="isOwner || isAdmin" command="sticky"
+        >置顶</el-dropdown-item
+      >
+      <el-dropdown-item v-if="isOwner || isAdmin" command="stickyGlobal"
+        >全局置顶</el-dropdown-item
+      >
       <el-dropdown-item v-if="isOwner || isAdmin" command="forbidden7Days"
         >禁言7天</el-dropdown-item
       >
@@ -68,6 +74,10 @@ export default {
         this.deleteTopic(this.topic.topicId)
       } else if (command === 'recommend') {
         this.switchRecommend(this.topic)
+      } else if (command === 'sticky') {
+        alert('置顶')
+      } else if (command === 'stickyGlobal') {
+        alert('全局置顶')
       } else if (command === 'forbidden7Days') {
         await this.forbidden(7)
       } else if (command === 'forbiddenForever') {
