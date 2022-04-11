@@ -15,6 +15,9 @@
             <nuxt-link :to="'/user/' + topic.user.id">{{
               topic.user.nickname
             }}</nuxt-link>
+            <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
+              >置顶</span
+            >
           </div>
           <div class="topic-time">
             发布于{{ topic.createTime | prettyDate }}
@@ -100,6 +103,10 @@ export default {
     showAvatar: {
       type: Boolean,
       default: true,
+    },
+    showSticky: {
+      type: Boolean,
+      default: false,
     },
     showAd: {
       type: Boolean,
