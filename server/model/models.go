@@ -7,7 +7,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
+	&TopicTag{}, &StickyTopic{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{},
 }
 
@@ -164,6 +164,13 @@ type TopicTag struct {
 	LastCommentTime   int64 `gorm:"index:idx_topic_tag_last_comment_time" json:"lastCommentTime" form:"lastCommentTime"` // 最后回复时间
 	LastCommentUserId int64 `json:"lastCommentUserId" form:"lastCommentUserId"`                                          // 最后回复用户
 	CreateTime        int64 `json:"createTime" form:"createTime"`                                                        // 创建时间
+}
+
+type StickyTopic struct {
+	Model
+	TopicId    int64 `json:"topicId" form:"topicId"`                                  // 帖子编号
+	NodeId     int64 `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"` // 节点编号
+	CreateTime int64 `json:"createTime" form:"createTime"`                            // 创建时间
 }
 
 // 用户点赞
