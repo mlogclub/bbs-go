@@ -288,8 +288,15 @@ func (c *TopicController) GetNewest() *web.JsonResult {
 	return web.JsonData(render.BuildSimpleTopics(topics, nil))
 }
 
+func (c *TopicController) GetSticky_topics() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	nodeId := params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+	topics := services.TopicService.GetStickyTopics(nodeId, 3)
+	return web.JsonData(render.BuildSimpleTopics(topics, user))
+}
+
 // 设置指定
-func (c *TopicController) PostSet_sticky() *web.JsonResult {
+func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return web.JsonError(common.ErrorNotLogin)
@@ -299,17 +306,9 @@ func (c *TopicController) PostSet_sticky() *web.JsonResult {
 	}
 
 	var (
-		topicId = params.FormValueInt64Default(c.Ctx, "topicId", 0)   // 0 表示全局置顶
-		nodeId  = params.FormValueInt64Default(c.Ctx, "nodeId", 0)    // 0 表示全局置顶
-		remove  = params.FormValueBoolDefault(c.Ctx, "remove", false) // 是否移除置顶
+		sticky = params.FormValueBoolDefault(c.Ctx, "sticky", false) // 是否指定
 	)
-	var err error
-	if remove {
-		err = services.StickyTopicService.RemoveSticky(topicId)
-	} else {
-		err = services.StickyTopicService.AddSticky(nodeId, topicId)
-	}
-	if err != nil {
+	if err := services.TopicService.SetSticky(topicId, sticky); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
 	return web.JsonSuccess()

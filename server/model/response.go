@@ -101,6 +101,8 @@ type TopicResponse struct {
 	CreateTime      int64               `json:"createTime"`
 	Recommend       bool                `json:"recommend"`
 	RecommendTime   int64               `json:"recommendTime"`
+	Sticky          bool                `json:"sticky"`
+	StickyTime      int64               `json:"stickyTime"`
 }
 
 // 项目简单返回

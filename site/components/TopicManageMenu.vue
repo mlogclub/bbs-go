@@ -13,12 +13,9 @@
       <el-dropdown-item v-if="isOwner || isAdmin" command="recommend">{{
         topic.recommend ? '取消推荐' : '推荐'
       }}</el-dropdown-item>
-      <el-dropdown-item v-if="isOwner || isAdmin" command="sticky"
-        >置顶</el-dropdown-item
-      >
-      <el-dropdown-item v-if="isOwner || isAdmin" command="stickyGlobal"
-        >全局置顶</el-dropdown-item
-      >
+      <el-dropdown-item v-if="isOwner || isAdmin" command="sticky">{{
+        topic.sticky ? '取消置顶' : '置顶'
+      }}</el-dropdown-item>
       <el-dropdown-item v-if="isOwner || isAdmin" command="forbidden7Days"
         >禁言7天</el-dropdown-item
       >
@@ -75,9 +72,7 @@ export default {
       } else if (command === 'recommend') {
         this.switchRecommend(this.topic)
       } else if (command === 'sticky') {
-        alert('置顶')
-      } else if (command === 'stickyGlobal') {
-        alert('全局置顶')
+        this.switchSticky(this.topic)
       } else if (command === 'forbidden7Days') {
         await this.forbidden(7)
       } else if (command === 'forbiddenForever') {
@@ -128,6 +123,24 @@ export default {
         me.$axios
           .post('/api/topic/recommend/' + topic.topicId, {
             recommend: !topic.recommend,
+          })
+          .then(() => {
+            me.$msg({
+              message: `${action}成功`,
+            })
+          })
+          .catch((e) => {
+            me.$message.error(`${action}失败：` + (e.message || e))
+          })
+      })
+    },
+    switchSticky(topic) {
+      const me = this
+      const action = topic.sticky ? '取消置顶' : '置顶'
+      this.$confirm(`是否确认${action}该帖子？`).then(function () {
+        me.$axios
+          .post('/api/topic/sticky/' + topic.topicId, {
+            sticky: !topic.sticky,
           })
           .then(() => {
             me.$msg({

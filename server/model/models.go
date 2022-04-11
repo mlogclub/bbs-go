@@ -7,7 +7,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &StickyTopic{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
+	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{},
 }
 
@@ -143,6 +143,8 @@ type Topic struct {
 	ImageList         string              `gorm:"type:longtext" json:"imageList" form:"imageList"`                                 // 图片
 	Recommend         bool                `gorm:"not null;index:idx_recommend" json:"recommend" form:"recommend"`                  // 是否推荐
 	RecommendTime     int64               `gorm:"not null" json:"recommendTime" form:"recommendTime"`                              // 推荐时间
+	Sticky            bool                `gorm:"not null;index:idx_sticky_sticky_time" json:"sticky" form:"sticky"`               // 置顶
+	StickyTime        int64               `gorm:"not null;index:idx_sticky_sticky_time" json:"stickyTime" form:"stickyTime"`       // 置顶时间
 	ViewCount         int64               `gorm:"not null" json:"viewCount" form:"viewCount"`                                      // 查看数量
 	CommentCount      int64               `gorm:"not null" json:"commentCount" form:"commentCount"`                                // 跟帖数量
 	LikeCount         int64               `gorm:"not null" json:"likeCount" form:"likeCount"`                                      // 点赞数量
@@ -164,13 +166,6 @@ type TopicTag struct {
 	LastCommentTime   int64 `gorm:"index:idx_topic_tag_last_comment_time" json:"lastCommentTime" form:"lastCommentTime"` // 最后回复时间
 	LastCommentUserId int64 `json:"lastCommentUserId" form:"lastCommentUserId"`                                          // 最后回复用户
 	CreateTime        int64 `json:"createTime" form:"createTime"`                                                        // 创建时间
-}
-
-type StickyTopic struct {
-	Model
-	TopicId    int64 `gorm:"not null;uniqueIndex:idx_topic_id" json:"topicId" form:"topicId"` // 帖子编号
-	NodeId     int64 `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`         // 节点编号
-	CreateTime int64 `json:"createTime" form:"createTime"`                                    // 创建时间
 }
 
 // 用户点赞
