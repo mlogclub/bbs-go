@@ -168,9 +168,9 @@ type TopicTag struct {
 
 type StickyTopic struct {
 	Model
-	TopicId    int64 `json:"topicId" form:"topicId"`                                  // 帖子编号
-	NodeId     int64 `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"` // 节点编号
-	CreateTime int64 `json:"createTime" form:"createTime"`                            // 创建时间
+	TopicId    int64 `gorm:"not null;uniqueIndex:idx_topic_id" json:"topicId" form:"topicId"` // 帖子编号
+	NodeId     int64 `gorm:"not null;index:idx_node_id;" json:"nodeId" form:"nodeId"`         // 节点编号
+	CreateTime int64 `json:"createTime" form:"createTime"`                                    // 创建时间
 }
 
 // 用户点赞

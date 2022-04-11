@@ -287,3 +287,30 @@ func (c *TopicController) GetNewest() *web.JsonResult {
 	topics := services.TopicService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
 	return web.JsonData(render.BuildSimpleTopics(topics, nil))
 }
+
+// 设置指定
+func (c *TopicController) PostSet_sticky() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(common.ErrorNotLogin)
+	}
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+		return web.JsonErrorMsg("无权限")
+	}
+
+	var (
+		topicId = params.FormValueInt64Default(c.Ctx, "topicId", 0)   // 0 表示全局置顶
+		nodeId  = params.FormValueInt64Default(c.Ctx, "nodeId", 0)    // 0 表示全局置顶
+		remove  = params.FormValueBoolDefault(c.Ctx, "remove", false) // 是否移除置顶
+	)
+	var err error
+	if remove {
+		err = services.StickyTopicService.RemoveSticky(topicId)
+	} else {
+		err = services.StickyTopicService.AddSticky(nodeId, topicId)
+	}
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}

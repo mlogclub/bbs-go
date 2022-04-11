@@ -62,12 +62,12 @@ func (r *stickyTopicRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list 
 	return
 }
 
-func (r *stickyTopicRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []model.StickyTopic) {
+func (r *stickyTopicRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []model.StickyTopic) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *stickyTopicRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *stickyTopicRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *stickyTopicRepository) UpdateColumn(db *gorm.DB, id int64, name string,
 func (r *stickyTopicRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.StickyTopic{}, "id = ?", id)
 }
-
