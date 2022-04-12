@@ -4,14 +4,17 @@
       管理<i class="el-icon-arrow-down el-icon--right"></i>
     </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-if="hasPermission && topic.type === 0" command="edit"
+      <el-dropdown-item v-if="hasPermission && value.type === 0" command="edit"
         >修改</el-dropdown-item
       >
       <el-dropdown-item v-if="hasPermission" command="delete"
         >删除</el-dropdown-item
       >
       <el-dropdown-item v-if="isOwner || isAdmin" command="recommend">{{
-        topic.recommend ? '取消推荐' : '推荐'
+        value.recommend ? '取消推荐' : '推荐'
+      }}</el-dropdown-item>
+      <el-dropdown-item v-if="isOwner || isAdmin" command="sticky">{{
+        value.sticky ? '取消置顶' : '置顶'
       }}</el-dropdown-item>
       <el-dropdown-item v-if="isOwner || isAdmin" command="forbidden7Days"
         >禁言7天</el-dropdown-item
@@ -28,10 +31,15 @@ import UserHelper from '~/common/UserHelper'
 
 export default {
   props: {
-    topic: {
+    value: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      topic: this.value,
+    }
   },
   computed: {
     hasPermission() {
@@ -63,11 +71,13 @@ export default {
         return
       }
       if (command === 'edit') {
-        this.editTopic(this.topic.topicId)
+        this.editTopic()
       } else if (command === 'delete') {
-        this.deleteTopic(this.topic.topicId)
+        this.deleteTopic()
       } else if (command === 'recommend') {
-        this.switchRecommend(this.topic)
+        this.switchRecommend()
+      } else if (command === 'sticky') {
+        this.switchSticky()
       } else if (command === 'forbidden7Days') {
         await this.forbidden(7)
       } else if (command === 'forbiddenForever') {
@@ -87,14 +97,14 @@ export default {
         this.$message.error('禁言失败')
       }
     },
-    deleteTopic(topicId) {
+    deleteTopic() {
       if (!process.client) {
         return
       }
       const me = this
       this.$confirm('是否确认删除该帖子？').then(function () {
         me.$axios
-          .post('/api/topic/delete/' + topicId)
+          .post('/api/topic/delete/' + me.topic.topicId)
           .then(() => {
             me.$msg({
               message: '删除成功',
@@ -108,18 +118,42 @@ export default {
           })
       })
     },
-    editTopic(topicId) {
-      this.$linkTo('/topic/edit/' + topicId)
+    editTopic() {
+      this.$linkTo('/topic/edit/' + this.topic.topicId)
     },
-    switchRecommend(topic) {
+    switchRecommend() {
       const me = this
-      const action = topic.recommend ? '取消推荐' : '推荐'
+      const action = me.topic.recommend ? '取消推荐' : '推荐'
       this.$confirm(`是否确认${action}该帖子？`).then(function () {
+        const recommend = !me.topic.recommend
         me.$axios
-          .post('/api/topic/recommend/' + topic.topicId, {
-            recommend: !topic.recommend,
+          .post('/api/topic/recommend/' + me.topic.topicId, {
+            recommend,
           })
           .then(() => {
+            me.topic.recommend = recommend
+            me.$emit('input', me.topic)
+            me.$msg({
+              message: `${action}成功`,
+            })
+          })
+          .catch((e) => {
+            me.$message.error(`${action}失败：` + (e.message || e))
+          })
+      })
+    },
+    switchSticky() {
+      const me = this
+      const action = me.topic.sticky ? '取消置顶' : '置顶'
+      this.$confirm(`是否确认${action}该帖子？`).then(function () {
+        const sticky = !me.topic.sticky
+        me.$axios
+          .post('/api/topic/sticky/' + me.topic.topicId, {
+            sticky,
+          })
+          .then(() => {
+            me.topic.sticky = sticky
+            me.$emit('input', me.topic)
             me.$msg({
               message: `${action}成功`,
             })

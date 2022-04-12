@@ -54,6 +54,18 @@
             />
           </div>
         </div>
+
+        <div v-if="postForm.type === 0 && isEnableHideContent" class="field">
+          <div class="control">
+            <markdown-editor
+              ref="mdEditor"
+              v-model="postForm.hideContent"
+              height="200px"
+              placeholder="隐藏内容，评论后可见"
+            />
+          </div>
+        </div>
+
         <div v-if="postForm.type === 1" class="field">
           <div class="control">
             <simple-editor
@@ -147,6 +159,7 @@ export default {
         title: '',
         tags: [],
         content: '',
+        hideContent: '',
         imageList: [],
       },
     }
@@ -166,6 +179,9 @@ export default {
     // 是否需要先邮箱认证
     isNeedEmailVerify() {
       return this.config.createTopicEmailVerified && !this.user.emailVerified
+    },
+    isEnableHideContent() {
+      return this.config.enableHideContent
     },
   },
   watchQuery: ['type', 'nodeId'],
@@ -199,6 +215,7 @@ export default {
           nodeId: this.postForm.nodeId,
           title: this.postForm.title,
           content: this.postForm.content,
+          hideContent: this.postForm.hideContent,
           imageList:
             this.postForm.imageList && this.postForm.imageList.length
               ? JSON.stringify(this.postForm.imageList)

@@ -42,10 +42,21 @@
           }
         }
 
+        .topic-sticky-icon {
+          color: var(--color-red);
+          border: 1px solid var(--color-red);
+          border-radius: 2px;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 0 5px;
+          margin-left: 10px;
+        }
+
         .topic-time {
           color: var(--text-color3);
           font-size: 12px;
           float: right;
+          display: flex;
         }
 
         @media screen and (max-width: 1024px) {

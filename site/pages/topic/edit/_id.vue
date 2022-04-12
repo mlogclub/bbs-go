@@ -38,6 +38,17 @@
           </div>
         </div>
 
+        <div v-if="isEnableHideContent || topic.hideContent" class="field">
+          <div class="control">
+            <markdown-editor
+              ref="mdEditor"
+              v-model="postForm.hideContent"
+              height="200px"
+              placeholder="隐藏内容，评论后可见"
+            />
+          </div>
+        </div>
+
         <div class="field">
           <div class="control">
             <tag-input v-model="postForm.tags" />
@@ -76,6 +87,7 @@ export default {
         title: topic.title,
         tags: topic.tags,
         content: topic.content,
+        hideContent: topic.hideContent,
       },
     }
   },
@@ -99,6 +111,9 @@ export default {
     currentUser() {
       return this.$store.state.user.current
     },
+    isEnableHideContent() {
+      return this.$store.state.config.config.enableHideContent
+    },
   },
   mounted() {},
   methods: {
@@ -116,6 +131,7 @@ export default {
             nodeId: this.postForm.nodeId,
             title: this.postForm.title,
             content: this.postForm.content,
+            hideContent: this.postForm.hideContent,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )

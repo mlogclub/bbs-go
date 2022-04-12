@@ -168,6 +168,17 @@
         }
       }
     }
+
+    .hide-content {
+      margin: 20px 0;
+      .hide-content-tip {
+        border: 1px solid var(--border-hover-color);
+        border-radius: 2px;
+        padding: 6px 12px;
+        font-size: 14px;
+        color: #3273dc;
+      }
+    }
   }
 
   .topic-tags {
@@ -196,6 +207,7 @@
     width: 80%;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     margin-bottom: 10px;
 
     .avatar-a {

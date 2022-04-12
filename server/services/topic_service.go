@@ -160,6 +160,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 		NodeId:          form.NodeId,
 		Title:           form.Title,
 		Content:         form.Content,
+		HideContent:     form.HideContent,
 		Status:          constants.StatusOk,
 		UserAgent:       form.UserAgent,
 		Ip:              form.Ip,
@@ -203,7 +204,7 @@ func (s *topicService) Publish(userId int64, form model.CreateTopicForm) (*model
 }
 
 // 更新
-func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content string) *web.CodeError {
+func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content, hideContent string) *web.CodeError {
 	if len(title) == 0 {
 		return web.NewErrorMsg("标题不能为空")
 	}
@@ -219,9 +220,10 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		err := repositories.TopicRepository.Updates(sqls.DB(), topicId, map[string]interface{}{
-			"node_id": nodeId,
-			"title":   title,
-			"content": content,
+			"node_id":      nodeId,
+			"title":        title,
+			"content":      content,
+			"hide_content": hideContent,
 		})
 		if err != nil {
 			return err
@@ -505,4 +507,34 @@ func (s *topicService) GetUserTopics(userId, cursor int64) (topics []model.Topic
 		nextCursor = cursor
 	}
 	return
+}
+
+func (s *topicService) GetStickyTopics(nodeId int64, limit int) []model.Topic {
+	if nodeId > 0 {
+		return s.Find(sqls.NewCnd().Where("node_id = ? and sticky = true and status = ?",
+			nodeId, constants.StatusOk).Desc("sticky_time").Limit(limit))
+	} else {
+		return s.Find(sqls.NewCnd().Where("sticky = true and status = ?",
+			constants.StatusOk).Desc("sticky_time").Limit(limit))
+	}
+}
+
+func (s *topicService) SetSticky(topicId int64, sticky bool) error {
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New("话题不存在")
+	}
+	if topic.Sticky == sticky {
+		return nil
+	}
+	if sticky {
+		return s.Updates(topicId, map[string]interface{}{
+			"sticky":      true,
+			"sticky_time": dates.NowTimestamp(),
+		})
+	} else {
+		return s.Updates(topicId, map[string]interface{}{
+			"sticky": false,
+		})
+	}
 }

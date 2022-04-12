@@ -186,6 +186,10 @@ $main-container-width: null; // 主栏目的宽度
     margin: 0;
   }
 
+  &.has-border {
+    border: 1px solid var(--border-color);
+  }
+
   &.no-margin {
     margin: 0;
   }

@@ -202,3 +202,7 @@ func (s *commentService) ScanByUser(userId int64, callback func(comments []model
 		callback(list)
 	}
 }
+
+func (s *commentService) IsCommented(userId int64, entityType string, entityId int64) bool {
+	return s.FindOne(sqls.NewCnd().Where("user_id = ? and entity_id = ? and entity_type = ? and status = ?", userId, entityId, entityType, constants.StatusOk)) != nil
+}

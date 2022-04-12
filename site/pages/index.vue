@@ -5,6 +5,7 @@
         <div class="main-content no-padding no-bg topics-wrapper">
           <div class="topics-nav"><topics-nav :nodes="nodes" /></div>
           <div class="topics-main">
+            <sticky-topics :node-id="0" />
             <load-more
               v-if="topicsPage"
               v-slot="{ results }"

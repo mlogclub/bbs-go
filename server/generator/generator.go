@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	codegen.Generate("./", "bbs-go", codegen.GetGenerateStruct(&model.CheckIn{}))
+	codegen.Generate("./", "bbs-go", codegen.GetGenerateStruct(&model.StickyTopic{}))
 }

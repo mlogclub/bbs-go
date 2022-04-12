@@ -1,5 +1,6 @@
 <template>
   <div class="topics-main">
+    <sticky-topics :node-id="-2" />
     <load-more
       v-if="topicsPage"
       v-slot="{ results }"

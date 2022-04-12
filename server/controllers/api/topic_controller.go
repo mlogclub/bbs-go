@@ -3,12 +3,14 @@ package api
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/common"
+	"bbs-go/pkg/markdown"
 	"bbs-go/spam"
 	"math/rand"
 	"strconv"
 	"strings"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
@@ -88,6 +90,7 @@ func (c *TopicController) GetEditBy(topicId int64) *web.JsonResult {
 		Put("nodeId", topic.NodeId).
 		Put("title", topic.Title).
 		Put("content", topic.Content).
+		Put("hideContent", topic.HideContent).
 		Put("tags", tagNames).
 		JsonResult()
 }
@@ -109,12 +112,15 @@ func (c *TopicController) PostEditBy(topicId int64) *web.JsonResult {
 		return web.JsonErrorMsg("无权限")
 	}
 
-	nodeId := params.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	title := strings.TrimSpace(params.FormValue(c.Ctx, "title"))
-	content := strings.TrimSpace(params.FormValue(c.Ctx, "content"))
-	tags := params.FormValueStringArray(c.Ctx, "tags")
+	var (
+		nodeId      = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		title       = strings.TrimSpace(params.FormValue(c.Ctx, "title"))
+		content     = strings.TrimSpace(params.FormValue(c.Ctx, "content"))
+		hideContent = strings.TrimSpace(params.FormValue(c.Ctx, "hideContent"))
+		tags        = params.FormValueStringArray(c.Ctx, "tags")
+	)
 
-	err := services.TopicService.Edit(topicId, nodeId, tags, title, content)
+	err := services.TopicService.Edit(topicId, nodeId, tags, title, content, hideContent)
 	if err != nil {
 		return web.JsonError(err)
 	}
@@ -286,4 +292,54 @@ func (c *TopicController) GetRecommend() *web.JsonResult {
 func (c *TopicController) GetNewest() *web.JsonResult {
 	topics := services.TopicService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(6))
 	return web.JsonData(render.BuildSimpleTopics(topics, nil))
+}
+
+func (c *TopicController) GetSticky_topics() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	nodeId := params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+	topics := services.TopicService.GetStickyTopics(nodeId, 3)
+	return web.JsonData(render.BuildSimpleTopics(topics, user))
+}
+
+// 设置指定
+func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(common.ErrorNotLogin)
+	}
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+		return web.JsonErrorMsg("无权限")
+	}
+
+	var (
+		sticky = params.FormValueBoolDefault(c.Ctx, "sticky", false) // 是否指定
+	)
+	if err := services.TopicService.SetSticky(topicId, sticky); err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) GetHide_content() *web.JsonResult {
+	topicId := params.FormValueInt64Default(c.Ctx, "topicId", 0)
+	var (
+		exists      = false // 是否有隐藏内容
+		show        = false // 是否显示隐藏内容
+		hideContent = ""    // 隐藏内容
+	)
+	topic := services.TopicService.Get(topicId)
+	if topic != nil && topic.Status == constants.StatusOk && strs.IsNotBlank(topic.HideContent) {
+		exists = true
+		if user := services.UserTokenService.GetCurrent(c.Ctx); user != nil {
+			if services.CommentService.IsCommented(user.Id, constants.EntityTopic, topic.Id) {
+				show = true
+				hideContent = markdown.ToHTML(topic.HideContent)
+			}
+		}
+	}
+	return web.JsonData(map[string]interface{}{
+		"exists":  exists,
+		"show":    show,
+		"content": hideContent,
+	})
 }

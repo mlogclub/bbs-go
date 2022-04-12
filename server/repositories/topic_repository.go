@@ -62,6 +62,16 @@ func (r *topicRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []mode
 	return
 }
 
+func (r *topicRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []model.Topic) {
+	db.Raw(sqlStr, paramArr...).Scan(&list)
+	return
+}
+
+func (r *topicRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
+	db.Raw(sqlStr, paramArr...).Count(&count)
+	return
+}
+
 func (r *topicRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
 	return cnd.Count(db, &model.Topic{})
 }

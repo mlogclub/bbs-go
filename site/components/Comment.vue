@@ -95,6 +95,7 @@ export default {
   methods: {
     commentCreated(data) {
       this.$refs.list.append(data)
+      this.$emit('created')
     },
     reply(quote) {
       this.$refs.input.reply(quote)
