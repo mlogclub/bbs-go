@@ -337,7 +337,7 @@ func (c *TopicController) GetHide_content() *web.JsonResult {
 			}
 		}
 	}
-	return web.JsonData(map[string]any{
+	return web.JsonData(map[string]interface{}{
 		"exists":  exists,
 		"show":    show,
 		"content": hideContent,
