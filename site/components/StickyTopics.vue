@@ -1,5 +1,10 @@
 <template>
-  <topic-list class="sticky-topics" show-sticky :topics="topics" />
+  <topic-list
+    v-if="topics && topics.length"
+    class="sticky-topics"
+    show-sticky
+    :topics="topics"
+  />
 </template>
 
 <script>
