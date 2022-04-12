@@ -59,9 +59,13 @@
 
 ## 功能预览
 
-![首页.jpg](https://i.loli.net/2020/07/10/CzmOJZk3xjKM1cT.png)
-![动态.jpg](https://i.loli.net/2020/07/10/Qim57jL9MydbsZk.png)
-![后台.png](https://i.loli.net/2020/07/10/1BwAkrI6DOCWQS3.png)
+![首页.png](https://s2.loli.net/2022/04/12/DpvPwB9dlQ6Chef.png)
+![发帖.png](https://s2.loli.net/2022/04/12/KC8eXfE6sDLq34V.png)
+![发动态.png](https://s2.loli.net/2022/04/12/14pMPuGjEU6kiWV.png)
+![个人中心.png](https://s2.loli.net/2022/04/12/1PVNjMh9nUAXsl8.png)
+![手机版.png](https://s2.loli.net/2022/04/12/mowWb78CGIaH6T2.png)
+![后台首页.png](https://s2.loli.net/2022/04/12/ErX2BLTnh7ldz8D.png)
+![后台配置.png](https://s2.loli.net/2022/04/12/PwK6aC74XEZlIOL.png)
 
 ## Contributors
 
