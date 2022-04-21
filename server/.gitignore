@@ -25,5 +25,6 @@ tags
 
 logs/*.log
 
+generator.go
 go.work
 go.work.sum
