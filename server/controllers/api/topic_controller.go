@@ -331,7 +331,7 @@ func (c *TopicController) GetHide_content() *web.JsonResult {
 	if topic != nil && topic.Status == constants.StatusOk && strs.IsNotBlank(topic.HideContent) {
 		exists = true
 		if user := services.UserTokenService.GetCurrent(c.Ctx); user != nil {
-			if services.CommentService.IsCommented(user.Id, constants.EntityTopic, topic.Id) {
+			if user.Id == topic.UserId || services.CommentService.IsCommented(user.Id, constants.EntityTopic, topic.Id) {
 				show = true
 				hideContent = markdown.ToHTML(topic.HideContent)
 			}
