@@ -147,7 +147,6 @@ export default {
               this.loading = false;
             })
             .catch((e) => {
-              console.error(e);
               this.showCaptcha();
               this.loading = false;
             });

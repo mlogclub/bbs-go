@@ -45,7 +45,6 @@ export default {
       if (typeof val !== "string") return;
       const themeCluster = this.getThemeCluster(val.replace("#", ""));
       const originalCluster = this.getThemeCluster(oldVal.replace("#", ""));
-      console.log(themeCluster, originalCluster);
 
       const $message = this.$message({
         message: "  Compiling the theme",
