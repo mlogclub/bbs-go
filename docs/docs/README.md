@@ -10,7 +10,7 @@ features:
   details: 支持在不同的屏幕尺寸下面展示，例如桌面平台、iPad、iPhone，这有助于你的网站内容往各类移动平台推广。
 - title: Go语言驱动
   details: 基于Go语言开发，高性能、易扩展。
-footer: Copyright © 2020
+footer: Copyright © 2022
 ---
 
 ![bbs-go功能简介](https://file.mlog.club/images/2021/11/12/8754103189670afe659f88d5596c8f2a.png)

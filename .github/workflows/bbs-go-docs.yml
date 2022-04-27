@@ -24,14 +24,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
       - name: build
+        working-directory: ./docs
         run: |
           cd docs
           npm install
           npm run docs:build
-          cd docs/.vuepress/dist
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
+          working-directory: ./docs/.vuepress/dist
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/docs/.vuepress/dist
           cname: docs.bbs-go.com

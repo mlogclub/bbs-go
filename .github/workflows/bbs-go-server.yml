@@ -21,6 +21,6 @@ jobs:
           go mod download
 
       - name: Build
+        working-directory: ./server
         run: |
-          cd server
           go build -v .
