@@ -73,6 +73,9 @@
               </nuxt-link>
             </div>
           </div>
+          <div class="navbar-item">
+            <color-mode />
+          </div>
         </div>
       </div>
     </div>

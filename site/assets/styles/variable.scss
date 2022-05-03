@@ -10,8 +10,9 @@
   --body-bg-color: #f3f3f3;
   --bg-color: #fff;
   // --bg-color2: #f7f7f7;
-  --bg-color2: rgba(247,248,250,.7);
+  --bg-color2: rgba(247, 248, 250, .7);
   --bg-color3: #f2f3f5;
+  --bg-color4: #f2f2f2;
   --bg-color-alpha: rgba(29, 33, 41, 0.5); // 50%透明
 
   --border-color: #e9e9e9;
@@ -20,23 +21,38 @@
   --border-hover-color: #1878f3;
 
   --color-red: #fa5151;
+
+  --color-navbar-icon: #1878f3;
 }
 
 .dark-mode {
-  --text-color: findColorInvert(#4a4a4a);
-  --text-color2: findColorInvert(#555);
-  --text-color3: findColorInvert(#70727c);
-  --text-color4: findColorInvert(#d8d8d8);
-  --text-color5: findColorInvert(#fff);
+  // --text-color: findColorInvert(#4a4a4a);
+  // --text-color2: findColorInvert(#555);
+  // --text-color3: findColorInvert(#70727c);
+  // --text-color4: findColorInvert(#d8d8d8);
+  // --text-color5: findColorInvert(#fff);
+
+  --text-color: #fafaf9;
+  --text-color2: #fafaf9;
+  --text-color3: #fafaf9;
+  --text-color4: #fff;
+  --text-color5: #fff;
   --text-link-color: findColorInvert(#3273dc);
   --text-link-hover-color: findColorInvert(#363636);
 
   --body-bg-color: #121212;
   --bg-color: #272727;
   --bg-color2: #3a3a3a;
+  --bg-color3: #3a3a3a;
+  --bg-color4: #3a3a3a;
   --bg-color-alpha: rgba(29, 33, 41, 0.5); // 50%透明
 
   --border-color: #4a4a4a;
   --border-color2: #4a4a4a;
+  --border-color3: #4a4a4a;
   --border-hover-color: findColorInvert(#1878f3);
+
+  --color-red: #fa5151;
+
+  --color-navbar-icon: #e3e3e3;
 }

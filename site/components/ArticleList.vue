@@ -51,7 +51,7 @@
             <span
               v-for="tag in article.tags"
               :key="tag.tagId"
-              class="article-tag tag"
+              class="article-tag"
             >
               <nuxt-link :to="'/articles/' + tag.tagId" class>{{
                 tag.tagName

@@ -150,7 +150,7 @@ export default {
           position: relative;
           padding: 8px 15px;
           border-radius: 1px;
-          background: #f2f2f2;
+          background: var(--bg-color4);
           border: 1px solid var(--border-color2);
           color: var(--text-color);
 

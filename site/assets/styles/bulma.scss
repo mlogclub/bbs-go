@@ -3,11 +3,15 @@
 
 $widescreen-enabled: true;
 $fullhd-enabled: true;
+
 $body-background-color: var(--body-bg-color);
 $body-background-dark: var(--body-bg-color);
+$body-color: var(--text-color);
+$navbar-item-color: var(--text-color);
+$label-color: var(--text-color);
 
 @import '/node_modules/bulma/bulma.sass';
-@import "/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
+@import '/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass';
 
 .dark-mode {
 
@@ -19,6 +23,12 @@ $body-background-dark: var(--body-bg-color);
     &:hover,
     &.is-active {
       background-color: var(--bg-color);
+    }
+  }
+
+  .navbar {
+    &.has-shadow {
+      box-shadow: 0 2px 0 0 #000;
     }
   }
 }

@@ -81,12 +81,25 @@
       }
 
       .article-tag {
-        a {
-          color: var(--text-color);
+        height: 25px;
+        padding: 0 8px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12.5px;
+        background: var(--bg-color2);
+        border: 1px solid var(--border-color);
+        color: var(--text-color3);
+        font-size: 12px;
+
+        &:hover {
+          color: var(--text-link-color);
+          background: var(--bg-color);
+          border: 1px solid var(--border-hover-color);
         }
 
         &:not(:last-child) {
-          margin-right: 3px;
+          margin-right: 10px;
         }
       }
     }
@@ -97,7 +110,7 @@
     margin-right: 5px;
     line-height: 32px;
 
-    & > span {
+    &>span {
       margin-left: 5px;
 
       a {
