@@ -2,7 +2,7 @@
 //$family-sans-serif: 'Source Code Pro', monospace;
 
 $widescreen-enabled: true;
-$fullhd-enabled: false;
+$fullhd-enabled: true;
 $body-background-color: var(--body-bg-color);
 $body-background-dark: var(--body-bg-color);
 
@@ -10,7 +10,10 @@ $body-background-dark: var(--body-bg-color);
 @import "/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass";
 
 .dark-mode {
-  a.navbar-item, .navbar-link {
+
+  a.navbar-item,
+  .navbar-link {
+
     &:focus,
     &:focus-within,
     &:hover,
