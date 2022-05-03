@@ -9,6 +9,8 @@ $body-background-dark: var(--body-bg-color);
 $body-color: var(--text-color);
 $navbar-item-color: var(--text-color);
 $label-color: var(--text-color);
+$navbar-dropdown-background-color: var(--bg-color);
+$navbar-item-hover-background-color: var(--bg-color2);
 
 @import '/node_modules/bulma/bulma.sass';
 @import '/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass';
