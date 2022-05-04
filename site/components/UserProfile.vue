@@ -14,13 +14,7 @@
         </span>
       </label>
     </div>
-    <avatar
-      :user="localUser"
-      :round="true"
-      :has-border="true"
-      size="100"
-      class="profile-avatar"
-    />
+    <avatar :user="localUser" :round="true" size="100" class="profile-avatar" />
     <div class="profile-info">
       <div class="metas">
         <h1 class="nickname">
