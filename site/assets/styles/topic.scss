@@ -23,13 +23,27 @@
   background: var(--bg-color);
   padding: 30px;
 
-  .tag {
+  .topic-tag {
     margin-right: 10px;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 700;
+    // height: 25px;
+    padding: 2px 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: var(--bg-color2);
+    border: 1px solid var(--border-color);
     color: var(--text-color3);
+    font-size: 14px;
+    font-weight: 700;
+
+    &:hover {
+      color: var(--text-link-color);
+      background: var(--bg-color);
+      border: 1px solid var(--border-hover-color);
+    }
 
     &.selected {
       color: var(--text-color5);
@@ -37,5 +51,3 @@
     }
   }
 }
-
-

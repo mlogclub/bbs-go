@@ -210,6 +210,7 @@ export default {
       overflow: auto;
       overscroll-behavior: contain;
       transition: all 100ms linear;
+      color: var(--text-color);
     }
   }
 

@@ -25,7 +25,7 @@
             <div
               v-for="node in nodes"
               :key="node.nodeId"
-              class="tag"
+              class="topic-tag"
               :class="{ selected: postForm.nodeId === node.nodeId }"
               @click="postForm.nodeId = node.nodeId"
             >

@@ -14,6 +14,7 @@
         maxlength="30"
         placeholder="输入你想查找的内容"
         autocomplete="off"
+        aria-autocomplete="off"
         @focus="onFocus"
         @input="onInput"
         @keyup.down="changeSelect(1)"

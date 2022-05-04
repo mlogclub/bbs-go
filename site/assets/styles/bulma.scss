@@ -1,36 +1,5 @@
 //@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
 //$family-sans-serif: 'Source Code Pro', monospace;
 
-$widescreen-enabled: true;
-$fullhd-enabled: true;
-
-$body-background-color: var(--body-bg-color);
-$body-background-dark: var(--body-bg-color);
-$body-color: var(--text-color);
-$navbar-item-color: var(--text-color);
-$label-color: var(--text-color);
-$navbar-dropdown-background-color: var(--bg-color);
-$navbar-item-hover-background-color: var(--bg-color2);
-
+@import './variable.scss';
 @import '/node_modules/bulma/bulma.sass';
-@import '/node_modules/bulma-prefers-dark/bulma-prefers-dark.sass';
-
-.dark-mode {
-
-  a.navbar-item,
-  .navbar-link {
-
-    &:focus,
-    &:focus-within,
-    &:hover,
-    &.is-active {
-      background-color: var(--bg-color);
-    }
-  }
-
-  .navbar {
-    &.has-shadow {
-      box-shadow: 0 2px 0 0 #000;
-    }
-  }
-}
