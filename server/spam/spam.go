@@ -10,7 +10,7 @@ var strategies []Strategy
 func init() {
 	strategies = append(strategies, &EmailVerifyStrategy{})
 	strategies = append(strategies, &CaptchaStrategy{})
-	strategies = append(strategies, &PostFrequencyStrategy{})
+	// strategies = append(strategies, &PostFrequencyStrategy{})
 }
 
 func CheckTopic(user *model.User, form model.CreateTopicForm) error {
