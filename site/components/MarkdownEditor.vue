@@ -59,7 +59,7 @@ export default {
     },
     toolbars() {
       if (this.isMobile) {
-        return 'h bold italic strikethrough'
+        return 'h bold italic strikethrough image'
       } else {
         return 'undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code'
       }
