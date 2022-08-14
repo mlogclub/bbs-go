@@ -195,4 +195,15 @@ export default {
     }
   }
 }
+
+.dark-mode {
+  .profile-info {
+    background-image: linear-gradient(
+      90deg,
+      #00000088,
+      rgba(255, 255, 255, 0.5),
+      #dce9f200
+    );
+  }
+}
 </style>

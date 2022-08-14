@@ -2,15 +2,14 @@
   <div class="select-tags">
     <input id="tags" v-model="tags" name="tags" type="hidden" />
     <div class="tags-selected">
-      <span v-for="tag in tags" :key="tag" class="tag-item">
-        <span class="text"
-          >{{ tag
-          }}<i
-            :data-name="tag"
-            class="iconfont icon-close"
-            @click="clickRemoveTag"
-        /></span>
-      </span>
+      <div v-for="tag in tags" :key="tag" class="tag-item">
+        <span>{{ tag }}</span>
+        <i
+          :data-name="tag"
+          class="iconfont icon-close"
+          @click="clickRemoveTag"
+        />
+      </div>
     </div>
     <input
       ref="tagInput"
@@ -278,31 +277,26 @@ export default {
   .tags-selected {
     display: flex;
 
-    span.tag-item {
+    .tag-item {
       margin: 5px;
       padding: 0 10px;
-      background: #eee;
+      background: var(--bg-color3);
       color: var(--text-color);
       line-height: 30px;
       border-radius: 5px;
 
-      .text {
-        text-align: center;
-        vertical-align: middle;
+      text-align: center;
+      font-size: 12px;
+      white-space: nowrap;
+
+      i {
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.5);
-        white-space: nowrap;
-        display: inline-block;
+        margin-left: 4px;
+      }
 
-        i {
-          font-size: 12px;
-          margin-left: 4px;
-        }
-
-        i:hover {
-          color: red;
-          cursor: pointer;
-        }
+      i:hover {
+        color: red;
+        cursor: pointer;
       }
     }
   }
@@ -318,7 +312,8 @@ export default {
     .tags-container {
       scroll-behavior: smooth;
       position: relative;
-      background: #f7f7f7;
+      // background: #f7f7f7;
+      background-color: var(--bg-color);
       border-left: 1px solid var(--border-color2);
       border-right: 1px solid var(--border-color2);
       border-bottom: 1px solid var(--border-color2);
@@ -334,7 +329,8 @@ export default {
           &.active,
           &:hover {
             color: var(--text-color5);
-            background: #006bde;
+            // background: #006bde;
+            background-color: var(--bg-color2);
           }
         }
       }
