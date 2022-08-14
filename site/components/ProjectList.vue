@@ -1,18 +1,8 @@
 <template>
   <div class="projects">
     <ul>
-      <li v-for="(p, index) in projects" :key="p.projectId" class="project">
+      <li v-for="p in projects" :key="p.projectId" class="project">
         <article itemscope itemtype="http://schema.org/BlogPosting">
-          <div
-            v-if="index === 2 || index === 6 || index === 12 || index === 18"
-          >
-            <!-- 信息流广告 -->
-            <adsbygoogle
-              ad-slot="4980294904"
-              ad-format="fluid"
-              ad-layout-key="-ht-19-1m-3j+mu"
-            />
-          </div>
           <div class="project-header">
             <h1 itemprop="headline">
               <nuxt-link :to="'/project/' + p.projectId">

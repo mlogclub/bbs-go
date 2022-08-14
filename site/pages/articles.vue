@@ -6,17 +6,9 @@
       </div>
       <div class="right-container">
         <check-in />
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
         <site-notice />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
-        <div class="ad">
-          <!-- 展示广告 -->
-          <adsbygoogle ad-slot="1742173616" />
-        </div>
       </div>
     </div>
   </section>

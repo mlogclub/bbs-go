@@ -79,26 +79,12 @@
               </div>
             </div>
 
-            <div class="ad">
-              <!-- 信息流广告 -->
-              <adsbygoogle
-                ad-slot="4980294904"
-                ad-format="fluid"
-                ad-layout-key="-ht-19-1m-3j+mu"
-              />
-            </div>
-
             <div
               v-lazy-container="{ selector: 'img' }"
               class="article-content content"
               itemprop="articleBody"
               v-html="article.content"
             ></div>
-
-            <div class="ad">
-              <!-- 展示广告 -->
-              <adsbygoogle ad-slot="1742173616" />
-            </div>
 
             <!-- 评论 -->
             <comment
@@ -112,9 +98,6 @@
       </div>
       <div class="right-container">
         <user-info :user="article.user" />
-        <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
-
         <div
           v-if="relatedArticles && relatedArticles.length"
           class="widget no-margin"
@@ -135,9 +118,6 @@
           </div>
         </div>
 
-        <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
-
         <div v-if="nearlyArticles && nearlyArticles.length" class="widget">
           <div class="widget-header">近期文章</div>
           <div class="widget-content article-related">
@@ -154,9 +134,6 @@
             </ul>
           </div>
         </div>
-
-        <!-- 展示广告 -->
-        <adsbygoogle ad-slot="1742173616" />
       </div>
     </div>
   </section>

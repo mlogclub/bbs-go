@@ -10,7 +10,6 @@
             >即将跳往站外地址，点击该链接继续跳转&nbsp;&gt;&gt;</a
           >
         </div>
-        <adsbygoogle ad-slot="1742173616" />
       </div>
     </div>
   </section>

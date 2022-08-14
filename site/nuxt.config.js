@@ -78,10 +78,6 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
-    [
-      '@nuxtjs/google-adsense',
-      { id: 'ca-pub-5683711753850351', pageLevelAds: true },
-    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

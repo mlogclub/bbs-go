@@ -1,14 +1,6 @@
 <template>
   <ul class="article-list">
-    <li v-for="(article, index) in articles" :key="article.articleId">
-      <div v-if="showAd && index !== 0 && index % 3 === 0">
-        <!-- 信息流广告 -->
-        <adsbygoogle
-          ad-slot="4980294904"
-          ad-format="fluid"
-          ad-layout-key="-ht-19-1m-3j+mu"
-        />
-      </div>
+    <li v-for="article in articles" :key="article.articleId">
       <article
         class="article-item"
         itemscope

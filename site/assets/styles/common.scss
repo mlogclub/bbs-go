@@ -297,15 +297,15 @@ $main-container-width: null; // 主栏目的宽度
   }
 }
 
-img[lazy='loading'] {
+img[lazy="loading"] {
   background-color: var(--bg-color2);
 }
 
-img[lazy='error'] {
+img[lazy="error"] {
   background-color: var(--bg-color2);
 }
 
-img[lazy='loaded'] {
+img[lazy="loaded"] {
   /* your style here */
 }
 
@@ -340,7 +340,7 @@ img[lazy='loaded'] {
 
   &:before,
   &:after {
-    content: '';
+    content: "";
     width: inherit;
     height: inherit;
     border-radius: 50%;
@@ -395,18 +395,6 @@ img[lazy='loaded'] {
 span.search-highlight {
   // TODO
   color: #cc0000;
-}
-
-.ad {
-  margin: 10px 0;
-
-  &.no-margin-top {
-    margin-top: 0;
-  }
-
-  &.no-margin-bottom {
-    margin-bottom: 0;
-  }
 }
 
 @keyframes rotating {

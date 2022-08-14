@@ -988,12 +988,13 @@
   resolved "https://registry.npmmirror.com/@humanwhocodes/object-schema/download/@humanwhocodes/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha1-tSBSnsIdjllFoYUd/Rwy6U45/0U=
 
-"@kangc/v-md-editor@^1.7.7":
-  version "1.7.8"
-  resolved "https://registry.npmmirror.com/@kangc/v-md-editor/download/@kangc/v-md-editor-1.7.8.tgz#5a0e5cd05003e1703d11df72f803e2343e92fbad"
-  integrity sha1-Wg5c0FAD4XA9Ed9y+APiND6S+60=
+"@kangc/v-md-editor@^1.7.11":
+  version "1.7.11"
+  resolved "https://registry.npmmirror.com/@kangc/v-md-editor/-/v-md-editor-1.7.11.tgz#83d950c687bcd2a7414a0308e2867ca55ba752d2"
+  integrity sha512-398+4uKqc2Ybog0kktTuLDkBObN8/2QB0OsIjOgUURojy9RY1fX2PeJ5OXL5zWMf3y8dF98Ho/x9AAUY6L6YZA==
   dependencies:
     "@vuepress/markdown" "^1.8.2"
+    "@vuepress/shared-utils" "^1.8.2"
     codemirror "^5.61.0"
     copy-to-clipboard "^3.3.1"
     highlight.js "^10.7.1"
@@ -1002,6 +1003,7 @@
     markdown-it "^12.0.6"
     markdown-it-attrs "^4.0.0"
     markdown-it-container "^3.0.0"
+    markdown-it-emoji "1.4.0"
     mermaid "^8.10.1"
     prismjs "^1.23.0"
     resize-observer-polyfill "^1.5.1"
@@ -1415,11 +1417,6 @@
     consola "^2.15.0"
     eslint-webpack-plugin "^2.4.1"
 
-"@nuxtjs/google-adsense@^1.3.0":
-  version "1.4.0"
-  resolved "https://registry.nlark.com/@nuxtjs/google-adsense/download/@nuxtjs/google-adsense-1.4.0.tgz#c86eedf10fa8cc9ae5e4b3bb45998bd462d9634b"
-  integrity sha1-yG7t8Q+ozJrl5LO7RZmL1GLZY0s=
-
 "@nuxtjs/proxy@^2.1.0":
   version "2.1.0"
   resolved "https://registry.npm.taobao.org/@nuxtjs/proxy/download/@nuxtjs/proxy-2.1.0.tgz#fa7715a11d237fa1273503c4e9e137dd1bf5575b"
@@ -1721,6 +1718,21 @@
   version "1.8.2"
   resolved "https://registry.nlark.com/@vuepress/shared-utils/download/@vuepress/shared-utils-1.8.2.tgz#5ec1601f2196aca34ad82eed7c9be2d7948f705b"
   integrity sha1-XsFgHyGWrKNK2C7tfJvi15SPcFs=
+  dependencies:
+    chalk "^2.3.2"
+    escape-html "^1.0.3"
+    fs-extra "^7.0.1"
+    globby "^9.2.0"
+    gray-matter "^4.0.1"
+    hash-sum "^1.0.2"
+    semver "^6.0.0"
+    toml "^3.0.0"
+    upath "^1.1.0"
+
+"@vuepress/shared-utils@^1.8.2":
+  version "1.9.7"
+  resolved "https://registry.npmmirror.com/@vuepress/shared-utils/-/shared-utils-1.9.7.tgz#f1203c7f48e9d546078f5f9b2ec5200b29da481b"
+  integrity sha512-lIkO/eSEspXgVHjYHa9vuhN7DuaYvkfX1+TTJDiEYXIwgwqtvkTv55C+IOdgswlt0C/OXDlJaUe1rGgJJ1+FTw==
   dependencies:
     chalk "^2.3.2"
     escape-html "^1.0.3"
@@ -2490,11 +2502,6 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/builtin-status-codes/download/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
-
-bulma-prefers-dark@^0.1.0-beta.1:
-  version "0.1.0-beta.1"
-  resolved "https://registry.npmmirror.com/bulma-prefers-dark/download/bulma-prefers-dark-0.1.0-beta.1.tgz#074aa71899f389a0137dd3753f0d89e96ab1e59b"
-  integrity sha1-B0qnGJnziaATfdN1Pw2J6Wqx5Zs=
 
 bulma@^0.9.3:
   version "0.9.3"
@@ -6300,7 +6307,7 @@ markdown-it-container@^3.0.0:
   resolved "https://registry.npm.taobao.org/markdown-it-container/download/markdown-it-container-3.0.0.tgz#1d19b06040a020f9a827577bb7dbf67aa5de9a5b"
   integrity sha1-HRmwYECgIPmoJ1d7t9v2eqXemls=
 
-markdown-it-emoji@^1.4.0:
+markdown-it-emoji@1.4.0, markdown-it-emoji@^1.4.0:
   version "1.4.0"
   resolved "https://registry.nlark.com/markdown-it-emoji/download/markdown-it-emoji-1.4.0.tgz#9bee0e9a990a963ba96df6980c4fddb05dfb4dcc"
   integrity sha1-m+4OmpkKljupbfaYDE/dsF37Tcw=
