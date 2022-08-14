@@ -68,10 +68,6 @@ export default {
       type: Number,
       default: 0,
     },
-    showAd: {
-      type: Boolean,
-      default: false,
-    },
   },
   computed: {
     isLogin() {

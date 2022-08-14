@@ -108,10 +108,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    showAd: {
-      type: Boolean,
-      default: false,
-    },
   },
   methods: {
     async like(topic) {

@@ -90,7 +90,6 @@
             <comment
               :entity-id="article.articleId"
               :comments-page="commentsPage"
-              :show-ad="true"
               entity-type="article"
             />
           </div>

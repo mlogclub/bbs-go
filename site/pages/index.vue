@@ -12,7 +12,7 @@
               :init-data="topicsPage"
               url="/api/topic/topics"
             >
-              <topic-list :topics="results" :show-ad="true" />
+              <topic-list :topics="results" />
             </load-more>
           </div>
         </div>

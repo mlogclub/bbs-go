@@ -7,7 +7,7 @@
       :init-data="topicsPage"
       url="/api/topic/topics?recommend=true"
     >
-      <topic-list :topics="results" :show-ad="true" />
+      <topic-list :topics="results" />
     </load-more>
   </div>
 </template>

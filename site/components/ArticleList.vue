@@ -80,10 +80,6 @@ export default {
       },
       required: false,
     },
-    showAd: {
-      type: Boolean,
-      default: false,
-    },
   },
 }
 </script>

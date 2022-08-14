@@ -51,7 +51,6 @@
         <comment
           :entity-id="project.projectId"
           :comments-page="commentsPage"
-          :show-ad="true"
           entity-type="project"
         />
       </div>

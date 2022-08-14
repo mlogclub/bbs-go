@@ -4,7 +4,7 @@
     :init-data="articlesPage"
     url="/api/article/articles"
   >
-    <article-list :articles="results" :show-ad="true" />
+    <article-list :articles="results" />
   </load-more>
 </template>
 

@@ -5,7 +5,7 @@
     :params="{ tagId: tag.tagId }"
     url="/api/article/tag/articles"
   >
-    <article-list :articles="results" :show-ad="true" />
+    <article-list :articles="results" />
   </load-more>
 </template>
 
