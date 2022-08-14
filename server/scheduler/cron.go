@@ -16,7 +16,6 @@ func Start() {
 	addCronFunc(c, "@every 30m", func() {
 		services.ArticleService.GenerateRss()
 		services.TopicService.GenerateRss()
-		services.ProjectService.GenerateRss()
 	})
 
 	// Generate sitemap

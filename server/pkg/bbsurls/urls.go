@@ -52,11 +52,6 @@ func TopicUrl(topicId int64) string {
 	return AbsUrl("/topic/" + strconv.FormatInt(topicId, 10))
 }
 
-// 项目详情
-func ProjectUrl(projectId int64) string {
-	return AbsUrl("/project/" + strconv.FormatInt(projectId, 10))
-}
-
 func UrlJoin(parts ...string) string {
 	sep := "/"
 	var ss []string

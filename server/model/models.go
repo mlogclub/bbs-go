@@ -7,7 +7,7 @@ import (
 
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
-	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Project{}, &Link{}, &ThirdAccount{},
+	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{},
 }
 
@@ -200,21 +200,6 @@ type SysConfig struct {
 	Description string `gorm:"size:128" json:"description" form:"description"` // 配置描述
 	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
 	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`   // 更新时间
-}
-
-// 开源项目
-type Project struct {
-	Model
-	UserId      int64  `gorm:"not null" json:"userId" form:"userId"`
-	Name        string `gorm:"type:varchar(1024)" json:"name" form:"name"`
-	Title       string `gorm:"type:text" json:"title" form:"title"`
-	Logo        string `gorm:"type:varchar(1024)" json:"logo" form:"logo"`
-	Url         string `gorm:"type:varchar(1024)" json:"url" form:"url"`
-	DocUrl      string `gorm:"type:varchar(1024)" json:"docUrl" form:"docUrl"`
-	DownloadUrl string `gorm:"type:varchar(1024)" json:"downloadUrl" form:"downloadUrl"`
-	ContentType string `gorm:"type:varchar(32);" json:"contentType" form:"contentType"`
-	Content     string `gorm:"type:longtext" json:"content" form:"content"`
-	CreateTime  int64  `gorm:"index:idx_project_create_time" json:"createTime" form:"createTime"`
 }
 
 // 友链

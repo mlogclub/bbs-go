@@ -2,8 +2,8 @@ package sitemap
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/pkg/uploader"
 	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/uploader"
 	"bytes"
 	"compress/gzip"
 	"strings"
@@ -76,12 +76,6 @@ func Generate() {
 		{"changefreq", changefreqAlways},
 	})
 
-	sm.Add(stm.URL{
-		{"loc", bbsurls.AbsUrl("/projects")},
-		{"lastmod", time.Now()},
-		{"changefreq", changefreqDaily},
-	})
-
 	// var (
 	// 	dateFrom = dates.Timestamp(time.Now().AddDate(0, -1, 0))
 	// 	dateTo   = dates.NowTimestamp()
@@ -112,16 +106,6 @@ func Generate() {
 					{"priority", 0.6},
 				})
 			}
-		}
-	})
-
-	services.ProjectService.ScanDesc(func(projects []model.Project) {
-		for _, project := range projects {
-			sm.Add(stm.URL{
-				{"loc", bbsurls.ProjectUrl(project.Id)},
-				{"lastmod", dates.FromTimestamp(project.CreateTime)},
-				{"changefreq", changefreqMonthly},
-			})
 		}
 	})
 

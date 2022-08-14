@@ -105,26 +105,6 @@ type TopicResponse struct {
 	StickyTime      int64               `json:"stickyTime"`
 }
 
-// 项目简单返回
-type ProjectSimpleResponse struct {
-	ProjectId   int64     `json:"projectId"`
-	User        *UserInfo `json:"user"`
-	Name        string    `json:"name"`
-	Title       string    `json:"title"`
-	Logo        string    `json:"logo"`
-	Url         string    `json:"url"`
-	DocUrl      string    `json:"docUrl"`
-	DownloadUrl string    `json:"downloadUrl"`
-	Summary     string    `json:"summary"`
-	CreateTime  int64     `json:"createTime"`
-}
-
-// 项目详情
-type ProjectResponse struct {
-	ProjectSimpleResponse
-	Content string `json:"content"`
-}
-
 // CommentResponse 评论返回数据
 type CommentResponse struct {
 	CommentId    int64             `json:"commentId"`
