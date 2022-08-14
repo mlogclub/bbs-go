@@ -54,8 +54,12 @@
                         ><i class="iconfont icon-captcha"
                       /></span>
                     </div>
-                    <div v-if="captchaUrl" class="field login-captcha-img">
-                      <a @click="showCaptcha"><img :src="captchaUrl" /></a>
+                    <div
+                      v-if="captchaUrl"
+                      class="field login-captcha-img"
+                      @click="showCaptcha"
+                    >
+                      <img :src="captchaUrl" />
                     </div>
                   </div>
                 </div>

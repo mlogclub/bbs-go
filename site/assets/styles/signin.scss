@@ -1,6 +1,6 @@
 .signin {
   max-width: 500px;
-  margin: auto!important;
+  margin: auto !important;
   padding: 0 20px;
 
   .login-captcha-input {
@@ -13,8 +13,10 @@
   }
 
   .login-captcha-img {
+    cursor: pointer;
     img {
       height: 40px;
+      background-color: #fff;
     }
   }
 
