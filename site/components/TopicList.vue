@@ -75,14 +75,13 @@
             </div>
           </div>
           <div class="topic-tags">
-            <span>
-              <nuxt-link
-                v-if="topic.node"
-                :to="'/topics/node/' + topic.node.nodeId"
-                :alt="topic.node.name"
-                >{{ topic.node.name }}</nuxt-link
-              >
-            </span>
+            <nuxt-link
+              v-if="topic.node"
+              class="topic-tag"
+              :to="'/topics/node/' + topic.node.nodeId"
+              :alt="topic.node.name"
+              >{{ topic.node.name }}</nuxt-link
+            >
           </div>
         </div>
       </div>

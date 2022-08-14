@@ -63,7 +63,7 @@ export default {
       &:hover,
       &.active,
       &.nuxt-link-exact-active {
-        background: #e8f3ff;
+        background: var(--bg-color5);
         color: var(--text-link-color);
       }
     }

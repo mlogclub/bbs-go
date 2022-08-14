@@ -220,28 +220,20 @@
         }
 
         .topic-tags {
-          span {
-            font-size: 11px;
-            margin-left: 6px;
+          .topic-tag {
+            padding: 2px 8px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12.5px;
+            margin-right: 10px;
+            background: var(--bg-color2);
+            border: 1px solid var(--border-color2);
+            color: var(--text-color3);
+            font-size: 12px;
 
-            a {
-              //height: 25px;
-              padding: 0 8px;
-              //display: inline-flex;
-              justify-content: center;
-              align-items: center;
-              border-radius: 12.5px;
-              margin-right: 10px;
-              background: var(--bg-color2);
-              border: 1px solid var(--border-color2);
-              color: var(--text-color3);
-              font-size: 12px;
-
-              &:hover {
-                color: var(--text-link-color);
-                background: var(--bg-color);
-                border: 1px solid var(--border-hover-color);
-              }
+            &:hover {
+              color: var(--text-link-color);
+              background: var(--bg-color);
             }
           }
         }
