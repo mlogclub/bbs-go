@@ -42,7 +42,7 @@ func Router() {
 		path := ctx.Path()
 		var err error
 		if strings.Contains(path, "/api/admin/") {
-			_, err = ctx.JSON(web.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
+			err = ctx.JSON(web.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		}
 		if err != nil {
 			logrus.Error(err)

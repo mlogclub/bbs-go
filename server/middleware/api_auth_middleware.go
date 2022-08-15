@@ -59,13 +59,13 @@ func getPathRoles(ctx iris.Context) []string {
 
 // notLogin 未登录返回
 func notLogin(ctx iris.Context) {
-	_, _ = ctx.JSON(web.JsonError(common.ErrorNotLogin))
+	_ = ctx.JSON(web.JsonError(common.ErrorNotLogin))
 	ctx.StopExecution()
 }
 
 // noPermission 无权限返回
 func noPermission(ctx iris.Context) {
-	_, _ = ctx.JSON(web.JsonErrorCode(2, "无权限"))
+	_ = ctx.JSON(web.JsonErrorCode(2, "无权限"))
 	ctx.StopExecution()
 }
 
