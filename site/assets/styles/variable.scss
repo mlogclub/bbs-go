@@ -100,7 +100,10 @@ $title-color: var(--text);
     border-top-color: #272727 !important;
 
     .navbar-item {
-      &:hover {
+      &:hover,
+      &.is-hovered,
+      &:focus,
+      &.is-focused {
         background-color: #272727;
       }
     }
