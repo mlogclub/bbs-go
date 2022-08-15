@@ -30,75 +30,37 @@
     </div>
 
     <div ref="mainContent" :style="{ height: mainHeight }" class="page-section topics">
-      <div v-for="item in results" :key="item.topicId" class="topic-item">
-        <div class="topic-avatar">
-          <avatar :user="item.user" />
+      <div v-for="topic in results" :key="topic.topicId" class="topic-item">
+        <div class="topic-left">
+          <avatar :user="topic.user" size="30" />
         </div>
         <div class="topic-main">
-          <div class="topic-header">
-            <a :href="('/user/' + item.user.id) | siteUrl" target="_blank" class="topic-nickname">{{
-              item.user.nickname
-            }}</a>
-
-            <div class="topic-info">
-              <span v-if="item.status === 1" style="color: red; font-weight: bold">已删除</span>
-              <span v-if="item.recommend" style="color: red; font-weight: bold">已推荐</span>
-            </div>
+          <div class="nickname">{{ topic.user.nickname }}</div>
+          <div class="create-time">{{ topic.createTime | formatDate }}</div>
+          <div v-if="topic.type === 0 && topic.summary" class="summary">
+            {{ topic.summary }}
           </div>
-
-          <div class="topic-metadata">
-            <a
-              class="topic-metadata-item topic-title-link"
-              :href="('/topic/' + item.topicId) | siteUrl"
-              target="_blank"
-            >
-              ID: {{ item.topicId }}
-            </a>
-            <span class="topic-metadata-item">发布于：{{ item.createTime | formatDate }}</span>
-            <span class="topic-metadata-item">查看：{{ item.viewCount }}</span>
-            <span class="topic-metadata-item">点赞：{{ item.likeCount }}</span>
-            <span class="topic-metadata-item">评论：{{ item.commentCount }}</span>
-            <span v-if="item.node" class="topic-metadata-item node">{{ item.node.name }}</span>
-            <template v-if="item.tags && item.tags.length">
-              <span v-for="tag in item.tags" :key="tag.tagId" class="topic-metadata-item tag"
-                >#{{ tag.tagName }}</span
-              >
-            </template>
+          <div v-if="topic.type === 1 && topic.content" class="summary">
+            {{ topic.content }}
           </div>
-
-          <div class="topic-title">
-            <a :href="('/topic/' + item.topicId) | siteUrl" target="_blank">{{ item.title }}</a>
-          </div>
-
-          <template v-if="item.type === 0">
-            <div class="topic-summary">
-              {{ item.summary }}
-            </div>
-          </template>
-          <template v-else>
-            <div class="topic-summary">
-              {{ item.content }}
-            </div>
-          </template>
-
-          <ul v-if="item.imageList && item.imageList.length" class="topic-image-list">
-            <li v-for="(image, index) in item.imageList" :key="index">
-              <a :href="('/topic/' + item.topicId) | siteUrl" target="_blank" class="image-item">
-                <img v-lazy="image.preview" />
-              </a>
+          <ul v-if="topic.imageList && topic.imageList.length" class="image-list">
+            <li v-for="(image, index) in topic.imageList" :key="index">
+              <el-image
+                class="image-item"
+                lazy
+                :src="image.url"
+                fit="cover"
+                :preview-src-list="imagePreviewList(topic.imageList)"
+              />
             </li>
           </ul>
-
-          <div class="topic-actions">
-            <a v-if="item.status === 0" class="action-item btn" @click="deleteSubmit(item.topicId)"
-              >删除</a
-            >
-            <a v-else class="action-item btn" @click="undeleteSubmit(item.topicId)">取消删除</a>
-
-            <a v-if="!item.recommend" class="action-item btn" @click="recommend(item.topicId)"
-              >推荐</a
-            >
-            <a v-else class="action-item btn" @click="cancelRecommend(item.topicId)">取消推荐</a>
+          <div class="actions">
+            <el-link class="action-item">默认链接</el-link>
+            <el-link class="action-item" type="primary">主要链接</el-link>
+            <el-link class="action-item" type="success">成功链接</el-link>
+            <el-link class="action-item" type="warning">警告链接</el-link>
+            <el-link class="action-item" type="danger">危险链接</el-link>
+            <el-link class="action-item" type="info">信息链接</el-link>
           </div>
         </div>
       </div>
@@ -228,6 +190,14 @@ export default {
     handleSelectionChange(val) {
       this.selectedRows = val;
     },
+    imagePreviewList(imageList) {
+      var ret = [];
+      for (let i = 0; i < imageList.length; i++) {
+        const ele = imageList[i];
+        ret.push(ele.url);
+      }
+      return ret;
+    },
   },
 };
 </script>
@@ -239,121 +209,45 @@ export default {
   margin: 0;
   overflow-y: auto;
 
-  .topic-item:not(:last-child) {
-    border-bottom: solid 1px rgba(140, 147, 157, 0.14);
-  }
-
   .topic-item {
-    width: 100%;
-    padding: 20px 10px;
     display: flex;
-    flex: 1;
-
+    padding: 20px 10px 10px 10px;
+    border-bottom: 1px solid #e9e9e9;
+    .topic-left {
+    }
     .topic-main {
-      width: 100%;
       margin-left: 10px;
-      font-size: 14px;
-      a {
+      .nickname {
+        font-size: 13px;
+        font-weight: 500;
+        color: #111827;
+      }
+      .create-time {
+        margin-top: 3px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .summary {
+        margin-top: 10px;
         font-size: 14px;
       }
-
-      .topic-header {
-        .topic-nickname {
-          font-size: 16px;
-          font-weight: 600;
-          color: #606266;
-        }
-
-        .topic-info {
-          margin-left: 10px;
-          float: right;
-          cursor: pointer;
-        }
-      }
-
-      .topic-metadata {
-        margin: 12px 0;
-        color: #8590a6;
-
-        .topic-metadata-item {
-          margin-right: 12px;
-
-          &.topic-title-link {
-            color: #1482f0;
-          }
-          &.node {
-          }
-          &.tag {
-          }
-        }
-      }
-
-      .topic-title {
-        margin: 12px 0;
-        a {
-          font-size: 16px;
-          font-weight: 600;
-          color: #000;
-        }
-      }
-
-      .topic-summary {
-        margin: 12px 0;
-        color: #525252;
-      }
-
-      .topic-image-list {
-        margin: 12px 0;
+      .image-list {
+        display: flex;
+        list-style: none;
         padding: 0;
-        li {
-          cursor: pointer;
-          border: 1px dashed #ddd;
-          text-align: center;
+        margin: 10px 0 0 0;
 
-          // 图片尺寸
-          $image-size: 120px;
-
-          display: inline-block;
-          vertical-align: middle;
-          width: $image-size;
-          height: $image-size;
-          line-height: $image-size;
-          margin: 0 8px 8px 0;
-          background-color: #e8e8e8;
-          background-size: 32px 32px;
-          background-position: 50%;
-          background-repeat: no-repeat;
-          overflow: hidden;
-          position: relative;
-
-          .image-item {
-            display: block;
-            width: $image-size;
-            height: $image-size;
-            overflow: hidden;
-            transform-style: preserve-3d;
-
-            & > img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              transition: all 0.5s ease-out 0.1s;
-
-              &:hover {
-                transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-                backface-visibility: hidden;
-              }
-            }
-          }
+        .image-item {
+          width: 150px;
+          height: 150px;
+          margin: 0 10px 10px 0;
         }
       }
 
-      .topic-actions {
+      .actions {
         margin-top: 20px;
         .action-item {
-          margin-right: 20px;
-          color: #1482f0;
-          font-weight: 500;
+          margin-right: 10px;
         }
       }
     }
