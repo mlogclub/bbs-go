@@ -32,18 +32,27 @@
     <div ref="mainContent" :style="{ height: mainHeight }" class="page-section topics">
       <div v-for="topic in results" :key="topic.topicId" class="topic-item">
         <div class="topic-left">
-          <avatar :user="topic.user" size="30" />
+          <avatar :user="topic.user" size="40" />
         </div>
         <div class="topic-main">
-          <div class="nickname">{{ topic.user.nickname }}</div>
-          <div class="create-time">{{ topic.createTime | formatDate }}</div>
-          <div v-if="topic.type === 0 && topic.summary" class="summary">
+          <div class="topic-status">
+            <el-tag v-if="topic.recommend" type="success">已推荐</el-tag>
+            <el-tag v-if="topic.status === 1" type="danger">已删除</el-tag>
+          </div>
+          <div class="topic-nickname">{{ topic.user.nickname }}</div>
+          <div class="topic-mates">
+            <span> 时间: {{ topic.createTime | formatDate }} </span>
+            <span> 查看: {{ topic.viewCount }} </span>
+            <span> 点赞: {{ topic.likeCount }} </span>
+            <span> 评论: {{ topic.commentCount }} </span>
+          </div>
+          <div v-if="topic.type === 0 && topic.summary" class="topic-summary">
             {{ topic.summary }}
           </div>
-          <div v-if="topic.type === 1 && topic.content" class="summary">
+          <div v-if="topic.type === 1 && topic.content" class="topic-summary">
             {{ topic.content }}
           </div>
-          <ul v-if="topic.imageList && topic.imageList.length" class="image-list">
+          <ul v-if="topic.imageList && topic.imageList.length" class="topic-image-list">
             <li v-for="(image, index) in topic.imageList" :key="index">
               <el-image
                 class="image-item"
@@ -54,13 +63,57 @@
               />
             </li>
           </ul>
+          <div class="topic-tags">
+            <el-tag type="success" size="mini">{{ topic.node.name }}</el-tag>
+            <template v-if="topic.tags && topic.tags.length">
+              <el-tag v-for="tag in topic.tags" :key="tag.tagId" type="info" size="mini"
+                >#&nbsp;{{ tag.tagName }}</el-tag
+              >
+            </template>
+          </div>
           <div class="actions">
-            <el-link class="action-item">默认链接</el-link>
-            <el-link class="action-item" type="primary">主要链接</el-link>
-            <el-link class="action-item" type="success">成功链接</el-link>
-            <el-link class="action-item" type="warning">警告链接</el-link>
-            <el-link class="action-item" type="danger">危险链接</el-link>
-            <el-link class="action-item" type="info">信息链接</el-link>
+            <template v-if="topic.status === 0">
+              <el-link
+                class="action-item"
+                type="primary"
+                icon="el-icon-view"
+                :href="('/topic/' + topic.topicId) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link
+                v-if="topic.recommend"
+                class="action-item"
+                type="warning"
+                icon="el-icon-s-flag"
+                @click="cancelRecommend(topic.topicId)"
+                >取消推荐</el-link
+              >
+              <el-link
+                v-else
+                class="action-item"
+                type="success"
+                icon="el-icon-s-flag"
+                @click="recommend(topic.topicId)"
+                >推荐</el-link
+              >
+              <el-link
+                class="action-item"
+                type="danger"
+                icon="el-icon-delete"
+                @click="deleteSubmit(topic.topicId)"
+                >删除</el-link
+              >
+            </template>
+            <template v-else-if="topic.status === 1">
+              <el-link
+                class="action-item"
+                type="info"
+                icon="el-icon-delete"
+                @click="undeleteSubmit(topic.topicId)"
+                >取消删除</el-link
+              >
+            </template>
           </div>
         </div>
       </div>
@@ -156,35 +209,68 @@ export default {
     },
     async undeleteSubmit(topicId) {
       try {
-        await this.axios.form("/api/admin/topic/undelete", { id: topicId });
-        this.list();
-        this.$message({ message: "取消删除成功", type: "success" });
-      } catch (err) {
-        this.$notify.error({ title: "错误", message: err.message || err });
+        const flag = await this.$confirm("是否确认取消删除?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        });
+        if (flag) {
+          try {
+            await this.axios.form("/api/admin/topic/undelete", { id: topicId });
+            this.list();
+            this.$message.success("操作成功");
+          } catch (err) {
+            this.$notify.error({ title: "错误", message: err.message || err });
+          }
+        }
+      } catch (e) {
+        this.$message.success("操作已取消");
       }
     },
     async recommend(id) {
       try {
-        await this.axios.form("/api/admin/topic/recommend", {
-          id,
+        const flag = await this.$confirm("是否确认推荐?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         });
-        this.$message({ message: "推荐成功", type: "success" });
-        this.list();
+        if (flag) {
+          try {
+            await this.axios.form("/api/admin/topic/recommend", {
+              id,
+            });
+            this.$message.success("操作成功");
+            this.list();
+          } catch (e) {
+            this.$notify.error({ title: "错误", message: e.message });
+          }
+        }
       } catch (e) {
-        this.$notify.error({ title: "错误", message: e.message });
+        this.$message.success("操作已取消");
       }
     },
     async cancelRecommend(id) {
       try {
-        await this.axios.delete("/api/admin/topic/recommend", {
-          params: {
-            id,
-          },
+        const flag = await this.$confirm("是否取消推荐?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         });
-        this.$message({ message: "取消推荐成功", type: "success" });
-        this.list();
+        if (flag) {
+          try {
+            await this.axios.delete("/api/admin/topic/recommend", {
+              params: {
+                id,
+              },
+            });
+            this.$message.success("操作成功");
+            this.list();
+          } catch (e) {
+            this.$notify.error({ title: "错误", message: e.message });
+          }
+        }
       } catch (e) {
-        this.$notify.error({ title: "错误", message: e.message });
+        this.$message.success("操作已取消");
       }
     },
     handleSelectionChange(val) {
@@ -213,25 +299,41 @@ export default {
     display: flex;
     padding: 20px 10px 10px 10px;
     border-bottom: 1px solid #e9e9e9;
-    .topic-left {
-    }
     .topic-main {
+      position: relative;
+      width: 100%;
       margin-left: 10px;
-      .nickname {
-        font-size: 13px;
+      .topic-status {
+        position: absolute;
+        right: 20px;
+
+        .el-tag {
+          margin-left: 10px;
+        }
+      }
+      .topic-nickname {
+        font-size: 15px;
         font-weight: 500;
         color: #111827;
       }
-      .create-time {
+      .topic-mates {
         margin-top: 3px;
         font-size: 12px;
         color: #6b7280;
+
+        i {
+          font-size: 12px;
+        }
+
+        span {
+          margin-right: 15px;
+        }
       }
-      .summary {
+      .topic-summary {
         margin-top: 10px;
         font-size: 14px;
       }
-      .image-list {
+      .topic-image-list {
         display: flex;
         list-style: none;
         padding: 0;
@@ -244,10 +346,19 @@ export default {
         }
       }
 
+      .topic-tags {
+        margin-top: 10px;
+
+        .el-tag {
+          margin-right: 10px;
+        }
+      }
+
       .actions {
         margin-top: 20px;
         .action-item {
-          margin-right: 10px;
+          margin-right: 15px;
+          font-size: 13px;
         }
       }
     }
