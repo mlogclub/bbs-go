@@ -10,18 +10,18 @@
           <el-input v-model="filters.userId" placeholder="用户编号" />
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.entityType" clearable placeholder="评论对象">
+          <el-select v-model="filters.entityType" clearable placeholder="评论数据类型">
             <el-option label="话题" value="topic" />
             <el-option label="文章" value="article" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="filters.entityId" placeholder="对象编号" />
+          <el-input v-model="filters.entityId" placeholder="评论数据编号" />
         </el-form-item>
         <el-form-item>
           <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" value="0" />
-            <el-option label="删除" value="1" />
+            <el-option label="正常" :value="0" />
+            <el-option label="删除" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -35,7 +35,7 @@
         <ul class="comments">
           <li v-for="item in results" :key="item.id">
             <div class="comment-item">
-              <avatar :user="item.user" />
+              <avatar :user="item.user" size="40" />
               <div class="content">
                 <div class="meta">
                   <span class="nickname">
@@ -43,7 +43,12 @@
                       item.user.nickname
                     }}</a>
                   </span>
-
+                  <div class="tools">
+                    <span v-if="item.status === 1" class="item info">已删除</span>
+                    <a v-else class="item" @click="handleDelete(item)">删除</a>
+                  </div>
+                </div>
+                <div class="meta">
                   <span>ID: {{ item.id }}</span>
 
                   <span class="create-time">@{{ item.createTime | formatDate }}</span>
@@ -58,11 +63,6 @@
                       >话题：{{ item.entityId }}</a
                     >
                   </span>
-
-                  <div class="tools">
-                    <span v-if="item.status === 1" class="item info">已删除</span>
-                    <a v-else class="item" @click="handleDelete(item)">删除</a>
-                  </div>
                 </div>
                 <div class="summary" v-html="item.content" />
               </div>
@@ -72,7 +72,7 @@
       </div>
       <div v-else class="page-section comments-div">
         <div class="notification is-primary">
-          <strong>无数据 或 输入相应参数进行查询</strong>
+          <strong>无数据 或 输入<span style="color: red">查询条件</span>进行查询</strong>
         </div>
       </div>
     </div>
@@ -104,7 +104,9 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {},
+      filters: {
+        status: 0,
+      },
       selectedRows: [],
     };
   },
@@ -166,13 +168,15 @@ export default {
   overflow-y: auto;
 
   .notification {
-    margin: 10px;
+    margin-top: 80px;
     text-align: center;
   }
 
   .comments {
     width: 100%;
     list-style: none;
+    margin: 0;
+    padding: 0;
 
     li {
       width: 100%;
@@ -191,6 +195,7 @@ export default {
           margin-left: 10px;
 
           .meta {
+            margin-top: 2px;
             span {
               &:not(:last-child) {
                 margin-right: 5px;
