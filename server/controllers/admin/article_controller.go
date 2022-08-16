@@ -51,20 +51,9 @@ func (c *ArticleController) AnyList() *web.JsonResult {
 	}
 	params.EqByReq("status").EqByReq("title").PageByReq().Desc("id")
 
-	if id <= 0 && userId <= 0 {
-		return web.JsonErrorMsg("请指定查询的【文章编号】或【作者编号】")
-	}
 	list, paging := services.ArticleService.FindPageByParams(params)
 	results := c.buildArticles(list)
 	return web.JsonPageData(results, paging)
-}
-
-// GetRecent 展示最近一页数据
-func (c *ArticleController) GetRecent() *web.JsonResult {
-	params := params.NewQueryParams(c.Ctx).EqByReq("id").EqByReq("user_id").EqByReq("status").Desc("id").Limit(20)
-	list := services.ArticleService.Find(&params.Cnd)
-	results := c.buildArticles(list)
-	return web.JsonData(results)
 }
 
 // 构建文章列表返回数据
@@ -129,7 +118,7 @@ func (c *ArticleController) GetTags() *web.JsonResult {
 	return web.JsonData(render.BuildTags(tags))
 }
 
-func (c *ArticleController) PutTags() *web.JsonResult {
+func (c *ArticleController) PostTags() *web.JsonResult {
 	var (
 		articleId = params.FormValueInt64Default(c.Ctx, "articleId", 0)
 		tags      = params.FormValueStringArray(c.Ctx, "tags")

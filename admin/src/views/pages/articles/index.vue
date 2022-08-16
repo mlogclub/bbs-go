@@ -14,9 +14,9 @@
         </el-form-item>
         <el-form-item>
           <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" value="0" />
-            <el-option label="删除" value="1" />
-            <el-option label="待审核" value="2" />
+            <el-option label="正常" :value="0" />
+            <el-option label="删除" :value="1" />
+            <el-option label="待审核" :value="2" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -26,73 +26,81 @@
     </div>
 
     <!--列表-->
-    <div
-      v-if="results && results.length > 0"
-      ref="mainContent"
-      :style="{ height: mainHeight }"
-      class="page-section articles"
-    >
+    <div ref="mainContent" :style="{ height: mainHeight }" class="page-section articles">
       <div v-for="item in results" :key="item.id" class="article">
-        <avatar :user="item.user" />
+        <avatar :user="item.user" size="40" />
         <div class="article-right">
-          <a class="article-title" :href="('/article/' + item.id) | siteUrl" target="_blank">{{
-            item.title
-          }}</a>
-          <div class="article-meta">
-            <label class="action-item info">ID: {{ item.id }}</label>
-            <label v-if="item.user" class="author">{{ item.user.nickname }}</label>
-            <label>{{ item.createTime | formatDate }}</label>
-
-            <div class="article-tags">
-              <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
-                {{ tag.tagName }}
-              </el-tag>
+          <div class="article-nickname">{{ item.user.nickname }}</div>
+          <div class="article-metas">
+            <div>
+              ID: <span>{{ item.id }}</span>
             </div>
+            <div>{{ item.createTime | formatDate }}</div>
+          </div>
+
+          <a class="article-title" :href="('/article/' + item.id) | siteUrl" target="_blank">
+            {{ item.title }}
+          </a>
+
+          <div v-if="item.tags && item.tags.length" class="article-tags">
+            <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
+              {{ tag.tagName }}
+            </el-tag>
           </div>
 
           <div class="article-info">
-            <span v-if="item.sticky">已推荐</span>
-            <span v-if="item.status === 1">已删除</span>
+            <el-tag v-if="item.status === 1" type="danger">已删除</el-tag>
           </div>
 
-          <div class="summary">{{ item.summary }}</div>
-          <div class="actions">
-            <el-button
-              v-if="item.status !== 1"
-              type="text"
-              class="action-item"
-              @click="deleteSubmit(item)"
-              >删除</el-button
-            >
-            <el-button
-              v-if="item.status === 2"
-              type="text"
-              class="action-item"
-              @click="pendingSubmit(item)"
-              >审核</el-button
-            >
-            <el-button
-              v-if="item.sticky"
-              type="text"
-              class="action-item"
-              @click="setSticky(item, false)"
-              >取消置顶</el-button
-            >
-            <el-button v-else type="text" class="action-item" @click="setSticky(item, true)"
-              >置顶</el-button
-            >
+          <div class="article-summary">{{ item.summary }}</div>
+          <div class="article-actions">
+            <template v-if="item.status === 0">
+              <el-link
+                class="action-item"
+                type="primary"
+                icon="el-icon-view"
+                :href="('/article/' + item.id) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link
+                class="action-item"
+                type="primary"
+                icon="el-icon-edit"
+                @click="showUpdateTags(item)"
+                >修改标签</el-link
+              >
+              <el-link
+                type="danger"
+                icon="el-icon-delete"
+                class="action-item"
+                @click="deleteSubmit(item)"
+                >删除</el-link
+              >
+            </template>
+            <template v-if="item.status === 2">
+              <el-link
+                type="danger"
+                icon="el-icon-delete"
+                class="action-item"
+                @click="deleteSubmit(item)"
+                >删除</el-link
+              >
+              <el-link
+                type="warning"
+                icon="el-icon-s-check"
+                class="action-item"
+                @click="pendingSubmit(item)"
+                >审核</el-link
+              >
+            </template>
           </div>
         </div>
       </div>
     </div>
-    <div v-else class="page-section articles">
-      <div class="notification is-primary">
-        <strong>无数据</strong>
-      </div>
-    </div>
 
     <!--工具条-->
-    <div v-if="page.total > 0" ref="pagebar" class="pagebar">
+    <div ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -143,7 +151,9 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {},
+      filters: {
+        status: 0,
+      },
       tagOptions: [],
       updateTagsDialogVisible: false,
       updateTagForm: {
@@ -154,7 +164,7 @@ export default {
   },
   mounted() {
     mainHeight(this);
-    this.recent();
+    this.list();
   },
   methods: {
     async list() {
@@ -169,16 +179,6 @@ export default {
         this.page = data.page;
       } catch (err) {
         // this.$message.error(err.message);
-      } finally {
-        this.listLoading = false;
-      }
-    },
-    async recent() {
-      this.listLoading = true;
-      try {
-        this.results = await this.axios.get("/api/admin/article/recent");
-      } catch (err) {
-        this.$message.error(err.message);
       } finally {
         this.listLoading = false;
       }
@@ -203,17 +203,14 @@ export default {
             .form("/api/admin/article/delete", { id: row.id })
             .then((data) => {
               me.$message({ message: "删除成功", type: "success" });
-              // me.list();
+              me.list();
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
             });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
+          this.$message.success("操作已取消");
         });
     },
     pendingSubmit(row) {
@@ -228,17 +225,14 @@ export default {
             .form("/api/admin/article/pending", { id: row.id })
             .then((data) => {
               me.$message({ message: "审核成功", type: "success" });
-              // me.list();
+              me.list();
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
             });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消审核",
-          });
+          this.$message.success("操作已取消");
         });
     },
     async showUpdateTags(article) {
@@ -263,7 +257,7 @@ export default {
     },
     async updateTags() {
       try {
-        const nowTags = await this.axios.put("/api/admin/article/tags", {
+        const nowTags = await this.axios.form("/api/admin/article/tags", {
           articleId: this.updateTagForm.articleId,
           tags: (this.updateTagForm.tags || []).join(","),
         });
@@ -275,6 +269,7 @@ export default {
           }
         }
         this.updateTagsDialogVisible = false;
+        this.list();
       } catch (e) {
         this.$message({
           type: "error",
@@ -289,28 +284,29 @@ export default {
 <style scoped lang="scss">
 .articles {
   width: 100%;
+  padding: 0;
+  margin: 0;
   overflow-y: auto;
 
-  .notification {
-    margin: 20px;
-    text-align: center;
-  }
-
-  .article:not(:last-child) {
-    border-bottom: solid 1px rgba(140, 147, 157, 0.14);
-  }
-
   .article {
-    width: 100%;
-    padding: 10px;
     display: flex;
+    padding: 20px 10px 10px 10px;
+    border-bottom: 1px solid #e9e9e9;
 
     .article-right {
       width: 100%;
       margin-left: 10px;
       position: relative;
 
+      .article-nickname {
+        font-size: 15px;
+        font-weight: 500;
+        color: #111827;
+      }
+
       .article-title {
+        display: block;
+        margin-top: 10px;
         color: #555;
         font-size: 16px;
         font-weight: bold;
@@ -318,38 +314,21 @@ export default {
         text-decoration: none;
       }
 
-      .article-meta {
+      .article-tags {
+        margin-top: 10px;
+        .el-tag {
+          margin-right: 3px;
+        }
+      }
+
+      .article-metas {
         margin-top: 10px;
         display: flex;
         font-size: 12px;
+        color: #6b7280;
 
-        label:not(:last-child) {
-          margin-right: 8px;
-        }
-
-        label {
-          color: #999;
-          font-size: 12px;
-        }
-
-        .article-tags {
-          .el-tag + .el-tag {
-            margin-left: 5px;
-          }
-
-          .button-new-tag {
-            margin-left: 10px;
-            height: 32px;
-            line-height: 30px;
-            padding-top: 0;
-            padding-bottom: 0;
-          }
-
-          .input-new-tag {
-            width: 90px;
-            margin-left: 10px;
-            vertical-align: bottom;
-          }
+        & > div {
+          margin-right: 10px;
         }
       }
 
@@ -357,18 +336,9 @@ export default {
         position: absolute;
         top: 0;
         right: 0;
-        cursor: pointer;
-        min-width: max-content;
-
-        span {
-          margin-left: 10px;
-          color: red;
-          font-size: 13px;
-          font-weight: bold;
-        }
       }
 
-      .summary {
+      .article-summary {
         margin-top: 10px;
         word-break: break-all;
         -webkit-line-clamp: 2;
@@ -383,10 +353,10 @@ export default {
         margin-bottom: 10px;
       }
 
-      .actions {
+      .article-actions {
         margin-top: 10px;
         .action-item {
-          margin-right: 5px;
+          margin-right: 10px;
         }
       }
     }
