@@ -1,16 +1,12 @@
 package admin
 
 import (
-	"bytes"
 	"strconv"
 
-	"github.com/PuerkitoBio/goquery"
-	"github.com/go-resty/resty/v2"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/model"
 	"bbs-go/services"
@@ -68,21 +64,4 @@ func (c *LinkController) PostUpdate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 	return web.JsonData(t)
-}
-
-func (c *LinkController) GetDetect() *web.JsonResult {
-	url := c.Ctx.FormValue("url")
-	resp, err := resty.New().SetRedirectPolicy(resty.FlexibleRedirectPolicy(3)).R().Get(url)
-	if err != nil {
-		logrus.Error(err)
-		return web.JsonSuccess()
-	}
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(resp.Body()))
-	if err != nil {
-		logrus.Error(err)
-		return web.JsonSuccess()
-	}
-	title := doc.Find("title").Text()
-	description := doc.Find("meta[name=description]").AttrOr("content", "")
-	return web.NewEmptyRspBuilder().Put("title", title).Put("description", description).JsonResult()
 }

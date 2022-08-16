@@ -41,8 +41,7 @@
         </el-table-column>
         <el-table-column prop="logo" label="Logo" width="60">
           <template slot-scope="scope">
-            <img v-if="scope.row.logo" :src="scope.row.logo" class="link-logo" />
-            <img v-else src="@/assets/images/net.png" class="link-logo" />
+            <el-image v-if="scope.row.logo" :src="scope.row.logo" class="link-logo" />
           </template>
         </el-table-column>
         <el-table-column prop="summary" label="描述" />
@@ -78,18 +77,17 @@
 
     <el-dialog :visible.sync="addFormVisible" :close-on-click-modal="false" title="新增">
       <el-form ref="addForm" :model="addForm" label-width="80px">
-        <el-form-item label="链接">
-          <el-input v-model="addForm.url" style="width: 80%" />&nbsp;
-          <el-button type="primary" @click="detect"> Detect </el-button>
-        </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="addForm.title" />
+        </el-form-item>
+        <el-form-item label="链接">
+          <el-input v-model="addForm.url" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="addForm.summary" :autosize="{ minRows: 2, maxRows: 4 }" />
         </el-form-item>
         <el-form-item label="Logo">
-          <el-input v-model="addForm.logo" />
+          <upload v-model="addForm.logo" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -101,17 +99,17 @@
     <el-dialog :visible.sync="editFormVisible" :close-on-click-modal="false" title="编辑">
       <el-form ref="editForm" :model="editForm" :rules="editFormRules" label-width="80px">
         <el-input v-model="editForm.id" type="hidden" />
-        <el-form-item label="链接">
-          <el-input v-model="editForm.url" />
-        </el-form-item>
         <el-form-item label="标题">
           <el-input v-model="editForm.title" />
+        </el-form-item>
+        <el-form-item label="链接">
+          <el-input v-model="editForm.url" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="editForm.summary" :autosize="{ minRows: 2, maxRows: 4 }" />
         </el-form-item>
         <el-form-item label="Logo">
-          <el-input v-model="editForm.logo" />
+          <upload v-model="editForm.logo" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="editForm.status" placeholder="请选择">
@@ -131,10 +129,12 @@
 </template>
 
 <script>
+import Upload from "@/components/Upload";
 import mainHeight from "@/utils/mainHeight";
 
 export default {
   name: "Links",
+  components: { Upload },
   data() {
     return {
       mainHeight: "300px",
@@ -200,27 +200,6 @@ export default {
         .catch((rsp) => {
           me.$notify.error({ title: "错误", message: rsp.message });
         });
-    },
-    async detect() {
-      if (!this.addForm.url) {
-        return;
-      }
-      try {
-        const flag = await this.$confirm("确定采集吗，采集之后将覆盖现有内容?", "提示", {
-          type: "warning",
-        });
-        if (flag) {
-          const data = await this.axios.get("/api/admin/link/detect", {
-            url: this.addForm.url,
-          });
-          if (data) {
-            this.addForm.title = data.title;
-            this.addForm.summary = data.description;
-          }
-        }
-      } catch (e) {
-        this.$notify.error({ title: "错误", message: e.message || e });
-      }
     },
     handleEdit(index, row) {
       const me = this;
