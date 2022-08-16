@@ -25,16 +25,22 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="id" label="编号" />
-        <el-table-column prop="name" label="名称" />
-        <el-table-column prop="logo" label="图标">
+        <el-table-column prop="id" label="编号" width="80" />
+        <el-table-column prop="logo" label="图标" width="100">
           <template slot-scope="scope">
-            <img v-if="scope.row.logo" :src="scope.row.logo" class="node-logo" />
+            <el-image
+              v-if="scope.row.logo"
+              :src="scope.row.logo"
+              class="node-logo"
+              fit="cover"
+              :preview-src-list="[scope.row.logo]"
+            />
           </template>
         </el-table-column>
+        <el-table-column prop="name" label="名称" />
         <el-table-column prop="description" label="描述" />
-        <el-table-column prop="sortNo" label="排序" />
-        <el-table-column prop="status" label="状态">
+        <el-table-column prop="sortNo" label="排序" width="60" />
+        <el-table-column prop="status" label="状态" width="60">
           <template slot-scope="scope">
             {{ scope.row.status === 0 ? "启用" : "禁用" }}
           </template>

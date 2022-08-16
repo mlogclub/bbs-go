@@ -41,7 +41,13 @@
         </el-table-column>
         <el-table-column prop="logo" label="Logo" width="60">
           <template slot-scope="scope">
-            <el-image v-if="scope.row.logo" :src="scope.row.logo" class="link-logo" />
+            <el-image
+              v-if="scope.row.logo"
+              :src="scope.row.logo"
+              class="link-logo"
+              fit="cover"
+              :preview-src-list="[scope.row.logo]"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="summary" label="描述" />
