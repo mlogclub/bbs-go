@@ -1,12 +1,15 @@
 package admin
 
 import (
+	"bbs-go/model"
+	"bbs-go/model/constants"
 	"bbs-go/pkg/markdown"
 	"strconv"
 
 	"bbs-go/controllers/render"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
@@ -56,14 +59,24 @@ func (c *CommentController) AnyList() *web.JsonResult {
 
 	var results []map[string]interface{}
 	for _, comment := range list {
-		builder := web.NewRspBuilderExcludes(comment, "content")
+		builder := web.NewRspBuilder(comment)
 
 		// 用户
 		builder = builder.Put("user", render.BuildUserInfoDefaultIfNull(comment.UserId))
 
-		// 简介
-		content := markdown.ToHTML(comment.Content)
-		builder.Put("content", content)
+		// 内容
+		if comment.ContentType == constants.ContentTypeMarkdown {
+			builder.Put("content", markdown.ToHTML(comment.Content))
+		} else {
+			builder.Put("content", comment.Content)
+		}
+
+		// 图片
+		if strs.IsNotBlank(comment.ImageList) {
+			var imageList []model.ImageDTO
+			_ = jsons.Parse(comment.ImageList, &imageList)
+			builder.Put("imageList", imageList)
+		}
 
 		results = append(results, builder.Build())
 	}

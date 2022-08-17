@@ -41,6 +41,7 @@
           </div>
           <div class="topic-nickname">{{ topic.user.nickname }}</div>
           <div class="topic-mates">
+            <span> ID: {{ topic.topicId }} </span>
             <span> 时间: {{ topic.createTime | formatDate }} </span>
             <span> 查看: {{ topic.viewCount }} </span>
             <span> 点赞: {{ topic.likeCount }} </span>
@@ -75,16 +76,20 @@
             <template v-if="topic.status === 0">
               <el-link
                 class="action-item"
-                type="primary"
                 icon="el-icon-view"
                 :href="('/topic/' + topic.topicId) | siteUrl"
                 target="_blank"
                 >查看详情</el-link
               >
               <el-link
+                class="action-item"
+                icon="el-icon-s-comment"
+                @click="showComments(topic.topicId)"
+                >查看评论</el-link
+              >
+              <el-link
                 v-if="topic.recommend"
                 class="action-item"
-                type="warning"
                 icon="el-icon-s-flag"
                 @click="cancelRecommend(topic.topicId)"
                 >取消推荐</el-link
@@ -92,7 +97,6 @@
               <el-link
                 v-else
                 class="action-item"
-                type="success"
                 icon="el-icon-s-flag"
                 @click="recommend(topic.topicId)"
                 >推荐</el-link
@@ -130,16 +134,19 @@
         @size-change="handleLimitChange"
       />
     </div>
+
+    <comments-dialog ref="commentsDialog" />
   </section>
 </template>
 
 <script>
 import Avatar from "@/components/Avatar";
 import mainHeight from "@/utils/mainHeight";
+import CommentsDialog from "../comments/CommentsDialog";
 
 export default {
   name: "Topics",
-  components: { Avatar },
+  components: { Avatar, CommentsDialog },
   data() {
     return {
       mainHeight: "300px",
@@ -181,6 +188,9 @@ export default {
     handleLimitChange(val) {
       this.page.limit = val;
       this.list();
+    },
+    showComments(topicId) {
+      this.$refs.commentsDialog.show("topic", topicId);
     },
     deleteSubmit(topicId) {
       const me = this;
@@ -317,8 +327,8 @@ export default {
         color: #111827;
       }
       .topic-mates {
-        margin-top: 3px;
-        font-size: 12px;
+        margin-top: 10px;
+        font-size: 13px;
         color: #6b7280;
 
         i {

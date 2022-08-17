@@ -57,17 +57,15 @@
             <template v-if="item.status === 0">
               <el-link
                 class="action-item"
-                type="primary"
                 icon="el-icon-view"
                 :href="('/article/' + item.id) | siteUrl"
                 target="_blank"
                 >查看详情</el-link
               >
-              <el-link
-                class="action-item"
-                type="primary"
-                icon="el-icon-edit"
-                @click="showUpdateTags(item)"
+              <el-link class="action-item" icon="el-icon-s-comment" @click="showComments(item.id)"
+                >查看评论</el-link
+              >
+              <el-link class="action-item" icon="el-icon-edit" @click="showUpdateTags(item)"
                 >修改标签</el-link
               >
               <el-link
@@ -135,16 +133,19 @@
         <el-button type="primary" @click.native="updateTags"> 提交 </el-button>
       </div>
     </el-dialog>
+
+    <comments-dialog ref="commentsDialog" />
   </section>
 </template>
 
 <script>
 import Avatar from "@/components/Avatar";
 import mainHeight from "@/utils/mainHeight";
+import CommentsDialog from "../comments/CommentsDialog";
 
 export default {
   name: "Articles",
-  components: { Avatar },
+  components: { Avatar, CommentsDialog },
   data() {
     return {
       mainHeight: "300px",
@@ -190,6 +191,9 @@ export default {
     handleLimitChange(val) {
       this.page.limit = val;
       this.list();
+    },
+    showComments(articleId) {
+      this.$refs.commentsDialog.show("article", articleId);
     },
     deleteSubmit(row) {
       const me = this;

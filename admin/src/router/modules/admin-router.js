@@ -47,15 +47,6 @@ const adminRouter = [
           icon: "iconfont icon-article",
         },
       },
-      {
-        name: "Comments",
-        path: "comments",
-        component: () => import("@/views/pages/comments/index"),
-        meta: {
-          title: "评论",
-          icon: "iconfont icon-comments",
-        },
-      },
     ],
   },
   {
