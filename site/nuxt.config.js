@@ -99,6 +99,14 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    publicPath: 'https://file.mlog.club/static/nuxtclient/',
+    optimizeCSS: true,
+    extractCSS: true,
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true,
+    },
     babel: {
       plugins: [
         [
