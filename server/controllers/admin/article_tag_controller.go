@@ -34,7 +34,7 @@ func (c *ArticleTagController) PostCreate() *web.JsonResult {
 
 	err := services.ArticleTagService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -42,7 +42,7 @@ func (c *ArticleTagController) PostCreate() *web.JsonResult {
 func (c *ArticleTagController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.ArticleTagService.Get(id)
 	if t == nil {
@@ -53,7 +53,7 @@ func (c *ArticleTagController) PostUpdate() *web.JsonResult {
 
 	err = services.ArticleTagService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

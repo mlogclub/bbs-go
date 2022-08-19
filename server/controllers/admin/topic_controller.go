@@ -43,11 +43,11 @@ func (c *TopicController) AnyList() *web.JsonResult {
 func (c *TopicController) PostRecommend() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	err = services.TopicService.SetRecommend(id, true)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -56,11 +56,11 @@ func (c *TopicController) PostRecommend() *web.JsonResult {
 func (c *TopicController) DeleteRecommend() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	err = services.TopicService.SetRecommend(id, false)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -68,7 +68,7 @@ func (c *TopicController) DeleteRecommend() *web.JsonResult {
 func (c *TopicController) PostDelete() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
@@ -76,7 +76,7 @@ func (c *TopicController) PostDelete() *web.JsonResult {
 	}
 	err = services.TopicService.Delete(id, user.Id, c.Ctx.Request())
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -84,11 +84,11 @@ func (c *TopicController) PostDelete() *web.JsonResult {
 func (c *TopicController) PostUndelete() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	err = services.TopicService.Undelete(id)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

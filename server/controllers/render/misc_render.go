@@ -89,7 +89,7 @@ Parameter:
 func BuildLoginSuccess(user *model.User, ref string) *web.JsonResult {
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.NewEmptyRspBuilder().
 		Put("token", token).

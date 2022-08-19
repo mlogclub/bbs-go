@@ -53,7 +53,7 @@ func (c *UserController) PostCreate() *web.JsonResult {
 
 	user, err := services.UserService.SignUp(username, email, nickname, password, password)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(c.buildUserItem(user))
 }
@@ -61,7 +61,7 @@ func (c *UserController) PostCreate() *web.JsonResult {
 func (c *UserController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	user := services.UserService.Get(id)
 	if user == nil {
@@ -87,7 +87,7 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 
 	err = services.UserService.Update(user)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(c.buildUserItem(user))
 }
@@ -113,7 +113,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
 	} else {
 		if err := services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request()); err != nil {
-			return web.JsonErrorMsg(err.Error())
+			return web.JsonError(err)
 		}
 	}
 	return web.JsonSuccess()

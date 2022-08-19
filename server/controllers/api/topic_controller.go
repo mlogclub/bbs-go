@@ -47,7 +47,7 @@ func (c *TopicController) PostCreate() *web.JsonResult {
 	form := model.GetCreateTopicForm(c.Ctx)
 
 	if err := spam.CheckTopic(user, form); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	topic, err := services.TopicService.Publish(user.Id, form)
@@ -148,7 +148,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *web.JsonResult {
 	}
 
 	if err := services.TopicService.Delete(topicId, user.Id, c.Ctx.Request()); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -157,7 +157,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *web.JsonResult {
 func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 	recommend, err := params.FormValueBool(c.Ctx, "recommend")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
@@ -169,7 +169,7 @@ func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 
 	err = services.TopicService.SetRecommend(topicId, recommend)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -192,7 +192,7 @@ func (c *TopicController) PostLikeBy(topicId int64) *web.JsonResult {
 	}
 	err := services.UserLikeService.TopicLike(user.Id, topicId)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -221,7 +221,7 @@ func (c *TopicController) GetRecent() *web.JsonResult {
 func (c *TopicController) GetUserTopics() *web.JsonResult {
 	userId, err := params.FormValueInt64(c.Ctx, "userId")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
 	user := services.UserTokenService.GetCurrent(c.Ctx)
@@ -249,7 +249,7 @@ func (c *TopicController) GetTagTopics() *web.JsonResult {
 		user       = services.UserTokenService.GetCurrent(c.Ctx)
 	)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	topics, cursor, hasMore := services.TopicService.GetTagTopics(tagId, cursor)
 	return web.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
@@ -263,7 +263,7 @@ func (c *TopicController) GetFavoriteBy(topicId int64) *web.JsonResult {
 	}
 	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -315,7 +315,7 @@ func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
 		sticky = params.FormValueBoolDefault(c.Ctx, "sticky", false) // 是否指定
 	)
 	if err := services.TopicService.SetSticky(topicId, sticky); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

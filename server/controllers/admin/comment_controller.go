@@ -86,7 +86,7 @@ func (c *CommentController) AnyList() *web.JsonResult {
 
 func (c *CommentController) PostDeleteBy(id int64) *web.JsonResult {
 	if err := services.CommentService.Delete(id); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	} else {
 		return web.JsonSuccess()
 	}

@@ -37,7 +37,7 @@ func (c *QQLoginController) GetCallback() *web.JsonResult {
 
 	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	user, codeErr := services.UserService.SignInByThirdAccount(thirdAccount)

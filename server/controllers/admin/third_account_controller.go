@@ -32,12 +32,12 @@ func (c *ThirdAccountController) PostCreate() *web.JsonResult {
 	t := &model.ThirdAccount{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.ThirdAccountService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -45,7 +45,7 @@ func (c *ThirdAccountController) PostCreate() *web.JsonResult {
 func (c *ThirdAccountController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.ThirdAccountService.Get(id)
 	if t == nil {
@@ -54,12 +54,12 @@ func (c *ThirdAccountController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.ThirdAccountService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

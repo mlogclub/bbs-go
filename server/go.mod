@@ -16,7 +16,7 @@ require (
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.0-beta4
 	github.com/microcosm-cc/bluemonday v1.0.19
-	github.com/mlogclub/simple v1.2.0
+	github.com/mlogclub/simple v1.2.1
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/panjf2000/ants/v2 v2.4.8
 	github.com/robfig/cron v1.2.0

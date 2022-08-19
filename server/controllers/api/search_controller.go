@@ -35,7 +35,7 @@ func (c *SearchController) PostTopic() *web.JsonResult {
 
 	docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	items := render.BuildSearchTopics(docs)

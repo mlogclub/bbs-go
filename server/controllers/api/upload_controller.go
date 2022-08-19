@@ -25,7 +25,7 @@ func (c *UploadController) Post() *web.JsonResult {
 
 	file, header, err := c.Ctx.FormFile("image")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	defer file.Close()
 
@@ -36,14 +36,14 @@ func (c *UploadController) Post() *web.JsonResult {
 	contentType := header.Header.Get("Content-Type")
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
 
 	url, err := uploader.PutImage(fileBytes, contentType)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }

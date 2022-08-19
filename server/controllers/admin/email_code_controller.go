@@ -31,12 +31,12 @@ func (c *EmailCodeController) PostCreate() *web.JsonResult {
 	t := &model.EmailCode{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.EmailCodeService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -44,7 +44,7 @@ func (c *EmailCodeController) PostCreate() *web.JsonResult {
 func (c *EmailCodeController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.EmailCodeService.Get(id)
 	if t == nil {
@@ -53,12 +53,12 @@ func (c *EmailCodeController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.EmailCodeService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

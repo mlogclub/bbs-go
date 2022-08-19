@@ -25,7 +25,7 @@ func (c *CheckinController) PostCheckin() *web.JsonResult {
 	if err == nil {
 		return web.JsonSuccess()
 	} else {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 }
 

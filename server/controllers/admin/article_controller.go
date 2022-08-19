@@ -89,7 +89,7 @@ func (c *ArticleController) PostUpdate() *web.JsonResult {
 	}
 
 	if err := params.ReadForm(c.Ctx, t); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	// 数据校验
@@ -106,7 +106,7 @@ func (c *ArticleController) PostUpdate() *web.JsonResult {
 	t.UpdateTime = dates.NowTimestamp()
 	err := services.ArticleService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	return web.JsonData(t)
@@ -134,7 +134,7 @@ func (c *ArticleController) PostDelete() *web.JsonResult {
 	}
 	err := services.ArticleService.Delete(id)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -146,7 +146,7 @@ func (c *ArticleController) PostPending() *web.JsonResult {
 	}
 	err := services.ArticleService.UpdateColumn(id, "status", constants.StatusOk)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

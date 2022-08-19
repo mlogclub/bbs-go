@@ -31,12 +31,12 @@ func (c *CheckInController) PostCreate() *web.JsonResult {
 	t := &model.CheckIn{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.CheckInService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -44,7 +44,7 @@ func (c *CheckInController) PostCreate() *web.JsonResult {
 func (c *CheckInController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.CheckInService.Get(id)
 	if t == nil {
@@ -53,12 +53,12 @@ func (c *CheckInController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.CheckInService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

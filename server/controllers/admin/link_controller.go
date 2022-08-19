@@ -33,13 +33,13 @@ func (c *LinkController) PostCreate() *web.JsonResult {
 	t := &model.Link{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t.CreateTime = dates.NowTimestamp()
 
 	err = services.LinkService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -47,7 +47,7 @@ func (c *LinkController) PostCreate() *web.JsonResult {
 func (c *LinkController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.LinkService.Get(id)
 	if t == nil {
@@ -56,12 +56,12 @@ func (c *LinkController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.LinkService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

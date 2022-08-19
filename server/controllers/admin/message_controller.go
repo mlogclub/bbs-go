@@ -34,7 +34,7 @@ func (c *MessageController) PostCreate() *web.JsonResult {
 
 	err := services.MessageService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -42,7 +42,7 @@ func (c *MessageController) PostCreate() *web.JsonResult {
 func (c *MessageController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.MessageService.Get(id)
 	if t == nil {
@@ -53,7 +53,7 @@ func (c *MessageController) PostUpdate() *web.JsonResult {
 
 	err = services.MessageService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

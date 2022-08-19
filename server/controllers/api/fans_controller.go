@@ -30,7 +30,7 @@ func (c *FansController) PostFollow() *web.JsonResult {
 
 	err := services.UserFollowService.Follow(user.Id, otherId)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -48,7 +48,7 @@ func (c *FansController) PostUnfollow() *web.JsonResult {
 
 	err := services.UserFollowService.UnFollow(user.Id, otherId)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

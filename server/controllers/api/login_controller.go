@@ -36,7 +36,7 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 	}
 	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return render.BuildLoginSuccess(user, ref)
 }
@@ -59,7 +59,7 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 	}
 	user, err := services.UserService.SignIn(username, password)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return render.BuildLoginSuccess(user, ref)
 }
@@ -68,7 +68,7 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 func (c *LoginController) GetSignout() *web.JsonResult {
 	err := services.UserTokenService.Signout(c.Ctx)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

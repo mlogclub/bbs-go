@@ -41,7 +41,7 @@ func (c *TagController) PostCreate() *web.JsonResult {
 	t := &model.Tag{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	if len(t.Name) == 0 {
@@ -57,7 +57,7 @@ func (c *TagController) PostCreate() *web.JsonResult {
 
 	err = services.TagService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -65,7 +65,7 @@ func (c *TagController) PostCreate() *web.JsonResult {
 func (c *TagController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.TagService.Get(id)
 	if t == nil {
@@ -74,7 +74,7 @@ func (c *TagController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	if len(t.Name) == 0 {
@@ -87,7 +87,7 @@ func (c *TagController) PostUpdate() *web.JsonResult {
 	t.UpdateTime = dates.NowTimestamp()
 	err = services.TagService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

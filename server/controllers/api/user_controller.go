@@ -69,7 +69,7 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 		"description": description,
 	})
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -86,7 +86,7 @@ func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 	}
 	err := services.UserService.UpdateAvatar(user.Id, avatar)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -100,7 +100,7 @@ func (c *UserController) PostSetUsername() *web.JsonResult {
 	username := strings.TrimSpace(params.FormValue(c.Ctx, "username"))
 	err := services.UserService.SetUsername(user.Id, username)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -114,7 +114,7 @@ func (c *UserController) PostSetEmail() *web.JsonResult {
 	email := strings.TrimSpace(params.FormValue(c.Ctx, "email"))
 	err := services.UserService.SetEmail(user.Id, email)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -129,7 +129,7 @@ func (c *UserController) PostSetPassword() *web.JsonResult {
 	rePassword := params.FormValue(c.Ctx, "rePassword")
 	err := services.UserService.SetPassword(user.Id, password, rePassword)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -146,7 +146,7 @@ func (c *UserController) PostUpdatePassword() *web.JsonResult {
 		rePassword  = params.FormValue(c.Ctx, "rePassword")
 	)
 	if err := services.UserService.UpdatePassword(user.Id, oldPassword, password, rePassword); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -162,7 +162,7 @@ func (c *UserController) PostSetBackgroundImage() *web.JsonResult {
 		return web.JsonErrorMsg("请上传图片")
 	}
 	if err := services.UserService.UpdateBackgroundImage(user.Id, backgroundImage); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -279,7 +279,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
 	} else {
 		if err := services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request()); err != nil {
-			return web.JsonErrorMsg(err.Error())
+			return web.JsonError(err)
 		}
 	}
 	return web.JsonSuccess()
@@ -292,7 +292,7 @@ func (c *UserController) PostSend_verify_email() *web.JsonResult {
 		return web.JsonError(common.ErrorNotLogin)
 	}
 	if err := services.UserService.SendEmailVerifyEmail(user.Id); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }
@@ -308,7 +308,7 @@ func (c *UserController) PostVerify_email() *web.JsonResult {
 		err   error
 	)
 	if email, err = services.UserService.VerifyEmail(token); err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.NewEmptyRspBuilder().Put("email", email).JsonResult()
 }

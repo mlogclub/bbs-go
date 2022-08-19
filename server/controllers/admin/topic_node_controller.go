@@ -33,12 +33,12 @@ func (c *TopicNodeController) PostCreate() *web.JsonResult {
 	t := &model.TopicNode{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t.CreateTime = dates.NowTimestamp()
 	err = services.TopicNodeService.Create(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }
@@ -46,7 +46,7 @@ func (c *TopicNodeController) PostCreate() *web.JsonResult {
 func (c *TopicNodeController) PostUpdate() *web.JsonResult {
 	id, err := params.FormValueInt64(c.Ctx, "id")
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	t := services.TopicNodeService.Get(id)
 	if t == nil {
@@ -55,12 +55,12 @@ func (c *TopicNodeController) PostUpdate() *web.JsonResult {
 
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	err = services.TopicNodeService.Update(t)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 	return web.JsonData(t)
 }

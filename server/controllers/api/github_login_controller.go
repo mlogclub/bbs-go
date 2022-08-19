@@ -37,7 +37,7 @@ func (c *GithubLoginController) GetCallback() *web.JsonResult {
 
 	thirdAccount, err := services.ThirdAccountService.GetOrCreateByGithub(code, state)
 	if err != nil {
-		return web.JsonErrorMsg(err.Error())
+		return web.JsonError(err)
 	}
 
 	user, codeErr := services.UserService.SignInByThirdAccount(thirdAccount)
