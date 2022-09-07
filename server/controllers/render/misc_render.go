@@ -18,6 +18,7 @@ import (
 func xssProtection(htmlContent string) string {
 	ugcProtection := bluemonday.UGCPolicy() // 用户生成内容模式
 	ugcProtection.AllowAttrs("class").OnElements("code")
+	ugcProtection.AllowAttrs("start").OnElements("ol", "ul", "li")
 	return ugcProtection.Sanitize(htmlContent)
 }
 
