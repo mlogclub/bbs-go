@@ -110,7 +110,7 @@
     margin-right: 5px;
     line-height: 32px;
 
-    &>span {
+    & > span {
       margin-left: 5px;
 
       a {
@@ -132,6 +132,8 @@
 
   .article-content {
     font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     a.article-share-summary {
       color: var(--text-color);

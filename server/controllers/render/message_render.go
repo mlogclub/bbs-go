@@ -3,8 +3,9 @@ package render
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
-	"bbs-go/pkg/msg"
 	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/msg"
+
 	"github.com/tidwall/gjson"
 )
 
