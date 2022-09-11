@@ -116,6 +116,29 @@ export default {
             styleLibraryName: 'theme-chalk',
           },
         ],
+        [
+          'prismjs',
+          {
+            languages: [
+              'html',
+              'css',
+              'javascript',
+              'php',
+              'dart',
+              'bash',
+              'nginx',
+              'sql',
+              'c',
+              'cpp',
+              'python',
+              'go',
+              'java',
+            ],
+            plugins: ['line-numbers'],
+            theme: 'tomorrow',
+            css: true,
+          },
+        ],
       ],
       presets(env, [preset, options]) {
         return [['@nuxt/babel-preset-app', options]]

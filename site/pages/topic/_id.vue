@@ -43,7 +43,7 @@
 
               <!--内容-->
               <div
-                class="topic-content content"
+                class="topic-content content line-numbers"
                 :class="{
                   'topic-tweet': topic.type === 1,
                 }"
@@ -185,7 +185,7 @@
 </template>
 
 <script>
-import CommonHelper from '~/common/CommonHelper'
+import Prism from 'prismjs'
 
 export default {
   async asyncData({ $axios, params, error }) {
@@ -238,22 +238,6 @@ export default {
   head() {
     return {
       title: this.$topicSiteTitle(this.topic),
-      link: [
-        {
-          rel: 'stylesheet',
-          href: CommonHelper.highlightCss,
-        },
-      ],
-      script: [
-        {
-          type: 'text/javascript',
-          src: CommonHelper.highlightScript,
-          callback: () => {
-            // 客户端渲染的时候执行这里进行代码高亮
-            CommonHelper.initHighlight()
-          },
-        },
-      ],
     }
   },
   computed: {
@@ -264,9 +248,7 @@ export default {
   mounted() {
     // 加载隐藏内容
     this.getHideContent()
-    // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
-    // 所以服务端渲染时会调用这里的方法进行代码高亮
-    CommonHelper.initHighlight(this)
+    Prism.highlightAll()
   },
   methods: {
     commentCreated() {
