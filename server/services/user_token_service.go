@@ -2,7 +2,7 @@ package services
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -82,7 +82,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *model.User {
 func (s *userTokenService) CheckLogin(ctx iris.Context) (*model.User, *web.CodeError) {
 	user := s.GetCurrent(ctx)
 	if user == nil {
-		return nil, common.ErrorNotLogin
+		return nil, errs.NotLogin
 	}
 	return user, nil
 }

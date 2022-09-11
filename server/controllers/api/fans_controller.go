@@ -3,7 +3,7 @@ package api
 import (
 	"bbs-go/controllers/render"
 	"bbs-go/model"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 	"strconv"
 
@@ -20,7 +20,7 @@ type FansController struct {
 func (c *FansController) PostFollow() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 
 	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -38,7 +38,7 @@ func (c *FansController) PostFollow() *web.JsonResult {
 func (c *FansController) PostUnfollow() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 
 	otherId := params.FormValueInt64Default(c.Ctx, "userId", 0)

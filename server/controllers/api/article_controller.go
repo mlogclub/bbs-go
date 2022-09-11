@@ -3,7 +3,7 @@ package api
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/spam"
 	"strconv"
 
@@ -168,7 +168,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 func (c *ArticleController) PostFavoriteBy(articleId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	err := services.FavoriteService.AddArticleFavorite(user.Id, articleId)
 	if err != nil {

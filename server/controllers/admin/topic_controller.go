@@ -8,7 +8,7 @@ import (
 	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/controllers/render"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 )
 
@@ -72,7 +72,7 @@ func (c *TopicController) PostDelete() *web.JsonResult {
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	err = services.TopicService.Delete(id, user.Id, c.Ctx.Request())
 	if err != nil {

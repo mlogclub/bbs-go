@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/model"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/spam"
 	"strconv"
 
@@ -69,7 +69,7 @@ func (c *CommentController) PostCreate() *web.JsonResult {
 func (c *CommentController) PostLikeBy(commentId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	err := services.UserLikeService.CommentLike(user.Id, commentId)
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 )
 
@@ -32,7 +32,7 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 		return web.JsonErrorMsg("账号密码登录/注册已禁用")
 	}
 	if !captcha.VerifyString(captchaId, captchaCode) {
-		return web.JsonError(common.CaptchaError)
+		return web.JsonError(errs.CaptchaError)
 	}
 	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword)
 	if err != nil {
@@ -55,7 +55,7 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 	// 	return web.JsonErrorMsg("账号密码登录/注册已禁用")
 	// }
 	if !captcha.VerifyString(captchaId, captchaCode) {
-		return web.JsonError(common.CaptchaError)
+		return web.JsonError(errs.CaptchaError)
 	}
 	user, err := services.UserService.SignIn(username, password)
 	if err != nil {

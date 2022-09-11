@@ -2,8 +2,9 @@ package spam
 
 import (
 	"bbs-go/model"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
+
 	"github.com/dchest/captcha"
 )
 
@@ -15,7 +16,7 @@ func (CaptchaStrategy) Name() string {
 
 func (CaptchaStrategy) CheckTopic(user *model.User, form model.CreateTopicForm) error {
 	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
-		return common.CaptchaError
+		return errs.CaptchaError
 	}
 	return nil
 }

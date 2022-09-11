@@ -1,11 +1,11 @@
-package common
+package errs
 
 import (
 	"github.com/mlogclub/simple/web"
 )
 
 var (
-	ErrorNotLogin       = web.NewError(1, "请先登录")
+	NotLogin            = web.NewError(1, "请先登录")
 	CaptchaError        = web.NewError(1000, "验证码错误")
 	ForbiddenError      = web.NewError(1001, "已被禁言")
 	UserDisabled        = web.NewError(1002, "账号已禁用")

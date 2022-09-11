@@ -3,8 +3,8 @@ package services
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/common"
 	"bbs-go/pkg/email"
+	"bbs-go/pkg/errs"
 	"bbs-go/pkg/uploader"
 	"bbs-go/pkg/validate"
 	"database/sql"
@@ -541,19 +541,19 @@ func (s *userService) VerifyEmail(token string) (string, error) {
 }
 
 // CheckPostStatus 用于在发表内容时检查用户状态
-func (s *userService) CheckPostStatus(user *model.User) *web.CodeError {
+func (s *userService) CheckPostStatus(user *model.User) error {
 	if user == nil {
-		return common.ErrorNotLogin
+		return errs.NotLogin
 	}
 	if user.Status != constants.StatusOk {
-		return common.UserDisabled
+		return errs.UserDisabled
 	}
 	if user.IsForbidden() {
-		return common.ForbiddenError
+		return errs.ForbiddenError
 	}
 	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds)
 	if user.InObservationPeriod(observeSeconds) {
-		return web.NewError(common.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
+		return web.NewError(errs.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
 	}
 	return nil
 }

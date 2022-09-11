@@ -2,7 +2,7 @@ package api
 
 import (
 	"bbs-go/controllers/render"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 	"strconv"
 
@@ -18,7 +18,7 @@ type FeedController struct {
 func (c *FeedController) GetTopics() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
 	topics, cursor, hasMore := services.UserFeedService.GetTopics(user.Id, cursor)

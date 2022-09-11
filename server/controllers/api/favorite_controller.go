@@ -5,7 +5,7 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 )
 
@@ -32,7 +32,7 @@ func (c *FavoriteController) GetDelete() *web.JsonResult {
 	entityType := params.FormValue(c.Ctx, "entityType")
 	entityId := params.FormValueInt64Default(c.Ctx, "entityId", 0)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	tmp := services.FavoriteService.GetBy(user.Id, entityType, entityId)
 	if tmp != nil {

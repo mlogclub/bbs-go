@@ -2,7 +2,7 @@ package admin
 
 import (
 	"bbs-go/model/constants"
-	"bbs-go/pkg/common"
+	"bbs-go/pkg/errs"
 	"strconv"
 	"strings"
 
@@ -96,7 +96,7 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 func (c *UserController) PostForbidden() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(common.ErrorNotLogin)
+		return web.JsonError(errs.NotLogin)
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
 		return web.JsonErrorMsg("无权限")
