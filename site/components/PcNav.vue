@@ -48,7 +48,7 @@
             class="navbar-item has-dropdown is-hoverable user-menus"
           >
             <nuxt-link :to="'/user/' + user.id" class="navbar-link">
-              <no-ssr><avatar :user="user" :size="30" /></no-ssr>
+              <client-only><avatar :user="user" :size="30" /></client-only>
               <span class="user-menus-nickname">{{ user.nickname }}</span>
             </nuxt-link>
             <div class="navbar-dropdown">

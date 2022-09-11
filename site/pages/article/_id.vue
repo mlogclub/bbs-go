@@ -81,7 +81,7 @@
 
             <div
               v-lazy-container="{ selector: 'img' }"
-              class="article-content content"
+              class="article-content content line-numbers"
               itemprop="articleBody"
               v-html="article.content"
             ></div>
@@ -139,8 +139,8 @@
 </template>
 
 <script>
+import Prism from 'prismjs'
 import UserHelper from '~/common/UserHelper'
-import CommonHelper from '~/common/CommonHelper'
 
 export default {
   async asyncData({ $axios, params, error }) {
@@ -210,22 +210,6 @@ export default {
         { hid: 'description', name: 'description', content: this.description },
         { hid: 'keywords', name: 'keywords', content: this.keywords },
       ],
-      link: [
-        {
-          rel: 'stylesheet',
-          href: CommonHelper.highlightCss,
-        },
-      ],
-      script: [
-        {
-          type: 'text/javascript',
-          src: CommonHelper.highlightScript,
-          callback: () => {
-            // 客户端渲染的时候执行这里进行代码高亮
-            CommonHelper.initHighlight()
-          },
-        },
-      ],
     }
   },
   computed: {
@@ -250,9 +234,7 @@ export default {
     },
   },
   mounted() {
-    // 为了解决服务端渲染时，没有刷新meta中的script，callback没执行，导致代码高亮失败的问题
-    // 所以服务端渲染时会调用这里的方法进行代码高亮
-    CommonHelper.initHighlight(this)
+    Prism.highlightAll()
   },
   methods: {
     deleteArticle(articleId) {

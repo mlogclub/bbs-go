@@ -43,7 +43,7 @@
 
               <!--内容-->
               <div
-                class="topic-content content line-numbers"
+                class="topic-content content"
                 :class="{
                   'topic-tweet': topic.type === 1,
                 }"
@@ -55,7 +55,7 @@
                 <div
                   ref="topicContent"
                   v-lazy-container="{ selector: 'img' }"
-                  class="topic-content-detail"
+                  class="topic-content-detail line-numbers"
                   v-html="topic.content"
                 ></div>
                 <ul
