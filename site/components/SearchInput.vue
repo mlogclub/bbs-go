@@ -21,7 +21,7 @@
         @keyup.up="changeSelect(-1)"
         @keyup.enter="searchBoxOnEnter"
       />
-      <span>
+      <span @click="submitSearch">
         <i class="iconfont icon-search" />
       </span>
     </div>
@@ -229,6 +229,11 @@ export default {
         outline: none;
       }
     }
+  }
+
+  span {
+    padding: 0 4px 0 10px;
+    cursor: pointer;
   }
 
   .histories {
