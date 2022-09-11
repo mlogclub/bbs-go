@@ -56,6 +56,7 @@ export default {
     }
     .topic-search-item-summary {
       font-size: 80%;
+      cursor: pointer;
     }
     .topic-mates {
       font-size: 80%;
