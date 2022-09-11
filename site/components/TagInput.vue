@@ -100,6 +100,9 @@ export default {
   },
   methods: {
     removeTag(event, tag) {
+      if (event.currentTarget.value) {
+        return
+      }
       const selectionStart = this.$refs.tagInput.selectionStart
       if (!this.inputTag || selectionStart === 0) {
         // input框没内容，或者光标在首位的时候就删除最后一个标签
