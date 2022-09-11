@@ -24,7 +24,6 @@
       @input="autocomplete"
       @keydown.delete="removeTag"
       @keydown.enter="addTag"
-      @keydown.32="addTag"
       @keydown.186="addTag"
       @keydown.188="addTag"
       @keydown.38="selectUp"
