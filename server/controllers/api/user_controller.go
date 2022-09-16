@@ -91,6 +91,22 @@ func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
+func (c *UserController) PostUpdateNickname() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	nickname := strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
+	if len(nickname) == 0 {
+		return web.JsonErrorMsg("Nickname cannot be empty")
+	}
+	err := services.UserService.UpdateNickname(user.Id, nickname)
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
 // 设置用户名
 func (c *UserController) PostSetUsername() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)

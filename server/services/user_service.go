@@ -352,6 +352,11 @@ func (s *userService) UpdateAvatar(userId int64, avatar string) error {
 	return s.UpdateColumn(userId, "avatar", avatar)
 }
 
+// UpdateNickname 更新昵称
+func (s *userService) UpdateNickname(userId int64, nickname string) error {
+	return s.UpdateColumn(userId, "nickname", nickname)
+}
+
 // UpdateBackgroundImage 修改背景图
 func (s *userService) UpdateBackgroundImage(userId int64, backgroundImage string) error {
 	return s.UpdateColumn(userId, "background_image", backgroundImage)
