@@ -357,6 +357,31 @@ func (s *userService) UpdateNickname(userId int64, nickname string) error {
 	return s.UpdateColumn(userId, "nickname", nickname)
 }
 
+// UpdateGender 修改性别
+func (s *userService) UpdateGender(userId int64, gender string) error {
+	if strs.IsBlank(gender) {
+		return s.UpdateColumn(userId, "gender", "")
+	} else {
+		if gender != string(constants.GenderMale) && gender != string(constants.GenderFemale) {
+			return errors.New("invalidate gender value")
+		}
+		return s.UpdateColumn(userId, "gender", gender)
+	}
+}
+
+// UpdateBirthday 修改生日
+func (s *userService) UpdateBirthday(userId int64, birthdayStr string) error {
+	if strs.IsBlank(birthdayStr) {
+		return s.UpdateColumn(userId, "birthday", "")
+	} else {
+		birthday, err := dates.Parse(birthdayStr, dates.FmtDate)
+		if err != nil {
+			return err
+		}
+		return s.UpdateColumn(userId, "birthday", birthday)
+	}
+}
+
 // UpdateBackgroundImage 修改背景图
 func (s *userService) UpdateBackgroundImage(userId int64, backgroundImage string) error {
 	return s.UpdateColumn(userId, "background_image", backgroundImage)

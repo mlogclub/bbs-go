@@ -7,8 +7,10 @@ import (
 	"bbs-go/pkg/validate"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
@@ -51,22 +53,42 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 	if user.Id != userId {
 		return web.JsonErrorMsg("无权限")
 	}
-	nickname := strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
-	homePage := params.FormValue(c.Ctx, "homePage")
-	description := params.FormValue(c.Ctx, "description")
+	var (
+		nickname    = strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
+		homePage    = params.FormValue(c.Ctx, "homePage")
+		description = params.FormValue(c.Ctx, "description")
+		gender      = strings.TrimSpace(params.FormValue(c.Ctx, "gender"))
+		birthdayStr = strings.TrimSpace(params.FormValue(c.Ctx, "birthday"))
+		birthday    time.Time
+		err         error
+	)
 
 	if len(nickname) == 0 {
 		return web.JsonErrorMsg("昵称不能为空")
+	}
+
+	if strs.IsNotBlank(gender) {
+		if gender != string(constants.GenderMale) && gender != string(constants.GenderFemale) {
+			return web.JsonErrorMsg("性别数据错误")
+		}
+	}
+	if strs.IsNotBlank(birthdayStr) {
+		birthday, err = dates.Parse(birthdayStr, dates.FmtDate)
+		if err != nil {
+			return web.JsonError(err)
+		}
 	}
 
 	if len(homePage) > 0 && validate.IsURL(homePage) != nil {
 		return web.JsonErrorMsg("个人主页地址错误")
 	}
 
-	err := services.UserService.Updates(user.Id, map[string]interface{}{
+	err = services.UserService.Updates(user.Id, map[string]interface{}{
 		"nickname":    nickname,
-		"home_page":   homePage,
+		"homePage":    homePage,
 		"description": description,
+		"gender":      gender,
+		"birthday":    birthday,
 	})
 	if err != nil {
 		return web.JsonError(err)
@@ -101,6 +123,32 @@ func (c *UserController) PostUpdateNickname() *web.JsonResult {
 		return web.JsonErrorMsg("Nickname cannot be empty")
 	}
 	err := services.UserService.UpdateNickname(user.Id, nickname)
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
+func (c *UserController) PostUpdateGender() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	gender := strings.TrimSpace(params.FormValue(c.Ctx, "gender"))
+	err := services.UserService.UpdateGender(user.Id, gender)
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
+func (c *UserController) PostUpdateBirthday() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	birthday := strings.TrimSpace(params.FormValue(c.Ctx, "birthday"))
+	err := services.UserService.UpdateBirthday(user.Id, birthday)
 	if err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
