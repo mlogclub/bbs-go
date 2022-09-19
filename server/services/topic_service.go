@@ -286,18 +286,30 @@ func (s *topicService) GetTopicTags(topicId int64) []model.Tag {
 	return cache.TagCache.GetList(tagIds)
 }
 
-// GetTopics 获取帖子分页列表
-func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics []model.Topic, nextCursor int64, hasMore bool) {
-	limit := 20
+// GetTopics 帖子列表（最新、推荐、关注、节点）
+func (s *topicService) GetTopics(user *model.User, nodeId, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	var limit int = 20
+	if nodeId == constants.NodeIdFollow {
+		if user != nil {
+			return s._GetFollowTopics(user.Id, cursor)
+		}
+		return
+	} else {
+		return s._GetNodeTopics(nodeId, cursor, limit)
+	}
+}
+
+// _GetNodeTopics 帖子列表（最新、推荐、节点）
+func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int) (topics []model.Topic, nextCursor int64, hasMore bool) {
 	cnd := sqls.NewCnd()
 	if nodeId > 0 {
 		cnd.Eq("node_id", nodeId)
 	}
+	if nodeId == constants.NodeIdRecommend {
+		cnd.Eq("recommend", true)
+	}
 	if cursor > 0 {
 		cnd.Lt("last_comment_time", cursor)
-	}
-	if recommend {
-		cnd.Eq("recommend", true)
 	}
 	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(limit)
 	topics = repositories.TopicRepository.Find(sqls.DB(), cnd)
@@ -307,6 +319,33 @@ func (s *topicService) GetTopics(nodeId, cursor int64, recommend bool) (topics [
 	} else {
 		nextCursor = cursor
 	}
+	return
+}
+
+// _GetFollowTopics 关注帖子列表
+func (s *topicService) _GetFollowTopics(userId int64, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
+	var limit = 20
+	cnd := sqls.NewCnd().Eq("user_id", userId)
+	cnd.Eq("data_type", constants.EntityTopic)
+	if cursor > 0 {
+		cnd.Lt("create_time", cursor)
+	}
+	cnd.Desc("create_time").Limit(limit)
+
+	userFeeds := repositories.UserFeedRepository.Find(sqls.DB(), cnd)
+	if len(userFeeds) > 0 {
+		nextCursor = userFeeds[len(userFeeds)-1].CreateTime
+		hasMore = len(userFeeds) >= limit
+	} else {
+		nextCursor = cursor
+	}
+
+	var topicIds []int64
+	for _, item := range userFeeds {
+		topicIds = append(topicIds, item.DataId)
+	}
+	topics = TopicService.GetTopicByIds(topicIds)
+
 	return
 }
 

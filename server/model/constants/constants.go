@@ -107,3 +107,9 @@ const (
 	FollowStatusFollow = 1
 	FollowStatusBoth   = 2
 )
+
+const (
+	NodeIdNewest    int64 = 0
+	NodeIdRecommend int64 = -1
+	NodeIdFollow    int64 = -2
+)

@@ -2,7 +2,6 @@ package services
 
 import (
 	"bbs-go/model"
-	"bbs-go/model/constants"
 	"bbs-go/repositories"
 
 	"github.com/mlogclub/simple/sqls"
@@ -72,30 +71,4 @@ func (s *userFeedService) DeleteByUser(userId, authorId int64) {
 
 func (s *userFeedService) DeleteByDataId(dataId int64, dataType string) {
 	sqls.DB().Where("data_id = ? and data_type = ?", dataId, dataType).Delete(model.UserFeed{})
-}
-
-func (s *userFeedService) GetTopics(userId int64, cursor int64) (topics []model.Topic, nextCursor int64, hasMore bool) {
-	var limit = 20
-	cnd := sqls.NewCnd().Eq("user_id", userId)
-	cnd.Eq("data_type", constants.EntityTopic)
-	if cursor > 0 {
-		cnd.Lt("create_time", cursor)
-	}
-	cnd.Desc("create_time").Limit(limit)
-
-	userFeeds := repositories.UserFeedRepository.Find(sqls.DB(), cnd)
-	if len(userFeeds) > 0 {
-		nextCursor = userFeeds[len(userFeeds)-1].CreateTime
-		hasMore = len(userFeeds) >= limit
-	} else {
-		nextCursor = cursor
-	}
-
-	var topicIds []int64
-	for _, item := range userFeeds {
-		topicIds = append(topicIds, item.DataId)
-	}
-	topics = TopicService.GetTopicByIds(topicIds)
-
-	return
 }

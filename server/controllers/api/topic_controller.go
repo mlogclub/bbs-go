@@ -27,8 +27,26 @@ type TopicController struct {
 
 // 节点
 func (c *TopicController) GetNodes() *web.JsonResult {
-	nodes := services.TopicNodeService.GetNodes()
-	return web.JsonData(render.BuildNodes(nodes))
+	nodes := []model.NodeResponse{
+		{
+			NodeId: 0,
+			Name:   "最新",
+			Logo:   "", // TODO
+		},
+		{
+			NodeId: -1,
+			Name:   "推荐",
+			Logo:   "", // TODO
+		},
+		{
+			NodeId: -2,
+			Name:   "关注",
+			Logo:   "", // TODO
+		},
+	}
+	realNodes := render.BuildNodes(services.TopicNodeService.GetNodes())
+	nodes = append(nodes, realNodes...)
+	return web.JsonData(nodes)
 }
 
 // 节点信息
@@ -232,12 +250,14 @@ func (c *TopicController) GetUserTopics() *web.JsonResult {
 // 帖子列表
 func (c *TopicController) GetTopics() *web.JsonResult {
 	var (
-		cursor       = params.FormValueInt64Default(c.Ctx, "cursor", 0)
-		nodeId       = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
-		recommend, _ = params.FormValueBool(c.Ctx, "recommend")
-		user         = services.UserTokenService.GetCurrent(c.Ctx)
+		cursor = params.FormValueInt64Default(c.Ctx, "cursor", 0)
+		nodeId = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		user   = services.UserTokenService.GetCurrent(c.Ctx)
 	)
-	topics, cursor, hasMore := services.TopicService.GetTopics(nodeId, cursor, recommend)
+	if nodeId == constants.NodeIdFollow {
+		return web.JsonError(errs.NotLogin)
+	}
+	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor)
 	return web.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
 }
 
