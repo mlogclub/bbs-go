@@ -55,11 +55,6 @@ Smtp:
   Password: 请配置成你自己的
   SSL: true
 
-# 百度ai配置，用于自动分析文章摘要、标签
-BaiduAi:
-  ApiKey:
-  SecretKey:
-
 # 百度SEO相关配置
 # 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
 BaiduSEO:
