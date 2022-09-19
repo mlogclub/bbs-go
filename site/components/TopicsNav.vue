@@ -1,33 +1,14 @@
 <template>
   <nav class="dock-nav">
     <ul>
-      <li :class="{ active: currentNodeId === 0 }">
-        <nuxt-link to="/topics/node/newest">
-          <img class="node-logo" src="~/assets/images/new.png" />
-          <span class="node-name">最新</span>
-        </nuxt-link>
-      </li>
-      <li :class="{ active: currentNodeId === -1 }">
-        <nuxt-link to="/topics/node/recommend">
-          <img class="node-logo" src="~/assets/images/recommend2.png" />
-          <span class="node-name">推荐</span>
-        </nuxt-link>
-      </li>
-      <li :class="{ active: currentNodeId === -2 }">
-        <nuxt-link to="/topics/node/feed">
-          <img class="node-logo" src="~/assets/images/feed.png" />
-          <span class="node-name">关注</span>
-        </nuxt-link>
-      </li>
-      <li class="dock-nav-divider"></li>
+      <!-- <li class="dock-nav-divider"></li> -->
       <li
         v-for="node in nodes"
         :key="node.nodeId"
         :class="{ active: currentNodeId === node.nodeId }"
       >
-        <nuxt-link :to="'/topics/node/' + node.nodeId">
-          <img v-if="node.logo" class="node-logo" :src="node.logo" />
-          <img v-else class="node-logo" src="~/assets/images/node.png" />
+        <nuxt-link :to="nodeUrl(node)">
+          <img class="node-logo" :src="nodeLogo(node)" />
           <span class="node-name">{{ node.name }}</span>
         </nuxt-link>
       </li>
@@ -48,6 +29,32 @@ export default {
   computed: {
     currentNodeId() {
       return this.$store.state.env.currentNodeId
+    },
+  },
+  methods: {
+    nodeLogo(node) {
+      if (node.logo) {
+        return node.logo
+      }
+      if (node.nodeId === 0) {
+        return require('~/assets/images/new.png')
+      } else if (node.nodeId === -1) {
+        return require('~/assets/images/recommend.png')
+      } else if (node.nodeId === -2) {
+        return require('~/assets/images/feed.png')
+      }
+      return require('~/assets/images/node.png')
+    },
+    nodeUrl(node) {
+      if (node.nodeId > 0) {
+        return '/topics/node/' + node.nodeId
+      } else if (node.nodeId === 0) {
+        return '/topics/node/newest'
+      } else if (node.nodeId === -1) {
+        return '/topics/node/recommend'
+      } else if (node.nodeId === -2) {
+        return '/topics/node/feed'
+      }
     },
   },
 }

@@ -31,17 +31,14 @@ func (c *TopicController) GetNodes() *web.JsonResult {
 		{
 			NodeId: 0,
 			Name:   "最新",
-			Logo:   "", // TODO
 		},
 		{
 			NodeId: -1,
 			Name:   "推荐",
-			Logo:   "", // TODO
 		},
 		{
 			NodeId: -2,
 			Name:   "关注",
-			Logo:   "", // TODO
 		},
 	}
 	realNodes := render.BuildNodes(services.TopicNodeService.GetNodes())
