@@ -32,6 +32,8 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		Nickname:     user.Nickname,
 		Avatar:       user.Avatar,
 		SmallAvatar:  HandleOssImageStyleAvatar(user.Avatar),
+		Gender:       user.Gender,
+		Birthday:     user.Birthday,
 		TopicCount:   user.TopicCount,
 		CommentCount: user.CommentCount,
 		FansCount:    user.FansCount,

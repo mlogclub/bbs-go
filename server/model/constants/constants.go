@@ -113,3 +113,10 @@ const (
 	NodeIdRecommend int64 = -1
 	NodeIdFollow    int64 = -2
 )
+
+type Gender string
+
+const (
+	GenderMale   Gender = "Male"
+	GenderFemale Gender = "Female"
+)

@@ -2,23 +2,26 @@ package model
 
 import (
 	"bbs-go/model/constants"
+	"time"
 
 	"github.com/mlogclub/simple/web"
 )
 
 // UserInfo 用户简单信息
 type UserInfo struct {
-	Id           int64  `json:"id"`
-	Nickname     string `json:"nickname"`
-	Avatar       string `json:"avatar"`
-	SmallAvatar  string `json:"smallAvatar"`
-	TopicCount   int    `json:"topicCount"`   // 话题数量
-	CommentCount int    `json:"commentCount"` // 跟帖数量
-	FansCount    int    `json:"fansCount"`    // 粉丝数量
-	FollowCount  int    `json:"followCount"`  // 关注数量
-	Score        int    `json:"score"`        // 积分
-	Description  string `json:"description"`
-	CreateTime   int64  `json:"createTime"`
+	Id           int64            `json:"id"`
+	Nickname     string           `json:"nickname"`
+	Avatar       string           `json:"avatar"`
+	SmallAvatar  string           `json:"smallAvatar"`
+	Gender       constants.Gender `json:"gender"`
+	Birthday     *time.Time       `json:"birthday"`
+	TopicCount   int              `json:"topicCount"`   // 话题数量
+	CommentCount int              `json:"commentCount"` // 跟帖数量
+	FansCount    int              `json:"fansCount"`    // 粉丝数量
+	FollowCount  int              `json:"followCount"`  // 关注数量
+	Score        int              `json:"score"`        // 积分
+	Description  string           `json:"description"`
+	CreateTime   int64            `json:"createTime"`
 
 	Followed bool `json:"followed"`
 }
