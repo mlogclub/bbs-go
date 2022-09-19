@@ -5,7 +5,7 @@
       v-if="topicsPage"
       v-slot="{ results }"
       :init-data="topicsPage"
-      :url="'/api/topic/topics?nodeId=' + node.nodeId"
+      :url="url"
     >
       <topic-list :topics="results" />
     </load-more>
@@ -16,10 +16,11 @@
 export default {
   async asyncData({ $axios, params, store }) {
     const nodeId = parseInt(params.nodeId)
+    const url = '/api/topic/topics?nodeId=' + nodeId
     store.commit('env/setCurrentNodeId', nodeId) // 设置当前所在node
     const [node, topicsPage] = await Promise.all([
       $axios.get('/api/topic/node?nodeId=' + nodeId),
-      $axios.get('/api/topic/topics?nodeId=' + nodeId),
+      $axios.get(url),
     ])
     return {
       node,

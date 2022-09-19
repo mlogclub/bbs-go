@@ -5,7 +5,7 @@
       v-if="topicsPage"
       v-slot="{ results }"
       :init-data="topicsPage"
-      url="/api/topic/topics?recommend=true"
+      :url="url"
     >
       <topic-list :topics="results" />
     </load-more>
@@ -15,19 +15,19 @@
 <script>
 export default {
   async asyncData({ $axios, store }) {
-    store.commit('env/setCurrentNodeId', -1) // 设置当前所在node
+    const nodeId = -1
+    const url = '/api/topic/topics?nodeId=' + nodeId
+    store.commit('env/setCurrentNodeId', nodeId) // 设置当前所在node
     try {
-      const [topicsPage] = await Promise.all([
-        $axios.get('/api/topic/topics?recommend=true'),
-      ])
-      return { topicsPage }
+      const topicsPage = await $axios.get(url)
+      return { topicsPage, url }
     } catch (e) {
       console.error(e)
     }
   },
   head() {
     return {
-      title: this.$siteTitle('热门话题'),
+      title: this.$siteTitle('热门'),
       meta: [
         {
           hid: 'description',
