@@ -2,7 +2,6 @@ FROM node:16.15.0-alpine
 
 # env
 ENV HOST 0.0.0.0
-ENV NODE_ENV production
 ENV APP_HOME /code/bbs-go/site
 
 # code
@@ -15,6 +14,7 @@ RUN npm config set registry https://registry.npm.taobao.org \
 RUN npm install
 
 # build
+ENV NODE_ENV production
 RUN npm run build
 
 EXPOSE 3000
