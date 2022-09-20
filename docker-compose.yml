@@ -7,6 +7,8 @@ services:
       # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
     volumes:
       - .:/opt/server
+    ports:
+    - "8082:8082"
   site:
     build:
       dockerfile: Dockerfile
@@ -14,3 +16,5 @@ services:
       # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
     volumes:
       - .:/opt/site
+    ports:
+    - "3000:3000"
