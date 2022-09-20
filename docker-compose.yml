@@ -1,9 +1,16 @@
 version: "3.9"
 services:
-  app:
+  server:
     build:
       dockerfile: Dockerfile
-      context: .
-      target: dev
+      context: ./server
+      # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
     volumes:
-      - .:/opt/app/api
+      - .:/opt/server
+  site:
+    build:
+      dockerfile: Dockerfile
+      context: ./site
+      # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
+    volumes:
+      - .:/opt/site
