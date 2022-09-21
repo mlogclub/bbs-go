@@ -1,0 +1,79 @@
+Env: dev # 环境，线上环境：prod、测试环境：dev
+BaseUrl: http://127.0.0.1:3000 # 网站域名
+Port: 8082 # 端口
+LogFile: /data/logs/bbs-go.log # 日志文件
+ShowSql: false # 是否打印sql
+StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
+AllowedOrigins: 
+  - "*"
+
+# 数据库连接
+DB:
+  Url: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+  MaxIdleConns: 50
+  MaxOpenConns: 200
+
+# github登录配置
+Github:
+  ClientID: 
+  ClientSecret: 
+
+# 开源中国登录配置
+OSChina:
+  ClientID: 
+  ClientSecret: 
+
+# qq登录配置
+QQConnect:
+  AppId:
+  AppKey:
+
+# 上传配置
+Uploader:
+  Enable: aliyunOss
+  AliyunOss:
+    Host: 
+    Bucket: 
+    Endpoint: 
+    AccessId: 
+    AccessSecret: 
+    StyleSplitter: "!"
+    StyleAvatar: avatar
+    StylePreview: preview
+    StyleSmall: 768_auto
+    StyleDetail: detail
+  # 本地文件上传
+  Local:
+    Host: https://st.mlog.club/ # 上传文件域名
+    Path: /data/www/st.mlog.club # 上传目录
+
+# 邮件服务器配置，用于邮件通知
+Smtp:
+  Host: 
+  Port: 
+  Username: 
+  Password: 
+  SSL: true
+
+# 百度SEO相关配置
+# 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
+BaiduSEO:
+  Site:
+  Token:
+
+# 神马搜索SEO相关
+# 文档：https://zhanzhang.sm.cn/open/mip
+SmSEO:
+  Site:
+  UserName:
+  Token:
+
+# es 配置
+Es:
+  Url: 
+  Index: 
+
+# 微信配置
+WeixinConfig:
+  AppID:
+  AppSecret:

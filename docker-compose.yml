@@ -1,20 +1,44 @@
-version: "3.9"
+version: "1.0"
 services:
+  mysql:
+    image: 'mysql:8.0'
+    container_name: bbs-go-mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: bbsgo_db
+      MYSQL_USER: bbsgo
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - '.docker-compose/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d' # 初始化脚本件目录, 这个目录中的.sh/sql文件会以字母顺序依次执行
+      # - /data/mysql:/var/lib/mysql # 挂载数据件目录.如果非root账号执行，挂载目录必须是登录账号家目录
+      # - .docker-compose/mysql/conf.d:/etc/mysql/conf.d # 挂在配置文件目录s
+    restart: always # 关机或者重启docker同时重启容器
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
   server:
+    container_name: bbs-go-server
+    depends_on:
+      - bbs-go-mysql
+    ports:
+      - 8082:8082
     build:
       dockerfile: Dockerfile
       context: ./server
-      # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
     volumes:
       - .:/opt/server
-    ports:
-    - "8082:8082"
+    restart: on-failure
+
   site:
+    container_name: bbs-go-site
+    depends_on:
+      - bbs-go-server
+    ports:
+      - 3000:3000
     build:
       dockerfile: Dockerfile
       context: ./site
-      # target: dev # TODO dev 是啥意思？答：就是指定dockerfile文件的版本，会根据他选择不同的dockerfile
     volumes:
       - .:/opt/site
-    ports:
-    - "3000:3000"
+    restart: on-failure
