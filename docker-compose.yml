@@ -2,8 +2,6 @@ services:
   mysql:
     image: 'mysql:8.0'
     container_name: bbs-go-mysql
-    # ports:
-    #   - 3306:3306
     environment:
       TZ: Asia/Shanghai
       MYSQL_DATABASE: bbsgo_db
