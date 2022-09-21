@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   mysql:
-    image: 'mysql:8.0'
     container_name: bbs-go-mysql
+    image: 'mysql:8.0'
     environment:
       TZ: Asia/Shanghai
       MYSQL_DATABASE: bbsgo_db
@@ -24,6 +24,7 @@ services:
 
   server:
     container_name: bbs-go-server
+    image: mlogclub/bbs-go-server
     depends_on:
       mysql:
         condition: service_healthy
@@ -39,6 +40,7 @@ services:
 
   site:
     container_name: bbs-go-site
+    image: mlogclub/bbs-go-site
     depends_on:
       - server
     ports:
