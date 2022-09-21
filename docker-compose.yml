@@ -17,10 +17,19 @@ services:
     restart: always # 关机或者重启docker同时重启容器
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - bbs-go-mysql
+    command: bbs-go-mysql:3306
+    environment:
+      SLEEP_LENGTH: 3
+      TIMEOUT_LENGTH: 300
+
   server:
     container_name: bbs-go-server
     depends_on:
-      - bbs-go-mysql
+      - start_dependencies
     ports:
       - 8082:8082
     build:

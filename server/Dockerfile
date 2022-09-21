@@ -11,4 +11,4 @@ COPY . ./
 RUN go build
 
 EXPOSE 8082
-CMD ["./bbs-go" "--config bbs-go.docker.yaml"]
+CMD ["./bbs-go", "--config", "bbs-go.docker.yaml"]
