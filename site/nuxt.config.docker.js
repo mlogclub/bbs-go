@@ -87,7 +87,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://127.0.0.1:8082',
+    '/api/': 'http://bbs-go-server:8082',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -99,7 +99,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    publicPath: 'https://file.mlog.club/_nuxt/',
+    // publicPath: 'https://file.mlog.club/_nuxt/',
     optimizeCSS: true,
     extractCSS: true,
     splitChunks: {
@@ -114,6 +114,29 @@ export default {
           {
             libraryName: 'element-ui',
             styleLibraryName: 'theme-chalk',
+          },
+        ],
+        [
+          'prismjs',
+          {
+            languages: [
+              'html',
+              'css',
+              'javascript',
+              'php',
+              'dart',
+              'bash',
+              'nginx',
+              'sql',
+              'c',
+              'cpp',
+              'python',
+              'go',
+              'java',
+            ],
+            plugins: ['line-numbers'],
+            theme: 'tomorrow',
+            css: true,
           },
         ],
       ],

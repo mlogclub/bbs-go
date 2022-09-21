@@ -3,8 +3,8 @@ services:
   mysql:
     image: 'mysql:8.0'
     container_name: bbs-go-mysql
-    ports:
-      - 3306:3306
+    # ports:
+    #   - 3306:3306
     environment:
       TZ: Asia/Shanghai
       MYSQL_DATABASE: bbsgo_db
@@ -17,10 +17,10 @@ services:
       # - .docker-compose/mysql/conf.d:/etc/mysql/conf.d # 挂在配置文件目录s
     restart: always # 关机或者重启docker同时重启容器
     healthcheck:
-      test: '/usr/bin/mysql --user=bbsgo --password=123456 --execute "USE bbsgo_db; SHOW TABLES;"'
-      interval: 1s
+      test: '/usr/bin/mysql --user=bbsgo --password=123456 bbsgo_db --execute "SHOW TABLES;"'
+      interval: 3s
       timeout: 300s
-      retries: 10
+      retries: 100
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   server:

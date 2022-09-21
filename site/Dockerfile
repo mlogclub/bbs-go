@@ -7,6 +7,7 @@ ENV APP_HOME /code/bbs-go/site
 # code
 WORKDIR "$APP_HOME"
 COPY . ./
+COPY nuxt.config.docker.js ./nuxt.config.js
 
 # install
 RUN npm config set registry https://registry.npm.taobao.org \
