@@ -1,11 +1,12 @@
-FROM golang AS build-stage
+FROM golang:alpine AS builder
 
 ENV APP_HOME /code/bbs-go/server
 WORKDIR "$APP_HOME"
 
 COPY go.mod ./
 COPY go.sum ./
-RUN go mod download
+RUN go env -w GOPROXY=https://goproxy.cn,direct \
+    && go mod download
 
 COPY . ./
 RUN go build
