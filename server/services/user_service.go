@@ -357,6 +357,11 @@ func (s *userService) UpdateNickname(userId int64, nickname string) error {
 	return s.UpdateColumn(userId, "nickname", nickname)
 }
 
+// UpdateDescription 更新简介
+func (s *userService) UpdateDescription(userId int64, description string) error {
+	return s.UpdateColumn(userId, "description", description)
+}
+
 // UpdateGender 修改性别
 func (s *userService) UpdateGender(userId int64, gender string) error {
 	if strs.IsBlank(gender) {

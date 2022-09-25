@@ -129,6 +129,19 @@ func (c *UserController) PostUpdateNickname() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
+func (c *UserController) PostUpdateDescription() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	description := strings.TrimSpace(params.FormValue(c.Ctx, "description"))
+	err := services.UserService.UpdateDescription(user.Id, description)
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
 func (c *UserController) PostUpdateGender() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
