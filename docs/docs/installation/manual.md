@@ -265,15 +265,26 @@ Application started. Press CMD+C to shut down.
 
 bbs-go-server默认的端口是：8082（你也可以在bbs-go.yaml配置文件中自行修改），在浏览器中访问：`http://localhost:8082` 就可以看到效果了，浏览器会显示：Powered by bbs-go 。
 
-## site 端
+## site
 
 ### nodejs环境安装
+
+> **推荐nodejs 版本：v16.xx**
 
 site 模块是基于nodejs开发的，所以编译他首先要安装nodejs环境。
 
 - Windows下安装请参照这篇文章：https://www.cnblogs.com/liuqiyun/p/8133904.html
 - Linux/MacOS下安装可以使用nvm：https://github.com/nvm-sh/nvm
 - 或参照官网提供的《通过包管理器方式安装 Node.js》教程：https://nodejs.org/zh-cn/download/package-manager/
+
+使用以下命令验证nodejs是否安装成功
+
+```bash
+➜  ~ node -v
+v16.15.0
+➜  ~ npm -v
+8.1.0
+```
 
 ### 安装依赖
 
@@ -307,14 +318,24 @@ proxy: {
 
 ### 运行
 
-完成上面步骤之后，可以通过命令：`npm run dev` 以开发模式启动bbs-go-site。bbs-go-site服务默认端口为`3000`，启动成功后你就可以在浏览器通过：http://localhost:3000 访问和体验整个`bbs-go`的功能啦。
+确认正确安装依赖，配置修改成功后，在site目录使用以下命令已开发模式启动bbs-go-site项目：
 
-当然我们线上部署是不能使用：`npm run dev`方式执行的，向上部署方式如下：
+```bash
+npm run dev
+```
+
+bbs-go-site服务默认端口为`3000`，启动成功后你就可以在浏览器通过：[http://localhost:3000](http://localhost:3000)访问和体验整个`bbs-go`的功能啦。
+
+### 打包
+
+我们线上部署是不能使用：`npm run dev`方式的，该方式为开发者模式启动，系统限制最多只能同时打开三个网页。
+
+线上部署方式如下：
 
 1. 使用`npm run build`编译site模块，编译成功后会在目录中生成`.nuxt`目录。
 2. 使用`npm run start`启动服务，服务同样启动在：3000 端口。
 
-## admin 端
+## admin
 
 ### nodejs环境安装
 
@@ -365,17 +386,21 @@ VUE_APP_BASE_URL = 'http://localhost:3000'
 ### 运行
 
 确保依赖安装成功、配置正确后，可以使用命令：
+
 ```bash
 npm run serve
 ```
+
 来启动admin服务，使用该命令启动服务，会使用配置：`/admin/.env.development`
 
 ### 打包
 
 确保依赖安装成功、配置正确后，可以使用命令：
+
 ```bash
 npm run build
 ```
+
 来打包`bbs-go-admin`模块，打包时会使用配置：`/admin/.env.production`
 
 打包的成果为：`/admin/dist/`文件夹，将该文件夹部署到nginx或者其他web容器中即可正常访问。
