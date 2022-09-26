@@ -13,9 +13,9 @@
   "author": "mlog1@qq.com",
   "license": "ISC",
   "devDependencies": {
-    "vuepress": "^1.7.1"
+    "vuepress": "^1.9.7"
   },
   "dependencies": {
-    "@vuepress/core": "^1.7.1"
+    "@vuepress/core": "^1.9.7"
   }
 }

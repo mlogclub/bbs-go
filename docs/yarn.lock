@@ -1287,7 +1287,7 @@
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
 
-"@vuepress/core@1.9.7", "@vuepress/core@^1.7.1":
+"@vuepress/core@1.9.7", "@vuepress/core@^1.9.7":
   version "1.9.7"
   resolved "https://registry.npmmirror.com/@vuepress/core/-/core-1.9.7.tgz#a23388377f84322b933fc97b6cca32a90d8f5ce2"
   integrity sha512-u5eb1mfNLV8uG2UuxlvpB/FkrABxeMHqymTsixOnsOg2REziv9puEIbqaZ5BjLPvbCDvSj6rn+DwjENmBU+frQ==
@@ -8076,7 +8076,7 @@ vuepress-plugin-smooth-scroll@^0.0.3:
   dependencies:
     smoothscroll-polyfill "^0.4.3"
 
-vuepress@^1.7.1:
+vuepress@^1.9.7:
   version "1.9.7"
   resolved "https://registry.npmmirror.com/vuepress/-/vuepress-1.9.7.tgz#2cd6709a2228f5cef588115aaeabf820ab9ed7cc"
   integrity sha512-aSXpoJBGhgjaWUsT1Zs/ZO8JdDWWsxZRlVme/E7QYpn+ZB9iunSgPMozJQNFaHzcRq4kPx5A4k9UhzLRcvtdMg==
