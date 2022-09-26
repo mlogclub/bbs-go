@@ -31,19 +31,21 @@
             <div>
               <div
                 v-if="
-                  topicsPage && topicsPage.results && topicsPage.results.length
+                  articlesPage &&
+                  articlesPage.results &&
+                  articlesPage.results.length
                 "
               >
                 <load-more
-                  v-if="topicsPage"
+                  v-if="articlesPage"
                   v-slot="{ results }"
-                  :init-data="topicsPage"
-                  :url="'/api/topic/user/topics?userId=' + user.id"
+                  :init-data="articlesPage"
+                  :url="'/api/article/user/articles?userId=' + user.id"
                 >
-                  <topic-list :topics="results" :show-avatar="false" />
+                  <article-list :articles="results" />
                 </load-more>
               </div>
-              <div v-else class="notification is-primary">暂无话题</div>
+              <div v-else class="notification is-primary">暂无文章</div>
             </div>
           </div>
         </div>
@@ -66,13 +68,13 @@ export default {
       return
     }
 
-    const topicsPage = await $axios.get('/api/topic/user/topics', {
+    const articlesPage = await $axios.get('/api/article/user/articles', {
       params: { userId: params.userId },
     })
     return {
-      activeTab: 'topics',
+      activeTab: 'articles',
       user,
-      topicsPage,
+      articlesPage,
     }
   },
   data() {
@@ -80,7 +82,7 @@ export default {
   },
   head() {
     return {
-      title: this.$siteTitle(this.user.nickname + ' - 话题'),
+      title: this.$siteTitle(this.user.nickname + ' - 文章'),
     }
   },
   computed: {
