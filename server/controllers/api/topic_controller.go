@@ -251,7 +251,7 @@ func (c *TopicController) GetTopics() *web.JsonResult {
 		nodeId = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
 		user   = services.UserTokenService.GetCurrent(c.Ctx)
 	)
-	if nodeId == constants.NodeIdFollow {
+	if nodeId == constants.NodeIdFollow && user == nil {
 		return web.JsonError(errs.NotLogin)
 	}
 	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor)
