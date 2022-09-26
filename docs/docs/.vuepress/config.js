@@ -11,15 +11,19 @@ module.exports = {
             {
                 title: '简介',
                 path: '/introduction',
-                collapsable: true,
+                collapsable: false,
             },
             {
                 title: '安装',
-                path: '/installation',
-                collapsable: true,
+                collapsable: false, 
+                sidebarDepth: 2,    
+                children: [
+                    'installation/manual',
+                    'installation/docker'
+                ]
             },
         ],
-        sidebarDepth: 2,
+        displayAllHeaders: true,
         search: true,
         // 以下为可选的编辑链接选项
         // 假如你的文档仓库和项目本身不在一个仓库：
