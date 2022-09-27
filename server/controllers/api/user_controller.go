@@ -85,7 +85,7 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 
 	err = services.UserService.Updates(user.Id, map[string]interface{}{
 		"nickname":    nickname,
-		"homePage":    homePage,
+		"home_page":   homePage,
 		"description": description,
 		"gender":      gender,
 		"birthday":    birthday,
