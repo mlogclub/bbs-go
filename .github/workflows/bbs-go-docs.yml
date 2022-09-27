@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: ./docs/package-lock.json
+          cache-dependency-path: '**/package-lock.json'
       - name: build
         working-directory: ./docs
         run: |
