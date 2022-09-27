@@ -25,8 +25,7 @@ type TopicController struct {
 	Ctx iris.Context
 }
 
-// 节点
-func (c *TopicController) GetNodes() *web.JsonResult {
+func (c *TopicController) GetNode_navs() *web.JsonResult {
 	nodes := []model.NodeResponse{
 		{
 			NodeId: 0,
@@ -43,6 +42,12 @@ func (c *TopicController) GetNodes() *web.JsonResult {
 	}
 	realNodes := render.BuildNodes(services.TopicNodeService.GetNodes())
 	nodes = append(nodes, realNodes...)
+	return web.JsonData(nodes)
+}
+
+// 节点
+func (c *TopicController) GetNodes() *web.JsonResult {
+	nodes := render.BuildNodes(services.TopicNodeService.GetNodes())
 	return web.JsonData(nodes)
 }
 

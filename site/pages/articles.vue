@@ -18,12 +18,11 @@
 export default {
   async asyncData({ $axios, store }) {
     try {
-      const [nodes, scoreRank, links] = await Promise.all([
-        $axios.get('/api/topic/nodes'),
+      const [scoreRank, links] = await Promise.all([
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
       ])
-      return { nodes, scoreRank, links }
+      return { scoreRank, links }
     } catch (e) {
       console.error(e)
     }

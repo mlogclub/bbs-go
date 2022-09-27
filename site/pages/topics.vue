@@ -23,7 +23,7 @@ export default {
     try {
       store.commit('env/setCurrentNodeId', 0) // 设置当前所在node
       const [nodes, scoreRank, links] = await Promise.all([
-        $axios.get('/api/topic/nodes'),
+        $axios.get('/api/topic/node_navs'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
       ])
