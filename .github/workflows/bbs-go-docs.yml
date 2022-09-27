@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+          cache-dependency-path: './docs/yarn.json'
       - name: build
         working-directory: ./docs
         run: |
