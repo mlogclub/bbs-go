@@ -70,13 +70,13 @@ func (s *userLikeService) Delete(id int64) {
 // 统计数量
 func (s *userLikeService) Count(entityType string, entityId int64) int64 {
 	var count int64 = 0
-	sqls.DB().Model(&model.UserLike{}).Where("entity_type = ?", entityType).Where("entity_id = ?", entityId).Count(&count)
+	sqls.DB().Model(&model.UserLike{}).Where("entity_id = ?", entityId).Where("entity_type = ?", entityType).Count(&count)
 	return count
 }
 
 // 最近点赞
 func (s *userLikeService) Recent(entityType string, entityId int64, count int) []model.UserLike {
-	return s.Find(sqls.NewCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Desc("id").Limit(count))
+	return s.Find(sqls.NewCnd().Eq("entity_id", entityId).Eq("entity_type", entityType).Desc("id").Limit(count))
 }
 
 // Exists 是否点赞
@@ -88,7 +88,7 @@ func (s *userLikeService) Exists(userId int64, entityType string, entityId int64
 // 是否点赞，返回已点赞实体编号
 func (s *userLikeService) IsLiked(userId int64, entityType string, entityIds []int64) (likedEntityIds []int64) {
 	list := repositories.UserLikeRepository.Find(sqls.DB(), sqls.NewCnd().Eq("user_id", userId).
-		Eq("entity_type", entityType).In("entity_id", entityIds))
+		In("entity_id", entityIds).Eq("entity_type", entityType))
 	for _, like := range list {
 		likedEntityIds = append(likedEntityIds, like.EntityId)
 	}
