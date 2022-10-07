@@ -200,8 +200,9 @@ func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 	if topic == nil || topic.Status != constants.StatusOk {
 		return web.JsonErrorMsg("主题不存在")
 	}
+	user := services.UserTokenService.GetCurrent(c.Ctx)
 	services.TopicService.IncrViewCount(topicId) // 增加浏览量
-	return web.JsonData(render.BuildTopic(topic))
+	return web.JsonData(render.BuildTopic(topic, user))
 }
 
 // 点赞

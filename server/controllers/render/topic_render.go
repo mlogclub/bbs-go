@@ -11,8 +11,12 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 )
 
-func BuildTopic(topic *model.Topic) *model.TopicResponse {
-	return _buildTopic(topic, true)
+func BuildTopic(topic *model.Topic, currentUser *model.User) *model.TopicResponse {
+	resp := _buildTopic(topic, true)
+	if currentUser != nil {
+		resp.Liked = services.UserLikeService.Exists(currentUser.Id, constants.EntityTopic, topic.Id)
+	}
+	return resp
 }
 
 func BuildSimpleTopic(topic *model.Topic) *model.TopicResponse {
