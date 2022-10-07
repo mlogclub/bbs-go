@@ -82,7 +82,7 @@ func (s *userLikeService) Recent(entityType string, entityId int64, count int) [
 // Exists 是否点赞
 func (s *userLikeService) Exists(userId int64, entityType string, entityId int64) bool {
 	return repositories.UserLikeRepository.FindOne(sqls.DB(), sqls.NewCnd().Eq("user_id", userId).
-		Eq("entity_type", entityType).Eq("entity_id", entityId)) != nil
+		Eq("entity_id", entityId).Eq("entity_type", entityType)) != nil
 }
 
 // 是否点赞，返回已点赞实体编号
@@ -122,6 +122,32 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 	return nil
 }
 
+func (s *userLikeService) TopicUnLike(userId int64, topicId int64) error {
+	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New("话题不存在")
+	}
+
+	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		if err := s.unlike(tx, userId, constants.EntityTopic, topicId); err != nil {
+			return err
+		}
+		// 更新点赞数
+		return repositories.TopicRepository.UpdateColumn(tx, topicId, "like_count", gorm.Expr("like_count - 1"))
+	}); err != nil {
+		return err
+	}
+
+	// 发送事件
+	event.Send(event.UserUnLikeEvent{
+		UserId:     userId,
+		EntityId:   topicId,
+		EntityType: constants.EntityTopic,
+	})
+
+	return nil
+}
+
 // CommentLike 话题点赞
 func (s *userLikeService) CommentLike(userId int64, commentId int64) error {
 	comment := repositories.CommentRepository.Get(sqls.DB(), commentId)
@@ -149,16 +175,47 @@ func (s *userLikeService) CommentLike(userId int64, commentId int64) error {
 	return nil
 }
 
-func (s *userLikeService) like(db *gorm.DB, userId int64, entityType string, entityId int64) error {
+// CommentLike 话题点赞
+func (s *userLikeService) CommentUnLike(userId int64, commentId int64) error {
+	comment := repositories.CommentRepository.Get(sqls.DB(), commentId)
+	if comment == nil || comment.Status != constants.StatusOk {
+		return errors.New("评论不存在")
+	}
+
+	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		if err := s.unlike(tx, userId, constants.EntityComment, commentId); err != nil {
+			return err
+		}
+		// 更新点赞数
+		return repositories.CommentRepository.UpdateColumn(tx, commentId, "like_count", gorm.Expr("like_count - 1"))
+	}); err != nil {
+		return err
+	}
+
+	// 发送事件
+	event.Send(event.UserUnLikeEvent{
+		UserId:     userId,
+		EntityId:   commentId,
+		EntityType: constants.EntityComment,
+	})
+
+	return nil
+}
+
+func (s *userLikeService) like(tx *gorm.DB, userId int64, entityType string, entityId int64) error {
 	// 判断是否已经点赞了
 	if s.Exists(userId, entityType, entityId) {
 		return errors.New("已点赞")
 	}
 	// 点赞
-	return repositories.UserLikeRepository.Create(db, &model.UserLike{
+	return repositories.UserLikeRepository.Create(tx, &model.UserLike{
 		UserId:     userId,
 		EntityType: entityType,
 		EntityId:   entityId,
 		CreateTime: dates.NowTimestamp(),
 	})
+}
+
+func (s userLikeService) unlike(tx *gorm.DB, userId int64, entityType string, entityId int64) error {
+	return tx.Delete(&model.UserLike{}, "user_id = ? and entity_id = ? and entity_type = ?", userId, entityId, entityType).Error
 }

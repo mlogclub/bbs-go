@@ -10,6 +10,7 @@ import (
 
 func init() {
 	event.RegHandler(reflect.TypeOf(event.UserLikeEvent{}), handleUserLike)
+	event.RegHandler(reflect.TypeOf(event.UserUnLikeEvent{}), handleUserUnLike)
 }
 
 func handleUserLike(i interface{}) {
@@ -18,6 +19,13 @@ func handleUserLike(i interface{}) {
 	if e.EntityType == constants.EntityTopic {
 		sendTopicLikeMsg(e.EntityId, e.UserId)
 	} else if e.EntityType == constants.EntityComment {
+		// TODO
+	}
+}
+
+func handleUserUnLike(i interface{}) {
+	e := i.(event.UserUnLikeEvent)
+	if e.EntityType == constants.EntityTopic {
 		// TODO
 	}
 }

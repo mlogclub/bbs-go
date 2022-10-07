@@ -77,3 +77,15 @@ func (c *CommentController) PostLikeBy(commentId int64) *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
+
+func (c *CommentController) PostUnlikeBy(commentId int64) *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	err := services.UserLikeService.CommentUnLike(user.Id, commentId)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
