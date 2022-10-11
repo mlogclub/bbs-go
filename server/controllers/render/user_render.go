@@ -4,11 +4,14 @@ import (
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"strconv"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/spf13/cast"
 )
 
 func BuildUserInfoDefaultIfNull(id int64) *model.UserInfo {
@@ -30,8 +33,6 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 	ret := &model.UserInfo{
 		Id:           user.Id,
 		Nickname:     user.Nickname,
-		Avatar:       user.Avatar,
-		SmallAvatar:  HandleOssImageStyleAvatar(user.Avatar),
 		Gender:       user.Gender,
 		Birthday:     user.Birthday,
 		TopicCount:   user.TopicCount,
@@ -41,6 +42,14 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		Score:        user.Score,
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,
+	}
+	if strs.IsNotBlank(user.Avatar) {
+		ret.Avatar = user.Avatar
+		ret.SmallAvatar = HandleOssImageStyleAvatar(user.Avatar)
+	} else {
+		avatar := RandomAvatar(user.Id)
+		ret.Avatar = avatar
+		ret.SmallAvatar = avatar
 	}
 	if len(ret.Description) == 0 {
 		ret.Description = "这家伙很懒，什么都没留下"
@@ -87,4 +96,10 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 		PasswordSet:   len(user.Password) > 0,
 	}
 	return ret
+}
+
+func RandomAvatar(userId int64) string {
+	avatarCount := 128
+	avatarIndex := userId % int64(avatarCount)
+	return bbsurls.AbsUrl("/images/avatars/" + cast.ToString(avatarIndex) + ".svg")
 }
