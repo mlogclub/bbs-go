@@ -101,5 +101,5 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 func RandomAvatar(userId int64) string {
 	avatarCount := 128
 	avatarIndex := userId % int64(avatarCount)
-	return bbsurls.AbsUrl("/images/avatars/" + cast.ToString(avatarIndex) + ".svg")
+	return bbsurls.AbsUrl("/images/avatars/" + cast.ToString(avatarIndex) + ".png")
 }
