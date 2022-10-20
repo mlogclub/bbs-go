@@ -52,15 +52,17 @@ type TagResponse struct {
 }
 
 type ArticleSimpleResponse struct {
-	ArticleId  int64          `json:"articleId"`
-	User       *UserInfo      `json:"user"`
-	Tags       *[]TagResponse `json:"tags"`
-	Title      string         `json:"title"`
-	Summary    string         `json:"summary"`
-	SourceUrl  string         `json:"sourceUrl"`
-	ViewCount  int64          `json:"viewCount"`
-	CreateTime int64          `json:"createTime"`
-	Status     int            `json:"status"`
+	ArticleId    int64          `json:"articleId"`
+	User         *UserInfo      `json:"user"`
+	Tags         *[]TagResponse `json:"tags"`
+	Title        string         `json:"title"`
+	Summary      string         `json:"summary"`
+	SourceUrl    string         `json:"sourceUrl"`
+	ViewCount    int64          `json:"viewCount"`
+	CommentCount int64          `json:"commentCount"`
+	LikeCount    int64          `json:"likeCount"`
+	CreateTime   int64          `json:"createTime"`
+	Status       int            `json:"status"`
 }
 
 type ArticleResponse struct {
