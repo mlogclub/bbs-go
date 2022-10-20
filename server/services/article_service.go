@@ -292,21 +292,6 @@ func (s *articleService) ScanByUser(userId int64, callback func(articles []model
 	}
 }
 
-// 倒序扫描
-func (s *articleService) ScanDescWithDate(dateFrom, dateTo int64, callback func(articles []model.Article)) {
-	var cursor int64 = math.MaxInt64
-	for {
-		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
-			Cols("id", "status", "create_time", "update_time").
-			Lt("id", cursor).Gte("create_time", dateFrom).Lt("create_time", dateTo).Desc("id").Limit(1000))
-		if len(list) == 0 {
-			break
-		}
-		cursor = list[len(list)-1].Id
-		callback(list)
-	}
-}
-
 // rss
 func (s *articleService) GenerateRss() {
 	articles := repositories.ArticleRepository.Find(sqls.DB(),
