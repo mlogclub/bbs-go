@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/errs"
 	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
@@ -11,6 +13,52 @@ import (
 
 type LikeController struct {
 	Ctx iris.Context
+}
+
+func (c *LikeController) PostLike() *web.JsonResult {
+	var (
+		entityType = params.FormValue(c.Ctx, "entityType")
+		entityId   = params.FormValueInt64Default(c.Ctx, "entityId", 0)
+		user       = services.UserTokenService.GetCurrent(c.Ctx)
+		err        error
+	)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	if entityType == constants.EntityTopic {
+		err = services.UserLikeService.TopicLike(user.Id, entityId)
+	} else if entityType == constants.EntityArticle {
+		err = services.UserLikeService.ArticleLike(user.Id, entityId)
+	} else if entityType == constants.EntityComment {
+		err = services.UserLikeService.CommentLike(user.Id, entityId)
+	}
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *LikeController) PostUnlike() *web.JsonResult {
+	var (
+		entityType = params.FormValue(c.Ctx, "entityType")
+		entityId   = params.FormValueInt64Default(c.Ctx, "entityId", 0)
+		user       = services.UserTokenService.GetCurrent(c.Ctx)
+		err        error
+	)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	if entityType == constants.EntityTopic {
+		err = services.UserLikeService.TopicUnLike(user.Id, entityId)
+	} else if entityType == constants.EntityArticle {
+		err = services.UserLikeService.ArticleUnLike(user.Id, entityId)
+	} else if entityType == constants.EntityComment {
+		err = services.UserLikeService.CommentUnLike(user.Id, entityId)
+	}
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
 }
 
 func (c *LikeController) GetIsLiked() *web.JsonResult {

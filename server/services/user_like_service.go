@@ -148,6 +148,16 @@ func (s *userLikeService) TopicUnLike(userId int64, topicId int64) error {
 	return nil
 }
 
+func (s *userLikeService) ArticleLike(userId int64, articleId int64) error {
+	// TODO
+	return nil
+}
+
+func (s *userLikeService) ArticleUnLike(userId int64, articleId int64) error {
+	// TODO
+	return nil
+}
+
 // CommentLike 话题点赞
 func (s *userLikeService) CommentLike(userId int64, commentId int64) error {
 	comment := repositories.CommentRepository.Get(sqls.DB(), commentId)
