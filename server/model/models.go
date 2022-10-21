@@ -9,7 +9,7 @@ import (
 var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{}, &ThirdAccount{},
-	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{},
+	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
 }
 
 type Model struct {
@@ -285,4 +285,17 @@ type UserFeed struct {
 	DataType   string `gorm:"not null;uniqueIndex:idx_data;index:idx_data_id;index:idx_search" json:"dataType" form:"dataType"` // 数据类型
 	AuthorId   int64  `gorm:"not null;index:idx_user_id" json:"authorId" form:"authorId"`                                       // 作者编号
 	CreateTime int64  `gorm:"type:bigint;not null;index:idx_search" json:"createTime" form:"createTime"`                        // 数据的创建时间
+}
+
+// UserReport 用户举报
+type UserReport struct {
+	Model
+	DataId      int64  `json:"dataId" form:"dataId"`           // 举报数据ID
+	DataType    string `json:"dataType" form:"dataType"`       // 举报数据类型
+	UserId      int64  `json:"userId" form:"userId"`           // 举报人ID
+	Reason      string `json:"reason" form:"reason"`           // 举报原因
+	AuditStatus int64  `json:"auditStatus" form:"auditStatus"` // 审核状态
+	AuditTime   int64  `json:"auditTime" form:"auditTime"`     // 审核时间
+	AuditUserId int64  `json:"auditUserId" form:"auditUserId"` // 审核人ID
+	CreateTime  int64  `json:"createTime" form:"createTime"`   // 举报时间
 }
