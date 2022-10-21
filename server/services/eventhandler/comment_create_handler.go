@@ -6,11 +6,11 @@ import (
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/event"
 	"bbs-go/pkg/msg"
-	"reflect"
-)
-
-import (
 	"bbs-go/services"
+	"reflect"
+
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
 )
 
 func init() {
@@ -39,14 +39,18 @@ func handleMsg(comment *model.Comment) {
 func handleEntityMsg(comment *model.Comment, commentMsg *CommentMsg) {
 	var (
 		from = comment.UserId
-		to   = commentMsg.EntityUserId
+		to   = commentMsg.rootEntityUserId()
 	)
 	if from == to {
 		return
 	}
+	if to <= 0 {
+		logrus.Warn("消息发送失败, to=", to)
+		return
+	}
 
 	// 如果回复的评论作者就是帖子作者，那么只给回复作者发消息即可，这里就不再给帖子作者发消息了
-	if commentMsg.FirstComment != nil && commentMsg.FirstComment.UserId == to {
+	if commentMsg.ParentComment != nil && commentMsg.ParentComment.UserId == to {
 		return
 	}
 	// 同上
@@ -60,21 +64,22 @@ func handleEntityMsg(comment *model.Comment, commentMsg *CommentMsg) {
 		commentMsg.msgContent(),
 		commentMsg.msgRepliedContent(),
 		&msg.CommentExtraData{
-			EntityType: commentMsg.EntityType,
-			EntityId:   commentMsg.EntityId,
-			CommentId:  comment.Id,
-			QuoteId:    comment.QuoteId,
+			EntityType:     commentMsg.EntityType,
+			EntityId:       commentMsg.EntityId,
+			QuoteId:        comment.QuoteId,
+			RootEntityType: commentMsg.rootEntityType(),
+			RootEntityId:   cast.ToString(commentMsg.rootEntityId()),
 		})
 }
 
 func handleReplyMsg(comment *model.Comment, commentMsg *CommentMsg) {
-	if commentMsg.FirstComment == nil {
+	if commentMsg.ParentComment == nil {
 		return
 	}
 
 	var (
 		from = comment.UserId
-		to   = commentMsg.FirstComment.UserId
+		to   = commentMsg.ParentComment.UserId
 	)
 
 	if from == to {
@@ -87,17 +92,18 @@ func handleReplyMsg(comment *model.Comment, commentMsg *CommentMsg) {
 	}
 
 	var (
-		title          = "回复了你的评论"
+		title          = commentMsg.msgTitle()
 		content        = commentMsg.msgContent()
-		repliedContent = common.GetSummary(commentMsg.FirstComment.ContentType, commentMsg.FirstComment.Content)
+		repliedContent = common.GetSummary(commentMsg.ParentComment.ContentType, commentMsg.ParentComment.Content)
 	)
 
 	services.MessageService.SendMsg(from, to, msg.TypeCommentReply, title, content, repliedContent,
 		&msg.CommentExtraData{
-			EntityType: comment.EntityType,
-			EntityId:   comment.EntityId,
-			CommentId:  comment.Id,
-			QuoteId:    comment.QuoteId,
+			EntityType:     comment.EntityType,
+			EntityId:       comment.EntityId,
+			QuoteId:        comment.QuoteId,
+			RootEntityType: commentMsg.rootEntityType(),
+			RootEntityId:   cast.ToString(commentMsg.rootEntityId()),
 		})
 }
 
@@ -110,7 +116,7 @@ func handleQuoteMsg(comment *model.Comment, commentMsg *CommentMsg) {
 	var (
 		from           = comment.UserId
 		to             = commentMsg.QuoteComment.UserId
-		title          = "回复了你的评论"
+		title          = commentMsg.msgTitle()
 		content        = commentMsg.msgContent()
 		repliedContent = common.GetSummary(commentMsg.QuoteComment.ContentType, commentMsg.QuoteComment.Content)
 	)
@@ -121,10 +127,11 @@ func handleQuoteMsg(comment *model.Comment, commentMsg *CommentMsg) {
 
 	services.MessageService.SendMsg(from, to, msg.TypeCommentReply, title, content, repliedContent,
 		&msg.CommentExtraData{
-			EntityType: comment.EntityType,
-			EntityId:   comment.EntityId,
-			CommentId:  comment.Id,
-			QuoteId:    comment.QuoteId,
+			EntityType:     comment.EntityType,
+			EntityId:       comment.EntityId,
+			QuoteId:        comment.QuoteId,
+			RootEntityType: commentMsg.rootEntityType(),
+			RootEntityId:   cast.ToString(commentMsg.rootEntityId()),
 		})
 }
 
@@ -133,47 +140,43 @@ func getCommentMsg(comment *model.Comment) *CommentMsg {
 		topic := services.TopicService.Get(comment.EntityId)
 		if topic != nil && topic.Status == constants.StatusOk {
 			return &CommentMsg{
-				Comment:      comment,
-				EntityType:   comment.EntityType,
-				EntityId:     comment.EntityId,
-				EntityUserId: topic.UserId,
-				Entity:       topic,
+				Comment:    comment,
+				EntityType: comment.EntityType,
+				EntityId:   comment.EntityId,
+				Entity:     topic,
 			}
 		}
 	} else if comment.EntityType == constants.EntityArticle { // 文章
 		article := services.ArticleService.Get(comment.EntityId)
 		if article != nil && article.Status == constants.StatusOk {
 			return &CommentMsg{
-				Comment:      comment,
-				EntityType:   comment.EntityType,
-				EntityId:     comment.EntityId,
-				EntityUserId: article.UserId,
-				Entity:       article,
+				Comment:    comment,
+				EntityType: comment.EntityType,
+				EntityId:   comment.EntityId,
+				Entity:     article,
 			}
 		}
 	} else if comment.EntityType == constants.EntityComment { // 二级评论
-		firstComment := services.CommentService.Get(comment.EntityId)
-		if firstComment == nil || firstComment.Status != constants.StatusOk {
+		parentComment := services.CommentService.Get(comment.EntityId)
+		if parentComment == nil || parentComment.Status != constants.StatusOk {
 			return nil
 		}
 
 		ret := &CommentMsg{
-			Comment:      comment,
-			EntityType:   firstComment.EntityType, // 二级评论时，取一级评论的
-			EntityId:     firstComment.EntityId,   // 二级评论时，取一级评论的
-			FirstComment: firstComment,            // 一级评论
+			Comment:       comment,
+			EntityType:    parentComment.EntityType, // 二级评论时，取一级评论的
+			EntityId:      parentComment.EntityId,   // 二级评论时，取一级评论的
+			ParentComment: parentComment,            // 一级评论
 		}
 
-		if firstComment.EntityType == constants.EntityTopic {
-			topic := services.TopicService.Get(firstComment.EntityId)
+		if parentComment.EntityType == constants.EntityTopic {
+			topic := services.TopicService.Get(parentComment.EntityId)
 			if topic != nil && topic.Status == constants.StatusOk {
-				ret.EntityUserId = topic.UserId
 				ret.Entity = topic
 			}
-		} else if firstComment.EntityType == constants.EntityArticle {
-			article := services.ArticleService.Get(firstComment.EntityId)
+		} else if parentComment.EntityType == constants.EntityArticle {
+			article := services.ArticleService.Get(parentComment.EntityId)
 			if article != nil && article.Status == constants.StatusOk {
-				ret.EntityUserId = article.UserId
 				ret.Entity = article
 			}
 		} else {
@@ -193,13 +196,12 @@ func getCommentMsg(comment *model.Comment) *CommentMsg {
 }
 
 type CommentMsg struct {
-	EntityType   string         // 实体类型
-	EntityId     int64          // 实体ID
-	EntityUserId int64          // 实体所属人
-	Entity       interface{}    // 被评论实体
-	Comment      *model.Comment // 当前评论
-	FirstComment *model.Comment // 根评论
-	QuoteComment *model.Comment // 引用评论
+	EntityType    string         // 实体类型
+	EntityId      int64          // 实体ID
+	Entity        interface{}    // 被评论实体
+	Comment       *model.Comment // 当前评论
+	ParentComment *model.Comment // 上一级评论（二级评论的时候有值）
+	QuoteComment  *model.Comment // 引用评论
 }
 
 // msgType 消息类型
@@ -208,6 +210,8 @@ func (c *CommentMsg) msgType() msg.Type {
 		return msg.TypeTopicComment
 	} else if c.EntityType == constants.EntityArticle {
 		return msg.TypeArticleComment
+	} else if c.EntityType == constants.EntityComment {
+		return msg.TypeCommentReply
 	}
 	return msg.TypeTopicComment
 }
@@ -218,6 +222,8 @@ func (c *CommentMsg) msgTitle() string {
 		return "回复了你的话题"
 	} else if c.EntityType == constants.EntityArticle {
 		return "回复了你的文章"
+	} else if c.EntityType == constants.EntityComment {
+		return "回复了你的评论"
 	}
 	return ""
 }
@@ -237,4 +243,41 @@ func (c *CommentMsg) msgRepliedContent() string {
 		return "《" + topic.GetTitle() + "》"
 	}
 	return ""
+}
+
+func (c *CommentMsg) rootEntityUserId() int64 {
+	if c.ParentComment != nil { // 二级评论
+		if c.ParentComment.EntityType == constants.EntityTopic {
+			topic := c.Entity.(*model.Topic)
+			return topic.UserId
+		} else if c.ParentComment.EntityType == constants.EntityArticle {
+			article := c.Entity.(*model.Article)
+			return article.UserId
+		}
+	} else {
+		if c.Comment.EntityType == constants.EntityTopic {
+			topic := c.Entity.(*model.Topic)
+			return topic.UserId
+		} else if c.Comment.EntityType == constants.EntityArticle {
+			article := c.Entity.(*model.Article)
+			return article.UserId
+		}
+	}
+	return 0
+}
+
+func (c *CommentMsg) rootEntityType() string {
+	if c.ParentComment != nil { // 二级评论
+		return c.ParentComment.EntityType
+	} else {
+		return c.Comment.EntityType
+	}
+}
+
+func (c *CommentMsg) rootEntityId() int64 {
+	if c.ParentComment != nil { // 二级评论
+		return c.ParentComment.EntityId
+	} else {
+		return c.Comment.EntityId
+	}
 }

@@ -50,9 +50,18 @@ func BuildMessages(messages []model.Message) []model.MessageResponse {
 // getMessageDetailUrl 查看消息详情链接地址
 func getMessageDetailUrl(t *model.Message) string {
 	msgType := msg.Type(t.Type)
-	if msgType == msg.TypeTopicComment || msgType == msg.TypeArticleComment || msgType == msg.TypeCommentReply {
+	if msgType == msg.TypeTopicComment || msgType == msg.TypeArticleComment {
 		entityType := gjson.Get(t.ExtraData, "entityType")
 		entityId := gjson.Get(t.ExtraData, "entityId")
+		if entityType.String() == constants.EntityArticle {
+			return bbsurls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
+	} else if msgType == msg.TypeCommentReply {
+		entityType := gjson.Get(t.ExtraData, "rootEntityType")
+		entityId := gjson.Get(t.ExtraData, "rootEntityId")
+
 		if entityType.String() == constants.EntityArticle {
 			return bbsurls.ArticleUrl(entityId.Int())
 		} else if entityType.String() == constants.EntityTopic {

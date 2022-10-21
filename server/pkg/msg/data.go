@@ -39,8 +39,9 @@ type TopicDeleteExtraData struct {
 }
 
 type CommentExtraData struct {
-	EntityType string `json:"entityType"`
-	EntityId   int64  `json:"entityId"`
-	CommentId  int64  `json:"commentId"`
-	QuoteId    int64  `json:"quoteId"`
+	EntityType     string `json:"entityType"`     // 评论实体类型
+	EntityId       int64  `json:"entityId"`       // 评论实体ID
+	QuoteId        int64  `json:"quoteId"`        // 引用评论ID
+	RootEntityType string `json:"rootEntityType"` // 根评论的实体类型（例如：文章评论的二级评论，该类型还是文章）
+	RootEntityId   string `json:"rootEntityId"`   // 根评论的实体ID
 }
