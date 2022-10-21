@@ -68,6 +68,7 @@ func Router() {
 		m.Party("/osc/login").Handle(new(api.OscLoginController))
 		m.Party("/search").Handle(new(api.SearchController))
 		m.Party("/fans").Handle(new(api.FansController))
+		m.Party("/user-report").Handle(new(api.UserReportController))
 	})
 
 	// admin
@@ -87,6 +88,7 @@ func Router() {
 		m.Party("/link").Handle(new(admin.LinkController))
 		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
+		m.Party("/user-report").Handle(new(admin.UserReportController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {
