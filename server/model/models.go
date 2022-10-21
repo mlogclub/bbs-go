@@ -83,10 +83,10 @@ type Article struct {
 	ContentType  string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`     // 内容类型：markdown、html
 	Status       int    `gorm:"type:int(11);index:idx_article_status" json:"status" form:"status"`   // 状态
 	SourceUrl    string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                         // 原文链接
-	ViewCount    int64  `gorm:"not null;index:idx_view_count;" json:"viewCount" form:"viewCount"`    // 查看数量
+	ViewCount    int64  `gorm:"not null;" json:"viewCount" form:"viewCount"`                         // 查看数量
 	CommentCount int64  `gorm:"default:0" json:"commentCount" form:"commentCount"`                   // 评论数量
 	LikeCount    int64  `gorm:"default:0" json:"likeCount" form:"likeCount"`                         // 点赞数量
-	CreateTime   int64  `gorm:"index:idx_article_create_time" json:"createTime" form:"createTime"`   // 创建时间
+	CreateTime   int64  `json:"createTime" form:"createTime"`                                        // 创建时间
 	UpdateTime   int64  `json:"updateTime" form:"updateTime"`                                        // 更新时间
 }
 
