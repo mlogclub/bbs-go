@@ -1,11 +1,8 @@
 package controllers
 
 import (
-	"net/http"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/iris-contrib/middleware/cors"
@@ -13,12 +10,10 @@ import (
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/controllers/api"
-	"bbs-go/pkg/config"
 
 	"bbs-go/controllers/admin"
 	"bbs-go/middleware"
@@ -105,40 +100,21 @@ func Router() {
 		}
 	})
 
-	server := &http.Server{Addr: ":" + config.Instance.Port}
-	handleSignal(server)
-	err := app.Run(iris.Server(server), iris.WithConfiguration(iris.Configuration{
-		DisableStartupLog:                 false,
-		DisableInterruptHandler:           false,
-		DisablePathCorrection:             false,
-		EnablePathEscape:                  false,
-		FireMethodNotAllowed:              false,
-		DisableBodyConsumptionOnUnmarshal: false,
-		DisableAutoFireStatusCode:         false,
-		EnableOptimizations:               true,
-		TimeFormat:                        "2006-01-02 15:04:05",
-		Charset:                           "UTF-8",
-	}))
-	if err != nil {
+	if err := app.Listen(":8082",
+		iris.WithConfiguration(iris.Configuration{
+			DisableStartupLog:                 false,
+			DisableInterruptHandler:           false,
+			DisablePathCorrection:             false,
+			EnablePathEscape:                  false,
+			FireMethodNotAllowed:              false,
+			DisableBodyConsumptionOnUnmarshal: false,
+			DisableAutoFireStatusCode:         false,
+			EnableOptimizations:               true,
+			TimeFormat:                        "2006-01-02 15:04:05",
+			Charset:                           "UTF-8",
+		}),
+	); err != nil {
 		logrus.Error(err)
 		os.Exit(-1)
 	}
-}
-
-func handleSignal(server *http.Server) {
-	c := make(chan os.Signal)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
-
-	go func() {
-		s := <-c
-		logrus.Infof("got signal [%s], exiting now", s)
-		if err := server.Close(); nil != err {
-			logrus.Errorf("server close failed: " + err.Error())
-		}
-
-		sqls.Close()
-
-		logrus.Infof("Exited")
-		os.Exit(0)
-	}()
 }
