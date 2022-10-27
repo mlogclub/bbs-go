@@ -586,7 +586,7 @@ func (s *userService) CheckPostStatus(user *model.User) error {
 	if user.IsForbidden() {
 		return errs.ForbiddenError
 	}
-	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds)
+	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds, 0)
 	if user.InObservationPeriod(observeSeconds) {
 		return web.NewError(errs.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
 	}

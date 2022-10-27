@@ -70,7 +70,7 @@ func (c *TopicController) PostCreate() *web.JsonResult {
 		return web.JsonError(err)
 	}
 
-	topic, err := services.TopicService.Publish(user.Id, form)
+	topic, err := services.TopicPublishService.Publish(user.Id, form)
 	if err != nil {
 		return web.JsonError(err)
 	}

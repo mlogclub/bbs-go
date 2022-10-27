@@ -12,6 +12,7 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/spf13/cast"
 	"github.com/tidwall/gjson"
 
 	"github.com/sirupsen/logrus"
@@ -260,11 +261,25 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	}
 }
 
-func (s *sysConfigService) GetInt(key string) int {
-	value := cache.SysConfigCache.GetValue(key)
+func (s *sysConfigService) GetStr(key, def string) (value string) {
+	value = cache.SysConfigCache.GetValue(key)
 	if strs.IsBlank(value) {
-		return 0
+		value = def
 	}
-	ret, _ := strconv.Atoi(value)
-	return ret
+	return
+}
+
+func (s *sysConfigService) GetInt(key string, def int) (value int) {
+	str := cache.SysConfigCache.GetValue(key)
+	if strs.IsBlank(str) {
+		value = def
+		return
+	}
+	var err error
+	if value, err = cast.ToIntE(value); err != nil {
+		value = def
+		logrus.Warn("Get int config error, use default value:", def, " key: ", key, " value: ", str)
+		return
+	}
+	return
 }
