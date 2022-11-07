@@ -254,6 +254,7 @@ export default {
           margin-top: 5px;
           margin-bottom: 0;
           color: var(--text-color2);
+          white-space: pre-wrap;
         }
         .comment-image-list {
           margin-top: 5px;
