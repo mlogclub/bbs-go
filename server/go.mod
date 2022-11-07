@@ -12,26 +12,27 @@ require (
 	github.com/goburrow/cache v0.1.4
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
-	github.com/iris-contrib/middleware/cors v0.0.0-20221004221944-7386a93ab90a
+	github.com/iris-contrib/middleware/cors v0.0.0-20221023021543-014b91018351
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/kataras/iris/v12 v12.2.0-beta5
+	github.com/kataras/iris/v12 v12.2.0-beta6
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/mlogclub/simple v1.2.4
 	github.com/olivere/elastic/v7 v7.0.32
-	github.com/panjf2000/ants/v2 v2.5.0
+	github.com/panjf2000/ants/v2 v2.6.0
 	github.com/robfig/cron v1.2.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cast v1.5.0
 	github.com/tidwall/gjson v1.14.3
 	golang.org/x/oauth2 v0.1.0
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/gorm v1.24.0
+	gorm.io/gorm v1.24.1
 )
 
 require (
-	github.com/BurntSushi/toml v1.2.0 // indirect
+	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/CloudyKit/jet/v6 v6.1.0 // indirect
+	github.com/Joker/jade v1.1.3 // indirect
 	github.com/Shopify/goreferrer v0.0.0-20220729165902-8cddb4f5de06 // indirect
 	github.com/alecthomas/chroma v0.10.0 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
@@ -61,13 +62,13 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/blocks v0.0.7 // indirect
-	github.com/kataras/golog v0.1.7 // indirect
+	github.com/kataras/golog v0.1.8 // indirect
 	github.com/kataras/neffos v0.0.20 // indirect
 	github.com/kataras/pio v0.0.11 // indirect
 	github.com/kataras/sitemap v0.0.6 // indirect
 	github.com/kataras/tunnel v0.0.4 // indirect
-	github.com/klauspost/compress v1.15.11 // indirect
-	github.com/mailgun/raymond/v2 v2.0.47 // indirect
+	github.com/klauspost/compress v1.15.12 // indirect
+	github.com/mailgun/raymond/v2 v2.0.48 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mediocregopher/radix/v3 v3.8.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
