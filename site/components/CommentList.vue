@@ -31,11 +31,18 @@
             v-lazy-container="{ selector: 'img' }"
             class="comment-content-wrapper"
           >
-            <div
-              v-if="comment.content"
-              class="comment-content content"
-              v-html="comment.content"
-            ></div>
+            <template v-if="comment.content">
+              <div
+                v-if="comment.contentType === 'text'"
+                class="comment-content content"
+                v-text="comment.content"
+              ></div>
+              <div
+                v-else
+                class="comment-content content"
+                v-html="comment.content"
+              ></div>
+            </template>
             <div
               v-if="comment.imageList && comment.imageList.length"
               class="comment-image-list"
@@ -256,6 +263,7 @@ export default {
           margin-top: 10px;
           margin-bottom: 0;
           color: var(--text-color);
+          white-space: pre-wrap;
         }
         .comment-image-list {
           margin-top: 10px;
