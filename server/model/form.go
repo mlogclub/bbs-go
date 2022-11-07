@@ -36,14 +36,13 @@ type CreateArticleForm struct {
 
 // CreateCommentForm 发表评论
 type CreateCommentForm struct {
-	EntityType  string     `form:"entityType"`
-	EntityId    int64      `form:"entityId"`
-	Content     string     `form:"content"`
-	ImageList   []ImageDTO `form:"imageList"`
-	QuoteId     int64      `form:"quoteId"`
-	ContentType string     `form:"contentType"`
-	UserAgent   string     `form:"userAgent"`
-	Ip          string     `form:"ip"`
+	EntityType string     `form:"entityType"`
+	EntityId   int64      `form:"entityId"`
+	Content    string     `form:"content"`
+	ImageList  []ImageDTO `form:"imageList"`
+	QuoteId    int64      `form:"quoteId"`
+	UserAgent  string     `form:"userAgent"`
+	Ip         string     `form:"ip"`
 }
 
 type ImageDTO struct {
@@ -71,14 +70,13 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 
 func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 	form := CreateCommentForm{
-		EntityType:  params.FormValue(ctx, "entityType"),
-		EntityId:    params.FormValueInt64Default(ctx, "entityId", 0),
-		Content:     strings.TrimSpace(params.FormValue(ctx, "content")),
-		ImageList:   GetImageList(ctx, "imageList"),
-		QuoteId:     params.FormValueInt64Default(ctx, "quoteId", 0),
-		ContentType: params.FormValueDefault(ctx, "contentType", constants.ContentTypeText),
-		UserAgent:   common.GetUserAgent(ctx.Request()),
-		Ip:          common.GetRequestIP(ctx.Request()),
+		EntityType: params.FormValue(ctx, "entityType"),
+		EntityId:   params.FormValueInt64Default(ctx, "entityId", 0),
+		Content:    strings.TrimSpace(params.FormValue(ctx, "content")),
+		ImageList:  GetImageList(ctx, "imageList"),
+		QuoteId:    params.FormValueInt64Default(ctx, "quoteId", 0),
+		UserAgent:  common.GetUserAgent(ctx.Request()),
+		Ip:         common.GetRequestIP(ctx.Request()),
 	}
 	return form
 }

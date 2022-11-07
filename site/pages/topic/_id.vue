@@ -170,7 +170,6 @@
               :entity-id="topic.topicId"
               :comments-page="commentsPage"
               :comment-count="topic.commentCount"
-              :mode="topic.type === 1 ? 'text' : 'markdown'"
               entity-type="topic"
               @created="commentCreated"
             />

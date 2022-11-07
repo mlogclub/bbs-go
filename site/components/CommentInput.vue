@@ -7,20 +7,7 @@
           <label v-text="quote.user.nickname" />
           <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
         </div>
-        <markdown-editor
-          v-if="inputMode === 'markdown'"
-          ref="mdEditor"
-          v-model="value.content"
-          height="200px"
-          placeholder="请发表你的观点..."
-          @submit="create"
-        />
-        <text-editor
-          v-else
-          ref="simpleEditor"
-          v-model="value"
-          @submit="create"
-        />
+        <text-editor ref="simpleEditor" v-model="value" @submit="create" />
       </div>
     </div>
   </div>
@@ -29,10 +16,6 @@
 <script>
 export default {
   props: {
-    mode: {
-      type: String,
-      default: 'markdown',
-    },
     entityType: {
       type: String,
       default: '',
@@ -60,18 +43,6 @@ export default {
     },
     user() {
       return this.$store.state.user.current
-    },
-    inputMode() {
-      // if (this.$store.state.env.isMobile) {
-      //   // 手机中，强制使用普通文本编辑器
-      //   return 'text'
-      // }
-      // return this.mode
-      // 强制text模式
-      return 'text'
-    },
-    contentType() {
-      return this.inputMode === 'markdown' ? 'markdown' : 'text'
     },
   },
   methods: {
@@ -106,12 +77,7 @@ export default {
         this.value.content = ''
         this.value.imageList = []
         this.quote = null
-        if (this.$refs.mdEditor) {
-          this.$refs.mdEditor.clear()
-        }
-        if (this.$refs.simpleEditor) {
-          this.$refs.simpleEditor.clear()
-        }
+        this.$refs.simpleEditor.clear()
         this.$message.success('发布成功')
       } catch (e) {
         console.error(e)

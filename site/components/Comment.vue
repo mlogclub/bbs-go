@@ -17,7 +17,6 @@
       <template v-else>
         <comment-input
           ref="input"
-          :mode="mode"
           :entity-id="entityId"
           :entity-type="entityType"
           @created="commentCreated"
@@ -44,10 +43,6 @@
 <script>
 export default {
   props: {
-    mode: {
-      type: String,
-      default: 'markdown',
-    },
     entityType: {
       type: String,
       default: '',
