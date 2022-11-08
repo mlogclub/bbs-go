@@ -45,6 +45,11 @@ func (u *User) HasAnyRole(roles ...string) bool {
 	return false
 }
 
+// IsOwnerOrAdmin 是否是管理员
+func (u *User) IsOwnerOrAdmin() bool {
+	return u.HasAnyRole(constants.RoleOwner, constants.RoleAdmin)
+}
+
 // GetRoles 获取角色
 func (u *User) GetRoles() []string {
 	if strs.IsBlank(u.Roles) {
