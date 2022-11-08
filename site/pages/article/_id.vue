@@ -1,6 +1,11 @@
 <template>
   <section class="main">
-    <div class="container main-container left-main size-320">
+    <div v-if="isShowPendingStatus" class="container main-container">
+      <div class="notification is-warning" style="width: 100%; margin: 20px 0">
+        {{ $t('文章正在审核中，审核通过后展示') }}
+      </div>
+    </div>
+    <div v-else class="container main-container left-main size-320">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -53,34 +58,6 @@
                     }}</nuxt-link>
                   </span>
                 </span>
-
-                <!-- <div class="article-tool">
-                  <span v-if="hasPermission">
-                    <a @click="deleteArticle(article.articleId)">
-                      <i class="iconfont icon-delete" />&nbsp;删除
-                    </a>
-                  </span>
-                  <span v-if="hasPermission">
-                    <nuxt-link :to="'/article/edit/' + article.articleId">
-                      <i class="iconfont icon-edit" />&nbsp;修改
-                    </nuxt-link>
-                  </span>
-                  <span>
-                    <a @click="addFavorite(article.articleId)">
-                      <i class="iconfont icon-favorite" />&nbsp;{{
-                        favorited ? '已收藏' : '收藏'
-                      }}
-                    </a>
-                  </span>
-                  <span v-if="isPending">
-                    <a
-                      href="javascript:void(0)"
-                      style="cursor: default; text-decoration: none"
-                    >
-                      <i class="iconfont icon-shenhe" />&nbsp;审核中
-                    </a>
-                  </span>
-                </div> -->
               </div>
             </div>
 
@@ -90,15 +67,15 @@
               itemprop="articleBody"
               v-html="article.content"
             ></div>
-
-            <!-- 评论 -->
-            <comment
-              :entity-id="article.articleId"
-              :comments-page="commentsPage"
-              entity-type="article"
-            />
           </div>
         </article>
+
+        <!-- 评论 -->
+        <comment
+          :entity-id="article.articleId"
+          :comments-page="commentsPage"
+          entity-type="article"
+        />
       </div>
       <div class="right-container">
         <user-info :user="article.user" />
@@ -219,20 +196,20 @@ export default {
   },
   computed: {
     hasPermission() {
-      return (
-        this.isOwner ||
-        UserHelper.isOwner(this.user) ||
-        UserHelper.isAdmin(this.user)
-      )
+      return this.isOwner || this.isOwnerOrAdmin
     },
-    isOwner() {
-      if (!this.user || !this.article) {
+    isOwnerOrAdmin() {
+      return UserHelper.isOwner(this.user) || UserHelper.isAdmin(this.user)
+    },
+    isShowPendingStatus() {
+      if (this.article.status !== 2) {
         return false
       }
-      return this.user.id === this.article.user.id
-    },
-    isPending() {
-      return this.article.status === 2
+      // 用户没登陆
+      if (!this.user) {
+        return true
+      }
+      return this.user.id !== this.article.user.id && !this.isOwnerOrAdmin
     },
     user() {
       return this.$store.state.user.current
