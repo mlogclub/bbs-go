@@ -1,11 +1,11 @@
 <template>
   <section class="main">
-    <div v-if="isShowPendingStatus" class="container main-container">
+    <div v-if="isPending" class="container main-container">
       <div class="notification is-warning" style="width: 100%; margin: 20px 0">
-        {{ $t('文章正在审核中，审核通过后展示') }}
+        文章正在审核中
       </div>
     </div>
-    <div v-else class="container main-container left-main size-320">
+    <div class="container main-container left-main size-320">
       <div class="left-container">
         <article
           class="article-item article-detail"
@@ -197,15 +197,8 @@ export default {
     isOwnerOrAdmin() {
       return UserHelper.isOwner(this.user) || UserHelper.isAdmin(this.user)
     },
-    isShowPendingStatus() {
-      if (this.article.status !== 2) {
-        return false
-      }
-      // 用户没登陆
-      if (!this.user) {
-        return true
-      }
-      return this.user.id !== this.article.user.id && !this.isOwnerOrAdmin
+    isPending() {
+      return this.article.status === 2
     },
     user() {
       return this.$store.state.user.current
