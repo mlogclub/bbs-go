@@ -9,9 +9,14 @@
         >
           <div class="main-content">
             <div class="article-header">
-              <h1 class="article-title" itemprop="headline">
-                {{ article.title }}
-              </h1>
+              <div class="article-title-wrapper">
+                <h1 class="article-title" itemprop="headline">
+                  {{ article.title }}
+                </h1>
+                <div class="article-manage-menu">
+                  <article-manage-menu v-model="article" />
+                </div>
+              </div>
               <div class="article-meta">
                 <span class="article-meta-item">
                   由
@@ -49,7 +54,7 @@
                   </span>
                 </span>
 
-                <div class="article-tool">
+                <!-- <div class="article-tool">
                   <span v-if="hasPermission">
                     <a @click="deleteArticle(article.articleId)">
                       <i class="iconfont icon-delete" />&nbsp;删除
@@ -75,7 +80,7 @@
                       <i class="iconfont icon-shenhe" />&nbsp;审核中
                     </a>
                   </span>
-                </div>
+                </div> -->
               </div>
             </div>
 

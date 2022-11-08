@@ -39,13 +39,20 @@
       border-bottom: 1px solid var(--border-color);
     }
 
-    .article-title {
-      color: var(--text-color);
-      font-weight: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 18px;
-      line-height: 30px;
+    .article-title-wrapper {
+      display: flex;
+      .article-title {
+        width: 100%;
+        color: var(--text-color);
+        font-weight: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 18px;
+        line-height: 30px;
+      }
+      .article-manage-menu {
+        min-width: max-content;
+      }
     }
   }
 
