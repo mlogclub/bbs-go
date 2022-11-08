@@ -27,15 +27,14 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorCode(404, "文章不存在")
 	}
 
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user != nil {
-		if article.Status == constants.StatusPending {
+	// 审核中文章控制展示
+	if article.Status == constants.StatusPending {
+		user := services.UserTokenService.GetCurrent(c.Ctx)
+		if user != nil {
 			if article.UserId != user.Id && !user.IsOwnerOrAdmin() {
 				return web.JsonErrorCode(403, "文章审核中")
 			}
-		}
-	} else {
-		if article.Status == constants.StatusPending {
+		} else {
 			return web.JsonErrorCode(403, "文章审核中")
 		}
 	}
