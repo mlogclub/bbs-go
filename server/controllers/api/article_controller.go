@@ -48,19 +48,7 @@ func (c *ArticleController) PostCreate() *web.JsonResult {
 	if err := services.UserService.CheckPostStatus(user); err != nil {
 		return web.JsonError(err)
 	}
-	var (
-		tags    = params.FormValueStringArray(c.Ctx, "tags")
-		title   = c.Ctx.PostValue("title")
-		summary = c.Ctx.PostValue("summary")
-		content = c.Ctx.PostValue("content")
-	)
-	form := model.CreateArticleForm{
-		Title:       title,
-		Summary:     summary,
-		Content:     content,
-		ContentType: constants.ContentTypeMarkdown,
-		Tags:        tags,
-	}
+	form := model.GetCreateArticleForm(c.Ctx)
 
 	if err := spam.CheckArticle(user, form); err != nil {
 		return web.JsonError(err)

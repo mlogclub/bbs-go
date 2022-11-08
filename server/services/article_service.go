@@ -160,8 +160,7 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 
 	// 获取后台配置 否是开启发表文章审核
 	status := constants.StatusOk
-	sysConfigArticlePending := cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
-	if strings.ToLower(sysConfigArticlePending) == "true" {
+	if SysConfigService.IsArticlePending() {
 		status = constants.StatusPending
 	}
 

@@ -46,6 +46,12 @@
           </div>
         </div>
 
+        <!-- <div class="field">
+          <div class="control">
+            <image-upload :limit="1" />
+          </div>
+        </div> -->
+
         <div class="field is-grouped">
           <div class="control">
             <a

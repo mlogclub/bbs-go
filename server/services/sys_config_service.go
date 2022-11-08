@@ -176,6 +176,11 @@ func (s *sysConfigService) IsEnableHideContent() bool {
 	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
 }
 
+func (s *sysConfigService) IsArticlePending() bool {
+	value := cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
+	return strs.EqualsIgnoreCase(value, "true") || strs.EqualsIgnoreCase(value, "1")
+}
+
 func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
 	siteNavs := cache.SysConfigCache.GetValue(constants.SysConfigSiteNavs)
 	var siteNavsArr []model.ActionLink
@@ -197,7 +202,6 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		urlRedirect                = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
 		scoreConfigStr             = cache.SysConfigCache.GetValue(constants.SysConfigScoreConfig)
 		defaultNodeIdStr           = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
-		articlePending             = cache.SysConfigCache.GetValue(constants.SysConfigArticlePending)
 		topicCaptcha               = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr      = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
 		siteNavs                   = s.GetSiteNavs()
@@ -207,6 +211,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		createArticleEmailVerified = s.IsCreateArticleEmailVerified()
 		createCommentEmailVerified = s.IsCreateCommentEmailVerified()
 		enableHideContent          = s.IsEnableHideContent()
+		articlePending             = s.IsArticlePending()
 	)
 
 	var siteKeywordsArr []string
@@ -249,7 +254,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		UrlRedirect:                strings.ToLower(urlRedirect) == "true",
 		ScoreConfig:                scoreConfig,
 		DefaultNodeId:              defaultNodeId,
-		ArticlePending:             strings.ToLower(articlePending) == "true",
+		ArticlePending:             articlePending,
 		TopicCaptcha:               strings.ToLower(topicCaptcha) == "true",
 		UserObserveSeconds:         userObserveSeconds,
 		TokenExpireDays:            tokenExpireDays,

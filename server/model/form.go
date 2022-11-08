@@ -30,6 +30,7 @@ type CreateArticleForm struct {
 	Summary     string
 	Content     string
 	ContentType string
+	Cover       string
 	Tags        []string
 	SourceUrl   string
 }
@@ -79,6 +80,24 @@ func GetCreateCommentForm(ctx iris.Context) CreateCommentForm {
 		Ip:         common.GetRequestIP(ctx.Request()),
 	}
 	return form
+}
+
+func GetCreateArticleForm(ctx iris.Context) CreateArticleForm {
+	var (
+		title   = ctx.PostValue("title")
+		summary = ctx.PostValue("summary")
+		content = ctx.PostValue("content")
+		tags    = params.FormValueStringArray(ctx, "tags")
+		cover   = params.FormValue(ctx, "cover")
+	)
+	return CreateArticleForm{
+		Title:       title,
+		Summary:     summary,
+		Content:     content,
+		ContentType: constants.ContentTypeMarkdown,
+		Cover:       cover,
+		Tags:        tags,
+	}
 }
 
 func GetImageList(ctx iris.Context, paramName string) []ImageDTO {
