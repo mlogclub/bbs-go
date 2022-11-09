@@ -5,40 +5,56 @@
       :key="article.articleId"
       class="article-item"
     >
-      <nuxt-link class="article-title" :to="'/article/' + article.articleId">{{
-        article.title
-      }}</nuxt-link>
+      <div class="article-item-main">
+        <div class="article-info">
+          <nuxt-link
+            class="article-title"
+            :to="'/article/' + article.articleId"
+            >{{ article.title }}</nuxt-link
+          >
 
-      <div class="article-summary">
-        {{ article.summary }}
-      </div>
-
-      <div class="article-meta">
-        <div class="article-meta-left">
-          <span class="article-meta-item">
-            <nuxt-link :to="'/user/' + article.user.id" class="article-author">
-              <span>{{ article.user.nickname }}</span>
-            </nuxt-link>
-            <time
-              :datetime="article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"
-              >发布于 {{ article.createTime | prettyDate }}</time
-            >
-          </span>
-        </div>
-
-        <div class="article-meta-right">
-          <div v-if="article.tags && article.tags.length > 0">
-            <span
-              v-for="tag in article.tags"
-              :key="tag.tagId"
-              class="article-tag"
-            >
-              <nuxt-link :to="'/articles/' + tag.tagId" class>{{
-                tag.tagName
-              }}</nuxt-link>
-            </span>
+          <div class="article-summary">
+            {{ article.summary }}
           </div>
         </div>
+
+        <div class="article-meta">
+          <div class="article-meta-left">
+            <span class="article-meta-item">
+              <nuxt-link
+                :to="'/user/' + article.user.id"
+                class="article-author"
+              >
+                <span>{{ article.user.nickname }}</span>
+              </nuxt-link>
+              <time
+                :datetime="
+                  article.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                "
+                >发布于 {{ article.createTime | prettyDate }}</time
+              >
+            </span>
+          </div>
+
+          <div class="article-meta-right">
+            <div v-if="article.tags && article.tags.length > 0">
+              <nuxt-link
+                v-for="tag in article.tags"
+                :key="tag.tagId"
+                class="article-tag"
+                :to="'/articles/' + tag.tagId"
+                >{{ tag.tagName }}</nuxt-link
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="article.cover"
+        v-lazy-container="{ selector: 'img' }"
+        class="article-item-cover"
+      >
+        <img :data-src="article.cover.url" />
       </div>
     </div>
   </div>
@@ -73,76 +89,89 @@ export default {
       margin-bottom: 10px;
     }
 
-    .article-title {
-      font-size: 18px;
-      line-height: 30px;
-      font-weight: 500;
-      color: var(--text-color);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .article-summary {
-      font-size: 14px;
-      color: var(--text-color2);
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      text-align: justify;
-      padding-top: 6px;
-      word-break: break-all;
-      text-overflow: ellipsis;
-    }
-
-    .article-meta {
+    display: flex;
+    .article-item-main {
+      width: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      padding-top: 6px;
 
-      .article-meta-left {
-        .article-meta-item {
-          padding: 0 6px 0 0;
-          color: var(--text-color3);
+      .article-info {
+        .article-title {
+          font-size: 18px;
+          line-height: 30px;
+          font-weight: 500;
+          color: var(--text-color);
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-          .article-author {
-            font-weight: bold;
-            padding: 0 3px;
-          }
+        .article-summary {
+          font-size: 14px;
+          color: var(--text-color2);
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          text-align: justify;
+          padding-top: 6px;
+          word-break: break-all;
+          text-overflow: ellipsis;
         }
       }
 
-      .article-meta-right {
-        .article-tag {
-          height: 22px;
-          padding: 0 8px;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 12.5px;
-          background: var(--bg-color2);
-          border: 1px solid var(--border-color);
-          color: var(--text-color3);
-          font-size: 12px;
+      .article-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        padding-top: 6px;
 
-          &:hover {
-            color: var(--text-link-color);
-            background: var(--bg-color);
-            border: 1px solid var(--border-hover-color);
-          }
+        .article-meta-left {
+          .article-meta-item {
+            padding: 0 6px 0 0;
+            color: var(--text-color3);
 
-          &:not(:last-child) {
-            margin-right: 10px;
+            .article-author {
+              font-weight: bold;
+              padding: 0 3px;
+            }
           }
         }
-      }
 
-      @media screen and (max-width: 1024px) {
         .article-meta-right {
-          display: none;
+          @media screen and (max-width: 1024px) {
+            & {
+              display: none;
+            }
+          }
+
+          .article-tag {
+            padding: 2px 8px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12.5px;
+            margin-right: 10px;
+            background: var(--bg-color2);
+            border: 1px solid var(--border-color2);
+            color: var(--text-color3);
+            font-size: 12px;
+
+            &:hover {
+              color: var(--text-link-color);
+              background: var(--bg-color);
+            }
+          }
         }
+      }
+    }
+
+    .article-item-cover {
+      display: flex;
+      img {
+        width: 140px;
+        height: 90px;
+        object-fit: cover;
       }
     }
   }
