@@ -122,7 +122,7 @@ export default {
 
       .article-meta {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
         align-items: center;
         font-size: 13px;
         padding-top: 6px;
@@ -140,11 +140,13 @@ export default {
         }
 
         .article-meta-right {
-          @media screen and (max-width: 1024px) {
+          @media screen and (max-width: 768px) {
             & {
               display: none;
             }
           }
+
+          margin-left: 10px;
 
           .article-tag {
             padding: 2px 8px;
@@ -168,10 +170,22 @@ export default {
 
     .article-item-cover {
       display: flex;
+      margin-left: 6px;
       img {
+        min-width: 140px;
+        min-height: 90px;
         width: 140px;
         height: 90px;
         object-fit: cover;
+
+        @media screen and (max-width: 768px) {
+          & {
+            min-width: 110px;
+            min-height: 80px;
+            width: 110px;
+            height: 80px;
+          }
+        }
       }
     }
   }
