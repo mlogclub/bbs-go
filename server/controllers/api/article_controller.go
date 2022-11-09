@@ -8,8 +8,10 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/sirupsen/logrus"
 
 	"bbs-go/controllers/render"
 	"bbs-go/model"
@@ -87,11 +89,17 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 		}
 	}
 
+	var cover *model.ImageDTO
+	if err := jsons.Parse(article.Cover, &cover); err != nil {
+		logrus.Error(err)
+	}
+
 	return web.NewEmptyRspBuilder().
 		Put("articleId", article.Id).
 		Put("title", article.Title).
 		Put("content", article.Content).
 		Put("tags", tagNames).
+		Put("cover", cover).
 		JsonResult()
 }
 
@@ -106,6 +114,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		tags    = params.FormValueStringArray(c.Ctx, "tags")
 		title   = c.Ctx.PostValue("title")
 		content = c.Ctx.PostValue("content")
+		cover   = model.GetImageDTO(c.Ctx, "cover")
 	)
 
 	article := services.ArticleService.Get(articleId)
@@ -118,7 +127,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg("无权限")
 	}
 
-	if err := services.ArticleService.Edit(articleId, tags, title, content); err != nil {
+	if err := services.ArticleService.Edit(articleId, tags, title, content, cover); err != nil {
 		return web.JsonError(err)
 	}
 	// 操作日志

@@ -198,7 +198,7 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 }
 
 // 修改文章
-func (s *articleService) Edit(articleId int64, tags []string, title, content string) *web.CodeError {
+func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *model.ImageDTO) *web.CodeError {
 	if len(title) == 0 {
 		return web.NewErrorMsg("请输入标题")
 	}
@@ -207,10 +207,16 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
-		err := repositories.ArticleRepository.Updates(sqls.DB(), articleId, map[string]interface{}{
+		updates := map[string]interface{}{
 			"title":   title,
 			"content": content,
-		})
+		}
+		if cover != nil {
+			updates["cover"] = jsons.ToJsonStr(cover)
+		} else {
+			updates["cover"] = ""
+		}
+		err := repositories.ArticleRepository.Updates(sqls.DB(), articleId, updates)
 		if err != nil {
 			return err
 		}

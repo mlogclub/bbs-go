@@ -54,6 +54,12 @@
 <script>
 export default {
   props: {
+    value: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
     accept: {
       type: String,
       default: 'image/*',
@@ -77,7 +83,7 @@ export default {
   },
   data() {
     return {
-      fileList: [],
+      fileList: this.value,
       previewFiles: [],
       currentInput: null,
       viewerOptions: {

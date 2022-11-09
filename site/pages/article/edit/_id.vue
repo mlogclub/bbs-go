@@ -30,6 +30,19 @@
           </div>
         </div>
 
+        <div class="field">
+          <div class="control">
+            <image-upload v-model="postForm.cover" :limit="1" size="120px">
+              <template #add-image-button>
+                <div class="cover-add-btn">
+                  <i class="iconfont icon-add" />
+                  <span>封面</span>
+                </div>
+              </template>
+            </image-upload>
+          </div>
+        </div>
+
         <div class="field is-grouped">
           <div class="control">
             <a
@@ -54,12 +67,17 @@ export default {
       const [article] = await Promise.all([
         $axios.get('/api/article/edit/' + params.id),
       ])
+      const cover = []
+      if (article.cover) {
+        cover.push(article.cover)
+      }
       return {
         article,
         postForm: {
           title: article.title,
-          tags: article.tags,
           content: article.content,
+          tags: article.tags,
+          cover,
         },
       }
     } catch (e) {
@@ -74,8 +92,9 @@ export default {
       publishing: false, // 当前是否正处于发布中...
       postForm: {
         title: '',
-        tags: [],
         content: '',
+        tags: [],
+        cover: [],
       },
     }
   },
@@ -104,6 +123,10 @@ export default {
             title: this.postForm.title,
             content: this.postForm.content,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
+            cover:
+              me.postForm.cover && me.postForm.cover.length
+                ? JSON.stringify(me.postForm.cover[0])
+                : null,
           }
         )
         this.$msg({
@@ -125,5 +148,21 @@ export default {
 .article-create-form {
   background-color: var(--bg-color);
   padding: 30px;
+}
+.cover-add-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 24px;
+    color: #1878f3;
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--text-color3);
+  }
 }
 </style>
