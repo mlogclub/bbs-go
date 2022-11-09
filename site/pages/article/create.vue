@@ -46,11 +46,18 @@
           </div>
         </div>
 
-        <!-- <div class="field">
+        <div class="field">
           <div class="control">
-            <image-upload :limit="1" />
+            <image-upload v-model="postForm.cover" :limit="1" size="120px">
+              <template #add-image-button>
+                <div class="cover-add-btn">
+                  <i class="iconfont icon-add" />
+                  <span>封面</span>
+                </div>
+              </template>
+            </image-upload>
           </div>
-        </div> -->
+        </div>
 
         <div class="field is-grouped">
           <div class="control">
@@ -112,6 +119,10 @@ export default {
           title: me.postForm.title,
           content: me.postForm.content,
           tags: me.postForm.tags ? me.postForm.tags.join(',') : '',
+          cover:
+            me.postForm.cover && me.postForm.cover.length
+              ? JSON.stringify(me.postForm.cover[0])
+              : null,
         })
         this.$refs.mdEditor.clearCache()
         this.$msg({
@@ -133,5 +144,22 @@ export default {
 .article-create-form {
   background-color: var(--bg-color);
   padding: 30px;
+}
+
+.cover-add-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 24px;
+    color: #1878f3;
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--text-color3);
+  }
 }
 </style>

@@ -1,0 +1,1 @@
+alter table t_article add column cover text null after content_type;

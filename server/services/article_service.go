@@ -19,6 +19,7 @@ import (
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/files"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
@@ -174,6 +175,10 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 		SourceUrl:   form.SourceUrl,
 		CreateTime:  dates.NowTimestamp(),
 		UpdateTime:  dates.NowTimestamp(),
+	}
+
+	if form.Cover != nil {
+		article.Cover = jsons.ToJsonStr(form.Cover)
 	}
 
 	err = sqls.DB().Transaction(func(tx *gorm.DB) error {

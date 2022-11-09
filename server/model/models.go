@@ -81,7 +81,7 @@ type Article struct {
 	Summary      string `gorm:"type:text" json:"summary" form:"summary"`                             // 摘要
 	Content      string `gorm:"type:longtext;not null;" json:"content" form:"content"`               // 内容
 	ContentType  string `gorm:"type:varchar(32);not null" json:"contentType" form:"contentType"`     // 内容类型：markdown、html
-	Cover        string `gorm:"size:1024;" json:"cover" form:"cover"`                                // 封面图
+	Cover        string `gorm:"size:text;" json:"cover" form:"cover"`                                // 封面图
 	Status       int    `gorm:"type:int(11);index:idx_article_status" json:"status" form:"status"`   // 状态
 	SourceUrl    string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                         // 原文链接
 	ViewCount    int64  `gorm:"not null;" json:"viewCount" form:"viewCount"`                         // 查看数量

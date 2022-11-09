@@ -6,8 +6,10 @@ import (
 	"strings"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
@@ -30,7 +32,7 @@ type CreateArticleForm struct {
 	Summary     string
 	Content     string
 	ContentType string
-	Cover       string
+	Cover       *ImageDTO
 	Tags        []string
 	SourceUrl   string
 }
@@ -88,7 +90,7 @@ func GetCreateArticleForm(ctx iris.Context) CreateArticleForm {
 		summary = ctx.PostValue("summary")
 		content = ctx.PostValue("content")
 		tags    = params.FormValueStringArray(ctx, "tags")
-		cover   = params.FormValue(ctx, "cover")
+		cover   = GetImageDTO(ctx, "cover")
 	)
 	return CreateArticleForm{
 		Title:       title,
@@ -115,4 +117,15 @@ func GetImageList(ctx iris.Context, paramName string) []ImageDTO {
 		}
 	}
 	return imageList
+}
+
+func GetImageDTO(ctx iris.Context, paramName string) (img *ImageDTO) {
+	str := params.FormValue(ctx, paramName)
+	if strs.IsBlank(str) {
+		return
+	}
+	if err := jsons.Parse(str, &img); err != nil {
+		logrus.Error(err)
+	}
+	return
 }

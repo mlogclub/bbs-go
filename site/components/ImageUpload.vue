@@ -39,9 +39,14 @@
         multiple
         @input="onInput"
       />
-      <slot name="add-image-button">
-        <i class="iconfont icon-add" />
-      </slot>
+      <div class="add-image-btn-wrapper">
+        <slot name="add-image-button">
+          <i
+            class="iconfont icon-add"
+            style="font-size: 30px; color: #1878f3"
+          />
+        </slot>
+      </div>
     </div>
   </div>
 </template>
@@ -355,13 +360,11 @@ export default {
       display: none;
     }
 
-    .icon-add {
-      font-size: 30px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #1878f3; // TODO
+    .add-image-btn-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
   }
 }
