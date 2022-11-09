@@ -26,3 +26,19 @@ func buildImageList(imageListStr string) (imageList []model.ImageInfo) {
 	}
 	return
 }
+
+func buildImage(imageStr string) *model.ImageInfo {
+	if strs.IsBlank(imageStr) {
+		return nil
+	}
+	var img *model.ImageDTO
+	if err := jsons.Parse(imageStr, &img); err != nil {
+		logrus.Error(err)
+		return nil
+	} else {
+		return &model.ImageInfo{
+			Url:     HandleOssImageStyleDetail(img.Url),
+			Preview: HandleOssImageStylePreview(img.Url),
+		}
+	}
+}

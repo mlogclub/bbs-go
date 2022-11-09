@@ -36,6 +36,8 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 		rsp.Content = handleHtmlContent(article.Content)
 	}
 
+	rsp.Cover = buildImage(article.Cover)
+
 	return rsp
 }
 
@@ -70,6 +72,8 @@ func BuildSimpleArticle(article *model.Article) *model.ArticleSimpleResponse {
 			rsp.Summary = text.GetSummary(html.GetHtmlText(article.Content), constants.SummaryLen)
 		}
 	}
+
+	rsp.Cover = buildImage(article.Cover)
 
 	return rsp
 }

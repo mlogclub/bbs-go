@@ -57,6 +57,7 @@ type ArticleSimpleResponse struct {
 	Tags         *[]TagResponse `json:"tags"`
 	Title        string         `json:"title"`
 	Summary      string         `json:"summary"`
+	Cover        *ImageInfo     `json:"cover"`
 	SourceUrl    string         `json:"sourceUrl"`
 	ViewCount    int64          `json:"viewCount"`
 	CommentCount int64          `json:"commentCount"`
