@@ -30,7 +30,7 @@ func handleHtmlContent(htmlContent string) string {
 		return htmlContent
 	}
 
-	doc.Find("a").Each(func(i int, selection *goquery.Selection) {
+	doc.Find("a").Each(func(_ int, selection *goquery.Selection) {
 		href := selection.AttrOr("href", "")
 
 		if strs.IsBlank(href) {
@@ -57,13 +57,12 @@ func handleHtmlContent(htmlContent string) string {
 	})
 
 	// 处理图片
-	doc.Find("img").Each(func(i int, selection *goquery.Selection) {
+	doc.Find("img").Each(func(_ int, selection *goquery.Selection) {
 		src := selection.AttrOr("src", "")
 
 		// 处理第三方图片
 		if strings.Contains(src, "qpic.cn") {
 			src = urls.ParseUrl("/api/img/proxy").AddQuery("url", src).BuildStr()
-			// selection.SetAttr("src", src)
 		}
 
 		// 处理图片样式
@@ -84,6 +83,7 @@ func handleHtmlContent(htmlContent string) string {
 BuildLoginSuccess 处理登录成功后的返回数据
 
 Parameter:
+
 	user - login user
 	ref - 登录来源地址，需要控制登录成功之后跳转到该地址
 */
