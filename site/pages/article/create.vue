@@ -78,6 +78,17 @@
 <script>
 export default {
   middleware: 'authenticated',
+  asyncData({ store, error }) {
+    if (!store.getters['config/isEnabledArticle']) {
+      // 发帖子
+      error({
+        statusCode: 404,
+        message: '已关闭文章功能',
+      })
+      return
+    }
+    return {}
+  },
   data() {
     return {
       publishing: false, // 当前是否正处于发布中...

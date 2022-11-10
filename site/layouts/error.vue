@@ -6,13 +6,14 @@
           <img src="~/assets/images/logo.png" style="max-width: 100px" />
         </div>
         <div class="description">
-          <span v-if="error.statusCode === 404">{{
-            error.message ? error.message : '页面没找到'
-          }}</span>
-          <span v-if="error.statusCode === 403">{{
-            error.message ? error.message : 'forbidden'
-          }}</span>
-          <span v-else>{{ error.statusCode }} 页面异常</span>
+          <div v-if="error.message">
+            {{ error.message }}
+          </div>
+          <template v-else>
+            <div v-if="error.statusCode === 404">页面没找到</div>
+            <div v-if="error.statusCode === 403">forbidden</div>
+            <div v-else>{{ error.statusCode }} 异常</div>
+          </template>
         </div>
         <div class="report">
           <nuxt-link to="/topic/create" target="_blank"
@@ -44,7 +45,7 @@ export default {
 
   .description {
     margin-top: 30px;
-    span {
+    div {
       font-size: 18px;
       font-weight: bold;
       line-height: 22px;

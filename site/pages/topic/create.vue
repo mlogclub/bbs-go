@@ -121,7 +121,7 @@
 <script>
 export default {
   middleware: 'authenticated',
-  async asyncData({ $axios, query, store }) {
+  async asyncData({ $axios, query, store, error }) {
     // 节点
     const nodes = await $axios.get('/api/topic/nodes')
 
@@ -138,6 +138,22 @@ export default {
     }
 
     const type = parseInt(query.type || 0) || 0
+
+    if (type === 0 && !store.getters['config/isEnabledTopic']) {
+      // 发帖子
+      error({
+        statusCode: 404,
+        message: '已关闭帖子功能',
+      })
+      return
+    } else if (type === 1 && !store.getters['config/isEnabledTweet']) {
+      // 发动态
+      error({
+        statusCode: 404,
+        message: '已关闭动态功能',
+      })
+      return
+    }
 
     return {
       nodes,
