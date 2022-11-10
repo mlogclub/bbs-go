@@ -27,4 +27,28 @@ export const getters = {
   siteKeywords(state) {
     return state.config.siteKeywords || ''
   },
+  isEnabledTweet(state) {
+    for (let i = 0; i < state.config.modules.length; i++) {
+      if (state.config.modules[i].module === 'tweet') {
+        return state.config.modules[i].enabled
+      }
+    }
+    return true
+  },
+  isEnabledTopic(state) {
+    for (let i = 0; i < state.config.modules.length; i++) {
+      if (state.config.modules[i].module === 'topic') {
+        return state.config.modules[i].enabled
+      }
+    }
+    return true
+  },
+  isEnabledArticle(state) {
+    for (let i = 0; i < state.config.modules.length; i++) {
+      if (state.config.modules[i].module === 'article') {
+        return state.config.modules[i].enabled
+      }
+    }
+    return true
+  },
 }

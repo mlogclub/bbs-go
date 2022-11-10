@@ -19,14 +19,12 @@
         </slot>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="tweet" icon="iconfont icon-tweet2"
-          >发动态</el-dropdown-item
-        >
-        <el-dropdown-item command="topic" icon="iconfont icon-topic"
-          >发帖子</el-dropdown-item
-        >
-        <el-dropdown-item command="article" icon="iconfont icon-article"
-          >发文章</el-dropdown-item
+        <el-dropdown-item
+          v-for="(item, i) in modules"
+          :key="i"
+          :command="item.command"
+          :icon="item.icon"
+          >{{ item.name }}</el-dropdown-item
         >
       </el-dropdown-menu>
     </el-dropdown>
@@ -37,7 +35,38 @@ export default {
   data() {
     return {}
   },
-  computed: {},
+  computed: {
+    config() {
+      return this.$store.state.config.config
+    },
+    modules() {
+      const modules = []
+      for (let i = 0; i < this.config.modules.length; i++) {
+        const item = this.config.modules[i]
+        if (item.enabled) {
+          const command = item.module
+          let icon = ''
+          let name = ''
+          if (item.module === 'tweet') {
+            icon = 'iconfont icon-tweet2'
+            name = '发动态'
+          } else if (item.module === 'topic') {
+            icon = 'iconfont icon-topic'
+            name = '发帖子'
+          } else if (item.module === 'article') {
+            icon = 'iconfont icon-article'
+            name = '发文章'
+          }
+          modules.push({
+            command,
+            icon,
+            name,
+          })
+        }
+      }
+      return modules
+    },
+  },
   methods: {
     handlePostCommand(cmd) {
       if (cmd === 'topic') {
