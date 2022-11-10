@@ -74,6 +74,12 @@
               </el-form-item>
             </template>
 
+            <el-form-item label="功能模块">
+              <el-checkbox v-model="modules.tweet" border label="动态"></el-checkbox>
+              <el-checkbox v-model="modules.topic" border label="帖子"></el-checkbox>
+              <el-checkbox v-model="modules.article" border label="文章"></el-checkbox>
+            </el-form-item>
+
             <el-form-item label="站外链接跳转页面">
               <el-tooltip content="在跳转前需手动确认是否前往该站外链接" placement="top">
                 <el-switch v-model="config.urlRedirect" />
@@ -209,6 +215,11 @@ export default {
       autocompleteTags: [],
       autocompleteTagLoading: false,
       nodes: [],
+      modules: {
+        tweet: false,
+        topic: false,
+        article: false,
+      },
     };
   },
   mounted() {
@@ -220,6 +231,18 @@ export default {
       try {
         this.config = await this.axios.get("/api/admin/sys-config/all");
         this.nodes = await this.axios.get("/api/admin/topic-node/nodes");
+
+        // 处理功能模块
+        for (let i = 0; i < this.config.modules.length; i++) {
+          const e = this.config.modules[i];
+          if (e.module === "tweet") {
+            this.modules.tweet = e.enabled;
+          } else if (e.module === "topic") {
+            this.modules.topic = e.enabled;
+          } else if (e.module === "article") {
+            this.modules.article = e.enabled;
+          }
+        }
       } catch (err) {
         this.$notify.error({ title: "错误", message: err.message });
       } finally {
@@ -229,6 +252,18 @@ export default {
     async save() {
       this.loading = true;
       try {
+        // 处理功能模块
+        for (let i = 0; i < this.config.modules.length; i++) {
+          const e = this.config.modules[i];
+          if (e.module === "tweet") {
+            e.enabled = this.modules.tweet;
+          } else if (e.module === "topic") {
+            e.enabled = this.modules.topic;
+          } else if (e.module === "article") {
+            e.enabled = this.modules.article;
+          }
+        }
+
         await this.axios.form("/api/admin/sys-config/save", {
           config: JSON.stringify(this.config),
         });

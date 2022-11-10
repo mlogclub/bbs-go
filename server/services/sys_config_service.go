@@ -202,16 +202,16 @@ func (s *sysConfigService) GetModules() (modules []model.ModuleConfig) {
 	if len(modules) == 0 {
 		modules = []model.ModuleConfig{
 			{
-				Module: constants.ModuleTweet,
-				Config: map[string]interface{}{},
+				Module:  constants.ModuleTweet,
+				Enabled: true,
 			},
 			{
-				Module: constants.ModuleTopic,
-				Config: map[string]interface{}{},
+				Module:  constants.ModuleTopic,
+				Enabled: true,
 			},
 			{
-				Module: constants.ModuleArticle,
-				Config: map[string]interface{}{},
+				Module:  constants.ModuleArticle,
+				Enabled: true,
 			},
 		}
 	}

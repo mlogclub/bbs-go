@@ -49,6 +49,6 @@ type SysConfigResponse struct {
 //
 //	模块配置
 type ModuleConfig struct {
-	Module string                 `json:"module"`
-	Config map[string]interface{} `json:"config"`
+	Module  string `json:"module"`
+	Enabled bool   `json:"enabled"`
 }
