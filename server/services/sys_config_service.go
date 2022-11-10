@@ -192,6 +192,32 @@ func (s *sysConfigService) GetSiteNavs() []model.ActionLink {
 	return siteNavsArr
 }
 
+func (s *sysConfigService) GetModules() (modules []model.ModuleConfig) {
+	str := cache.SysConfigCache.GetValue(constants.SysConfigModules)
+	if strs.IsNotBlank(str) {
+		if err := jsons.Parse(str, &modules); err != nil {
+			logrus.Warn("站点导航数据错误", err)
+		}
+	}
+	if len(modules) == 0 {
+		modules = []model.ModuleConfig{
+			{
+				Module: constants.ModuleTweet,
+				Config: map[string]interface{}{},
+			},
+			{
+				Module: constants.ModuleTopic,
+				Config: map[string]interface{}{},
+			},
+			{
+				Module: constants.ModuleArticle,
+				Config: map[string]interface{}{},
+			},
+		}
+	}
+	return
+}
+
 func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
 		siteTitle                  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
@@ -205,7 +231,6 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		topicCaptcha               = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr      = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
 		siteNavs                   = s.GetSiteNavs()
-		tokenExpireDays            = s.GetTokenExpireDays()
 		loginMethod                = s.GetLoginMethod()
 		createTopicEmailVerified   = s.IsCreateTopicEmailVerified()
 		createArticleEmailVerified = s.IsCreateArticleEmailVerified()
@@ -240,10 +265,6 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		userObserveSeconds = numbers.ToInt(userObserveSecondsStr)
 	)
 
-	if tokenExpireDays <= 0 {
-		tokenExpireDays = 7
-	}
-
 	return &model.SysConfigResponse{
 		SiteTitle:                  siteTitle,
 		SiteDescription:            siteDescription,
@@ -257,12 +278,13 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		ArticlePending:             articlePending,
 		TopicCaptcha:               strings.ToLower(topicCaptcha) == "true",
 		UserObserveSeconds:         userObserveSeconds,
-		TokenExpireDays:            tokenExpireDays,
+		TokenExpireDays:            s.GetTokenExpireDays(),
 		LoginMethod:                loginMethod,
 		CreateTopicEmailVerified:   createTopicEmailVerified,
 		CreateArticleEmailVerified: createArticleEmailVerified,
 		CreateCommentEmailVerified: createCommentEmailVerified,
 		EnableHideContent:          enableHideContent,
+		Modules:                    s.GetModules(),
 	}
 }
 

@@ -27,6 +27,7 @@ const (
 	SysConfigCreateTopicEmailVerified   = "createTopicEmailVerified"   // 发话题需要邮箱认证
 	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
 	SysConfigCreateCommentEmailVerified = "createCommentEmailVerified" // 发话题需要邮箱认证
+	SysConfigModules                    = "modules"                    // 功能模块
 )
 
 // EntityType
@@ -119,4 +120,11 @@ type Gender string
 const (
 	GenderMale   Gender = "Male"
 	GenderFemale Gender = "Female"
+)
+
+// 模块
+const (
+	ModuleTweet   = "tweet"
+	ModuleTopic   = "topic"
+	ModuleArticle = "article"
 )
