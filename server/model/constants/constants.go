@@ -128,3 +128,8 @@ const (
 	ModuleTopic   = "topic"
 	ModuleArticle = "article"
 )
+
+const (
+	ForbiddenWordTypeWord  = "word"
+	ForbiddenWordTypeRegex = "regex"
+)
