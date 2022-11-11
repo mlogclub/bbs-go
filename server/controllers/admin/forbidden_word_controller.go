@@ -23,7 +23,7 @@ func (c *ForbiddenWordController) GetBy(id int64) *web.JsonResult {
 }
 
 func (c *ForbiddenWordController) AnyList() *web.JsonResult {
-	list, paging := services.ForbiddenWordService.FindPageByParams(params.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
+	list, paging := services.ForbiddenWordService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("type").LikeByReq("word").EqByReq("status").PageByReq().Desc("id"))
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
@@ -62,4 +62,3 @@ func (c *ForbiddenWordController) PostUpdate() *web.JsonResult {
 	}
 	return web.JsonData(t)
 }
-

@@ -1,214 +1,208 @@
-
 <template>
-    <section class="page-container">
-        
-        <div ref="toolbar" class="toolbar">
-            <el-form :inline="true" :model="filters">
-                <el-form-item>
-                    <el-input v-model="filters.name" placeholder="名称"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" v-on:click="list">查询</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+  <section class="page-container">
+    <div ref="toolbar" class="toolbar">
+      <el-form :inline="true" :model="filters">
+        <el-form-item>
+          <el-select v-model="filters.type" placeholder="类型">
+            <el-option label="regex" value="regex" />
+            <el-option label="word" value="word" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="filters.word" placeholder="违禁词"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="list">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-        
-		<div ref="mainContent" :style="{ height: mainHeight }">
-			<el-table
-				v-loading="listLoading"
-				height="100%"
-				:data="results"
-				highlight-current-row
-				stripe
-				border
-				@selection-change="handleSelectionChange"
-			>
-				<el-table-column type="selection" width="55"></el-table-column>
-				<el-table-column prop="id" label="编号"></el-table-column>
-				
-				<el-table-column prop="type" label="type"></el-table-column>
-				
-				<el-table-column prop="word" label="word"></el-table-column>
-				
-				<el-table-column prop="remark" label="remark"></el-table-column>
-				
-				<el-table-column prop="createTime" label="createTime"></el-table-column>
-				
-				<el-table-column label="操作" width="150">
-					<template slot-scope="scope">
-						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-		</div>
+    <div ref="mainContent" :style="{ height: mainHeight }">
+      <el-table
+        v-loading="listLoading"
+        height="100%"
+        :data="results"
+        highlight-current-row
+        stripe
+        border
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="id" label="编号"></el-table-column>
 
-        
-        <div ref="pagebar" class="pagebar">
-            <el-pagination
-                           @current-change="handlePageChange"
-                           @size-change="handleLimitChange"
-                           :page-sizes="[20, 50, 100, 300]"
-                           :current-page="page.page"
-                           :page-size="page.limit"
-                           :total="page.total"
-						   layout="total, sizes, prev, pager, next, jumper">
-            </el-pagination>
-        </div>
+        <el-table-column prop="type" label="类型"></el-table-column>
 
-        
-        <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-            <el-form :model="addForm" label-width="80px" ref="addForm">
-                
-				<el-form-item label="type">
-					<el-input v-model="addForm.type"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="word">
-					<el-input v-model="addForm.word"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="remark">
-					<el-input v-model="addForm.remark"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="createTime">
-					<el-input v-model="addForm.createTime"></el-input>
-				</el-form-item>
-                
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="addFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-            </div>
-        </el-dialog>
+        <el-table-column prop="word" label="违禁词"></el-table-column>
 
-        
-        <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" ref="editForm">
-                <el-input v-model="editForm.id" type="hidden"></el-input>
-                
-				<el-form-item label="type">
-					<el-input v-model="editForm.type"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="word">
-					<el-input v-model="editForm.word"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="remark">
-					<el-input v-model="editForm.remark"></el-input>
-				</el-form-item>
-                
-				<el-form-item label="createTime">
-					<el-input v-model="editForm.createTime"></el-input>
-				</el-form-item>
-                
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
-        </el-dialog>
-    </section>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+
+        <el-table-column prop="createTime" label="创建时间">
+          <template slot-scope="scope">
+            {{ scope.row.createTime | formatDate }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div ref="pagebar" class="pagebar">
+      <el-pagination
+        :page-sizes="[20, 50, 100, 300]"
+        :current-page="page.page"
+        :page-size="page.limit"
+        :total="page.total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @current-change="handlePageChange"
+        @size-change="handleLimitChange"
+      >
+      </el-pagination>
+    </div>
+
+    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
+      <el-form ref="addForm" :model="addForm" label-width="80px">
+        <el-form-item label="类型">
+          <el-select v-model="addForm.type" placeholder="类型">
+            <el-option label="regex" value="regex" />
+            <el-option label="word" value="word" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="违禁词">
+          <el-input v-model="addForm.word"></el-input>
+        </el-form-item>
+
+        <el-form-item label="备注">
+          <el-input v-model="addForm.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="addFormVisible = false">取消</el-button>
+        <el-button type="primary" :loading="addLoading" @click.native="addSubmit">提交</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+      <el-form ref="editForm" :model="editForm" label-width="80px">
+        <el-input v-model="editForm.id" type="hidden"></el-input>
+
+        <el-form-item label="类型">
+          <el-select v-model="editForm.type" placeholder="类型">
+            <el-option label="regex" value="regex" />
+            <el-option label="word" value="word" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="违禁词">
+          <el-input v-model="editForm.word"></el-input>
+        </el-form-item>
+
+        <el-form-item label="备注">
+          <el-input v-model="editForm.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="editFormVisible = false">取消</el-button>
+        <el-button type="primary" :loading="editLoading" @click.native="editSubmit">提交</el-button>
+      </div>
+    </el-dialog>
+  </section>
 </template>
 
 <script>
-  import mainHeight from "@/utils/mainHeight";
-  export default {
-    data() {
-      return {
-		mainHeight: "300px",
-        results: [],
-        listLoading: false,
-        page: {},
-        filters: {},
-        selectedRows: [],
+import mainHeight from "@/utils/mainHeight";
+export default {
+  data() {
+    return {
+      mainHeight: "300px",
+      results: [],
+      listLoading: false,
+      page: {},
+      filters: {},
+      selectedRows: [],
 
-        addForm: {},
-        addFormVisible: false,
-        addLoading: false,
+      addForm: {},
+      addFormVisible: false,
+      addLoading: false,
 
-        editForm: {},
-        editFormVisible: false,
-        editLoading: false,
+      editForm: {},
+      editFormVisible: false,
+      editLoading: false,
+    };
+  },
+  mounted() {
+    mainHeight(this);
+    this.list();
+  },
+  methods: {
+    async list() {
+      const params = Object.assign(this.filters, {
+        page: this.page.page,
+        limit: this.page.limit,
+      });
+      try {
+        const data = await this.axios.form("/api/admin/forbidden-word/list", params);
+        this.results = data.results;
+        this.page = data.page;
+      } catch (e) {
+        this.$notify.error({ title: "错误", message: e.message || e });
+      } finally {
+        this.listLoading = false;
       }
     },
-    mounted() {
-	  mainHeight(this);
-      this.list();
+    async handlePageChange(val) {
+      this.page.page = val;
+      await this.list();
     },
-    methods: {
-		async list() {
-		  const params = Object.assign(this.filters, {
-			page: this.page.page,
-			limit: this.page.limit,
-		  })
-		  try {
-			const data = await this.axios.form('/api/admin/forbidden-word/list', params)
-			this.results = data.results
-			this.page = data.page
-		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e.message || e })
-		  } finally {
-			this.listLoading = false
-		  }
-		},
-		async handlePageChange(val) {
-		  this.page.page = val
-		  await this.list()
-		},
-		async handleLimitChange(val) {
-		  this.page.limit = val
-		  await this.list()
-		},
-		handleAdd() {
-		  this.addForm = {
-			name: '',
-			description: '',
-		  }
-		  this.addFormVisible = true
-		},
-		async addSubmit() {
-		  try {
-			await this.axios.form('/api/admin/forbidden-word/create', this.addForm)
-			this.$message({ message: '提交成功', type: 'success' })
-			this.addFormVisible = false
-			await this.list()
-		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e.message || e })
-		  }
-		},
-		async handleEdit(index, row) {
-		  try {
-			const data = await this.axios.get('/api/admin/forbidden-word/' + row.id)
-			this.editForm = Object.assign({}, data)
-			this.editFormVisible = true
-		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e.message || e })
-		  }
-		},
-		async editSubmit() {
-		  try {
-			await this.axios.form('/api/admin/forbidden-word/update', this.editForm)
-			await this.list()
-			this.editFormVisible = false
-		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e.message || e })
-		  }
-		},
-	
-		handleSelectionChange(val) {
-		  this.selectedRows = val
-		},
-    }
-  }
+    async handleLimitChange(val) {
+      this.page.limit = val;
+      await this.list();
+    },
+    handleAdd() {
+      this.addForm = {};
+      this.addFormVisible = true;
+    },
+    async addSubmit() {
+      try {
+        await this.axios.form("/api/admin/forbidden-word/create", this.addForm);
+        this.$message({ message: "提交成功", type: "success" });
+        this.addFormVisible = false;
+        await this.list();
+      } catch (e) {
+        this.$notify.error({ title: "错误", message: e.message || e });
+      }
+    },
+    async handleEdit(index, row) {
+      try {
+        const data = await this.axios.get("/api/admin/forbidden-word/" + row.id);
+        this.editForm = Object.assign({}, data);
+        this.editFormVisible = true;
+      } catch (e) {
+        this.$notify.error({ title: "错误", message: e.message || e });
+      }
+    },
+    async editSubmit() {
+      try {
+        await this.axios.form("/api/admin/forbidden-word/update", this.editForm);
+        await this.list();
+        this.editFormVisible = false;
+      } catch (e) {
+        this.$notify.error({ title: "错误", message: e.message || e });
+      }
+    },
+
+    handleSelectionChange(val) {
+      this.selectedRows = val;
+    },
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-
+<style lang="scss" scoped></style>
