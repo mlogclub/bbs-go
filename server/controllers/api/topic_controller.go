@@ -197,10 +197,22 @@ func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 // 帖子详情
 func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 	topic := services.TopicService.Get(topicId)
-	if topic == nil || topic.Status != constants.StatusOk {
-		return web.JsonErrorMsg("主题不存在")
+	if topic == nil || topic.Status == constants.StatusDeleted {
+		return web.JsonErrorMsg("帖子不存在")
 	}
+
+	// 审核中文章控制展示
 	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if topic.Status == constants.StatusReview {
+		if user != nil {
+			if topic.UserId != user.Id && !user.IsOwnerOrAdmin() {
+				return web.JsonErrorCode(403, "文章审核中")
+			}
+		} else {
+			return web.JsonErrorCode(403, "文章审核中")
+		}
+	}
+
 	services.TopicService.IncrViewCount(topicId) // 增加浏览量
 	return web.JsonData(render.BuildTopic(topic, user))
 }

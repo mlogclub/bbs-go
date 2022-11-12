@@ -109,6 +109,7 @@ type TopicResponse struct {
 	RecommendTime   int64               `json:"recommendTime"`
 	Sticky          bool                `json:"sticky"`
 	StickyTime      int64               `json:"stickyTime"`
+	Status          int                 `json:"status"`
 }
 
 // CommentResponse 评论返回数据

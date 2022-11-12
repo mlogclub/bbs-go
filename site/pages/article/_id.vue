@@ -127,7 +127,6 @@ export default {
       article = await $axios.get('/api/article/' + params.id)
     } catch (e) {
       error({
-        statusCode: e.errorCode,
         message: e.message,
       })
       return
