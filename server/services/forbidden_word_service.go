@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -50,31 +51,46 @@ func (s *forbiddenWordService) Count(cnd *sqls.Cnd) int64 {
 }
 
 func (s *forbiddenWordService) Create(t *model.ForbiddenWord) error {
-	return repositories.ForbiddenWordRepository.Create(sqls.DB(), t)
+	if err := repositories.ForbiddenWordRepository.Create(sqls.DB(), t); err != nil {
+		return err
+	}
+	cache.ForbiddenWordCache.Invalidate()
+	return nil
 }
 
 func (s *forbiddenWordService) Update(t *model.ForbiddenWord) error {
-	return repositories.ForbiddenWordRepository.Update(sqls.DB(), t)
+	if err := repositories.ForbiddenWordRepository.Update(sqls.DB(), t); err != nil {
+		return err
+	}
+	cache.ForbiddenWordCache.Invalidate()
+	return nil
 }
 
 func (s *forbiddenWordService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.ForbiddenWordRepository.Updates(sqls.DB(), id, columns)
+	if err := repositories.ForbiddenWordRepository.Updates(sqls.DB(), id, columns); err != nil {
+		return err
+	}
+	cache.ForbiddenWordCache.Invalidate()
+	return nil
 }
 
 func (s *forbiddenWordService) UpdateColumn(id int64, name string, value interface{}) error {
 	if err := repositories.ForbiddenWordRepository.UpdateColumn(sqls.DB(), id, name, value); err != nil {
 		return err
 	}
-	cache.ForbiddenWordCache.Reload()
+	cache.ForbiddenWordCache.Invalidate()
 	return nil
 }
 
 func (s *forbiddenWordService) Delete(id int64) {
 	repositories.ForbiddenWordRepository.Delete(sqls.DB(), id)
-	cache.ForbiddenWordCache.Reload()
+	cache.ForbiddenWordCache.Invalidate()
 }
 
-func (s forbiddenWordService) Hit(content string) (hitWords []string) {
+func (s forbiddenWordService) Check(content string) (hitWords []string) {
+	if strs.IsBlank(content) {
+		return
+	}
 	words := cache.ForbiddenWordCache.Get()
 	if len(words) == 0 {
 		return

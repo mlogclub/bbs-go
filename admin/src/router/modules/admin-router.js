@@ -53,7 +53,7 @@ const adminRouter = [
         component: () => import("@/views/pages/forbidden-word/index"),
         meta: {
           title: "违禁词",
-          icon: "el-icon-warning-outline",
+          icon: "iconfont icon-article",
         },
       },
     ],

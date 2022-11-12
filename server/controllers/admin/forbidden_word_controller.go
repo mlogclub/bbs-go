@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -27,13 +28,19 @@ func (c *ForbiddenWordController) AnyList() *web.JsonResult {
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
+func (c ForbiddenWordController) PostDelete() *web.JsonResult {
+	id, _ := params.FormValueInt64(c.Ctx, "id")
+	services.ForbiddenWordService.Delete(id)
+	return web.JsonSuccess()
+}
+
 func (c *ForbiddenWordController) PostCreate() *web.JsonResult {
 	t := &model.ForbiddenWord{}
 	err := params.ReadForm(c.Ctx, t)
 	if err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
-
+	t.CreateTime = dates.NowTimestamp()
 	err = services.ForbiddenWordService.Create(t)
 	if err != nil {
 		return web.JsonErrorMsg(err.Error())

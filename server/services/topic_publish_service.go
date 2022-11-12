@@ -77,11 +77,13 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 }
 
 func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicForm) (err error) {
-	// TODO 帖子内容、标题字数限制可配置
 	if form.Type == constants.TopicTypeTweet {
-		if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
-			return web.NewErrorMsg("内容或图片不能为空")
+		if strs.IsBlank(form.Content) {
+			return web.NewErrorMsg("内容不能为空")
 		}
+		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
+		// 	return web.NewErrorMsg("内容或图片不能为空")
+		// }
 	} else {
 		if strs.IsBlank(form.Title) {
 			return web.NewErrorMsg("标题不能为空")
@@ -106,5 +108,14 @@ func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicFo
 	if node == nil || node.Status != constants.StatusOk {
 		return web.NewErrorMsg("节点不存在")
 	}
+
+	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
+		return web.NewErrorMsg("发表失败")
+	}
+
+	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
+		return web.NewErrorMsg("发表失败")
+	}
+
 	return nil
 }

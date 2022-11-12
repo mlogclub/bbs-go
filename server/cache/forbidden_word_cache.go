@@ -2,7 +2,6 @@ package cache
 
 import (
 	"bbs-go/model"
-	"bbs-go/model/constants"
 	"bbs-go/repositories"
 	"time"
 
@@ -21,7 +20,7 @@ func newForbiddenWordCache() *forbiddenWordCache {
 	return &forbiddenWordCache{
 		cache: cache.NewLoadingCache(
 			func(_ cache.Key) (value cache.Value, e error) {
-				value = repositories.ForbiddenWordRepository.Find(sqls.DB(), sqls.NewCnd().Where("status = ", constants.StatusOk))
+				value = repositories.ForbiddenWordRepository.Find(sqls.DB(), sqls.NewCnd())
 				return
 			},
 			cache.WithMaximumSize(1000),
@@ -39,6 +38,6 @@ func (c *forbiddenWordCache) Get() []model.ForbiddenWord {
 	return val.([]model.ForbiddenWord)
 }
 
-func (c *forbiddenWordCache) Reload() {
-	c.cache.Refresh("_")
+func (c *forbiddenWordCache) Invalidate() {
+	c.cache.Invalidate("_")
 }

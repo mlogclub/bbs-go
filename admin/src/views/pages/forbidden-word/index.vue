@@ -3,19 +3,19 @@
     <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-select v-model="filters.type" placeholder="类型">
-            <el-option label="regex" value="regex" />
-            <el-option label="word" value="word" />
+          <el-select v-model="filters.type" placeholder="类型" clearable @change="list">
+            <el-option label="词组" value="word" />
+            <el-option label="正则表达式" value="regex" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-input v-model="filters.word" placeholder="违禁词"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="list">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="list">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -30,7 +30,7 @@
         border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="id" label="编号"></el-table-column>
 
         <el-table-column prop="type" label="类型"></el-table-column>
@@ -45,9 +45,22 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button
+              size="small"
+              type="primary"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="danger"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -70,8 +83,8 @@
       <el-form ref="addForm" :model="addForm" label-width="80px">
         <el-form-item label="类型">
           <el-select v-model="addForm.type" placeholder="类型">
-            <el-option label="regex" value="regex" />
-            <el-option label="word" value="word" />
+            <el-option label="词组" value="word" />
+            <el-option label="正则表达式" value="regex" />
           </el-select>
         </el-form-item>
 
@@ -95,8 +108,8 @@
 
         <el-form-item label="类型">
           <el-select v-model="editForm.type" placeholder="类型">
-            <el-option label="regex" value="regex" />
-            <el-option label="word" value="word" />
+            <el-option label="词组" value="word" />
+            <el-option label="正则表达式" value="regex" />
           </el-select>
         </el-form-item>
 
@@ -166,7 +179,9 @@ export default {
       await this.list();
     },
     handleAdd() {
-      this.addForm = {};
+      this.addForm = {
+        type: "word",
+      };
       this.addFormVisible = true;
     },
     async addSubmit() {
@@ -197,7 +212,17 @@ export default {
         this.$notify.error({ title: "错误", message: e.message || e });
       }
     },
-
+    async handleDelete(index, row) {
+      try {
+        await this.axios.form("/api/admin/forbidden-word/delete", {
+          id: row.id,
+        });
+        await this.list();
+        this.$notify.success("删除成功");
+      } catch (e) {
+        this.$notify.error({ title: "错误", message: e.message || e });
+      }
+    },
     handleSelectionChange(val) {
       this.selectedRows = val;
     },
