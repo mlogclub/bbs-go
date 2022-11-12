@@ -189,17 +189,21 @@ export default {
     },
     async updateTags() {
       try {
-        const nowTags = await this.axios.form("/api/admin/article/tags", {
+        // const nowTags = await this.axios.form("/api/admin/article/tags", {
+        //   articleId: this.updateTagForm.articleId,
+        //   tags: (this.updateTagForm.tags || []).join(","),
+        // });
+        // if (this.results && this.results.length) {
+        //   for (let i = 0; i < this.results.length; i++) {
+        //     if (this.results[i].id === this.updateTagForm.articleId) {
+        //       this.results[i].tags = nowTags;
+        //     }
+        //   }
+        // }
+        await this.axios.form("/api/admin/article/tags", {
           articleId: this.updateTagForm.articleId,
           tags: (this.updateTagForm.tags || []).join(","),
         });
-        if (this.results && this.results.length) {
-          for (let i = 0; i < this.results.length; i++) {
-            if (this.results[i].id === this.updateTagForm.articleId) {
-              this.results[i].tags = nowTags;
-            }
-          }
-        }
         this.updateTagsDialogVisible = false;
         this.$emit("change");
       } catch (e) {
