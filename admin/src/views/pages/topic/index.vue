@@ -19,8 +19,8 @@
         </el-form-item>
         <el-form-item>
           <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" value="0" />
-            <el-option label="删除" value="1" />
+            <el-option label="正常" :value="0" />
+            <el-option label="删除" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -61,7 +61,7 @@ export default {
       listLoading: false,
       page: {},
       filters: {
-        status: "0",
+        status: 0,
       },
       selectedRows: [],
     };

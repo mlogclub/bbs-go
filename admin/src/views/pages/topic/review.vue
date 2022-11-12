@@ -48,9 +48,7 @@ export default {
       results: [],
       listLoading: false,
       page: {},
-      filters: {
-        status: "0",
-      },
+      filters: {},
       selectedRows: [],
     };
   },
