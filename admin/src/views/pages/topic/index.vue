@@ -145,7 +145,7 @@ import mainHeight from "@/utils/mainHeight";
 import CommentsDialog from "../comments/CommentsDialog";
 
 export default {
-  name: "Topics",
+  name: "Topic",
   components: { Avatar, CommentsDialog },
   data() {
     return {

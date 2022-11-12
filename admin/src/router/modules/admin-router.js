@@ -22,7 +22,7 @@ const adminRouter = [
   {
     path: "/content",
     component: Layout,
-    redirect: "/content/topics",
+    redirect: "/content/topic",
     name: "content",
     meta: {
       title: "内容管理",
@@ -30,18 +30,18 @@ const adminRouter = [
     },
     children: [
       {
-        name: "Topics",
-        path: "topics",
-        component: () => import("@/views/pages/topics/index"),
+        name: "Topic",
+        path: "topic",
+        component: () => import("@/views/pages/topic/index"),
         meta: {
           title: "话题",
           icon: "iconfont icon-topic",
         },
       },
       {
-        name: "Articles",
-        path: "articles",
-        component: () => import("@/views/pages/articles/index"),
+        name: "Article",
+        path: "article",
+        component: () => import("@/views/pages/article/index"),
         meta: {
           title: "文章",
           icon: "iconfont icon-article",
@@ -53,6 +53,24 @@ const adminRouter = [
         component: () => import("@/views/pages/forbidden-word/index"),
         meta: {
           title: "违禁词",
+          icon: "iconfont icon-article",
+        },
+      },
+      {
+        name: "TopicReview",
+        path: "topic/review",
+        component: () => import("@/views/pages/topic/review"),
+        meta: {
+          title: "帖子审核",
+          icon: "iconfont icon-article",
+        },
+      },
+      {
+        name: "ArticleReview",
+        path: "article/review",
+        component: () => import("@/views/pages/article/review"),
+        meta: {
+          title: "文章审核",
           icon: "iconfont icon-article",
         },
       },

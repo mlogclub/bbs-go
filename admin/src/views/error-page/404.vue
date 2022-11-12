@@ -1,6 +1,6 @@
 <template>
-  <div class="wscn-http404-container">
-    <div class="wscn-http404">
+  <div class="http404-container">
+    <div class="http404">
       <div class="pic-404">
         <img class="pic-404__parent" src="@/assets/404_images/404.png" alt="404" />
         <img class="pic-404__child left" src="@/assets/404_images/404_cloud.png" alt="404" />
@@ -11,7 +11,7 @@
         <div class="bullshit__oops">OOPS!</div>
         <div class="bullshit__info">
           All rights reserved
-          <a style="color: #20a0ff" href="https://wallstreetcn.com" target="_blank">wallstreetcn</a>
+          <a style="color: #20a0ff" href="https://mlog.club" target="_blank">mlog.club</a>
         </div>
         <div class="bullshit__headline">
           {{ message }}
@@ -38,13 +38,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wscn-http404-container {
+.http404-container {
   transform: translate(-50%, -50%);
   position: absolute;
   top: 40%;
   left: 50%;
 }
-.wscn-http404 {
+.http404 {
   position: relative;
   width: 1200px;
   padding: 0 50px;

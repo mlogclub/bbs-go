@@ -15,7 +15,7 @@
         <el-form-item>
           <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
             <el-option label="正常" :value="0" />
-            <el-option label="删除" :value="1" />
+            <el-option label="已删除" :value="1" />
             <el-option label="待审核" :value="2" />
           </el-select>
         </el-form-item>
@@ -144,7 +144,7 @@ import mainHeight from "@/utils/mainHeight";
 import CommentsDialog from "../comments/CommentsDialog";
 
 export default {
-  name: "Articles",
+  name: "ArticleReview",
   components: { Avatar, CommentsDialog },
   data() {
     return {
