@@ -61,7 +61,7 @@
               type="success"
               icon="el-icon-s-check"
               class="action-item"
-              @click="pendingSubmit(item)"
+              @click="auditSubmit(item)"
               >审核通过</el-link
             >
           </template>
@@ -145,16 +145,16 @@ export default {
           this.$message.success("操作已取消");
         });
     },
-    pendingSubmit(row) {
+    auditSubmit(row) {
       const me = this;
-      this.$confirm("确认要过审文章？", "提示", {
+      this.$confirm("确认审核通过？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
           this.axios
-            .form("/api/admin/article/pending", { id: row.id })
+            .form("/api/admin/article/audit", { id: row.id })
             .then((data) => {
               me.$message({ message: "审核成功", type: "success" });
               me.$emit("change");

@@ -8,6 +8,7 @@ import (
 	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/controllers/render"
+	"bbs-go/model/constants"
 	"bbs-go/pkg/errs"
 	"bbs-go/services"
 )
@@ -87,6 +88,18 @@ func (c *TopicController) PostUndelete() *web.JsonResult {
 		return web.JsonError(err)
 	}
 	err = services.TopicService.Undelete(id)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) PostAudit() *web.JsonResult {
+	id := c.Ctx.PostValueInt64Default("id", 0)
+	if id <= 0 {
+		return web.JsonErrorMsg("id is required")
+	}
+	err := services.TopicService.UpdateColumn(id, "status", constants.StatusOk)
 	if err != nil {
 		return web.JsonError(err)
 	}

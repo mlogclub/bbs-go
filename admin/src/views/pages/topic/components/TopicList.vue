@@ -88,6 +88,35 @@
               >取消删除</el-link
             >
           </template>
+          <template v-else-if="topic.status === 2">
+            <el-link
+              class="action-item"
+              icon="el-icon-view"
+              :href="('/topic/' + topic.topicId) | siteUrl"
+              target="_blank"
+              >查看详情</el-link
+            >
+            <el-link
+              class="action-item"
+              icon="el-icon-s-comment"
+              @click="showComments(topic.topicId)"
+              >查看评论</el-link
+            >
+            <el-link
+              class="action-item"
+              type="danger"
+              icon="el-icon-delete"
+              @click="deleteSubmit(topic.topicId)"
+              >删除</el-link
+            >
+            <el-link
+              type="success"
+              icon="el-icon-s-check"
+              class="action-item"
+              @click="auditSubmit(topic)"
+              >审核通过</el-link
+            >
+          </template>
         </div>
       </div>
     </div>
@@ -111,7 +140,7 @@ export default {
   methods: {
     deleteSubmit(topicId) {
       const me = this;
-      this.$confirm("是否确认删除该话题?", "提示", {
+      this.$confirm("是否确认删除该帖子?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -199,6 +228,28 @@ export default {
       } catch (e) {
         this.$message.success("操作已取消");
       }
+    },
+    auditSubmit(row) {
+      const me = this;
+      this.$confirm("确认审核通过？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.axios
+            .form("/api/admin/topic/audit", { id: row.topicId })
+            .then((data) => {
+              me.$message({ message: "审核成功", type: "success" });
+              me.$emit("change");
+            })
+            .catch((rsp) => {
+              me.$notify.error({ title: "错误", message: rsp.message });
+            });
+        })
+        .catch(() => {
+          this.$message.success("操作已取消");
+        });
     },
     showComments(topicId) {
       this.$refs.commentsDialog.show("topic", topicId);

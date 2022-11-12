@@ -139,7 +139,7 @@ func (c *ArticleController) PostDelete() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
-func (c *ArticleController) PostPending() *web.JsonResult {
+func (c *ArticleController) PostAudit() *web.JsonResult {
 	id := c.Ctx.PostValueInt64Default("id", 0)
 	if id <= 0 {
 		return web.JsonErrorMsg("id is required")
