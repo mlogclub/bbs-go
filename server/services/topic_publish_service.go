@@ -50,6 +50,11 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		}
 	}
 
+	// 检查是否需要审核
+	if s._IsNeedReview(userId, form) {
+		topic.Status = constants.StatusReview
+	}
+
 	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
 		err := repositories.TopicRepository.Create(tx, topic)
@@ -74,6 +79,19 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		CreateTime: topic.CreateTime,
 	})
 	return topic, nil
+}
+
+// IsNeedReview 是否需要审核
+func (s *topicPublishService) _IsNeedReview(userId int64, form model.CreateTopicForm) bool {
+	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
+		return true
+	}
+
+	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
+		return true
+	}
+
+	return false
 }
 
 func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicForm) (err error) {
@@ -107,14 +125,6 @@ func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicFo
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
 		return web.NewErrorMsg("节点不存在")
-	}
-
-	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
-		return web.NewErrorMsg("发表失败")
-	}
-
-	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
-		return web.NewErrorMsg("发表失败")
 	}
 
 	return nil

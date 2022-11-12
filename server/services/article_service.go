@@ -162,7 +162,7 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 	// 获取后台配置 否是开启发表文章审核
 	status := constants.StatusOk
 	if SysConfigService.IsArticlePending() {
-		status = constants.StatusPending
+		status = constants.StatusReview
 	}
 
 	article = &model.Article{

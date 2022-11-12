@@ -59,7 +59,7 @@ const (
 const (
 	StatusOk      = 0 // 正常
 	StatusDeleted = 1 // 删除
-	StatusPending = 2 // 待审核
+	StatusReview  = 2 // 待审核
 )
 
 // 用户类型
