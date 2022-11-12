@@ -4,14 +4,14 @@ import Layout from "@/layout";
 
 const adminRouter = [
   {
-    path: "/users",
+    path: "/user",
     component: Layout,
-    redirect: "/users",
+    redirect: "/user",
     children: [
       {
-        name: "Users",
+        name: "User",
         path: "",
-        component: () => import("@/views/pages/users/index"),
+        component: () => import("@/views/pages/user/index"),
         meta: {
           title: "用户管理",
           icon: "iconfont icon-username",

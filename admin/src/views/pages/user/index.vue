@@ -32,35 +32,38 @@
       >
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <div v-if="scope.row.username">
-              <span>用户名：</span>
-              {{ scope.row.username }}
-            </div>
-            <div v-if="scope.row.roles && scope.row.roles.length">
-              <div>
-                <span>角色：</span>
-                <el-tag
-                  v-for="role in scope.row.roles"
-                  :key="role"
-                  size="mini"
-                  style="margin-right: 3px"
-                >
-                  {{ role }}
-                </el-tag>
-              </div>
-            </div>
-            <div>
-              <span>状态：</span>
-              {{ scope.row.status === 0 ? "正常" : "删除" }}
-            </div>
-            <div>
-              <span>注册时间：</span>
-              {{ scope.row.createTime | formatDate }}
-            </div>
-            <div>
-              <span>更新时间：</span>
-              {{ scope.row.updateTime | formatDate }}
-            </div>
+            <el-descriptions border column="3" direction="vertical" style="margin: 0 10px">
+              <el-descriptions-item label="用户名">
+                {{ scope.row.username || "-" }}
+              </el-descriptions-item>
+              <el-descriptions-item label="角色">
+                <div v-if="scope.row.roles && scope.row.roles.length">
+                  <div>
+                    <span>角色：</span>
+                    <el-tag
+                      v-for="role in scope.row.roles"
+                      :key="role"
+                      size="mini"
+                      style="margin-right: 3px"
+                    >
+                      {{ role }}
+                    </el-tag>
+                  </div>
+                </div>
+              </el-descriptions-item>
+              <el-descriptions-item label="简介">
+                {{ scope.row.description || "-" }}
+              </el-descriptions-item>
+              <el-descriptions-item label="状态">
+                {{ scope.row.status === 0 ? "正常" : "删除" }}
+              </el-descriptions-item>
+              <el-descriptions-item label="注册时间">
+                {{ scope.row.createTime | formatDate }}
+              </el-descriptions-item>
+              <el-descriptions-item label="更新时间">
+                {{ scope.row.updateTime | formatDate }}
+              </el-descriptions-item>
+            </el-descriptions>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="编号" width="100" />
@@ -236,7 +239,7 @@ import Avatar from "@/components/Avatar";
 import mainHeight from "@/utils/mainHeight";
 
 export default {
-  name: "Users",
+  name: "User",
   components: { ScoreLog, Avatar },
   data() {
     return {
