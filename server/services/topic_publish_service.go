@@ -57,22 +57,37 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 	}
 
 	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
-		err := repositories.TopicRepository.Create(tx, topic)
-		if err != nil {
+		var (
+			tagIds []int64
+			err    error
+		)
+		// 帖子
+		if err := repositories.TopicRepository.Create(tx, topic); err != nil {
 			return err
 		}
-		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
+
+		// 标签
+		if tagIds, err = repositories.TagRepository.GetOrCreates(tx, form.Tags); err != nil {
+			return err
+		}
+		if err = repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds); err != nil {
+			return err
+		}
+
+		// 用户计数
+		if err = UserService.IncrTopicCount(tx, userId); err != nil {
+			return err
+		}
+
+		// 积分
+		UserService.IncrScoreForPostTopic(topic)
+
 		return nil
 	}); err != nil {
 		return nil, err
 	}
 	// 添加索引
 	es.UpdateTopicIndex(topic)
-	// 用户话题计数
-	UserService.IncrTopicCount(userId)
-	// 获得积分
-	UserService.IncrScoreForPostTopic(topic)
 	// 发送事件
 	event.Send(event.TopicCreateEvent{
 		UserId:     topic.UserId,

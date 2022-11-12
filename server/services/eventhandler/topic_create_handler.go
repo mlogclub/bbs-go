@@ -3,12 +3,13 @@ package eventhandler
 import (
 	"bbs-go/model"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/event"
 	"bbs-go/pkg/seo"
-	"bbs-go/pkg/bbsurls"
 	"bbs-go/services"
-	"github.com/sirupsen/logrus"
 	"reflect"
+
+	"github.com/sirupsen/logrus"
 )
 
 func init() {

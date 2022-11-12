@@ -182,9 +182,14 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 	}
 
 	err = sqls.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
-		err := repositories.ArticleRepository.Create(tx, article)
-		if err != nil {
+		var (
+			tagIds []int64
+			err    error
+		)
+		if tagIds, err = repositories.TagRepository.GetOrCreates(tx, form.Tags); err != nil {
+			return err
+		}
+		if err = repositories.ArticleRepository.Create(tx, article); err != nil {
 			return err
 		}
 		repositories.ArticleTagRepository.AddArticleTags(tx, article.Id, tagIds)
@@ -220,7 +225,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		if err != nil {
 			return err
 		}
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)             // 创建文章对应标签
+		tagIds, _ := repositories.TagRepository.GetOrCreates(tx, tags)          // 创建文章对应标签
 		repositories.ArticleTagRepository.DeleteArticleTags(tx, articleId)      // 先删掉所有的标签
 		repositories.ArticleTagRepository.AddArticleTags(tx, articleId, tagIds) // 然后重新添加标签
 		return nil
@@ -230,7 +235,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 }
 
 func (s *articleService) PutTags(articleId int64, tags []string) {
-	tagIds := repositories.TagRepository.GetOrCreates(sqls.DB(), tags)             // 创建文章对应标签
+	tagIds, _ := repositories.TagRepository.GetOrCreates(sqls.DB(), tags)          // 创建文章对应标签
 	repositories.ArticleTagRepository.DeleteArticleTags(sqls.DB(), articleId)      // 先删掉所有的标签
 	repositories.ArticleTagRepository.AddArticleTags(sqls.DB(), articleId, tagIds) // 然后重新添加标签
 	cache.ArticleTagCache.Invalidate(articleId)

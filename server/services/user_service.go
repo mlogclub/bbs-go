@@ -464,18 +464,13 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 }
 
 // IncrTopicCount topic_count + 1
-func (s *userService) IncrTopicCount(userId int64) int {
-	t := repositories.UserRepository.Get(sqls.DB(), userId)
-	if t == nil {
-		return 0
-	}
-	topicCount := t.TopicCount + 1
-	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", topicCount); err != nil {
+func (s *userService) IncrTopicCount(tx *gorm.DB, userId int64) error {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", gorm.Expr("topic_count + 1")); err != nil {
 		logrus.Error(err)
-	} else {
-		cache.UserCache.Invalidate(userId)
+		return err
 	}
-	return topicCount
+	cache.UserCache.Invalidate(userId)
+	return nil
 }
 
 // IncrCommentCount comment_count + 1

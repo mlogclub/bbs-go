@@ -129,13 +129,14 @@ func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*model.Tag, error
 	}
 }
 
-func (r *tagRepository) GetOrCreates(db *gorm.DB, tags []string) (tagIds []int64) {
+func (r *tagRepository) GetOrCreates(db *gorm.DB, tags []string) (tagIds []int64, err error) {
 	for _, tagName := range tags {
-		tagName = strings.TrimSpace(tagName)
-		tag, err := r.GetOrCreate(db, tagName)
-		if err == nil {
-			tagIds = append(tagIds, tag.Id)
+		var tag *model.Tag
+		tag, err = r.GetOrCreate(db, strings.TrimSpace(tagName))
+		if err != nil {
+			return
 		}
+		tagIds = append(tagIds, tag.Id)
 	}
 	return
 }

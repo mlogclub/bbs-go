@@ -137,17 +137,24 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
-		err := repositories.TopicRepository.Updates(sqls.DB(), topicId, map[string]interface{}{
+		var (
+			tagIds []int64
+			err    error
+		)
+		if err = repositories.TopicRepository.Updates(sqls.DB(), topicId, map[string]interface{}{
 			"node_id":      nodeId,
 			"title":        title,
 			"content":      content,
 			"hide_content": hideContent,
-		})
-		if err != nil {
+		}); err != nil {
 			return err
 		}
 
-		tagIds := repositories.TagRepository.GetOrCreates(tx, tags)       // 创建帖子对应标签
+		// 创建帖子对应标签
+		if tagIds, err = repositories.TagRepository.GetOrCreates(tx, tags); err != nil {
+			return err
+		}
+
 		repositories.TopicTagRepository.DeleteTopicTags(tx, topicId)      // 先删掉所有的标签
 		repositories.TopicTagRepository.AddTopicTags(tx, topicId, tagIds) // 然后重新添加标签
 		return nil
