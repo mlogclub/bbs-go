@@ -192,6 +192,18 @@
                 <el-input-number v-model="config.userObserveSeconds" :min="0" :max="720" />
               </el-tooltip>
             </el-form-item>
+
+            <el-form-item label="邮箱白名单">
+              <el-select
+                v-model="config.emailWhitelist"
+                style="width: 100%"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="邮箱白名单"
+              />
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>

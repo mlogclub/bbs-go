@@ -89,7 +89,7 @@ const adminRouter = [
       {
         name: "Nodes",
         path: "nodes",
-        component: () => import("@/views/pages/topics/nodes"),
+        component: () => import("@/views/pages/topic/nodes"),
         meta: {
           title: "节点",
           icon: "iconfont icon-tag",

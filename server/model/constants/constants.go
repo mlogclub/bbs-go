@@ -28,6 +28,7 @@ const (
 	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
 	SysConfigCreateCommentEmailVerified = "createCommentEmailVerified" // 发话题需要邮箱认证
 	SysConfigModules                    = "modules"                    // 功能模块
+	SysConfigEmailWhitelist             = "emailWhitelist"             // 邮箱白名单
 )
 
 // EntityType

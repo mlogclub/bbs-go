@@ -513,6 +513,21 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	if err := validate.IsEmail(user.Email.String); err != nil {
 		return err
 	}
+	// 如果设置了邮箱白名单
+	if emailWhitelist := SysConfigService.GetEmailWhitelist(); len(emailWhitelist) > 0 {
+		isInWhitelist := false
+		for _, whitelist := range emailWhitelist {
+			if strings.Contains(strings.ToLower(user.Email.String), strings.ToLower(whitelist)) {
+				isInWhitelist = true
+				break
+			}
+		}
+		if !isInWhitelist {
+			// 直接返回，也不抛出异常了，就是不发邮件
+			logrus.Error("不支持使用该邮箱进行验证.", user.Email.String)
+			return errors.New("不支持该类型邮箱")
+		}
+	}
 	var (
 		token     = strs.UUID()
 		url       = bbsurls.AbsUrl("/user/email/verify?token=" + token)
