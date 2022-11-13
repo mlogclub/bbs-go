@@ -28,12 +28,12 @@ type TopicController struct {
 func (c *TopicController) GetNode_navs() *web.JsonResult {
 	nodes := []model.NodeResponse{
 		{
-			NodeId: 0,
-			Name:   "最新",
-		},
-		{
 			NodeId: -1,
 			Name:   "推荐",
+		},
+		{
+			NodeId: 0,
+			Name:   "最新",
 		},
 		{
 			NodeId: -2,
