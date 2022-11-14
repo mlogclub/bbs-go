@@ -1,125 +1,129 @@
 <template>
   <div class="topics">
-    <div v-for="topic in results" :key="topic.topicId" class="topic-item">
-      <div class="topic-left">
-        <avatar :user="topic.user" size="40" />
-      </div>
-      <div class="topic-main">
-        <div class="topic-status">
-          <el-tag v-if="topic.recommend" type="success">已推荐</el-tag>
-          <el-tag v-if="topic.status === 1" type="danger">已删除</el-tag>
+    <div v-if="results && results.length">
+      <div v-for="topic in results" :key="topic.topicId" class="topic-item">
+        <div class="topic-left">
+          <avatar :user="topic.user" size="40" />
         </div>
-        <div class="topic-nickname">{{ topic.user.nickname }}</div>
-        <div class="topic-mates">
-          <span> ID: {{ topic.topicId }} </span>
-          <span> 时间: {{ topic.createTime | formatDate }} </span>
-          <span> 查看: {{ topic.viewCount }} </span>
-          <span> 点赞: {{ topic.likeCount }} </span>
-          <span> 评论: {{ topic.commentCount }} </span>
-        </div>
-        <div v-if="topic.type === 0 && topic.summary" class="topic-summary">
-          {{ topic.summary }}
-        </div>
-        <div v-if="topic.type === 1 && topic.content" class="topic-summary">
-          {{ topic.content }}
-        </div>
-        <ul v-if="topic.imageList && topic.imageList.length" class="topic-image-list">
-          <li v-for="(image, index) in topic.imageList" :key="index">
-            <el-image
-              class="image-item"
-              lazy
-              :src="image.url"
-              fit="cover"
-              :preview-src-list="imagePreviewList(topic.imageList)"
-            />
-          </li>
-        </ul>
-        <div class="topic-tags">
-          <el-tag type="success" size="mini">{{ topic.node.name }}</el-tag>
-          <template v-if="topic.tags && topic.tags.length">
-            <el-tag v-for="tag in topic.tags" :key="tag.tagId" type="info" size="mini"
-              >#&nbsp;{{ tag.tagName }}</el-tag
-            >
-          </template>
-        </div>
-        <div class="actions">
-          <template v-if="topic.status === 0">
-            <el-link
-              class="action-item"
-              icon="el-icon-view"
-              :href="('/topic/' + topic.topicId) | siteUrl"
-              target="_blank"
-              >查看详情</el-link
-            >
-            <el-link
-              class="action-item"
-              icon="el-icon-s-comment"
-              @click="showComments(topic.topicId)"
-              >查看评论</el-link
-            >
-            <el-link
-              v-if="topic.recommend"
-              class="action-item"
-              icon="el-icon-s-flag"
-              @click="cancelRecommend(topic.topicId)"
-              >取消推荐</el-link
-            >
-            <el-link
-              v-else-if="!topic.recommend && topic.status === 0"
-              class="action-item"
-              icon="el-icon-s-flag"
-              @click="recommend(topic.topicId)"
-              >推荐</el-link
-            >
-            <el-link
-              class="action-item"
-              type="danger"
-              icon="el-icon-delete"
-              @click="deleteSubmit(topic.topicId)"
-              >删除</el-link
-            >
-          </template>
-          <template v-else-if="topic.status === 1">
-            <el-link
-              class="action-item"
-              type="info"
-              icon="el-icon-delete"
-              @click="undeleteSubmit(topic.topicId)"
-              >取消删除</el-link
-            >
-          </template>
-          <template v-else-if="topic.status === 2">
-            <el-link
-              class="action-item"
-              icon="el-icon-view"
-              :href="('/topic/' + topic.topicId) | siteUrl"
-              target="_blank"
-              >查看详情</el-link
-            >
-            <el-link
-              class="action-item"
-              icon="el-icon-s-comment"
-              @click="showComments(topic.topicId)"
-              >查看评论</el-link
-            >
-            <el-link
-              class="action-item"
-              type="danger"
-              icon="el-icon-delete"
-              @click="deleteSubmit(topic.topicId)"
-              >删除</el-link
-            >
-            <el-link
-              type="success"
-              icon="el-icon-s-check"
-              class="action-item"
-              @click="auditSubmit(topic)"
-              >审核通过</el-link
-            >
-          </template>
+        <div class="topic-main">
+          <div class="topic-status">
+            <el-tag v-if="topic.recommend" type="success">已推荐</el-tag>
+            <el-tag v-if="topic.status === 1" type="danger">已删除</el-tag>
+          </div>
+          <div class="topic-nickname">{{ topic.user.nickname }}</div>
+          <div class="topic-mates">
+            <span> ID: {{ topic.topicId }} </span>
+            <span> 时间: {{ topic.createTime | formatDate }} </span>
+            <span> 查看: {{ topic.viewCount }} </span>
+            <span> 点赞: {{ topic.likeCount }} </span>
+            <span> 评论: {{ topic.commentCount }} </span>
+          </div>
+          <div v-if="topic.type === 0 && topic.summary" class="topic-summary">
+            {{ topic.summary }}
+          </div>
+          <div v-if="topic.type === 1 && topic.content" class="topic-summary">
+            {{ topic.content }}
+          </div>
+          <ul v-if="topic.imageList && topic.imageList.length" class="topic-image-list">
+            <li v-for="(image, index) in topic.imageList" :key="index">
+              <el-image
+                class="image-item"
+                lazy
+                :src="image.url"
+                fit="cover"
+                :preview-src-list="imagePreviewList(topic.imageList)"
+              />
+            </li>
+          </ul>
+          <div class="topic-tags">
+            <el-tag type="success" size="mini">{{ topic.node.name }}</el-tag>
+            <template v-if="topic.tags && topic.tags.length">
+              <el-tag v-for="tag in topic.tags" :key="tag.tagId" type="info" size="mini"
+                >#&nbsp;{{ tag.tagName }}</el-tag
+              >
+            </template>
+          </div>
+          <div class="actions">
+            <template v-if="topic.status === 0">
+              <el-link
+                class="action-item"
+                icon="el-icon-view"
+                :href="('/topic/' + topic.topicId) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link
+                class="action-item"
+                icon="el-icon-s-comment"
+                @click="showComments(topic.topicId)"
+                >查看评论</el-link
+              >
+              <el-link
+                v-if="topic.recommend"
+                class="action-item"
+                icon="el-icon-s-flag"
+                @click="cancelRecommend(topic.topicId)"
+                >取消推荐</el-link
+              >
+              <el-link
+                v-else-if="!topic.recommend && topic.status === 0"
+                class="action-item"
+                icon="el-icon-s-flag"
+                @click="recommend(topic.topicId)"
+                >推荐</el-link
+              >
+              <el-link
+                class="action-item"
+                type="danger"
+                icon="el-icon-delete"
+                @click="deleteSubmit(topic.topicId)"
+                >删除</el-link
+              >
+            </template>
+            <template v-else-if="topic.status === 1">
+              <el-link
+                class="action-item"
+                type="info"
+                icon="el-icon-delete"
+                @click="undeleteSubmit(topic.topicId)"
+                >取消删除</el-link
+              >
+            </template>
+            <template v-else-if="topic.status === 2">
+              <el-link
+                class="action-item"
+                icon="el-icon-view"
+                :href="('/topic/' + topic.topicId) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link
+                class="action-item"
+                icon="el-icon-s-comment"
+                @click="showComments(topic.topicId)"
+                >查看评论</el-link
+              >
+              <el-link
+                class="action-item"
+                type="danger"
+                icon="el-icon-delete"
+                @click="deleteSubmit(topic.topicId)"
+                >删除</el-link
+              >
+              <el-link
+                type="success"
+                icon="el-icon-s-check"
+                class="action-item"
+                @click="auditSubmit(topic)"
+                >审核通过</el-link
+              >
+            </template>
+          </div>
         </div>
       </div>
     </div>
+    <el-empty v-else />
+
     <comments-dialog ref="commentsDialog" />
   </div>
 </template>

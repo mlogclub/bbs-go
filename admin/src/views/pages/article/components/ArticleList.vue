@@ -1,73 +1,77 @@
 <template>
   <div class="articles">
-    <div v-for="item in results" :key="item.id" class="article">
-      <avatar :user="item.user" size="40" />
-      <div class="article-right">
-        <div class="article-nickname">{{ item.user.nickname }}</div>
-        <div class="article-metas">
-          <div>
-            ID: <span>{{ item.id }}</span>
+    <template v-if="results && results.length">
+      <div v-for="item in results" :key="item.id" class="article">
+        <avatar :user="item.user" size="40" />
+        <div class="article-right">
+          <div class="article-nickname">{{ item.user.nickname }}</div>
+          <div class="article-metas">
+            <div>
+              ID: <span>{{ item.id }}</span>
+            </div>
+            <div>{{ item.createTime | formatDate }}</div>
           </div>
-          <div>{{ item.createTime | formatDate }}</div>
-        </div>
 
-        <a class="article-title" :href="('/article/' + item.id) | siteUrl" target="_blank">
-          {{ item.title }}
-        </a>
+          <a class="article-title" :href="('/article/' + item.id) | siteUrl" target="_blank">
+            {{ item.title }}
+          </a>
 
-        <div v-if="item.tags && item.tags.length" class="article-tags">
-          <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
-            {{ tag.tagName }}
-          </el-tag>
-        </div>
+          <div v-if="item.tags && item.tags.length" class="article-tags">
+            <el-tag v-for="tag in item.tags" :key="tag.tagId" type="info" size="mini">
+              {{ tag.tagName }}
+            </el-tag>
+          </div>
 
-        <div class="article-info">
-          <el-tag v-if="item.status === 1" type="danger">已删除</el-tag>
-        </div>
+          <div class="article-info">
+            <el-tag v-if="item.status === 1" type="danger">已删除</el-tag>
+          </div>
 
-        <div class="article-summary">{{ item.summary }}</div>
-        <div class="article-actions">
-          <template v-if="item.status === 0">
-            <el-link
-              class="action-item"
-              icon="el-icon-view"
-              :href="('/article/' + item.id) | siteUrl"
-              target="_blank"
-              >查看详情</el-link
-            >
-            <el-link class="action-item" icon="el-icon-s-comment" @click="showComments(item.id)"
-              >查看评论</el-link
-            >
-            <el-link class="action-item" icon="el-icon-edit" @click="showUpdateTags(item)"
-              >修改标签</el-link
-            >
-            <el-link
-              type="danger"
-              icon="el-icon-delete"
-              class="action-item"
-              @click="deleteSubmit(item)"
-              >删除</el-link
-            >
-          </template>
-          <template v-if="item.status === 2">
-            <el-link
-              type="danger"
-              icon="el-icon-delete"
-              class="action-item"
-              @click="deleteSubmit(item)"
-              >删除</el-link
-            >
-            <el-link
-              type="success"
-              icon="el-icon-s-check"
-              class="action-item"
-              @click="auditSubmit(item)"
-              >审核通过</el-link
-            >
-          </template>
+          <div class="article-summary">{{ item.summary }}</div>
+          <div class="article-actions">
+            <template v-if="item.status === 0">
+              <el-link
+                class="action-item"
+                icon="el-icon-view"
+                :href="('/article/' + item.id) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link class="action-item" icon="el-icon-s-comment" @click="showComments(item.id)"
+                >查看评论</el-link
+              >
+              <el-link class="action-item" icon="el-icon-edit" @click="showUpdateTags(item)"
+                >修改标签</el-link
+              >
+              <el-link
+                type="danger"
+                icon="el-icon-delete"
+                class="action-item"
+                @click="deleteSubmit(item)"
+                >删除</el-link
+              >
+            </template>
+            <template v-if="item.status === 2">
+              <el-link
+                type="danger"
+                icon="el-icon-delete"
+                class="action-item"
+                @click="deleteSubmit(item)"
+                >删除</el-link
+              >
+              <el-link
+                type="success"
+                icon="el-icon-s-check"
+                class="action-item"
+                @click="auditSubmit(item)"
+                >审核通过</el-link
+              >
+            </template>
+          </div>
         </div>
       </div>
-    </div>
+    </template>
+    <el-empty v-else />
+
     <el-dialog
       :visible.sync="updateTagsDialogVisible"
       :close-on-click-modal="false"

@@ -63,6 +63,9 @@
             >
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty />
+        </template>
       </el-table>
     </div>
 

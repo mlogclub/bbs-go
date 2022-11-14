@@ -43,6 +43,9 @@
           {{ scope.row.createTime | formatDate }}
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty />
+      </template>
     </el-table>
 
     <div class="pagebar">

@@ -115,6 +115,9 @@
             </el-dropdown>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty />
+        </template>
       </el-table>
     </div>
     <div ref="pagebar" class="pagebar">

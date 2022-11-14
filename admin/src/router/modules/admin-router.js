@@ -44,7 +44,7 @@ const adminRouter = [
         component: () => import("@/views/pages/topic/review"),
         meta: {
           title: "帖子审核",
-          icon: "iconfont icon-article",
+          icon: "iconfont icon-audit",
         },
       },
       {
@@ -62,7 +62,7 @@ const adminRouter = [
         component: () => import("@/views/pages/article/review"),
         meta: {
           title: "文章审核",
-          icon: "iconfont icon-article",
+          icon: "iconfont icon-audit",
         },
       },
       {
@@ -71,7 +71,7 @@ const adminRouter = [
         component: () => import("@/views/pages/forbidden-word/index"),
         meta: {
           title: "违禁词",
-          icon: "iconfont icon-article",
+          icon: "iconfont icon-forbidden",
         },
       },
     ],

@@ -66,6 +66,9 @@
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> 编辑 </el-button>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty />
+        </template>
       </el-table>
     </div>
 
