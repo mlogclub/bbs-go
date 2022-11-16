@@ -39,7 +39,7 @@ func (c *UserController) GetCurrent() *web.JsonResult {
 func (c *UserController) GetBy(userId int64) *web.JsonResult {
 	user := cache.UserCache.Get(userId)
 	if user != nil && user.Status != constants.StatusDeleted {
-		return web.JsonData(render.BuildUserProfile(user))
+		return web.JsonData(render.BuildUserDetail(user))
 	}
 	return web.JsonErrorMsg("用户不存在")
 }
