@@ -36,6 +36,7 @@ services:
       context: ./server
     volumes:
       - /data/docker:/data
+      - ./server/bbs-go.docker.yaml:/app/bbs-go.docker.yaml
     restart: on-failure
 
   site:
