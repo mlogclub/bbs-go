@@ -11,5 +11,11 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
 COPY . ./
 RUN go build
 
+FROM alpine:latest
+
+COPY --from=builder /code/bbs-go/server/bbs-go /app/bbs-go
+
+WORKDIR /app
+
 EXPOSE 8082
 CMD ["./bbs-go", "--config", "bbs-go.docker.yaml"]
