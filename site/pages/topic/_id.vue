@@ -193,7 +193,6 @@
 
 <script>
 import Prism from 'prismjs'
-import UserHelper from '~/common/UserHelper'
 
 export default {
   async asyncData({ $axios, params, error }) {
