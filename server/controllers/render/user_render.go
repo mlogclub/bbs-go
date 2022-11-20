@@ -94,7 +94,7 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 		PasswordSet:   len(user.Password) > 0,
 	}
 
-	if strs.IsBlank(user.Roles) {
+	if strs.IsNotBlank(user.Roles) {
 		ret.Roles = strings.Split(user.Roles, ",")
 	}
 	return ret
