@@ -89,6 +89,7 @@ func Router() {
 		m.Party("/user-score-log").Handle(new(admin.UserScoreLogController))
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 		m.Party("/user-report").Handle(new(admin.UserReportController))
+		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {

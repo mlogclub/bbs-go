@@ -28,6 +28,7 @@ const (
 	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
 	SysConfigCreateCommentEmailVerified = "createCommentEmailVerified" // 发话题需要邮箱认证
 	SysConfigModules                    = "modules"                    // 功能模块
+	SysConfigEmailWhitelist             = "emailWhitelist"             // 邮箱白名单
 )
 
 // EntityType
@@ -59,7 +60,7 @@ const (
 const (
 	StatusOk      = 0 // 正常
 	StatusDeleted = 1 // 删除
-	StatusPending = 2 // 待审核
+	StatusReview  = 2 // 待审核
 )
 
 // 用户类型
@@ -127,4 +128,9 @@ const (
 	ModuleTweet   = "tweet"
 	ModuleTopic   = "topic"
 	ModuleArticle = "article"
+)
+
+const (
+	ForbiddenWordTypeWord  = "word"
+	ForbiddenWordTypeRegex = "regex"
 )

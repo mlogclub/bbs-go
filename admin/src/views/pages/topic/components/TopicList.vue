@@ -1,35 +1,6 @@
 <template>
-  <section v-loading="listLoading" class="page-container">
-    <div ref="toolbar" class="toolbar">
-      <el-form :inline="true" :model="filters">
-        <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号" />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.userId" placeholder="用户编号" />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.title" placeholder="标题" />
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="filters.recommend" clearable placeholder="是否推荐" @change="list">
-            <el-option label="推荐" value="1" />
-            <el-option label="未推荐" value="0" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" value="0" />
-            <el-option label="删除" value="1" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="list"> 查询 </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
-    <div ref="mainContent" :style="{ height: mainHeight }" class="page-section topics">
+  <div class="topics">
+    <div v-if="results && results.length">
       <div v-for="topic in results" :key="topic.topicId" class="topic-item">
         <div class="topic-left">
           <avatar :user="topic.user" size="40" />
@@ -95,7 +66,7 @@
                 >取消推荐</el-link
               >
               <el-link
-                v-else
+                v-else-if="!topic.recommend && topic.status === 0"
                 class="action-item"
                 icon="el-icon-s-flag"
                 @click="recommend(topic.topicId)"
@@ -118,83 +89,62 @@
                 >取消删除</el-link
               >
             </template>
+            <template v-else-if="topic.status === 2">
+              <el-link
+                class="action-item"
+                icon="el-icon-view"
+                :href="('/topic/' + topic.topicId) | siteUrl"
+                target="_blank"
+                >查看详情</el-link
+              >
+              <el-link
+                class="action-item"
+                icon="el-icon-s-comment"
+                @click="showComments(topic.topicId)"
+                >查看评论</el-link
+              >
+              <el-link
+                class="action-item"
+                type="danger"
+                icon="el-icon-delete"
+                @click="deleteSubmit(topic.topicId)"
+                >删除</el-link
+              >
+              <el-link
+                type="success"
+                icon="el-icon-s-check"
+                class="action-item"
+                @click="auditSubmit(topic)"
+                >审核通过</el-link
+              >
+            </template>
           </div>
         </div>
       </div>
     </div>
-
-    <div ref="pagebar" class="pagebar">
-      <el-pagination
-        :page-sizes="[20, 50, 100, 300]"
-        :current-page="page.page"
-        :page-size="page.limit"
-        :total="page.total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
-      />
-    </div>
+    <el-empty v-else />
 
     <comments-dialog ref="commentsDialog" />
-  </section>
+  </div>
 </template>
 
 <script>
 import Avatar from "@/components/Avatar";
-import mainHeight from "@/utils/mainHeight";
-import CommentsDialog from "../comments/CommentsDialog";
-
+import CommentsDialog from "../../comments/CommentsDialog";
 export default {
-  name: "Topics",
   components: { Avatar, CommentsDialog },
-  data() {
-    return {
-      mainHeight: "300px",
-      results: [],
-      listLoading: false,
-      page: {},
-      filters: {
-        status: "0",
+  props: {
+    results: {
+      type: Array,
+      default() {
+        return [];
       },
-      selectedRows: [],
-    };
-  },
-  mounted() {
-    mainHeight(this);
-    this.list();
+    },
   },
   methods: {
-    list() {
-      const me = this;
-      me.listLoading = true;
-      const params = Object.assign(me.filters, {
-        page: me.page.page,
-        limit: me.page.limit,
-      });
-      this.axios
-        .form("/api/admin/topic/list", params)
-        .then((data) => {
-          me.results = data.results;
-          me.page = data.page;
-        })
-        .finally(() => {
-          me.listLoading = false;
-        });
-    },
-    handlePageChange(val) {
-      this.page.page = val;
-      this.list();
-    },
-    handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
-    },
-    showComments(topicId) {
-      this.$refs.commentsDialog.show("topic", topicId);
-    },
     deleteSubmit(topicId) {
       const me = this;
-      this.$confirm("是否确认删除该话题?", "提示", {
+      this.$confirm("是否确认删除该帖子?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -204,7 +154,7 @@ export default {
             .form("/api/admin/topic/delete", { id: topicId })
             .then(function () {
               me.$message({ message: "删除成功", type: "success" });
-              me.list();
+              me.$emit("change");
             })
             .catch(function (err) {
               me.$notify.error({ title: "错误", message: err.message || err });
@@ -227,7 +177,7 @@ export default {
         if (flag) {
           try {
             await this.axios.form("/api/admin/topic/undelete", { id: topicId });
-            this.list();
+            this.$emit("change");
             this.$message.success("操作成功");
           } catch (err) {
             this.$notify.error({ title: "错误", message: err.message || err });
@@ -250,7 +200,7 @@ export default {
               id,
             });
             this.$message.success("操作成功");
-            this.list();
+            this.$emit("change");
           } catch (e) {
             this.$notify.error({ title: "错误", message: e.message });
           }
@@ -274,7 +224,7 @@ export default {
               },
             });
             this.$message.success("操作成功");
-            this.list();
+            this.$emit("change");
           } catch (e) {
             this.$notify.error({ title: "错误", message: e.message });
           }
@@ -283,8 +233,30 @@ export default {
         this.$message.success("操作已取消");
       }
     },
-    handleSelectionChange(val) {
-      this.selectedRows = val;
+    auditSubmit(row) {
+      const me = this;
+      this.$confirm("确认审核通过？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.axios
+            .form("/api/admin/topic/audit", { id: row.topicId })
+            .then((data) => {
+              me.$message({ message: "审核成功", type: "success" });
+              me.$emit("change");
+            })
+            .catch((rsp) => {
+              me.$notify.error({ title: "错误", message: rsp.message });
+            });
+        })
+        .catch(() => {
+          this.$message.success("操作已取消");
+        });
+    },
+    showComments(topicId) {
+      this.$refs.commentsDialog.show("topic", topicId);
     },
     imagePreviewList(imageList) {
       var ret = [];
@@ -342,6 +314,7 @@ export default {
       .topic-summary {
         margin-top: 10px;
         font-size: 14px;
+        color: #4e4f53;
       }
       .topic-image-list {
         display: flex;
@@ -365,7 +338,7 @@ export default {
       }
 
       .actions {
-        margin-top: 20px;
+        margin-top: 10px;
         .action-item {
           margin-right: 15px;
           font-size: 13px;

@@ -1,32 +1,6 @@
 <template>
-  <section v-loading="listLoading" class="page-container">
-    <!--工具条-->
-    <div ref="toolbar" class="toolbar">
-      <el-form :inline="true" :model="filters">
-        <el-form-item>
-          <el-input v-model="filters.id" placeholder="编号" />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.userId" placeholder="用户编号" />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.title" placeholder="标题" />
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
-            <el-option label="正常" :value="0" />
-            <el-option label="删除" :value="1" />
-            <el-option label="待审核" :value="2" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="list"> 查询 </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
-    <!--列表-->
-    <div ref="mainContent" :style="{ height: mainHeight }" class="page-section articles">
+  <div class="articles">
+    <template v-if="results && results.length">
       <div v-for="item in results" :key="item.id" class="article">
         <avatar :user="item.user" size="40" />
         <div class="article-right">
@@ -85,30 +59,18 @@
                 >删除</el-link
               >
               <el-link
-                type="warning"
+                type="success"
                 icon="el-icon-s-check"
                 class="action-item"
-                @click="pendingSubmit(item)"
-                >审核</el-link
+                @click="auditSubmit(item)"
+                >审核通过</el-link
               >
             </template>
           </div>
         </div>
       </div>
-    </div>
-
-    <!--工具条-->
-    <div ref="pagebar" class="pagebar">
-      <el-pagination
-        :page-sizes="[20, 50, 100, 300]"
-        :current-page="page.page"
-        :page-size="page.limit"
-        :total="page.total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="handlePageChange"
-        @size-change="handleLimitChange"
-      />
-    </div>
+    </template>
+    <el-empty v-else />
 
     <el-dialog
       :visible.sync="updateTagsDialogVisible"
@@ -135,26 +97,24 @@
     </el-dialog>
 
     <comments-dialog ref="commentsDialog" />
-  </section>
+  </div>
 </template>
 
 <script>
 import Avatar from "@/components/Avatar";
-import mainHeight from "@/utils/mainHeight";
-import CommentsDialog from "../comments/CommentsDialog";
-
+import CommentsDialog from "../../comments/CommentsDialog";
 export default {
-  name: "Articles",
   components: { Avatar, CommentsDialog },
+  props: {
+    results: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+  },
   data() {
     return {
-      mainHeight: "300px",
-      results: [],
-      listLoading: false,
-      page: {},
-      filters: {
-        status: 0,
-      },
       tagOptions: [],
       updateTagsDialogVisible: false,
       updateTagForm: {
@@ -163,35 +123,7 @@ export default {
       },
     };
   },
-  mounted() {
-    mainHeight(this);
-    this.list();
-  },
   methods: {
-    async list() {
-      this.listLoading = true;
-      const params = Object.assign(this.filters, {
-        page: this.page.page,
-        limit: this.page.limit,
-      });
-      try {
-        const data = await this.axios.form("/api/admin/article/list", params);
-        this.results = data.results;
-        this.page = data.page;
-      } catch (err) {
-        // this.$message.error(err.message);
-      } finally {
-        this.listLoading = false;
-      }
-    },
-    handlePageChange(val) {
-      this.page.page = val;
-      this.list();
-    },
-    handleLimitChange(val) {
-      this.page.limit = val;
-      this.list();
-    },
     showComments(articleId) {
       this.$refs.commentsDialog.show("article", articleId);
     },
@@ -207,7 +139,7 @@ export default {
             .form("/api/admin/article/delete", { id: row.id })
             .then((data) => {
               me.$message({ message: "删除成功", type: "success" });
-              me.list();
+              me.$emit("change");
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
@@ -217,19 +149,19 @@ export default {
           this.$message.success("操作已取消");
         });
     },
-    pendingSubmit(row) {
+    auditSubmit(row) {
       const me = this;
-      this.$confirm("确认要过审文章？", "提示", {
+      this.$confirm("确认审核通过？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
           this.axios
-            .form("/api/admin/article/pending", { id: row.id })
+            .form("/api/admin/article/audit", { id: row.id })
             .then((data) => {
               me.$message({ message: "审核成功", type: "success" });
-              me.list();
+              me.$emit("change");
             })
             .catch((rsp) => {
               me.$notify.error({ title: "错误", message: rsp.message });
@@ -261,19 +193,23 @@ export default {
     },
     async updateTags() {
       try {
-        const nowTags = await this.axios.form("/api/admin/article/tags", {
+        // const nowTags = await this.axios.form("/api/admin/article/tags", {
+        //   articleId: this.updateTagForm.articleId,
+        //   tags: (this.updateTagForm.tags || []).join(","),
+        // });
+        // if (this.results && this.results.length) {
+        //   for (let i = 0; i < this.results.length; i++) {
+        //     if (this.results[i].id === this.updateTagForm.articleId) {
+        //       this.results[i].tags = nowTags;
+        //     }
+        //   }
+        // }
+        await this.axios.form("/api/admin/article/tags", {
           articleId: this.updateTagForm.articleId,
           tags: (this.updateTagForm.tags || []).join(","),
         });
-        if (this.results && this.results.length) {
-          for (let i = 0; i < this.results.length; i++) {
-            if (this.results[i].id === this.updateTagForm.articleId) {
-              this.results[i].tags = nowTags;
-            }
-          }
-        }
         this.updateTagsDialogVisible = false;
-        this.list();
+        this.$emit("change");
       } catch (e) {
         this.$message({
           type: "error",
@@ -284,7 +220,6 @@ export default {
   },
 };
 </script>
-
 <style scoped lang="scss">
 .articles {
   width: 100%;

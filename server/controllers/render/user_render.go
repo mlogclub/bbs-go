@@ -87,13 +87,15 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 	if user == nil {
 		return nil
 	}
-	roles := strings.Split(user.Roles, ",")
 	ret := &model.UserProfile{
 		UserDetail:    *BuildUserDetail(user),
-		Roles:         roles,
 		Email:         user.Email.String,
 		EmailVerified: user.EmailVerified,
 		PasswordSet:   len(user.Password) > 0,
+	}
+
+	if strs.IsNotBlank(user.Roles) {
+		ret.Roles = strings.Split(user.Roles, ",")
 	}
 	return ret
 }

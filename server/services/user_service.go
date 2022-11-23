@@ -464,18 +464,13 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 }
 
 // IncrTopicCount topic_count + 1
-func (s *userService) IncrTopicCount(userId int64) int {
-	t := repositories.UserRepository.Get(sqls.DB(), userId)
-	if t == nil {
-		return 0
-	}
-	topicCount := t.TopicCount + 1
-	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", topicCount); err != nil {
+func (s *userService) IncrTopicCount(tx *gorm.DB, userId int64) error {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", gorm.Expr("topic_count + 1")); err != nil {
 		logrus.Error(err)
-	} else {
-		cache.UserCache.Invalidate(userId)
+		return err
 	}
-	return topicCount
+	cache.UserCache.Invalidate(userId)
+	return nil
 }
 
 // IncrCommentCount comment_count + 1
@@ -517,6 +512,21 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	}
 	if err := validate.IsEmail(user.Email.String); err != nil {
 		return err
+	}
+	// 如果设置了邮箱白名单
+	if emailWhitelist := SysConfigService.GetEmailWhitelist(); len(emailWhitelist) > 0 {
+		isInWhitelist := false
+		for _, whitelist := range emailWhitelist {
+			if strings.Contains(strings.ToLower(user.Email.String), strings.ToLower(whitelist)) {
+				isInWhitelist = true
+				break
+			}
+		}
+		if !isInWhitelist {
+			// 直接返回，也不抛出异常了，就是不发邮件
+			logrus.Error("不支持使用该邮箱进行验证.", user.Email.String)
+			return errors.New("不支持该类型邮箱")
+		}
 	}
 	var (
 		token     = strs.UUID()

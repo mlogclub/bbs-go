@@ -29,7 +29,7 @@
       </div>
 
       <div ref="mainContent" class="main-content" :style="{ height: mainHeight }">
-        <div class="page-section comments">
+        <div v-if="results && results.length" class="page-section comments">
           <div v-for="item in results" :key="item.id" class="comment-item">
             <avatar :user="item.user" size="40" />
             <div class="comment-main">
@@ -79,6 +79,7 @@
             </div>
           </div>
         </div>
+        <el-empty v-else />
       </div>
 
       <div v-if="page.total > 0" ref="pagebar" class="pagebar">

@@ -6,6 +6,7 @@ import (
 	"bbs-go/pkg/es"
 	"bbs-go/pkg/event"
 	"bbs-go/repositories"
+	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
@@ -50,23 +51,43 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		}
 	}
 
+	// 检查是否需要审核
+	if s._IsNeedReview(userId, form) {
+		topic.Status = constants.StatusReview
+	}
+
 	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
-		tagIds := repositories.TagRepository.GetOrCreates(tx, form.Tags)
-		err := repositories.TopicRepository.Create(tx, topic)
-		if err != nil {
+		var (
+			tagIds []int64
+			err    error
+		)
+		// 帖子
+		if err := repositories.TopicRepository.Create(tx, topic); err != nil {
 			return err
 		}
-		repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds)
+
+		// 标签
+		if tagIds, err = repositories.TagRepository.GetOrCreates(tx, form.Tags); err != nil {
+			return err
+		}
+		if err = repositories.TopicTagRepository.AddTopicTags(tx, topic.Id, tagIds); err != nil {
+			return err
+		}
+
+		// 用户计数
+		if err = UserService.IncrTopicCount(tx, userId); err != nil {
+			return err
+		}
+
+		// 积分
+		UserService.IncrScoreForPostTopic(topic)
+
 		return nil
 	}); err != nil {
 		return nil, err
 	}
 	// 添加索引
 	es.UpdateTopicIndex(topic)
-	// 用户话题计数
-	UserService.IncrTopicCount(userId)
-	// 获得积分
-	UserService.IncrScoreForPostTopic(topic)
 	// 发送事件
 	event.Send(event.TopicCreateEvent{
 		UserId:     topic.UserId,
@@ -76,12 +97,29 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 	return topic, nil
 }
 
+// IsNeedReview 是否需要审核
+func (s *topicPublishService) _IsNeedReview(userId int64, form model.CreateTopicForm) bool {
+	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
+		logrus.Info("帖子标题命中违禁词", strings.Join(hits, ","))
+		return true
+	}
+
+	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
+		logrus.Info("帖子内容命中违禁词", strings.Join(hits, ","))
+		return true
+	}
+
+	return false
+}
+
 func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicForm) (err error) {
-	// TODO 帖子内容、标题字数限制可配置
 	if form.Type == constants.TopicTypeTweet {
-		if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
-			return web.NewErrorMsg("内容或图片不能为空")
+		if strs.IsBlank(form.Content) {
+			return web.NewErrorMsg("内容不能为空")
 		}
+		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
+		// 	return web.NewErrorMsg("内容或图片不能为空")
+		// }
 	} else {
 		if strs.IsBlank(form.Title) {
 			return web.NewErrorMsg("标题不能为空")
@@ -106,5 +144,6 @@ func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicFo
 	if node == nil || node.Status != constants.StatusOk {
 		return web.NewErrorMsg("节点不存在")
 	}
+
 	return nil
 }

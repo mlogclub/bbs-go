@@ -17,9 +17,25 @@
 
 <script>
 export default {
-  asyncData({ query }) {
+  asyncData({ query, error }) {
+    const url = query.url
+    if (!url) {
+      error({
+        statusCode: 500,
+        message: '你访问的页面发生错误!',
+      })
+      return
+    }
+    const temp = url.toLowerCase()
+    if (!temp.startsWith('http://') && !temp.startsWith('https://')) {
+      error({
+        statusCode: 500,
+        message: '你访问的页面发生错误!',
+      })
+      return
+    }
     return {
-      url: query.url,
+      url,
     }
   },
 }

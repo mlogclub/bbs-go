@@ -10,6 +10,7 @@ var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
+	&ForbiddenWord{},
 }
 
 type Model struct {
@@ -299,4 +300,13 @@ type UserReport struct {
 	AuditTime   int64  `json:"auditTime" form:"auditTime"`     // 审核时间
 	AuditUserId int64  `json:"auditUserId" form:"auditUserId"` // 审核人ID
 	CreateTime  int64  `json:"createTime" form:"createTime"`   // 举报时间
+}
+
+// ForbiddenWord 违禁词
+type ForbiddenWord struct {
+	Model
+	Type       string `gorm:"size:16" json:"type" form:"type"`       // 类型：word/regex
+	Word       string `gorm:"size:128" json:"word" form:"word"`      // 违禁词
+	Remark     string `gorm:"size:1024" json:"remark" form:"remark"` // 备注
+	CreateTime int64  `json:"createTime" form:"createTime"`          // 举报时间
 }

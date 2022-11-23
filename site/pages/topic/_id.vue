@@ -1,6 +1,14 @@
 <template>
   <div>
     <section class="main">
+      <div v-if="isPending" class="container main-container">
+        <div
+          class="notification is-warning"
+          style="width: 100%; margin: 20px 0"
+        >
+          帖子正在审核中
+        </div>
+      </div>
       <div class="container main-container left-main size-360">
         <div class="left-container">
           <div class="main-content no-padding no-bg">
@@ -193,8 +201,7 @@ export default {
       topic = await $axios.get('/api/topic/' + params.id)
     } catch (e) {
       error({
-        statusCode: 404,
-        message: '话题不存在',
+        message: e.message,
       })
       return
     }
@@ -242,6 +249,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.current
+    },
+    isPending() {
+      return this.topic.status === 2
     },
   },
   mounted() {

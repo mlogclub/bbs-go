@@ -5,11 +5,8 @@
 @import "./sidebar.scss";
 @import "./btn.scss";
 @import "./common.scss";
-@import "//at.alicdn.com/t/font_1142441_w7fbddw0ctp.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// @import "//at.alicdn.com/t/c/font_1142441_8wp1jwogilt.css";
+@import "./iconfont/iconfont.css";
 
 body {
   height: 100%;

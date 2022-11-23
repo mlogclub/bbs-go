@@ -4,14 +4,14 @@ import Layout from "@/layout";
 
 const adminRouter = [
   {
-    path: "/users",
+    path: "/user",
     component: Layout,
-    redirect: "/users",
+    redirect: "/user",
     children: [
       {
-        name: "Users",
+        name: "User",
         path: "",
-        component: () => import("@/views/pages/users/index"),
+        component: () => import("@/views/pages/user/index"),
         meta: {
           title: "用户管理",
           icon: "iconfont icon-username",
@@ -22,7 +22,7 @@ const adminRouter = [
   {
     path: "/content",
     component: Layout,
-    redirect: "/content/topics",
+    redirect: "/content/topic",
     name: "content",
     meta: {
       title: "内容管理",
@@ -30,21 +30,48 @@ const adminRouter = [
     },
     children: [
       {
-        name: "Topics",
-        path: "topics",
-        component: () => import("@/views/pages/topics/index"),
+        name: "Topic",
+        path: "topic",
+        component: () => import("@/views/pages/topic/index"),
         meta: {
-          title: "话题",
+          title: "帖子管理",
           icon: "iconfont icon-topic",
         },
       },
       {
-        name: "Articles",
-        path: "articles",
-        component: () => import("@/views/pages/articles/index"),
+        name: "TopicReview",
+        path: "topic/review",
+        component: () => import("@/views/pages/topic/review"),
         meta: {
-          title: "文章",
+          title: "帖子审核",
+          icon: "iconfont icon-audit",
+        },
+      },
+      {
+        name: "Article",
+        path: "article",
+        component: () => import("@/views/pages/article/index"),
+        meta: {
+          title: "文章管理",
           icon: "iconfont icon-article",
+        },
+      },
+      {
+        name: "ArticleReview",
+        path: "article/review",
+        component: () => import("@/views/pages/article/review"),
+        meta: {
+          title: "文章审核",
+          icon: "iconfont icon-audit",
+        },
+      },
+      {
+        name: "ForbiddenWord",
+        path: "forbidden-word",
+        component: () => import("@/views/pages/forbidden-word/index"),
+        meta: {
+          title: "违禁词",
+          icon: "iconfont icon-forbidden",
         },
       },
     ],
@@ -62,7 +89,7 @@ const adminRouter = [
       {
         name: "Nodes",
         path: "nodes",
-        component: () => import("@/views/pages/topics/nodes"),
+        component: () => import("@/views/pages/topic/nodes"),
         meta: {
           title: "节点",
           icon: "iconfont icon-tag",

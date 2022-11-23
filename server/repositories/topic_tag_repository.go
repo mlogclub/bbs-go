@@ -87,17 +87,20 @@ func (r *topicTagRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.TopicTag{}, "id = ?", id)
 }
 
-func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) {
+func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []int64) error {
 	if topicId <= 0 || len(tagIds) == 0 {
-		return
+		return nil
 	}
 	for _, tagId := range tagIds {
-		_ = r.Create(db, &model.TopicTag{
+		if err := r.Create(db, &model.TopicTag{
 			TopicId:    topicId,
 			TagId:      tagId,
 			CreateTime: dates.NowTimestamp(),
-		})
+		}); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func (r *topicTagRepository) DeleteTopicTags(db *gorm.DB, topicId int64) {

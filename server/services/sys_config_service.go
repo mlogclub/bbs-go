@@ -218,6 +218,16 @@ func (s *sysConfigService) GetModules() (modules []model.ModuleConfig) {
 	return
 }
 
+// GetEmailWhitelist 邮箱白名单
+func (s *sysConfigService) GetEmailWhitelist() []string {
+	str := cache.SysConfigCache.GetValue(constants.SysConfigEmailWhitelist)
+	var emailWhitelist []string
+	if strs.IsNotBlank(str) {
+		_ = jsons.Parse(str, &emailWhitelist)
+	}
+	return emailWhitelist
+}
+
 func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 	var (
 		siteTitle                  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
@@ -285,6 +295,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		CreateCommentEmailVerified: createCommentEmailVerified,
 		EnableHideContent:          enableHideContent,
 		Modules:                    s.GetModules(),
+		EmailWhitelist:             s.GetEmailWhitelist(),
 	}
 }
 

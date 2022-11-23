@@ -67,6 +67,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.RecommendTime = topic.RecommendTime
 	rsp.Sticky = topic.Sticky
 	rsp.StickyTime = topic.StickyTime
+	rsp.Status = topic.Status
 
 	// 构建内容
 	if buildContent {

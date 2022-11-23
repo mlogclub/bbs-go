@@ -30,7 +30,7 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 	}
 
 	// 审核中文章控制展示
-	if article.Status == constants.StatusPending {
+	if article.Status == constants.StatusReview {
 		user := services.UserTokenService.GetCurrent(c.Ctx)
 		if user != nil {
 			if article.UserId != user.Id && !user.IsOwnerOrAdmin() {

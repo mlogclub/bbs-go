@@ -43,6 +43,7 @@ type SysConfigResponse struct {
 	CreateCommentEmailVerified bool           `json:"createCommentEmailVerified"`
 	EnableHideContent          bool           `json:"enableHideContent"`
 	Modules                    []ModuleConfig `json:"modules"`
+	EmailWhitelist             []string       `json:"emailWhitelist"` // 邮箱白名单
 }
 
 // Moduleconfig

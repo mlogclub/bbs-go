@@ -1,15 +1,26 @@
 <template>
-  <section class="page-container">
-    <div class="toolbar">
+  <section v-loading="listLoading" class="page-container">
+    <div ref="toolbar" class="toolbar">
       <el-form :inline="true" :model="filters">
+        <el-form-item>
+          <el-input v-model="filters.id" placeholder="编号" />
+        </el-form-item>
         <el-form-item>
           <el-input v-model="filters.userId" placeholder="用户编号" />
         </el-form-item>
         <el-form-item>
-          <el-select v-model="filters.opType" clearable placeholder="操作类型" @change="list">
-            <el-option label="添加" value="create" />
-            <el-option label="删除" value="delete" />
-            <el-option label="修改" value="update" />
+          <el-input v-model="filters.title" placeholder="标题" />
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="filters.recommend" clearable placeholder="是否推荐" @change="list">
+            <el-option label="推荐" value="1" />
+            <el-option label="未推荐" value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="filters.status" clearable placeholder="请选择状态" @change="list">
+            <el-option label="正常" :value="0" />
+            <el-option label="删除" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -18,37 +29,11 @@
       </el-form>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      height="100%"
-      :data="results"
-      highlight-current-row
-      stripe
-      border
-    >
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <div>{{ scope.row.ip }}</div>
-          <div>{{ scope.row.userAgent }}</div>
-          <div>{{ scope.row.referer }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" label="编号" width="100" />
-      <el-table-column prop="userId" label="用户编号" />
-      <el-table-column prop="opType" label="操作类型" />
-      <el-table-column prop="dataType" label="数据类型" />
-      <el-table-column prop="dataId" label="数据编号" />
-      <el-table-column prop="createTime" label="操作时间">
-        <template slot-scope="scope">
-          {{ scope.row.createTime | formatDate }}
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty />
-      </template>
-    </el-table>
+    <div ref="mainContent" :style="{ height: mainHeight }" class="page-section">
+      <topic-list :results="results" @change="list" />
+    </div>
 
-    <div class="pagebar">
+    <div ref="pagebar" class="pagebar">
       <el-pagination
         :page-sizes="[20, 50, 100, 300]"
         :current-page="page.page"
@@ -63,16 +48,26 @@
 </template>
 
 <script>
+import mainHeight from "@/utils/mainHeight";
+import TopicList from "./components/TopicList";
+
 export default {
+  name: "Topic",
+  components: { TopicList },
   data() {
     return {
+      mainHeight: "300px",
       results: [],
       listLoading: false,
       page: {},
-      filters: {},
+      filters: {
+        status: 0,
+      },
+      selectedRows: [],
     };
   },
   mounted() {
+    mainHeight(this);
     this.list();
   },
   methods: {
@@ -84,7 +79,7 @@ export default {
         limit: me.page.limit,
       });
       this.axios
-        .form("/api/admin/operate-log/list", params)
+        .form("/api/admin/topic/list", params)
         .then((data) => {
           me.results = data.results;
           me.page = data.page;
@@ -101,13 +96,14 @@ export default {
       this.page.limit = val;
       this.list();
     },
+    handleSelectionChange(val) {
+      this.selectedRows = val;
+    },
   },
 };
 </script>
-
-<style scoped>
-.link-logo {
-  max-width: 50px;
-  max-height: 50px;
+<style scoped lang="scss">
+.page-section {
+  overflow-y: auto;
 }
 </style>
