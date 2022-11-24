@@ -1,12 +1,11 @@
 FROM node:16.15.0-alpine
 
-# env
 ENV HOST 0.0.0.0
 ENV APP_HOME /app/bbs-go
 
-# code
 WORKDIR "$APP_HOME"
 COPY . ./
+COPY nuxt.config.docker.js ./nuxt.config.js
 
 # install
 RUN npm config set registry https://registry.npm.taobao.org \
