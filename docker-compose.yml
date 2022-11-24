@@ -49,4 +49,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./site
+    volumes:
+      - ./site/nuxt.config.docker.js:/app/bbs-go/nuxt.config.js
     restart: on-failure

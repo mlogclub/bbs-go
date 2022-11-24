@@ -11,6 +11,10 @@ export const mutations = {
 export const actions = {
   // 加载配置
   async loadConfig(context) {
+    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    console.log(this)
+    console.log(this.$axios)
+    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     const ret = await this.$axios.get('/api/config/configs')
     context.commit('setConfig', ret)
     return ret
