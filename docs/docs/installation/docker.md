@@ -24,14 +24,21 @@
 │   │   │   └── init.sql   (数据库初始化脚本)
 ├── server
 │   ├── Dockerfile   (server 模块Dockerfile)
+│   ├── bbs-go.docker.yaml   (server 模块用于docker环境中的配置文件)
 ├── site
 │   ├── Dockerfile   (site 模块Dockerfile)
+│   ├── nuxt.config.docker.js   (site 模块用于docker环境中的配置文件)
 └── ...
 ```
 
 ## 安装
 
-### 构建镜像
+## 配置
+
+> TODO
+
+
+<!-- ### 构建镜像
 
 docker服务成功安装且启动后，在项目根目录执行以下命令构建镜像：
 
@@ -39,12 +46,13 @@ docker服务成功安装且启动后，在项目根目录执行以下命令构�
 
 ```bash
 docker compose build
-```
+``` -->
 
 ### 启动服务
 
 ```bash
-docker compose up
+docker-compose pull
+docker-compose up -d --no-build
 ```
 
 启动成功后即可通过`3000`端口访问到你的服务了。
@@ -54,7 +62,3 @@ docker compose up
 ```bash
 docker compose stop
 ```
-
-## docker参数配置
-
-> TODO
