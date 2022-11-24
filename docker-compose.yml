@@ -24,7 +24,7 @@ services:
 
   server:
     container_name: bbs-go-server
-    image: mlogclub/bbs-go-server
+    image: mlogclub/bbs-go-server:latest
     depends_on:
       mysql:
         condition: service_healthy
@@ -41,7 +41,7 @@ services:
 
   site:
     container_name: bbs-go-site
-    image: mlogclub/bbs-go-site
+    image: mlogclub/bbs-go-site:latest
     depends_on:
       - server
     ports:
