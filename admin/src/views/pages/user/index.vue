@@ -67,15 +67,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="编号" width="100" />
-        <el-table-column prop="avatar" label="头像" width="80">
+        <el-table-column prop="avatar" label="头像" width="70">
           <template slot-scope="scope">
-            <avatar :user="scope.row" />
+            <avatar :user="scope.row" size="40" />
           </template>
         </el-table-column>
         <el-table-column prop="nickname" label="昵称" />
         <el-table-column prop="email" label="邮箱" />
-        <el-table-column prop="score" label="积分" />
-        <el-table-column prop="forbidden" label="是否禁言">
+        <el-table-column prop="emailVerified" label="邮箱是否验证" width="120">
+          <template #default="{ row }">
+            {{ row.emailVerified ? "已验证" : "" }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="score" label="积分" width="100" />
+        <el-table-column prop="forbidden" label="是否禁言" width="200">
           <template slot-scope="scope">
             <span v-if="scope.row.forbidden" class="tag is-warning">
               <template v-if="scope.row.forbiddenEndTime === -1">永久禁言</template>
@@ -84,12 +89,12 @@
             <span v-else class="tag is-success">正常</span>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="注册时间">
+        <el-table-column prop="createTime" label="注册时间" width="180">
           <template slot-scope="scope">
             {{ scope.row.createTime | formatDate }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" width="160">
           <template slot-scope="scope">
             <el-dropdown size="mini" trigger="hover" placement="bottom" @command="handleCommand">
               <el-button type="primary">

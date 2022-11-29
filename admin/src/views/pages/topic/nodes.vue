@@ -33,6 +33,7 @@
               :src="scope.row.logo"
               class="node-logo"
               fit="cover"
+              style="width: 50px; height: 50px"
               :preview-src-list="[scope.row.logo]"
             />
           </template>
