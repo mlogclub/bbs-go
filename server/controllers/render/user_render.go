@@ -42,6 +42,7 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		Score:        user.Score,
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,
+		Forbidden:    user.IsForbidden(),
 	}
 	if strs.IsNotBlank(user.Avatar) {
 		ret.Avatar = user.Avatar
@@ -57,6 +58,8 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 	if user.Status == constants.StatusDeleted {
 		ret.Nickname = "黑名单用户"
 		ret.Description = ""
+		ret.Score = 0
+		ret.Forbidden = true
 	}
 	return ret
 }
@@ -71,14 +74,11 @@ func BuildUserDetail(user *model.User) *model.UserDetail {
 		BackgroundImage:      user.BackgroundImage,
 		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
 		HomePage:             user.HomePage,
-		Forbidden:            user.IsForbidden(),
 		Status:               user.Status,
 	}
 	if user.Status == constants.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.HomePage = ""
-		ret.Score = 0
-		ret.Forbidden = true
 	}
 	return ret
 }

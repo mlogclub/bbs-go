@@ -23,7 +23,8 @@ type UserInfo struct {
 	Description  string           `json:"description"`
 	CreateTime   int64            `json:"createTime"`
 
-	Followed bool `json:"followed"`
+	Forbidden bool `json:"forbidden"` // 是否禁言
+	Followed  bool `json:"followed"`  // 是否关注
 }
 
 // UserDetail 用户详细信息
@@ -33,7 +34,6 @@ type UserDetail struct {
 	BackgroundImage      string `json:"backgroundImage"`
 	SmallBackgroundImage string `json:"smallBackgroundImage"`
 	HomePage             string `json:"homePage"`
-	Forbidden            bool   `json:"forbidden"` // 是否禁言
 	Status               int    `json:"status"`
 }
 
