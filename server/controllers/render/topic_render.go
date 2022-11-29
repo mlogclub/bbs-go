@@ -15,6 +15,7 @@ func BuildTopic(topic *model.Topic, currentUser *model.User) *model.TopicRespons
 	resp := _buildTopic(topic, true)
 	if currentUser != nil {
 		resp.Liked = services.UserLikeService.Exists(currentUser.Id, constants.EntityTopic, topic.Id)
+		resp.Favorited = services.FavoriteService.IsFavorited(currentUser.Id, constants.EntityTopic, topic.Id)
 	}
 	return resp
 }

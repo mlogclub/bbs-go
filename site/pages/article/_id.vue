@@ -131,23 +131,16 @@ export default {
       })
       return
     }
-    const [commentsPage, favorited, nearlyArticles, relatedArticles] =
-      await Promise.all([
-        $axios.get('/api/comment/comments', {
-          params: {
-            entityType: 'article',
-            entityId: article.articleId,
-          },
-        }),
-        $axios.get('/api/favorite/favorited', {
-          params: {
-            entityType: 'article',
-            entityId: params.id,
-          },
-        }),
-        $axios.get('/api/article/nearly/' + article.articleId),
-        $axios.get('/api/article/related/' + article.articleId),
-      ])
+    const [commentsPage, nearlyArticles, relatedArticles] = await Promise.all([
+      $axios.get('/api/comment/comments', {
+        params: {
+          entityType: 'article',
+          entityId: article.articleId,
+        },
+      }),
+      $axios.get('/api/article/nearly/' + article.articleId),
+      $axios.get('/api/article/related/' + article.articleId),
+    ])
 
     // 文章关键字
     let keywords = ''
@@ -172,7 +165,6 @@ export default {
 
     return {
       article,
-      favorited: favorited.favorited,
       nearlyArticles,
       relatedArticles,
       commentsPage,
@@ -230,18 +222,18 @@ export default {
     },
     async addFavorite(articleId) {
       try {
-        if (this.favorited) {
+        if (this.article.favorited) {
           await this.$axios.get('/api/favorite/delete', {
             params: {
               entityType: 'article',
               entityId: articleId,
             },
           })
-          this.favorited = false
+          this.article.favorited = false
           this.$message.success('已取消收藏')
         } else {
           await this.$axios.post('/api/article/favorite/' + articleId)
-          this.favorited = true
+          this.article.favorited = true
           this.$message.success('收藏成功')
         }
       } catch (e) {

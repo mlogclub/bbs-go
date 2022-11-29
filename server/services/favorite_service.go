@@ -66,6 +66,11 @@ func (s *favoriteService) Delete(id int64) {
 	repositories.FavoriteRepository.Delete(sqls.DB(), id)
 }
 
+func (s *favoriteService) IsFavorited(userId int64, entityType string, entityId int64) bool {
+	return repositories.FavoriteRepository.Take(sqls.DB(), "user_id = ? and entity_type = ? and entity_id = ?",
+		userId, entityType, entityId) != nil
+}
+
 func (s *favoriteService) GetBy(userId int64, entityType string, entityId int64) *model.Favorite {
 	return repositories.FavoriteRepository.Take(sqls.DB(), "user_id = ? and entity_type = ? and entity_id = ?",
 		userId, entityType, entityId)
@@ -90,8 +95,7 @@ func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 }
 
 func (s *favoriteService) addFavorite(userId int64, entityType string, entityId int64) error {
-	temp := s.GetBy(userId, entityType, entityId)
-	if temp != nil { // 已经收藏
+	if s.IsFavorited(userId, entityType, entityId) { // 已经收藏
 		return nil
 	}
 	if err := repositories.FavoriteRepository.Create(sqls.DB(), &model.Favorite{

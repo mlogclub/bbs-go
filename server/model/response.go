@@ -64,6 +64,7 @@ type ArticleSimpleResponse struct {
 	LikeCount    int64          `json:"likeCount"`
 	CreateTime   int64          `json:"createTime"`
 	Status       int            `json:"status"`
+	Favorited    bool           `json:"favorited"`
 }
 
 type ArticleResponse struct {
@@ -110,6 +111,7 @@ type TopicResponse struct {
 	Sticky          bool                `json:"sticky"`
 	StickyTime      int64               `json:"stickyTime"`
 	Status          int                 `json:"status"`
+	Favorited       bool                `json:"favorited"`
 }
 
 // CommentResponse 评论返回数据

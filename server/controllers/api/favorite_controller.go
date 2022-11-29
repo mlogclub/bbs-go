@@ -13,19 +13,6 @@ type FavoriteController struct {
 	Ctx iris.Context
 }
 
-// 是否收藏了
-func (c *FavoriteController) GetFavorited() *web.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	entityType := params.FormValue(c.Ctx, "entityType")
-	entityId := params.FormValueInt64Default(c.Ctx, "entityId", 0)
-	if user == nil || len(entityType) == 0 || entityId <= 0 {
-		return web.NewEmptyRspBuilder().Put("favorited", false).JsonResult()
-	} else {
-		tmp := services.FavoriteService.GetBy(user.Id, entityType, entityId)
-		return web.NewEmptyRspBuilder().Put("favorited", tmp != nil).JsonResult()
-	}
-}
-
 // 取消收藏
 func (c *FavoriteController) GetDelete() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)

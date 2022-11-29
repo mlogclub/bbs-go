@@ -7,9 +7,10 @@ import (
 	"bbs-go/pkg/html"
 	"bbs-go/pkg/markdown"
 	"bbs-go/pkg/text"
+	"bbs-go/services"
 )
 
-func BuildArticle(article *model.Article) *model.ArticleResponse {
+func BuildArticle(article *model.Article, currentUser *model.User) *model.ArticleResponse {
 	if article == nil {
 		return nil
 	}
@@ -37,6 +38,10 @@ func BuildArticle(article *model.Article) *model.ArticleResponse {
 	}
 
 	rsp.Cover = buildImage(article.Cover)
+
+	if currentUser != nil {
+		rsp.Favorited = services.FavoriteService.IsFavorited(currentUser.Id, constants.EntityArticle, article.Id)
+	}
 
 	return rsp
 }

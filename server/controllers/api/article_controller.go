@@ -29,9 +29,10 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorCode(404, "文章不存在")
 	}
 
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+
 	// 审核中文章控制展示
 	if article.Status == constants.StatusReview {
-		user := services.UserTokenService.GetCurrent(c.Ctx)
 		if user != nil {
 			if article.UserId != user.Id && !user.IsOwnerOrAdmin() {
 				return web.JsonErrorCode(403, "文章审核中")
@@ -42,7 +43,7 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 	}
 
 	services.ArticleService.IncrViewCount(articleId) // 增加浏览量
-	return web.JsonData(render.BuildArticle(article))
+	return web.JsonData(render.BuildArticle(article, user))
 }
 
 // PostCreate 发表文章
@@ -61,7 +62,7 @@ func (c *ArticleController) PostCreate() *web.JsonResult {
 	if err != nil {
 		return web.JsonError(err)
 	}
-	return web.JsonData(render.BuildArticle(article))
+	return web.JsonData(render.BuildArticle(article, user))
 }
 
 // 编辑时获取详情

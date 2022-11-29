@@ -161,9 +161,9 @@
                   <i
                     class="action-icon iconfont"
                     :class="{
-                      'icon-has-favorite': favorited,
-                      'icon-favorite': !favorited,
-                      'checked-icon': favorited,
+                      'icon-has-favorite': topic.favorited,
+                      'icon-favorite': !topic.favorited,
+                      'checked-icon': topic.favorited,
                     }"
                   />
                   <div class="action-text">
@@ -206,14 +206,8 @@ export default {
       return
     }
 
-    const [liked, favorited, commentsPage, likeUsers] = await Promise.all([
+    const [liked, commentsPage, likeUsers] = await Promise.all([
       $axios.get('/api/like/liked', {
-        params: {
-          entityType: 'topic',
-          entityId: params.id,
-        },
-      }),
-      $axios.get('/api/favorite/favorited', {
         params: {
           entityType: 'topic',
           entityId: params.id,
@@ -231,7 +225,6 @@ export default {
     return {
       topic,
       commentsPage,
-      favorited: favorited.favorited,
       liked: liked.liked,
       likeUsers,
     }
@@ -265,18 +258,18 @@ export default {
     },
     async addFavorite(topicId) {
       try {
-        if (this.favorited) {
+        if (this.topic.favorited) {
           await this.$axios.get('/api/favorite/delete', {
             params: {
               entityType: 'topic',
               entityId: topicId,
             },
           })
-          this.favorited = false
+          this.topic.favorited = false
           this.$message.success('已取消收藏')
         } else {
           await this.$axios.get('/api/topic/favorite/' + topicId)
-          this.favorited = true
+          this.topic.favorited = true
           this.$message.success('收藏成功')
         }
       } catch (e) {
