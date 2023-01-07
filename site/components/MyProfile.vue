@@ -12,6 +12,12 @@
         <div class="svalue">{{ user.nickname }}</div>
       </div>
       <div class="str">
+        <div class="slabel">等级</div>
+        <div class="svalue">
+          {{ user.level }}
+        </div>
+      </div>
+      <div class="str">
         <div class="slabel">签名</div>
         <div class="svalue">
           {{ user.description }}

@@ -11,6 +11,7 @@
             <nuxt-link :to="'/user/' + user.id" class="score-nickname">{{
               user.nickname
             }}</nuxt-link>
+            <img class="vip-class" :src="user.vip" />
             <p class="score-desc">
               {{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论
             </p>
@@ -95,5 +96,12 @@ export default {
       }
     }
   }
+}
+
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+  position: relative;
+  top: 5px;
 }
 </style>

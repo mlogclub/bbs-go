@@ -24,11 +24,12 @@ const (
 	SysConfigTokenExpireDays            = "tokenExpireDays"            // 登录Token有效天数
 	SysConfigLoginMethod                = "loginMethod"                // 登录方式
 	SysConfigEnableHideContent          = "enableHideContent"          // 启用回复可见功能
-	SysConfigCreateTopicEmailVerified   = "createTopicEmailVerified"   // 发话题需要邮箱认证
-	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
+	SysConfigCreateTopicEmailVerified   = "createTopicEmailVerified"   // 发帖子需要邮箱认证
+	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发文章需要邮箱认证
 	SysConfigCreateCommentEmailVerified = "createCommentEmailVerified" // 发话题需要邮箱认证
 	SysConfigModules                    = "modules"                    // 功能模块
 	SysConfigEmailWhitelist             = "emailWhitelist"             // 邮箱白名单
+	SysConfigVipConfig                  = "vipConfig"                  // vip积分配置
 )
 
 // EntityType

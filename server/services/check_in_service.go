@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/base"
 	"bbs-go/cache"
 	"bbs-go/model"
 	"bbs-go/model/constants"
@@ -114,7 +115,8 @@ func (s *checkInService) CheckIn(userId int64) error {
 		// 处理签到积分
 		config := SysConfigService.GetConfig()
 		if config.ScoreConfig.CheckInScore > 0 {
-			_ = UserService.IncrScore(userId, config.ScoreConfig.CheckInScore, constants.EntityCheckIn,
+			score := base.RandScore(config.ScoreConfig.CheckInScore)
+			_ = UserService.IncrScore(userId, score, constants.EntityCheckIn,
 				strconv.FormatInt(userId, 10), "签到"+strconv.Itoa(dayName))
 		} else {
 			logrus.Warn("签到积分未配置...")

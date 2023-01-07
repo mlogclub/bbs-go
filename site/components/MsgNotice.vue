@@ -8,7 +8,6 @@
         title="消息"
       >
         <i class="iconfont icon-message"></i>
-        <span>消息</span>
         <sup v-if="msgcount > 0">{{ msgcount > 9 ? '9+' : msgcount }}</sup>
       </nuxt-link>
     </div>

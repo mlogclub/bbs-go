@@ -123,6 +123,22 @@ const adminRouter = [
     ],
   },
   {
+    path: "/advert",
+    component: Layout,
+    redirect: "/advert",
+    children: [
+      {
+        name: "Advert",
+        path: "",
+        component: () => import("@/views/pages/advert/index"),
+        meta: {
+          title: "广告配置",
+          icon: "iconfont icon-share",
+        },
+      },
+    ],
+  },
+  {
     path: "/settings",
     component: Layout,
     redirect: "/settings",

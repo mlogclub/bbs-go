@@ -51,3 +51,14 @@ type TopicRecommendEvent struct {
 	TopicId   int64 `json:"topicId"`
 	Recommend bool  `json:"recommend"`
 }
+
+type TopicBuyEvent struct {
+	UserId       int64  `json:"userId"`
+	ToUserId     int64  `json:"toUserId"`
+	QuoteContent string `json:"quoteContent"`
+}
+
+type ScorePayEvent struct {
+	ToUserId int64 `json:"toUserId"`
+	Score    int64 `json:"score"`
+}

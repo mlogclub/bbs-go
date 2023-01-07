@@ -31,6 +31,7 @@
         <div class="column is-3">
           <div class="main-aside">
             <site-notice />
+            <advert :adverts="adverts" />
           </div>
         </div>
       </div>
@@ -41,15 +42,17 @@
 <script>
 export default {
   async asyncData({ $axios, params }) {
-    const [tagsPage] = await Promise.all([
+    const [tagsPage, adverts] = await Promise.all([
       $axios.get('/api/tag/tags', {
         params: {
           page: params.page,
         },
       }),
+      $axios.get('/api/advert/list'),
     ])
     return {
       tagsPage,
+      adverts,
     }
   },
   head() {

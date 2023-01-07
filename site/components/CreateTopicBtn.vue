@@ -7,15 +7,9 @@
     >
       <span class="el-dropdown-link">
         <slot>
-          <el-button type="primary" icon="el-icon-plus">发表</el-button>
-          <!--
-          <button class="button is-primary">
-            <span class="icon">
-              <i class="iconfont icon-add"></i>
-            </span>
-            <span>发表</span>
-          </button>
-          -->
+          <el-button size="mini" type="primary" icon="el-icon-plus"
+            >发表</el-button
+          >
         </slot>
       </span>
       <el-dropdown-menu slot="dropdown">

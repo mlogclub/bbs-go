@@ -41,6 +41,15 @@ Uploader:
     StylePreview: 预览图片样式名称
     StyleSmall: 小图样式名称
     StyleDetail: 详情图片样式名称
+  TxyOss:
+    Host: 腾讯云Cos
+    Bucket: 请配置成你自己的
+    Region: 请配置成你自己的
+    SecretID: 请配置成你自己的
+    SecretKey: 请配置成你自己的
+  Server:
+    URL: 自建图片上传地址
+    Host: 自建图片访问域名
   # 本地文件上传
   Local:
     Host: https://st.mlog.club/ # 上传文件域名

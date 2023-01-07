@@ -56,6 +56,17 @@ type Config struct {
 			StyleSmall    string `yaml:"StyleSmall"`
 			StyleDetail   string `yaml:"StyleDetail"`
 		} `yaml:"AliyunOss"`
+		TxyCos struct {
+			Host      string `yaml:"Host"`
+			Bucket    string `yaml:"Bucket"`
+			Region    string `yaml:"Region"`
+			SecretID  string `yaml:"SecretID"`
+			SecretKey string `yaml:"SecretKey"`
+		} `yaml:"TxyOss"`
+		Server struct {
+			URL  string `yaml:"URL"`
+			Host string `yaml:"Host"`
+		} `yaml:"Server"`
 		Local struct {
 			Host string `yaml:"Host"`
 			Path string `yaml:"Path"`

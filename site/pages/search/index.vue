@@ -17,8 +17,9 @@
         </div>
       </div>
       <div class="right-container">
-        <check-in />
         <site-notice />
+        <advert :adverts="adverts" />
+        <check-in />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
       </div>
@@ -30,16 +31,17 @@
 export default {
   async asyncData({ $axios, query, store }) {
     const keyword = query.q || ''
-    const [nodes, scoreRank, links] = await Promise.all([
+    const [nodes, scoreRank, links, adverts] = await Promise.all([
       $axios.get('/api/topic/nodes'),
       $axios.get('/api/user/score/rank'),
       $axios.get('/api/link/toplinks'),
+      $axios.get('/api/advert/list'),
     ])
     store.dispatch('search/initParams', {
       keyword: query.q || '',
       page: query.p || 1,
     })
-    return { keyword, nodes, scoreRank, links }
+    return { keyword, nodes, scoreRank, links, adverts }
   },
   computed: {
     searchPage() {

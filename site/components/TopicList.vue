@@ -15,6 +15,7 @@
             <nuxt-link :to="'/user/' + topic.user.id">{{
               topic.user.nickname
             }}</nuxt-link>
+            <img class="vip-class" :src="topic.user.vip" />
             <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
               >置顶</span
             >
@@ -130,4 +131,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+}
+</style>

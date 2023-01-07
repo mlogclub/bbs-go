@@ -5,9 +5,11 @@ import (
 	"bbs-go/pkg/bbsurls"
 	"bbs-go/pkg/email"
 	"bbs-go/pkg/errs"
+	"bbs-go/pkg/event"
 	"bbs-go/pkg/uploader"
 	"bbs-go/pkg/validate"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -190,10 +192,11 @@ func (s *userService) GetByUsername(username string) *model.User {
 }
 
 // SignUp 注册
-func (s *userService) SignUp(username, email, nickname, password, rePassword string) (*model.User, error) {
+func (s *userService) SignUp(username, email, nickname, password, rePassword, refereeCode string) (*model.User, error) {
 	username = strings.TrimSpace(username)
 	email = strings.TrimSpace(email)
 	nickname = strings.TrimSpace(nickname)
+	refereeCode = strings.TrimSpace(refereeCode)
 
 	// 验证昵称
 	if len(nickname) == 0 {
@@ -242,6 +245,20 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	if err != nil {
 		return nil, err
 	}
+
+	if len(refereeCode) > 0 {
+		userReferrer := &model.UserReferee{
+			UserId:      user.Id,
+			RefereeCode: refereeCode,
+			Status:      0,
+		}
+
+		err = repositories.UserRefereeRepository.Create(sqls.DB(), userReferrer)
+		if err != nil {
+			logrus.Errorf("推荐人创建失败 referrerCode : [%s] - userId : [%d]", refereeCode, user.Id)
+		}
+	}
+
 	return user, nil
 }
 
@@ -561,16 +578,20 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 // VerifyEmail 验证邮箱
 func (s *userService) VerifyEmail(token string) (string, error) {
 	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
-	if emailCode == nil || emailCode.Used {
-		return "", errors.New("非法请求")
+	if emailCode == nil {
+		return "", errs.BadRequest
+	}
+
+	if emailCode.Used {
+		return "", errs.EmailVerified
 	}
 
 	user := s.Get(emailCode.UserId)
 	if user == nil || emailCode.Email != user.Email.String {
-		return "", errors.New("验证码过期")
+		return "", errs.EmailTimeout
 	}
 	if dates.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
-		return "", errors.New("验证邮件已过期")
+		return "", errs.EmailTimeout
 	}
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.UpdateColumn(tx, emailCode.UserId, "email_verified", true); err != nil {
@@ -582,6 +603,22 @@ func (s *userService) VerifyEmail(token string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	userReferee := repositories.UserRefereeRepository.FindOne(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", 0))
+	if userReferee != nil {
+		userReferee.Status = 1
+		err := repositories.UserRefereeRepository.Update(sqls.DB(), userReferee)
+		if err != nil {
+			logrus.Errorf("更新推荐人状态失败 用户ID : [%d] - 推荐人Code : [%d]", userReferee.UserId, userReferee.RefereeCode)
+		}
+		users := repositories.UserRepository.FindOne(sqls.DB(), sqls.NewCnd().Eq("referee_code", userReferee.RefereeCode))
+		users.RefereeCount = users.RefereeCount + 1
+		err = repositories.UserRepository.Update(sqls.DB(), users)
+		if err != nil {
+			logrus.Errorf("更新推荐数量失败 推荐人ID : [%d] - 用户ID : [%d]", users.Id, user.Id)
+		}
+	}
+
 	return emailCode.Email, nil
 }
 
@@ -636,7 +673,7 @@ func (s *userService) IncrScoreForPostComment(comment *model.Comment) {
 }
 
 // IncrScore 增加分数
-func (s *userService) IncrScore(userId int64, score int, sourceType, sourceId, description string) error {
+func (s *userService) IncrScore(userId int64, score int64, sourceType, sourceId, description string) error {
 	if score <= 0 {
 		return errors.New("分数必须为正数")
 	}
@@ -644,7 +681,7 @@ func (s *userService) IncrScore(userId int64, score int, sourceType, sourceId, d
 }
 
 // DecrScore 减少分数
-func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, description string) error {
+func (s *userService) DecrScore(userId int64, score int64, sourceType, sourceId, description string) error {
 	if score <= 0 {
 		return errors.New("分数必须为正数")
 	}
@@ -652,7 +689,7 @@ func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, d
 }
 
 // addScore 加分数，也可以加负数
-func (s *userService) addScore(userId int64, score int, sourceType, sourceId, description string) error {
+func (s *userService) addScore(userId int64, score int64, sourceType, sourceId, description string) error {
 	if score == 0 {
 		return errors.New("分数不能为0")
 	}
@@ -684,4 +721,53 @@ func (s *userService) addScore(userId int64, score int, sourceType, sourceId, de
 		cache.UserCache.Invalidate(userId)
 	}
 	return err
+}
+
+// IncrScore 充值
+func (s *userService) PayScore(userId int64, score int64) error {
+	if score <= 0 {
+		logrus.Errorf("积分数量非法 : [%d] - [%d]", userId, score)
+		return errs.ErrScore
+	}
+
+	err := s.IncrScore(userId, score, "pay", string(userId), "充值")
+	if err != nil {
+		logrus.Errorf("充值失败 : [%d] - [%d]", userId, score)
+		return errs.ErrPayScore
+	}
+
+	event.Send(event.ScorePayEvent{
+		ToUserId: userId,
+		Score:    score,
+	})
+
+	return err
+}
+
+func (s *userService) CronUserPayScore() {
+	logrus.Infof("Vip 积分每日充值任务开启")
+	conf := SysConfigService.Get(21).Value
+	congMap := make(map[string]int64)
+	err := json.Unmarshal([]byte(conf), &congMap)
+	if err != nil {
+		logrus.Errorf("CronUserPayScore Unmarshal Err : [%s]", err.Error())
+	}
+	vip1 := s.Find(sqls.NewCnd().Eq("vip", 1))
+	go s.userPayScore(vip1, congMap["vip1"])
+	vip2 := s.Find(sqls.NewCnd().Eq("vip", 2))
+	go s.userPayScore(vip2, congMap["vip2"])
+	vip3 := s.Find(sqls.NewCnd().Eq("vip", 3))
+	go s.userPayScore(vip3, congMap["vip3"])
+	vip4 := s.Find(sqls.NewCnd().Eq("vip", 4))
+	go s.userPayScore(vip4, congMap["vip4"])
+	vip5 := s.Find(sqls.NewCnd().Eq("vip", 5))
+	go s.userPayScore(vip5, congMap["vip5"])
+	vip6 := s.Find(sqls.NewCnd().Eq("vip", 6))
+	go s.userPayScore(vip6, congMap["vip6"])
+}
+
+func (s *userService) userPayScore(user []model.User, score int64) {
+	for _, v := range user {
+		_ = s.PayScore(v.Id, score)
+	}
 }

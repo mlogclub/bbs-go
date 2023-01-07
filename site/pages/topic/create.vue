@@ -33,7 +33,6 @@
             </div>
           </div>
         </div>
-
         <div v-if="postForm.type === 0" class="field">
           <div class="control">
             <input
@@ -61,7 +60,7 @@
               ref="mdEditor"
               v-model="postForm.hideContent"
               height="200px"
-              placeholder="隐藏内容，评论后可见"
+              placeholder="隐藏内容，购买后可见"
             />
           </div>
         </div>
@@ -79,6 +78,18 @@
         <div class="field">
           <div class="control">
             <tag-input v-model="postForm.tags" />
+          </div>
+        </div>
+
+        <div v-if="postForm.type === 0" class="field">
+          <div class="control">
+            <input
+              v-model="postForm.score"
+              class="input"
+              type="text"
+              placeholder="隐藏内容查看所需积分"
+              style="max-width: 200px; margin-right: 20px"
+            />
           </div>
         </div>
 
@@ -173,6 +184,7 @@ export default {
         type: 0,
         nodeId: 0,
         title: '',
+        score: 0,
         tags: [],
         content: '',
         hideContent: '',
@@ -214,6 +226,13 @@ export default {
         this.$message.error('请选择节点')
         return
       }
+      if (this.postForm?.score) {
+        console.log(this.postForm.score)
+        if (!this.isNumber(this.postForm.score)) {
+          this.$message.error('积分必须为正整数')
+          return
+        }
+      }
 
       this.publishing = true
 
@@ -232,6 +251,7 @@ export default {
           title: this.postForm.title,
           content: this.postForm.content,
           hideContent: this.postForm.hideContent,
+          score: this.postForm.score,
           imageList:
             this.postForm.imageList && this.postForm.imageList.length
               ? JSON.stringify(this.postForm.imageList)
@@ -271,6 +291,17 @@ export default {
     onSimpleEditorInput(value) {
       this.postForm.content = value.content
       this.postForm.imageList = value.imageList
+    },
+    isNumber(value) {
+      if (value === '') {
+        return true
+      }
+      const r = /^\+?[1-9][0-9]*$/
+      if (!r.test(value)) {
+        return false
+      } else {
+        return true
+      }
     },
   },
 }

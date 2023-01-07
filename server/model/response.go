@@ -19,12 +19,16 @@ type UserInfo struct {
 	CommentCount int              `json:"commentCount"` // 跟帖数量
 	FansCount    int              `json:"fansCount"`    // 粉丝数量
 	FollowCount  int              `json:"followCount"`  // 关注数量
-	Score        int              `json:"score"`        // 积分
+	RefereeCount int              `json:"refereeCount"` // 推荐数量
+	Score        int64            `json:"score"`        // 积分
 	Description  string           `json:"description"`
+	Vip          string           `json:"vip"`
 	CreateTime   int64            `json:"createTime"`
 
 	Forbidden bool `json:"forbidden"` // 是否禁言
 	Followed  bool `json:"followed"`  // 是否关注
+
+	Level int64 `json:"level"` // 账号等级
 }
 
 // UserDetail 用户详细信息
@@ -111,6 +115,7 @@ type TopicResponse struct {
 	Sticky          bool                `json:"sticky"`
 	StickyTime      int64               `json:"stickyTime"`
 	Status          int                 `json:"status"`
+	Score           int64               `json:"score"`
 	Favorited       bool                `json:"favorited"`
 }
 

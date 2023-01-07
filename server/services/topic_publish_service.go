@@ -35,6 +35,7 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		Title:           form.Title,
 		Content:         form.Content,
 		HideContent:     form.HideContent,
+		Score:           form.Score,
 		Status:          constants.StatusOk,
 		UserAgent:       form.UserAgent,
 		Ip:              form.Ip,

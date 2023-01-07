@@ -240,6 +240,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		defaultNodeIdStr           = cache.SysConfigCache.GetValue(constants.SysConfigDefaultNodeId)
 		topicCaptcha               = cache.SysConfigCache.GetValue(constants.SysConfigTopicCaptcha)
 		userObserveSecondsStr      = cache.SysConfigCache.GetValue(constants.SysConfigUserObserveSeconds)
+		vipConfigStr               = cache.SysConfigCache.GetValue(constants.SysConfigVipConfig)
 		siteNavs                   = s.GetSiteNavs()
 		loginMethod                = s.GetLoginMethod()
 		createTopicEmailVerified   = s.IsCreateTopicEmailVerified()
@@ -275,6 +276,13 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		userObserveSeconds = numbers.ToInt(userObserveSecondsStr)
 	)
 
+	var vipConfig model.VipConfig
+	if strs.IsNotBlank(vipConfigStr) {
+		if err := jsons.Parse(vipConfigStr, &vipConfig); err != nil {
+			logrus.Errorf("Vip积分配置错误", err)
+		}
+	}
+
 	return &model.SysConfigResponse{
 		SiteTitle:                  siteTitle,
 		SiteDescription:            siteDescription,
@@ -284,6 +292,7 @@ func (s *sysConfigService) GetConfig() *model.SysConfigResponse {
 		RecommendTags:              recommendTagsArr,
 		UrlRedirect:                strings.ToLower(urlRedirect) == "true",
 		ScoreConfig:                scoreConfig,
+		VipConfig:                  vipConfig,
 		DefaultNodeId:              defaultNodeId,
 		ArticlePending:             articlePending,
 		TopicCaptcha:               strings.ToLower(topicCaptcha) == "true",

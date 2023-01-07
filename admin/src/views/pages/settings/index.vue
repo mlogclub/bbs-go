@@ -152,6 +152,68 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane v-if="config.vipConfig" label="VIP积分配置" name="vipConfigTab">
+          <el-form label-width="160px">
+            <el-form-item label="vip1积分">
+              <el-input-number
+                v-model="config.vipConfig.vip1"
+                :min="1"
+                type="text"
+                placeholder="vip1每日积分"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form label-width="160px">
+            <el-form-item label="vip2积分">
+              <el-input-number
+                v-model="config.vipConfig.vip2"
+                :min="1"
+                type="text"
+                placeholder="vip2每日积分"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form label-width="160px">
+            <el-form-item label="vip3积分">
+              <el-input-number
+                v-model="config.vipConfig.vip3"
+                :min="1"
+                type="text"
+                placeholder="vip3每日积分"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form label-width="160px">
+            <el-form-item label="vip4积分">
+              <el-input-number
+                v-model="config.vipConfig.vip4"
+                :min="1"
+                type="text"
+                placeholder="vip4每日积分"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form label-width="160px">
+            <el-form-item label="vip5积分">
+              <el-input-number
+                v-model="config.vipConfig.vip5"
+                :min="1"
+                type="text"
+                placeholder="vip5每日积分"
+              />
+            </el-form-item>
+          </el-form>
+          <el-form label-width="160px">
+            <el-form-item label="vip6积分">
+              <el-input-number
+                v-model="config.vipConfig.vip6"
+                :min="1"
+                type="text"
+                placeholder="vip6每日积分"
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="反作弊配置" name="spamConfigTab">
           <el-form label-width="160px">
             <el-form-item label="发帖验证码">

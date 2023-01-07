@@ -69,6 +69,7 @@ func Router() {
 		m.Party("/search").Handle(new(api.SearchController))
 		m.Party("/fans").Handle(new(api.FansController))
 		m.Party("/user-report").Handle(new(api.UserReportController))
+		m.Party("/advert").Handle(new(api.AdvertController))
 	})
 
 	// admin
@@ -90,6 +91,7 @@ func Router() {
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 		m.Party("/user-report").Handle(new(admin.UserReportController))
 		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
+		m.Party("/advert").Handle(new(admin.AdvertController))
 	})
 
 	app.Get("/api/img/proxy", func(i iris.Context) {
@@ -103,7 +105,7 @@ func Router() {
 		}
 	})
 
-	if err := app.Listen(":8082",
+	if err := app.Listen(":8080",
 		iris.WithConfiguration(iris.Configuration{
 			DisableStartupLog:                 false,
 			DisableInterruptHandler:           false,

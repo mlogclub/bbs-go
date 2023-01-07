@@ -6,6 +6,7 @@
         <nuxt-link :to="'/user/' + user.id" :alt="user.nickname">{{
           user.nickname
         }}</nuxt-link>
+        <img class="vip-class" :src="user.vip" />
       </div>
       <div class="description">
         {{ user.description }}
@@ -101,5 +102,12 @@ export default {
       }
     }
   }
+}
+
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+  position: relative;
+  top: 5px;
 }
 </style>

@@ -30,6 +30,7 @@
                       :to="'/user/' + topic.user.id"
                       >{{ topic.user.nickname }}</nuxt-link
                     >
+                    <img class="vip-class" :src="topic.user.vip" />
                   </div>
                   <div class="topic-meta">
                     <span class="meta-item">
@@ -92,7 +93,9 @@
                   </div>
                   <div v-else class="hide-content-tip">
                     <i class="iconfont icon-lock" />
-                    <span>隐藏内容，请回复后查看</span>
+                    <span>隐藏内容，请</span>
+                    <el-button type="text" @click="showBuy()"> 购买 </el-button>
+                    <span>后查看</span>
                   </div>
                 </div>
               </div>
@@ -188,6 +191,15 @@
         </div>
       </div>
     </section>
+
+    <el-dialog title="提示" :visible.sync="showBuyDialog" width="20%">
+      <div v-loading="buyDialogLoading"></div>
+      <span>购买需要{{ score }}积分!</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showBuyDialog = false">取 消</el-button>
+        <el-button type="primary" @click="buyHideContent()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,7 +217,6 @@ export default {
       })
       return
     }
-
     const [liked, commentsPage, likeUsers] = await Promise.all([
       $axios.get('/api/like/liked', {
         params: {
@@ -232,6 +243,9 @@ export default {
   data() {
     return {
       hideContent: null,
+      showBuyDialog: false,
+      buyDialogLoading: false,
+      score: 0,
     }
   },
   head() {
@@ -255,6 +269,10 @@ export default {
   methods: {
     commentCreated() {
       this.getHideContent()
+    },
+    showBuy() {
+      this.showBuyDialog = true
+      this.score = this.topic.score
     },
     async addFavorite(topicId) {
       try {
@@ -310,8 +328,33 @@ export default {
         console.log(e)
       }
     },
+    buyHideContent() {
+      this.buyDialogLoading = true
+      this.$axios
+        .get('/api/topic/buy', {
+          params: {
+            topicId: this.topic.topicId,
+          },
+        })
+        .then((data) => {
+          this.showBuyDialog = false
+          this.buyDialogLoading = false
+          this.$message.info('购买成功')
+          this.getHideContent()
+        })
+        .catch((rsp) => {
+          this.$message.error(rsp.message)
+        })
+    },
   },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+  position: relative;
+  top: 5px;
+}
+</style>

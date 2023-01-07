@@ -24,6 +24,7 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 		username    = c.Ctx.PostValueTrim("username")
 		password    = c.Ctx.PostValueTrim("password")
 		rePassword  = c.Ctx.PostValueTrim("rePassword")
+		refereeCode = c.Ctx.PostValueTrim("refereeCode")
 		nickname    = c.Ctx.PostValueTrim("nickname")
 		ref         = c.Ctx.FormValue("ref")
 	)
@@ -34,7 +35,7 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 	if !captcha.VerifyString(captchaId, captchaCode) {
 		return web.JsonError(errs.CaptchaError)
 	}
-	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword)
+	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword, refereeCode)
 	if err != nil {
 		return web.JsonError(err)
 	}

@@ -79,7 +79,16 @@ export const actions = {
 
   async signup(
     context,
-    { captchaId, captchaCode, nickname, username, email, password, rePassword }
+    {
+      captchaId,
+      captchaCode,
+      nickname,
+      username,
+      email,
+      password,
+      rePassword,
+      refereeCode,
+    }
   ) {
     const ret = await this.$axios.post('/api/login/signup', {
       captchaId,
@@ -89,6 +98,7 @@ export const actions = {
       email,
       password,
       rePassword,
+      refereeCode,
     })
     context.dispatch('loginSuccess', ret)
     return ret.user

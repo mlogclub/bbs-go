@@ -12,6 +12,9 @@
           <el-input v-model="filters.nickname" placeholder="昵称" />
         </el-form-item>
         <el-form-item>
+          <el-input v-model="filters.email" placeholder="邮箱" />
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" @click="list"> 查询 </el-button>
         </el-form-item>
         <el-form-item>
@@ -113,6 +116,9 @@
                 <el-dropdown-item v-else :command="{ cmd: 'forbidden', row: scope.row }">
                   禁言
                 </el-dropdown-item>
+                <el-dropdown-item :command="{ cmd: 'rechargeScore', row: scope.row }">
+                  充值
+                </el-dropdown-item>
                 <el-dropdown-item :command="{ cmd: 'scoreLog', row: scope.row }">
                   积分记录
                 </el-dropdown-item>
@@ -206,6 +212,21 @@
       </div>
     </el-dialog>
 
+    <el-dialog :visible.sync="rechargeFormVisible" :close-on-click-modal="false" title="充值">
+      <el-form ref="rechargeForm" :model="rechargeForm" label-width="80px">
+        <el-input v-model="rechargeForm.id" type="hidden" />
+        <el-form-item label="积分" prop="score">
+          <el-input v-model="rechargeForm.score" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="rechargeFormVisible = false"> 取消 </el-button>
+        <el-button :loading="rechargeLoading" type="primary" @click.native="rechargeSubmit">
+          提交
+        </el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog :visible.sync="forbiddenFormVisible" :close-on-click-modal="false" title="禁言">
       <el-form ref="forbiddenForm" :model="forbiddenForm" label-width="80px">
         <el-input v-model="forbiddenForm.userId" type="hidden" />
@@ -286,6 +307,13 @@ export default {
       editFormVisible: false,
       editFormRules: {},
       editLoading: false,
+
+      rechargeForm: {
+        id: "",
+        score: 0,
+      },
+      rechargeFormVisible: false,
+      rechargeLoading: false,
 
       forbiddenForm: {
         userId: "",
@@ -377,6 +405,19 @@ export default {
           me.$notify.error({ title: "错误", message: rsp.message });
         });
     },
+    rechargeSubmit() {
+      const params = { ...this.rechargeForm };
+      const me = this;
+      this.axios
+        .form("/api/admin/user/recharge", params)
+        .then((data) => {
+          me.list();
+          me.rechargeFormVisible = false;
+        })
+        .catch((rsp) => {
+          me.$notify.error({ title: "错误", message: rsp.message });
+        });
+    },
     handleSelectionChange(val) {
       this.selectedRows = val;
     },
@@ -417,6 +458,10 @@ export default {
     showScoreLog(row) {
       this.$refs.scoreLog.showLog(row.id);
     },
+    showRechargeScore(row) {
+      this.rechargeForm.id = row.id;
+      this.rechargeFormVisible = true;
+    },
     handleCommand(cmd) {
       if (cmd.cmd === "edit") {
         this.handleEdit(cmd.row);
@@ -426,6 +471,8 @@ export default {
         this.showForbiddenDialog(cmd.row);
       } else if (cmd.cmd === "scoreLog") {
         this.showScoreLog(cmd.row);
+      } else if (cmd.cmd === "rechargeScore") {
+        this.showRechargeScore(cmd.row);
       }
     },
   },

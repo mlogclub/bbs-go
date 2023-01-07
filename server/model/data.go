@@ -8,9 +8,19 @@ type ActionLink struct {
 
 // 积分配置
 type ScoreConfig struct {
-	PostTopicScore   int `json:"postTopicScore"`   // 发帖获得积分
-	PostCommentScore int `json:"postCommentScore"` // 跟帖获得积分
-	CheckInScore     int `json:"checkInScore"`     // 签到积分
+	PostTopicScore   int64 `json:"postTopicScore"`   // 发帖获得积分
+	PostCommentScore int64 `json:"postCommentScore"` // 跟帖获得积分
+	CheckInScore     int64 `json:"checkInScore"`     // 签到积分
+}
+
+// vip积分配置
+type VipConfig struct {
+	Vip1 int64 `json:"vip1"` // vip1每日积分
+	Vip2 int64 `json:"vip2"` // vip2每日积分
+	Vip3 int64 `json:"vip3"` // vip3每日积分
+	Vip4 int64 `json:"vip4"` // vip4每日积分
+	Vip5 int64 `json:"vip5"` // vip5每日积分
+	Vip6 int64 `json:"vip6"` // vip6每日积分
 }
 
 type LoginMethod struct {
@@ -32,6 +42,7 @@ type SysConfigResponse struct {
 	RecommendTags              []string       `json:"recommendTags"`
 	UrlRedirect                bool           `json:"urlRedirect"`
 	ScoreConfig                ScoreConfig    `json:"scoreConfig"`
+	VipConfig                  VipConfig      `json:"vipConfig"`
 	DefaultNodeId              int64          `json:"defaultNodeId"`
 	ArticlePending             bool           `json:"articlePending"`
 	TopicCaptcha               bool           `json:"topicCaptcha"`

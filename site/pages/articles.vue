@@ -5,8 +5,9 @@
         <nuxt-child :key="$route.path" />
       </div>
       <div class="right-container">
-        <check-in />
         <site-notice />
+        <advert :adverts="adverts" />
+        <check-in />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
       </div>
@@ -18,11 +19,12 @@
 export default {
   async asyncData({ $axios, store }) {
     try {
-      const [scoreRank, links] = await Promise.all([
+      const [scoreRank, links, adverts] = await Promise.all([
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
+        $axios.get('/api/advert/list'),
       ])
-      return { scoreRank, links }
+      return { scoreRank, links, adverts }
     } catch (e) {
       console.error(e)
     }

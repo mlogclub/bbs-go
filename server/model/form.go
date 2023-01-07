@@ -20,6 +20,7 @@ type CreateTopicForm struct {
 	NodeId      int64
 	Title       string
 	Content     string
+	Score       int64
 	HideContent string
 	Tags        []string
 	ImageList   []ImageDTO

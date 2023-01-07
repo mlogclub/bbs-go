@@ -51,7 +51,7 @@ func (c *UserController) PostCreate() *web.JsonResult {
 	nickname := params.FormValue(c.Ctx, "nickname")
 	password := params.FormValue(c.Ctx, "password")
 
-	user, err := services.UserService.SignUp(username, email, nickname, password, password)
+	user, err := services.UserService.SignUp(username, email, nickname, password, password, "")
 	if err != nil {
 		return web.JsonError(err)
 	}
@@ -115,6 +115,22 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		if err := services.UserService.Forbidden(user.Id, userId, days, reason, c.Ctx.Request()); err != nil {
 			return web.JsonError(err)
 		}
+	}
+	return web.JsonSuccess()
+}
+
+func (c *UserController) PostRecharge() *web.JsonResult {
+	userId, err := params.FormValueInt64(c.Ctx, "id")
+	if err != nil {
+		return web.JsonError(err)
+	}
+	score, err := params.FormValueInt64(c.Ctx, "score")
+	if err != nil {
+		return web.JsonError(err)
+	}
+	err = services.UserService.PayScore(userId, score)
+	if err != nil {
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

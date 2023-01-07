@@ -18,27 +18,28 @@
         </div>
       </div>
       <div class="right-container">
-        <check-in />
         <site-notice />
+        <advert :adverts="adverts" />
+        <check-in />
         <score-rank :score-rank="scoreRank" />
         <friend-links :links="links" />
       </div>
     </div>
   </section>
 </template>
-
 <script>
 export default {
   async asyncData({ $axios, store }) {
     store.commit('env/setCurrentNodeId', 0) // 设置当前所在node
     try {
-      const [nodes, topicsPage, scoreRank, links] = await Promise.all([
+      const [nodes, topicsPage, scoreRank, links, adverts] = await Promise.all([
         $axios.get('/api/topic/node_navs'),
         $axios.get('/api/topic/topics'),
         $axios.get('/api/user/score/rank'),
         $axios.get('/api/link/toplinks'),
+        $axios.get('/api/advert/list'),
       ])
-      return { nodes, topicsPage, scoreRank, links }
+      return { nodes, topicsPage, scoreRank, links, adverts }
     } catch (e) {
       console.error(e)
     }

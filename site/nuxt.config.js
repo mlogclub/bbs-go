@@ -87,7 +87,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://127.0.0.1:8082',
+    '/api/': 'http://localhost:8080',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

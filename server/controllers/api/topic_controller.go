@@ -111,6 +111,7 @@ func (c *TopicController) GetEditBy(topicId int64) *web.JsonResult {
 		Put("title", topic.Title).
 		Put("content", topic.Content).
 		Put("hideContent", topic.HideContent).
+		Put("score", topic.Score).
 		Put("tags", tagNames).
 		JsonResult()
 }
@@ -136,11 +137,12 @@ func (c *TopicController) PostEditBy(topicId int64) *web.JsonResult {
 		nodeId      = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
 		title       = strings.TrimSpace(params.FormValue(c.Ctx, "title"))
 		content     = strings.TrimSpace(params.FormValue(c.Ctx, "content"))
+		score       = params.FormValueInt64Default(c.Ctx, "score", 0)
 		hideContent = strings.TrimSpace(params.FormValue(c.Ctx, "hideContent"))
 		tags        = params.FormValueStringArray(c.Ctx, "tags")
 	)
 
-	err := services.TopicService.Edit(topicId, nodeId, tags, title, content, hideContent)
+	err := services.TopicService.Edit(topicId, nodeId, score, tags, title, content, hideContent)
 	if err != nil {
 		return web.JsonError(err)
 	}
@@ -367,6 +369,25 @@ func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
 	return web.JsonSuccess()
 }
 
+func (c *TopicController) GetBuy() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	topicId := params.FormValueInt64Default(c.Ctx, "topicId", 0)
+	topic := services.TopicService.Get(topicId)
+	if user.Score < topic.Score {
+		return web.JsonError(errs.ScoreScarcity)
+	}
+	user.Score = user.Score - topic.Score
+	err := services.PhService.BuyTopic(user, topic)
+	if err != nil {
+		return web.JsonError(errs.BuyTopicError)
+	}
+
+	return web.JsonSuccess()
+}
+
 func (c *TopicController) GetHide_content() *web.JsonResult {
 	topicId := params.FormValueInt64Default(c.Ctx, "topicId", 0)
 	var (
@@ -378,7 +399,7 @@ func (c *TopicController) GetHide_content() *web.JsonResult {
 	if topic != nil && topic.Status == constants.StatusOk && strs.IsNotBlank(topic.HideContent) {
 		exists = true
 		if user := services.UserTokenService.GetCurrent(c.Ctx); user != nil {
-			if user.Id == topic.UserId || services.CommentService.IsCommented(user.Id, constants.EntityTopic, topic.Id) {
+			if user.Id == topic.UserId || services.PhService.IsBuy(user.Id, topic.Id) {
 				show = true
 				hideContent = markdown.ToHTML(topic.HideContent)
 			}

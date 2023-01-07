@@ -17,6 +17,8 @@ const (
 	TypeTopicRecommend Type = 4 // 话题被设为推荐
 	TypeTopicDelete    Type = 5 // 话题被删除
 	TypeArticleComment Type = 6 // 收到文章评论
+	TypeBuyHidContent  Type = 7 // 购买隐藏内容
+	TypePayScore       Type = 8 // 充值积分
 )
 
 type TopicLikeExtraData struct {

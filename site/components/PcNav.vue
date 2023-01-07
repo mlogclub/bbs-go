@@ -61,6 +61,9 @@
               <nuxt-link class="navbar-item" to="/user/profile">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </nuxt-link>
+              <a class="navbar-item" @click="getRefereeLink">
+                <i class="iconfont icon-link" />&nbsp;推荐链接
+              </a>
               <a class="navbar-item" @click="signout">
                 <i class="iconfont icon-log-out" />&nbsp;退出登录
               </a>
@@ -72,6 +75,9 @@
                 >登录
               </nuxt-link>
             </div>
+          </div>
+          <div v-if="user" class="navbar-item">
+            <img class="vip-class" :src="user.vip" />
           </div>
           <div class="navbar-item">
             <color-mode />
@@ -114,6 +120,26 @@ export default {
     toggleNav() {
       this.navbarActive = !this.navbarActive
     },
+    async getRefereeLink() {
+      const me = this
+      await me.$axios
+        .get('/api/user/referee_code')
+        .then(function (resp) {
+          if (resp !== '') {
+            me.$alert(resp, '推荐链接', {
+              showConfirmButton: false,
+            }).catch((e) => {})
+          }
+        })
+        .catch((e) => {})
+      // if (res.errorCode === 0) {
+      //   console.log('qdwqdasda')
+      //   this.$alert(res.data, '提示', {
+      //     confirmButtonText: '确定',
+      //     callback: (action) => {},
+      //   })
+      // }
+    },
   },
 }
 </script>
@@ -151,5 +177,15 @@ export default {
   .user-menus-nickname {
     margin-left: 5px;
   }
+}
+
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+}
+</style>
+<style>
+.el-message-box {
+  width: 500px;
 }
 </style>

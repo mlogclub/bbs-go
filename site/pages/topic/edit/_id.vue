@@ -44,7 +44,7 @@
               ref="mdEditor"
               v-model="postForm.hideContent"
               height="200px"
-              placeholder="隐藏内容，评论后可见"
+              placeholder="隐藏内容，购买后可见"
             />
           </div>
         </div>
@@ -52,6 +52,18 @@
         <div class="field">
           <div class="control">
             <tag-input v-model="postForm.tags" />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <input
+              v-model="postForm.score"
+              class="input"
+              type="text"
+              placeholder="隐藏内容查看所需积分"
+              style="max-width: 200px; margin-right: 20px"
+            />
           </div>
         </div>
 
@@ -88,6 +100,7 @@ export default {
         tags: topic.tags,
         content: topic.content,
         hideContent: topic.hideContent,
+        score: topic.score,
       },
     }
   },
@@ -99,6 +112,7 @@ export default {
         title: '',
         tags: [],
         content: '',
+        score: 0,
       },
     }
   },
@@ -132,6 +146,7 @@ export default {
             title: this.postForm.title,
             content: this.postForm.content,
             hideContent: this.postForm.hideContent,
+            score: this.postForm.score,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
           }
         )

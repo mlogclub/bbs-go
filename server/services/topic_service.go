@@ -122,7 +122,7 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 更新
-func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content, hideContent string) *web.CodeError {
+func (s *topicService) Edit(topicId, nodeId, score int64, tags []string, title, content, hideContent string) *web.CodeError {
 	if len(title) == 0 {
 		return web.NewErrorMsg("标题不能为空")
 	}
@@ -146,6 +146,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 			"title":        title,
 			"content":      content,
 			"hide_content": hideContent,
+			"score":        score,
 		}); err != nil {
 			return err
 		}

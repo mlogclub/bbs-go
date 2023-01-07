@@ -1,10 +1,13 @@
 package api
 
 import (
+	"bbs-go/base"
 	"bbs-go/model/constants"
+	"bbs-go/pkg/config"
 	"bbs-go/pkg/errs"
 	"bbs-go/pkg/msg"
 	"bbs-go/pkg/validate"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -378,7 +381,7 @@ func (c *UserController) PostSend_verify_email() *web.JsonResult {
 }
 
 // PostVerify_email 获取邮箱验证码
-func (c *UserController) PostVerify_email() *web.JsonResult {
+func (c *UserController) GetVerify_email() *web.JsonResult {
 	token := params.FormValue(c.Ctx, "token")
 	if strs.IsBlank(token) {
 		return web.JsonErrorMsg("Illegal request")
@@ -391,4 +394,30 @@ func (c *UserController) PostVerify_email() *web.JsonResult {
 		return web.JsonError(err)
 	}
 	return web.NewEmptyRspBuilder().Put("email", email).JsonResult()
+}
+
+// GetReferee_code 获取推荐人链接
+func (c *UserController) GetReferee_code() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin)
+	}
+	if !user.EmailVerified {
+		return web.JsonError(errs.EmailNotVerified)
+	}
+
+	if user.RefereeCode != "" {
+		return web.JsonData(buildRefreeUrl(user.RefereeCode))
+	}
+	k := fmt.Sprintf("%d%s", user.Id, user.Email)
+	user.RefereeCode = base.Get16MD5Encode(k)
+	err := services.UserService.Update(user)
+	if err != nil {
+		return web.JsonError(errs.RefereeGenCode)
+	}
+	return web.JsonData(buildRefreeUrl(user.RefereeCode))
+}
+
+func buildRefreeUrl(code string) string {
+	return fmt.Sprintf("%s/user/signup?refereeCode=%s", config.Instance.BaseUrl, code)
 }

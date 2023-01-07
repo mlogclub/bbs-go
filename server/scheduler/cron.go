@@ -23,6 +23,11 @@ func Start() {
 		sitemap.Generate()
 	})
 
+	// vip 每日积分充值
+	addCronFunc(c, "0 0 1 ? * *", func() {
+		services.UserService.CronUserPayScore()
+	})
+
 	c.Start()
 }
 

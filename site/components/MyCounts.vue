@@ -14,8 +14,8 @@
           <b>{{ user.topicCount }}</b>
         </li>
         <li>
-          <span>评论</span><br />
-          <b>{{ user.commentCount }}</b>
+          <span>推荐人数</span><br />
+          <b>{{ user.refereeCount }}</b>
         </li>
         <li>
           <span>注册排名</span><br />

@@ -21,6 +21,8 @@
           <nuxt-link :to="'/user/' + localUser.id">{{
             localUser.nickname
           }}</nuxt-link>
+
+          <img class="vip-class" :src="localUser.vip" />
         </h1>
         <div v-if="localUser.description" class="description">
           <p>{{ localUser.description }}</p>
@@ -205,5 +207,12 @@ export default {
       #dce9f200
     );
   }
+}
+
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+  position: relative;
+  top: 5px;
 }
 </style>

@@ -138,6 +138,7 @@ export default {
       captchaId: '',
       captchaUrl: '',
       captchaCode: '',
+      refereeCode: '',
     }
   },
   head() {
@@ -149,6 +150,10 @@ export default {
     loginMethod() {
       return this.$store.state.config.config.loginMethod
     },
+  },
+  created() {
+    const refereeCode = this.$route.query.refereeCode
+    this.refereeCode = refereeCode
   },
   mounted() {
     this.showCaptcha()
@@ -163,6 +168,7 @@ export default {
           email: this.email,
           password: this.password,
           rePassword: this.rePassword,
+          refereeCode: this.refereeCode,
           ref: this.ref,
         })
         if (this.ref) {

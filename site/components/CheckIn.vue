@@ -108,6 +108,7 @@
               <nuxt-link :to="'/user/' + rank.user.id">{{
                 rank.user.nickname
               }}</nuxt-link>
+              <img class="vip-class" :src="rank.user.vip" />
               <p>@{{ rank.updateTime | formatDate }}</p>
             </div>
           </li>
@@ -319,5 +320,12 @@ export default {
       }
     }
   }
+}
+
+.vip-class {
+  width: 60px;
+  max-height: 151px;
+  position: relative;
+  top: 5px;
 }
 </style>
