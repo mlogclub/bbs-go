@@ -33,7 +33,7 @@
 export default {
   async asyncData({ $axios, query }) {
     try {
-      const data = await $axios.post(
+      const data = await $axios.get(
         '/api/user/verify_email?token=' + query.token
       )
       return { success: true, email: data.email }
