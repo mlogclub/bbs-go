@@ -1,18 +1,18 @@
 package uploader
 
 import (
+	"bbs-go/pkg/bbsurls"
 	"bytes"
 	"context"
 	"fmt"
 	"github.com/mlogclub/simple/common/strs"
 	"net/http"
 	"net/url"
-	"server/pkg/bbsurls"
 	"sync"
 	"time"
 
+	"bbs-go/pkg/config"
 	"github.com/tencentyun/cos-go-sdk-v5"
-	"server/pkg/config"
 )
 
 // 腾讯云oss
