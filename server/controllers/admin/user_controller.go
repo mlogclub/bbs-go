@@ -37,7 +37,7 @@ func (c *UserController) GetBy(id int64) *web.JsonResult {
 }
 
 func (c *UserController) AnyList() *web.JsonResult {
-	list, paging := services.UserService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("id").LikeByReq("nickname").EqByReq("username").PageByReq().Desc("id"))
+	list, paging := services.UserService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("id").LikeByReq("nickname").EqByReq("username").EqByReq("email").PageByReq().Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
 		itemList = append(itemList, c.buildUserItem(&user))
