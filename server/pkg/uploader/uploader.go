@@ -21,7 +21,12 @@ var (
 		once:   sync.Once{},
 		bucket: nil,
 	}
-	local = &localUploader{}
+	txy = &txyCosUploader{
+		once:   sync.Once{},
+		object: nil,
+	}
+	server = &serverUploader{}
+	local  = &localUploader{}
 )
 
 func PutImage(data []byte, contentType string) (string, error) {
@@ -43,9 +48,15 @@ func CopyImage(url string) (string, error) {
 }
 
 func getUploader() uploader {
-	if IsEnabledOss() {
+	enable := config.Instance.Uploader.Enable
+	switch enable {
+	case "aly":
 		return aliyun
-	} else {
+	case "txy":
+		return txy
+	case "server":
+		return server
+	default:
 		return local
 	}
 }
