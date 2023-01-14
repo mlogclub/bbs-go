@@ -130,7 +130,38 @@ export default {
           }
         )
         this.$msg({
-          message: '删除成功',
+          message: '修改成功',
+          onClose() {
+            me.$linkTo('/article/' + article.articleId)
+          },
+        })
+      } catch (e) {
+        me.publishing = false
+        this.$message.error('提交失败：' + (e.message || e))
+      }
+    },
+    async submitDraft() {
+      const me = this
+      if (me.publishing) {
+        return
+      }
+      me.publishing = true
+
+      try {
+        const article = await this.$axios.post(
+          '/api/article/edit/' + this.article.articleId,
+          {
+            title: this.postForm.title,
+            content: this.postForm.content,
+            tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
+            cover:
+              me.postForm.cover && me.postForm.cover.length
+                ? JSON.stringify(me.postForm.cover[0])
+                : null,
+          }
+        )
+        this.$msg({
+          message: '保存成功',
           onClose() {
             me.$linkTo('/article/' + article.articleId)
           },

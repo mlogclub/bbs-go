@@ -5,6 +5,11 @@
         文章正在审核中
       </div>
     </div>
+    <div v-if="isDrafts" class="container main-container">
+      <div class="notification is-warning" style="width: 100%; margin: 20px 0">
+        未发布
+      </div>
+    </div>
     <div class="container main-container left-main size-320">
       <div class="left-container">
         <article
@@ -190,6 +195,9 @@ export default {
     },
     isPending() {
       return this.article.status === 2
+    },
+    isDrafts() {
+      return this.article.status === 3
     },
     user() {
       return this.$store.state.user.current

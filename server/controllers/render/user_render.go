@@ -42,6 +42,7 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		CommentCount: user.CommentCount,
 		FansCount:    user.FansCount,
 		FollowCount:  user.FollowCount,
+		RefereeCount: user.RefereeCount,
 		Score:        user.Score,
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,

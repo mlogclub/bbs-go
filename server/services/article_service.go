@@ -202,6 +202,45 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 	return
 }
 
+// 发布文章
+func (s *articleService) SaveDraft(userId int64, form model.CreateArticleForm) (article *model.Article, err error) {
+	form.Title = strings.TrimSpace(form.Title)
+	form.Summary = strings.TrimSpace(form.Summary)
+	form.Content = strings.TrimSpace(form.Content)
+
+	article = &model.Article{
+		UserId:      userId,
+		Title:       form.Title,
+		Summary:     form.Summary,
+		Content:     form.Content,
+		ContentType: form.ContentType,
+		Status:      constants.StatusDraft,
+		SourceUrl:   form.SourceUrl,
+		CreateTime:  dates.NowTimestamp(),
+		UpdateTime:  dates.NowTimestamp(),
+	}
+
+	if form.Cover != nil {
+		article.Cover = jsons.ToJsonStr(form.Cover)
+	}
+
+	err = sqls.DB().Transaction(func(tx *gorm.DB) error {
+		var (
+			tagIds []int64
+			err    error
+		)
+		if tagIds, err = repositories.TagRepository.GetOrCreates(tx, form.Tags); err != nil {
+			return err
+		}
+		if err = repositories.ArticleRepository.Create(tx, article); err != nil {
+			return err
+		}
+		repositories.ArticleTagRepository.AddArticleTags(tx, article.Id, tagIds)
+		return nil
+	})
+	return
+}
+
 // 修改文章
 func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *model.ImageDTO) *web.CodeError {
 	if len(title) == 0 {
@@ -360,7 +399,7 @@ func (s *articleService) IncrViewCount(articleId int64) {
 	sqls.DB().Exec("update t_article set view_count = view_count + 1 where id = ?", articleId)
 }
 
-func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model.Article, nextCursor int64, hasMore bool) {
+func (s *articleService) GetUserArticles(userId, cursor, status int64) (articles []model.Article, nextCursor int64, hasMore bool) {
 	limit := 20
 	cnd := sqls.NewCnd()
 	if userId > 0 {
@@ -369,7 +408,7 @@ func (s *articleService) GetUserArticles(userId, cursor int64) (articles []model
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	cnd.Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	cnd.Eq("status", status).Desc("id").Limit(limit)
 	articles = repositories.ArticleRepository.Find(sqls.DB(), cnd)
 	if len(articles) > 0 {
 		nextCursor = articles[len(articles)-1].Id

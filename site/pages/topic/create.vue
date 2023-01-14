@@ -33,6 +33,7 @@
             </div>
           </div>
         </div>
+
         <div v-if="postForm.type === 0" class="field">
           <div class="control">
             <input
@@ -227,7 +228,6 @@ export default {
         return
       }
       if (this.postForm?.score) {
-        console.log(this.postForm.score)
         if (!this.isNumber(this.postForm.score)) {
           this.$message.error('积分必须为正整数')
           return

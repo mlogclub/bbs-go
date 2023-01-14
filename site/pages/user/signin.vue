@@ -72,6 +72,9 @@
                 <nuxt-link class="button is-text" to="/user/signup">
                   没有账号？点击这里去注册&gt;&gt;
                 </nuxt-link>
+                <nuxt-link class="button is-text" to="/user/forgotpwd">
+                  忘记密码&gt;&gt;
+                </nuxt-link>
               </div>
             </template>
 

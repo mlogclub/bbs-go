@@ -25,10 +25,7 @@
                     <span>文章</span>
                   </nuxt-link>
                 </li>
-                <li
-                  v-if="currentUser !== null && currentUser.id === user.id"
-                  :class="{ 'is-active': activeTab === 'drafts' }"
-                >
+                <li :class="{ 'is-active': activeTab === 'drafts' }">
                   <nuxt-link :to="'/user/' + user.id + '/drafts'">
                     <span class="icon is-small">
                       <i class="iconfont icon-article" aria-hidden="true" />
@@ -42,19 +39,19 @@
             <div>
               <div
                 v-if="
-                  topicsPage && topicsPage.results && topicsPage.results.length
+                  draftsPage && draftsPage.results && draftsPage.results.length
                 "
               >
                 <load-more
-                  v-if="topicsPage"
+                  v-if="draftsPage"
                   v-slot="{ results }"
-                  :init-data="topicsPage"
-                  :url="'/api/topic/user/topics?userId=' + user.id"
+                  :init-data="draftsPage"
+                  :url="'/api/article/user/drafts?userId=' + user.id"
                 >
-                  <topic-list :topics="results" :show-avatar="false" />
+                  <article-list :articles="results" />
                 </load-more>
               </div>
-              <div v-else class="notification is-primary">暂无话题</div>
+              <div v-else class="notification is-primary">暂无草稿</div>
             </div>
           </div>
         </div>
@@ -77,13 +74,13 @@ export default {
       return
     }
 
-    const topicsPage = await $axios.get('/api/topic/user/topics', {
+    const draftsPage = await $axios.get('/api/article/user/drafts', {
       params: { userId: params.userId },
     })
     return {
-      activeTab: 'topics',
+      activeTab: 'drafts',
       user,
-      topicsPage,
+      draftsPage,
     }
   },
   data() {

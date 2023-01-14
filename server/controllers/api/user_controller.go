@@ -368,6 +368,27 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
+func (c *UserController) GetSend_email() *web.JsonResult {
+	email := strings.TrimSpace(params.FormValue(c.Ctx, "email"))
+	if err := services.UserService.SendEmail(email); err != nil {
+		return web.JsonError(err)
+	}
+	return web.Json(0, "验证码已发送至邮箱", nil, true)
+}
+
+// 找回密码
+func (c *UserController) PostForgotpwd() *web.JsonResult {
+	emailCode := params.FormValue(c.Ctx, "emailCode")
+	email := params.FormValue(c.Ctx, "email")
+	password := params.FormValue(c.Ctx, "password")
+	rePassword := params.FormValue(c.Ctx, "rePassword")
+	err := services.UserService.Forgotpwd(email, emailCode, password, rePassword)
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonSuccess()
+}
+
 // PostEmailVerify 请求邮箱验证邮件
 func (c *UserController) PostSend_verify_email() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)

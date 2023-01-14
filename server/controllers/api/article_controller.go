@@ -65,6 +65,21 @@ func (c *ArticleController) PostCreate() *web.JsonResult {
 	return web.JsonData(render.BuildArticle(article, user))
 }
 
+// PostDraft 保存草稿
+func (c *ArticleController) PostDraft() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return web.JsonError(err)
+	}
+	form := model.GetCreateArticleForm(c.Ctx)
+
+	article, err := services.ArticleService.SaveDraft(user.Id, form)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonData(render.BuildArticle(article, user))
+}
+
 // 编辑时获取详情
 func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
@@ -192,7 +207,18 @@ func (c *ArticleController) GetUserArticles() *web.JsonResult {
 		return web.JsonError(err)
 	}
 	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
-	articles, cursor, hasMore := services.ArticleService.GetUserArticles(userId, cursor)
+	articles, cursor, hasMore := services.ArticleService.GetUserArticles(userId, cursor, constants.StatusOk)
+	return web.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+// 用户草稿文章列表
+func (c *ArticleController) GetUserDrafts() *web.JsonResult {
+	userId, err := params.FormValueInt64(c.Ctx, "userId")
+	if err != nil {
+		return web.JsonError(err)
+	}
+	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
+	articles, cursor, hasMore := services.ArticleService.GetUserArticles(userId, cursor, constants.StatusDraft)
 	return web.JsonCursorData(render.BuildSimpleArticles(articles), strconv.FormatInt(cursor, 10), hasMore)
 }
 

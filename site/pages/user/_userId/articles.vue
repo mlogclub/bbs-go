@@ -25,6 +25,17 @@
                     <span>文章</span>
                   </nuxt-link>
                 </li>
+                <li
+                  v-if="currentUser !== null && currentUser.id === user.id"
+                  :class="{ 'is-active': activeTab === 'drafts' }"
+                >
+                  <nuxt-link :to="'/user/' + user.id + '/drafts'">
+                    <span class="icon is-small">
+                      <i class="iconfont icon-article" aria-hidden="true" />
+                    </span>
+                    <span>草稿箱</span>
+                  </nuxt-link>
+                </li>
               </ul>
             </div>
 

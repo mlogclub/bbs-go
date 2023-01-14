@@ -101,12 +101,12 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 // IsNeedReview 是否需要审核
 func (s *topicPublishService) _IsNeedReview(userId int64, form model.CreateTopicForm) bool {
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
-		logrus.Info("帖子标题命中违禁词", strings.Join(hits, ","))
+		logrus.Warn("帖子标题命中违禁词", strings.Join(hits, ","))
 		return true
 	}
 
 	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
-		logrus.Info("帖子内容命中违禁词", strings.Join(hits, ","))
+		logrus.Warn("帖子内容命中违禁词", strings.Join(hits, ","))
 		return true
 	}
 

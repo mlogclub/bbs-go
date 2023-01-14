@@ -11,6 +11,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -27,7 +29,6 @@ import (
 	"gorm.io/gorm"
 
 	"bbs-go/cache"
-
 	"bbs-go/model"
 	"bbs-go/repositories"
 )
@@ -742,6 +743,81 @@ func (s *userService) PayScore(userId int64, score int64) error {
 	})
 
 	return err
+}
+
+// SendEmailEmail 发送找回密码邮箱验证邮件
+func (s *userService) SendEmail(e string) error {
+
+	if err := validate.IsEmail(e); err != nil {
+		return err
+	}
+
+	user := s.FindOne(sqls.NewCnd().Eq("email", e))
+	if user == nil {
+		return errors.New("用户不存在")
+	}
+
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("email", e).Where("code <> ?", "").Where("Used = ?", false))
+	if emailCode != nil {
+		return errors.New("验证码已发送")
+	}
+
+	var (
+		code      = fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
+		siteTitle = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		subject   = "密码找回 - " + siteTitle
+		title     = "密码找回 - " + siteTitle
+		content   = "该邮件验证码用于找回你在 " + siteTitle + " 的密码，验证码有效期" + strconv.Itoa(emailVerifyExpireHour) + "小时, 验证码为：" + code
+	)
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		if err := repositories.EmailCodeRepository.Create(tx, &model.EmailCode{
+			Model:      model.Model{},
+			UserId:     user.Id,
+			Email:      user.Email.String,
+			Code:       code,
+			Token:      code,
+			Title:      title,
+			Content:    content,
+			Used:       false,
+			CreateTime: dates.NowTimestamp(),
+		}); err != nil {
+			return nil
+		}
+		if err := email.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", nil); err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+func (s *userService) Forgotpwd(email, email_code, password, rePassword string) error {
+	user := s.FindOne(sqls.NewCnd().Eq("email", email))
+	if user == nil {
+		return errors.New("用户不存在")
+	}
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("email", email).Where("code = ?", email_code).Where("Used = ?", false))
+	if emailCode == nil {
+		return errors.New("验证码已使用")
+	}
+	if err := validate.IsPassword(password, rePassword); err != nil {
+		return err
+	}
+
+	password = passwd.EncodePassword(password)
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		err := repositories.UserRepository.UpdateColumn(tx, user.Id, "password", password)
+		if err != nil {
+			logrus.Errorf("密码设置失败: [%s]", err.Error())
+			return err
+		}
+		err = repositories.EmailCodeRepository.UpdateColumn(tx, emailCode.Id, "used", true)
+		if err != nil {
+			logrus.Errorf("code 更新失败: [%s]", err.Error())
+			return err
+		}
+		return nil
+	})
+
 }
 
 func (s *userService) CronUserPayScore() {

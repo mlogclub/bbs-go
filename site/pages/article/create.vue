@@ -69,6 +69,9 @@
               >发表</a
             >
           </div>
+          <div class="control">
+            <a class="button is-warning" @click="submitDraft">保存草稿</a>
+          </div>
         </div>
       </div>
     </div>
@@ -144,6 +147,33 @@ export default {
         })
       } catch (e) {
         me.publishing = false
+        this.$message.error(e.message || e)
+      }
+    },
+    async submitDraft() {
+      const me = this
+      if (!me.postForm.title) {
+        this.$message.error('标题不能为空')
+        return
+      }
+      try {
+        const article = await this.$axios.post('/api/article/draft', {
+          title: me.postForm.title,
+          content: me.postForm.content,
+          tags: me.postForm.tags ? me.postForm.tags.join(',') : '',
+          cover:
+            me.postForm.cover && me.postForm.cover.length
+              ? JSON.stringify(me.postForm.cover[0])
+              : null,
+        })
+        this.$refs.mdEditor.clearCache()
+        this.$msg({
+          message: '草稿保存成功',
+          onClose() {
+            me.$linkTo('/article/' + article.articleId)
+          },
+        })
+      } catch (e) {
         this.$message.error(e.message || e)
       }
     },
