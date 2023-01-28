@@ -57,6 +57,12 @@
               <el-descriptions-item label="简介">
                 {{ scope.row.description || "-" }}
               </el-descriptions-item>
+              <el-descriptions-item label="VIP等级">
+                {{ scope.row.vip || "-" }}
+              </el-descriptions-item>
+              <el-descriptions-item label="称号">
+                {{ scope.row.title || "-" }}
+              </el-descriptions-item>
               <el-descriptions-item label="状态">
                 {{ scope.row.status === 0 ? "正常" : "删除" }}
               </el-descriptions-item>
@@ -196,6 +202,12 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="editForm.password" placeholder="不填写表示不更改密码" />
         </el-form-item>
+        <el-form-item label="称号" prop="title">
+          <el-input v-model="editForm.title" />
+        </el-form-item>
+        <el-form-item label="VIP" prop="vip">
+          <el-input v-model="editForm.vip" />
+        </el-form-item>
 
         <el-form-item label="状态" prop="status">
           <el-select v-model="editForm.status" placeholder="请选择">
@@ -298,6 +310,8 @@ export default {
         id: "",
         username: "",
         nickname: "",
+        title: "",
+        vip: 0,
         avatar: "",
         email: "",
         roles: [],

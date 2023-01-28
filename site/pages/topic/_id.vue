@@ -343,6 +343,7 @@ export default {
           this.getHideContent()
         })
         .catch((rsp) => {
+          this.buyDialogLoading = false
           this.$message.error(rsp.message)
         })
     },

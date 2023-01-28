@@ -15,6 +15,9 @@ import {
   Notification,
   Carousel,
   CarouselItem,
+  Card,
+  Radio,
+  RadioGroup,
 } from 'element-ui'
 
 Vue.use(Dialog)
@@ -26,6 +29,9 @@ Vue.use(DropdownItem)
 Vue.use(Progress)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Card)
+Vue.use(Radio)
+Vue.use(RadioGroup)
 
 Vue.use(Loading.directive)
 

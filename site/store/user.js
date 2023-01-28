@@ -66,11 +66,12 @@ export const actions = {
   },
 
   // qq登录
-  async signinByQQ(context, { code, state }) {
+  async signinByQQ(context, { code, state, userId }) {
     const ret = await this.$axios.get('/api/qq/login/callback', {
       params: {
         code,
         state,
+        userId,
       },
     })
     context.dispatch('loginSuccess', ret)

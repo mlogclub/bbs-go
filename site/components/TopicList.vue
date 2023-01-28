@@ -16,6 +16,11 @@
               topic.user.nickname
             }}</nuxt-link>
             <img class="vip-class" :src="topic.user.vip" />
+            <span
+              v-if="topic.user && topic.user.title"
+              class="topic-title-icon"
+              >{{ topic.user.title }}</span
+            >
             <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
               >置顶</span
             >

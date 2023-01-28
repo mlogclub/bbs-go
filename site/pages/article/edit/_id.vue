@@ -53,6 +53,9 @@
               >提交更改</a
             >
           </div>
+          <div class="control">
+            <a class="button is-warning" @click="submitDraft">保存草稿</a>
+          </div>
         </div>
       </div>
     </div>
@@ -123,6 +126,7 @@ export default {
             title: this.postForm.title,
             content: this.postForm.content,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
+            status: 2,
             cover:
               me.postForm.cover && me.postForm.cover.length
                 ? JSON.stringify(me.postForm.cover[0])
@@ -154,6 +158,7 @@ export default {
             title: this.postForm.title,
             content: this.postForm.content,
             tags: this.postForm.tags ? this.postForm.tags.join(',') : '',
+            status: 3,
             cover:
               me.postForm.cover && me.postForm.cover.length
                 ? JSON.stringify(me.postForm.cover[0])

@@ -61,6 +61,9 @@
               <nuxt-link class="navbar-item" to="/user/profile">
                 <i class="iconfont icon-username" />&nbsp;编辑资料
               </nuxt-link>
+              <nuxt-link class="navbar-item" to="/pay">
+                <i class="iconfont icon-score" />&nbsp;积分购买
+              </nuxt-link>
               <a class="navbar-item" @click="getRefereeLink">
                 <i class="iconfont icon-link" />&nbsp;推荐链接
               </a>

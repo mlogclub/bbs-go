@@ -3,9 +3,9 @@
     <div class="container main-container left-main size-320">
       <div class="left-container">
         <div class="main-content">
-          <search-topics-nav :nodes="nodes" />
+          <search-nav :nodes="nodes" />
           <div v-if="searchPage && searchPage.results">
-            <search-topic-list :search-page="searchPage" />
+            <search-list :search-page="searchPage" />
             <pagination
               :page="searchPage.page"
               :url-prefix="'/search?q=' + keyword + '&p='"
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     async searchTopic() {
-      await this.$store.dispatch('search/searchTopic')
+      await this.$store.dispatch('search/searchAny')
     },
   },
 }
