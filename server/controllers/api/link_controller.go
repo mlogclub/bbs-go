@@ -1,15 +1,15 @@
 package api
 
 import (
-	"bbs-go/model/constants"
+	"server/model/constants"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/model"
+	"server/services"
 )
 
 type LinkController struct {

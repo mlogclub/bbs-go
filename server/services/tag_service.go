@@ -1,15 +1,15 @@
 package services
 
 import (
-	"bbs-go/model/constants"
+	"server/model/constants"
 	"strings"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/cache"
+	"server/model"
+	"server/repositories"
 )
 
 var TagService = newTagService()

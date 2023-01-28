@@ -8,8 +8,8 @@ import (
 	"github.com/mlogclub/simple/common/urls"
 	"github.com/tidwall/gjson"
 
-	"bbs-go/pkg/common"
-	"bbs-go/pkg/config"
+	"server/pkg/common"
+	"server/pkg/config"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/goburrow/cache"

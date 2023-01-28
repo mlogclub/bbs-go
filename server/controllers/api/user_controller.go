@@ -1,13 +1,13 @@
 package api
 
 import (
-	"bbs-go/base"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/config"
-	"bbs-go/pkg/errs"
-	"bbs-go/pkg/msg"
-	"bbs-go/pkg/validate"
 	"fmt"
+	"server/model/constants"
+	"server/pkg/common"
+	"server/pkg/config"
+	"server/pkg/errs"
+	"server/pkg/msg"
+	"server/pkg/validate"
 	"strconv"
 	"strings"
 	"time"
@@ -19,10 +19,10 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/cache"
-	"bbs-go/controllers/render"
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/cache"
+	"server/controllers/render"
+	"server/model"
+	"server/services"
 )
 
 type UserController struct {
@@ -428,17 +428,17 @@ func (c *UserController) GetReferee_code() *web.JsonResult {
 	}
 
 	if user.RefereeCode != "" {
-		return web.JsonData(buildRefreeUrl(user.RefereeCode))
+		return web.JsonData(buildRefereeUrl(user.RefereeCode))
 	}
 	k := fmt.Sprintf("%d%s", user.Id, user.Email)
-	user.RefereeCode = base.Get16MD5Encode(k)
+	user.RefereeCode = common.Get16MD5Encode(k)
 	err := services.UserService.Update(user)
 	if err != nil {
 		return web.JsonError(errs.RefereeGenCode)
 	}
-	return web.JsonData(buildRefreeUrl(user.RefereeCode))
+	return web.JsonData(buildRefereeUrl(user.RefereeCode))
 }
 
-func buildRefreeUrl(code string) string {
+func buildRefereeUrl(code string) string {
 	return fmt.Sprintf("%s/user/signup?refereeCode=%s", config.Instance.BaseUrl, code)
 }

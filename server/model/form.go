@@ -1,8 +1,8 @@
 package model
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/common"
+	"server/model/constants"
+	"server/pkg/common"
 	"strings"
 
 	"github.com/kataras/iris/v12"
@@ -69,6 +69,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 		ImageList:   GetImageList(ctx, "imageList"),
 		UserAgent:   common.GetUserAgent(ctx.Request()),
 		Ip:          common.GetRequestIP(ctx.Request()),
+		Score:       params.FormValueInt64Default(ctx, "score", 0),
 	}
 }
 

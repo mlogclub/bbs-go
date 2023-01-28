@@ -1,11 +1,11 @@
 package services
 
 import (
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/repositories"
 	"regexp"
+	"server/cache"
+	"server/model"
+	"server/model/constants"
+	"server/repositories"
 	"strings"
 
 	"github.com/mlogclub/simple/common/strs"

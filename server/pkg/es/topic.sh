@@ -1,4 +1,4 @@
-curl -XPUT 127.0.0.1:9200/bbsgo_topic_1 -H 'Content-Type: application/json' -d'
+curl -XPUT 127.0.0.1:9200/bbs_topic_1 -H 'Content-Type: application/json' -d'
 {
     "mappings": {
         "properties": {

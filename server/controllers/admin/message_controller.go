@@ -7,8 +7,8 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/model"
+	"server/services"
 )
 
 type MessageController struct {

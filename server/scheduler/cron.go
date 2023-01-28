@@ -1,12 +1,12 @@
 package scheduler
 
 import (
-	"bbs-go/pkg/sitemap"
+	"server/pkg/sitemap"
 
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/services"
+	"server/services"
 )
 
 func Start() {
@@ -26,6 +26,12 @@ func Start() {
 	// vip 每日积分充值
 	addCronFunc(c, "0 0 1 ? * *", func() {
 		services.UserService.CronUserPayScore()
+	})
+
+	// 每天4点更新ES数据
+	addCronFunc(c, "0 0 4 ? * *", func() {
+		services.TopicService.UpdateEsIndex()
+		services.ArticleService.UpdateEsIndex()
 	})
 
 	c.Start()

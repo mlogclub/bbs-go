@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 	"time"
 
 	"github.com/goburrow/cache"

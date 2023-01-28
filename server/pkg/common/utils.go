@@ -1,14 +1,17 @@
 package common
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/config"
-	"bbs-go/pkg/html"
-	"bbs-go/pkg/markdown"
-	"bbs-go/pkg/text"
+	"github.com/mlogclub/simple/common/digests"
+	"math/rand"
 	"net"
 	"net/http"
+	"server/model/constants"
+	"server/pkg/config"
+	"server/pkg/html"
+	"server/pkg/markdown"
+	"server/pkg/text"
 	"strings"
+	"time"
 )
 
 // IsProd 是否是正式环境
@@ -54,4 +57,26 @@ func GetRequestIP(r *http.Request) string {
 
 func GetUserAgent(r *http.Request) string {
 	return r.Header.Get("User-Agent")
+}
+
+func GetScore(score int64) int64 {
+	return score / 2
+}
+
+func GetLevel(score int64) int64 {
+	return score / 1000
+}
+
+func Get16MD5Encode(str string) string {
+	return digests.MD5Bytes([]byte(str))[8:24]
+}
+
+func RandScore(max int64) int64 {
+	var timeStamp = time.Now().Unix()
+	r := rand.New(rand.NewSource(timeStamp))
+	score := r.Int63n(max)
+	if score < 5 {
+		return 5
+	}
+	return score
 }

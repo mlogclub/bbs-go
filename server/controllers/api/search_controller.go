@@ -1,10 +1,10 @@
 package api
 
 import (
-	"bbs-go/controllers/render"
-	"bbs-go/model"
-	"bbs-go/pkg/es"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/model"
+	"server/pkg/es"
+	"server/services"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
@@ -25,7 +25,7 @@ func (c *SearchController) AnyReindex() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
-func (c *SearchController) PostTopic() *web.JsonResult {
+func (c *SearchController) PostSearch() *web.JsonResult {
 	var (
 		page      = params.FormValueIntDefault(c.Ctx, "page", 1)
 		keyword   = params.FormValue(c.Ctx, "keyword")
@@ -33,11 +33,27 @@ func (c *SearchController) PostTopic() *web.JsonResult {
 		timeRange = params.FormValueIntDefault(c.Ctx, "timeRange", 0)
 	)
 
-	docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
-	if err != nil {
-		return web.JsonError(err)
-	}
+	key := keyword[0:2]
+	Index := keyword[3:]
+	switch key {
+	case ":t":
+		docs, paging, err := es.SearchTopic(Index, nodeId, timeRange, page, 20)
+		if err != nil {
+			return web.JsonError(err)
+		}
 
-	items := render.BuildSearchTopics(docs)
-	return web.JsonPageData(items, paging)
+		items := render.BuildSearchTopics(docs)
+		return web.JsonPageData(items, paging)
+	case ":a":
+		docs, paging, err := es.SearchArticle(Index, timeRange, page, 20)
+		if err != nil {
+			return web.JsonError(err)
+		}
+
+		items := render.BuildSearchArticles(docs)
+		return web.JsonPageData(items, paging)
+	default:
+		web.JsonErrorMsg("参数错误")
+	}
+	return web.JsonSuccess()
 }

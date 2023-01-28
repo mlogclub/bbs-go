@@ -1,11 +1,11 @@
 package services
 
 import (
-	. "bbs-go/base"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/event"
-	"bbs-go/repositories"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/common"
+	"server/pkg/event"
+	"server/repositories"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
@@ -66,7 +66,7 @@ func (s *phService) BuyTopic(user *model.User, topic *model.Topic) error {
 		}
 
 		// 更新发帖人积分
-		err := UserService.IncrScore(topic.UserId, GetScore(topic.Score), "pay", user.Nickname, "隐藏内容售出")
+		err := UserService.IncrScore(topic.UserId, common.GetScore(topic.Score), "pay", user.Nickname, "隐藏内容售出")
 		if err != nil {
 			return err
 		}

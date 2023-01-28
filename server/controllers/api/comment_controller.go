@@ -1,17 +1,17 @@
 package api
 
 import (
-	"bbs-go/model"
-	"bbs-go/pkg/errs"
-	"bbs-go/spam"
+	"server/model"
+	"server/pkg/errs"
+	"server/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/controllers/render"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/services"
 )
 
 type CommentController struct {

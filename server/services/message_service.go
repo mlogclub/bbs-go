@@ -1,13 +1,13 @@
 package services
 
 import (
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/email"
-	"bbs-go/pkg/msg"
-	"bbs-go/repositories"
+	"server/cache"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/bbsurls"
+	"server/pkg/email"
+	"server/pkg/msg"
+	"server/repositories"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"

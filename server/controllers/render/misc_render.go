@@ -1,7 +1,7 @@
 package render
 
 import (
-	"bbs-go/pkg/bbsurls"
+	"server/pkg/bbsurls"
 	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -11,8 +11,8 @@ import (
 	"github.com/mlogclub/simple/common/urls"
 	"github.com/mlogclub/simple/web"
 
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/model"
+	"server/services"
 )
 
 func xssProtection(htmlContent string) string {

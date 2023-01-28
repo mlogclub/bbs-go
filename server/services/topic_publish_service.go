@@ -1,11 +1,11 @@
 package services
 
 import (
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/es"
-	"bbs-go/pkg/event"
-	"bbs-go/repositories"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/es"
+	"server/pkg/event"
+	"server/repositories"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"

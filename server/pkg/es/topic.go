@@ -1,14 +1,14 @@
 package es
 
 import (
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	html2 "bbs-go/pkg/html"
-	"bbs-go/pkg/markdown"
-	"bbs-go/repositories"
 	"context"
 	"html"
+	"server/cache"
+	"server/model"
+	"server/model/constants"
+	html2 "server/pkg/html"
+	"server/pkg/markdown"
+	"server/repositories"
 	"strconv"
 	"time"
 
@@ -117,7 +117,7 @@ func UpdateTopicIndex(topic *model.Topic) {
 	}
 	logrus.Infof("Es add index topic, id = %d", topic.Id)
 	if response, err := client.Index().
-		Index(index).
+		Index(indexTopic).
 		BodyJson(doc).
 		Id(strconv.FormatInt(doc.Id, 10)).
 		Do(context.Background()); err == nil {
@@ -165,7 +165,7 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 			elastic.NewHighlighterField("tags"))
 
 	searchResult, err := client.Search().
-		Index(index).
+		Index(indexTopic).
 		Query(query).
 		From(paging.Offset()).Size(paging.Limit).
 		Highlight(highlight).

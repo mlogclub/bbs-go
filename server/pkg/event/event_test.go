@@ -1,9 +1,9 @@
 package event
 
 import (
-	"bbs-go/model"
 	"fmt"
 	"reflect"
+	"server/model"
 	"testing"
 
 	"github.com/mlogclub/simple/common/jsons"

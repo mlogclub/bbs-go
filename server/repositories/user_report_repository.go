@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"bbs-go/model"
+	"server/model"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
@@ -62,12 +62,12 @@ func (r *userReportRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list [
 	return
 }
 
-func (r *userReportRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []model.UserReport) {
+func (r *userReportRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []model.UserReport) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *userReportRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *userReportRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *userReportRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (r *userReportRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.UserReport{}, "id = ?", id)
 }
-

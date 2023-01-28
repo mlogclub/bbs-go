@@ -2,7 +2,6 @@ package qq
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -16,8 +15,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	"bbs-go/pkg/common"
-	"bbs-go/pkg/config"
+	"server/pkg/common"
+	"server/pkg/config"
 )
 
 type UserInfo struct {
@@ -83,8 +82,6 @@ func AuthorizationCode(code, state string) (*AccessToken, error) {
 	}
 	content := string(resp.Body())
 
-	fmt.Println("token:" + content)
-
 	// qq返回的数据格式如下：
 	// access_token=xxx&expires_in=7776000&refresh_token=xxx
 	ub := urls.ParseUrl("?" + content)
@@ -113,8 +110,6 @@ func GetOpenid(accessToken string) (string, string, error) {
 	content := string(resp.Body())
 	content = removeCallback(content)
 
-	logrus.Info("me:" + content)
-
 	return gjson.Get(content, "openid").String(), gjson.Get(content, "unionid").String(), nil
 }
 
@@ -135,8 +130,6 @@ func GetUserInfo(accessToken string) (*UserInfo, error) {
 		return nil, err
 	}
 	content := string(resp.Body())
-
-	logrus.Info("get_user_info:" + content)
 
 	ret := gjson.Get(content, "ret").Int()
 	msg := gjson.Get(content, "msg").String()
@@ -168,7 +161,7 @@ func GetUserInfoByCode(code, state string) (*UserInfo, error) {
 
 // 获取回调跳转地址
 func getRedirectUrl(params map[string]string) string {
-	redirectUrl := config.Instance.BaseUrl + "/user/qq/callback"
+	redirectUrl := config.Instance.QQUrl + "/user/qq/callback"
 	if !common.IsProd() {
 		redirectUrl = "http://localhost:3000/user/qq/callback"
 	}

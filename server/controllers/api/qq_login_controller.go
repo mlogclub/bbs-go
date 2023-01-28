@@ -1,9 +1,10 @@
 package api
 
 import (
-	"bbs-go/controllers/render"
-	"bbs-go/pkg/qq"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/pkg/qq"
+	"server/services"
+	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
@@ -15,13 +16,19 @@ type QQLoginController struct {
 
 // 获取QQ登录授权地址
 func (c *QQLoginController) GetAuthorize() *web.JsonResult {
+	user := services.UserTokenService.GetCurrent(c.Ctx)
+	param := make(map[string]string)
+	if user != nil {
+		param["userId"] = strconv.FormatInt(user.Id, 10)
+	}
 	loginMethod := services.SysConfigService.GetLoginMethod()
 	if !loginMethod.QQ {
 		return web.JsonErrorMsg("QQ登录/注册已禁用")
 	}
 
 	ref := c.Ctx.FormValue("ref")
-	url := qq.AuthorizeUrl(map[string]string{"ref": ref})
+	param["ref"] = ref
+	url := qq.AuthorizeUrl(param)
 	return web.NewEmptyRspBuilder().Put("url", url).JsonResult()
 }
 
@@ -34,8 +41,9 @@ func (c *QQLoginController) GetCallback() *web.JsonResult {
 
 	code := c.Ctx.FormValue("code")
 	state := c.Ctx.FormValue("state")
+	userId := c.Ctx.FormValue("userId")
 
-	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state)
+	thirdAccount, err := services.ThirdAccountService.GetOrCreateByQQ(code, state, userId)
 	if err != nil {
 		return web.JsonError(err)
 	}

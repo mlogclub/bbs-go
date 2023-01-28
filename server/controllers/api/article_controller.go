@@ -1,10 +1,10 @@
 package api
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/errs"
-	"bbs-go/spam"
+	"server/model/constants"
+	"server/pkg/bbsurls"
+	"server/pkg/errs"
+	"server/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -13,9 +13,9 @@ import (
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/controllers/render"
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/model"
+	"server/services"
 )
 
 type ArticleController struct {
@@ -133,6 +133,12 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		cover   = model.GetImageDTO(c.Ctx, "cover")
 	)
 
+	status, err := c.Ctx.PostValueInt64("status")
+	if err != nil {
+		logrus.Errorf("文章ID: [%d] - 用户: [%d]", articleId, user.Id)
+		return web.JsonErrorMsg("文章状态非法")
+	}
+
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
 		return web.JsonErrorMsg("文章不存在")
@@ -143,7 +149,12 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg("无权限")
 	}
 
-	if err := services.ArticleService.Edit(articleId, tags, title, content, cover); err != nil {
+	//重新编辑不审核
+	if article.Status == constants.StatusOk {
+		status = constants.StatusOk
+	}
+
+	if err := services.ArticleService.Edit(articleId, tags, title, content, status, cover); err != nil {
 		return web.JsonError(err)
 	}
 	// 操作日志

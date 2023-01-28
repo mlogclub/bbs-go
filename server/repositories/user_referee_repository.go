@@ -4,7 +4,7 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 
-	"bbs-go/model"
+	"server/model"
 )
 
 var UserRefereeRepository = newUserRefereeRepository()

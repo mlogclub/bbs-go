@@ -1,6 +1,6 @@
 package spam
 
-import "bbs-go/model"
+import "server/model"
 
 type Strategy interface {
 	// Name 策略名称

@@ -4,8 +4,8 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 )
 
 var UserScoreLogService = newUserScoreLogService()

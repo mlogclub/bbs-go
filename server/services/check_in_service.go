@@ -1,12 +1,12 @@
 package services
 
 import (
-	"bbs-go/base"
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/repositories"
 	"errors"
+	"server/cache"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/common"
+	"server/repositories"
 	"strconv"
 	"sync"
 	"time"
@@ -92,6 +92,13 @@ func (s *checkInService) CheckIn(userId int64) error {
 
 	if checkIn != nil && checkIn.LatestDayName == yesterdayName {
 		consecutiveDays = checkIn.ConsecutiveDays + 1
+
+		if (consecutiveDays % 10) == 0 {
+			err := UserService.IncrScore(userId, int64(consecutiveDays*100), "checkinReward", strconv.FormatInt(userId, 10), "连续签到奖励")
+			if err != nil {
+				logrus.Errorf("用户ID : [%d] - 连续签到奖励出错 : [%s]", userId, err.Error())
+			}
+		}
 	}
 
 	if checkIn == nil {
@@ -115,7 +122,7 @@ func (s *checkInService) CheckIn(userId int64) error {
 		// 处理签到积分
 		config := SysConfigService.GetConfig()
 		if config.ScoreConfig.CheckInScore > 0 {
-			score := base.RandScore(config.ScoreConfig.CheckInScore)
+			score := common.RandScore(config.ScoreConfig.CheckInScore)
 			_ = UserService.IncrScore(userId, score, constants.EntityCheckIn,
 				strconv.FormatInt(userId, 10), "签到"+strconv.Itoa(dayName))
 		} else {

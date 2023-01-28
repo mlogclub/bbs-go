@@ -1,13 +1,12 @@
 package render
 
 import (
-	"bbs-go/base"
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/config"
 	"fmt"
+	"server/cache"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/common"
+	"server/pkg/config"
 	"strconv"
 	"strings"
 
@@ -47,8 +46,10 @@ func BuildUserInfo(user *model.User) *model.UserInfo {
 		Description:  user.Description,
 		CreateTime:   user.CreateTime,
 		Forbidden:    user.IsForbidden(),
-		Level:        base.GetLevel(user.HistoricalScore),
+		Level:        common.GetLevel(user.HistoricalScore),
 		Vip:          getVipImageUrl(user.Vip),
+		Title:        user.Title,
+		QQStatus:     user.QQStatus,
 	}
 	if strs.IsNotBlank(user.Avatar) {
 		ret.Avatar = user.Avatar
@@ -109,7 +110,7 @@ func BuildUserProfile(user *model.User) *model.UserProfile {
 func RandomAvatar(userId int64) string {
 	avatarCount := 128
 	avatarIndex := userId % int64(avatarCount)
-	return bbsurls.AbsUrl("/images/avatars/" + cast.ToString(avatarIndex) + ".png")
+	return fmt.Sprintf("%s/images/avatars/%s.png", config.Instance.Uploader.Server.Host, cast.ToString(avatarIndex))
 }
 
 func getVipImageUrl(vip int) string {

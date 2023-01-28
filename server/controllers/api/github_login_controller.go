@@ -1,9 +1,9 @@
 package api
 
 import (
-	"bbs-go/controllers/render"
-	"bbs-go/pkg/github"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/pkg/github"
+	"server/services"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"

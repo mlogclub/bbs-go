@@ -7,9 +7,9 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model/constants"
-	"bbs-go/pkg/errs"
-	"bbs-go/services"
+	"server/model/constants"
+	"server/pkg/errs"
+	"server/services"
 )
 
 type FavoriteController struct {

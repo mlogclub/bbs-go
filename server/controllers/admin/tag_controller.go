@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"bbs-go/model/constants"
+	"server/model/constants"
 	"strconv"
 	"strings"
 
@@ -11,9 +11,9 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/controllers/render"
-	"bbs-go/model"
-	"bbs-go/services"
+	"server/controllers/render"
+	"server/model"
+	"server/services"
 )
 
 type TagController struct {

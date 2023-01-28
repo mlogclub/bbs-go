@@ -1,16 +1,16 @@
 package services
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/event"
 	"errors"
+	"server/model/constants"
+	"server/pkg/event"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 )
 
 var FavoriteService = newFavoriteService()

@@ -1,12 +1,12 @@
 package admin
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/errs"
+	"server/model/constants"
+	"server/pkg/errs"
 	"strconv"
 	"strings"
 
-	"bbs-go/model"
+	"server/model"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/passwd"
@@ -14,7 +14,7 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/services"
+	"server/services"
 )
 
 type UserController struct {
@@ -71,15 +71,19 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 	username := params.FormValue(c.Ctx, "username")
 	password := params.FormValue(c.Ctx, "password")
 	nickname := params.FormValue(c.Ctx, "nickname")
+	title := params.FormValue(c.Ctx, "title")
 	email := params.FormValue(c.Ctx, "email")
 	roles := params.FormValueStringArray(c.Ctx, "roles")
 	status := params.FormValueIntDefault(c.Ctx, "status", -1)
+	vip := params.FormValueIntDefault(c.Ctx, "vip", -1)
 
 	user.Username = sqls.SqlNullString(username)
 	user.Nickname = nickname
 	user.Email = sqls.SqlNullString(email)
 	user.Roles = strings.Join(roles, ",")
 	user.Status = status
+	user.Vip = vip
+	user.Title = title
 
 	if len(password) > 0 {
 		user.Password = passwd.EncodePassword(password)

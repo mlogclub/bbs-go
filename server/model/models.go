@@ -1,8 +1,8 @@
 package model
 
 import (
-	"bbs-go/model/constants"
 	"database/sql"
+	"server/model/constants"
 	"time"
 )
 
@@ -10,7 +10,7 @@ var Models = []interface{}{
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{}, &ThirdAccount{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
-	&ForbiddenWord{}, &PurchaseHistory{}, &Advert{}, &UserReferee{},
+	&ForbiddenWord{}, &PurchaseHistory{}, &Advert{}, &UserReferee{}, &Order{},
 }
 
 type Model struct {
@@ -30,6 +30,7 @@ type User struct {
 	Password         string           `gorm:"size:512" json:"password" form:"password"`                                 // 密码
 	HomePage         string           `gorm:"size:1024" json:"homePage" form:"homePage"`                                // 个人主页
 	Description      string           `gorm:"type:text" json:"description" form:"description"`                          // 个人描述
+	Title            string           `gorm:"size:128" json:"title" form:"title"`                                       // 称号
 	Vip              int              `gorm:"type:int(11);not null;default:0" json:"vip" form:"vip"`                    // Vip等级
 	Score            int64            `gorm:"not null;index:idx_user_score" json:"score" form:"score"`                  // 积分
 	HistoricalScore  int64            `gorm:"not null;index" json:"historicalScore" form:"historicalScore"`             // 历史积分
@@ -44,6 +45,7 @@ type User struct {
 	ForbiddenEndTime int64            `gorm:"not null;default:0" json:"forbiddenEndTime" form:"forbiddenEndTime"`       // 禁言结束时间
 	CreateTime       int64            `json:"createTime" form:"createTime"`                                             // 创建时间
 	UpdateTime       int64            `json:"updateTime" form:"updateTime"`                                             // 更新时间
+	QQStatus         bool             `json:"qqStatus"`                                                                 // 是否绑定QQ
 }
 
 type UserToken struct {
@@ -341,4 +343,15 @@ type UserReferee struct {
 	UserId      int64  `gorm:"index:idx_tl_user_id" json:"userId" form:"userId"`                            // 用户id
 	RefereeCode string `gorm:"not null;size:128;index:idx_r_user_id" json:"refereeCode" form:"refereeCode"` // 推荐人Code
 	Status      int    `gorm:"type:int(11);not null" json:"status" form:"status"`                           // 是否验证邮箱状态
+}
+
+// 支付订单
+type Order struct {
+	Model
+	UserId      int64  `gorm:"index:idx_order_user_id" json:"userId" form:"userId"`     // 用户id
+	Subject     string `gorm:"not null;size:128" json:"subject" form:"subject"`         // 订单标题
+	OutTradeNo  string `gorm:"not null;size:128" json:"outTradeNo" form:"outTradeNo"`   // 商户订单号，64个字符以内、可包含字母、数字、下划线；需保证在商户端不重复
+	TotalAmount string `gorm:"not null;size:128" json:"totalAmount" form:"totalAmount"` // 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
+	IsSuccess   bool   `gorm:"not null;default:false" json:"isSuccess" form:"isSuccess"`
+	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"` // 创建时间
 }

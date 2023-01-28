@@ -1,20 +1,21 @@
 package services
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/seo"
 	"errors"
 	"math"
 	"path"
+	"server/model/constants"
+	"server/pkg/bbsurls"
+	"server/pkg/es"
+	"server/pkg/seo"
 	"strings"
 	"time"
 
 	"github.com/emirpasic/gods/sets/hashset"
 
-	"bbs-go/cache"
-	"bbs-go/pkg/config"
-	"bbs-go/repositories"
+	"server/cache"
+	"server/pkg/config"
+	"server/repositories"
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple/common/dates"
@@ -27,8 +28,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"bbs-go/model"
-	"bbs-go/pkg/common"
+	"server/model"
+	"server/pkg/common"
 )
 
 var ArticleService = newArticleService()
@@ -242,7 +243,7 @@ func (s *articleService) SaveDraft(userId int64, form model.CreateArticleForm) (
 }
 
 // 修改文章
-func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *model.ImageDTO) *web.CodeError {
+func (s *articleService) Edit(articleId int64, tags []string, title, content string, status int64, cover *model.ImageDTO) *web.CodeError {
 	if len(title) == 0 {
 		return web.NewErrorMsg("请输入标题")
 	}
@@ -254,6 +255,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		updates := map[string]interface{}{
 			"title":   title,
 			"content": content,
+			"status":  status,
 		}
 		if cover != nil {
 			updates["cover"] = jsons.ToJsonStr(cover)
@@ -417,4 +419,11 @@ func (s *articleService) GetUserArticles(userId, cursor, status int64) (articles
 		nextCursor = cursor
 	}
 	return
+}
+
+func (s *articleService) UpdateEsIndex() {
+	articles := s.Find(sqls.NewCnd())
+	for _, article := range articles {
+		es.UpdateArticleIndex(&article)
+	}
 }

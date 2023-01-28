@@ -1,8 +1,8 @@
 package services
 
 import (
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
@@ -11,7 +11,7 @@ import (
 var UserReportService = newUserReportService()
 
 func newUserReportService() *userReportService {
-	return &userReportService {}
+	return &userReportService{}
 }
 
 type userReportService struct {
@@ -64,4 +64,3 @@ func (s *userReportService) UpdateColumn(id int64, name string, value interface{
 func (s *userReportService) Delete(id int64) {
 	repositories.UserReportRepository.Delete(sqls.DB(), id)
 }
-

@@ -1,30 +1,32 @@
 package main
 
 import (
-	"bbs-go/controllers"
-	"bbs-go/model"
-	"bbs-go/pkg/common"
-	"bbs-go/pkg/config"
-	"bbs-go/scheduler"
-	_ "bbs-go/services/eventhandler"
 	"flag"
+	"gorm.io/gorm"
 	"io"
+	"log"
 	"os"
+	"server/controllers"
+	"server/model"
+	"server/pkg/common"
+	"server/pkg/config"
+	"server/scheduler"
+	_ "server/services/eventhandler"
 	"time"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-var configFile = flag.String("config", "./bbs-go.yaml", "配置文件路径")
+var configFile = flag.String("config", "./server.yaml", "配置文件路径")
 
 func init() {
 	flag.Parse()
 
 	// 初始化配置
 	conf := config.Init(*configFile)
+	//alipay.Init()
 
 	// 初始化日志
 	if file, err := os.OpenFile(conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
@@ -44,7 +46,7 @@ func init() {
 		}),
 	}
 	if err := sqls.Open(conf.DB.Url, gormConf, conf.DB.MaxIdleConns, conf.DB.MaxOpenConns, model.Models...); err != nil {
-		logrus.Error(err)
+		log.Fatal(err.Error())
 	}
 }
 

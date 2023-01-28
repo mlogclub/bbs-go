@@ -4,8 +4,9 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
+	"server/model/constants"
 
-	"bbs-go/model"
+	"server/model"
 )
 
 var UserRepository = newUserRepository()
@@ -22,6 +23,7 @@ func (r *userRepository) Get(db *gorm.DB, id int64) *model.User {
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
 	}
+	ret.QQStatus = ThirdAccountRepository.FindOne(db, sqls.NewCnd().Eq("user_id", id).Eq("third_type", constants.ThirdAccountTypeQQ)) != nil
 	return ret
 }
 

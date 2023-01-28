@@ -1,7 +1,7 @@
 package model
 
 import (
-	"bbs-go/model/constants"
+	"server/model/constants"
 	"time"
 
 	"github.com/mlogclub/simple/web"
@@ -22,13 +22,16 @@ type UserInfo struct {
 	RefereeCount int              `json:"refereeCount"` // 推荐数量
 	Score        int64            `json:"score"`        // 积分
 	Description  string           `json:"description"`
-	Vip          string           `json:"vip"`
 	CreateTime   int64            `json:"createTime"`
 
 	Forbidden bool `json:"forbidden"` // 是否禁言
 	Followed  bool `json:"followed"`  // 是否关注
 
-	Level int64 `json:"level"` // 账号等级
+	QQStatus bool `json:"qqStatus"` //是否绑定QQ
+
+	Title string `json:"title"` // 称号
+	Vip   string `json:"vip"`
+	Level int64  `json:"level"` // 账号等级
 }
 
 // UserDetail 用户详细信息
@@ -74,6 +77,15 @@ type ArticleSimpleResponse struct {
 type ArticleResponse struct {
 	ArticleSimpleResponse
 	Content string `json:"content"`
+}
+
+type SearchArticleResponse struct {
+	ArticleId  int64          `json:"articleId"`
+	User       *UserInfo      `json:"user"`
+	Tags       *[]TagResponse `json:"tags"`
+	Title      string         `json:"title"`
+	Summary    string         `json:"summary"`
+	CreateTime int64          `json:"createTime"`
 }
 
 type NodeResponse struct {

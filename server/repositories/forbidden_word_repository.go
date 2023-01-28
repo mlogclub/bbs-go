@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"bbs-go/model"
+	"server/model"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
@@ -62,12 +62,12 @@ func (r *forbiddenWordRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (lis
 	return
 }
 
-func (r *forbiddenWordRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []model.ForbiddenWord) {
+func (r *forbiddenWordRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []model.ForbiddenWord) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *forbiddenWordRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *forbiddenWordRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *forbiddenWordRepository) UpdateColumn(db *gorm.DB, id int64, name strin
 func (r *forbiddenWordRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.ForbiddenWord{}, "id = ?", id)
 }
-

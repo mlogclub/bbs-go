@@ -1,13 +1,13 @@
 package admin
 
 import (
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"server/model"
+	"server/model/constants"
+	"server/services"
 )
 
 type AdvertController struct {

@@ -1,8 +1,8 @@
 package es
 
 import (
-	"bbs-go/pkg/config"
 	"errors"
+	"server/pkg/config"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
@@ -11,17 +11,19 @@ import (
 )
 
 var (
-	client      *elastic.Client
-	index       string
-	once        sync.Once
-	errNoConfig = errors.New("es config not found. ")
+	client        *elastic.Client
+	indexTopic    string
+	indexArticles string
+	once          sync.Once
+	errNoConfig   = errors.New("es config not found. ")
 )
 
 func initClient() *elastic.Client {
 	once.Do(func() {
 		var err error
-		if !strs.IsAnyBlank(config.Instance.Es.Url, config.Instance.Es.Index) {
-			index = config.Instance.Es.Index
+		if !strs.IsAnyBlank(config.Instance.Es.Url, config.Instance.Es.IndexTopic) {
+			indexTopic = config.Instance.Es.IndexTopic
+			indexArticles = config.Instance.Es.IndexArticles
 			client, err = elastic.NewClient(
 				elastic.SetURL(config.Instance.Es.Url),
 				elastic.SetHealthcheck(false),

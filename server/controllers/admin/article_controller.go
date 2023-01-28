@@ -1,21 +1,21 @@
 package admin
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/sitemap"
+	"server/model/constants"
+	"server/pkg/sitemap"
 	"strconv"
 
-	"bbs-go/model"
+	"server/model"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/cache"
-	"bbs-go/controllers/render"
-	"bbs-go/pkg/common"
-	"bbs-go/services"
+	"server/cache"
+	"server/controllers/render"
+	"server/pkg/common"
+	"server/services"
 )
 
 type ArticleController struct {

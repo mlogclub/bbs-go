@@ -12,6 +12,7 @@ var Instance *Config
 type Config struct {
 	Env        string `yaml:"Env"`        // 环境：prod、dev
 	BaseUrl    string `yaml:"BaseUrl"`    // base url
+	QQUrl      string `yaml:"QQUrl"`      // QQ url
 	Port       string `yaml:"Port"`       // 端口
 	LogFile    string `yaml:"LogFile"`    // 日志文件
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
@@ -99,9 +100,18 @@ type Config struct {
 
 	// es
 	Es struct {
-		Url   string `yaml:"Url"`
-		Index string `yaml:"Index"`
+		Url           string `yaml:"Url"`
+		IndexTopic    string `yaml:"IndexTopic"`
+		IndexArticles string `yaml:"IndexArticles"`
 	} `yaml:"Es"`
+
+	// alipay
+	Alipay struct {
+		AppId         string `yaml:"AppId"`
+		AppPrivateKey string `yaml:"AppPrivateKey"`
+		AppPublicKey  string `yaml:"AppPublicKey"`
+		BaseUrl       string `yaml:"BaseUrl"`
+	} `yaml:"Alipay"`
 }
 
 func Init(filename string) *Config {

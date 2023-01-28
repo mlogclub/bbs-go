@@ -1,11 +1,11 @@
 package render
 
 import (
-	"bbs-go/model"
-	"bbs-go/model/constants"
-	"bbs-go/pkg/markdown"
-	"bbs-go/services"
 	"html"
+	"server/model"
+	"server/model/constants"
+	"server/pkg/markdown"
+	"server/services"
 	"strconv"
 
 	"github.com/mlogclub/simple/common/arrays"

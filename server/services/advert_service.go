@@ -1,12 +1,12 @@
 package services
 
 import (
-	"bbs-go/repositories"
+	"server/repositories"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
+	"server/model"
 )
 
 var AdvertService = newAdvertService()

@@ -76,3 +76,10 @@ Es:
 WeixinConfig:
   AppID:
   AppSecret:
+
+# 支付宝支付
+Alipay:
+  AppId:
+  AppPrivateKey:
+  AppPublicKey:
+  BaseUrl:

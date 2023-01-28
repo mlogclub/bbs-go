@@ -1,19 +1,19 @@
 package services
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/email"
-	"bbs-go/pkg/errs"
-	"bbs-go/pkg/event"
-	"bbs-go/pkg/uploader"
-	"bbs-go/pkg/validate"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
+	"server/model/constants"
+	"server/pkg/bbsurls"
+	"server/pkg/email"
+	"server/pkg/errs"
+	"server/pkg/event"
+	"server/pkg/uploader"
+	"server/pkg/validate"
 	"strconv"
 	"strings"
 	"time"
@@ -28,9 +28,10 @@ import (
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
 
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/cache"
+
+	"server/model"
+	"server/repositories"
 )
 
 // 邮箱验证邮件有效期（小时）
@@ -277,6 +278,7 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	} else {
 		user = s.GetByUsername(username)
 	}
+	user.QQStatus = ThirdAccountService.FindOne(sqls.NewCnd().Eq("user_id", user.Id).Eq("third_type", constants.ThirdAccountTypeQQ)) != nil
 	if user == nil || user.Status != constants.StatusOk {
 		return nil, errors.New("用户不存在或被禁用")
 	}

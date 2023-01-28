@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"bbs-go/services"
+	"server/services"
 	"strconv"
 
 	"github.com/kataras/iris/v12"

@@ -1,15 +1,15 @@
 package services
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/bbsurls"
-	"bbs-go/pkg/config"
-	"bbs-go/pkg/es"
-	"bbs-go/pkg/event"
 	"errors"
 	"math"
 	"net/http"
 	"path"
+	"server/model/constants"
+	"server/pkg/bbsurls"
+	"server/pkg/config"
+	"server/pkg/es"
+	"server/pkg/event"
 	"time"
 
 	"github.com/mlogclub/simple/common/dates"
@@ -23,10 +23,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"bbs-go/cache"
-	"bbs-go/model"
-	"bbs-go/pkg/common"
-	"bbs-go/repositories"
+	"server/cache"
+	"server/model"
+	"server/pkg/common"
+	"server/repositories"
 )
 
 var TopicService = newTopicService()
@@ -501,5 +501,12 @@ func (s *topicService) SetSticky(topicId int64, sticky bool) error {
 		return s.Updates(topicId, map[string]interface{}{
 			"sticky": false,
 		})
+	}
+}
+
+func (s *topicService) UpdateEsIndex() {
+	topics := s.Find(sqls.NewCnd())
+	for _, topic := range topics {
+		es.UpdateTopicIndex(&topic)
 	}
 }

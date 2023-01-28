@@ -7,8 +7,8 @@ import (
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple/sqls"
 
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 )
 
 var UserTokenCache = newUserTokenCache()

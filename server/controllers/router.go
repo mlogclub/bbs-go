@@ -13,10 +13,10 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 
-	"bbs-go/controllers/api"
+	"server/controllers/api"
 
-	"bbs-go/controllers/admin"
-	"bbs-go/middleware"
+	"server/controllers/admin"
+	"server/middleware"
 )
 
 func Router() {
@@ -45,7 +45,7 @@ func Router() {
 	})
 
 	app.Any("/", func(i iris.Context) {
-		_, _ = i.HTML("<h1>Powered by bbs-go</h1>")
+		_, _ = i.HTML("<h1>Powered by server</h1>")
 	})
 
 	// api
@@ -70,6 +70,7 @@ func Router() {
 		m.Party("/fans").Handle(new(api.FansController))
 		m.Party("/user-report").Handle(new(api.UserReportController))
 		m.Party("/advert").Handle(new(api.AdvertController))
+		m.Party("/pay").Handle(new(api.AlipayController))
 	})
 
 	// admin

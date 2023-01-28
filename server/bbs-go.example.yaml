@@ -80,3 +80,10 @@ SmSEO:
 Es:
   Url: http://127.0.0.1:9200
   Index: bbsgo_topic_1
+
+# 支付宝支付
+Alipay:
+  AppId:
+  AppPrivateKey:
+  AppPublicKey:
+  BaseUrl:

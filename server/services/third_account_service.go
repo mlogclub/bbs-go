@@ -1,11 +1,13 @@
 package services
 
 import (
-	"bbs-go/model/constants"
-	"bbs-go/pkg/github"
-	"bbs-go/pkg/osc"
-	"bbs-go/pkg/qq"
 	"database/sql"
+	"github.com/sirupsen/logrus"
+	"server/cache"
+	"server/model/constants"
+	"server/pkg/github"
+	"server/pkg/osc"
+	"server/pkg/qq"
 	"strconv"
 	"strings"
 
@@ -14,8 +16,8 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"bbs-go/model"
-	"bbs-go/repositories"
+	"server/model"
+	"server/repositories"
 )
 
 var ThirdAccountService = newThirdAccountService()
@@ -143,7 +145,7 @@ func (s *thirdAccountService) GetOrCreateByOSC(code, state string) (*model.Third
 	return account, nil
 }
 
-func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdAccount, error) {
+func (s *thirdAccountService) GetOrCreateByQQ(code, state, userId string) (*model.ThirdAccount, error) {
 	userInfo, err := qq.GetUserInfoByCode(code, state)
 	if err != nil {
 		return nil, err
@@ -153,10 +155,22 @@ func (s *thirdAccountService) GetOrCreateByQQ(code, state string) (*model.ThirdA
 	if account != nil {
 		return account, nil
 	}
+	var userid = sql.NullInt64{}
+	if userId != "" {
+		userid.Int64, err = strconv.ParseInt(userId, 10, 64)
+		userid.Valid = true
+		if err != nil {
+			logrus.Warnf("绑定失败 : [%s]", userId)
+			userid = sql.NullInt64{}
+		} else {
+			//刷新缓存
+			cache.UserCache.Invalidate(userid.Int64)
+		}
+	}
 
 	userInfoJson, _ := jsons.ToStr(userInfo)
 	account = &model.ThirdAccount{
-		UserId:     sql.NullInt64{},
+		UserId:     userid,
 		Avatar:     userInfo.FigureurlQQ1,
 		Nickname:   strings.TrimSpace(userInfo.Nickname),
 		ThirdType:  constants.ThirdAccountTypeQQ,
