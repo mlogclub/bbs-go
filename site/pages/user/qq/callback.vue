@@ -17,6 +17,7 @@ export default {
     return {
       code: query.code,
       state: query.state,
+      userId: query.userId,
       ref: query.ref,
     }
   },
@@ -40,6 +41,7 @@ export default {
         const user = await this.$store.dispatch('user/signinByQQ', {
           code: this.code,
           state: this.state,
+          userId: this.userId,
         })
 
         if (this.ref) {

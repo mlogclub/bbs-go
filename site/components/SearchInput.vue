@@ -12,7 +12,7 @@
         class="input"
         type="text"
         maxlength="30"
-        placeholder="输入你想查找的内容"
+        placeholder="输入你想查找的内容(:t 帖子 :a 文章)"
         autocomplete="off"
         aria-autocomplete="off"
         @focus="onFocus"

@@ -77,6 +77,23 @@
             </div>
           </div>
         </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">QQ：</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control has-icons-left">
+                <template v-if="user.qqStatus">
+                  <label>QQ已绑定&nbsp;</label>
+                  <a @click="bindQQ">点击修改</a>
+                </template>
+                <a v-else @click="bindQQ">点击设置</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -375,6 +392,23 @@ export default {
     async reload() {
       this.user = await this.$axios.get('/api/user/current')
       this.form = { ...this.user }
+    },
+    async bindQQ() {
+      try {
+        if (!this.refUrlValue && process.client) {
+          // 如果没配置refUrl，那么取当前地址
+          this.refUrlValue = window.location.pathname
+        }
+        const ret = await this.$axios.get('/api/qq/login/authorize', {
+          params: {
+            ref: this.refUrlValue,
+          },
+        })
+        window.location = ret.url
+      } catch (e) {
+        console.error(e)
+        this.$message.error('登录失败：' + (e.message || e))
+      }
     },
   },
 }

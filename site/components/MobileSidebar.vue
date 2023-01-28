@@ -35,6 +35,14 @@
                 >编辑资料</nuxt-link
               >
             </div>
+            <div
+              v-if="checkIn == null || checkIn?.checkIn == false"
+              class="sidebar-menu-item"
+            >
+              <a @click="doCheckIn">
+                <span>立即签到</span>
+              </a>
+            </div>
           </div>
         </template>
         <template v-else>
@@ -52,6 +60,11 @@
 <script>
 import UserHelper from '~/common/UserHelper'
 export default {
+  data() {
+    return {
+      checkIn: null,
+    }
+  },
   computed: {
     show() {
       return this.$store.state.env.showMobileSidebar
@@ -69,12 +82,37 @@ export default {
       const config = this.$store.state.config.config
       return config.siteNavs || []
     },
+    isLogin() {
+      return this.$store.state.user.current != null
+    },
+  },
+  mounted() {
+    this.getCheckIn()
   },
   methods: {
     async signout() {
       try {
         await this.$store.dispatch('user/signout')
         this.$linkTo('/')
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async getCheckIn() {
+      try {
+        this.checkIn = await this.$axios.get('/api/checkin/checkin')
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async doCheckIn() {
+      if (!this.isLogin) {
+        this.$toSignin()
+      }
+      try {
+        await this.$axios.post('/api/checkin/checkin')
+        this.$message.success('签到成功')
+        await this.getCheckIn()
       } catch (e) {
         console.error(e)
       }

@@ -36,16 +36,16 @@ export const actions = {
   },
   changeNodeId(context, nodeId) {
     context.commit('setNodeId', nodeId || 0)
-    context.dispatch('searchTopic')
+    context.dispatch('searchAny')
   },
   changeTimeRange(context, timeRange) {
     context.commit('setTimeRange', timeRange || 0)
-    context.dispatch('searchTopic')
+    context.dispatch('searchAny')
   },
-  async searchTopic({ state, commit }) {
+  async searchAny({ state, commit }) {
     commit('setLoading', true)
     try {
-      const result = await this.$axios.post('/api/search/topic', {
+      const result = await this.$axios.post('/api/search/search', {
         keyword: state.keyword,
         nodeId: state.nodeId,
         timeRange: state.timeRange,

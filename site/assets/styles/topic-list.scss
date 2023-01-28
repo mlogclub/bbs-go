@@ -52,6 +52,39 @@
           margin-left: 10px;
         }
 
+        .topic-title-icon {
+          font-size: 10px;
+          border-radius: 5px;
+          box-shadow: 0 0 5px #7e2694;
+          padding: 4px;
+          background: -webkit-linear-gradient(
+            left,
+            #fff,
+            red 6.25%,
+            #ff7d00 12.5%,
+            #ff0 18.75%,
+            #00f 37.5%,
+            red 56.25%,
+            #ff7d00 62.5%,
+            #ff0 68.75%,
+            #00f 87.5%,
+            #ff0 100%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 200% 100%;
+          animation: masked-animation 2s infinite linear;
+        }
+
+        @keyframes masked-animation {
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: -100%, 0;
+          }
+        }
+
         .topic-time {
           color: var(--text-color3);
           font-size: 12px;
