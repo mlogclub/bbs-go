@@ -61,6 +61,7 @@ func doBuildComment(comment *model.Comment, currentUser *model.User, isBuildRepl
 		LikeCount:    comment.LikeCount,
 		CommentCount: comment.CommentCount,
 		ContentType:  comment.ContentType,
+		IpLocation:   comment.IpLocation,
 		Status:       comment.Status,
 		CreateTime:   comment.CreateTime,
 	}

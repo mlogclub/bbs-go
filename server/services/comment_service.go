@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/event"
+	"bbs-go/pkg/iplocator"
 	"errors"
 	"strings"
 
@@ -98,6 +99,7 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		Status:      constants.StatusOk,
 		UserAgent:   form.UserAgent,
 		Ip:          form.Ip,
+		IpLocation:  iplocator.IpLocation(form.Ip),
 		CreateTime:  dates.NowTimestamp(),
 	}
 

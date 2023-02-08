@@ -5,6 +5,7 @@ import (
 	"bbs-go/model/constants"
 	"bbs-go/pkg/es"
 	"bbs-go/pkg/event"
+	"bbs-go/pkg/iplocator"
 	"bbs-go/repositories"
 	"strings"
 
@@ -38,6 +39,7 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		Status:          constants.StatusOk,
 		UserAgent:       form.UserAgent,
 		Ip:              form.Ip,
+		IpLocation:      iplocator.IpLocation(form.Ip),
 		LastCommentTime: now,
 		CreateTime:      now,
 	}

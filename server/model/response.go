@@ -112,6 +112,7 @@ type TopicResponse struct {
 	StickyTime      int64               `json:"stickyTime"`
 	Status          int                 `json:"status"`
 	Favorited       bool                `json:"favorited"`
+	IpLocation      string              `json:"ipLocation"`
 }
 
 // CommentResponse 评论返回数据
@@ -129,6 +130,7 @@ type CommentResponse struct {
 	QuoteId      int64             `json:"quoteId"`
 	Quote        *CommentResponse  `json:"quote"`
 	Replies      *web.CursorResult `json:"replies"`
+	IpLocation   string            `json:"ipLocation"`
 	Status       int               `json:"status"`
 	CreateTime   int64             `json:"createTime"`
 }

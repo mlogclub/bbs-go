@@ -69,6 +69,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.Sticky = topic.Sticky
 	rsp.StickyTime = topic.StickyTime
 	rsp.Status = topic.Status
+	rsp.IpLocation = topic.IpLocation
 
 	// 构建内容
 	if buildContent {

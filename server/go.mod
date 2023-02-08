@@ -15,6 +15,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20221023021543-014b91018351
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.0-beta7
+	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20230205110531-05840c74e63c
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/mlogclub/simple v1.2.4
 	github.com/olivere/elastic/v7 v7.0.32
