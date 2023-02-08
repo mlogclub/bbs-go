@@ -42,6 +42,9 @@
                         >{{ topic.createTime | prettyDate }}</time
                       >
                     </span>
+                    <span v-if="topic.ipLocation" class="meta-item"
+                      >IP属地{{ topic.ipLocation }}</span
+                    >
                   </div>
                 </div>
                 <div class="topic-header-right">

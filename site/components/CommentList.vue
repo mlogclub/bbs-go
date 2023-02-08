@@ -20,11 +20,18 @@
             >
               {{ comment.user.nickname }}
             </nuxt-link>
-            <time
-              class="comment-time"
-              :datetime="comment.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')"
-              >{{ comment.createTime | prettyDate }}</time
-            >
+            <div class="comment-meta-right">
+              <time
+                class="comment-time"
+                :datetime="
+                  comment.createTime | formatDate('yyyy-MM-ddTHH:mm:ss')
+                "
+                >{{ comment.createTime | prettyDate }}</time
+              >
+              <span v-if="comment.ipLocation" class="comment-ip-area"
+                >IP属地{{ comment.ipLocation }}</span
+              >
+            </div>
           </div>
           <div
             v-viewer
@@ -252,9 +259,16 @@ export default {
           }
         }
 
-        .comment-time {
-          font-size: 13px;
-          color: var(--text-color3);
+        .comment-meta-right {
+          .comment-time {
+            font-size: 13px;
+            color: var(--text-color3);
+          }
+          .comment-ip-area {
+            font-size: 13px;
+            color: var(--text-color3);
+            margin-left: 10px;
+          }
         }
       }
 
