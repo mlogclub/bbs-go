@@ -5,6 +5,7 @@ import (
 	"bbs-go/model"
 	"bbs-go/pkg/common"
 	"bbs-go/pkg/config"
+	"bbs-go/pkg/iplocator"
 	"bbs-go/scheduler"
 	_ "bbs-go/services/eventhandler"
 	"flag"
@@ -46,6 +47,9 @@ func init() {
 	if err := sqls.Open(conf.DB.Url, gormConf, conf.DB.MaxIdleConns, conf.DB.MaxOpenConns, model.Models...); err != nil {
 		logrus.Error(err)
 	}
+
+	// ip定位
+	iplocator.InitIpLocator(conf.IpDataPath)
 }
 
 func main() {

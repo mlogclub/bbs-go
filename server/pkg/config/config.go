@@ -15,6 +15,7 @@ type Config struct {
 	Port       string `yaml:"Port"`       // 端口
 	LogFile    string `yaml:"LogFile"`    // 日志文件
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
+	IpDataPath string `yaml:"IpDataPath"` // IP数据文件
 
 	// 数据库配置
 	DB struct {
