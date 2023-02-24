@@ -13,7 +13,7 @@
     "lint": "yarn lint:js"
   },
   "dependencies": {
-    "@kangc/v-md-editor": "^1.7.11",
+    "@kangc/v-md-editor": "^2.1.7",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
     "babel-plugin-prismjs": "^2.1.0",
