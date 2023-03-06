@@ -165,7 +165,7 @@ INSERT INTO t_sys_config (
     `update_time`
   )
 SELECT 'siteKeywords',
-  'bbs-go',
+  '["bbs-go"]',
   '站点关键字',
   '站点关键字',
   (UNIX_TIMESTAMP(now()) * 1000),
