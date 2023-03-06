@@ -146,7 +146,7 @@ WHERE NOT EXISTS(SELECT * FROM `t_sys_config` WHERE `key` = 'siteDescription');
 
 INSERT INTO t_sys_config (`key`, `value`, `name`, `description`, `create_time`, `update_time`)
 SELECT 'siteKeywords',
-       'bbs-go',
+       '["bbs-go"]',
        '站点关键字',
        '站点关键字',
        (UNIX_TIMESTAMP(now()) * 1000),
