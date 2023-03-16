@@ -7,6 +7,7 @@ import (
 	"bbs-go/pkg/event"
 	"bbs-go/pkg/iplocator"
 	"bbs-go/repositories"
+	"math/rand"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
@@ -43,6 +44,9 @@ func (s *topicPublishService) Publish(userId int64, form model.CreateTopicForm) 
 		LastCommentTime: now,
 		CreateTime:      now,
 	}
+
+	maxTopic := TopicService.FindOne(sqls.NewCnd().Desc("id").Limit(1))
+	topic.Id = rand.Int63n(51) + 100050 + maxTopic.Id
 
 	if len(form.ImageList) > 0 {
 		imageListStr, err := jsons.ToStr(form.ImageList)
