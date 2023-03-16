@@ -12,7 +12,7 @@
 
 <!-- - 联系QQ：`471243194` -->
 - QQ群：397215759
-- ![QQ群](docs/images/qq.jpg)
+- ![QQ群](docs/images/qq.png)
 - 微信：
 - ![微信](https://s2.loli.net/2022/03/01/ojufvSrGF8PQq14.jpg)
 
