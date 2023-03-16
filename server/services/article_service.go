@@ -6,7 +6,6 @@ import (
 	"bbs-go/pkg/seo"
 	"errors"
 	"math"
-	"math/rand"
 	"path"
 	"strings"
 	"time"
@@ -177,9 +176,6 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 		CreateTime:  dates.NowTimestamp(),
 		UpdateTime:  dates.NowTimestamp(),
 	}
-
-	maxArticle := ArticleService.FindOne(sqls.NewCnd().Desc("id").Limit(1))
-	article.Id = rand.Int63n(51) + 10050 + maxArticle.Id
 
 	if form.Cover != nil {
 		article.Cover = jsons.ToJsonStr(form.Cover)
