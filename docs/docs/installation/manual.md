@@ -69,7 +69,7 @@ CREATE TABLE `t_user`
 
 -- 初始化用户数据（用户名：admin、密码：123456）
 INSERT INTO t_user (`id`, `username`, `nickname`, `avatar`, `email`, `password`, `status`, `create_time`, `update_time`,
-                    `roles`, `description`, `topic_count`, `comment_count`, `score`)
+                    `roles`, `description`, `topic_count`, `comment_count`, `score`, `follow_count`, `fans_count`)
 SELECT 1,
        'admin',
        'bbsgo站长',
@@ -81,6 +81,8 @@ SELECT 1,
        (UNIX_TIMESTAMP(now()) * 1000),
        'owner',
        '轻轻地我走了，正如我轻轻的来。',
+       0,
+       0,
        0,
        0,
        0
