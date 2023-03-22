@@ -3,6 +3,7 @@ package config
 import (
 	"io/ioutil"
 
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -18,11 +19,7 @@ type Config struct {
 	IpDataPath string `yaml:"IpDataPath"` // IP数据文件
 
 	// 数据库配置
-	DB struct {
-		Url          string `yaml:"Url"`
-		MaxIdleConns int    `yaml:"MaxIdleConns"`
-		MaxOpenConns int    `yaml:"MaxOpenConns"`
-	} `yaml:"DB"`
+	DB sqls.DbConfig `yaml:"DB"`
 
 	// Github
 	Github struct {

@@ -74,7 +74,7 @@ func (s *userFollowService) Delete(id int64) {
 func (s *userFollowService) Follow(userId, otherId int64) error {
 	if userId == otherId {
 		// 自己关注自己，不进行处理。
-		// return web.NewErrorMsg("自己不能关注自己")
+		// return errors.New("自己不能关注自己")
 		return nil
 	}
 

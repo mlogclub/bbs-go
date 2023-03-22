@@ -164,7 +164,7 @@ func (s *userLikeService) ArticleLike(userId int64, articleId int64) error {
 	}
 
 	// 发送事件
-	event.Send(event.UserUnLikeEvent{
+	event.Send(event.UserLikeEvent{
 		UserId:     userId,
 		EntityId:   articleId,
 		EntityType: constants.EntityArticle,

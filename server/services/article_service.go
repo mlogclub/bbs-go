@@ -22,7 +22,6 @@ import (
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -203,12 +202,12 @@ func (s *articleService) Publish(userId int64, form model.CreateArticleForm) (ar
 }
 
 // 修改文章
-func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *model.ImageDTO) *web.CodeError {
+func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *model.ImageDTO) error {
 	if len(title) == 0 {
-		return web.NewErrorMsg("请输入标题")
+		return errors.New("请输入标题")
 	}
 	if len(content) == 0 {
-		return web.NewErrorMsg("请填写文章内容")
+		return errors.New("请填写文章内容")
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
@@ -231,7 +230,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return nil
 	})
 	cache.ArticleTagCache.Invalidate(articleId)
-	return web.FromError(err)
+	return err
 }
 
 func (s *articleService) PutTags(articleId int64, tags []string) {

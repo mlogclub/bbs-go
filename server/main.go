@@ -44,7 +44,7 @@ func init() {
 			IgnoreRecordNotFoundError: true,
 		}),
 	}
-	if err := sqls.Open(conf.DB.Url, gormConf, conf.DB.MaxIdleConns, conf.DB.MaxOpenConns, model.Models...); err != nil {
+	if err := sqls.Open(conf.DB, gormConf, model.Models...); err != nil {
 		logrus.Error(err)
 	}
 

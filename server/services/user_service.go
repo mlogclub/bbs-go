@@ -269,11 +269,11 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 }
 
 // SignInByThirdAccount 第三方账号登录
-func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *web.CodeError) {
+func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, error) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		if user.Status != constants.StatusOk {
-			return nil, web.NewErrorMsg("用户已被禁用")
+			return nil, errors.New("用户已被禁用")
 		}
 		return user, nil
 	}
@@ -316,7 +316,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		return nil
 	})
 	if err != nil {
-		return nil, web.FromError(err)
+		return nil, err
 	}
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil

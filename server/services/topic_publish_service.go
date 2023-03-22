@@ -7,13 +7,13 @@ import (
 	"bbs-go/pkg/event"
 	"bbs-go/pkg/iplocator"
 	"bbs-go/repositories"
+	"errors"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -117,34 +117,34 @@ func (s *topicPublishService) _IsNeedReview(userId int64, form model.CreateTopic
 func (s topicPublishService) _CheckParams(userId int64, form model.CreateTopicForm) (err error) {
 	if form.Type == constants.TopicTypeTweet {
 		if strs.IsBlank(form.Content) {
-			return web.NewErrorMsg("内容不能为空")
+			return errors.New("内容不能为空")
 		}
 		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
-		// 	return web.NewErrorMsg("内容或图片不能为空")
+		// 	return errors.New("内容或图片不能为空")
 		// }
 	} else {
 		if strs.IsBlank(form.Title) {
-			return web.NewErrorMsg("标题不能为空")
+			return errors.New("标题不能为空")
 		}
 
 		if strs.IsBlank(form.Content) {
-			return web.NewErrorMsg("内容不能为空")
+			return errors.New("内容不能为空")
 		}
 
 		if strs.RuneLen(form.Title) > 128 {
-			return web.NewErrorMsg("标题长度不能超过128")
+			return errors.New("标题长度不能超过128")
 		}
 	}
 
 	if form.NodeId <= 0 {
 		form.NodeId = SysConfigService.GetConfig().DefaultNodeId
 		if form.NodeId <= 0 {
-			return web.NewErrorMsg("请选择节点")
+			return errors.New("请选择节点")
 		}
 	}
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return web.NewErrorMsg("节点不存在")
+		return errors.New("节点不存在")
 	}
 
 	return nil
