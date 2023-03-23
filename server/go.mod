@@ -10,6 +10,7 @@ require (
 	github.com/emirpasic/gods v1.18.1
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/goburrow/cache v0.1.4
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/gorilla/feeds v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20230311205048-b568fe9b470f

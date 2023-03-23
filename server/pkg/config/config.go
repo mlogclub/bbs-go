@@ -21,6 +21,12 @@ type Config struct {
 	// 数据库配置
 	DB sqls.DbConfig `yaml:"DB"`
 
+	Jwt struct {
+		SignKey       string `yaml:"SignKey"`
+		ExpireSeconds int    `yaml:"ExpireSeconds"`
+		Issuer        string `yaml:"Issuer"`
+	} `yaml:"Jwt"`
+
 	// Github
 	Github struct {
 		ClientID     string `yaml:"ClientID"`
