@@ -38,16 +38,26 @@ func IsEmail(email string) (err error) {
 	return
 }
 
-// IsPassword 是否是合法的密码
-func IsPassword(password, rePassword string) error {
+// IsValidPassword 是否是合法的密码
+func IsValidPassword(password, rePassword string) error {
+	if err := IsPassword(password); err != nil {
+		return err
+	}
+	if password != rePassword {
+		return errors.New("两次输入密码不匹配")
+	}
+	return nil
+}
+
+func IsPassword(password string) error {
 	if strs.IsBlank(password) {
 		return errors.New("请输入密码")
 	}
 	if strs.RuneLen(password) < 6 {
 		return errors.New("密码过于简单")
 	}
-	if password != rePassword {
-		return errors.New("两次输入密码不匹配")
+	if strs.RuneLen(password) > 1024 {
+		return errors.New("密码长度不能超过128")
 	}
 	return nil
 }

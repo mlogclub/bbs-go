@@ -201,7 +201,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	}
 
 	// 验证密码
-	err := validate.IsPassword(password, rePassword)
+	err := validate.IsValidPassword(password, rePassword)
 	if err != nil {
 		return nil, err
 	}
@@ -247,11 +247,14 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 
 // SignIn 登录
 func (s *userService) SignIn(username, password string) (*model.User, error) {
-	if len(username) == 0 {
+	if strs.IsBlank(username) {
 		return nil, errors.New("用户名/邮箱不能为空")
 	}
-	if len(password) == 0 {
+	if strs.IsBlank(password) {
 		return nil, errors.New("密码不能为空")
+	}
+	if err := validate.IsPassword(password); err != nil {
+		return nil, err
 	}
 	var user *model.User = nil
 	if err := validate.IsEmail(username); err == nil { // 如果用户输入的是邮箱
@@ -434,7 +437,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 
 // SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -447,7 +450,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 
 // UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
