@@ -18,7 +18,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0
 	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20230205110531-05840c74e63c
 	github.com/microcosm-cc/bluemonday v1.0.23
-	github.com/mlogclub/simple v1.2.10
+	github.com/mlogclub/simple v1.2.11
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/panjf2000/ants/v2 v2.7.1
 	github.com/robfig/cron v1.2.0
@@ -27,7 +27,7 @@ require (
 	github.com/tidwall/gjson v1.14.4
 	golang.org/x/oauth2 v0.6.0
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/gorm v1.24.6
+	gorm.io/gorm v1.25.0
 )
 
 require (

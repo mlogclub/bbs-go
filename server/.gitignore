@@ -24,8 +24,9 @@ cscope.files
 tags
 
 logs/*.log
+web/*
 
-generator.go
+generator/*
 go.work
 go.work.sum
 
