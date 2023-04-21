@@ -260,10 +260,10 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 		user = s.GetByUsername(username)
 	}
 	if user == nil || user.Status != constants.StatusOk {
-		return nil, errors.New("用户不存在或被禁用")
+		return nil, errors.New("用户名或密码错误")
 	}
 	if !passwd.ValidatePassword(user.Password, password) {
-		return nil, errors.New("密码错误")
+		return nil, errors.New("用户名或密码错误")
 	}
 	return user, nil
 }
