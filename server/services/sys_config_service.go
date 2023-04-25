@@ -314,7 +314,7 @@ func (s *sysConfigService) GetInt(key string, def int) (value int) {
 		return
 	}
 	var err error
-	if value, err = cast.ToIntE(value); err != nil {
+	if value, err = cast.ToIntE(str); err != nil {
 		value = def
 		logrus.Warn("Get int config error, use default value:", def, " key: ", key, " value: ", str)
 		return
