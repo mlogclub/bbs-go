@@ -1,13 +1,13 @@
 package render
 
 import (
-	"server/cache"
-	"server/model"
-	"server/model/constants"
-	"server/pkg/html"
-	"server/pkg/markdown"
-	"server/pkg/text"
-	"server/services"
+	"bbs-go/cache"
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/html"
+	"bbs-go/pkg/markdown"
+	"bbs-go/pkg/text"
+	"bbs-go/services"
 )
 
 func BuildArticle(article *model.Article, currentUser *model.User) *model.ArticleResponse {

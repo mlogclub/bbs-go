@@ -1,7 +1,7 @@
 package api
 
 import (
-	"server/pkg/bbsurls"
+	"bbs-go/pkg/bbsurls"
 
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"

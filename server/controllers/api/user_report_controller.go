@@ -1,8 +1,8 @@
 package api
 
 import (
-	"server/model"
-	"server/services"
+	"bbs-go/model"
+	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"

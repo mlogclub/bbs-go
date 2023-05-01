@@ -1,13 +1,13 @@
 package eventhandler
 
 import (
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/event"
+	"bbs-go/pkg/seo"
+	"bbs-go/services"
 	"reflect"
-	"server/model"
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/event"
-	"server/pkg/seo"
-	"server/services"
 
 	"github.com/sirupsen/logrus"
 )

@@ -1,12 +1,12 @@
 package repositories
 
 import (
+	"bbs-go/model/constants"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
-	"server/model/constants"
 
-	"server/model"
+	"bbs-go/model"
 )
 
 var UserRepository = newUserRepository()

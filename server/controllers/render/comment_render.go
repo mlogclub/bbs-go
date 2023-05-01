@@ -1,11 +1,11 @@
 package render
 
 import (
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/markdown"
+	"bbs-go/services"
 	"html"
-	"server/model"
-	"server/model/constants"
-	"server/pkg/markdown"
-	"server/services"
 	"strconv"
 
 	"github.com/mlogclub/simple/common/arrays"
@@ -61,6 +61,7 @@ func doBuildComment(comment *model.Comment, currentUser *model.User, isBuildRepl
 		LikeCount:    comment.LikeCount,
 		CommentCount: comment.CommentCount,
 		ContentType:  comment.ContentType,
+		IpLocation:   comment.IpLocation,
 		Status:       comment.Status,
 		CreateTime:   comment.CreateTime,
 	}

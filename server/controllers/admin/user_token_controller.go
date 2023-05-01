@@ -7,7 +7,7 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/services"
+	"bbs-go/services"
 )
 
 type UserTokenController struct {

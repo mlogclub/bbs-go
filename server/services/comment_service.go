@@ -1,9 +1,10 @@
 package services
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/event"
+	"bbs-go/pkg/iplocator"
 	"errors"
-	"server/model/constants"
-	"server/pkg/event"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
@@ -14,8 +15,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var CommentService = newCommentService()
@@ -98,6 +99,7 @@ func (s *commentService) Publish(userId int64, form model.CreateCommentForm) (*m
 		Status:      constants.StatusOk,
 		UserAgent:   form.UserAgent,
 		Ip:          form.Ip,
+		IpLocation:  iplocator.IpLocation(form.Ip),
 		CreateTime:  dates.NowTimestamp(),
 	}
 

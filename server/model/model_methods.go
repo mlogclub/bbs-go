@@ -1,7 +1,7 @@
 package model
 
 import (
-	"server/model/constants"
+	"bbs-go/model/constants"
 	"strings"
 	"time"
 

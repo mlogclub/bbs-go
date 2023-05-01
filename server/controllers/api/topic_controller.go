@@ -1,11 +1,11 @@
 package api
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/errs"
+	"bbs-go/pkg/markdown"
+	"bbs-go/spam"
 	"math/rand"
-	"server/model/constants"
-	"server/pkg/errs"
-	"server/pkg/markdown"
-	"server/spam"
 	"strconv"
 	"strings"
 
@@ -15,10 +15,10 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/cache"
-	"server/controllers/render"
-	"server/model"
-	"server/services"
+	"bbs-go/cache"
+	"bbs-go/controllers/render"
+	"bbs-go/model"
+	"bbs-go/services"
 )
 
 type TopicController struct {

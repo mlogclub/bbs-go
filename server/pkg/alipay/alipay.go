@@ -1,9 +1,9 @@
 package alipay
 
 import (
+	"bbs-go/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/smartwalle/alipay/v3"
-	"server/pkg/config"
 )
 
 var (

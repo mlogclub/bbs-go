@@ -13,7 +13,7 @@ RUN go build
 
 FROM alpine:latest
 
-COPY --from=builder /code/bbs-go/server/bbs-go /app/bbs-go
+COPY --from=builder /code/bbs-go/bbs-go/bbs-go /app/bbs-go
 
 WORKDIR /app
 

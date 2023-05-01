@@ -1,13 +1,13 @@
 package api
 
 import (
+	alipay2 "bbs-go/pkg/alipay"
+	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/smartwalle/alipay/v3"
 	"net/url"
-	alipay2 "server/pkg/alipay"
-	"server/services"
 )
 
 type AlipayController struct {

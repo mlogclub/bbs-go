@@ -1,11 +1,11 @@
 package sitemap
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/uploader"
 	"bytes"
 	"compress/gzip"
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/uploader"
 	"strings"
 	"time"
 
@@ -13,9 +13,9 @@ import (
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/sirupsen/logrus"
 
-	"server/model"
-	"server/pkg/config"
-	"server/services"
+	"bbs-go/model"
+	"bbs-go/pkg/config"
+	"bbs-go/services"
 )
 
 const (

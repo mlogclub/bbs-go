@@ -1,7 +1,7 @@
 package model
 
 import (
-	"server/model/constants"
+	"bbs-go/model/constants"
 	"time"
 
 	"github.com/mlogclub/simple/web"
@@ -129,6 +129,7 @@ type TopicResponse struct {
 	Status          int                 `json:"status"`
 	Score           int64               `json:"score"`
 	Favorited       bool                `json:"favorited"`
+	IpLocation      string              `json:"ipLocation"`
 }
 
 // CommentResponse 评论返回数据
@@ -146,6 +147,7 @@ type CommentResponse struct {
 	QuoteId      int64             `json:"quoteId"`
 	Quote        *CommentResponse  `json:"quote"`
 	Replies      *web.CursorResult `json:"replies"`
+	IpLocation   string            `json:"ipLocation"`
 	Status       int               `json:"status"`
 	CreateTime   int64             `json:"createTime"`
 }

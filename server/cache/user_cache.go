@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple/common/dates"

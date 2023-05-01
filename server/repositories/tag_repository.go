@@ -1,8 +1,8 @@
 package repositories
 
 import (
+	"bbs-go/model/constants"
 	"errors"
-	"server/model/constants"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
@@ -10,7 +10,7 @@ import (
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
-	"server/model"
+	"bbs-go/model"
 )
 
 var TagRepository = newTagRepository()

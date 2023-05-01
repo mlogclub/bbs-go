@@ -1,10 +1,10 @@
 package api
 
 import (
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/errs"
-	"server/spam"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/errs"
+	"bbs-go/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -13,9 +13,9 @@ import (
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 
-	"server/controllers/render"
-	"server/model"
-	"server/services"
+	"bbs-go/controllers/render"
+	"bbs-go/model"
+	"bbs-go/services"
 )
 
 type ArticleController struct {

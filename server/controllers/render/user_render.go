@@ -1,12 +1,12 @@
 package render
 
 import (
+	"bbs-go/cache"
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/config"
 	"fmt"
-	"server/cache"
-	"server/model"
-	"server/model/constants"
-	"server/pkg/common"
-	"server/pkg/config"
 	"strconv"
 	"strings"
 

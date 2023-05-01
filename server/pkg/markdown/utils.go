@@ -1,7 +1,7 @@
 package markdown
 
 import (
-	"server/pkg/html"
+	"bbs-go/pkg/html"
 	"sync"
 
 	"github.com/88250/lute"

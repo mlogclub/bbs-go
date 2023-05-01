@@ -1,13 +1,13 @@
 package uploader
 
 import (
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/config"
 	"bytes"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
-	"server/pkg/bbsurls"
-	"server/pkg/config"
 )
 
 // 本地文件系统

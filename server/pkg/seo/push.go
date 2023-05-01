@@ -9,7 +9,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/sirupsen/logrus"
 
-	"server/pkg/config"
+	"bbs-go/pkg/config"
 )
 
 func Push(url string) {

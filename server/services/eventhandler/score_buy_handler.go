@@ -1,12 +1,12 @@
 package eventhandler
 
 import (
+	"bbs-go/pkg/event"
+	"bbs-go/pkg/msg"
+	"bbs-go/services"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"reflect"
-	"server/pkg/event"
-	"server/pkg/msg"
-	"server/services"
 )
 
 func init() {

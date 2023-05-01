@@ -1,16 +1,16 @@
 package api
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/uploader"
 	"io/ioutil"
-	"server/model/constants"
-	"server/pkg/uploader"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 
-	"server/services"
+	"bbs-go/services"
 )
 
 type UploadController struct {

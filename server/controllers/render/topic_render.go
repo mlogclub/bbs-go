@@ -1,11 +1,11 @@
 package render
 
 import (
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/markdown"
+	"bbs-go/services"
 	"html"
-	"server/model"
-	"server/model/constants"
-	"server/pkg/markdown"
-	"server/services"
 
 	"github.com/mlogclub/simple/common/arrays"
 	"github.com/mlogclub/simple/common/strs"
@@ -70,6 +70,7 @@ func _buildTopic(topic *model.Topic, buildContent bool) *model.TopicResponse {
 	rsp.StickyTime = topic.StickyTime
 	rsp.Status = topic.Status
 	rsp.Score = topic.Score
+	rsp.IpLocation = topic.IpLocation
 
 	// 构建内容
 	if buildContent {

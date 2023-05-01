@@ -1,6 +1,11 @@
 package services
 
 import (
+	"bbs-go/model"
+	alipay2 "bbs-go/pkg/alipay"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/order"
+	"bbs-go/repositories"
 	"errors"
 	"fmt"
 	"github.com/mlogclub/simple/common/dates"
@@ -10,11 +15,6 @@ import (
 	"gorm.io/gorm"
 	"math"
 	"net/url"
-	"server/model"
-	alipay2 "server/pkg/alipay"
-	"server/pkg/config"
-	"server/pkg/order"
-	"server/repositories"
 	"strconv"
 	"strings"
 )

@@ -1,10 +1,10 @@
 package render
 
 import (
-	"server/model"
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/msg"
+	"bbs-go/model"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/msg"
 
 	"github.com/tidwall/gjson"
 )

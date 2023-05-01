@@ -1,19 +1,19 @@
 package services
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/bbsurls"
+	"bbs-go/pkg/email"
+	"bbs-go/pkg/errs"
+	"bbs-go/pkg/event"
+	"bbs-go/pkg/uploader"
+	"bbs-go/pkg/validate"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/email"
-	"server/pkg/errs"
-	"server/pkg/event"
-	"server/pkg/uploader"
-	"server/pkg/validate"
 	"strconv"
 	"strings"
 	"time"
@@ -28,10 +28,10 @@ import (
 	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
 
-	"server/cache"
+	"bbs-go/cache"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 // 邮箱验证邮件有效期（小时）
@@ -206,7 +206,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword, re
 	}
 
 	// 验证密码
-	err := validate.IsPassword(password, rePassword)
+	err := validate.IsValidPassword(password, rePassword)
 	if err != nil {
 		return nil, err
 	}
@@ -266,11 +266,14 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword, re
 
 // SignIn 登录
 func (s *userService) SignIn(username, password string) (*model.User, error) {
-	if len(username) == 0 {
+	if strs.IsBlank(username) {
 		return nil, errors.New("用户名/邮箱不能为空")
 	}
-	if len(password) == 0 {
+	if strs.IsBlank(password) {
 		return nil, errors.New("密码不能为空")
+	}
+	if err := validate.IsPassword(password); err != nil {
+		return nil, err
 	}
 	var user *model.User = nil
 	if err := validate.IsEmail(username); err == nil { // 如果用户输入的是邮箱
@@ -280,20 +283,20 @@ func (s *userService) SignIn(username, password string) (*model.User, error) {
 	}
 	user.QQStatus = ThirdAccountService.FindOne(sqls.NewCnd().Eq("user_id", user.Id).Eq("third_type", constants.ThirdAccountTypeQQ)) != nil
 	if user == nil || user.Status != constants.StatusOk {
-		return nil, errors.New("用户不存在或被禁用")
+		return nil, errors.New("用户名或密码错误")
 	}
 	if !passwd.ValidatePassword(user.Password, password) {
-		return nil, errors.New("密码错误")
+		return nil, errors.New("用户名或密码错误")
 	}
 	return user, nil
 }
 
 // SignInByThirdAccount 第三方账号登录
-func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, *web.CodeError) {
+func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*model.User, error) {
 	user := s.Get(thirdAccount.UserId.Int64)
 	if user != nil {
 		if user.Status != constants.StatusOk {
-			return nil, web.NewErrorMsg("用户已被禁用")
+			return nil, errors.New("用户已被禁用")
 		}
 		return user, nil
 	}
@@ -336,7 +339,7 @@ func (s *userService) SignInByThirdAccount(thirdAccount *model.ThirdAccount) (*m
 		return nil
 	})
 	if err != nil {
-		return nil, web.FromError(err)
+		return nil, err
 	}
 	cache.UserCache.Invalidate(user.Id)
 	return user, nil
@@ -454,7 +457,7 @@ func (s *userService) SetEmail(userId int64, email string) error {
 
 // SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -467,7 +470,7 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 
 // UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
 		return err
 	}
 	user := s.Get(userId)
@@ -801,7 +804,10 @@ func (s *userService) Forgotpwd(email, email_code, password, rePassword string) 
 	if emailCode == nil {
 		return errors.New("验证码已使用")
 	}
-	if err := validate.IsPassword(password, rePassword); err != nil {
+	if err := validate.IsPassword(password); err != nil {
+		return err
+	}
+	if err := validate.IsPassword(rePassword); err != nil {
 		return err
 	}
 

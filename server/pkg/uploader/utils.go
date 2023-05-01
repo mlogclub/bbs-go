@@ -1,8 +1,8 @@
 package uploader
 
 import (
+	"bbs-go/pkg/config"
 	"mime"
-	"server/pkg/config"
 	"time"
 
 	"github.com/go-resty/resty/v2"

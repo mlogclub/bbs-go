@@ -3,7 +3,7 @@ package html
 import (
 	"strings"
 
-	"server/pkg/text"
+	"bbs-go/pkg/text"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple/common/strs"

@@ -1,10 +1,10 @@
 package services
 
 import (
+	"bbs-go/model"
+	"bbs-go/pkg/common"
+	"bbs-go/repositories"
 	"net/http"
-	"server/model"
-	"server/pkg/common"
-	"server/repositories"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"server/model/constants"
-	"server/pkg/errs"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/errs"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -12,9 +12,9 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/cache"
-	"server/model"
-	"server/repositories"
+	"bbs-go/cache"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var UserTokenService = newUserTokenService()

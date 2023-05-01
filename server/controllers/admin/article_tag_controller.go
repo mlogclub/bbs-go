@@ -7,8 +7,8 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/model"
-	"server/services"
+	"bbs-go/model"
+	"bbs-go/services"
 )
 
 type ArticleTagController struct {

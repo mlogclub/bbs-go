@@ -1,6 +1,6 @@
 package render
 
-import "server/model"
+import "bbs-go/model"
 
 func BuildTag(tag *model.Tag) *model.TagResponse {
 	if tag == nil {

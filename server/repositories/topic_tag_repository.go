@@ -6,7 +6,7 @@ import (
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
-	"server/model"
+	"bbs-go/model"
 )
 
 var TopicTagRepository = newTopicTagRepository()

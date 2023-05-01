@@ -1,13 +1,13 @@
 package services
 
 import (
-	"server/model/constants"
+	"bbs-go/model/constants"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var TopicTagService = newTopicTagService()

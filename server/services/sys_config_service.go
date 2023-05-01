@@ -1,8 +1,8 @@
 package services
 
 import (
+	"bbs-go/model/constants"
 	"errors"
-	"server/model/constants"
 	"strconv"
 	"strings"
 
@@ -18,9 +18,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"server/cache"
-	"server/model"
-	"server/repositories"
+	"bbs-go/cache"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var SysConfigService = newSysConfigService()
@@ -323,7 +323,7 @@ func (s *sysConfigService) GetInt(key string, def int) (value int) {
 		return
 	}
 	var err error
-	if value, err = cast.ToIntE(value); err != nil {
+	if value, err = cast.ToIntE(str); err != nil {
 		value = def
 		logrus.Warn("Get int config error, use default value:", def, " key: ", key, " value: ", str)
 		return

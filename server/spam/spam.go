@@ -1,8 +1,8 @@
 package spam
 
 import (
+	"bbs-go/model"
 	"github.com/sirupsen/logrus"
-	"server/model"
 )
 
 var strategies []Strategy

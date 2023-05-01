@@ -1,8 +1,8 @@
 package uploader
 
 import (
+	"bbs-go/pkg/bbsurls"
 	"bytes"
-	"server/pkg/bbsurls"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
@@ -10,7 +10,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/sirupsen/logrus"
 
-	"server/pkg/config"
+	"bbs-go/pkg/config"
 )
 
 // 阿里云oss

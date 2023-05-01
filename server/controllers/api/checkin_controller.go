@@ -1,9 +1,9 @@
 package api
 
 import (
-	"server/cache"
-	"server/controllers/render"
-	"server/services"
+	"bbs-go/cache"
+	"bbs-go/controllers/render"
+	"bbs-go/services"
 	"time"
 
 	"github.com/kataras/iris/v12"

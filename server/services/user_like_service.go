@@ -1,17 +1,17 @@
 package services
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/event"
 	"errors"
-	"server/model/constants"
-	"server/pkg/event"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var UserLikeService = newUserLikeService()
@@ -164,7 +164,7 @@ func (s *userLikeService) ArticleLike(userId int64, articleId int64) error {
 	}
 
 	// 发送事件
-	event.Send(event.UserUnLikeEvent{
+	event.Send(event.UserLikeEvent{
 		UserId:     userId,
 		EntityId:   articleId,
 		EntityType: constants.EntityArticle,

@@ -1,8 +1,8 @@
 package repositories
 
 import (
+	"bbs-go/model"
 	"gorm.io/gorm"
-	"server/model"
 )
 
 var OrderRepository = newOrderRepository()

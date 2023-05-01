@@ -1,15 +1,15 @@
 package common
 
 import (
+	"bbs-go/model/constants"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/html"
+	"bbs-go/pkg/markdown"
+	"bbs-go/pkg/text"
 	"github.com/mlogclub/simple/common/digests"
 	"math/rand"
 	"net"
 	"net/http"
-	"server/model/constants"
-	"server/pkg/config"
-	"server/pkg/html"
-	"server/pkg/markdown"
-	"server/pkg/text"
 	"strings"
 	"time"
 )

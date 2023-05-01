@@ -1,8 +1,8 @@
 package model
 
 import (
+	"bbs-go/model/constants"
 	"database/sql"
-	"server/model/constants"
 	"time"
 )
 
@@ -121,6 +121,7 @@ type Comment struct {
 	CommentCount int64  `gorm:"not null;default:0" json:"commentCount" form:"commentCount"`                 // 评论数量
 	UserAgent    string `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                // UserAgent
 	Ip           string `gorm:"size:128" json:"ip" form:"ip"`                                               // IP
+	IpLocation   string `gorm:"size:64" json:"ipLocation" form:"ipLocation"`                                // IP属地
 	Status       int    `gorm:"type:int(11);index:idx_comment_status" json:"status" form:"status"`          // 状态：0：待审核、1：审核通过、2：审核失败、3：已发布
 	CreateTime   int64  `json:"createTime" form:"createTime"`                                               // 创建时间
 }
@@ -168,6 +169,7 @@ type Topic struct {
 	LastCommentUserId int64               `json:"lastCommentUserId" form:"lastCommentUserId"`                                      // 最后回复用户
 	UserAgent         string              `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                     // UserAgent
 	Ip                string              `gorm:"size:128" json:"ip" form:"ip"`                                                    // IP
+	IpLocation        string              `gorm:"size:64" json:"ipLocation" form:"ipLocation"`                                     // IP属地
 	CreateTime        int64               `gorm:"index:idx_topic_create_time" json:"createTime" form:"createTime"`                 // 创建时间
 	ExtraData         string              `gorm:"type:text" json:"extraData" form:"extraData"`                                     // 扩展数据
 }

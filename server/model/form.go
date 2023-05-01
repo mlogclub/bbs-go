@@ -1,8 +1,8 @@
 package model
 
 import (
-	"server/model/constants"
-	"server/pkg/common"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/common"
 	"strings"
 
 	"github.com/kataras/iris/v12"

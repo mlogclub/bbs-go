@@ -1,8 +1,8 @@
 package es
 
 import (
+	"bbs-go/pkg/config"
 	"errors"
-	"server/pkg/config"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"

@@ -1,13 +1,13 @@
 package services
 
 import (
+	"bbs-go/cache"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/github"
+	"bbs-go/pkg/osc"
+	"bbs-go/pkg/qq"
 	"database/sql"
 	"github.com/sirupsen/logrus"
-	"server/cache"
-	"server/model/constants"
-	"server/pkg/github"
-	"server/pkg/osc"
-	"server/pkg/qq"
 	"strconv"
 	"strings"
 
@@ -16,8 +16,8 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 var ThirdAccountService = newThirdAccountService()

@@ -8,8 +8,8 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 
-	"server/model"
-	"server/repositories"
+	"bbs-go/model"
+	"bbs-go/repositories"
 )
 
 type tagCache struct {

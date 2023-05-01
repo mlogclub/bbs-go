@@ -13,10 +13,10 @@ import (
 	"github.com/mlogclub/simple/web"
 	"github.com/sirupsen/logrus"
 
-	"server/controllers/api"
+	"bbs-go/controllers/api"
 
-	"server/controllers/admin"
-	"server/middleware"
+	"bbs-go/controllers/admin"
+	"bbs-go/middleware"
 )
 
 func Router() {

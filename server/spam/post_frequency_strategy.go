@@ -1,9 +1,9 @@
 package spam
 
 import (
+	"bbs-go/model"
+	"bbs-go/repositories"
 	"errors"
-	"server/model"
-	"server/repositories"
 	"time"
 
 	"github.com/mlogclub/simple/common/dates"

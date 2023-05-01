@@ -7,7 +7,7 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/common/urls"
 
-	"server/pkg/config"
+	"bbs-go/pkg/config"
 )
 
 type uploader interface {

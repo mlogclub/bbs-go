@@ -1,21 +1,21 @@
 package main
 
 import (
+	"bbs-go/controllers"
+	"bbs-go/model"
+	"bbs-go/pkg/common"
+	"bbs-go/pkg/config"
+	"bbs-go/pkg/iplocator"
+	"bbs-go/scheduler"
+	_ "bbs-go/services/eventhandler"
 	"flag"
-	"gorm.io/gorm"
 	"io"
-	"log"
 	"os"
-	"server/controllers"
-	"server/model"
-	"server/pkg/common"
-	"server/pkg/config"
-	"server/scheduler"
-	_ "server/services/eventhandler"
 	"time"
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
@@ -45,9 +45,12 @@ func init() {
 			IgnoreRecordNotFoundError: true,
 		}),
 	}
-	if err := sqls.Open(conf.DB.Url, gormConf, conf.DB.MaxIdleConns, conf.DB.MaxOpenConns, model.Models...); err != nil {
-		log.Fatal(err.Error())
+	if err := sqls.Open(conf.DB, gormConf, model.Models...); err != nil {
+		logrus.Error(err)
 	}
+
+	// ip定位
+	iplocator.InitIpLocator(conf.IpDataPath)
 }
 
 func main() {

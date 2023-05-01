@@ -1,10 +1,10 @@
 package api
 
 import (
-	"server/controllers/render"
-	"server/model"
-	"server/pkg/es"
-	"server/services"
+	"bbs-go/controllers/render"
+	"bbs-go/model"
+	"bbs-go/pkg/es"
+	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"

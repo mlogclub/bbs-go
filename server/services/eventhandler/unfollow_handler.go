@@ -1,9 +1,9 @@
 package eventhandler
 
 import (
+	"bbs-go/pkg/event"
+	"bbs-go/services"
 	"reflect"
-	"server/pkg/event"
-	"server/services"
 )
 
 func init() {

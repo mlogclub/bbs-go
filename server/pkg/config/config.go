@@ -3,6 +3,7 @@ package config
 import (
 	"io/ioutil"
 
+	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -16,13 +17,16 @@ type Config struct {
 	Port       string `yaml:"Port"`       // 端口
 	LogFile    string `yaml:"LogFile"`    // 日志文件
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
+	IpDataPath string `yaml:"IpDataPath"` // IP数据文件
 
 	// 数据库配置
-	DB struct {
-		Url          string `yaml:"Url"`
-		MaxIdleConns int    `yaml:"MaxIdleConns"`
-		MaxOpenConns int    `yaml:"MaxOpenConns"`
-	} `yaml:"DB"`
+	DB sqls.DbConfig `yaml:"DB"`
+
+	Jwt struct {
+		SignKey       string `yaml:"SignKey"`
+		ExpireSeconds int    `yaml:"ExpireSeconds"`
+		Issuer        string `yaml:"Issuer"`
+	} `yaml:"Jwt"`
 
 	// Github
 	Github struct {

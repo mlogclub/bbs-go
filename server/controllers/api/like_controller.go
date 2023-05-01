@@ -1,9 +1,9 @@
 package api
 
 import (
-	"server/model/constants"
-	"server/pkg/errs"
-	"server/services"
+	"bbs-go/model/constants"
+	"bbs-go/pkg/errs"
+	"bbs-go/services"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"

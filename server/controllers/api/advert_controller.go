@@ -1,10 +1,10 @@
 package api
 
 import (
+	"bbs-go/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
-	"server/services"
 )
 
 type AdvertController struct {
