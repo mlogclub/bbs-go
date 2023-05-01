@@ -804,10 +804,7 @@ func (s *userService) Forgotpwd(email, email_code, password, rePassword string) 
 	if emailCode == nil {
 		return errors.New("验证码已使用")
 	}
-	if err := validate.IsPassword(password); err != nil {
-		return err
-	}
-	if err := validate.IsPassword(rePassword); err != nil {
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
 		return err
 	}
 
