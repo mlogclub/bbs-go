@@ -8,18 +8,14 @@ import (
 	"errors"
 	"math"
 	"path"
-	"server/model/constants"
-	"server/pkg/bbsurls"
-	"server/pkg/es"
-	"server/pkg/seo"
 	"strings"
 	"time"
 
 	"github.com/emirpasic/gods/sets/hashset"
 
-	"server/cache"
-	"server/pkg/config"
-	"server/repositories"
+	"bbs-go/cache"
+	"bbs-go/pkg/config"
+	"bbs-go/repositories"
 
 	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple/common/dates"
@@ -27,13 +23,12 @@ import (
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"server/model"
-	"server/pkg/common"
+	"bbs-go/model"
+	"bbs-go/pkg/common"
 )
 
 var ArticleService = newArticleService()
@@ -247,12 +242,12 @@ func (s *articleService) SaveDraft(userId int64, form model.CreateArticleForm) (
 }
 
 // 修改文章
-func (s *articleService) Edit(articleId int64, tags []string, title, content string, status int64, cover *model.ImageDTO) *web.CodeError {
+func (s *articleService) Edit(articleId int64, tags []string, title, content string, status int64, cover *model.ImageDTO) error {
 	if len(title) == 0 {
-		return web.NewErrorMsg("请输入标题")
+		return errors.New("请输入标题")
 	}
 	if len(content) == 0 {
-		return web.NewErrorMsg("请填写文章内容")
+		return errors.New("请填写文章内容")
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
@@ -276,7 +271,7 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return nil
 	})
 	cache.ArticleTagCache.Invalidate(articleId)
-	return web.FromError(err)
+	return err
 }
 
 func (s *articleService) PutTags(articleId int64, tags []string) {
