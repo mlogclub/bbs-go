@@ -1,0 +1,22 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "./server"
+    },
+    {
+      "path": "./site"
+    },
+    {
+      "path": "./admin"
+    },
+    {
+      "path": "./docs"
+    }
+  ],
+  "settings": {
+    "nuxt.isNuxtApp": false
+  }
+}
