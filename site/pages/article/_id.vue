@@ -224,10 +224,8 @@ export default {
       try {
         if (this.article.favorited) {
           await this.$axios.post('/api/favorite/delete', {
-            params: {
-              entityType: 'article',
-              entityId: articleId,
-            },
+            entityType: 'article',
+            entityId: articleId,
           })
           this.article.favorited = false
           this.$message.success('已取消收藏')

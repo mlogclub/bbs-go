@@ -159,10 +159,17 @@ export default {
     },
     async like(comment) {
       try {
-        await this.$axios.post(`/api/comment/like/${comment.commentId}`)
-        comment.liked = true
-        comment.likeCount = comment.likeCount + 1
-        this.$message.success('点赞成功')
+        if (!comment.liked) {
+          await this.$axios.post(`/api/comment/like/${comment.commentId}`)
+          comment.liked = true
+          comment.likeCount = comment.likeCount + 1
+          this.$message.success('点赞成功')
+        } else {
+          await this.$axios.post(`/api/comment/unlike/${comment.commentId}`)
+          comment.liked = false
+          comment.likeCount = comment.likeCount - 1
+          this.$message.success('取消点赞成功')
+        }
       } catch (e) {
         if (e.errorCode === 1) {
           this.$msgSignIn()
