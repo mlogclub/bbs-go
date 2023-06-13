@@ -15,6 +15,7 @@ import (
 	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/services"
+	"html"
 )
 
 type CommentController struct {
@@ -68,7 +69,7 @@ func (c *CommentController) AnyList() *web.JsonResult {
 		if comment.ContentType == constants.ContentTypeMarkdown {
 			builder.Put("content", markdown.ToHTML(comment.Content))
 		} else {
-			builder.Put("content", comment.Content)
+			builder.Put("content", html.EscapeString(comment.Content))
 		}
 
 		// 图片
