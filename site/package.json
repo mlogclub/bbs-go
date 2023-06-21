@@ -21,7 +21,7 @@
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.15.1",
     "element-ui": "^2.15.12",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.4.3",
     "prismjs": "^1.28.0",
     "qs": "^6.10.1",
     "v-viewer": "^1.6.4",
