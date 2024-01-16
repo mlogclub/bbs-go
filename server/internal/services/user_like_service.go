@@ -107,7 +107,7 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 			return err
 		}
 		// 更新点赞数
-		return repositories.TopicRepository.UpdateColumn(tx, topicId, "like_count", gorm.Expr("like_count + 1"))
+		return tx.Exec("update t_topic set like_count = like_count + 1 where id = ?", topicId).Error
 	}); err != nil {
 		return err
 	}
@@ -118,6 +118,7 @@ func (s *userLikeService) TopicLike(userId int64, topicId int64) error {
 		EntityId:   topicId,
 		EntityType: constants.EntityTopic,
 	})
+
 	return nil
 }
 
@@ -143,6 +144,7 @@ func (s *userLikeService) TopicUnLike(userId int64, topicId int64) error {
 		EntityId:   topicId,
 		EntityType: constants.EntityTopic,
 	})
+
 	return nil
 }
 
@@ -156,7 +158,7 @@ func (s *userLikeService) ArticleLike(userId int64, articleId int64) error {
 			return err
 		}
 		// 更新点赞数
-		return repositories.ArticleRepository.UpdateColumn(tx, articleId, "like_count", gorm.Expr("like_count + 1"))
+		return repositories.ArticleRepository.UpdateColumn(tx, articleId, "like_count", gorm.Expr("like_count - 1"))
 	}); err != nil {
 		return err
 	}
@@ -192,6 +194,7 @@ func (s *userLikeService) ArticleUnLike(userId int64, articleId int64) error {
 		EntityId:   articleId,
 		EntityType: constants.EntityArticle,
 	})
+
 	return nil
 }
 
@@ -218,6 +221,7 @@ func (s *userLikeService) CommentLike(userId int64, commentId int64) error {
 		EntityId:   commentId,
 		EntityType: constants.EntityComment,
 	})
+
 	return nil
 }
 
@@ -244,6 +248,7 @@ func (s *userLikeService) CommentUnLike(userId int64, commentId int64) error {
 		EntityId:   commentId,
 		EntityType: constants.EntityComment,
 	})
+
 	return nil
 }
 

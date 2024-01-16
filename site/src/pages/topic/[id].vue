@@ -246,6 +246,7 @@ async function like() {
       liked.value = false;
       topic.value.likeCount--;
 
+      useMsgSuccess("已取消点赞");
       await refreshLikeUsers();
     } else {
       // 点赞
@@ -258,6 +259,7 @@ async function like() {
       liked.value = true;
       topic.value.likeCount++;
 
+      useMsgSuccess("点赞成功");
       await refreshLikeUsers();
     }
   } catch (e) {

@@ -217,31 +217,6 @@ func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 	return web.JsonData(render.BuildTopic(topic, user))
 }
 
-// 点赞
-func (c *TopicController) PostLikeBy(topicId int64) *web.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin)
-	}
-	err := services.UserLikeService.TopicLike(user.Id, topicId)
-	if err != nil {
-		return web.JsonError(err)
-	}
-	return web.JsonSuccess()
-}
-
-func (c *TopicController) PostUnlikeBy(topicId int64) *web.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin)
-	}
-	err := services.UserLikeService.TopicUnLike(user.Id, topicId)
-	if err != nil {
-		return web.JsonError(err)
-	}
-	return web.JsonSuccess()
-}
-
 // 点赞用户
 func (c *TopicController) GetRecentlikesBy(topicId int64) *web.JsonResult {
 	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 5)

@@ -68,7 +68,7 @@
             <div
               class="btn"
               :class="{ liked: topic.liked }"
-              @click="like(topic)"
+              @click="likeOrUnlike(topic)"
             >
               <i class="iconfont icon-like" />{{ topic.liked ? "已赞" : "赞" }}
               <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
@@ -120,12 +120,45 @@ export default {
     },
   },
   methods: {
+    async likeOrUnlike(topic) {
+      if (topic.liked) {
+        this.unlike(topic);
+      } else {
+        this.like(topic);
+      }
+    },
     async like(topic) {
       try {
-        await useHttpPost(`/api/topic/like/${topic.id}`);
+        await useHttpPostForm("/api/like/like", {
+          body: {
+            entityType: "topic",
+            entityId: topic.id,
+          },
+        });
         topic.liked = true;
         topic.likeCount++;
         useMsgSuccess("点赞成功");
+      } catch (e) {
+        if (e.errorCode === 1) {
+          useMsgSignIn();
+        } else {
+          useMsgError(e.message || e);
+        }
+      }
+    },
+    async unlike(topic) {
+      try {
+        await useHttpPostForm("/api/like/unlike", {
+          body: {
+            entityType: "topic",
+            entityId: topic.id,
+          },
+        });
+        topic.liked = false;
+        if (topic.likeCount > 0) {
+          topic.likeCount--;
+        }
+        useMsgSuccess("已取消点赞");
       } catch (e) {
         if (e.errorCode === 1) {
           useMsgSignIn();
