@@ -14,34 +14,10 @@
 
   .login-captcha-img {
     cursor: pointer;
+
     img {
       height: 40px;
       background-color: #fff;
-    }
-  }
-
-  .third-party-line {
-    border-bottom: 1px solid var(--border-color2);
-    margin-bottom: 24px;
-
-    .third-party-title {
-      margin-bottom: -12px;
-      text-align: center;
-
-      span {
-        background-color: var(--bg-color);
-        padding: 0 10px;
-        font-size: 13px;
-      }
-    }
-  }
-
-  .third-parties {
-    text-align: center;
-    margin: 10px 0;
-
-    a:not(:last-child) {
-      margin-right: 10px;
     }
   }
 }
