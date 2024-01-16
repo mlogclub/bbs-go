@@ -70,6 +70,14 @@ export function useMsgSignIn() {
   });
 }
 
+export function useCatchError(e) {
+  if (e.errorCode === 1) {
+    useMsgSignIn();
+  } else {
+    useMsgError(e.message || e);
+  }
+}
+
 /**
  * Convert the given string to a unique color.
  *

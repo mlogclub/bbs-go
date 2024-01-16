@@ -144,11 +144,7 @@ export default {
           useMsgSuccess("点赞成功");
         }
       } catch (e) {
-        if (e.errorCode === 1) {
-          useMsgSignIn();
-        } else {
-          useMsgError(e.message || e);
-        }
+        useCatchError(e);
       }
     },
     toTopicDetail(topicId) {

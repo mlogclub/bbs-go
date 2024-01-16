@@ -142,7 +142,7 @@ async function doCheckIn() {
     refreshCheckIn();
     refreshCheckInRank();
   } catch (e) {
-    useMsgError(e.message || e);
+    useCatchError(e);
   }
 }
 </script>

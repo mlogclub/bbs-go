@@ -262,12 +262,7 @@ async function like() {
       await refreshLikeUsers();
     }
   } catch (e) {
-    if (e.errorCode === 1) {
-      useMsgSignIn();
-    } else {
-      liked.value = true;
-      useMsgError(e.message || e);
-    }
+    useCatchError(e);
   }
 }
 
@@ -293,8 +288,7 @@ async function addFavorite(topicId) {
       useMsgSuccess("收藏成功");
     }
   } catch (e) {
-    console.error(e);
-    useMsgError("收藏失败：" + (e.message || e));
+    useCatchError(e);
   }
 }
 
