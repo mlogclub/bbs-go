@@ -51,16 +51,20 @@
             </nuxt-link>
             <div class="navbar-dropdown">
               <nuxt-link class="navbar-item" :to="`/user/${user.id}`">
-                <i class="iconfont icon-username" />&nbsp;个人中心
+                <i class="iconfont icon-username" />
+                <span>个人中心</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/favorites">
-                <i class="iconfont icon-favorites" />&nbsp;我的收藏
+                <i class="iconfont icon-favorites" />
+                <span>我的收藏</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/profile">
-                <i class="iconfont icon-username" />&nbsp;编辑资料
+                <i class="iconfont icon-username" />
+                <span>编辑资料</span>
               </nuxt-link>
               <a class="navbar-item" @click="signout">
-                <i class="iconfont icon-log-out" />&nbsp;退出登录
+                <i class="iconfont icon-log-out" />
+                <span>退出登录</span>
               </a>
             </div>
           </div>
@@ -142,12 +146,12 @@ async function signout() {
     text-overflow: ellipsis;
   }
   .navbar-dropdown {
-    // border: 1px solid #121212;
+    border: 1px solid var(--border-color);
 
     a {
       display: flex;
       align-items: center;
-      padding: 8px 16px;
+      // padding: 8px 16px;
       img {
         width: 20px;
         height: 20px;
