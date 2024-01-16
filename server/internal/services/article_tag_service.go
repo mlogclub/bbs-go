@@ -55,6 +55,6 @@ func (s *articleTagService) UpdateColumn(id int64, name string, value interface{
 	return repositories.ArticleTagRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
-func (s *articleTagService) DeleteByArticleId(topicId int64) {
-	sqls.DB().Model(models.ArticleTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusDeleted)
+func (s *articleTagService) DeleteByArticleId(articleId int64) {
+	sqls.DB().Model(models.ArticleTag{}).Where("article_id = ?", articleId).UpdateColumn("status", constants.StatusDeleted)
 }
