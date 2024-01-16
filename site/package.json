@@ -23,8 +23,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@asika32764/vue-animate": "^3.0.2",
     "@pinia/nuxt": "^0.4.11",
+    "animate.css": "^4.1.1",
     "md-editor-v3": "^4.10.0",
     "nuxt-lazy-load": "^3.0.4"
   }

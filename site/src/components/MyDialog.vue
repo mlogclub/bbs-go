@@ -5,7 +5,12 @@
       :class="{ visible: visible }"
       :style="{ zIndex: zIndex }"
     ></div>
-    <transition :name="transition">
+    <transition
+      appear
+      enter-active-class="animate__animated animate__bounceIn"
+      leave-active-class="animate__animated animate__bounceOut"
+      mode="out-in"
+    >
       <div
         v-if="visible"
         class="dialog-wrapper"
@@ -73,11 +78,6 @@ const props = defineProps({
   title: {
     type: String,
     default: "",
-  },
-  transition: {
-    type: String,
-    // default: "fade", // bounce
-    default: "bounce",
   },
   btnsCenter: {
     type: Boolean,
