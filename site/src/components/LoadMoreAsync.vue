@@ -15,20 +15,18 @@ const props = defineProps({
 });
 // 是否正在加载中
 const loading = ref(true);
-const pageData = ref({
+const pageData = reactive({
   cursor: "",
   results: [],
   hasMore: true,
 });
 
 const disabled = computed(() => {
-  return loading.value || !pageData.value.hasMore;
+  return loading.value || !pageData.hasMore;
 });
 
 const empty = computed(() => {
-  return (
-    pageData.value.hasMore === false && pageData.value.results.length === 0
-  );
+  return pageData.hasMore === false && pageData.results.length === 0;
 });
 
 loadMore();
@@ -37,17 +35,17 @@ async function loadMore() {
   loading.value = true;
   try {
     const filters = Object.assign(props.params || {}, {
-      cursor: pageData.value.cursor || "",
+      cursor: pageData.cursor || "",
     });
     const data = await useHttpGet(props.url, {
       params: filters,
     });
 
-    pageData.value.cursor = data.cursor;
-    pageData.value.hasMore = data.hasMore;
+    pageData.cursor = data.cursor;
+    pageData.hasMore = data.hasMore;
     if (data.results && data.results.length) {
       data.results.forEach((item) => {
-        pageData.value.results.push(item);
+        pageData.results.push(item);
       });
     }
   } catch (err) {
@@ -57,15 +55,15 @@ async function loadMore() {
   }
 }
 async function refresh() {
-  pageData.value.cursor = "";
-  pageData.value.results = [];
-  pageData.value.hasMore = true;
+  pageData.cursor = "";
+  pageData.results = [];
+  pageData.hasMore = true;
   await loadMore();
 }
 
 function unshiftResults(item) {
-  if (item && pageData.value && pageData.value.results) {
-    pageData.value.results.unshift(item);
+  if (item && pageData && pageData.results) {
+    pageData.results.unshift(item);
   }
 }
 
