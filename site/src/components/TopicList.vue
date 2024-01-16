@@ -1,11 +1,7 @@
 <template>
   <ul class="topic-list">
     <li v-for="topic in topics" :key="topic.id" class="topic-item">
-      <div
-        class="topic-avatar"
-        :href="`/user/${topic.user.id}`"
-        :title="topic.user.nickname"
-      >
+      <div class="topic-avatar" :title="topic.user.nickname">
         <my-avatar :user="topic.user" />
       </div>
       <div class="topic-main-content">
@@ -16,7 +12,7 @@
               :user="topic.user"
               size="20"
             />
-            <nuxt-link :to="`/user/${topic.user.id}`">
+            <nuxt-link :to="`/user/${topic.user.id}`" target="_blank">
               {{ topic.user.nickname }}
             </nuxt-link>
             <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
@@ -30,11 +26,15 @@
         <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
           <template v-if="topic.type === 0">
             <h1 class="topic-title">
-              <nuxt-link :to="`/topic/${topic.id}`">
+              <nuxt-link :to="`/topic/${topic.id}`" target="_blank">
                 {{ topic.title }}
               </nuxt-link>
             </h1>
-            <nuxt-link :to="`/topic/${topic.id}`" class="topic-summary">
+            <nuxt-link
+              :to="`/topic/${topic.id}`"
+              class="topic-summary"
+              target="_blank"
+            >
               {{ topic.summary }}
             </nuxt-link>
           </template>
@@ -43,6 +43,7 @@
               v-if="topic.content"
               :to="`/topic/${topic.id}`"
               class="topic-summary"
+              target="_blank"
             >
               {{ topic.content }}
             </nuxt-link>
@@ -51,7 +52,11 @@
               class="topic-image-list"
             >
               <li v-for="(image, index) in topic.imageList" :key="index">
-                <nuxt-link :to="`/topic/${topic.id}`" class="image-item">
+                <nuxt-link
+                  :to="`/topic/${topic.id}`"
+                  class="image-item"
+                  target="_blank"
+                >
                   <img :src="image.preview" />
                 </nuxt-link>
               </li>
@@ -83,6 +88,7 @@
             <nuxt-link
               v-if="topic.node"
               class="topic-tag"
+              target="_blank"
               :to="`/topics/node/${topic.node.id}`"
               :alt="topic.node.name"
             >

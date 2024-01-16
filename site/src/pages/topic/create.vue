@@ -142,13 +142,9 @@ const postForm = ref({
 const publishing = ref(false);
 const simpleEditorComponent = ref(null);
 
-const currentUser = computed(() => {
-  return userStore.user;
-});
-
 const isNeedEmailVerify = computed(() => {
   return (
-    configStore.config.createTopicEmailVerified && !currentUser.emailVerified
+    configStore.config.createTopicEmailVerified && !userStore.user.emailVerified
   );
 });
 
