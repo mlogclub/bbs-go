@@ -55,3 +55,15 @@ func GetRequestIP(r *http.Request) string {
 func GetUserAgent(r *http.Request) string {
 	return r.Header.Get("User-Agent")
 }
+
+func Distinct[T any](input []T, getKey func(T) any) (output []T) {
+	tempMap := map[any]byte{}
+	for _, item := range input {
+		l := len(tempMap)
+		tempMap[getKey(item)] = 0
+		if len(tempMap) != l { // 数量发生变化，说明不存在
+			output = append(output, item)
+		}
+	}
+	return
+}

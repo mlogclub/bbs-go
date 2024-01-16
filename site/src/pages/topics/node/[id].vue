@@ -5,7 +5,7 @@
       url="/api/topic/topics"
       :params="{ nodeId: nodeId }"
     >
-      <topic-list :topics="results" />
+      <topic-list :topics="results" show-sticky />
     </load-more-async>
   </div>
 </template>

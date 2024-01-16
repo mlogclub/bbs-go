@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/spam"
@@ -259,8 +260,21 @@ func (c *TopicController) GetTopics() *web.JsonResult {
 	if nodeId == constants.NodeIdFollow && user == nil {
 		return web.JsonError(errs.NotLogin)
 	}
+
+	var temp []models.Topic
+	if cursor <= 0 {
+		stickyTopics := services.TopicService.GetStickyTopics(nodeId, 3)
+		temp = append(temp, stickyTopics...)
+	}
 	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor)
-	return web.JsonCursorData(render.BuildSimpleTopics(topics, user), strconv.FormatInt(cursor, 10), hasMore)
+	for _, topic := range topics {
+		topic.Sticky = false // 正常列表不要渲染置顶
+		temp = append(temp, topic)
+	}
+	list := common.Distinct(temp, func(t models.Topic) any {
+		return t.Id
+	})
+	return web.JsonCursorData(render.BuildSimpleTopics(list, user), strconv.FormatInt(cursor, 10), hasMore)
 }
 
 // 标签帖子列表
@@ -316,14 +330,7 @@ func (c *TopicController) GetNewest() *web.JsonResult {
 	return web.JsonData(render.BuildSimpleTopics(topics, nil))
 }
 
-func (c *TopicController) GetSticky_topics() *web.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	nodeId := params.FormValueInt64Default(c.Ctx, "nodeId", 0)
-	topics := services.TopicService.GetStickyTopics(nodeId, 3)
-	return web.JsonData(render.BuildSimpleTopics(topics, user))
-}
-
-// 设置指定
+// 设置置顶
 func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
