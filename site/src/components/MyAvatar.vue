@@ -27,8 +27,6 @@
 </template>
 
 <script>
-// import stringToColor from '~/utils/stringToColor'
-
 export default {
   name: "Avatar",
   props: {
@@ -91,10 +89,9 @@ export default {
       return c;
     },
     styleText() {
-      //   return `background-color: #${stringToColor(this.usernameAt)};${
-      //     this.sizes[this.size]
-      //   }`
-      return `background-color: #f3f3f3;${this.sizes[this.size]}`;
+      return `background-color: #${useStringToColor(this.usernameAt)};${
+        this.sizes[this.size]
+      }`;
     },
     sizeClass() {
       return [`avatar-size-${this.size}`];
