@@ -1,78 +1,3 @@
-<script setup>
-const props = defineProps({
-  // 请求URL
-  url: {
-    type: String,
-    required: true,
-  },
-  // 请求参数
-  params: {
-    type: Object,
-    default() {
-      return {};
-    },
-  },
-});
-// 是否正在加载中
-const loading = ref(true);
-const pageData = reactive({
-  cursor: "",
-  results: [],
-  hasMore: true,
-});
-
-const disabled = computed(() => {
-  return loading.value || !pageData.hasMore;
-});
-
-const empty = computed(() => {
-  return pageData.hasMore === false && pageData.results.length === 0;
-});
-
-loadMore();
-
-async function loadMore() {
-  loading.value = true;
-  try {
-    const filters = Object.assign(props.params || {}, {
-      cursor: pageData.cursor || "",
-    });
-    const data = await useHttpGet(props.url, {
-      params: filters,
-    });
-
-    pageData.cursor = data.cursor;
-    pageData.hasMore = data.hasMore;
-    if (data.results && data.results.length) {
-      data.results.forEach((item) => {
-        pageData.results.push(item);
-      });
-    }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-}
-async function refresh() {
-  pageData.cursor = "";
-  pageData.results = [];
-  pageData.hasMore = true;
-  await loadMore();
-}
-
-function unshiftResults(item) {
-  if (item && pageData && pageData.results) {
-    pageData.results.unshift(item);
-  }
-}
-
-defineExpose({
-  refresh,
-  unshiftResults,
-});
-</script>
-
 <template>
   <div class="load-more">
     <slot v-if="empty" name="empty">
@@ -98,6 +23,91 @@ defineExpose({
     </template>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  // 请求URL
+  url: {
+    type: String,
+    required: true,
+  },
+  // 请求参数
+  params: {
+    type: Object,
+    default() {
+      return {};
+    },
+  },
+});
+// 是否正在加载中
+const loading = ref(false);
+const pageData = reactive({
+  cursor: "",
+  results: [],
+  hasMore: true,
+});
+
+const disabled = computed(() => {
+  return loading.value || !pageData.hasMore;
+});
+
+const empty = computed(() => {
+  return pageData.hasMore === false && pageData.results.length === 0;
+});
+
+const { data: first } = await useAsyncData(() => {
+  return useMyFetch(props.url, {
+    params: props.params || {},
+  });
+});
+
+renderData(first.value);
+
+async function loadMore() {
+  loading.value = true;
+  try {
+    const filters = Object.assign(props.params || {}, {
+      cursor: pageData.cursor || "",
+    });
+    const data = await useHttpGet(props.url, {
+      params: filters,
+    });
+    renderData(data);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function refresh() {
+  pageData.cursor = "";
+  pageData.results = [];
+  pageData.hasMore = true;
+  await loadMore();
+}
+
+function renderData(data) {
+  pageData.cursor = data.cursor;
+  pageData.hasMore = data.hasMore;
+  if (data.results && data.results.length) {
+    data.results.forEach((item) => {
+      pageData.results.push(item);
+    });
+  }
+}
+
+function unshiftResults(item) {
+  if (item && pageData && pageData.results) {
+    pageData.results.unshift(item);
+  }
+}
+
+defineExpose({
+  refresh,
+  unshiftResults,
+});
+</script>
 
 <style lang="scss" scoped>
 .load-more {
