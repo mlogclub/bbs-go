@@ -25,7 +25,6 @@ if (!temp.startsWith("http://") && !temp.startsWith("https://")) {
     statusCode: 500,
     statusMessage: "你访问的页面发生错误!",
   });
-  return;
 }
 </script>
 
