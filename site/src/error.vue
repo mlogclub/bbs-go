@@ -14,35 +14,43 @@ defineProps({
   },
 });
 
+definePageMeta({
+  layout: "default",
+});
+
 const handleError = () => {
   clearError({ redirect: "/" });
 };
 </script>
 
 <template>
-  <section class="main">
-    <div class="container">
-      <div class="error">
-        <div>
-          <img src="~/assets/images/logo.png" style="max-width: 100px" />
-        </div>
-        <div class="description">
-          <div v-if="error.message">
-            {{ error.message }}
+  <div>
+    <MyHeader />
+    <section class="main">
+      <div class="container">
+        <div class="error">
+          <div>
+            <img src="~/assets/images/logo.png" style="max-width: 100px" />
           </div>
+          <div class="description">
+            <div v-if="error.message">
+              {{ error.message }}
+            </div>
 
-          <template v-else>
-            <div v-if="error.statusCode === 404">页面没找到</div>
-            <div v-if="error.statusCode === 403">Forbidden</div>
-            <div v-else>{{ error.statusCode }} 异常</div>
-          </template>
-        </div>
-        <div class="report">
-          <a @click="handleError">返回首页</a>
+            <template v-else>
+              <div v-if="error.statusCode === 404">页面没找到</div>
+              <div v-if="error.statusCode === 403">Forbidden</div>
+              <div v-else>{{ error.statusCode }} 异常</div>
+            </template>
+          </div>
+          <div class="report">
+            <a @click="handleError">返回首页</a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <MyFooter />
+  </div>
 </template>
 
 <style lang="scss" scoped>
