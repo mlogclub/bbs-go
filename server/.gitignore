@@ -25,9 +25,12 @@ tags
 
 logs/*.log
 web/*
+tmp/*
 
 generator/*
 go.work
 go.work.sum
 
 ip2region.xdb
+
+__debug_bin*

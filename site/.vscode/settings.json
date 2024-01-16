@@ -1,0 +1,10 @@
+{
+  "prettier.enable": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  }
+  // "stylelint.enable": true,
+  // "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"]
+}

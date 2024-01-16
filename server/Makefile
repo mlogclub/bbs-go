@@ -1,0 +1,22 @@
+# Build the application
+all: build
+
+build:
+	@echo "Building..."
+	@go build -o bbs-go cmd/server/main.go
+
+# Run the application
+run:
+	@go run cmd/server/main.go
+
+# Test the application
+test:
+	@echo "Testing..."
+	@go test ./...
+
+# Clean the binary
+clean:
+	@echo "Cleaning..."
+	@rm -f bbs-go
+
+.PHONY: all build run test clean

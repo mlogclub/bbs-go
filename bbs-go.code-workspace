@@ -17,6 +17,12 @@
     }
   ],
   "settings": {
-    "nuxt.isNuxtApp": false
+    "nuxt.isNuxtApp": false,
+    "i18n-ally.localesPaths": [
+      "admin-next/src/locale",
+      "admin-next/src/components/message-box/locale",
+      "admin-next/src/views/login/locale",
+      "admin-next/src/views/dashboard/workplace/locale"
+    ]
   }
 }

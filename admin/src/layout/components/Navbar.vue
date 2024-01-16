@@ -22,7 +22,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <avatar :user="{ id: userId, nickname: name, avatar: avatar }" size="40" />
+          <my-avatar :user="{ id: userId, nickname: name, avatar: avatar }" size="40" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">

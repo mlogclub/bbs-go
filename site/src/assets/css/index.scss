@@ -1,0 +1,19 @@
+@charset "UTF-8";
+@import "../iconfont/iconfont.css";
+@import "./variable";
+@import "./common";
+@import "./topic";
+@import "./link";
+@import "./highlightjs";
+@import "./nav";
+@import "./signin";
+
+@import "../node_modules/bulma/bulma.sass";
+
+
+:root {
+    --animate-duration: .3s;
+    --animate-delay: 0;
+}
+
+@import '@asika32764/vue-animate/dist/vue-animate.css';

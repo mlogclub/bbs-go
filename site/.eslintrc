@@ -1,0 +1,11 @@
+{
+  "extends": ["@antfu"],
+  "rules": {
+    "@typescript-eslint/semi": "off",
+    "no-undef": "off",
+    "no-debugger": "warn",
+    "no-console": "warn",
+    "curly": "off",
+    "n/prefer-global/process": "always"
+  }
+}
