@@ -160,7 +160,7 @@
                 </div>
                 <div class="action" @click="addFavorite(topic.id)">
                   <i
-                    class="action-icon iconfont"
+                    class="action-icon iconfont icon-favorite"
                     :class="{
                       'icon-has-favorite': topic.favorited,
                       'icon-favorite': !topic.favorited,

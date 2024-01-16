@@ -55,11 +55,11 @@
                 <span>个人中心</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/favorites">
-                <i class="iconfont icon-favorites" />
+                <i class="iconfont icon-favorite" />
                 <span>我的收藏</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/profile">
-                <i class="iconfont icon-username" />
+                <i class="iconfont icon-edit" />
                 <span>编辑资料</span>
               </nuxt-link>
               <a class="navbar-item" @click="signout">

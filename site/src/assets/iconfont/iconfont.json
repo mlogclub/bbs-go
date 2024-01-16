@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7116480",
+      "name": "收藏",
+      "font_class": "favorite",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
       "icon_id": "12934669",
       "name": "article",
       "font_class": "article",
@@ -153,13 +160,6 @@
       "unicode_decimal": 59536
     },
     {
-      "icon_id": "11982663",
-      "name": "Favorite, star, rate",
-      "font_class": "favorite",
-      "unicode": "e9ce",
-      "unicode_decimal": 59854
-    },
-    {
       "icon_id": "933646",
       "name": "微信",
       "font_class": "weixin",
@@ -272,20 +272,6 @@
       "unicode_decimal": 58882
     },
     {
-      "icon_id": "5379854",
-      "name": "book",
-      "font_class": "book",
-      "unicode": "e6f3",
-      "unicode_decimal": 59123
-    },
-    {
-      "icon_id": "6808491",
-      "name": "Open-Source Iniciati",
-      "font_class": "open-source",
-      "unicode": "edcd",
-      "unicode_decimal": 60877
-    },
-    {
       "icon_id": "835969",
       "name": "arrow-right",
       "font_class": "arrowright",
@@ -340,20 +326,6 @@
       "font_class": "close",
       "unicode": "e633",
       "unicode_decimal": 58931
-    },
-    {
-      "icon_id": "995207",
-      "name": "share",
-      "font_class": "share",
-      "unicode": "e626",
-      "unicode_decimal": 58918
-    },
-    {
-      "icon_id": "2535714",
-      "name": "favorites",
-      "font_class": "favorites",
-      "unicode": "e7e9",
-      "unicode_decimal": 59369
     },
     {
       "icon_id": "1645862",

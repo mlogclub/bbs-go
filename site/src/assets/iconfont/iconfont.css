@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 1142441 */
-  src: url('iconfont.woff2?t=1668404745159') format('woff2'),
-       url('iconfont.woff?t=1668404745159') format('woff'),
-       url('iconfont.ttf?t=1668404745159') format('truetype');
+  src: url('iconfont.woff2?t=1705419839591') format('woff2'),
+       url('iconfont.woff?t=1705419839591') format('woff'),
+       url('iconfont.ttf?t=1705419839591') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-favorite:before {
+  content: "\e606";
 }
 
 .icon-article:before {
@@ -97,10 +101,6 @@
   content: "\e890";
 }
 
-.icon-favorite:before {
-  content: "\e9ce";
-}
-
 .icon-weixin:before {
   content: "\e61c";
 }
@@ -165,14 +165,6 @@
   content: "\e602";
 }
 
-.icon-book:before {
-  content: "\e6f3";
-}
-
-.icon-open-source:before {
-  content: "\edcd";
-}
-
 .icon-arrowright:before {
   content: "\e625";
 }
@@ -203,14 +195,6 @@
 
 .icon-close:before {
   content: "\e633";
-}
-
-.icon-share:before {
-  content: "\e626";
-}
-
-.icon-favorites:before {
-  content: "\e7e9";
 }
 
 .icon-delete:before {
