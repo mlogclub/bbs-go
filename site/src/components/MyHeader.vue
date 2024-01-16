@@ -1,23 +1,9 @@
-<script setup>
-const userStore = useUserStore();
-const configStore = useConfigStore();
-
-const { user } = storeToRefs(userStore);
-const { config } = storeToRefs(configStore);
-
-const navbarActive = ref(false);
-
-function toggleNav() {
-  navbarActive.value = !navbarActive.value;
-}
-</script>
-
 <template>
   <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
         <nuxt-link to="/" class="navbar-item">
-          <img :alt="config.siteTitle" src="~/assets/images/logo.png">
+          <img :alt="config.siteTitle" src="~/assets/images/logo.png" />
         </nuxt-link>
         <a
           :class="{ 'is-active': navbarActive }"
@@ -89,6 +75,27 @@ function toggleNav() {
     </div>
   </nav>
 </template>
+
+<script setup>
+const userStore = useUserStore();
+const configStore = useConfigStore();
+
+const { user } = storeToRefs(userStore);
+const { config } = storeToRefs(configStore);
+
+const navbarActive = ref(false);
+
+function toggleNav() {
+  navbarActive.value = !navbarActive.value;
+}
+
+async function signout() {
+  if (confirm("确定退出登录吗？")) {
+    await userStore.signout();
+    useLinkTo("/");
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .navbar {

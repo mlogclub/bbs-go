@@ -66,7 +66,12 @@ func (s *userTokenService) Signout(ctx iris.Context) error {
 	if userToken == nil {
 		return nil
 	}
-	return repositories.UserTokenRepository.UpdateColumn(sqls.DB(), userToken.Id, "status", constants.StatusDeleted)
+	err := repositories.UserTokenRepository.UpdateColumn(sqls.DB(), userToken.Id, "status", constants.StatusDeleted)
+	if err != nil {
+		return err
+	}
+	ctx.RemoveCookie(constants.CookieTokenKey)
+	return nil
 }
 
 func (s *userTokenService) GetUserToken(ctx iris.Context) string {

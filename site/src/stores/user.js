@@ -28,5 +28,9 @@ export const useUserStore = defineStore("user", {
         redirect,
       };
     },
+    async signout() {
+      await await useHttpGet("/api/login/signout");
+      this.user = null;
+    },
   },
 });

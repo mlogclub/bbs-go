@@ -18,12 +18,6 @@ const form = ref({
 const loginMethod = computed(() => {
   return configStore.config.loginMethod;
 });
-// const currentUser = computed(() => {
-//   return userStore.user
-// })
-// const isLogin = computed(() => {
-//   return !!currentUser
-// })
 async function showCaptcha() {
   try {
     const { captchaId, captchaUrl } = await useHttpGet("/api/captcha/request", {
