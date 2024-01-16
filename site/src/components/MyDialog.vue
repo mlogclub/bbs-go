@@ -7,8 +7,8 @@
     ></div>
     <transition
       appear
-      enter-active-class="animate__animated animate__bounceIn"
-      leave-active-class="animate__animated animate__bounceOut"
+      enter-active-class="animate__animated animate__fadeIn"
+      leave-active-class="animate__animated animate__fadeOut"
       mode="out-in"
     >
       <div
