@@ -135,7 +135,7 @@
               overflow: hidden;
               transform-style: preserve-3d;
 
-              & > img {
+              &>img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
@@ -162,7 +162,7 @@
 
             /* 只有两个图片时 */
             &:first-child:nth-last-child(2),
-            &:first-child:nth-last-child(2) ~ li {
+            &:first-child:nth-last-child(2)~li {
               width: 180px;
               height: 180px;
               line-height: 180px;
@@ -175,7 +175,7 @@
 
             /*大于两个图片时*/
             &:first-child:nth-last-child(n + 3),
-            &:first-child:nth-last-child(n + 3) ~ li {
+            &:first-child:nth-last-child(n + 3)~li {
               width: 120px;
               height: 120px;
               line-height: 120px;
@@ -198,6 +198,7 @@
           margin-top: 6px;
           font-size: 12px;
           flex: 1;
+          user-select: none;
 
           .btn {
             color: var(--text-color3);
