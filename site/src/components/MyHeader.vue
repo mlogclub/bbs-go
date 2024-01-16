@@ -42,8 +42,12 @@
             class="navbar-item has-dropdown is-hoverable user-menus"
           >
             <nuxt-link :to="`/user/${user.id}`" class="navbar-link">
-              <client-only><my-avatar :user="user" :size="30" /></client-only>
-              <span class="user-menus-nickname">{{ user.nickname }}</span>
+              <client-only>
+                <my-avatar :user="user" :size="24" round />
+              </client-only>
+              <span class="user-menus-nickname ellipsis">{{
+                user.nickname
+              }}</span>
             </nuxt-link>
             <div class="navbar-dropdown">
               <nuxt-link class="navbar-item" :to="`/user/${user.id}`">
@@ -129,7 +133,34 @@ async function signout() {
 
 .user-menus {
   .user-menus-nickname {
-    margin-left: 5px;
+    // margin-left: 5px;
+    padding: 0 4px;
+    font-size: 14px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .navbar-dropdown {
+    // border: 1px solid #121212;
+
+    a {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      span {
+        margin-left: 10px;
+        width: 56px;
+        height: 20px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+      }
+    }
   }
 }
 </style>

@@ -5,10 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    // ['@element-plus/nuxt', {
-    //   /** Options */
-    // }],
-
+    '@nuxtjs/color-mode',
     '@element-plus/nuxt',
 
     ['nuxt-lazy-load', {
