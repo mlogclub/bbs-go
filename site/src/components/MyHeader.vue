@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="navbar-item">
-            <!-- <color-mode /> -->
+            <color-mode />
           </div>
         </div>
       </div>
