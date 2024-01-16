@@ -236,7 +236,6 @@ const isPending = computed(() => {
 async function like() {
   try {
     if (liked.value) {
-      // 取消点赞
       await useHttpPostForm("/api/like/unlike", {
         body: {
           entityType: "topic",
@@ -244,12 +243,12 @@ async function like() {
         },
       });
       liked.value = false;
-      topic.value.likeCount--;
+      topic.value.likeCount =
+        topic.value.likeCount > 0 ? topic.value.likeCount - 1 : 0;
 
       useMsgSuccess("已取消点赞");
       await refreshLikeUsers();
     } else {
-      // 点赞
       await useHttpPostForm("/api/like/like", {
         body: {
           entityType: "topic",

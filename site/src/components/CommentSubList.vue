@@ -43,10 +43,27 @@ export default {
     },
     async like(comment) {
       try {
-        await useHttpPost(`/api/comment/like/${comment.id}`);
-        comment.liked = true;
-        comment.likeCount = comment.likeCount + 1;
-        useMsgSuccess("点赞成功");
+        if (comment.liked) {
+          await useHttpPostForm("/api/like/unlike", {
+            body: {
+              entityType: "comment",
+              entityId: comment.id,
+            },
+          });
+          comment.liked = false;
+          comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
+          useMsgSuccess("已取消点赞");
+        } else {
+          await useHttpPostForm("/api/like/like", {
+            body: {
+              entityType: "comment",
+              entityId: comment.id,
+            },
+          });
+          comment.liked = true;
+          comment.likeCount = comment.likeCount + 1;
+          useMsgSuccess("点赞成功");
+        }
       } catch (e) {
         if (e.errorCode === 1) {
           useMsgSignIn();

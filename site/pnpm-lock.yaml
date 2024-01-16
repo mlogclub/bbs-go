@@ -50,7 +50,7 @@ devDependencies:
     specifier: ^8.56.0
     version: 8.56.0
   nuxt:
-    specifier: ^3.9.0
+    specifier: ^3.9.1
     version: 3.9.1(eslint@8.56.0)(sass@1.69.7)(typescript@5.3.3)(vite@5.0.11)
   sass:
     specifier: ^1.69.1

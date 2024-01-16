@@ -68,7 +68,7 @@
             <div
               class="btn"
               :class="{ liked: topic.liked }"
-              @click="likeOrUnlike(topic)"
+              @click="like(topic)"
             >
               <i class="iconfont icon-like" />{{ topic.liked ? "已赞" : "赞" }}
               <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
@@ -120,45 +120,29 @@ export default {
     },
   },
   methods: {
-    async likeOrUnlike(topic) {
-      if (topic.liked) {
-        this.unlike(topic);
-      } else {
-        this.like(topic);
-      }
-    },
     async like(topic) {
       try {
-        await useHttpPostForm("/api/like/like", {
-          body: {
-            entityType: "topic",
-            entityId: topic.id,
-          },
-        });
-        topic.liked = true;
-        topic.likeCount++;
-        useMsgSuccess("点赞成功");
-      } catch (e) {
-        if (e.errorCode === 1) {
-          useMsgSignIn();
+        if (topic.liked) {
+          await useHttpPostForm("/api/like/unlike", {
+            body: {
+              entityType: "topic",
+              entityId: topic.id,
+            },
+          });
+          topic.liked = false;
+          topic.likeCount = topic.likeCount > 0 ? topic.likeCount - 1 : 0;
+          useMsgSuccess("已取消点赞");
         } else {
-          useMsgError(e.message || e);
+          await useHttpPostForm("/api/like/like", {
+            body: {
+              entityType: "topic",
+              entityId: topic.id,
+            },
+          });
+          topic.liked = true;
+          topic.likeCount++;
+          useMsgSuccess("点赞成功");
         }
-      }
-    },
-    async unlike(topic) {
-      try {
-        await useHttpPostForm("/api/like/unlike", {
-          body: {
-            entityType: "topic",
-            entityId: topic.id,
-          },
-        });
-        topic.liked = false;
-        if (topic.likeCount > 0) {
-          topic.likeCount--;
-        }
-        useMsgSuccess("已取消点赞");
       } catch (e) {
         if (e.errorCode === 1) {
           useMsgSignIn();
