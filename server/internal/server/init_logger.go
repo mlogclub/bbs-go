@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bbs-go/internal/pkg/config"
 	"fmt"
 	"io"
 	"log/slog"
@@ -12,16 +13,15 @@ import (
 )
 
 func initLogger() {
-	// conf := config.Instance
-	// // 初始化日志
-	// if file, err := os.OpenFile(conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
-	// 	logrus.SetOutput(io.MultiWriter(os.Stdout, file))
-	// } else {
-	// 	logrus.SetOutput(os.Stdout)
-	// 	slog.Error(err.Error(), slog.Any("err", err))
-	// }
+	var writer io.Writer
+	if file, err := os.OpenFile(config.Instance.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
+		writer = io.MultiWriter(os.Stdout, file)
+	} else {
+		writer = os.Stdout
+		slog.Error(err.Error(), slog.Any("err", err))
+	}
 
-	handler := slog.NewTextHandler(io.MultiWriter(os.Stdout), &slog.HandlerOptions{
+	handler := slog.NewTextHandler(writer, &slog.HandlerOptions{
 		ReplaceAttr: replaceAttr,
 		AddSource:   true,
 	})
