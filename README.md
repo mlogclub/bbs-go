@@ -1,3 +1,6 @@
+## 感谢您的支持与鼓励！如果您喜欢这个开源项目，不妨给它点个⭐️⭐️⭐️，您的星星是我们前进的动力 🙏🙏🙏
+
+
 ## 项目地址
 
 - 交流站：[码农俱乐部](https://mlog.club)
@@ -6,16 +9,18 @@
 - Github: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
+
+## 联系我
+
+### 用户交流群
+![BBS-GO用户交流群](docs/images/qq.png)
+
+### 加我微信
+![BBS-GO用户交流群](docs/images/wechat.png)
+
 ## 付费服务
 
 付费是为了项目能够更好的生存下去，请谅解。项目将一如既往的开源下去~
-
-<!-- - 联系QQ：`471243194` -->
-- QQ群：**`397215759`**
-<!-- - ![QQ群](docs/images/qq.png) -->
-- 微信：
-- ![微信](https://s2.loli.net/2022/03/01/ojufvSrGF8PQq14.jpg)
-
 
 | 服务     | 价格  | 服务内容                                         |
 | -------- | ----- | ------------------------------------------------ |
