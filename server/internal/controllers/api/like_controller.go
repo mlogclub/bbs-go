@@ -81,7 +81,7 @@ func (c *LikeController) GetLiked() *web.JsonResult {
 		entityId   = params.FormValueInt64Default(c.Ctx, "entityId", 0)
 	)
 	if user == nil || strs.IsBlank(entityType) || entityId <= 0 {
-		return web.NewEmptyRspBuilder().Put("liked", false).JsonResult()
+		return web.JsonData(false)
 	} else {
 		liked := services.UserLikeService.Exists(user.Id, entityType, entityId)
 		return web.JsonData(liked)
