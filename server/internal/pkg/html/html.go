@@ -1,13 +1,13 @@
 package html
 
 import (
+	"log/slog"
 	"strings"
 
 	"bbs-go/internal/pkg/text"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/sirupsen/logrus"
 )
 
 func GetSummary(htmlStr string, summaryLen int) string {
@@ -21,7 +21,7 @@ func GetSummary(htmlStr string, summaryLen int) string {
 func GetHtmlText(html string) string {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return ""
 	}
 	return doc.Text()

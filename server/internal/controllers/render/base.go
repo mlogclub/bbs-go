@@ -2,10 +2,10 @@ package render
 
 import (
 	"bbs-go/internal/models"
+	"log/slog"
 
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/sirupsen/logrus"
 )
 
 func buildImageList(imageListStr string) (imageList []models.ImageInfo) {
@@ -21,7 +21,7 @@ func buildImageList(imageListStr string) (imageList []models.ImageInfo) {
 				}
 			}
 		} else {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	}
 	return
@@ -33,7 +33,7 @@ func buildImage(imageStr string) *models.ImageInfo {
 	}
 	var img *models.ImageDTO
 	if err := jsons.Parse(imageStr, &img); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return nil
 	} else {
 		return &models.ImageInfo{

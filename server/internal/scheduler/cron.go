@@ -2,9 +2,9 @@ package scheduler
 
 import (
 	"bbs-go/internal/pkg/sitemap"
+	"log/slog"
 
 	"github.com/robfig/cron"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/services"
 )
@@ -29,6 +29,6 @@ func Start() {
 func addCronFunc(c *cron.Cron, sepc string, cmd func()) {
 	err := c.AddFunc(sepc, cmd)
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }

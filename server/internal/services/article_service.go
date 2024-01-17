@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/seo"
 	"errors"
+	"log/slog"
 	"math"
 	"path"
 	"strings"
@@ -21,7 +22,6 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
@@ -301,14 +301,14 @@ func (s *articleService) GenerateRss() {
 	}
 	atom, err := feed.ToAtom()
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "rss.xml"), rss, false)
 	}

@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/validate"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -400,7 +401,7 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 // IncrTopicCount topic_count + 1
 func (s *userService) IncrTopicCount(tx *gorm.DB, userId int64) error {
 	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", gorm.Expr("topic_count + 1")); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return err
 	}
 	cache.UserCache.Invalidate(userId)
@@ -415,7 +416,7 @@ func (s *userService) IncrCommentCount(userId int64) int {
 	}
 	commentCount := t.CommentCount + 1
 	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		cache.UserCache.Invalidate(userId)
 	}
@@ -541,13 +542,13 @@ func (s *userService) CheckPostStatus(user *models.User) error {
 func (s *userService) IncrScoreForPostTopic(topic *models.Topic) {
 	config := SysConfigService.GetConfig()
 	if config.ScoreConfig.PostTopicScore <= 0 {
-		logrus.Info("请配置发帖积分")
+		slog.Info("请配置发帖积分")
 		return
 	}
 	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, constants.EntityTopic,
 		strconv.FormatInt(topic.Id, 10), "发表话题")
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }
 
@@ -559,13 +560,13 @@ func (s *userService) IncrScoreForPostComment(comment *models.Comment) {
 	}
 	config := SysConfigService.GetConfig()
 	if config.ScoreConfig.PostCommentScore <= 0 {
-		logrus.Info("请配置跟帖积分")
+		slog.Info("请配置跟帖积分")
 		return
 	}
 	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, constants.EntityComment,
 		strconv.FormatInt(comment.Id, 10), "发表跟帖")
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }
 

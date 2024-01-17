@@ -8,12 +8,12 @@ import (
 	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/repositories"
+	"log/slog"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 )
 
 var MessageService = newMessageService()
@@ -97,7 +97,7 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 		CreateTime:   dates.NowTimestamp(),
 	}
 	if err := s.Create(t); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		s.SendEmailNotice(t)
 	}
@@ -146,6 +146,6 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 			Url:   bbsurls.AbsUrl("/user/messages"),
 		})
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }

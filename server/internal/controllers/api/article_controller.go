@@ -5,13 +5,13 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/spam"
+	"log/slog"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
@@ -92,7 +92,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 
 	var cover *models.ImageDTO
 	if err := jsons.Parse(article.Cover, &cover); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 
 	return web.NewEmptyRspBuilder().

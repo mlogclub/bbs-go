@@ -3,11 +3,11 @@ package cache
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
+	"log/slog"
 	"time"
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/sirupsen/logrus"
 )
 
 type forbiddenWordCache struct {
@@ -32,7 +32,7 @@ func newForbiddenWordCache() *forbiddenWordCache {
 func (c *forbiddenWordCache) Get() []models.ForbiddenWord {
 	val, err := c.cache.Get("_")
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return nil
 	}
 	return val.([]models.ForbiddenWord)

@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/uploader"
 	"bytes"
 	"compress/gzip"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -36,7 +37,7 @@ func Generate() {
 		return
 	}
 	if building {
-		logrus.Info("Sitemap in building...")
+		slog.Info("Sitemap in building...")
 		return
 	}
 	building = true
@@ -168,6 +169,6 @@ func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
 	if _url, err := uploader.PutObject(fileKey, out, ""); err != nil {
 		logrus.Error("Upload sitemap error:", err)
 	} else {
-		logrus.Info("Upload sitemap:", _url)
+		slog.Info("Upload sitemap:", slog.String("url", _url))
 	}
 }

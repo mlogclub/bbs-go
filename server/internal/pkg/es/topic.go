@@ -9,6 +9,7 @@ import (
 	"bbs-go/internal/repositories"
 	"context"
 	"html"
+	"log/slog"
 	"strconv"
 	"time"
 
@@ -41,7 +42,7 @@ type TopicDocument struct {
 func (t *TopicDocument) ToStr() string {
 	str, err := jsons.ToStr(t)
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 	return str
 }
@@ -98,7 +99,7 @@ func UpdateTopicIndexAsync(topic *models.Topic) {
 	if err := indexPool.Submit(func() {
 		UpdateTopicIndex(topic)
 	}); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }
 
@@ -121,9 +122,9 @@ func UpdateTopicIndex(topic *models.Topic) {
 		BodyJson(doc).
 		Id(strconv.FormatInt(doc.Id, 10)).
 		Do(context.Background()); err == nil {
-		logrus.Info(response.Result)
+		slog.Info(response.Result)
 	} else {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }
 
@@ -195,7 +196,7 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 				}
 				docs = append(docs, doc)
 			} else {
-				logrus.Error(err)
+				slog.Error(err.Error())
 			}
 		}
 	}

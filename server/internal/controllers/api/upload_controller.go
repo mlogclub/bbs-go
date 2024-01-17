@@ -3,12 +3,12 @@ package api
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/uploader"
-	"io/ioutil"
+	"io"
+	"log/slog"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/services"
 )
@@ -34,12 +34,12 @@ func (c *UploadController) Post() *web.JsonResult {
 	}
 
 	contentType := header.Header.Get("Content-Type")
-	fileBytes, err := ioutil.ReadAll(file)
+	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		return web.JsonError(err)
 	}
 
-	logrus.Info("上传文件：", header.Filename, " size:", header.Size)
+	slog.Info("上传文件：", slog.Any("filename", header.Filename), slog.Any("size", header.Size))
 
 	url, err := uploader.PutImage(fileBytes, contentType)
 	if err != nil {

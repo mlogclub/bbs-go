@@ -2,12 +2,12 @@ package api
 
 import (
 	"bbs-go/internal/pkg/bbsurls"
+	"log/slog"
 
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web"
-	"github.com/sirupsen/logrus"
 )
 
 type CaptchaController struct {
@@ -46,7 +46,7 @@ func (c *CaptchaController) GetShow() {
 
 	c.Ctx.Header("Content-Type", "image/png")
 	if err := captcha.WriteImage(c.Ctx.ResponseWriter(), captchaId, captcha.StdWidth, captcha.StdHeight); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }
 

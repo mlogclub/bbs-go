@@ -3,13 +3,13 @@ package models
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/common"
+	"log/slog"
 	"strings"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
@@ -58,7 +58,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 	var form *CreateTopicForm
 	if contentType == "application/json" {
 		if err := ctx.ReadJSON(&form); err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	} else {
 		form = &CreateTopicForm{
@@ -132,7 +132,7 @@ func GetImageDTO(ctx iris.Context, paramName string) (img *ImageDTO) {
 		return
 	}
 	if err := jsons.Parse(str, &img); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 	return
 }

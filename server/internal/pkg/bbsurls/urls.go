@@ -1,11 +1,10 @@
 package bbsurls
 
 import (
+	"log/slog"
 	"net/url"
 	"strconv"
 	"strings"
-
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/pkg/config"
 )
@@ -17,7 +16,7 @@ func IsInternalUrl(href string) bool {
 	}
 	u, err := url.Parse(config.Instance.BaseUrl)
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return false
 	}
 	return strings.Contains(href, u.Host)

@@ -1,13 +1,13 @@
 package seo
 
 import (
+	"log/slog"
 	"strings"
 
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/common/urls"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/pkg/config"
 )
@@ -31,9 +31,9 @@ func PushUrls(urls []string) {
 		config.Instance.BaiduSEO.Token
 	body := strings.Join(urls, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(api); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
-		logrus.Info("百度链接提交完成：", string(response.Body()))
+		slog.Info("百度链接提交完成", slog.Any("resp", response.Body()))
 	}
 }
 
@@ -55,8 +55,8 @@ func PushSmUrls(urlList []string) {
 
 	body := strings.Join(urlList, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(u.BuildStr()); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
-		logrus.Info("神马搜索链接推送完成：", string(response.Body()))
+		slog.Info("神马搜索链接推送完成：", slog.Any("resp", response.Body()))
 	}
 }

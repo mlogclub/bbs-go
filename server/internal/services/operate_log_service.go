@@ -4,12 +4,12 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/repositories"
+	"log/slog"
 	"net/http"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 )
 
 var OperateLogService = newOperateLogService()
@@ -86,6 +86,6 @@ func (s *operateLogService) AddOperateLog(userId int64, opType, dataType string,
 		operateLog.Referer = r.Header.Get("Referer")
 	}
 	if err := repositories.OperateLogRepository.Create(sqls.DB(), operateLog); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 }

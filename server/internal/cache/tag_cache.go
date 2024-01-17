@@ -2,11 +2,11 @@ package cache
 
 import (
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/goburrow/cache"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
@@ -37,7 +37,7 @@ func newTagCache() *tagCache {
 func (c *tagCache) Get(tagId int64) *models.Tag {
 	val, err := c.cache.Get(tagId)
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		return nil
 	}
 	if val != nil {

@@ -3,12 +3,12 @@ package uploader
 import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bytes"
+	"log/slog"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/pkg/config"
 )
@@ -52,9 +52,9 @@ func (aliyun *aliyunOssUploader) getBucket() *oss.Bucket {
 	aliyun.once.Do(func() {
 		c := config.Instance.Uploader.AliyunOss
 		if client, err := oss.New(c.Endpoint, c.AccessId, c.AccessSecret); err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		} else if aliyun.bucket, err = client.Bucket(c.Bucket); err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	})
 	return aliyun.bucket

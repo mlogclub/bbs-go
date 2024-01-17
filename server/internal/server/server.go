@@ -5,13 +5,14 @@ import (
 	"bbs-go/internal/controllers/api"
 	"bbs-go/internal/middleware"
 	"bbs-go/internal/pkg/config"
+	"log/slog"
+	"os"
+	"strings"
+
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/mlogclub/simple/web"
-	"github.com/sirupsen/logrus"
-	"os"
-	"strings"
 
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
@@ -38,7 +39,7 @@ func NewServer() {
 			err = ctx.JSON(web.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		}
 		if err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	})
 
@@ -104,7 +105,7 @@ func NewServer() {
 			Charset:                           "UTF-8",
 		}),
 	); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 		os.Exit(-1)
 	}
 }

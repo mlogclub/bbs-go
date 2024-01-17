@@ -1,10 +1,12 @@
 package event
 
 import (
-	"github.com/panjf2000/ants/v2"
-	"github.com/sirupsen/logrus"
+	"log/slog"
 	"reflect"
 	"sync"
+
+	"github.com/panjf2000/ants/v2"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -18,7 +20,7 @@ func init() {
 	var err error
 	eventPool, err = ants.NewPoolWithFunc(4, dispatch, ants.WithMaxBlockingTasks(1000), ants.WithLogger(logrus.New()))
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	}
 	handlers = make(map[reflect.Type][]func(i interface{}))
 }
@@ -36,7 +38,7 @@ func dispatch(i interface{}) {
 
 func Send(e interface{}) {
 	if err := eventPool.Invoke(e); err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		// wg.Add(len(getHandlerList(e)))
 		// wg.Wait()

@@ -8,13 +8,13 @@ import (
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/repositories"
 	"errors"
+	"log/slog"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -49,7 +49,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 		if err == nil {
 			topic.ImageList = imageListStr
 		} else {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	}
 
@@ -102,12 +102,12 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 // IsNeedReview 是否需要审核
 func (s *topicPublishService) _IsNeedReview(userId int64, form models.CreateTopicForm) bool {
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
-		logrus.Info("帖子标题命中违禁词", strings.Join(hits, ","))
+		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
 	}
 
 	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
-		logrus.Info("帖子内容命中违禁词", strings.Join(hits, ","))
+		slog.Info("帖子内容命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
 	}
 

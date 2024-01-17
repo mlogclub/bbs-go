@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/es"
 	"bbs-go/internal/pkg/event"
 	"errors"
+	"log/slog"
 	"math"
 	"net/http"
 	"path"
@@ -19,7 +20,6 @@ import (
 	"github.com/mlogclub/simple/web/params"
 
 	"github.com/gorilla/feeds"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
@@ -383,14 +383,14 @@ func (s *topicService) GenerateRss() {
 	}
 	atom, err := feed.ToAtom()
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error())
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_rss.xml"), rss, false)
 	}

@@ -3,11 +3,11 @@ package es
 import (
 	"bbs-go/internal/pkg/config"
 	"errors"
+	"log/slog"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/olivere/elastic/v7"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -31,7 +31,7 @@ func initClient() *elastic.Client {
 			err = errNoConfig
 		}
 		if err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	})
 	return client

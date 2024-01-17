@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/seo"
 	"bbs-go/internal/services"
+	"log/slog"
 	"reflect"
 
 	"github.com/sirupsen/logrus"
@@ -31,7 +32,7 @@ func handleTopicCreateEvent(i interface{}) {
 			AuthorId:   e.UserId,
 			CreateTime: e.CreateTime,
 		}); err != nil {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	})
 

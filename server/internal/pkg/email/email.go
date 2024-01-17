@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"html/template"
+	"log/slog"
 	"net"
 	"net/smtp"
 
@@ -93,7 +94,7 @@ func SendEmail(to string, subject, html string) error {
 
 	if ssl {
 		if err := e.SendWithTLS(addr, auth, tlsConfig); err != nil {
-			logrus.Error("发送邮件异常", err)
+			slog.Error("发送邮件异常")
 			return err
 		}
 	} else {

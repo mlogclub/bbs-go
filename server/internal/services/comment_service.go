@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
 	"errors"
+	"log/slog"
 	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
@@ -12,7 +13,6 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
@@ -108,7 +108,7 @@ func (s *commentService) Publish(userId int64, form models.CreateCommentForm) (*
 		if err == nil {
 			comment.ImageList = imageListStr
 		} else {
-			logrus.Error(err)
+			slog.Error(err.Error())
 		}
 	}
 
