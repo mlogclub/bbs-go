@@ -7,14 +7,16 @@ import (
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/scheduler"
 	"fmt"
+	"io"
+	"log/slog"
+	"os"
+	"time"
+
 	"github.com/mlogclub/simple/sqls"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"io"
-	"os"
-	"time"
 )
 
 func Init() {
@@ -42,14 +44,17 @@ func initConfig() {
 }
 
 func initLogger() {
-	conf := config.Instance
-	// 初始化日志
-	if file, err := os.OpenFile(conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
-		logrus.SetOutput(io.MultiWriter(os.Stdout, file))
-	} else {
-		logrus.SetOutput(os.Stdout)
-		logrus.Error(err)
-	}
+	// conf := config.Instance
+	// // 初始化日志
+	// if file, err := os.OpenFile(conf.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
+	// 	logrus.SetOutput(io.MultiWriter(os.Stdout, file))
+	// } else {
+	// 	logrus.SetOutput(os.Stdout)
+	// 	logrus.Error(err)
+	// }
+
+	logger := slog.New(slog.NewTextHandler(io.MultiWriter(os.Stdout)))
+	slog.SetDefault(logger)
 }
 
 func initDB() {
