@@ -37,7 +37,7 @@ func newTagCache() *tagCache {
 func (c *tagCache) Get(tagId int64) *models.Tag {
 	val, err := c.cache.Get(tagId)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return nil
 	}
 	if val != nil {

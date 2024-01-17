@@ -31,7 +31,7 @@ func PushUrls(urls []string) {
 		config.Instance.BaiduSEO.Token
 	body := strings.Join(urls, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(api); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		slog.Info("百度链接提交完成", slog.Any("resp", response.Body()))
 	}
@@ -55,7 +55,7 @@ func PushSmUrls(urlList []string) {
 
 	body := strings.Join(urlList, "\n")
 	if response, err := resty.New().R().SetBody(body).Post(u.BuildStr()); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		slog.Info("神马搜索链接推送完成：", slog.Any("resp", response.Body()))
 	}

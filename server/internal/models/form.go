@@ -58,7 +58,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 	var form *CreateTopicForm
 	if contentType == "application/json" {
 		if err := ctx.ReadJSON(&form); err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	} else {
 		form = &CreateTopicForm{
@@ -132,7 +132,7 @@ func GetImageDTO(ctx iris.Context, paramName string) (img *ImageDTO) {
 		return
 	}
 	if err := jsons.Parse(str, &img); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 	return
 }

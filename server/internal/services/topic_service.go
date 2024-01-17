@@ -383,14 +383,14 @@ func (s *topicService) GenerateRss() {
 	}
 	atom, err := feed.ToAtom()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_rss.xml"), rss, false)
 	}

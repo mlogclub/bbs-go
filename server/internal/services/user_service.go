@@ -19,7 +19,6 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
@@ -401,7 +400,7 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 // IncrTopicCount topic_count + 1
 func (s *userService) IncrTopicCount(tx *gorm.DB, userId int64) error {
 	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "topic_count", gorm.Expr("topic_count + 1")); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return err
 	}
 	cache.UserCache.Invalidate(userId)
@@ -416,7 +415,7 @@ func (s *userService) IncrCommentCount(userId int64) int {
 	}
 	commentCount := t.CommentCount + 1
 	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		cache.UserCache.Invalidate(userId)
 	}
@@ -459,7 +458,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		}
 		if !isInWhitelist {
 			// 直接返回，也不抛出异常了，就是不发邮件
-			logrus.Error("不支持使用该邮箱进行验证.", user.Email.String)
+			slog.Error("不支持使用该邮箱进行验证.", slog.String("email", user.Email.String))
 			return errors.New("不支持该类型邮箱")
 		}
 	}
@@ -548,7 +547,7 @@ func (s *userService) IncrScoreForPostTopic(topic *models.Topic) {
 	err := s.addScore(topic.UserId, config.ScoreConfig.PostTopicScore, constants.EntityTopic,
 		strconv.FormatInt(topic.Id, 10), "发表话题")
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 
@@ -566,7 +565,7 @@ func (s *userService) IncrScoreForPostComment(comment *models.Comment) {
 	err := s.addScore(comment.UserId, config.ScoreConfig.PostCommentScore, constants.EntityComment,
 		strconv.FormatInt(comment.Id, 10), "发表跟帖")
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 

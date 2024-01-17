@@ -42,7 +42,7 @@ type TopicDocument struct {
 func (t *TopicDocument) ToStr() string {
 	str, err := jsons.ToStr(t)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 	return str
 }
@@ -99,7 +99,7 @@ func UpdateTopicIndexAsync(topic *models.Topic) {
 	if err := indexPool.Submit(func() {
 		UpdateTopicIndex(topic)
 	}); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 
@@ -108,12 +108,12 @@ func UpdateTopicIndex(topic *models.Topic) {
 		return
 	}
 	if initClient() == nil {
-		logrus.Error(errNoConfig)
+		slog.Error("初始化ES客户端异常", slog.Any("err", errNoConfig))
 		return
 	}
 	doc := NewTopicDoc(topic)
 	if doc == nil {
-		logrus.Error("Topic doc is null. ")
+		slog.Error("Topic doc is null. ")
 		return
 	}
 	logrus.Infof("Es add index topic, id = %d", topic.Id)
@@ -124,7 +124,7 @@ func UpdateTopicIndex(topic *models.Topic) {
 		Do(context.Background()); err == nil {
 		slog.Info(response.Result)
 	} else {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 
@@ -196,7 +196,7 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 				}
 				docs = append(docs, doc)
 			} else {
-				slog.Error(err.Error())
+				slog.Error(err.Error(), slog.Any("err", err))
 			}
 		}
 	}

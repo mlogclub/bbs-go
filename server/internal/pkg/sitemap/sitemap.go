@@ -12,7 +12,6 @@ import (
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/config"
@@ -167,7 +166,7 @@ func (adp *myAdapter) Write(loc *stm.Location, data []byte) {
 // oss写入
 func (adp *myAdapter) ossWrite(fileKey string, out []byte) {
 	if _url, err := uploader.PutObject(fileKey, out, ""); err != nil {
-		logrus.Error("Upload sitemap error:", err)
+		slog.Error("Upload sitemap error:", slog.Any("err", err))
 	} else {
 		slog.Info("Upload sitemap:", slog.String("url", _url))
 	}

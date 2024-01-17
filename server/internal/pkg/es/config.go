@@ -31,7 +31,7 @@ func initClient() *elastic.Client {
 			err = errNoConfig
 		}
 		if err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	})
 	return client

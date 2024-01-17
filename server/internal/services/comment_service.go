@@ -108,7 +108,7 @@ func (s *commentService) Publish(userId int64, form models.CreateCommentForm) (*
 		if err == nil {
 			comment.ImageList = imageListStr
 		} else {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	}
 

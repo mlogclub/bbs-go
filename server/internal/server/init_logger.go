@@ -18,7 +18,7 @@ func initLogger() {
 	// 	logrus.SetOutput(io.MultiWriter(os.Stdout, file))
 	// } else {
 	// 	logrus.SetOutput(os.Stdout)
-	// 	slog.Error(err.Error())
+	// 	slog.Error(err.Error(), slog.Any("err", err))
 	// }
 
 	handler := slog.NewJSONHandler(io.MultiWriter(os.Stdout), &slog.HandlerOptions{

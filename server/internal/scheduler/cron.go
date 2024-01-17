@@ -29,6 +29,6 @@ func Start() {
 func addCronFunc(c *cron.Cron, sepc string, cmd func()) {
 	err := c.AddFunc(sepc, cmd)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }

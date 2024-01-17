@@ -11,7 +11,6 @@ import (
 	"net/smtp"
 
 	"github.com/jordan-wright/email"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/pkg/config"
 )
@@ -94,12 +93,12 @@ func SendEmail(to string, subject, html string) error {
 
 	if ssl {
 		if err := e.SendWithTLS(addr, auth, tlsConfig); err != nil {
-			slog.Error("发送邮件异常")
+			slog.Error("发送邮件异常", slog.Any("err", err))
 			return err
 		}
 	} else {
 		if err := e.Send(addr, auth); err != nil {
-			logrus.Error("发送邮件异常", err)
+			slog.Error("发送邮件异常", slog.Any("err", err))
 			return err
 		}
 	}

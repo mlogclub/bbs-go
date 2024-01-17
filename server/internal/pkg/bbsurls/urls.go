@@ -16,7 +16,7 @@ func IsInternalUrl(href string) bool {
 	}
 	u, err := url.Parse(config.Instance.BaseUrl)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return false
 	}
 	return strings.Contains(href, u.Host)

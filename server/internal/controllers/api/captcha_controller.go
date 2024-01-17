@@ -46,7 +46,7 @@ func (c *CaptchaController) GetShow() {
 
 	c.Ctx.Header("Content-Type", "image/png")
 	if err := captcha.WriteImage(c.Ctx.ResponseWriter(), captchaId, captcha.StdWidth, captcha.StdHeight); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 

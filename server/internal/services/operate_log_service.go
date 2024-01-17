@@ -86,6 +86,6 @@ func (s *operateLogService) AddOperateLog(userId int64, opType, dataType string,
 		operateLog.Referer = r.Header.Get("Referer")
 	}
 	if err := repositories.OperateLogRepository.Create(sqls.DB(), operateLog); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }

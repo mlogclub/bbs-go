@@ -92,7 +92,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 
 	var cover *models.ImageDTO
 	if err := jsons.Parse(article.Cover, &cover); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 
 	return web.NewEmptyRspBuilder().

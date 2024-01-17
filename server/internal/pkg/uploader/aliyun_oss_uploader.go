@@ -52,9 +52,9 @@ func (aliyun *aliyunOssUploader) getBucket() *oss.Bucket {
 	aliyun.once.Do(func() {
 		c := config.Instance.Uploader.AliyunOss
 		if client, err := oss.New(c.Endpoint, c.AccessId, c.AccessSecret); err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		} else if aliyun.bucket, err = client.Bucket(c.Bucket); err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	})
 	return aliyun.bucket

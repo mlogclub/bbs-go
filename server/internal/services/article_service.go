@@ -301,14 +301,14 @@ func (s *articleService) GenerateRss() {
 	}
 	atom, err := feed.ToAtom()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "atom.xml"), atom, false)
 	}
 
 	rss, err := feed.ToRss()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		_ = files.WriteString(path.Join(config.Instance.StaticPath, "rss.xml"), rss, false)
 	}

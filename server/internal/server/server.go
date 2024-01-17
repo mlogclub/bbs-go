@@ -39,7 +39,7 @@ func NewServer() {
 			err = ctx.JSON(web.JsonErrorCode(ctx.GetStatusCode(), "Http error"))
 		}
 		if err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	})
 
@@ -105,7 +105,7 @@ func NewServer() {
 			Charset:                           "UTF-8",
 		}),
 	); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		os.Exit(-1)
 	}
 }

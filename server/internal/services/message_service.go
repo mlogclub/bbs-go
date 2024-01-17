@@ -97,7 +97,7 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 		CreateTime:   dates.NowTimestamp(),
 	}
 	if err := s.Create(t); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		s.SendEmailNotice(t)
 	}
@@ -146,6 +146,6 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 			Url:   bbsurls.AbsUrl("/user/messages"),
 		})
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }

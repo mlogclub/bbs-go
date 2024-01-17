@@ -21,7 +21,7 @@ func buildImageList(imageListStr string) (imageList []models.ImageInfo) {
 				}
 			}
 		} else {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	}
 	return
@@ -33,7 +33,7 @@ func buildImage(imageStr string) *models.ImageInfo {
 	}
 	var img *models.ImageDTO
 	if err := jsons.Parse(imageStr, &img); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return nil
 	} else {
 		return &models.ImageInfo{

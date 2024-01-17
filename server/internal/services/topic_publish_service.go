@@ -49,7 +49,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 		if err == nil {
 			topic.ImageList = imageListStr
 		} else {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	}
 

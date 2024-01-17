@@ -32,7 +32,7 @@ func handleTopicCreateEvent(i interface{}) {
 			AuthorId:   e.UserId,
 			CreateTime: e.CreateTime,
 		}); err != nil {
-			slog.Error(err.Error())
+			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	})
 

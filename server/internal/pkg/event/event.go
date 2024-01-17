@@ -20,7 +20,7 @@ func init() {
 	var err error
 	eventPool, err = ants.NewPoolWithFunc(4, dispatch, ants.WithMaxBlockingTasks(1000), ants.WithLogger(logrus.New()))
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 	handlers = make(map[reflect.Type][]func(i interface{}))
 }
@@ -38,7 +38,7 @@ func dispatch(i interface{}) {
 
 func Send(e interface{}) {
 	if err := eventPool.Invoke(e); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		// wg.Add(len(getHandlerList(e)))
 		// wg.Wait()
@@ -63,7 +63,7 @@ func getHandlerList(i interface{}) []func(i interface{}) {
 	if ok {
 		return handlerList
 	} else {
-		logrus.Error("没找到任务处理器，type=" + t.String())
+		slog.Error("没找到任务处理器", slog.String("type", t.String()))
 		return nil
 	}
 }

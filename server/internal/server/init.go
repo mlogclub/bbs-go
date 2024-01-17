@@ -52,7 +52,7 @@ func initDB() {
 		}),
 	}
 	if err := sqls.Open(config.Instance.DB, gormConf, models.Models...); err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 	}
 }
 

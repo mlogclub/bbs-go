@@ -21,7 +21,7 @@ func GetSummary(htmlStr string, summaryLen int) string {
 func GetHtmlText(html string) string {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return ""
 	}
 	return doc.Text()

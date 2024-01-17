@@ -32,7 +32,7 @@ func newForbiddenWordCache() *forbiddenWordCache {
 func (c *forbiddenWordCache) Get() []models.ForbiddenWord {
 	val, err := c.cache.Get("_")
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error(err.Error(), slog.Any("err", err))
 		return nil
 	}
 	return val.([]models.ForbiddenWord)
