@@ -1,14 +1,13 @@
 package iplocator
 
 import (
-	"fmt"
 	"strings"
 	"sync"
 
 	"github.com/lionsoul2014/ip2region/binding/golang/xdb"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/sirupsen/logrus"
+	"golang.org/x/exp/slog"
 )
 
 var (
@@ -24,14 +23,14 @@ func InitIpLocator(dbPath string) {
 		start := dates.NowTimestamp()
 		data, err := xdb.LoadContentFromFile(dbPath)
 		if err != nil {
-			logrus.Errorf("failed to load content from `%s`: %s\n", dbPath, err)
+			slog.Error("failed to load content", slog.Any("path", dbPath), slog.Any("err", err))
 			return
 		}
 		if searcher, err = xdb.NewWithBuffer(data); err != nil {
-			logrus.Errorf("failed to create searcher with content: %s\n", err)
+			slog.Error("failed to create searcher with content", slog.Any("err", err))
 			return
 		}
-		fmt.Printf("Load ip2region.xdb success, elapsed %d ms\n", dates.NowTimestamp()-start)
+		slog.Info("Load ip2region.xdb success", slog.Any("elapsed", dates.NowTimestamp()-start))
 	})
 }
 

@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"errors"
+	"log/slog"
 	"strconv"
 	"strings"
 
@@ -15,7 +16,6 @@ import (
 	"github.com/spf13/cast"
 	"github.com/tidwall/gjson"
 
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
@@ -141,7 +141,7 @@ func (s *sysConfigService) GetLoginMethod() models.LoginMethod {
 	var loginMethod models.LoginMethod
 	if strs.IsNotBlank(loginMethodStr) {
 		if err := jsons.Parse(loginMethodStr, &loginMethod); err != nil {
-			logrus.Warn("登录方式数据错误", err)
+			slog.Warn("登录方式数据错误", err)
 		} else {
 			useDefault = false
 		}
@@ -186,7 +186,7 @@ func (s *sysConfigService) GetSiteNavs() []models.ActionLink {
 	var siteNavsArr []models.ActionLink
 	if strs.IsNotBlank(siteNavs) {
 		if err := jsons.Parse(siteNavs, &siteNavsArr); err != nil {
-			logrus.Warn("站点导航数据错误", err)
+			slog.Warn("站点导航数据错误", slog.Any("err", err))
 		}
 	}
 	return siteNavsArr
@@ -196,7 +196,7 @@ func (s *sysConfigService) GetModules() (modules []models.ModuleConfig) {
 	str := cache.SysConfigCache.GetValue(constants.SysConfigModules)
 	if strs.IsNotBlank(str) {
 		if err := jsons.Parse(str, &modules); err != nil {
-			logrus.Warn("站点导航数据错误", err)
+			slog.Warn("站点导航数据错误", slog.Any("err", err))
 		}
 	}
 	if len(modules) == 0 {
@@ -252,21 +252,21 @@ func (s *sysConfigService) GetConfig() *models.SysConfigResponse {
 	var siteKeywordsArr []string
 	if strs.IsNotBlank(siteKeywords) {
 		if err := jsons.Parse(siteKeywords, &siteKeywordsArr); err != nil {
-			logrus.Warn("站点关键词数据错误", err)
+			slog.Warn("站点关键词数据错误", slog.Any("err", err))
 		}
 	}
 
 	var recommendTagsArr []string
 	if strs.IsNotBlank(recommendTags) {
 		if err := jsons.Parse(recommendTags, &recommendTagsArr); err != nil {
-			logrus.Warn("推荐标签数据错误", err)
+			slog.Warn("推荐标签数据错误", slog.Any("err", err))
 		}
 	}
 
 	var scoreConfig models.ScoreConfig
 	if strs.IsNotBlank(scoreConfigStr) {
 		if err := jsons.Parse(scoreConfigStr, &scoreConfig); err != nil {
-			logrus.Warn("积分配置错误", err)
+			slog.Warn("积分配置错误", slog.Any("err", err))
 		}
 	}
 
@@ -316,7 +316,7 @@ func (s *sysConfigService) GetInt(key string, def int) (value int) {
 	var err error
 	if value, err = cast.ToIntE(str); err != nil {
 		value = def
-		logrus.Warn("Get int config error, use default value:", def, " key: ", key, " value: ", str)
+		slog.Warn("Get int config error, use default value", slog.Any("default", def), slog.Any("key", key), slog.Any("value", str))
 		return
 	}
 	return

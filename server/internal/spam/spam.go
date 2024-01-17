@@ -2,7 +2,7 @@ package spam
 
 import (
 	"bbs-go/internal/models"
-	"github.com/sirupsen/logrus"
+	"log/slog"
 )
 
 var strategies []Strategy
@@ -19,7 +19,7 @@ func CheckTopic(user *models.User, form models.CreateTopicForm) error {
 	}
 	for _, strategy := range strategies {
 		if err := strategy.CheckTopic(user, form); err != nil {
-			logrus.Warnf("[Topic]命中策略：%s, userId：%d", strategy.Name(), user.Id)
+			slog.Warn("[Topic]命中策略", slog.Any("strategy", strategy.Name()), slog.Any("userId", user.Id))
 			return err
 		}
 	}
@@ -32,7 +32,7 @@ func CheckArticle(user *models.User, form models.CreateArticleForm) error {
 	}
 	for _, strategy := range strategies {
 		if err := strategy.CheckArticle(user, form); err != nil {
-			logrus.Warnf("[Article]命中策略：%s, userId：%d", strategy.Name(), user.Id)
+			slog.Warn("[Article]命中策略", slog.Any("strategy", strategy.Name()), slog.Any("userId", user.Id))
 			return err
 		}
 	}
@@ -45,7 +45,7 @@ func CheckComment(user *models.User, form models.CreateCommentForm) error {
 	}
 	for _, strategy := range strategies {
 		if err := strategy.CheckComment(user, form); err != nil {
-			logrus.Warnf("[Comment]命中策略：%s, userId：%d", strategy.Name(), user.Id)
+			slog.Warn("[Comment]命中策略", slog.Any("strategy", strategy.Name()), slog.Any("userId", user.Id))
 			return err
 		}
 	}

@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 	"errors"
+	"log/slog"
 	"strconv"
 	"sync"
 	"time"
@@ -13,7 +14,6 @@ import (
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/sirupsen/logrus"
 )
 
 var CheckInService = newCheckInService()
@@ -117,7 +117,7 @@ func (s *checkInService) CheckIn(userId int64) error {
 			_ = UserService.IncrScore(userId, config.ScoreConfig.CheckInScore, constants.EntityCheckIn,
 				strconv.FormatInt(userId, 10), "签到"+strconv.Itoa(dayName))
 		} else {
-			logrus.Warn("签到积分未配置...")
+			slog.Warn("签到积分未配置...")
 		}
 	}
 	return err

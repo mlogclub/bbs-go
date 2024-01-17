@@ -9,8 +9,6 @@ import (
 	"bbs-go/internal/services"
 	"log/slog"
 	"reflect"
-
-	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -21,10 +19,7 @@ func handleTopicCreateEvent(i interface{}) {
 	e := i.(event.TopicCreateEvent)
 
 	services.UserFollowService.ScanFans(e.UserId, func(fansId int64) {
-		logrus.WithField("topicId", e.TopicId).
-			WithField("userId", e.UserId).
-			WithField("fansId", fansId).
-			Info("用户关注，处理帖子")
+		slog.With(slog.Any("topicId", e.TopicId), slog.Any("userId", e.UserId), slog.Any("fansId", fansId)).Info("用户关注，处理帖子")
 		if err := services.UserFeedService.Create(&models.UserFeed{
 			UserId:     fansId,
 			DataId:     e.TopicId,

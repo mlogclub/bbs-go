@@ -20,8 +20,6 @@ import (
 
 	"github.com/olivere/elastic/v7"
 	"github.com/panjf2000/ants/v2"
-
-	"github.com/sirupsen/logrus"
 )
 
 var indexPool, _ = ants.NewPool(8)
@@ -116,7 +114,7 @@ func UpdateTopicIndex(topic *models.Topic) {
 		slog.Error("Topic doc is null. ")
 		return
 	}
-	logrus.Infof("Es add index topic, id = %d", topic.Id)
+	slog.Info("Es add index topic", slog.Any("id", topic.Id))
 	if response, err := client.Index().
 		Index(index).
 		BodyJson(doc).
@@ -174,7 +172,6 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	if err != nil {
 		return
 	}
-	// logrus.Infof("Query took %d milliseconds\n", searchResult.TookInMillis)
 
 	if totalHits := searchResult.TotalHits(); totalHits > 0 {
 		paging.Total = totalHits

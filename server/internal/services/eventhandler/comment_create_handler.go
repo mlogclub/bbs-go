@@ -7,9 +7,9 @@ import (
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/services"
+	"log/slog"
 	"reflect"
 
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 )
 
@@ -45,7 +45,7 @@ func handleEntityMsg(comment *models.Comment, commentMsg *CommentMsg) {
 		return
 	}
 	if to <= 0 {
-		logrus.Warn("消息发送失败, to=", to)
+		slog.Warn("消息发送失败", slog.Any("to", to))
 		return
 	}
 

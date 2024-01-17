@@ -21,7 +21,7 @@ func initLogger() {
 	// 	slog.Error(err.Error(), slog.Any("err", err))
 	// }
 
-	handler := slog.NewJSONHandler(io.MultiWriter(os.Stdout), &slog.HandlerOptions{
+	handler := slog.NewTextHandler(io.MultiWriter(os.Stdout), &slog.HandlerOptions{
 		ReplaceAttr: replaceAttr,
 		AddSource:   true,
 	})

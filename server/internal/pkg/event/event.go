@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/panjf2000/ants/v2"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -18,7 +17,7 @@ var (
 
 func init() {
 	var err error
-	eventPool, err = ants.NewPoolWithFunc(4, dispatch, ants.WithMaxBlockingTasks(1000), ants.WithLogger(logrus.New()))
+	eventPool, err = ants.NewPoolWithFunc(4, dispatch, ants.WithMaxBlockingTasks(1000))
 	if err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 	}
