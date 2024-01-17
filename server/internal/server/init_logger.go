@@ -9,16 +9,18 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/pkg/errors"
 )
 
 func initLogger() {
-	var writer io.Writer
-	if file, err := os.OpenFile(config.Instance.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
-		writer = io.MultiWriter(os.Stdout, file)
-	} else {
-		writer = os.Stdout
-		slog.Error(err.Error(), slog.Any("err", err))
+	var writer io.Writer = os.Stdout
+	if strs.IsNotBlank(config.Instance.LogFile) {
+		if file, err := os.OpenFile(config.Instance.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
+			writer = io.MultiWriter(os.Stdout, file)
+		} else {
+			slog.Error(err.Error(), slog.Any("err", err))
+		}
 	}
 
 	handler := slog.NewTextHandler(writer, &slog.HandlerOptions{

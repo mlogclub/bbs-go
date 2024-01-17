@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/config"
+	"bbs-go/internal/pkg/gormlogs"
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/scheduler"
 	"fmt"
@@ -11,10 +12,8 @@ import (
 	"time"
 
 	"github.com/mlogclub/simple/sqls"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 func Init() {
@@ -42,14 +41,11 @@ func initConfig() {
 }
 
 func initDB() {
-	// 连接数据库
 	gormConf := &gorm.Config{
-		Logger: logger.New(logrus.StandardLogger(), logger.Config{
-			SlowThreshold:             time.Second,
-			Colorful:                  true,
-			LogLevel:                  logger.Warn,
-			IgnoreRecordNotFoundError: true,
-		}),
+		Logger: gormlogs.New(
+			gormlogs.SetLogLevel(gormlogs.SlowQueryLogType, slog.LevelWarn),
+			gormlogs.WithSlowThreshold(time.Second),
+		),
 	}
 	if err := sqls.Open(config.Instance.DB, gormConf, models.Models...); err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
@@ -58,7 +54,6 @@ func initDB() {
 
 func initCron() {
 	if common.IsProd() {
-		// 开启定时任务
 		scheduler.Start()
 	}
 }

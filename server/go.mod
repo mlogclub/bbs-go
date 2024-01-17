@@ -8,25 +8,26 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.7+incompatible
 	github.com/dchest/captcha v1.0.0
 	github.com/emirpasic/gods v1.18.1
-	github.com/go-resty/resty/v2 v2.7.0
+	github.com/go-resty/resty/v2 v2.11.0
 	github.com/goburrow/cache v0.1.4
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/gorilla/feeds v1.1.1
+	github.com/gorilla/feeds v1.1.2
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20230429193704-33473bd2dc16
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.9
 	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20230415042440-a5e3d8259ae0
 	github.com/microcosm-cc/bluemonday v1.0.26
-	github.com/mlogclub/simple v1.2.11
+	github.com/mlogclub/simple v1.2.23
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/panjf2000/ants/v2 v2.7.3
-	github.com/robfig/cron v1.2.0
-	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cast v1.5.1
-	github.com/spf13/viper v1.17.0
-	github.com/tidwall/gjson v1.14.4
-	gorm.io/gorm v1.25.0
+	github.com/pkg/errors v0.9.1
+	github.com/robfig/cron/v3 v3.0.0
+	github.com/spf13/cast v1.6.0
+	github.com/spf13/viper v1.18.2
+	github.com/tidwall/gjson v1.17.0
+	golang.org/x/exp v0.0.0-20240110193028-0dcbfd608b1e
+	gorm.io/gorm v1.25.5
 )
 
 require (
@@ -77,13 +78,13 @@ require (
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/sagikazarmark/locafero v0.3.0 // indirect
+	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
-	github.com/spf13/afero v1.10.0 // indirect
+	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tdewolff/minify/v2 v2.20.12 // indirect
@@ -97,7 +98,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/exp v0.0.0-20240110193028-0dcbfd608b1e // indirect
 	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

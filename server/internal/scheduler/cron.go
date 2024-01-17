@@ -4,7 +4,7 @@ import (
 	"bbs-go/internal/pkg/sitemap"
 	"log/slog"
 
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 
 	"bbs-go/internal/services"
 )
@@ -19,7 +19,7 @@ func Start() {
 	})
 
 	// Generate sitemap
-	addCronFunc(c, "0 0 4 ? * *", func() {
+	addCronFunc(c, "0 4 ? * *", func() {
 		sitemap.Generate()
 	})
 
@@ -27,8 +27,10 @@ func Start() {
 }
 
 func addCronFunc(c *cron.Cron, sepc string, cmd func()) {
-	err := c.AddFunc(sepc, cmd)
+	_, err := c.AddFunc(sepc, cmd)
 	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
+		slog.Error("add cron func error", slog.Any("err", err))
+	} else {
+		// slog.Info("add cron func", slog.Any("entryId", entryId))
 	}
 }
