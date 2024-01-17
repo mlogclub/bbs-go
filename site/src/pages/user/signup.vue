@@ -9,7 +9,7 @@
               <label class="label">昵称</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="nickname"
+                  v-model="form.nickname"
                   class="input is-success"
                   type="text"
                   placeholder="请输入昵称"
@@ -25,7 +25,7 @@
               <label class="label">邮箱</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="email"
+                  v-model="form.email"
                   class="input is-success"
                   type="text"
                   placeholder="请输入邮箱"
@@ -41,7 +41,7 @@
               <label class="label">密码</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="password"
+                  v-model="form.password"
                   class="input"
                   type="password"
                   placeholder="请输入密码"
@@ -57,7 +57,7 @@
               <label class="label">确认密码</label>
               <div class="control has-icons-left">
                 <input
-                  v-model="rePassword"
+                  v-model="form.rePassword"
                   class="input"
                   type="password"
                   placeholder="请再次输入密码"
@@ -75,7 +75,7 @@
                 <div class="field is-horizontal">
                   <div class="field login-captcha-input">
                     <input
-                      v-model="captchaCode"
+                      v-model="form.captchaCode"
                       class="input"
                       type="text"
                       placeholder="验证码"
@@ -85,8 +85,10 @@
                       ><i class="iconfont icon-captcha"
                     /></span>
                   </div>
-                  <div v-if="captchaUrl" class="field login-captcha-img">
-                    <a @click="showCaptcha"><img :src="captchaUrl" /></a>
+                  <div v-if="form.captchaUrl" class="field login-captcha-img">
+                    <a @click="refreshCaptcha"
+                      ><img :src="form.captchaUrl"
+                    /></a>
                   </div>
                 </div>
               </div>
@@ -95,25 +97,10 @@
             <div class="field">
               <div class="control">
                 <button class="button is-success" @click="signup">注册</button>
-                <nuxt-link class="button is-text" to="/user/signin">
+                <a class="button is-text" @click="toSignin">
                   已有账号，前往登录&gt;&gt;
-                </nuxt-link>
+                </a>
               </div>
-            </div>
-
-            <div
-              v-if="loginMethod.qq || loginMethod.github || loginMethod.osc"
-              class="third-party-line"
-            >
-              <div class="third-party-title">
-                <span>第三方账号登录</span>
-              </div>
-            </div>
-
-            <div class="third-parties">
-              <github-login v-if="loginMethod.github" :ref-url="ref" />
-              <osc-login v-if="loginMethod.osc" :ref-url="ref" />
-              <qq-login v-if="loginMethod.qq" :ref-url="ref" />
             </div>
           </div>
         </div>
@@ -122,72 +109,64 @@
   </section>
 </template>
 
-<script>
-export default {
-  asyncData({ params, query }) {
-    return {
-      ref: query.ref,
+<script setup>
+useHead({
+  title: useSiteTitle("注册"),
+});
+
+const route = useRoute();
+const form = reactive({
+  nickname: "",
+  email: "",
+  password: "",
+  rePassword: "",
+  captchaId: "",
+  captchaUrl: "",
+  captchaCode: "",
+  redirect: route.query.redirect || "",
+});
+
+refreshCaptcha();
+
+async function refreshCaptcha() {
+  try {
+    const { data: captcha } = await useAsyncData(() => {
+      return useMyFetch("/api/captcha/request", {
+        params: {
+          captchaId: form.captchaId,
+        },
+      });
+    });
+
+    form.captchaId = captcha.value.captchaId;
+    form.captchaUrl = captcha.value.captchaUrl;
+    form.captchaCode = "";
+  } catch (e) {
+    useCatchError(e);
+  }
+}
+
+async function signup() {
+  try {
+    const userStore = useUserStore();
+    const { user, redirect } = await userStore.signup(form);
+    if (redirect) {
+      useLinkTo(redirect);
+    } else {
+      useLinkTo(`/user/${user.id}`);
     }
-  },
-  data() {
-    return {
-      nickname: '',
-      email: '',
-      password: '',
-      rePassword: '',
-      captchaId: '',
-      captchaUrl: '',
-      captchaCode: '',
-    }
-  },
-  head() {
-    return {
-      title: this.$siteTitle('注册'),
-    }
-  },
-  computed: {
-    loginMethod() {
-      return this.$store.state.config.config.loginMethod
-    },
-  },
-  mounted() {
-    this.showCaptcha()
-  },
-  methods: {
-    async signup() {
-      try {
-        await this.$store.dispatch('user/signup', {
-          captchaId: this.captchaId,
-          captchaCode: this.captchaCode,
-          nickname: this.nickname,
-          email: this.email,
-          password: this.password,
-          rePassword: this.rePassword,
-          ref: this.ref,
-        })
-        if (this.ref) {
-          // 跳到登录前
-          this.$linkTo(this.ref)
-        } else {
-          // 跳到个人主页
-          this.$linkTo('/user/profile')
-        }
-      } catch (err) {
-        this.$message.error(err.message || err)
-        await this.showCaptcha()
-      }
-    },
-    async showCaptcha() {
-      try {
-        const ret = await this.$axios.get('/api/captcha/request')
-        this.captchaId = ret.captchaId
-        this.captchaUrl = ret.captchaUrl
-        this.captchaCode = ''
-      } catch (e) {
-        this.$message.error(e.message || e)
-      }
-    },
-  },
+  } catch (err) {
+    useCatchError(err);
+    await refreshCaptcha();
+  }
+}
+
+function toSignin() {
+  if (form.redirect) {
+    useLinkTo(`/user/signin?redirect=${encodeURIComponent(form.redirect)}`);
+  } else {
+    useLinkTo("/user/signin");
+  }
 }
 </script>
 

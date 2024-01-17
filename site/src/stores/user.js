@@ -29,8 +29,22 @@ export const useUserStore = defineStore("user", {
       };
     },
     async signout() {
-      await await useHttpGet("/api/login/signout");
+      await useHttpGet("/api/login/signout");
       this.user = null;
+    },
+    async signup(form) {
+      const { user, token, redirect } = await useHttpPostForm(
+        "/api/login/signup",
+        {
+          body: form,
+        }
+      );
+      this.user = user;
+      return {
+        user,
+        token,
+        redirect,
+      };
     },
   },
 });

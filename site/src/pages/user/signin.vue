@@ -1,65 +1,3 @@
-<script setup>
-const configStore = useConfigStore();
-const userStore = useUserStore();
-const route = useRoute();
-
-useHead({
-  title: `登录 | ${configStore.config.siteTitle}`,
-});
-
-const form = ref({
-  username: "",
-  password: "",
-  captchaId: "",
-  captchaUrl: "",
-  captchaCode: "",
-  redirect: route.query.redirect || "",
-});
-const loginMethod = computed(() => {
-  return configStore.config.loginMethod;
-});
-async function showCaptcha() {
-  try {
-    const { captchaId, captchaUrl } = await useHttpGet("/api/captcha/request", {
-      params: {
-        captchaId: form.value.captchaId,
-      },
-    });
-    form.value.captchaId = captchaId;
-    form.value.captchaUrl = captchaUrl;
-  } catch (e) {
-    useMsgError(e.message || e);
-  }
-}
-async function submitLogin() {
-  try {
-    if (!form.value.username) {
-      useMsgError("请输入用户名或邮箱");
-      return;
-    }
-    if (!form.value.password) {
-      useMsgError("请输入密码");
-      return;
-    }
-    if (!form.value.captchaCode) {
-      useMsgError("请输入验证码");
-      return;
-    }
-
-    const { user, redirect } = await userStore.signin(form.value);
-    if (redirect) {
-      useLinkTo(redirect);
-    } else {
-      useLinkTo("/user/" + user.id);
-    }
-  } catch (e) {
-    useMsgError(e.message || e);
-    await showCaptcha();
-  }
-}
-showCaptcha();
-</script>
-
 <template>
   <section class="main">
     <div class="container">
@@ -75,7 +13,7 @@ showCaptcha();
                   class="input is-success"
                   type="text"
                   placeholder="请输入用户名或邮箱"
-                  @keyup.enter="submitLogin"
+                  @keyup.enter="signin"
                 />
                 <span class="icon is-small is-left"
                   ><i class="iconfont icon-username"
@@ -91,7 +29,7 @@ showCaptcha();
                   class="input"
                   type="password"
                   placeholder="请输入密码"
-                  @keyup.enter="submitLogin"
+                  @keyup.enter="signin"
                 />
                 <span class="icon is-small is-left"
                   ><i class="iconfont icon-password"
@@ -109,7 +47,7 @@ showCaptcha();
                       class="input"
                       type="text"
                       placeholder="验证码"
-                      @keyup.enter="submitLogin"
+                      @keyup.enter="signin"
                     />
                     <span class="icon is-small is-left"
                       ><i class="iconfont icon-captcha"
@@ -118,7 +56,7 @@ showCaptcha();
                   <div
                     v-if="form.captchaUrl"
                     class="field login-captcha-img"
-                    @click="showCaptcha"
+                    @click="refreshCaptcha"
                   >
                     <img :src="form.captchaUrl" data-not-lazy />
                   </div>
@@ -127,12 +65,10 @@ showCaptcha();
             </div>
 
             <div class="field">
-              <button class="button is-success" @click="submitLogin">
-                登录
-              </button>
-              <nuxt-link class="button is-text" to="/user/signup">
+              <button class="button is-success" @click="signin">登录</button>
+              <a class="button is-text" @click="toSignup">
                 没有账号？点击这里去注册&gt;&gt;
-              </nuxt-link>
+              </a>
             </div>
           </div>
         </div>
@@ -140,5 +76,76 @@ showCaptcha();
     </div>
   </section>
 </template>
+
+<script setup>
+useHead({
+  title: useSiteTitle("登录"),
+});
+
+const route = useRoute();
+const form = reactive({
+  username: "",
+  password: "",
+  captchaId: "",
+  captchaUrl: "",
+  captchaCode: "",
+  redirect: route.query.redirect || "",
+});
+
+refreshCaptcha();
+
+async function refreshCaptcha() {
+  try {
+    const { data: captcha } = await useAsyncData(() => {
+      return useMyFetch("/api/captcha/request", {
+        params: {
+          captchaId: form.captchaId,
+        },
+      });
+    });
+    form.captchaId = captcha.value.captchaId;
+    form.captchaUrl = captcha.value.captchaUrl;
+    form.captchaCode = "";
+  } catch (e) {
+    useCatchError(e);
+  }
+}
+
+async function signin() {
+  try {
+    if (!form.username) {
+      useMsgError("请输入用户名或邮箱");
+      return;
+    }
+    if (!form.password) {
+      useMsgError("请输入密码");
+      return;
+    }
+    if (!form.captchaCode) {
+      useMsgError("请输入验证码");
+      return;
+    }
+
+    const userStore = useUserStore();
+    const { user, redirect } = await userStore.signin(form);
+    if (redirect) {
+      useLinkTo(redirect);
+    } else {
+      useLinkTo(`/user/${user.id}`);
+    }
+  } catch (e) {
+    useCatchError(e);
+    await refreshCaptcha();
+  }
+}
+
+function toSignup() {
+  if (form.redirect) {
+    useLinkTo(`/user/signup?redirect=${encodeURIComponent(form.redirect)}`);
+  } else {
+    useLinkTo("/user/signup");
+  }
+}
+</script>
 
 <style lang="scss" scoped></style>
