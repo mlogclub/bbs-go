@@ -31,11 +31,12 @@ if (route.params.id === "newest") {
   const { data: node } = await useAsyncData(() =>
     useMyFetch(`/api/topic/node?nodeId=${nodeId}`)
   );
-  nodeName = node.value.nodeName;
+  nodeName = node.value.name;
 }
 
-const envStore = useEnvStore();
-envStore.setCurrentNodeId(nodeId);
+onMounted(() => {
+  useEnvStore().setCurrentNodeId(nodeId);
+});
 
 useHead({
   title: useSiteTitle(nodeName, "话题"),
