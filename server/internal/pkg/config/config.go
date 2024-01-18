@@ -10,9 +10,16 @@ type Config struct {
 	Env        string // 环境：prod、dev
 	BaseUrl    string // base url
 	Port       string // 端口
-	LogFile    string // 日志文件
 	StaticPath string // 静态文件目录
 	IpDataPath string // IP数据文件
+
+	// 日志配置
+	Logger struct {
+		Filename   string // 日志文件的位置
+		MaxSize    int    // 文件最大尺寸（以MB为单位）
+		MaxAge     int    // 保留旧文件的最大天数
+		MaxBackups int    // 保留的最大旧文件数量
+	}
 
 	// 数据库配置
 	DB sqls.DbConfig

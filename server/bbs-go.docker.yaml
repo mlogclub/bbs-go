@@ -1,11 +1,17 @@
 Env: dev # 环境，线上环境：prod、测试环境：dev
 BaseUrl: http://127.0.0.1:3000 # 网站域名
 Port: 8082 # 端口
-LogFile: /data/logs/bbs-go.log # 日志文件
 StaticPath: /data/www  # 根路径下的静态文件目录，可配置绝对路径
 IpDataPath: # IP数据文件，默认读取当前目录下ip2region.xdb文件，最新数据文件请从这里下载：https://github.com/lionsoul2014/ip2region/tree/master/data
 AllowedOrigins:
   - "*"
+
+# 日志配置
+Logger:
+  Filename: /data/logs/bbs-go.log   # 日志文件的位置
+  MaxSize: 100                      # 文件最大尺寸（以MB为单位）
+  MaxAge: 10                        # 保留旧文件的最大天数
+  MaxBackups: 10                    # 保留的最大旧文件数量
 
 # 数据库连接
 DB:
