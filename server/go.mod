@@ -27,6 +27,7 @@ require (
 	github.com/spf13/viper v1.18.2
 	github.com/tidwall/gjson v1.17.0
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/gorm v1.25.5
 )
 

@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/pkg/validate"
+	"log/slog"
 	"strconv"
 	"strings"
 	"time"
@@ -25,6 +26,15 @@ import (
 
 type UserController struct {
 	Ctx iris.Context
+}
+
+func (c *UserController) GetTest() *web.JsonResult {
+	go func() {
+		for {
+			slog.Info("测试日志", slog.Any("now", dates.NowTimestamp()))
+		}
+	}()
+	return web.JsonSuccess()
 }
 
 // 获取当前登录用户

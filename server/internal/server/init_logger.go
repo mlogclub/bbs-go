@@ -11,16 +11,24 @@ import (
 
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/pkg/errors"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func initLogger() {
 	var writer io.Writer = os.Stdout
 	if strs.IsNotBlank(config.Instance.LogFile) {
-		if file, err := os.OpenFile(config.Instance.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
-			writer = io.MultiWriter(os.Stdout, file)
-		} else {
-			slog.Error(err.Error(), slog.Any("err", err))
-		}
+		writer = io.MultiWriter(
+			os.Stdout,
+			&lumberjack.Logger{
+				Filename:   config.Instance.LogFile, // 日志文件的位置
+				MaxSize:    100,                     // 文件最大尺寸（以MB为单位）
+				MaxBackups: 10,                      // 保留的最大旧文件数量
+				MaxAge:     28,                      // 保留旧文件的最大天数
+				Compress:   true,                    // 是否压缩/归档旧文件
+				LocalTime:  true,                    // 使用本地时间创建时间戳
+			},
+		)
 	}
 
 	handler := slog.NewTextHandler(writer, &slog.HandlerOptions{
