@@ -12,9 +12,6 @@
     {
       "path": "./admin"
     },
-    {
-      "path": "./docs"
-    }
   ],
   "settings": {
     "nuxt.isNuxtApp": false,
