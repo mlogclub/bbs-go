@@ -12,42 +12,26 @@
         <sup v-if="msgcount > 0">{{ msgcount > 9 ? "9+" : msgcount }}</sup>
       </nuxt-link>
     </div>
-    <!--
-    <div v-if="messages && messages.length" class="dropdown-menu">
-      <div class="dropdown-content msglist-wrapper">
-        <div class="msglist">
-          <ul>
-            <li v-for="msg in messages" :key="msg.messageId" class="msg-item">
-              <nuxt-link to="/user/messages">
-                {{ msg.from.id > 0 ? msg.from.nickname : '' }}{{ msg.title }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-        <div class="msgfooter">
-          <nuxt-link to="/user/messages">消息中心&gt;&gt;</nuxt-link>
-        </div>
-      </div>
-    </div>
-    -->
   </div>
 </template>
 
 <script setup>
 const msgcount = ref(0);
 const messages = ref([]);
-
-const { data } = useAsyncData(() => useMyFetch("/api/user/msgrecent"));
-msgcount.value = data.count || 0;
-messages.value = data.messages || [];
-console.log(data);
+const { data } = await useAsyncData(() => useMyFetch("/api/user/msgrecent"));
+msgcount.value = data.value.count || 0;
+messages.value = data.value.messages || [];
 </script>
 
 <style lang="scss" scoped>
 .msg-notice {
   .msgicon {
-    font-size: 16px;
+    font-size: 15px;
     color: var(--text-color);
+
+    display: flex;
+    align-items: center;
+    column-gap: 6px;
 
     &:hover {
       color: red;
@@ -64,33 +48,6 @@ console.log(data);
     50% {
       // color: transparent;
       color: red;
-    }
-  }
-
-  .msglist-wrapper {
-    padding: 5px 10px;
-    .msglist {
-      .msg-item {
-        padding: 3px 0;
-        font-size: 12px;
-        line-height: 21px;
-        overflow: hidden;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-        &:not(:last-child) {
-          border-bottom: 1px solid var(--border-color);
-        }
-      }
-    }
-    .msgfooter {
-      border-top: 1px solid var(--border-color);
-      text-align: right;
-      a {
-        font-size: 13px;
-      }
     }
   }
 }
