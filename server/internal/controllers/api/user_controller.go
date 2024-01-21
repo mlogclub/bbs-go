@@ -292,22 +292,34 @@ func (c *UserController) GetMsgrecent() *web.JsonResult {
 
 // 用户消息
 func (c *UserController) GetMessages() *web.JsonResult {
-	user := services.UserTokenService.GetCurrent(c.Ctx)
-	page := params.FormValueIntDefault(c.Ctx, "page", 1)
-
-	// 用户必须登录
-	if user == nil {
+	user, err := services.UserTokenService.CheckLogin(c.Ctx)
+	if err != nil {
 		return web.JsonError(errs.NotLogin)
 	}
+	var (
+		limit     = 20
+		cursor, _ = params.GetInt64(c.Ctx, "cursor")
+	)
 
-	messages, paging := services.MessageService.FindPageByCnd(sqls.NewCnd().
-		Eq("user_id", user.Id).
-		Page(page, 20).Desc("id"))
+	cnd := sqls.NewCnd().Eq("user_id", user.Id).Limit(limit).Desc("id")
+	if cursor > 0 {
+		cnd.Lt("id", cursor)
+	}
+	list := services.MessageService.Find(cnd)
+
+	var (
+		nextCursor = cursor
+		hasMore    = false
+	)
+	if len(list) > 0 {
+		nextCursor = list[len(list)-1].Id
+		hasMore = len(list) == limit
+	}
 
 	// 全部标记为已读
 	services.MessageService.MarkRead(user.Id)
 
-	return web.JsonPageData(render.BuildMessages(messages), paging)
+	return web.JsonCursorData(render.BuildMessages(list), cast.ToString(nextCursor), hasMore)
 }
 
 // 用户积分记录
