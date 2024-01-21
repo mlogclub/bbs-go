@@ -37,6 +37,8 @@
             <create-topic-btn />
           </div>
 
+          <msg-notice v-if="user" />
+
           <div
             v-if="user"
             class="navbar-item has-dropdown is-hoverable user-menus"
