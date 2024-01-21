@@ -100,6 +100,9 @@ useHead({
       width: 100%;
 
       .message-item-meta {
+        display: flex;
+        column-gap: 10px;
+        align-items: center;
         span.msg-nickname {
           a {
             font-size: 16px;
@@ -114,8 +117,8 @@ useHead({
         }
 
         span.msg-title {
-          font-size: 16px;
-          font-weight: 700;
+          font-size: 14px;
+          font-weight: 500;
         }
       }
 
