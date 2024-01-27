@@ -25,7 +25,12 @@ func (c *TopicNodeController) GetBy(id int64) *web.JsonResult {
 }
 
 func (c *TopicNodeController) AnyList() *web.JsonResult {
-	list, paging := services.TopicNodeService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("name").PageByReq().Asc("sort_no").Desc("id"))
+	list, paging := services.TopicNodeService.FindPageByCnd(params.NewPagedSqlCnd(c.Ctx,
+		params.QueryFilter{
+			ParamName: "name",
+			Op:        params.Like,
+		},
+	).Asc("sort_no").Desc("id"))
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
