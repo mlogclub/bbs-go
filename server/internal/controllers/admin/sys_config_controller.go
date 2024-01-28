@@ -33,8 +33,11 @@ func (c *SysConfigController) GetAll() *web.JsonResult {
 }
 
 func (c *SysConfigController) PostSave() *web.JsonResult {
-	config := c.Ctx.FormValue("config")
-	if err := services.SysConfigService.SetAll(config); err != nil {
+	body, err := c.Ctx.GetBody()
+	if err != nil {
+		return web.JsonError(err)
+	}
+	if err := services.SysConfigService.SetAll(string(body)); err != nil {
 		return web.JsonError(err)
 	}
 	return web.JsonSuccess()

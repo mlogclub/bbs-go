@@ -10,12 +10,7 @@ export const useConfigStore = defineStore("config", {
     //   return this.doubleCounter + 1
     // },
     isEnabledArticle(state) {
-      for (let i = 0; i < state.config.modules.length; i++) {
-        if (state.config.modules[i].module === "article") {
-          return state.config.modules[i].enabled;
-        }
-      }
-      return true;
+      return state.config.modules.article || true;
     },
   },
   actions: {

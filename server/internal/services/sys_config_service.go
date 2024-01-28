@@ -192,30 +192,26 @@ func (s *sysConfigService) GetSiteNavs() []models.ActionLink {
 	return siteNavsArr
 }
 
-func (s *sysConfigService) GetModules() (modules []models.ModuleConfig) {
+func (s *sysConfigService) GetModules() models.ModulesConfig {
 	str := cache.SysConfigCache.GetValue(constants.SysConfigModules)
+
+	useDefault := true
+	var modulesConfig models.ModulesConfig
 	if strs.IsNotBlank(str) {
-		if err := jsons.Parse(str, &modules); err != nil {
-			slog.Warn("站点导航数据错误", slog.Any("err", err))
+		if err := jsons.Parse(str, &modulesConfig); err != nil {
+			slog.Warn("启用模块配置错误", err)
+		} else {
+			useDefault = false
 		}
 	}
-	if len(modules) == 0 {
-		modules = []models.ModuleConfig{
-			{
-				Module:  constants.ModuleTweet,
-				Enabled: true,
-			},
-			{
-				Module:  constants.ModuleTopic,
-				Enabled: true,
-			},
-			{
-				Module:  constants.ModuleArticle,
-				Enabled: true,
-			},
+	if useDefault {
+		modulesConfig = models.ModulesConfig{
+			Tweet:   true,
+			Topic:   true,
+			Article: true,
 		}
 	}
-	return
+	return modulesConfig
 }
 
 // GetEmailWhitelist 邮箱白名单

@@ -24,32 +24,33 @@ type LoginMethod struct {
 //
 //	配置返回结构体
 type SysConfigResponse struct {
-	SiteTitle                  string         `json:"siteTitle"`
-	SiteDescription            string         `json:"siteDescription"`
-	SiteKeywords               []string       `json:"siteKeywords"`
-	SiteNavs                   []ActionLink   `json:"siteNavs"`
-	SiteNotification           string         `json:"siteNotification"`
-	RecommendTags              []string       `json:"recommendTags"`
-	UrlRedirect                bool           `json:"urlRedirect"`
-	ScoreConfig                ScoreConfig    `json:"scoreConfig"`
-	DefaultNodeId              int64          `json:"defaultNodeId"`
-	ArticlePending             bool           `json:"articlePending"`
-	TopicCaptcha               bool           `json:"topicCaptcha"`
-	UserObserveSeconds         int            `json:"userObserveSeconds"`
-	TokenExpireDays            int            `json:"tokenExpireDays"`
-	LoginMethod                LoginMethod    `json:"loginMethod"`
-	CreateTopicEmailVerified   bool           `json:"createTopicEmailVerified"`
-	CreateArticleEmailVerified bool           `json:"createArticleEmailVerified"`
-	CreateCommentEmailVerified bool           `json:"createCommentEmailVerified"`
-	EnableHideContent          bool           `json:"enableHideContent"`
-	Modules                    []ModuleConfig `json:"modules"`
-	EmailWhitelist             []string       `json:"emailWhitelist"` // 邮箱白名单
+	SiteTitle                  string        `json:"siteTitle"`
+	SiteDescription            string        `json:"siteDescription"`
+	SiteKeywords               []string      `json:"siteKeywords"`
+	SiteNavs                   []ActionLink  `json:"siteNavs"`
+	SiteNotification           string        `json:"siteNotification"`
+	RecommendTags              []string      `json:"recommendTags"`
+	UrlRedirect                bool          `json:"urlRedirect"`
+	ScoreConfig                ScoreConfig   `json:"scoreConfig"`
+	DefaultNodeId              int64         `json:"defaultNodeId"`
+	ArticlePending             bool          `json:"articlePending"`
+	TopicCaptcha               bool          `json:"topicCaptcha"`
+	UserObserveSeconds         int           `json:"userObserveSeconds"`
+	TokenExpireDays            int           `json:"tokenExpireDays"`
+	LoginMethod                LoginMethod   `json:"loginMethod"`
+	CreateTopicEmailVerified   bool          `json:"createTopicEmailVerified"`
+	CreateArticleEmailVerified bool          `json:"createArticleEmailVerified"`
+	CreateCommentEmailVerified bool          `json:"createCommentEmailVerified"`
+	EnableHideContent          bool          `json:"enableHideContent"`
+	Modules                    ModulesConfig `json:"modules"`
+	EmailWhitelist             []string      `json:"emailWhitelist"` // 邮箱白名单
 }
 
-// Moduleconfig
+// ModulesConfig
 //
 //	模块配置
-type ModuleConfig struct {
-	Module  string `json:"module"`
-	Enabled bool   `json:"enabled"`
+type ModulesConfig struct {
+	Tweet   bool `json:"tweet"`
+	Topic   bool `json:"topic"`
+	Article bool `json:"article"`
 }
