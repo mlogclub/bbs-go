@@ -75,6 +75,8 @@ const props = defineProps({
     }
 
     display: flex;
+    align-items: center;
+
     .article-item-main {
       width: 100%;
       display: flex;

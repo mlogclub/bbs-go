@@ -26,7 +26,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
     "animate.css": "^4.1.1",
-    "md-editor-v3": "^4.10.0",
+    "md-editor-v3": "^4.11.1",
     "nuxt-lazy-load": "^3.0.4"
   }
 }
