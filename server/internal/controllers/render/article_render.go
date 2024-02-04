@@ -37,7 +37,7 @@ func BuildArticle(article *models.Article, currentUser *models.User) *models.Art
 		rsp.Content = handleHtmlContent(article.Content)
 	}
 
-	rsp.Cover = buildImage(article.Cover)
+	rsp.Cover = BuildImage(article.Cover)
 
 	if currentUser != nil {
 		rsp.Favorited = services.FavoriteService.IsFavorited(currentUser.Id, constants.EntityArticle, article.Id)
@@ -78,7 +78,7 @@ func BuildSimpleArticle(article *models.Article) *models.ArticleSimpleResponse {
 		}
 	}
 
-	rsp.Cover = buildImage(article.Cover)
+	rsp.Cover = BuildImage(article.Cover)
 
 	return rsp
 }

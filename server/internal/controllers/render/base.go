@@ -8,7 +8,7 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 )
 
-func buildImageList(imageListStr string) (imageList []models.ImageInfo) {
+func BuildImageList(imageListStr string) (imageList []models.ImageInfo) {
 	if strs.IsNotBlank(imageListStr) {
 		var images []models.ImageDTO
 		if err := jsons.Parse(imageListStr, &images); err == nil {
@@ -27,7 +27,7 @@ func buildImageList(imageListStr string) (imageList []models.ImageInfo) {
 	return
 }
 
-func buildImage(imageStr string) *models.ImageInfo {
+func BuildImage(imageStr string) *models.ImageInfo {
 	if strs.IsBlank(imageStr) {
 		return nil
 	}

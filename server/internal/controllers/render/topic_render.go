@@ -89,7 +89,7 @@ func _buildTopic(topic *models.Topic, buildContent bool) *models.TopicResponse {
 		} else {
 			rsp.Content = html.EscapeString(topic.Content)
 		}
-		rsp.ImageList = buildImageList(topic.ImageList)
+		rsp.ImageList = BuildImageList(topic.ImageList)
 	}
 
 	if topic.NodeId > 0 {

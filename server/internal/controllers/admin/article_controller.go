@@ -73,6 +73,9 @@ func (c *ArticleController) buildArticles(articles []models.Article) []map[strin
 		tags := cache.TagCache.GetList(tagIds)
 		builder.Put("tags", render.BuildTags(tags))
 
+		// 封面
+		builder.Put("cover", render.BuildImage(article.Cover))
+
 		results = append(results, builder.Build())
 	}
 	return results
