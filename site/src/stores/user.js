@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", {
   },
   actions: {
     async fetchCurrent() {
-      this.user = await useMyFetch("/api/user/current");
+      this.user = await useHttpGet("/api/user/current");
       return this.user;
     },
     async signin(body) {
