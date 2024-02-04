@@ -7,6 +7,8 @@ import (
 )
 
 var Models = []interface{}{
+	&UserRole{}, &Role{}, &Menu{}, &RoleMenu{},
+
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{},
 	&UserScoreLog{}, &OperateLog{}, &EmailCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
@@ -49,44 +51,6 @@ type UserToken struct {
 	ExpiredAt  int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
 	Status     int    `gorm:"type:int(11);not null;index:idx_user_token_status" json:"status" form:"status"`
 	CreateTime int64  `gorm:"not null" json:"createTime" form:"createTime"`
-}
-
-type UserRole struct {
-	Model
-	UserId     int64 `json:"userId" form:"userId"`
-	RoleId     int64 `json:"roleId" form:"roleId"`
-	CreateTime int64 `json:"createTime" form:"createTime"`
-}
-
-type Role struct {
-	Model
-	Name       string `json:"name" form:"name"`     // 角色名称
-	Code       string `json:"code" form:"code"`     // 角色编码
-	System     bool   `json:"system" form:"system"` // 是否系统角色
-	Remark     string `json:"remark" form:"remark"`
-	CreateTime int64  `json:"createTime" form:"createTime"`
-	UpdateTime int64  `json:"updateTime" form:"updateTime"`
-}
-
-type Menu struct {
-	Model
-	Path       string `gorm:"size:1024" json:"path" form:"path"`
-	Name       string `gorm:"size:256" json:"name" form:"name"`
-	Redirect   string `gorm:"size:256" json:"redirect" form:"redirect"`
-	Roles      string `gorm:"size:512" json:"roles" form:"roles"`
-	Icon       string `gorm:"size:1024" json:"icon" form:"icon"`
-	Title      string `gorm:"size:64" json:"title" form:"title"`
-	SortNo     int    `gorm:"not null;default:0" json:"sortNo" form:"sortNo"`
-	CreateTime int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"`
-	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"`
-}
-
-type RoleMenu struct {
-	Model
-	RoleId     int64 `json:"roleId" form:"roleId"`
-	MenuId     int64 `json:"menuId" form:"menuId"`
-	CreateTime int64 `json:"createTime" form:"createTime"`
-	UpdateTime int64 `json:"updateTime" form:"updateTime"`
 }
 
 // 标签
