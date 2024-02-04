@@ -79,7 +79,6 @@ func (s *articleService) UpdateColumn(id int64, name string, value interface{}) 
 func (s *articleService) Delete(id int64) error {
 	err := repositories.ArticleRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
-		// 删掉标签文章
 		ArticleTagService.DeleteByArticleId(id)
 	}
 	return err
