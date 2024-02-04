@@ -9,24 +9,25 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.41.0",
+    "@antfu/eslint-config": "^2.6.4",
     "@element-plus/nuxt": "^1.0.7",
     "@nuxt/devtools": "latest",
     "@nuxtjs/color-mode": "^3.3.2",
     "@nuxtjs/eslint-module": "^4.1.0",
-    "@vueuse/core": "^10.7.1",
-    "@vueuse/nuxt": "^10.7.1",
+    "@vueuse/core": "^10.7.2",
+    "@vueuse/nuxt": "^10.7.2",
     "bulma": "^0.9.4",
-    "element-plus": "^2.4.4",
+    "element-plus": "^2.5.5",
     "eslint": "^8.56.0",
-    "nuxt": "^3.9.1",
-    "sass": "^1.69.1",
-    "typescript": "^5.3.3"
+    "nuxt": "^3.10.0",
+    "sass": "^1.70.0",
+    "typescript": "^5.3.3",
+    "vue": "^3.4.15"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.11",
+    "@pinia/nuxt": "^0.5.1",
     "animate.css": "^4.1.1",
-    "md-editor-v3": "^4.11.1",
+    "md-editor-v3": "^4.11.2",
     "nuxt-lazy-load": "^3.0.4"
   }
 }
