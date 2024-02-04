@@ -58,9 +58,6 @@ devDependencies:
   typescript:
     specifier: ^5.3.3
     version: 5.3.3
-  vue:
-    specifier: ^3.4.15
-    version: 3.4.15(typescript@5.3.3)
 
 packages:
 
