@@ -9,9 +9,9 @@
     {
       "path": "./site"
     },
-    {
-      "path": "./admin"
-    },
+    // {
+    //   "path": "./admin"
+    // },
   ],
   "settings": {
     "nuxt.isNuxtApp": false,
