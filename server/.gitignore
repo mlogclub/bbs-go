@@ -27,6 +27,8 @@ logs/*.log
 web/*
 tmp/*
 
+internal/web*
+
 cmd/generator/*
 go.work
 go.work.sum

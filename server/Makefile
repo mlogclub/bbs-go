@@ -19,4 +19,7 @@ clean:
 	@echo "Cleaning..."
 	@rm -f bbs-go
 
+generator:
+	@go run cmd/generator/generator.go
+
 .PHONY: all build run test clean
