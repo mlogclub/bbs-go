@@ -2,10 +2,12 @@ package admin
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/services"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -27,7 +29,18 @@ func (c *RoleController) AnyList() *web.JsonResult {
 		params.QueryFilter{
 			ParamName: "id",
 		},
-	).Desc("id"))
+		params.QueryFilter{
+			ParamName: "status",
+		},
+		params.QueryFilter{
+			ParamName: "name",
+			Op:        params.Like,
+		},
+		params.QueryFilter{
+			ParamName: "code",
+			Op:        params.Like,
+		},
+	).Asc("sort_no").Desc("id"))
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
@@ -37,6 +50,8 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	t.CreateTime = dates.NowTimestamp()
+	t.UpdateTime = dates.NowTimestamp()
 	if err := services.RoleService.Create(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
@@ -57,6 +72,7 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	t.UpdateTime = dates.NowTimestamp()
 	if err := services.RoleService.Update(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
@@ -69,7 +85,10 @@ func (c *RoleController) PostDelete() *web.JsonResult {
 		return web.JsonErrorMsg("delete ids is empty")
 	}
 	for _, id := range ids {
-		services.RoleService.Delete(id)
+		services.RoleService.Updates(id, map[string]interface{}{
+			"status":      constants.StatusDeleted,
+			"update_time": dates.NowTimestamp(),
+		})
 	}
 	return web.JsonSuccess()
 }

@@ -89,6 +89,9 @@ func NewServer() {
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 		m.Party("/user-report").Handle(new(admin.UserReportController))
 		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
+
+		m.Party("/role").Handle(new(admin.RoleController))
+		m.Party("/menu").Handle(new(admin.MenuController))
 	})
 
 	if err := app.Listen(":"+conf.Port,

@@ -2,10 +2,12 @@ package admin
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/services"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -27,7 +29,10 @@ func (c *MenuController) AnyList() *web.JsonResult {
 		params.QueryFilter{
 			ParamName: "id",
 		},
-	).Desc("id"))
+		params.QueryFilter{
+			ParamName: "status",
+		},
+	).Asc("sort_no").Desc("id"))
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
@@ -37,6 +42,8 @@ func (c *MenuController) PostCreate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	t.CreateTime = dates.NowTimestamp()
+	t.UpdateTime = dates.NowTimestamp()
 	if err := services.MenuService.Create(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
@@ -57,6 +64,7 @@ func (c *MenuController) PostUpdate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	t.UpdateTime = dates.NowTimestamp()
 	if err := services.MenuService.Update(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
@@ -69,7 +77,15 @@ func (c *MenuController) PostDelete() *web.JsonResult {
 		return web.JsonErrorMsg("delete ids is empty")
 	}
 	for _, id := range ids {
-		services.MenuService.Delete(id)
+		services.MenuService.Updates(id, map[string]interface{}{
+			"status":      constants.StatusDeleted,
+			"update_time": dates.NowTimestamp(),
+		})
 	}
+	return web.JsonSuccess()
+}
+
+func (c *MenuController) GetMenus() *web.JsonResult {
+	// TODO
 	return web.JsonSuccess()
 }
