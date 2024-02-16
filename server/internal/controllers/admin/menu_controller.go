@@ -22,7 +22,16 @@ func (c *MenuController) GetBy(id int64) *web.JsonResult {
 	if t == nil {
 		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return web.JsonData(t)
+	return web.JsonData(render.BuildMenu(t))
+}
+
+func (c *MenuController) GetTree() *web.JsonResult {
+	list := services.MenuService.Find(params.NewPagedSqlCnd(c.Ctx,
+		params.QueryFilter{
+			ParamName: "status",
+		},
+	).Asc("sort_no").Desc("id"))
+	return web.JsonData(render.BuildMenuSimpleTree(0, list))
 }
 
 func (c *MenuController) AnyList() *web.JsonResult {
@@ -40,6 +49,9 @@ func (c *MenuController) PostCreate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	if t.SortNo <= 0 {
+		t.SortNo = services.MenuService.GetNextSortNo(t.ParentId)
+	}
 	t.CreateTime = dates.NowTimestamp()
 	t.UpdateTime = dates.NowTimestamp()
 	if err := services.MenuService.Create(t); err != nil {
@@ -79,6 +91,26 @@ func (c *MenuController) PostDelete() *web.JsonResult {
 			"status":      constants.StatusDeleted,
 			"update_time": dates.NowTimestamp(),
 		})
+	}
+	return web.JsonSuccess()
+}
+
+func (c *MenuController) GetMenus() *web.JsonResult {
+	user, err := services.UserTokenService.CheckLogin(c.Ctx)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	list := services.MenuService.GetUserMenus(user)
+	return web.JsonData(render.BuildMenuTree(0, list))
+}
+
+func (c *MenuController) PostUpdate_sort() *web.JsonResult {
+	var ids []int64
+	if err := c.Ctx.ReadJSON(&ids); err != nil {
+		return web.JsonError(err)
+	}
+	if err := services.MenuService.UpdateSort(ids); err != nil {
+		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
 }

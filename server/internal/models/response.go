@@ -169,17 +169,27 @@ type ImageInfo struct {
 	Preview string `json:"preview"`
 }
 
+type TreeNode struct {
+	Id       int64      `json:"id"`
+	Title    string     `json:"title"`
+	Children []TreeNode `json:"children"`
+}
+
 type MenuResponse struct {
-	Id         int64          `json:"id"`
-	ParentId   int64          `json:"parentId"`
-	Name       string         `json:"name"`
-	Title      string         `json:"title"`
-	Icon       string         `json:"icon"`
-	Path       string         `json:"path"`
-	SortNo     int            `json:"sortNo"`
-	Status     int            `json:"status"`
-	CreateTime int64          `json:"createTime"`
-	UpdateTime int64          `json:"updateTime"`
-	Level      int            `json:"level"`
-	Children   []MenuResponse `json:"children"`
+	Id         int64  `json:"id"`
+	ParentId   *int64 `json:"parentId"`
+	Name       string `json:"name"`
+	Title      string `json:"title"`
+	Icon       string `json:"icon"`
+	Path       string `json:"path"`
+	SortNo     int    `json:"sortNo"`
+	Status     int    `json:"status"`
+	CreateTime int64  `json:"createTime"`
+	UpdateTime int64  `json:"updateTime"`
+}
+
+type MenuTreeResponse struct {
+	MenuResponse
+	Level    int                `json:"level"`
+	Children []MenuTreeResponse `json:"children"`
 }

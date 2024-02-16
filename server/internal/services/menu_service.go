@@ -6,6 +6,7 @@ import (
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"gorm.io/gorm"
 )
 
 var MenuService = newMenuService()
@@ -65,7 +66,26 @@ func (s *menuService) Delete(id int64) {
 	repositories.MenuRepository.Delete(sqls.DB(), id)
 }
 
-func (s *menuService) GetUserMenus() []models.Menu {
+func (s *menuService) GetNextSortNo(parentId int64) int {
+	max := s.FindOne(sqls.NewCnd().Eq("parent_id", parentId).Desc("sort_no"))
+	if max == nil {
+		return 0
+	}
+	return max.SortNo + 1
+}
+
+func (s *menuService) GetUserMenus(user *models.User) []models.Menu {
 	// TODO
-	return nil
+	return repositories.MenuRepository.Find(sqls.DB(), sqls.NewCnd().Asc("sort_no").Desc("id"))
+}
+
+func (s *menuService) UpdateSort(ids []int64) error {
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		for i, id := range ids {
+			if err := repositories.MenuRepository.UpdateColumn(tx, id, "sort_no", i); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
