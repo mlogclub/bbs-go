@@ -64,3 +64,8 @@ func (s *menuService) UpdateColumn(id int64, name string, value interface{}) err
 func (s *menuService) Delete(id int64) {
 	repositories.MenuRepository.Delete(sqls.DB(), id)
 }
+
+func (s *menuService) GetUserMenus() []models.Menu {
+	// TODO
+	return nil
+}

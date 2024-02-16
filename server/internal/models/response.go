@@ -168,3 +168,18 @@ type ImageInfo struct {
 	Url     string `json:"url"`
 	Preview string `json:"preview"`
 }
+
+type MenuResponse struct {
+	Id         int64          `json:"id"`
+	ParentId   int64          `json:"parentId"`
+	Name       string         `json:"name"`
+	Title      string         `json:"title"`
+	Icon       string         `json:"icon"`
+	Path       string         `json:"path"`
+	SortNo     int            `json:"sortNo"`
+	Status     int            `json:"status"`
+	CreateTime int64          `json:"createTime"`
+	UpdateTime int64          `json:"updateTime"`
+	Level      int            `json:"level"`
+	Children   []MenuResponse `json:"children"`
+}

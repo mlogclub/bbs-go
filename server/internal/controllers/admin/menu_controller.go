@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/services"
@@ -25,15 +26,12 @@ func (c *MenuController) GetBy(id int64) *web.JsonResult {
 }
 
 func (c *MenuController) AnyList() *web.JsonResult {
-	list, paging := services.MenuService.FindPageByCnd(params.NewPagedSqlCnd(c.Ctx,
-		params.QueryFilter{
-			ParamName: "id",
-		},
+	list := services.MenuService.Find(params.NewPagedSqlCnd(c.Ctx,
 		params.QueryFilter{
 			ParamName: "status",
 		},
 	).Asc("sort_no").Desc("id"))
-	return web.JsonData(&web.PageResult{Results: list, Page: paging})
+	return web.JsonData(render.BuildMenuTree(0, list))
 }
 
 func (c *MenuController) PostCreate() *web.JsonResult {
@@ -82,10 +80,5 @@ func (c *MenuController) PostDelete() *web.JsonResult {
 			"update_time": dates.NowTimestamp(),
 		})
 	}
-	return web.JsonSuccess()
-}
-
-func (c *MenuController) GetMenus() *web.JsonResult {
-	// TODO
 	return web.JsonSuccess()
 }
