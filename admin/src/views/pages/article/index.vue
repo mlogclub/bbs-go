@@ -63,6 +63,11 @@
   const filters = reactive({
     limit: 20,
     page: 1,
+
+    id: undefined,
+    userId: undefined,
+    title: undefined,
+    status: 0,
   });
 
   const data = reactive({
@@ -88,7 +93,7 @@
   const list = async () => {
     loading.value = true;
     try {
-      const ret = await axios.postForm(
+      const ret = await axios.postForm<any>(
         '/api/admin/article/list',
         jsonToFormData(filters)
       );
@@ -101,12 +106,12 @@
 
   list();
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     filters.page = page;
     list();
   };
 
-  const onPageSizeChange = (pageSize) => {
+  const onPageSizeChange = (pageSize: number) => {
     filters.limit = pageSize;
     list();
   };
