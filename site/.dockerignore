@@ -1,0 +1,4 @@
+.output
+.nuxt
+node_modules
+.eslintcache

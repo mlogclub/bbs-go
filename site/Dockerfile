@@ -1,20 +1,20 @@
-FROM node:20 AS builder
+FROM node:20-alpine AS builder
 
 ENV APP_HOME /code/bbs-go/site
 WORKDIR "$APP_HOME"
 
 COPY . ./
-RUN pnpm i \
-    pnpm build
+RUN npm install -g pnpm --registry=https://registry.npmmirror.com
+RUN pnpm install --registry=https://registry.npmmirror.com
+RUN pnpm build:docker
 
-FROM node:20
+FROM node:20-alpine
 
-COPY --from=builder /code/bbs-go/site/bbs-go /app/bbs-go
+COPY --from=builder /code/bbs-go/site/.output /app/bbs-go/.output
 
-WORKDIR /app
+WORKDIR /app/bbs-go
 
-EXPOSE 8082
+EXPOSE 3000
 
-# 设置环境变量
 ENV ENV=docker
-CMD ["./bbs-go"]
+CMD ["node", "./.output/server/index.mjs"]

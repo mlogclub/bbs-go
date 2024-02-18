@@ -23,6 +23,7 @@ logs
 .env.*
 !.env.local
 !.env.example
+!.env.docker
 
 nuxt.zip
 .eslintcache

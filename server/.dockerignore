@@ -1,5 +1,7 @@
 bbs-go
-bbs-go.example.yaml
 bbs-go.yaml
+bbs-go.prod.yaml
+bbs-go.dev.yaml
+bbs-go.test.yaml
 go.work
 go.work.sum

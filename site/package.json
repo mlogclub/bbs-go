@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build --dotenv .env.production",
+    "build:docker": "nuxt build --dotenv .env.docker",
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "preview": "nuxt preview --dotenv .env.production",
