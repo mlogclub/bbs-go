@@ -9,13 +9,15 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct \
     && go mod download
 
 COPY . ./
-RUN go build -v -o bbs-go cmd/server/main.go
+RUN CGO_ENABLED=0 go build -v -o bbs-go cmd/server/main.go && chmod +x bbs-go
 
 FROM alpine:latest
 
 COPY --from=builder /code/bbs-go/server/bbs-go /app/bbs-go
+COPY --from=builder /code/bbs-go/server/bbs-go.docker.yaml /app/bbs-go.docker.yaml
 
 WORKDIR /app
 
 EXPOSE 8082
-CMD ["ENV=production", "./bbs-go"]
+ENV ENV=docker
+CMD ["./bbs-go"]
