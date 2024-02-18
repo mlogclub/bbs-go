@@ -1,0 +1,24 @@
+{
+  // VUE3项目中禁用vetur
+  "vetur.validation.template": false,
+  "vetur.validation.script": false,
+  "vetur.validation.style": false,
+
+  "prettier.enable": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  },
+  "nuxt.isNuxtApp": false,
+  "i18n-ally.localesPaths": [
+    "src/locale",
+    "src/components/message-box/locale",
+    "src/views/login/locale"
+  ],
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
+  "cSpell.enabled": false,
+  "cSpell.words": ["arcoblue", "axios", "composables", "Gitee", "vueuse"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

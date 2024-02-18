@@ -9,17 +9,17 @@
     {
       "path": "./site"
     },
-    // {
-    //   "path": "./admin"
-    // },
+    {
+      "path": "./admin"
+    },
   ],
   "settings": {
     "nuxt.isNuxtApp": false,
     "i18n-ally.localesPaths": [
-      "admin-next/src/locale",
-      "admin-next/src/components/message-box/locale",
-      "admin-next/src/views/login/locale",
-      "admin-next/src/views/dashboard/workplace/locale"
+      "admin/src/locale",
+      "admin/src/components/message-box/locale",
+      "admin/src/views/login/locale",
+      "admin/src/views/dashboard/workplace/locale"
     ]
   }
 }
