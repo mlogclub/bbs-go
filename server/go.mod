@@ -1,6 +1,6 @@
 module bbs-go
 
-go 1.21.6
+go 1.21
 
 require (
 	github.com/88250/lute v1.7.5
