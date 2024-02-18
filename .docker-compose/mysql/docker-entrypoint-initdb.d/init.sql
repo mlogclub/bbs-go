@@ -75,9 +75,10 @@ WHERE NOT EXISTS(
 CREATE TABLE `t_topic_node` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) DEFAULT NULL,
-  `description` longtext,
-  `sort_no` bigint(20) DEFAULT NULL,
-  `status` bigint(20) NOT NULL,
+  `description` varchar(1024) DEFAULT NULL,
+  `logo` varchar(1024) DEFAULT NULL,
+  `sort_no` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL,
   `create_time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),

@@ -27,10 +27,12 @@ func Init() {
 }
 
 func initConfig() {
-	env := "dev"
-	if strs.IsNotBlank(os.Getenv("ENV")) {
-		env = os.Getenv("ENV")
+	env := os.Getenv("ENV")
+	if strs.IsBlank(env) {
+		env = "dev"
 	}
+
+	slog.Info("Load config", slog.String("ENV", env))
 
 	viper.SetConfigName("bbs-go." + env)
 	viper.SetConfigType("yaml")
