@@ -23,8 +23,8 @@ dependencies:
     specifier: ^1.11.5
     version: 1.11.7
   echarts:
-    specifier: ^5.4.0
-    version: 5.4.2
+    specifier: ^5.5.0
+    version: 5.5.0
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -47,8 +47,8 @@ dependencies:
     specifier: ^3.4.15
     version: 3.4.15(typescript@4.9.5)
   vue-echarts:
-    specifier: ^6.2.3
-    version: 6.5.4(echarts@5.4.2)(vue@3.4.15)
+    specifier: ^6.6.8
+    version: 6.6.8(echarts@5.5.0)(vue@3.4.15)
   vue-i18n:
     specifier: ^9.2.2
     version: 9.2.2(vue@3.4.15)
@@ -3313,11 +3313,11 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /echarts@5.4.2:
-    resolution: {integrity: sha512-2W3vw3oI2tWJdyAz+b8DuWS0nfXtSDqlDmqgin/lfzbkB01cuMEN66KWBlmur3YMp5nEDEEt5s23pllnAzB4EA==}
+  /echarts@5.5.0:
+    resolution: {integrity: sha512-rNYnNCzqDAPCr4m/fqyUFv7fD9qIsd50S6GDFgO1DxZhncCsNsG7IfUlAlvZe5oSEQxtsjnHiUuppzccry93Xw==}
     dependencies:
       tslib: 2.3.0
-      zrender: 5.4.3
+      zrender: 5.5.0
     dev: false
 
   /electron-to-chromium@1.4.648:
@@ -7976,18 +7976,21 @@ packages:
     dependencies:
       vue: 3.4.15(typescript@4.9.5)
 
-  /vue-echarts@6.5.4(echarts@5.4.2)(vue@3.4.15):
-    resolution: {integrity: sha512-pLJTk2hfhauoWdmiZGXByAtcO6bpfnAS+jkJqKimSBSV5I5ckh2nka9duLlIVbTvQOEb2tFa0XiXjACQNcEfpA==}
+  /vue-echarts@6.6.8(echarts@5.5.0)(vue@3.4.15):
+    resolution: {integrity: sha512-3EGrxKGCGjHnkhudRQQ4fkK5iJxxXNQ1fXvSWA/7mzR/oV7BBSHYvC3gDbG/WIW0A/Fcx2H8k5H3NDyWgjyi8g==}
     requiresBuild: true
     peerDependencies:
       '@vue/composition-api': ^1.0.5
+      '@vue/runtime-core': ^3.0.0
       echarts: ^5.4.1
       vue: ^2.6.12 || ^3.1.1
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+      '@vue/runtime-core':
+        optional: true
     dependencies:
-      echarts: 5.4.2
+      echarts: 5.5.0
       resize-detector: 0.3.0
       vue: 3.4.15(typescript@4.9.5)
       vue-demi: 0.13.11(vue@3.4.15)
@@ -8232,8 +8235,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zrender@5.4.3:
-    resolution: {integrity: sha512-DRUM4ZLnoaT0PBVvGBDO9oWIDBKFdAVieNWxWwK0niYzJCMwGchRk21/hsE+RKkIveH3XHCyvXcJDkgLVvfizQ==}
+  /zrender@5.5.0:
+    resolution: {integrity: sha512-O3MilSi/9mwoovx77m6ROZM7sXShR/O/JIanvzTwjN3FORfLSr81PsUGd7jlaYOeds9d8tw82oP44+3YucVo+w==}
     dependencies:
       tslib: 2.3.0
     dev: false
