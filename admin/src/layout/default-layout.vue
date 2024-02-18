@@ -87,7 +87,7 @@
     appStore.updateSettings({ menuCollapse: val });
   };
   watch(
-    () => userStore.roles,
+    () => userStore.role,
     (roleValue) => {
       if (roleValue && !permission.accessRouter(route))
         router.push({ name: 'notFound' });
