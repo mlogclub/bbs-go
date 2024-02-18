@@ -11,15 +11,21 @@ jobs:
         node-version: [20.x]
   
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          # cache: "npm"
+          cache: "pnpm"
           # cache-dependency-path: admin/package-lock.json
-      - name: pnpm install, build, and test
+      - name: Install dependencies
         working-directory: ./admin
         run: |
           pnpm install
+      - name: Build
+        working-directory: ./admin
+        run: |
           pnpm build

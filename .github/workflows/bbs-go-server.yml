@@ -15,12 +15,12 @@ jobs:
         with:
           go-version: 1.21
 
-      - name: Get dependencies
+      - name: Install dependencies
+        working-directory: ./server
         run: |
-          cd server
           go mod download
 
       - name: Build
         working-directory: ./server
         run: |
-          go build -v .
+          make build
