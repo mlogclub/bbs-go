@@ -36,7 +36,6 @@ services:
       context: ./server
     volumes:
       - /data/docker:/data
-      - ./server/bbs-go.docker.yaml:/app/bbs-go.docker.yaml
     restart: on-failure
 
   site:
@@ -49,6 +48,4 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./site
-    volumes:
-      - ./site/nuxt.config.docker.js:/app/bbs-go/nuxt.config.js
     restart: on-failure
