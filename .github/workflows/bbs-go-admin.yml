@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
   
     steps:
       - uses: actions/checkout@v2
@@ -18,8 +18,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           # cache: "npm"
           # cache-dependency-path: admin/package-lock.json
-      - name: npm install, build, and test
+      - name: pnpm install, build, and test
         working-directory: ./admin
         run: |
-          yarn
-          yarn build
+          pnpm install
+          pnpm build
