@@ -16,6 +16,8 @@ bbs-go
 
 bbs-go.yaml
 bbs-go.prod.yaml
+bbs-go.dev.yaml
+bbs-go.test.yaml
 
 .idea/*
 build/*

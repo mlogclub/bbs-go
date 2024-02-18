@@ -9,8 +9,10 @@ import (
 	"bbs-go/internal/scheduler"
 	"fmt"
 	"log/slog"
+	"os"
 	"time"
 
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -25,7 +27,12 @@ func Init() {
 }
 
 func initConfig() {
-	viper.SetConfigName("bbs-go")
+	env := "dev"
+	if strs.IsNotBlank(os.Getenv("ENV")) {
+		env = os.Getenv("ENV")
+	}
+
+	viper.SetConfigName("bbs-go." + env)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("$HOME/.bbs-go")
 	viper.AddConfigPath(".")
