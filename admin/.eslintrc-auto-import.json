@@ -333,6 +333,7 @@
     "calcHeight": true,
     "empty": true,
     "useTableHeight": true,
-    "convertMenuItem": true
+    "convertMenuItem": true,
+    "tabbar": true
   }
 }
