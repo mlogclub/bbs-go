@@ -286,5 +286,4 @@ INSERT INTO `t_menu` (`id`, `parent_id`, `name`, `title`, `icon`, `path`, `sort_
 (9, 0, 'Settings', '系统设置', 'icon-settings', '/settings', 6, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
 (10, 0, '', '权限管理', '', '', 7, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
 (12, 5, 'TopicNode', '节点管理', '', '/topic/topic-node', 0, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
-(13, 5, 'Topic', '帖子管理', '', '/topic/index', 1, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
-(14, 10, 'Permission', '权限管理', '', '/permission/index', 3, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000));
+(13, 5, 'Topic', '帖子管理', '', '/topic/index', 1, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000));
