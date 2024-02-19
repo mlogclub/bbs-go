@@ -49,3 +49,16 @@ services:
       dockerfile: Dockerfile
       context: ./site
     restart: on-failure
+
+
+  admin:
+    container_name: bbs-go-admin
+    image: mlogclub/bbs-go-admin:latest
+    depends_on:
+      - server
+    ports:
+      - 8080:80
+    build:
+      dockerfile: Dockerfile
+      context: ./admin
+    restart: on-failure
