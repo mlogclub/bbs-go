@@ -257,3 +257,34 @@ WHERE NOT EXISTS(
     FROM `t_sys_config`
     WHERE `key` = 'scoreConfig'
   );
+
+-- 菜单配置
+DROP TABLE IF EXISTS `t_menu`;
+CREATE TABLE `t_menu` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(20) DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `title` varchar(64) DEFAULT NULL,
+  `icon` varchar(1024) DEFAULT NULL,
+  `path` varchar(1024) DEFAULT NULL,
+  `sort_no` bigint(20) NOT NULL DEFAULT '0',
+  `status` bigint(20) DEFAULT NULL,
+  `create_time` bigint(20) NOT NULL DEFAULT '0',
+  `update_time` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `t_menu` (`id`, `parent_id`, `name`, `title`, `icon`, `path`, `sort_no`, `status`, `create_time`, `update_time`) VALUES
+(1, 0, 'Dashboard', '仪表盘', 'icon-dashboard', '/dashboard', 0, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(2, 10, 'Role', '角色管理', '', '/permission/role', 1, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(3, 10, 'Menu', '菜单管理', '', '/permission/menu', 2, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(4, 0, 'User', '用户管理', 'icon-user', '/user', 1, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(5, 0, '', '帖子管理', '', '', 2, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(6, 0, 'Article', '文章管理', '', '/article', 3, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(7, 0, 'ForbiddenWord', '违禁词', '', '/forbidden-word', 4, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(8, 0, 'Link', '友情链接', '', '/link', 5, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(9, 0, 'Settings', '系统设置', 'icon-settings', '/settings', 6, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(10, 0, '', '权限管理', '', '', 7, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(12, 5, 'TopicNode', '节点管理', '', '/topic/topic-node', 0, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(13, 5, 'Topic', '帖子管理', '', '/topic/index', 1, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
+(14, 10, 'Permission', '权限管理', '', '/permission/index', 3, 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000));
