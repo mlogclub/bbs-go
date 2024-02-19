@@ -5,10 +5,12 @@ export function useTableHeight() {
     return;
   }
 
+  const ins = instance as any;
+
   const containerHeaderRef =
-    instance.ctx.$el.getElementsByClassName('container-header')[0];
+    ins.ctx.$el.getElementsByClassName('container-header')[0];
   const containerMainRef =
-    instance.ctx.$el.getElementsByClassName('container-main')[0];
+    ins.ctx.$el.getElementsByClassName('container-main')[0];
 
   if (!containerMainRef) {
     return;
@@ -29,6 +31,4 @@ export function useTableHeight() {
   window.onresize = calcHeight;
 }
 
-export function empty(instance) {
-  console.log('unsupported');
-}
+export function empty(instance) { }
