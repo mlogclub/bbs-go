@@ -8,6 +8,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -42,6 +43,11 @@ func (c *RoleController) AnyList() *web.JsonResult {
 		},
 	).Asc("sort_no").Desc("id"))
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
+}
+
+func (c *RoleController) GetAll_roles() *web.JsonResult {
+	list := services.RoleService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+	return web.JsonData(list)
 }
 
 func (c *RoleController) PostCreate() *web.JsonResult {
