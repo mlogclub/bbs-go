@@ -1,5 +1,5 @@
 export default {
-  path: 'https://docs.bbs-go.com',
+  path: 'https://bbs-go.com',
   name: 'faq',
   meta: {
     title: '常见问题',

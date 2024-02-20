@@ -4,7 +4,7 @@
 ## 项目地址
 
 - 交流站：[码农俱乐部](https://mlog.club)
-- 文档地址：[http://docs.bbs-go.com/](http://docs.bbs-go.com/)
+- 文档地址：[https://bbs-go.com](https://bbs-go.com)
 - 问题反馈: [https://mlog.club/topics/node/3](https://mlog.club/topics/node/3)
 - Github: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
