@@ -1,16 +1,14 @@
 export function useTableHeight() {
-  const instance = getCurrentInstance();
+  const { proxy } = getCurrentInstance() as any;
 
-  if (!instance) {
+  if (!proxy) {
     return;
   }
 
-  const ins = instance as any;
-
   const containerHeaderRef =
-    ins.ctx.$el.getElementsByClassName('container-header')[0];
+    proxy.$el.getElementsByClassName('container-header')[0];
   const containerMainRef =
-    ins.ctx.$el.getElementsByClassName('container-main')[0];
+    proxy.$el.getElementsByClassName('container-main')[0];
 
   if (!containerMainRef) {
     return;
