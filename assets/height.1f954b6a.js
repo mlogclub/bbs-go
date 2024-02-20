@@ -1,1 +1,0 @@
-import{g as s}from"./arco.2c5416d7.js";function m(){const e=s();if(!e)return;const t=e,n=t.ctx.$el.getElementsByClassName("container-header")[0],i=t.ctx.$el.getElementsByClassName("container-main")[0];if(!i)return;function c(){let a=document.documentElement.clientHeight-118;n&&(a-=n.clientHeight),i.style.height=`${Math.max(a,300)}px`}c(),window.onresize=c}export{m as u};
