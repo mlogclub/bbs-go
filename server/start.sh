@@ -1,1 +1,1 @@
-pm2 start ./bbs-go --name bbs-go-server
+ENV=prod pm2 start ./bbs-go --name bbs-go-server
