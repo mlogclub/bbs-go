@@ -41,6 +41,7 @@
         show-empty-tree
         column-resizable
         :draggable="{ type: 'handle', width: 40 }"
+        row-key="id"
         @change="handleChange"
       >
         <template #columns>
