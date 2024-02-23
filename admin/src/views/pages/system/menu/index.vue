@@ -51,7 +51,11 @@
 
           <a-table-column title="名称" data-index="name" />
 
-          <a-table-column title="ICON" data-index="icon" />
+          <a-table-column title="ICON" data-index="icon">
+            <template #cell="{ record }">
+              <component :is="record.icon" v-if="record.icon" :size="18" />
+            </template>
+          </a-table-column>
 
           <a-table-column title="路径" data-index="path" />
 
