@@ -16,14 +16,14 @@
         </a-form-item>
       </a-form>
 
-      <!-- <div class="action-btns">
+      <div class="action-btns">
         <a-button type="primary" :size="appStore.table.size" @click="showAdd">
           <template #icon>
             <icon-plus />
           </template>
           新增
         </a-button>
-      </div> -->
+      </div>
     </div>
     <div class="container-main">
       <a-table
@@ -61,15 +61,30 @@
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ record }">
+              <a-button
+                type="primary"
+                :size="appStore.table.size"
+                @click="showEdit(record.id)"
+                >编辑</a-button
+              >
+            </template>
+          </a-table-column>
         </template>
       </a-table>
     </div>
+
+    <Edit ref="edit" @ok="list" />
   </div>
 </template>
 
 <script setup lang="ts">
+  import Edit from './components/Edit.vue';
+
   const appStore = useAppStore();
   const loading = ref(false);
+  const edit = ref();
   const filters = reactive({
     limit: 20,
     page: 1,
@@ -118,6 +133,14 @@
   };
 
   list();
+
+  const showAdd = () => {
+    edit.value.show();
+  };
+
+  const showEdit = (id: any) => {
+    edit.value.showEdit(id);
+  };
 
   const onPageChange = (page: number) => {
     filters.page = page;
