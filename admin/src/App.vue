@@ -1,10 +1,10 @@
 <template>
-  <a-watermark content="BBS-GO">
-    <a-config-provider :locale="locale">
-      <router-view />
-      <global-setting />
-    </a-config-provider>
-  </a-watermark>
+  <!-- <a-watermark content="BBS-GO"> -->
+  <a-config-provider :locale="locale">
+    <router-view />
+    <global-setting />
+  </a-config-provider>
+  <!-- </a-watermark> -->
 </template>
 
 <script lang="ts" setup>

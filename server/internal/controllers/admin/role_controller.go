@@ -98,3 +98,18 @@ func (c *RoleController) PostDelete() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
+
+func (c *RoleController) GetRole_menu_ids() *web.JsonResult {
+	roleId, _ := params.GetInt64(c.Ctx, "roleId")
+	menuIds := services.RoleMenuService.GetMenuIdsByRole(roleId)
+	return web.JsonData(menuIds)
+}
+
+func (c *RoleController) PostSave_role_menus() *web.JsonResult {
+	roleId, _ := params.GetInt64(c.Ctx, "roleId")
+	menuIds := params.GetInt64Arr(c.Ctx, "menuIds")
+	if err := services.RoleMenuService.SaveRoleMenus(roleId, menuIds); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}

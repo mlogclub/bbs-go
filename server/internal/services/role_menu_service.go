@@ -4,8 +4,11 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
 
+	"github.com/mlogclub/simple/common/arrs"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"gorm.io/gorm"
 )
 
 var RoleMenuService = newRoleMenuService()
@@ -63,4 +66,53 @@ func (s *roleMenuService) UpdateColumn(id int64, name string, value interface{})
 
 func (s *roleMenuService) Delete(id int64) {
 	repositories.RoleMenuRepository.Delete(sqls.DB(), id)
+}
+
+func (s *roleMenuService) GetByRole(roleId int64) []models.RoleMenu {
+	return s.Find(sqls.NewCnd().Eq("role_id", roleId))
+}
+
+func (s *roleMenuService) GetMenuIdsByRole(roleId int64) []int64 {
+	list := s.GetByRole(roleId)
+	var menuIds []int64
+	for _, element := range list {
+		menuIds = append(menuIds, element.Id)
+	}
+	return menuIds
+}
+
+func (s *roleMenuService) SaveRoleMenus(roleId int64, menuIds []int64) error {
+	currentMenuIds := s.GetMenuIdsByRole(roleId)
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		var (
+			addIds []int64 // 本次需要新增的
+			delIds []int64 // 本次需要删除的
+		)
+		for _, menuId := range menuIds {
+			if !arrs.Contains(currentMenuIds, menuId) {
+				addIds = append(addIds, menuId)
+			}
+		}
+		for _, menuId := range currentMenuIds {
+			if !arrs.Contains(menuIds, menuId) {
+				delIds = append(delIds, menuId)
+			}
+		}
+
+		for _, menuId := range addIds {
+			if err := repositories.RoleMenuRepository.Create(tx, &models.RoleMenu{
+				RoleId:     roleId,
+				MenuId:     menuId,
+				CreateTime: dates.NowTimestamp(),
+			}); err != nil {
+				return err
+			}
+		}
+		for _, menuId := range delIds {
+			if err := tx.Delete(&models.RoleMenu{}, "role_id = ? and menu_id = ?", roleId, menuId).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
