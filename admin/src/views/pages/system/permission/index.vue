@@ -9,12 +9,17 @@
     </div>
     <div class="container-main">
       <a-card title="角色列表" class="roles-panel" :body-style="cardBodyStyle">
-        <div v-for="role in roles" :key="role.id" class="role-item">
-          <a
+        <div class="role-item-list">
+          <div
+            v-for="role in roles"
+            :key="role.id"
+            class="role-item"
             :class="{ active: role.id === currentRoleId }"
             @click="changeRole(role)"
-            >{{ role.name }}</a
           >
+            <span>{{ role.name }}</span>
+            <icon-right />
+          </div>
         </div>
       </a-card>
       <a-card title="菜单权限" class="menus-panel" :body-style="cardBodyStyle">
@@ -54,18 +59,20 @@
   });
 
   const init = async () => {
-    await getRoles();
-    await getMenus();
+    await Promise.all([getRoles(), getMenus()]);
 
     if (!currentRoleId.value) {
       if (roles.value && roles.value.length) {
         currentRoleId.value = roles.value[0].id;
       }
     }
+
+    await getRoleMenusIds();
   };
 
-  const changeRole = async () => {
-    checkedMenuIds.value = await axios.get('/api/admin/role/role_menu_ids');
+  const changeRole = async (role) => {
+    currentRoleId.value = role.id;
+    await getRoleMenusIds();
   };
 
   const saveRoleMenus = async () => {
@@ -76,6 +83,7 @@
         menuIds: checkedMenuIds.value ? checkedMenuIds.value.join(',') : '',
       })
     );
+    await getRoleMenusIds();
   };
 
   const getRoles = async () => {
@@ -89,6 +97,12 @@
     } finally {
       loading.value = false;
     }
+  };
+
+  const getRoleMenusIds = async () => {
+    checkedMenuIds.value = await axios.get(
+      `/api/admin/role/role_menu_ids?roleId=${currentRoleId.value}`
+    );
   };
 </script>
 
@@ -104,17 +118,36 @@
     column-gap: 10px;
 
     .roles-panel {
-      width: 260px;
+      width: 220px;
 
-      .role-item {
-        a {
+      .role-item-list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 6px;
+
+        .role-item {
+          border: 1px solid var(--color-neutral-3);
+          border-radius: 4px;
+          padding: 10px;
           cursor: pointer;
           font-size: 14px;
           font-weight: 500;
+          background-color: var(--color-neutral-2);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-          &.active,
-          &:hover {
-            color: rgb(var(--arcoblue-6));
+          span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          &.active {
+            // color: rgb(var(--arcoblue-6));
+
+            color: rgb(var(--link-1));
+            background-color: rgb(var(--arcoblue-6));
           }
         }
       }

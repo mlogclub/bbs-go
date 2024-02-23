@@ -76,7 +76,7 @@ func (s *roleMenuService) GetMenuIdsByRole(roleId int64) []int64 {
 	list := s.GetByRole(roleId)
 	var menuIds []int64
 	for _, element := range list {
-		menuIds = append(menuIds, element.Id)
+		menuIds = append(menuIds, element.MenuId)
 	}
 	return menuIds
 }
