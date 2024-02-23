@@ -173,12 +173,17 @@
     text-decoration: none;
   }
   .link-activated {
-    color: rgb(var(--link-6));
+    // color: rgb(var(--link-6));
+    color: rgb(var(--link-1));
+    background-color: rgb(var(--arcoblue-6));
+    font-size: 13px;
     .tag-link {
-      color: rgb(var(--link-6));
+      // color: rgb(var(--link-6));
+      color: rgb(var(--link-1));
     }
     & + .arco-tag-close-btn {
-      color: rgb(var(--link-6));
+      // color: rgb(var(--link-6));
+      color: rgb(var(--link-1));
     }
   }
   :deep(.arco-dropdown-option-content) {
@@ -188,10 +193,10 @@
   }
   .arco-dropdown-open {
     .tag-link {
-      color: rgb(var(--danger-6));
+      color: rgb(var(--danger-1));
     }
     .arco-tag-close-btn {
-      color: rgb(var(--danger-6));
+      color: rgb(var(--danger-1));
     }
   }
   .sperate-line {
