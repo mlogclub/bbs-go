@@ -17,12 +17,12 @@
       </a-form>
 
       <div class="action-btns">
-        <a-button type="primary" :size="appStore.table.size" @click="showAdd">
+        <!-- <a-button type="primary" :size="appStore.table.size" @click="showAdd">
           <template #icon>
             <icon-plus />
           </template>
           新增
-        </a-button>
+        </a-button> -->
       </div>
     </div>
     <div class="container-main">
