@@ -123,11 +123,20 @@
     edit.value.showEdit(id);
   };
 
-  const handleChange = async (_data: any[]) => {
+  const handleChange = async (_data: any[], extra: any, current: any[]) => {
     const ids: number[] = [];
-    _data.forEach((element) => {
-      ids.push(element.id);
-    });
+
+    getSortedIds(_data);
+
+    function getSortedIds(elements) {
+      elements.forEach((element) => {
+        ids.push(element.id);
+        // 有children，children中的元素同样参与排序
+        if (element.children && element.children.length) {
+          getSortedIds(element.children);
+        }
+      });
+    }
 
     await axios.post('/api/admin/menu/update_sort', ids);
     await list();
