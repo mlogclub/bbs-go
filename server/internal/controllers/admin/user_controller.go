@@ -9,7 +9,6 @@ import (
 	"bbs-go/internal/models"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/passwd"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
@@ -59,33 +58,35 @@ func (c *UserController) PostCreate() *web.JsonResult {
 }
 
 func (c *UserController) PostUpdate() *web.JsonResult {
-	id, err := params.FormValueInt64(c.Ctx, "id")
-	if err != nil {
-		return web.JsonError(err)
-	}
+	var (
+		id, _       = params.GetInt64(c.Ctx, "id")
+		username    = params.FormValue(c.Ctx, "username")
+		email       = params.FormValue(c.Ctx, "email")
+		nickname    = params.FormValue(c.Ctx, "nickname")
+		avatar      = params.FormValue(c.Ctx, "avatar")
+		gender      = params.FormValue(c.Ctx, "gender")
+		homePage    = params.FormValue(c.Ctx, "homePage")
+		description = params.FormValue(c.Ctx, "description")
+		roles       = params.FormValueStringArray(c.Ctx, "roles")
+		status      = params.FormValueIntDefault(c.Ctx, "status", 0)
+	)
+
 	user := services.UserService.Get(id)
 	if user == nil {
 		return web.JsonErrorMsg("entity not found")
 	}
 
-	username := params.FormValue(c.Ctx, "username")
-	password := params.FormValue(c.Ctx, "password")
-	nickname := params.FormValue(c.Ctx, "nickname")
-	email := params.FormValue(c.Ctx, "email")
-	roles := params.FormValueStringArray(c.Ctx, "roles")
-	status := params.FormValueIntDefault(c.Ctx, "status", -1)
-
 	user.Username = sqls.SqlNullString(username)
-	user.Nickname = nickname
 	user.Email = sqls.SqlNullString(email)
+	user.Nickname = nickname
+	user.Avatar = avatar
+	user.Gender = constants.Gender(gender)
+	user.HomePage = homePage
+	user.Description = description
 	user.Roles = strings.Join(roles, ",")
 	user.Status = status
 
-	if len(password) > 0 {
-		user.Password = passwd.EncodePassword(password)
-	}
-
-	err = services.UserService.Update(user)
+	err := services.UserService.Update(user)
 	if err != nil {
 		return web.JsonError(err)
 	}

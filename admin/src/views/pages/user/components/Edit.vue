@@ -20,7 +20,7 @@
       </a-form-item>
 
       <a-form-item label="头像" field="avatar">
-        <a-input v-model="form.avatar" />
+        <image-upload v-model="form.avatar" />
       </a-form-item>
 
       <a-form-item label="性别" field="gender">
@@ -50,6 +50,8 @@
 </template>
 
 <script setup lang="ts">
+  import ImageUpload from '@/components/ImageUpload.vue';
+
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();
