@@ -70,6 +70,12 @@ const (
 	UserTypeGzh    = 1 // 公众号用户
 )
 
+// 角色类型
+const (
+	RoleTypeSystem = 0 // 系统角色
+	RoleTypeCustom = 1 // 自定义角色
+)
+
 // 内容类型
 const (
 	ContentTypeHtml     = "html"

@@ -2,13 +2,14 @@ package models
 
 type Role struct {
 	Model
-	Name       string `gorm:"size:64" json:"name" form:"name"`        // 角色名称
-	Code       string `gorm:"unique;size:64" json:"code" form:"code"` // 角色编码
-	SortNo     int    `json:"sortNo" form:"sortNo"`                   // 排序
-	Remark     string `gorm:"size:256" json:"remark" form:"remark"`   // 备注
-	Status     int    `json:"status" form:"status"`                   // 状态
-	CreateTime int64  `json:"createTime" form:"createTime"`           // 创建时间
-	UpdateTime int64  `json:"updateTime" form:"updateTime"`           // 更新时间
+	Type       int    `gorm:"not null;default:1" json:"type" form:"type"` // 角色类型（0：系统角色、1：自定义角色）
+	Name       string `gorm:"size:64" json:"name" form:"name"`            // 角色名称
+	Code       string `gorm:"unique;size:64" json:"code" form:"code"`     // 角色编码
+	SortNo     int    `json:"sortNo" form:"sortNo"`                       // 排序
+	Remark     string `gorm:"size:256" json:"remark" form:"remark"`       // 备注
+	Status     int    `json:"status" form:"status"`                       // 状态
+	CreateTime int64  `json:"createTime" form:"createTime"`               // 创建时间
+	UpdateTime int64  `json:"updateTime" form:"updateTime"`               // 更新时间
 }
 
 type Menu struct {

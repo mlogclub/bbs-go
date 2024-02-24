@@ -56,6 +56,7 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	t.Type = constants.RoleTypeCustom
 	t.CreateTime = dates.NowTimestamp()
 	t.UpdateTime = dates.NowTimestamp()
 	if err := services.RoleService.Create(t); err != nil {
@@ -72,6 +73,10 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 	t := services.RoleService.Get(id)
 	if t == nil {
 		return web.JsonErrorMsg("entity not found")
+	}
+
+	if t.Type == constants.RoleTypeSystem {
+		return web.JsonErrorMsg("系统角色不允许编辑")
 	}
 
 	if err := params.ReadForm(c.Ctx, t); err != nil {
