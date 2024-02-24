@@ -47,18 +47,19 @@
         <a-image-preview-group
           v-if="topic.imageList && topic.imageList.length"
           infinite
-          class="topic-image-list"
         >
-          <a-image
-            v-for="(image, index) in topic.imageList"
-            :key="index"
-            width="150"
-            height="150"
-            class="image-item"
-            show-loader
-            :src="image.url"
-            fit="cover"
-          />
+          <div class="topic-image-list">
+            <a-image
+              v-for="(image, index) in topic.imageList"
+              :key="index"
+              width="150"
+              height="150"
+              class="image-item"
+              show-loader
+              :src="image.url"
+              fit="cover"
+            />
+          </div>
         </a-image-preview-group>
         <div class="topic-footer">
           <div class="topic-tags">
@@ -286,6 +287,10 @@
         display: flex;
         row-gap: 10px;
         column-gap: 10px;
+
+        .image-item {
+          cursor: pointer;
+        }
       }
 
       .topic-footer {
