@@ -15,9 +15,9 @@
         <a-input v-model="form.code" />
       </a-form-item>
 
-      <a-form-item label="排序" field="sortNo">
+      <!-- <a-form-item label="排序" field="sortNo">
         <a-input-number v-model="form.sortNo" mode="button" />
-      </a-form-item>
+      </a-form-item> -->
 
       <a-form-item label="备注" field="remark">
         <a-input v-model="form.remark" />

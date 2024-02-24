@@ -59,7 +59,7 @@
 
           <a-table-column title="路径" data-index="path" />
 
-          <a-table-column title="排序" data-index="sortNo" />
+          <!-- <a-table-column title="排序" data-index="sortNo" /> -->
 
           <a-table-column title="状态" data-index="status">
             <template #cell="{ record }">

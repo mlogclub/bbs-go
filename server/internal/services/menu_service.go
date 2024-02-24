@@ -67,11 +67,10 @@ func (s *menuService) Delete(id int64) {
 }
 
 func (s *menuService) GetNextSortNo(parentId int64) int {
-	max := s.FindOne(sqls.NewCnd().Eq("parent_id", parentId).Desc("sort_no"))
-	if max == nil {
-		return 0
+	if max := s.FindOne(sqls.NewCnd().Eq("parent_id", parentId).Desc("sort_no")); max != nil {
+		return max.SortNo + 1
 	}
-	return max.SortNo + 1
+	return 0
 }
 
 func (s *menuService) GetUserMenus(user *models.User) []models.Menu {

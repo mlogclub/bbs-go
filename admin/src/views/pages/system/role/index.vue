@@ -60,7 +60,15 @@
 
           <a-table-column title="角色编码" data-index="code" />
 
-          <a-table-column title="排序" data-index="sortNo" />
+          <a-table-column title="类型" data-index="name">
+            <template #cell="{ record }">
+              <a-tag>{{
+                record.type === roleTypeSystem ? '系统' : '自定义'
+              }}</a-tag>
+            </template>
+          </a-table-column>
+
+          <!-- <a-table-column title="排序" data-index="sortNo" /> -->
 
           <a-table-column title="备注" data-index="remark" />
 
@@ -81,6 +89,7 @@
               <a-button
                 type="primary"
                 :size="appStore.table.size"
+                :disabled="record.type === roleTypeSystem"
                 @click="showEdit(record.id)"
                 >编辑</a-button
               >
@@ -96,6 +105,9 @@
 
 <script setup lang="ts">
   import Edit from './components/Edit.vue';
+
+  const roleTypeSystem = 0;
+  const roleTypeCustom = 1;
 
   const appStore = useAppStore();
   const loading = ref(false);

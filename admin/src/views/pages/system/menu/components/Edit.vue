@@ -36,9 +36,9 @@
         <a-input v-model="form.icon" />
       </a-form-item>
 
-      <a-form-item label="排序" field="sortNo">
+      <!-- <a-form-item label="排序" field="sortNo">
         <a-input-number v-model="form.sortNo" mode="button" />
-      </a-form-item>
+      </a-form-item> -->
 
       <a-form-item label="状态" field="status">
         <a-select v-model="form.status">
@@ -68,7 +68,7 @@
     title: undefined,
     icon: undefined,
     path: undefined,
-    sortNo: 0,
+    // sortNo: 0,
     status: 0,
   });
   const rules = {

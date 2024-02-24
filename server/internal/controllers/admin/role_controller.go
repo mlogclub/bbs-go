@@ -56,6 +56,11 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 		return web.JsonErrorMsg(err.Error())
 	}
 
+	if services.RoleService.GetByCode(t.Code) != nil {
+		return web.JsonErrorMsg("角色编码已存在")
+	}
+
+	t.SortNo = services.RoleService.GetNextSortNo()
 	t.Type = constants.RoleTypeCustom
 	t.CreateTime = dates.NowTimestamp()
 	t.UpdateTime = dates.NowTimestamp()
@@ -81,6 +86,10 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 
 	if err := params.ReadForm(c.Ctx, t); err != nil {
 		return web.JsonErrorMsg(err.Error())
+	}
+
+	if exists := services.RoleService.GetByCode(t.Code); exists != nil && exists.Id != t.Id {
+		return web.JsonErrorMsg("角色编码已存在")
 	}
 
 	t.UpdateTime = dates.NowTimestamp()

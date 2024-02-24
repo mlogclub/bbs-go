@@ -66,6 +66,17 @@ func (s *roleService) Delete(id int64) {
 	repositories.RoleRepository.Delete(sqls.DB(), id)
 }
 
+func (s *roleService) GetByCode(code string) *models.Role {
+	return s.FindOne(sqls.NewCnd().Eq("code", code))
+}
+
+func (s *roleService) GetNextSortNo() int {
+	if max := s.FindOne(sqls.NewCnd().Desc("sort_no")); max != nil {
+		return max.SortNo + 1
+	}
+	return 0
+}
+
 func (s *roleService) UpdateSort(ids []int64) error {
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		for i, id := range ids {
