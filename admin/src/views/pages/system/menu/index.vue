@@ -47,9 +47,9 @@
         <template #columns>
           <!-- <a-table-column title="编号" data-index="id" /> -->
 
-          <a-table-column title="标题" data-index="title" />
+          <a-table-column title="名称" data-index="title" />
 
-          <a-table-column title="名称" data-index="name" />
+          <a-table-column title="编码" data-index="name" />
 
           <a-table-column title="ICON" data-index="icon">
             <template #cell="{ record }">

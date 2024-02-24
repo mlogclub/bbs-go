@@ -47,6 +47,7 @@ func _BuildMenuSimpleTree(parentId int64, list []models.Menu) (ret []models.Tree
 		if element.ParentId == parentId {
 			ret = append(ret, models.TreeNode{
 				Id:       element.Id,
+				Key:      element.Id,
 				Title:    element.Title,
 				Children: _BuildMenuSimpleTree(element.Id, list),
 			})

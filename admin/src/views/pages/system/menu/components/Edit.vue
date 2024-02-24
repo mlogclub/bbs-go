@@ -12,19 +12,16 @@
           v-model="form.parentId"
           allow-clear
           :data="menus"
-          :field-names="{
-            key: 'id',
-          }"
           placeholder="Please select ..."
         >
         </a-tree-select>
       </a-form-item>
 
-      <a-form-item label="标题" field="title">
+      <a-form-item label="名称" field="title">
         <a-input v-model="form.title" />
       </a-form-item>
 
-      <a-form-item label="名称" field="name">
+      <a-form-item label="编码" field="name">
         <a-input v-model="form.name" />
       </a-form-item>
 
@@ -33,7 +30,7 @@
       </a-form-item>
 
       <a-form-item label="ICON" field="icon">
-        <a-input v-model="form.icon" />
+        <icon-picker v-model="form.icon" />
       </a-form-item>
 
       <!-- <a-form-item label="排序" field="sortNo">
@@ -51,6 +48,8 @@
 </template>
 
 <script setup lang="ts">
+  import IconPicker from './IconPicker.vue';
+
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();

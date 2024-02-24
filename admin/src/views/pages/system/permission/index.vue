@@ -30,9 +30,6 @@
             :data="menus"
             :checkable="true"
             :default-expand-all="true"
-            :field-names="{
-              key: 'id',
-            }"
             size="large"
           />
         </a-spin>

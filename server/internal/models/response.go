@@ -171,6 +171,7 @@ type ImageInfo struct {
 
 type TreeNode struct {
 	Id       int64      `json:"id"`
+	Key      int64      `json:"key"`
 	Title    string     `json:"title"`
 	Children []TreeNode `json:"children"`
 }
