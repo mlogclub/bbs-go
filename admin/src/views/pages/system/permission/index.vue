@@ -73,13 +73,18 @@
   };
 
   const saveRoleMenus = async () => {
-    await axios.postForm(
-      '/api/admin/role/save_role_menus',
-      jsonToFormData({
-        roleId: currentRoleId.value,
-        menuIds: checkedMenuIds.value ? checkedMenuIds.value.join(',') : '',
-      })
-    );
+    try {
+      await axios.postForm(
+        '/api/admin/role/save_role_menus',
+        jsonToFormData({
+          roleId: currentRoleId.value,
+          menuIds: checkedMenuIds.value ? checkedMenuIds.value.join(',') : '',
+        })
+      );
+      useNotificationSuccess('保存成功');
+    } catch (e) {
+      useHandleError(e);
+    }
     await getRoleMenusIds();
   };
 

@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
 
+	"github.com/mlogclub/simple/common/arrs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
@@ -73,18 +74,61 @@ func (s *menuService) GetNextSortNo(parentId int64) int {
 	return 0
 }
 
-func (s *menuService) GetUserMenus(user *models.User) []models.Menu {
-	// roleIds := UserRoleService.GetUserRoleIds(user.Id)
-	// if len(roleIds) == 0 {
-	// 	return nil
-	// }
-	// menuIds := RoleMenuService.GetMenuIdsByRoles(roleIds)
-	// if len(menuIds) == 0 {
-	// 	return nil
-	// }
-	// return repositories.MenuRepository.Find(sqls.DB(), sqls.NewCnd().In("id", menuIds).Asc("sort_no").Desc("id"))
+func (s *menuService) GetUserMenuIds(userId int64) []int64 {
+	roleIds := UserRoleService.GetUserRoleIds(userId)
+	if len(roleIds) == 0 {
+		return nil
+	}
+	return RoleMenuService.GetMenuIdsByRoles(roleIds)
+}
 
-	return repositories.MenuRepository.Find(sqls.DB(), sqls.NewCnd().Asc("sort_no").Desc("id"))
+func (s *menuService) GetUserMenus(user *models.User) (ret []models.Menu) {
+	menuIds := s.GetUserMenuIds(user.Id)
+	if len(menuIds) == 0 {
+		return nil
+	}
+
+	menus := s.Find(sqls.NewCnd().Asc("sort_no").Desc("id"))
+	menusMap := make(map[int64]models.Menu, len(menus))
+	for _, menu := range menus {
+		menusMap[menu.Id] = menu
+	}
+
+	var showMenuIds []int64
+	for _, menuId := range menuIds {
+		menuPath := s.GetMenuPath(menuId, menusMap)
+		showMenuIds = append(showMenuIds, menuPath...)
+	}
+
+	for _, menu := range menus {
+		if arrs.Contains(showMenuIds, menu.Id) {
+			ret = append(ret, menu)
+		}
+	}
+	return ret
+}
+
+// GetMenuPath 获取菜单路径
+func (s *menuService) GetMenuPath(menuId int64, menusMap map[int64]models.Menu) (ret []int64) {
+	if menuId <= 0 {
+		return
+	}
+	for {
+		menu, found := menusMap[menuId]
+		if !found {
+			break
+		}
+		ret = append(ret, menu.Id)
+		if menu.ParentId > 0 {
+			menuId = menu.ParentId
+		} else {
+			break
+		}
+	}
+	for i, j := 0, len(ret)-1; i < j; i, j = i+1, j-1 {
+		ret[i], ret[j] = ret[j], ret[i]
+	}
+	return
 }
 
 func (s *menuService) UpdateSort(ids []int64) error {
