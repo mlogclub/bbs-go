@@ -1,5 +1,7 @@
 .container {
-    padding: 10px;
+    /* padding: 10px; */
+    margin: 10px;
+    background-color: var(--color-bg-1);
 
     .container-header {
         display: flex;
@@ -17,6 +19,21 @@
     .container-main {
         padding: 10px;
         overflow: auto;
-        background-color: var(--color-bg-1);
+
+         &::-webkit-scrollbar-track-piece {
+            background: var(--color-neutral-3);
+        }
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--color-neutral-4);
+
+            /* border-radius: 20px; */
+        }
+
+        /* background-color: var(--color-bg-1); */
     }
 }

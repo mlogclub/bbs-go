@@ -43,22 +43,23 @@
       </a-form>
     </div>
     <div class="container-main">
-      <div v-if="data && data.results">
+      <div v-if="data && data.results" class="topic-container">
         <topic-list :results="data.results" @change="list" />
-        <div style="margin-top: 10px; display: flex; justify-content: flex-end">
-          <a-pagination
-            :total="pagination.total"
-            :current="pagination.current"
-            :page-size="pagination.pageSize"
-            :show-total="pagination.showTotal"
-            :show-jumper="pagination.showJumper"
-            :show-page-size="pagination.showPageSize"
-            @change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          />
-        </div>
       </div>
       <a-empty v-else />
+    </div>
+    <div class="container-footer">
+      <a-pagination
+        style="margin: 10px"
+        :total="pagination.total"
+        :current="pagination.current"
+        :page-size="pagination.pageSize"
+        :show-total="pagination.showTotal"
+        :show-jumper="pagination.showJumper"
+        :show-page-size="pagination.showPageSize"
+        @change="onPageChange"
+        @page-size-change="onPageSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -93,6 +94,10 @@
     };
   });
 
+  onMounted(() => {
+    useTableHeight();
+  });
+
   const list = async () => {
     loading.value = true;
     try {
@@ -121,8 +126,9 @@
 </script>
 
 <style scoped lang="less">
-  .topic-list {
-    .topic-item {
-    }
+  .container-footer {
+    // padding: 10px;
+    display: flex;
+    justify-content: end;
   }
 </style>

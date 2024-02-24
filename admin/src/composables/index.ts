@@ -81,6 +81,8 @@ export function useTableHeight() {
     proxy.$el.getElementsByClassName('container-header')[0];
   const containerMainRef =
     proxy.$el.getElementsByClassName('container-main')[0];
+  const containerFooterRef =
+    proxy.$el.getElementsByClassName('container-footer')[0];
 
   if (!containerMainRef) {
     return;
@@ -94,6 +96,10 @@ export function useTableHeight() {
     if (containerHeaderRef) {
       height -= containerHeaderRef.clientHeight;
     }
+    if (containerFooterRef) {
+      height -= containerFooterRef.clientHeight;
+    }
+    // height -= 32;
     containerMainRef.style.height = `${Math.max(height, minHeight)}px`;
   }
 
