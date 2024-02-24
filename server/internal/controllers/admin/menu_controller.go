@@ -95,7 +95,7 @@ func (c *MenuController) PostDelete() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
-func (c *MenuController) GetMenus() *web.JsonResult {
+func (c *MenuController) GetUser_menus() *web.JsonResult {
 	user, err := services.UserTokenService.CheckLogin(c.Ctx)
 	if err != nil {
 		return web.JsonError(err)

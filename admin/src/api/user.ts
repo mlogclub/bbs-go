@@ -47,7 +47,7 @@ export function getUserInfo() {
 }
 
 export async function getMenuList() {
-  const ret = await axios.get<any, MenuItem[]>('/api/admin/menu/menus');
+  const ret = await axios.get<any, MenuItem[]>('/api/admin/menu/user_menus');
   return convertMenus(ret);
 }
 

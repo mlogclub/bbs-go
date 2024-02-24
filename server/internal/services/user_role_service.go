@@ -64,3 +64,11 @@ func (s *userRoleService) UpdateColumn(id int64, name string, value interface{})
 func (s *userRoleService) Delete(id int64) {
 	repositories.UserRoleRepository.Delete(sqls.DB(), id)
 }
+
+func (s *userRoleService) GetUserRoleIds(userId int64) (roleIds []int64) {
+	list := s.Find(sqls.NewCnd().Eq("user_id", userId))
+	for _, userRole := range list {
+		roleIds = append(roleIds, userRole.RoleId)
+	}
+	return roleIds
+}

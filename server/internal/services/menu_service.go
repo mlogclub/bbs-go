@@ -74,7 +74,16 @@ func (s *menuService) GetNextSortNo(parentId int64) int {
 }
 
 func (s *menuService) GetUserMenus(user *models.User) []models.Menu {
-	// TODO
+	// roleIds := UserRoleService.GetUserRoleIds(user.Id)
+	// if len(roleIds) == 0 {
+	// 	return nil
+	// }
+	// menuIds := RoleMenuService.GetMenuIdsByRoles(roleIds)
+	// if len(menuIds) == 0 {
+	// 	return nil
+	// }
+	// return repositories.MenuRepository.Find(sqls.DB(), sqls.NewCnd().In("id", menuIds).Asc("sort_no").Desc("id"))
+
 	return repositories.MenuRepository.Find(sqls.DB(), sqls.NewCnd().Asc("sort_no").Desc("id"))
 }
 

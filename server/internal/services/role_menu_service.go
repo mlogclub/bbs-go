@@ -72,13 +72,20 @@ func (s *roleMenuService) GetByRole(roleId int64) []models.RoleMenu {
 	return s.Find(sqls.NewCnd().Eq("role_id", roleId))
 }
 
-func (s *roleMenuService) GetMenuIdsByRole(roleId int64) []int64 {
-	list := s.GetByRole(roleId)
-	var menuIds []int64
+func (s *roleMenuService) GetMenuIdsByRoles(roleIds []int64) (menuIds []int64) {
+	list := s.Find(sqls.NewCnd().In("role_id", roleIds))
 	for _, element := range list {
 		menuIds = append(menuIds, element.MenuId)
 	}
-	return menuIds
+	return
+}
+
+func (s *roleMenuService) GetMenuIdsByRole(roleId int64) (menuIds []int64) {
+	list := s.GetByRole(roleId)
+	for _, element := range list {
+		menuIds = append(menuIds, element.MenuId)
+	}
+	return
 }
 
 func (s *roleMenuService) SaveRoleMenus(roleId int64, menuIds []int64) error {
