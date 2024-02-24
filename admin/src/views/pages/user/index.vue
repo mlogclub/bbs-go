@@ -3,10 +3,19 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
+          <a-input v-model="filters.id" placeholder="用户ID" />
+        </a-form-item>
+        <a-form-item>
           <a-input v-model="filters.username" placeholder="用户名" />
         </a-form-item>
         <a-form-item>
           <a-input v-model="filters.nickname" placeholder="昵称" />
+        </a-form-item>
+        <a-form-item>
+          <a-select v-model="filters.type" placeholder="用户类型" allow-clear>
+            <a-option :value="0" label="用户" />
+            <a-option :value="1" label="员工" />
+          </a-select>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
@@ -40,6 +49,12 @@
       >
         <template #columns>
           <a-table-column title="编号" data-index="id"></a-table-column>
+          <a-table-column title="类型" data-index="type">
+            <template #cell="{ record }">
+              <a-tag v-if="record.type === 1" color="blue">员工</a-tag>
+              <a-tag v-else>用户</a-tag>
+            </template>
+          </a-table-column>
           <a-table-column title="头像" data-index="avatar">
             <template #cell="{ record }">
               <a-avatar>
@@ -89,8 +104,10 @@
     limit: 20,
     page: 1,
 
-    username: '',
-    nickname: '',
+    id: undefined,
+    username: undefined,
+    nickname: undefined,
+    type: undefined,
   });
 
   const data = reactive({

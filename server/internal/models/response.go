@@ -10,6 +10,7 @@ import (
 // UserInfo 用户简单信息
 type UserInfo struct {
 	Id           int64            `json:"id"`
+	Type         int              `json:"type"`
 	Nickname     string           `json:"nickname"`
 	Avatar       string           `json:"avatar"`
 	SmallAvatar  string           `json:"smallAvatar"`

@@ -36,7 +36,12 @@ func (c *UserController) GetBy(id int64) *web.JsonResult {
 }
 
 func (c *UserController) AnyList() *web.JsonResult {
-	list, paging := services.UserService.FindPageByParams(params.NewQueryParams(c.Ctx).EqByReq("id").LikeByReq("nickname").EqByReq("username").PageByReq().Desc("id"))
+	list, paging := services.UserService.FindPageByParams(params.NewQueryParams(c.Ctx).
+		EqByReq("id").
+		LikeByReq("nickname").
+		EqByReq("username").
+		EqByReq("type").
+		PageByReq().Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
 		itemList = append(itemList, c.buildUserItem(&user))
@@ -60,6 +65,7 @@ func (c *UserController) PostCreate() *web.JsonResult {
 func (c *UserController) PostUpdate() *web.JsonResult {
 	var (
 		id, _       = params.GetInt64(c.Ctx, "id")
+		_type, _    = params.GetInt(c.Ctx, "type")
 		username    = params.FormValue(c.Ctx, "username")
 		email       = params.FormValue(c.Ctx, "email")
 		nickname    = params.FormValue(c.Ctx, "nickname")
@@ -76,6 +82,7 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 		return web.JsonErrorMsg("entity not found")
 	}
 
+	user.Type = _type
 	user.Username = sqls.SqlNullString(username)
 	user.Email = sqls.SqlNullString(email)
 	user.Nickname = nickname

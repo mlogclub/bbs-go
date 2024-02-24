@@ -7,12 +7,11 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="用户名" field="username">
-        <a-input v-model="form.username" />
-      </a-form-item>
-
-      <a-form-item label="邮箱" field="email">
-        <a-input v-model="form.email" />
+      <a-form-item label="类型" field="type">
+        <a-select v-model="form.type" placeholder="用户类型">
+          <a-option :value="0" label="用户" />
+          <a-option :value="1" label="员工" />
+        </a-select>
       </a-form-item>
 
       <a-form-item label="昵称" field="nickname">
@@ -21,6 +20,14 @@
 
       <a-form-item label="头像" field="avatar">
         <image-upload v-model="form.avatar" />
+      </a-form-item>
+
+      <a-form-item label="用户名" field="username">
+        <a-input v-model="form.username" />
+      </a-form-item>
+
+      <a-form-item label="邮箱" field="email">
+        <a-input v-model="form.email" />
       </a-form-item>
 
       <a-form-item label="性别" field="gender">
@@ -63,49 +70,22 @@
   });
 
   const form = ref({
+    type: 0,
     username: undefined,
-
     email: undefined,
-
-    emailVerified: undefined,
-
     nickname: undefined,
-
     avatar: undefined,
-
     gender: undefined,
-
-    birthday: undefined,
-
-    backgroundImage: undefined,
-
-    password: undefined,
-
+    // birthday: undefined,
     homePage: undefined,
-
     description: undefined,
 
-    score: undefined,
-
-    status: undefined,
-
-    topicCount: undefined,
-
-    commentCount: undefined,
-
-    followCount: undefined,
-
-    fansCount: undefined,
-
     roles: undefined,
-
-    forbiddenEndTime: undefined,
-
-    createTime: undefined,
-
-    updateTime: undefined,
   });
-  const rules = {};
+  const rules = {
+    type: [{ required: true, message: '请选择用户类型' }],
+    nickname: [{ required: true, message: '请输入用户昵称' }],
+  };
 
   const show = () => {
     formRef.value.resetFields();

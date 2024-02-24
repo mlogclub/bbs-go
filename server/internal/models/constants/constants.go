@@ -66,8 +66,8 @@ const (
 
 // 用户类型
 const (
-	UserTypeNormal = 0 // 普通用户
-	UserTypeGzh    = 1 // 公众号用户
+	UserTypeNormal   = 0 // 普通用户
+	UserTypeEmployee = 1 // 员工用户
 )
 
 // 角色类型

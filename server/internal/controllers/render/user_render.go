@@ -19,6 +19,7 @@ func BuildUserInfoDefaultIfNull(id int64) *models.UserInfo {
 	if user == nil {
 		user = &models.User{}
 		user.Id = id
+		user.Type = constants.UserTypeNormal
 		user.Username = sqls.SqlNullString(strconv.FormatInt(id, 10))
 		user.Nickname = "匿名用户" + strconv.FormatInt(id, 10)
 		user.CreateTime = dates.NowTimestamp()
@@ -32,6 +33,7 @@ func BuildUserInfo(user *models.User) *models.UserInfo {
 	}
 	ret := &models.UserInfo{
 		Id:           user.Id,
+		Type:         user.Type,
 		Nickname:     user.Nickname,
 		Gender:       user.Gender,
 		Birthday:     user.Birthday,
