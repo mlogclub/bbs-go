@@ -16,7 +16,7 @@
       >
     </div>
 
-    <a-modal v-model:visible="visible">
+    <a-modal v-model:visible="visible" :width="650">
       <template #title> 选择图标 </template>
       <div class="icons">
         <div
@@ -25,7 +25,12 @@
           class="icon-item"
           @click="selectIcon(icon)"
         >
-          <component :is="icon" :size="30" />
+          <a-popover>
+            <component :is="icon" :size="30" />
+            <template #content>
+              {{ icon }}
+            </template>
+          </a-popover>
         </div>
       </div>
     </a-modal>
