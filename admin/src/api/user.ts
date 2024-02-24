@@ -72,7 +72,8 @@ function convertMenuItem(item: MenuItem) {
     redirect: '',
     meta: {
       title: item.title,
-      icon: item.icon || 'icon-apps',
+      // icon: item.icon || 'icon-apps',
+      icon: item.icon,
     } as RouteMeta,
   };
   return menu;

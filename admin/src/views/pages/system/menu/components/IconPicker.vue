@@ -39,8 +39,11 @@
 
 <script setup>
   const icons = [
+    'icon-dashboard',
     'icon-apps',
     'icon-home',
+    'icon-stop',
+    'icon-link',
     'icon-import',
     'icon-launch',
     'icon-list',
@@ -66,7 +69,6 @@
     'icon-compass',
     'icon-computer',
     'icon-copyright',
-    'icon-dashboard',
     'icon-desktop',
     'icon-dice',
     'icon-drag-dot-vertical',
@@ -93,7 +95,6 @@
     'icon-language',
     'icon-layers',
     'icon-layout',
-    // 'icon-loading',
     'icon-location',
     'icon-lock',
     'icon-loop',
