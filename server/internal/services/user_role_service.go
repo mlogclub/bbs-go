@@ -1,11 +1,15 @@
 package services
 
 import (
+	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
+	"strings"
 
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"gorm.io/gorm"
 )
 
 var UserRoleService = newUserRoleService()
@@ -45,24 +49,45 @@ func (s *userRoleService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.UserRoleRepository.Count(sqls.DB(), cnd)
 }
 
-func (s *userRoleService) Create(t *models.UserRole) error {
-	return repositories.UserRoleRepository.Create(sqls.DB(), t)
-}
-
-func (s *userRoleService) Update(t *models.UserRole) error {
-	return repositories.UserRoleRepository.Update(sqls.DB(), t)
-}
-
-func (s *userRoleService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.UserRoleRepository.Updates(sqls.DB(), id, columns)
-}
-
-func (s *userRoleService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.UserRoleRepository.UpdateColumn(sqls.DB(), id, name, value)
-}
-
 func (s *userRoleService) Delete(id int64) {
 	repositories.UserRoleRepository.Delete(sqls.DB(), id)
+}
+
+func (s *userRoleService) UpdateUserRoles(userId int64, roleIds []int64) error {
+	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		var roles []models.Role
+		if len(roleIds) > 0 {
+			roles = repositories.RoleRepository.Find(tx, sqls.NewCnd().In("id", roleIds))
+		}
+
+		var roleCodes []string
+		for _, role := range roles {
+			roleCodes = append(roleCodes, role.Code)
+		}
+
+		if err := tx.Delete(&models.UserRole{}, "user_id = ?", userId).Error; err != nil {
+			return err
+		}
+		if len(roles) == 0 {
+			return repositories.UserRepository.UpdateColumn(tx, userId, "roles", "")
+		} else {
+			for _, role := range roles {
+				if err := repositories.UserRoleRepository.Create(tx, &models.UserRole{
+					UserId:     userId,
+					RoleId:     role.Id,
+					CreateTime: dates.NowTimestamp(),
+				}); err != nil {
+					return err
+				}
+			}
+			return repositories.UserRepository.UpdateColumn(tx, userId, "roles", strings.Join(roleCodes, ","))
+		}
+	})
+	if err != nil {
+		return err
+	}
+	cache.UserCache.Invalidate(userId)
+	return nil
 }
 
 func (s *userRoleService) GetUserRoleIds(userId int64) (roleIds []int64) {

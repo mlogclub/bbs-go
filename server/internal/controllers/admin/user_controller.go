@@ -4,7 +4,6 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/errs"
 	"strconv"
-	"strings"
 
 	"bbs-go/internal/models"
 
@@ -32,7 +31,7 @@ func (c *UserController) GetBy(id int64) *web.JsonResult {
 	if t == nil {
 		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return web.JsonData(c.buildUserItem(t))
+	return web.JsonData(c.buildUserItem(t, true))
 }
 
 func (c *UserController) AnyList() *web.JsonResult {
@@ -44,7 +43,7 @@ func (c *UserController) AnyList() *web.JsonResult {
 		PageByReq().Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
-		itemList = append(itemList, c.buildUserItem(&user))
+		itemList = append(itemList, c.buildUserItem(&user, false))
 	}
 	return web.JsonData(&web.PageResult{Results: itemList, Page: paging})
 }
@@ -59,7 +58,7 @@ func (c *UserController) PostCreate() *web.JsonResult {
 	if err != nil {
 		return web.JsonError(err)
 	}
-	return web.JsonData(c.buildUserItem(user))
+	return web.JsonData(c.buildUserItem(user, true))
 }
 
 func (c *UserController) PostUpdate() *web.JsonResult {
@@ -73,7 +72,7 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 		gender      = params.FormValue(c.Ctx, "gender")
 		homePage    = params.FormValue(c.Ctx, "homePage")
 		description = params.FormValue(c.Ctx, "description")
-		roles       = params.FormValueStringArray(c.Ctx, "roles")
+		roleIds     = params.FormValueInt64Array(c.Ctx, "roleIds")
 		status      = params.FormValueIntDefault(c.Ctx, "status", 0)
 	)
 
@@ -90,14 +89,16 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 	user.Gender = constants.Gender(gender)
 	user.HomePage = homePage
 	user.Description = description
-	user.Roles = strings.Join(roles, ",")
 	user.Status = status
 
-	err := services.UserService.Update(user)
-	if err != nil {
+	if err := services.UserService.Update(user); err != nil {
 		return web.JsonError(err)
 	}
-	return web.JsonData(c.buildUserItem(user))
+	if err := services.UserRoleService.UpdateUserRoles(user.Id, roleIds); err != nil {
+		return web.JsonError(err)
+	}
+	user = services.UserService.Get(user.Id)
+	return web.JsonData(c.buildUserItem(user, true))
 }
 
 // 禁言
@@ -127,12 +128,15 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
-func (c *UserController) buildUserItem(user *models.User) map[string]interface{} {
-	return web.NewRspBuilder(user).
+func (c *UserController) buildUserItem(user *models.User, buildRoleIds bool) map[string]interface{} {
+	b := web.NewRspBuilder(user).
 		Put("roles", user.GetRoles()).
 		Put("username", user.Username.String).
 		Put("email", user.Email.String).
 		Put("score", user.Score).
-		Put("forbidden", user.IsForbidden()).
-		Build()
+		Put("forbidden", user.IsForbidden())
+	if buildRoleIds {
+		b.Put("roleIds", services.UserRoleService.GetUserRoleIds(user.Id))
+	}
+	return b.Build()
 }

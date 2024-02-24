@@ -50,7 +50,7 @@
       </a-form-item>
 
       <a-form-item label="角色" field="roles">
-        <a-select placeholder="请选择角色">
+        <a-select v-model="form.roleIds" multiple placeholder="请选择角色">
           <a-option
             v-for="role in roles"
             :key="role.id"
@@ -86,8 +86,7 @@
     // birthday: undefined,
     homePage: undefined,
     description: undefined,
-
-    roles: undefined,
+    roleIds: undefined,
   });
 
   const roles = ref();
