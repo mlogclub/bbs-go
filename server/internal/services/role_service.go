@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
 	"github.com/mlogclub/simple/sqls"
@@ -71,7 +72,7 @@ func (s *roleService) GetByCode(code string) *models.Role {
 }
 
 func (s *roleService) GetNextSortNo() int {
-	if max := s.FindOne(sqls.NewCnd().Desc("sort_no")); max != nil {
+	if max := s.FindOne(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("sort_no")); max != nil {
 		return max.SortNo + 1
 	}
 	return 0

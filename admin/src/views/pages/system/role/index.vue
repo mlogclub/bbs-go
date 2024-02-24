@@ -62,9 +62,10 @@
 
           <a-table-column title="类型" data-index="name">
             <template #cell="{ record }">
-              <a-tag>{{
-                record.type === roleTypeSystem ? '系统' : '自定义'
-              }}</a-tag>
+              <a-tag v-if="record.type === roleTypeSystem" color="blue"
+                >系统</a-tag
+              >
+              <a-tag v-else>自定义</a-tag>
             </template>
           </a-table-column>
 

@@ -113,6 +113,11 @@ func (c *RoleController) PostDelete() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
+func (s *RoleController) GetRoles() *web.JsonResult {
+	roles := services.RoleService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+	return web.JsonData(roles)
+}
+
 func (c *RoleController) GetRole_menu_ids() *web.JsonResult {
 	roleId, _ := params.GetInt64(c.Ctx, "roleId")
 	menuIds := services.RoleMenuService.GetMenuIdsByRole(roleId)

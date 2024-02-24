@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
 	"github.com/mlogclub/simple/common/arrs"
@@ -68,7 +69,7 @@ func (s *menuService) Delete(id int64) {
 }
 
 func (s *menuService) GetNextSortNo(parentId int64) int {
-	if max := s.FindOne(sqls.NewCnd().Eq("parent_id", parentId).Desc("sort_no")); max != nil {
+	if max := s.FindOne(sqls.NewCnd().Eq("parent_id", parentId).Eq("status", constants.StatusOk).Desc("sort_no")); max != nil {
 		return max.SortNo + 1
 	}
 	return 0
@@ -88,7 +89,7 @@ func (s *menuService) GetUserMenus(user *models.User) (ret []models.Menu) {
 		return nil
 	}
 
-	menus := s.Find(sqls.NewCnd().Asc("sort_no").Desc("id"))
+	menus := s.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 	menusMap := make(map[int64]models.Menu, len(menus))
 	for _, menu := range menus {
 		menusMap[menu.Id] = menu

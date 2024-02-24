@@ -50,7 +50,14 @@
       </a-form-item>
 
       <a-form-item label="角色" field="roles">
-        <a-input v-model="form.roles" />
+        <a-select placeholder="请选择角色">
+          <a-option
+            v-for="role in roles"
+            :key="role.id"
+            :value="role.id"
+            :label="role.name"
+          />
+        </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -82,16 +89,26 @@
 
     roles: undefined,
   });
+
+  const roles = ref();
+
   const rules = {
     type: [{ required: true, message: '请选择用户类型' }],
     nickname: [{ required: true, message: '请输入用户昵称' }],
   };
 
-  const show = () => {
+  const show = async () => {
     formRef.value.resetFields();
 
     config.isCreate = true;
     config.title = '新增';
+
+    try {
+      await loadRoles();
+    } catch (e: any) {
+      useHandleError(e);
+    }
+
     config.visible = true;
   };
 
@@ -103,11 +120,16 @@
 
     try {
       form.value = await axios.get(`/api/admin/user/${id}`);
+      await loadRoles();
     } catch (e: any) {
       useHandleError(e);
     }
 
     config.visible = true;
+  };
+
+  const loadRoles = async () => {
+    roles.value = await axios.get('/api/admin/role/roles');
   };
 
   const handleCancel = () => {
