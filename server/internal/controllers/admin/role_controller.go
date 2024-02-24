@@ -113,3 +113,14 @@ func (c *RoleController) PostSave_role_menus() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
+
+func (c *RoleController) PostUpdate_sort() *web.JsonResult {
+	var ids []int64
+	if err := c.Ctx.ReadJSON(&ids); err != nil {
+		return web.JsonError(err)
+	}
+	if err := services.RoleService.UpdateSort(ids); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}

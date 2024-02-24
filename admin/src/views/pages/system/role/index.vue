@@ -47,6 +47,9 @@
         :sticky-header="true"
         style="height: 100%"
         column-resizable
+        :draggable="{ type: 'handle', width: 40 }"
+        row-key="id"
+        @change="handleChange"
         @page-change="onPageChange"
         @page-size-change="onPageSizeChange"
       >
@@ -153,6 +156,17 @@
 
   const showEdit = (id: any) => {
     edit.value.showEdit(id);
+  };
+
+  const handleChange = async (_data: any[]) => {
+    const ids: number[] = [];
+
+    _data.forEach((element) => {
+      ids.push(element.id);
+    });
+
+    await axios.post('/api/admin/role/update_sort', ids);
+    await list();
   };
 
   const onPageChange = (page: number) => {

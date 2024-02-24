@@ -6,6 +6,7 @@ import (
 
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"gorm.io/gorm"
 )
 
 var RoleService = newRoleService()
@@ -63,4 +64,15 @@ func (s *roleService) UpdateColumn(id int64, name string, value interface{}) err
 
 func (s *roleService) Delete(id int64) {
 	repositories.RoleRepository.Delete(sqls.DB(), id)
+}
+
+func (s *roleService) UpdateSort(ids []int64) error {
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		for i, id := range ids {
+			if err := repositories.RoleRepository.UpdateColumn(tx, id, "sort_no", i); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }

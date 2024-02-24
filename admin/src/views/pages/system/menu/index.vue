@@ -127,7 +127,7 @@
     edit.value.showEdit(id);
   };
 
-  const handleChange = async (_data: any[], extra: any, current: any[]) => {
+  const handleChange = async (_data: any[]) => {
     const ids: number[] = [];
 
     getSortedIds(_data);
