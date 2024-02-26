@@ -38,7 +38,7 @@
 
 ### server
 
-<!-- [![bbs-go-server](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-server.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-server.yml) -->
+[![bbs-go-server](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-server.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-server.yml)
 
 > 基于`Golang`搭建，提供接口数据支撑。
 
@@ -51,7 +51,7 @@
 
 ### site
 
-<!-- [![bbs-go-site](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-site.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-site.yml) -->
+[![bbs-go-site](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-site.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-site.yml)
 
 > 前端页面渲染服务，基于`nuxt.js`搭建。
 
@@ -60,6 +60,8 @@
 - nuxt.js ([https://nuxtjs.org](https://nuxtjs.org)) 基于Vue的服务端渲染框架，效率高到爆
 
 ### admin
+
+[![bbs-go-admin](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-admin.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-admin.yml)
 
 > 管理后台系统，基于`vue.js + element-ui`搭建。
 
