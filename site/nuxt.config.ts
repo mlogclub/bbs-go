@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: 'src/',
+  publicRuntimeConfig: {
+    baiduAnalyticsID: `${import.meta.env.BAIDU_ANALYTICS_ID}`
+  },
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
@@ -31,6 +34,7 @@ export default defineNuxtConfig({
   ],
 
   plugins: [
+    '~/plugins/baidu-analytics.js'
   ],
 
   elementPlus: { /** Options */ },
