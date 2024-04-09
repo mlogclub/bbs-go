@@ -51,7 +51,7 @@ func Generate() {
 	} else {
 		sm.SetPublicPath(config.Instance.Uploader.Local.Host)
 	}
-	sm.SetSitemapsPath("sitemap2") // sitemap存放目录
+	sm.SetSitemapsPath("sitemap") // sitemap存放目录
 	sm.SetVerbose(false)
 	sm.SetPretty(false)
 	sm.SetCompress(true)
