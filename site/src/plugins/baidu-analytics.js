@@ -4,7 +4,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     console.log(import.meta.env);
     window._hmt = window._hmt || [];
     (function () {
-      debugger;
       var hm = document.createElement("script");
       hm.src = `https://hm.baidu.com/hm.js?${baiduAnalyticsID}`;
       var s = document.getElementsByTagName("script")[0];
