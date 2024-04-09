@@ -96,6 +96,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 	}
 
 	return web.NewEmptyRspBuilder().
+		Put("id", article.Id).
 		Put("articleId", article.Id).
 		Put("title", article.Title).
 		Put("content", article.Content).

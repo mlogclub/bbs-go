@@ -1,15 +1,15 @@
 <template>
   <section class="main">
-    <div class="container">
-      <div class="topic-create-form" v-if="postForm">
-        <h1 class="title">修改话题</h1>
+    <div class="container" v-if="postForm">
+      <div class="article-create-form">
+        <h1 class="title">修改文章</h1>
 
         <div class="field">
           <div class="control">
             <div
               v-for="node in nodes"
               :key="node.id"
-              class="topic-tag"
+              class="article-tag"
               :class="{ selected: postForm.nodeId === node.id }"
               @click="postForm.nodeId = node.id"
             >
@@ -22,9 +22,9 @@
           <div class="control">
             <input
               v-model="postForm.title"
-              class="input topic-title"
+              class="input article-title"
               type="text"
-              placeholder="请输入帖子标题"
+              placeholder="请输入文章标题"
             />
           </div>
         </div>
@@ -83,7 +83,7 @@ definePageMeta({
   middleware: "auth",
 });
 useHead({
-  title: useSiteTitle("修改话题"),
+  title: useSiteTitle("修改文章"),
 });
 
 const route = useRoute();
@@ -94,10 +94,10 @@ const isEnableHideContent = computed(() => {
 });
 
 const { data: nodes } = useAsyncData("nodes", () =>
-  useMyFetch("/api/topic/nodes")
+  useMyFetch("/api/article/nodes")
 );
 const { data: postForm } = useAsyncData(() =>
-  useMyFetch(`/api/topic/edit/${route.params.id}`)
+  useMyFetch(`/api/article/edit/${route.params.id}`)
 );
 const publishing = ref(false);
 
@@ -108,19 +108,18 @@ async function submitCreate() {
   publishing.value = true;
 
   try {
-    useHttpPostForm(`/api/topic/edit/${postForm.value.id}`, {
+    useHttpPostForm(`/api/article/edit/${postForm.value.id}`, {
       body: {
-        nodeId: postForm.value.nodeId,
         title: postForm.value.title,
         content: postForm.value.content,
-        hideContent: postForm.value.hideContent,
+        cover: postForm.value.cover,
         tags: postForm.value.tags ? postForm.value.tags.join(",") : "",
       },
     });
     useMsg({
       message: "修改成功",
       onClose() {
-        useLinkTo(`/topic/${postForm.value.id}`);
+        useLinkTo(`/article/${postForm.value.id}`);
       },
     });
   } catch (e) {
