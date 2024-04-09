@@ -3,7 +3,7 @@ all: build
 
 build:
 	@echo "Building..."
-	@go build -v -o bbs-go main.go
+	@go build -v -o bbs-go
 
 # Run the application
 run:
