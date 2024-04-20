@@ -31,7 +31,6 @@ export default defineNuxtConfig({
   ],
 
   plugins: [
-    '~/plugins/baidu-analytics.js'
   ],
 
   elementPlus: { /** Options */ },
@@ -53,6 +52,13 @@ export default defineNuxtConfig({
       htmlAttrs: { class: 'light-mode' },
       // bodyAttrs: { class: 'bg-gray-50' },
       // htmlAttrs: { class: 'bg-gray-50' },
+      script: [
+        {
+          src: 'https://hm.baidu.com/hm.js?79b8ff82974d0769ef5c629e4cd46629',
+          type: 'text/javascript',
+          async: true
+        }
+      ]
     },
   },
   css: [
