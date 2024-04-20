@@ -3,11 +3,11 @@ all: build
 
 build:
 	@echo "Building..."
-	@go build -v -o bbs-go cmd/server/main.go
+	@go build -v -o bbs-go main.go
 
 # Run the application
 run:
-	@go run cmd/server/main.go
+	@go run main.go
 
 # Test the application
 test:
