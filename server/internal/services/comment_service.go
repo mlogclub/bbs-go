@@ -13,6 +13,8 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
@@ -209,6 +211,7 @@ func (s *commentService) ScanByUser(userId int64, callback func(comments []model
 func (s *commentService) Scan(callback func(comments []models.Comment)) {
 	var cursor int64 = 0
 	for {
+		logrus.Info("scan comments, cursor:" + cast.ToString(cursor))
 		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewCnd().
 			Gt("id", cursor).Asc("id").Limit(10000))
 		if len(list) == 0 {
