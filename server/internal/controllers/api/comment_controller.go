@@ -2,12 +2,16 @@ package api
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/spam"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/panjf2000/ants/v2"
+	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/services"
@@ -15,6 +19,27 @@ import (
 
 type CommentController struct {
 	Ctx iris.Context
+}
+
+func (c *CommentController) GetClean() *web.JsonResult {
+	go func() {
+		p, _ := ants.NewPool(10)
+		services.CommentService.Scan(func(comments []models.Comment) {
+			var ids []int64
+			for _, comment := range comments {
+				if comment.ContentType == constants.ContentTypeHtml {
+					ids = append(ids, comment.Id)
+				}
+			}
+			if len(ids) > 0 {
+				p.Submit(func() {
+					sqls.DB().Delete(&models.Comment{}, "id in ?", ids)
+					logrus.Info("清理评论:", ids)
+				})
+			}
+		})
+	}()
+	return web.JsonSuccess()
 }
 
 func (c *CommentController) GetComments() *web.JsonResult {

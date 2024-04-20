@@ -205,6 +205,20 @@ func (s *commentService) ScanByUser(userId int64, callback func(comments []model
 	}
 }
 
+// ScanByUser 按照用户扫描数据
+func (s *commentService) Scan(callback func(comments []models.Comment)) {
+	var cursor int64 = 0
+	for {
+		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewCnd().
+			Gt("id", cursor).Asc("id").Limit(10000))
+		if len(list) == 0 {
+			break
+		}
+		cursor = list[len(list)-1].Id
+		callback(list)
+	}
+}
+
 func (s *commentService) IsCommented(userId int64, entityType string, entityId int64) bool {
 	return s.FindOne(sqls.NewCnd().Where("user_id = ? and entity_id = ? and entity_type = ? and status = ?", userId, entityId, entityType, constants.StatusOk)) != nil
 }
