@@ -213,7 +213,7 @@ func (s *commentService) Scan(callback func(comments []models.Comment)) {
 	for {
 		logrus.Info("scan comments, cursor:" + cast.ToString(cursor))
 		list := repositories.CommentRepository.Find(sqls.DB(), sqls.NewCnd().
-			Gt("id", cursor).Asc("id").Limit(10000))
+			Gt("id", cursor).Asc("id").Limit(1000))
 		if len(list) == 0 {
 			break
 		}
