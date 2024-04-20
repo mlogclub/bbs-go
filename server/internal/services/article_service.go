@@ -246,7 +246,7 @@ func (s *articleService) ScanDesc(callback func(articles []models.Article)) {
 		logrus.Info("scan articles desc, cursor:" + cast.ToString(cursor))
 		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
 			Cols("id", "status", "user_id", "content_type", "create_time", "update_time").
-			Lt("id", cursor).Desc("id").Limit(1000))
+			Lt("id", cursor).Desc("id").Limit(10000))
 		if len(list) == 0 {
 			break
 		}

@@ -13,6 +13,7 @@ import (
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/panjf2000/ants/v2"
 	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
@@ -26,6 +27,7 @@ type ArticleController struct {
 
 func (c *ArticleController) GetClean() *web.JsonResult {
 	go func() {
+		p, _ := ants.NewPool(10)
 		services.ArticleService.ScanDesc(func(articles []models.Article) {
 			var ids []int64
 			for _, article := range articles {
@@ -34,9 +36,11 @@ func (c *ArticleController) GetClean() *web.JsonResult {
 				}
 			}
 			if len(ids) > 0 {
-				sqls.DB().Delete(&models.Article{}, "id in ?", ids)
+				p.Submit(func() {
+					sqls.DB().Delete(&models.Article{}, "id in ?", ids)
+					logrus.Info("清理文章:", ids)
+				})
 			}
-			logrus.Info("清理文章:", ids)
 		})
 	}()
 	return web.JsonSuccess()
