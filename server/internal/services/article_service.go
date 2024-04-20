@@ -22,6 +22,8 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
@@ -241,8 +243,9 @@ func (s *articleService) PutTags(articleId int64, tags []string) {
 func (s *articleService) ScanDesc(callback func(articles []models.Article)) {
 	var cursor int64 = math.MaxInt64
 	for {
+		logrus.Info("scan articles desc, cursor:" + cast.ToString(cursor))
 		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
-			Cols("id", "status", "create_time", "update_time").
+			Cols("id", "status", "user_id", "content_type", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break

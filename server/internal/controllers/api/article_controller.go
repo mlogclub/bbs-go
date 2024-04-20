@@ -10,8 +10,10 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
@@ -20,6 +22,24 @@ import (
 
 type ArticleController struct {
 	Ctx iris.Context
+}
+
+func (c *ArticleController) GetClean() *web.JsonResult {
+	go func() {
+		services.ArticleService.ScanDesc(func(articles []models.Article) {
+			var ids []int64
+			for _, article := range articles {
+				if article.ContentType == constants.ContentTypeHtml {
+					ids = append(ids, article.Id)
+				}
+			}
+			if len(ids) > 0 {
+				sqls.DB().Delete(&models.Article{}, "id in ?", ids)
+			}
+			logrus.Info("清理文章:", ids)
+		})
+	}()
+	return web.JsonSuccess()
 }
 
 // 文章详情
