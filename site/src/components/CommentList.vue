@@ -134,7 +134,9 @@ export default {
   },
   methods: {
     append(data) {
-      this.$refs.commentsLoadMore.unshiftResults(data);
+      this.$nextTick(() => {
+        this.$refs.commentsLoadMore.unshiftResults(data);
+      }
     },
     async like(comment) {
       try {
