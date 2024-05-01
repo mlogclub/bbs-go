@@ -8,11 +8,7 @@
     </div>
 
     <div class="widget-content">
-      <load-more-async
-        ref="commentsLoadMore"
-        v-slot="{ results }"
-        url="/api/user/favorites"
-      >
+      <load-more-async v-slot="{ results }" url="/api/user/favorites">
         <ul v-if="results && results.length" class="favorite-list">
           <li
             v-for="item in results"

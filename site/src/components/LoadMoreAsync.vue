@@ -97,14 +97,14 @@ function renderData(data) {
   }
 }
 
-function unshiftResults(item) {
+const unshiftResults = (item) => {
   if (item && pageData && pageData.results) {
     pageData.results.unshift(item);
   }
-}
+};
 
 defineExpose({
-  refresh,
+  // refresh,
   unshiftResults,
 });
 </script>

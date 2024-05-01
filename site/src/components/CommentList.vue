@@ -96,127 +96,125 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    entityType: {
-      type: String,
-      default: "",
-      required: true,
-    },
-    entityId: {
-      type: Number,
-      default: 0,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  entityType: {
+    type: String,
+    default: "",
+    required: true,
   },
-  data() {
-    return {
-      showReplyCommentId: 0,
-      reply: {
-        commentId: 0,
-        value: {
-          content: "",
-          imageList: [],
-        },
-      },
-    };
+  entityId: {
+    type: Number,
+    default: 0,
+    required: true,
   },
-  computed: {
-    user() {
-      const userStore = useUserStore();
-      return userStore.user;
-    },
-    isLogin() {
-      const userStore = useUserStore();
-      return userStore.user != null;
-    },
+});
+const reply = reactive({
+  commentId: 0,
+  value: {
+    content: "",
+    imageList: [],
   },
-  methods: {
-    append(data) {
-      this.$refs.commentsLoadMore.unshiftResults(data);
-    },
-    async like(comment) {
-      try {
-        if (comment.liked) {
-          await useHttpPostForm("/api/like/unlike", {
-            body: {
-              entityType: "comment",
-              entityId: comment.id,
-            },
-          });
-          comment.liked = false;
-          comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
-          useMsgSuccess("已取消点赞");
-        } else {
-          await useHttpPostForm("/api/like/like", {
-            body: {
-              entityType: "comment",
-              entityId: comment.id,
-            },
-          });
-          comment.liked = true;
-          comment.likeCount = comment.likeCount + 1;
-          useMsgSuccess("点赞成功");
-        }
-      } catch (e) {
-        useCatchError(e);
-      }
-    },
-    switchShowReply(comment) {
-      if (!this.user) {
-        useMsgSignIn();
-        return;
-      }
+});
 
-      if (this.reply.commentId === comment.id) {
-        this.hideReply(comment);
-      } else {
-        this.reply.commentId = comment.id;
-        setTimeout(() => {
-          this.$refs[`editor${comment.id}`][0].focus();
-        }, 0);
-      }
-    },
-    hideReply(comment) {
-      this.reply.commentId = 0;
-      this.reply.value.content = "";
-      this.reply.value.imageList = [];
-    },
-    async submitReply(parent) {
-      try {
-        const ret = await useHttpPostForm("/api/comment/create", {
-          body: {
-            entityType: "comment",
-            entityId: parent.id,
-            content: this.reply.value.content,
-            imageList:
-              this.reply.value.imageList && this.reply.value.imageList.length
-                ? JSON.stringify(this.reply.value.imageList)
-                : "",
-          },
-        });
-        this.hideReply();
-        this.appendReply(parent, ret);
-        useMsgSuccess("发布成功");
-      } catch (e) {
-        useCatchError(e);
-      }
-    },
-    onReply(parent, comment) {
-      this.appendReply(parent, comment);
-    },
-    appendReply(parent, comment) {
-      if (parent.replies && parent.replies.results) {
-        parent.replies.results.push(comment);
-      } else {
-        parent.replies = {
-          results: [comment],
-        };
-      }
-    },
-  },
+const userStore = useUserStore();
+const commentsLoadMore = ref(null);
+
+const append = (data) => {
+  if (commentsLoadMore.value) {
+    commentsLoadMore.value.unshiftResults(data);
+  }
 };
+
+const like = async (comment) => {
+  try {
+    if (comment.liked) {
+      await useHttpPostForm("/api/like/unlike", {
+        body: {
+          entityType: "comment",
+          entityId: comment.id,
+        },
+      });
+      comment.liked = false;
+      comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
+      useMsgSuccess("已取消点赞");
+    } else {
+      await useHttpPostForm("/api/like/like", {
+        body: {
+          entityType: "comment",
+          entityId: comment.id,
+        },
+      });
+      comment.liked = true;
+      comment.likeCount = comment.likeCount + 1;
+      useMsgSuccess("点赞成功");
+    }
+  } catch (e) {
+    useCatchError(e);
+  }
+};
+
+const switchShowReply = (comment) => {
+  if (!userStore.user) {
+    useMsgSignIn();
+    return;
+  }
+
+  if (reply.commentId === comment.id) {
+    hideReply(comment);
+  } else {
+    reply.commentId = comment.id;
+    // // TODO
+    // setTimeout(() => {
+    //   this.$refs[`editor${comment.id}`][0].focus();
+    // }, 0);
+  }
+};
+
+const hideReply = (comment) => {
+  reply.commentId = 0;
+  reply.value.content = "";
+  reply.value.imageList = [];
+};
+
+const submitReply = async (parent) => {
+  try {
+    const ret = await useHttpPostForm("/api/comment/create", {
+      body: {
+        entityType: "comment",
+        entityId: parent.id,
+        content: reply.value.content,
+        imageList:
+          reply.value.imageList && reply.value.imageList.length
+            ? JSON.stringify(reply.value.imageList)
+            : "",
+      },
+    });
+    hideReply();
+    appendReply(parent, ret);
+    useMsgSuccess("发布成功");
+  } catch (e) {
+    useCatchError(e);
+  }
+};
+
+const onReply = (parent, comment) => {
+  appendReply(parent, comment);
+};
+
+const appendReply = (parent, comment) => {
+  if (parent.replies && parent.replies.results) {
+    parent.replies.results.push(comment);
+  } else {
+    parent.replies = {
+      results: [comment],
+    };
+  }
+};
+
+defineExpose({
+  append,
+});
 </script>
 
 <style scoped lang="scss">
