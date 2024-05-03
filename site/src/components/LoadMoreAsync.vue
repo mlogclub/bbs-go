@@ -88,6 +88,7 @@ async function refresh() {
 }
 
 function renderData(data) {
+  data = data || {};
   pageData.cursor = data.cursor;
   pageData.hasMore = data.hasMore;
   if (data.results && data.results.length) {
