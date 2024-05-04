@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/gormlogs"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
 	"fmt"
 	"log/slog"
@@ -24,6 +25,7 @@ func Init() {
 	initDB()
 	initCron()
 	initIpLocator()
+	initSearch()
 }
 
 func initConfig() {
@@ -69,4 +71,8 @@ func initCron() {
 
 func initIpLocator() {
 	iplocator.InitIpLocator(config.Instance.IpDataPath)
+}
+
+func initSearch() {
+	search.Init("./data")
 }
