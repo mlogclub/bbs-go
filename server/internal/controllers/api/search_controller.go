@@ -1,9 +1,8 @@
 package api
 
 import (
-	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/es"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
 
 	"github.com/kataras/iris/v12"
@@ -19,13 +18,14 @@ func (c *SearchController) AnyReindex() *web.JsonResult {
 	go services.TopicService.ScanDesc(func(topics []models.Topic) {
 		for _, t := range topics {
 			topic := services.TopicService.Get(t.Id)
-			es.UpdateTopicIndex(topic)
+			// es.UpdateTopicIndex(topic)
+			search.UpdateTopicIndex(topic)
 		}
 	})
 	return web.JsonSuccess()
 }
 
-func (c *SearchController) PostTopic() *web.JsonResult {
+func (c *SearchController) GetTopic() *web.JsonResult {
 	var (
 		page      = params.FormValueIntDefault(c.Ctx, "page", 1)
 		keyword   = params.FormValue(c.Ctx, "keyword")
@@ -33,11 +33,17 @@ func (c *SearchController) PostTopic() *web.JsonResult {
 		timeRange = params.FormValueIntDefault(c.Ctx, "timeRange", 0)
 	)
 
-	docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
+	// docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
+	// if err != nil {
+	// 	return web.JsonError(err)
+	// }
+
+	// items := render.BuildSearchTopics(docs)
+	// return web.JsonPageData(items, paging)
+
+	_, _, err := search.SearchTopic(keyword, nodeId, timeRange, page, 20)
 	if err != nil {
 		return web.JsonError(err)
 	}
-
-	items := render.BuildSearchTopics(docs)
-	return web.JsonPageData(items, paging)
+	return web.JsonSuccess()
 }

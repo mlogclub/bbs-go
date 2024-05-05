@@ -74,5 +74,5 @@ func initIpLocator() {
 }
 
 func initSearch() {
-	search.Init("./data")
+	search.Init(config.Instance.Search.IndexPath)
 }

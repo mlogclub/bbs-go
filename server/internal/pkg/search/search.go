@@ -6,16 +6,17 @@ import (
 	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/repositories"
+	"fmt"
 	"html"
 	"log"
 	"log/slog"
-	"strings"
-	"time"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/index/scorch"
+	"github.com/fatih/structs"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/spf13/cast"
 )
 
 var index bleve.Index
@@ -130,72 +131,26 @@ func getTopicTags(topicId int64) []models.Tag {
 }
 
 // IndexData 索引数据
-func IndexData(did string, id, userId, createTime int64, context string, title string) error {
-	content := markdown.ToHTML(context)
-	content = html2.GetHtmlText(content)
-	content = html.EscapeString(content)
-	return updateData(did, map[string]interface{}{
-		"id":         id,
-		"userId":     userId,
-		"content":    content,
-		"createTime": createTime,
-		"title":      title,
-	})
-}
+func UpdateTopicIndex(topic *models.Topic) {
+	doc := NewTopicDoc(topic)
+	if doc == nil {
+		return
+	}
 
-// 删除索引
-func DeleteData(did string) error {
-	return updateData(did, nil)
+	err := index.Index(cast.ToString(topic.Id), structs.Map(topic))
+	if err != nil {
+		slog.Error(err.Error())
+	}
 }
 
 // 分页查询
-func SearchPage(queryText string, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
+func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
+
 	boolQuery := bleve.NewBooleanQuery()
-
-	// 如果queryText不为空，则添加标题匹配子查询
-	if queryText != "" {
-		queryMatch := bleve.NewMatchQuery(queryText)
-		queryMatch.SetField("title")
-		boolQuery.AddMust(queryMatch)
-	}
-
-	// 如果timeRange不为空，则根据时间范围添加时间范围查询
-	if timeRange != 0 {
-		var startTime int64
-		currentTime := time.Now().Unix()
-
-		switch timeRange {
-		case 1: // 一天内
-			startTime = currentTime - 24*3600
-		case 2: // 一周内
-			startTime = currentTime - 7*24*3600
-		case 3: // 一月内
-			startTime = currentTime - 30*24*3600
-		case 4: // 一年内
-			startTime = currentTime - 365*24*3600
-		default:
-			// 其他情况不处理
-		}
-
-		// 添加时间范围查询
-		start := new(float64)
-		end := new(float64)
-
-		*start = float64(startTime * 1000)
-		*end = float64(currentTime * 1000)
-
-		queryTimeRange := bleve.NewNumericRangeQuery(start, end)
-		queryTimeRange.SetField("createTime")
-		boolQuery.AddMust(queryTimeRange)
-	}
-
 	searchRequest := bleve.NewSearchRequest(boolQuery)
-	searchRequest.SortBy([]string{"createTime"})
-	searchRequest.Fields = []string{"did", "userId", "title", "content", "createTime"}
-	// 设置分页参数
-	searchRequest.From = (page - 1) * limit
-	searchRequest.Size = limit
+	searchRequest.From = paging.Offset()
+	searchRequest.Size = paging.Limit
 
 	results, err := index.Search(searchRequest)
 	if err != nil {
@@ -203,46 +158,33 @@ func SearchPage(queryText string, timeRange, page, limit int) (docs []TopicDocum
 	}
 
 	for _, hit := range results.Hits {
-		var doc TopicDocument
+		fmt.Println(hit)
 
-		doc.Type = strings.Split(hit.ID, "-")[0]
+		// var doc TopicDocument
 
-		if title, ok := hit.Fields["title"].(string); ok {
-			doc.Title = title
-		}
-		if content, ok := hit.Fields["content"].(string); ok {
-			doc.Content = content
-		}
+		// doc.Type = strings.Split(hit.ID, "-")[0]
 
-		if userId, ok := hit.Fields["userId"].(float64); ok {
-			doc.UserId = userId
-		}
+		// if title, ok := hit.Fields["title"].(string); ok {
+		// 	doc.Title = title
+		// }
+		// if content, ok := hit.Fields["content"].(string); ok {
+		// 	doc.Content = content
+		// }
 
-		if did, ok := hit.Fields["did"].(float64); ok {
-			doc.Id = did
-		}
+		// if userId, ok := hit.Fields["userId"].(float64); ok {
+		// 	doc.UserId = userId
+		// }
 
-		if createTime, ok := hit.Fields["createTime"].(float64); ok {
-			doc.CreateTime = createTime
-		}
+		// if did, ok := hit.Fields["did"].(float64); ok {
+		// 	doc.Id = did
+		// }
 
-		docs = append(docs, doc)
+		// if createTime, ok := hit.Fields["createTime"].(float64); ok {
+		// 	doc.CreateTime = createTime
+		// }
+
+		// docs = append(docs, doc)
 	}
 
 	return
-}
-
-func updateData(docID string, newData interface{}) error {
-	if err := index.Delete(docID); err != nil {
-		slog.Error("删除索引失败～：", slog.Any("err", err))
-		return err
-	}
-
-	if newData != nil {
-		if err := index.Index(docID, newData); err != nil {
-			slog.Error("重建索引失败～：", slog.Any("err", err))
-			return err
-		}
-	}
-	return nil
 }

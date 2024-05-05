@@ -74,4 +74,8 @@ type Config struct {
 		Url   string
 		Index string
 	}
+
+	Search struct {
+		IndexPath string
+	}
 }
