@@ -12,7 +12,6 @@ import (
 	"log/slog"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/index/scorch"
 	"github.com/fatih/structs"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
@@ -45,7 +44,7 @@ func (t *TopicDocument) ToStr() string {
 func Init(indexPath string) {
 	var err error
 	index, err = bleve.Open(indexPath)
-	if err != nil {
+	if err == bleve.ErrorIndexPathDoesNotExist {
 		textField := bleve.NewTextFieldMapping()
 		textField.Store = true
 		textField.Index = true
@@ -75,10 +74,12 @@ func Init(indexPath string) {
 		indexMapping.DefaultMapping.AddFieldMappingsAt("createTime", numField)
 
 		// 使用 scorch 索引类型创建索引
-		index, err = bleve.NewUsing(indexPath, indexMapping, scorch.Name, scorch.Name, nil)
+		index, err = bleve.New(indexPath, indexMapping)
 		if err != nil {
 			log.Fatalf("创建索引失败: %v", err)
 		}
+	} else if err != nil {
+		slog.Error(err.Error())
 	}
 }
 
@@ -147,8 +148,9 @@ func UpdateTopicIndex(topic *models.Topic) {
 func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
 
-	boolQuery := bleve.NewBooleanQuery()
-	searchRequest := bleve.NewSearchRequest(boolQuery)
+	query := bleve.NewMatchQuery("example")
+	searchRequest := bleve.NewSearchRequest(query)
+	searchRequest.Fields = []string{"id", "title", "content", "createTime"}
 	searchRequest.From = paging.Offset()
 	searchRequest.Size = paging.Limit
 
@@ -159,31 +161,6 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 
 	for _, hit := range results.Hits {
 		fmt.Println(hit)
-
-		// var doc TopicDocument
-
-		// doc.Type = strings.Split(hit.ID, "-")[0]
-
-		// if title, ok := hit.Fields["title"].(string); ok {
-		// 	doc.Title = title
-		// }
-		// if content, ok := hit.Fields["content"].(string); ok {
-		// 	doc.Content = content
-		// }
-
-		// if userId, ok := hit.Fields["userId"].(float64); ok {
-		// 	doc.UserId = userId
-		// }
-
-		// if did, ok := hit.Fields["did"].(float64); ok {
-		// 	doc.Id = did
-		// }
-
-		// if createTime, ok := hit.Fields["createTime"].(float64); ok {
-		// 	doc.CreateTime = createTime
-		// }
-
-		// docs = append(docs, doc)
 	}
 
 	return

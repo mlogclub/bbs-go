@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
@@ -41,9 +42,10 @@ func (c *SearchController) GetTopic() *web.JsonResult {
 	// items := render.BuildSearchTopics(docs)
 	// return web.JsonPageData(items, paging)
 
-	_, _, err := search.SearchTopic(keyword, nodeId, timeRange, page, 20)
+	docs, paging, err := search.SearchTopic(keyword, nodeId, timeRange, page, 20)
 	if err != nil {
 		return web.JsonError(err)
 	}
-	return web.JsonSuccess()
+	items := render.BuildSearchTopics(docs)
+	return web.JsonPageData(items, paging)
 }
