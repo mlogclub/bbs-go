@@ -4,12 +4,12 @@
       <li :class="{ active: searchStore.nodeId === 0 }" class="topics-nav-item">
         <a @click="setNodeId(0)">全部</a>
       </li>
-      <li
+      <!-- <li
         :class="{ active: searchStore.nodeId === -1 }"
         class="topics-nav-item"
       >
         <a @click="setNodeId(-1)">推荐</a>
-      </li>
+      </li> -->
       <li
         v-for="node in nodes"
         :key="node.id"
