@@ -62,7 +62,6 @@ SmSEO:
   UserName:
   Token:
 
-# es 配置
-Es:
-  Url: http://127.0.0.1:9200
-  Index: bbsgo_topic_1
+# search
+Search:
+  IndexPath: # 索引路径

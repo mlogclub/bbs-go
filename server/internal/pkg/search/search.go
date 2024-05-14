@@ -106,6 +106,27 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 		query.AddMust(termQuery)
 	}
 
+	// if nodeId != 0 {
+	// 	if nodeId == -1 { // 推荐
+	// 		query.Must(elastic.NewTermQuery("recommend", true))
+	// 	} else {
+	// 		query.Must(elastic.NewTermQuery("nodeId", nodeId))
+	// 	}
+	// }
+	// if timeRange == 1 { // 一天内
+	// 	beginTime := dates.Timestamp(time.Now().Add(-24 * time.Hour))
+	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	// } else if timeRange == 2 { // 一周内
+	// 	beginTime := dates.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
+	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	// } else if timeRange == 3 { // 一月内
+	// 	beginTime := dates.Timestamp(time.Now().AddDate(0, -1, 0))
+	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	// } else if timeRange == 4 { // 一年内
+	// 	beginTime := dates.Timestamp(time.Now().AddDate(-1, 0, 0))
+	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
+	// }
+
 	searchRequest := bleve.NewSearchRequest(query)
 	searchRequest.From = paging.Offset()
 	searchRequest.Size = paging.Limit

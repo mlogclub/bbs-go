@@ -69,12 +69,6 @@ type Config struct {
 		SSL      bool
 	}
 
-	// es
-	Es struct {
-		Url   string
-		Index string
-	}
-
 	Search struct {
 		IndexPath string
 	}

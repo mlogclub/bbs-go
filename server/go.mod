@@ -21,7 +21,6 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mlogclub/simple v1.2.23
-	github.com/olivere/elastic/v7 v7.0.32
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1

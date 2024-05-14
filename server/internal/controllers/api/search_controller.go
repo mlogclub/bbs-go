@@ -19,7 +19,6 @@ func (c *SearchController) AnyReindex() *web.JsonResult {
 	go services.TopicService.ScanDesc(func(topics []models.Topic) {
 		for _, t := range topics {
 			topic := services.TopicService.Get(t.Id)
-			// es.UpdateTopicIndex(topic)
 			search.UpdateTopicIndex(topic)
 		}
 	})
