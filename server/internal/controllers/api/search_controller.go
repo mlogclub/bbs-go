@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
@@ -33,19 +34,11 @@ func (c *SearchController) GetTopic() *web.JsonResult {
 		timeRange = params.FormValueIntDefault(c.Ctx, "timeRange", 0)
 	)
 
-	// docs, paging, err := es.SearchTopic(keyword, nodeId, timeRange, page, 20)
-	// if err != nil {
-	// 	return web.JsonError(err)
-	// }
-
-	// items := render.BuildSearchTopics(docs)
-	// return web.JsonPageData(items, paging)
-
 	docs, paging, err := search.SearchTopic(keyword, nodeId, timeRange, page, 20)
 	if err != nil {
 		return web.JsonError(err)
 	}
-	// items := render.BuildSearchTopics(docs)
-	// return web.JsonPageData(items, paging)
-	return web.JsonPageData(docs, paging)
+	items := render.BuildSearchTopics(docs)
+	return web.JsonPageData(items, paging)
+	// return web.JsonPageData(docs, paging)
 }

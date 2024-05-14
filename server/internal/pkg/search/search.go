@@ -7,13 +7,10 @@ import (
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/repositories"
 	"html"
-	"log"
 	"log/slog"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/mitchellh/mapstructure"
-	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
@@ -21,75 +18,14 @@ import (
 
 var index bleve.Index
 
-type TopicDocument struct {
-	Id         int64    `json:"id"`
-	NodeId     int64    `json:"nodeId"`
-	UserId     int64    `json:"userId"`
-	Nickname   string   `json:"nickname"`
-	Title      string   `json:"title"`
-	Content    string   `json:"content"`
-	Tags       []string `json:"tags"`
-	Recommend  bool     `json:"recommend"`
-	Status     int      `json:"status"`
-	CreateTime int64    `json:"createTime"`
-}
-
-func (t *TopicDocument) ToStr() string {
-	str, err := jsons.ToStr(t)
-	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	}
-	return str
-}
-
-func newTextField() *mapping.FieldMapping {
-	textField := bleve.NewTextFieldMapping()
-	// textField.Store = true
-	textField.Index = true
-	textField.IncludeTermVectors = true
-	textField.Analyzer = "en"
-	return textField
-}
-
-func newNumField() *mapping.FieldMapping {
-	numField := bleve.NewNumericFieldMapping()
-	// numField.Store = true
-	numField.Index = true
-	numField.DocValues = true
-	return numField
-}
-
-func newBoolField() *mapping.FieldMapping {
-	boolField := bleve.NewBooleanFieldMapping()
-	// boolField.Store = true
-	boolField.Index = true
-	boolField.DocValues = true
-	return boolField
-}
-
 func Init(indexPath string) {
 	var err error
-	index, err = bleve.Open(indexPath)
-	if err == bleve.ErrorIndexPathDoesNotExist {
-		mapping := bleve.NewIndexMapping()
-		mapping.DefaultMapping.AddFieldMappingsAt("id", newNumField())
-		mapping.DefaultMapping.AddFieldMappingsAt("nodeId", newNumField())
-		mapping.DefaultMapping.AddFieldMappingsAt("userId", newNumField())
-		mapping.DefaultMapping.AddFieldMappingsAt("nickname", newTextField())
-		mapping.DefaultMapping.AddFieldMappingsAt("title", newTextField())
-		mapping.DefaultMapping.AddFieldMappingsAt("content", newTextField())
-		mapping.DefaultMapping.AddFieldMappingsAt("tags", newTextField())
-		mapping.DefaultMapping.AddFieldMappingsAt("recommend", newBoolField())
-		mapping.DefaultMapping.AddFieldMappingsAt("status", newNumField())
-		mapping.DefaultMapping.AddFieldMappingsAt("createTime", newNumField())
-
-		// 使用 scorch 索引类型创建索引
-		index, err = bleve.New(indexPath, mapping)
-		if err != nil {
-			log.Fatalf("创建索引失败: %v", err)
+	if index, err = bleve.Open(indexPath); err != nil {
+		if err == bleve.ErrorIndexPathDoesNotExist {
+			index = newIndex(indexPath)
+		} else {
+			slog.Error(err.Error())
 		}
-	} else if err != nil {
-		slog.Error(err.Error())
 	}
 }
 
@@ -126,6 +62,7 @@ func NewTopicDoc(topic *models.Topic) *TopicDocument {
 	for _, tag := range tags {
 		tagsArr = append(tagsArr, tag.Name)
 	}
+	tagsArr = append(tagsArr, "hello")
 	doc.Tags = tagsArr
 
 	return doc
@@ -147,11 +84,6 @@ func UpdateTopicIndex(topic *models.Topic) {
 	if doc == nil {
 		return
 	}
-
-	// var result map[string]interface{}
-	// if err := mapstructure.Decode(doc, &result); err != nil {
-	// 	slog.Error(err.Error())
-	// }
 	err := index.Index(cast.ToString(topic.Id), doc)
 	if err != nil {
 		slog.Error(err.Error())
@@ -177,12 +109,12 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	searchRequest.Highlight.AddField("title")
 	searchRequest.Highlight.AddField("content")
 
-	results, err := index.Search(searchRequest)
+	result, err := index.Search(searchRequest)
 	if err != nil {
 		slog.Error("搜索失败:", slog.Any("err", err))
 	}
 
-	for _, hit := range results.Hits {
+	for _, hit := range result.Hits {
 
 		storedDoc := make(map[string]interface{})
 		for key, field := range hit.Fields {
@@ -195,11 +127,23 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 			}
 		}
 
+		if tagField, ok := storedDoc["tags"]; ok {
+			switch v := tagField.(type) {
+			case string:
+				storedDoc["tags"] = []string{v}
+			case []interface{}:
+				var tags []string
+				for _, tag := range v {
+					tags = append(tags, tag.(string))
+				}
+				storedDoc["tags"] = tags
+			}
+		}
+
 		var doc TopicDocument
 		if err := mapstructure.Decode(storedDoc, &doc); err != nil {
 			slog.Error(err.Error())
 		}
-
 		docs = append(docs, doc)
 	}
 
