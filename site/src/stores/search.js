@@ -27,11 +27,13 @@ export const useSearchStore = defineStore("search", {
     async searchTopic() {
       this.loading = true;
       try {
-        this.searchPage = await this.$axios.post("/api/search/topic", {
-          keyword: this.keyword,
-          nodeId: this.nodeId,
-          timeRange: this.timeRange,
-          page: this.page,
+        this.searchPage = await useHttpGet("/api/search/topic", {
+          params: {
+            keyword: this.keyword,
+            nodeId: this.nodeId,
+            timeRange: this.timeRange,
+            page: this.page,
+          },
         });
       } finally {
         this.loading = false;

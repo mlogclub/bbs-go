@@ -40,5 +40,4 @@ func (c *SearchController) GetTopic() *web.JsonResult {
 	}
 	items := render.BuildSearchTopics(docs)
 	return web.JsonPageData(items, paging)
-	// return web.JsonPageData(docs, paging)
 }

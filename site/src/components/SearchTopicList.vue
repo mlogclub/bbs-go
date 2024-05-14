@@ -11,7 +11,7 @@
       <p class="topic-search-item-summary content" v-html="item.summary"></p>
       <div class="topic-mates">
         <span v-html="item.nickname"></span>
-        <span>{{ item.createTime | formatDate }}</span>
+        <span>{{ useFormatDate(item.createTime) }}</span>
         <span v-if="item.node">{{ item.node.name }}</span>
         <!-- <template v-if="item.tags && item.tags.length">
           <span v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
@@ -39,7 +39,7 @@ export default {
       default: null,
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

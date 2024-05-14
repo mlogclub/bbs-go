@@ -100,6 +100,11 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	if strs.IsNotBlank(keyword) {
 		query.AddMust(bleve.NewMatchQuery(keyword))
 	}
+	if nodeId > 0 {
+		termQuery := bleve.NewTermQuery(cast.ToString(nodeId))
+		termQuery.SetField("nodeId")
+		query.AddMust(termQuery)
+	}
 
 	searchRequest := bleve.NewSearchRequest(query)
 	searchRequest.From = paging.Offset()

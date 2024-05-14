@@ -12,11 +12,11 @@
       </li>
       <li
         v-for="node in nodes"
-        :key="node.nodeId"
-        :class="{ active: searchStore.nodeId === node.nodeId }"
+        :key="node.id"
+        :class="{ active: searchStore.nodeId === node.id }"
         class="topics-nav-item"
       >
-        <a @click="setNodeId(node.nodeId)">{{ node.name }}</a>
+        <a @click="setNodeId(node.id)">{{ node.name }}</a>
       </li>
     </ul>
     <div class="search-time-range">
@@ -34,22 +34,19 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  nodes: {
-    type: Array,
-    default() {
-      return [];
-    },
-  },
+const { data: nodes } = await useAsyncData("nodes", () => {
+  return useMyFetch("/api/topic/nodes");
 });
+
 const timeRange = ref(0);
 const searchStore = useSearchStore();
 
 const setNodeId = (nodeId) => {
-  this.$store.dispatch("search/changeNodeId", nodeId);
+  searchStore.changeNodeId(nodeId);
 };
+
 const setTimeRange = () => {
-  this.$store.dispatch("search/changeTimeRange", this.timeRange);
+  searchStore.changeTimeRange(timeRange.value);
 };
 </script>
 
