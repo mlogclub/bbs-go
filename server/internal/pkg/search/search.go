@@ -6,14 +6,15 @@ import (
 	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/repositories"
-	"fmt"
 	"html"
 	"log"
 	"log/slog"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/fatih/structs"
+	"github.com/blevesearch/bleve/v2/mapping"
+	"github.com/mitchellh/mapstructure"
 	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
 )
@@ -41,40 +42,49 @@ func (t *TopicDocument) ToStr() string {
 	return str
 }
 
+func newTextField() *mapping.FieldMapping {
+	textField := bleve.NewTextFieldMapping()
+	// textField.Store = true
+	textField.Index = true
+	textField.IncludeTermVectors = true
+	textField.Analyzer = "en"
+	return textField
+}
+
+func newNumField() *mapping.FieldMapping {
+	numField := bleve.NewNumericFieldMapping()
+	// numField.Store = true
+	numField.Index = true
+	numField.DocValues = true
+	return numField
+}
+
+func newBoolField() *mapping.FieldMapping {
+	boolField := bleve.NewBooleanFieldMapping()
+	// boolField.Store = true
+	boolField.Index = true
+	boolField.DocValues = true
+	return boolField
+}
+
 func Init(indexPath string) {
 	var err error
 	index, err = bleve.Open(indexPath)
 	if err == bleve.ErrorIndexPathDoesNotExist {
-		textField := bleve.NewTextFieldMapping()
-		textField.Store = true
-		textField.Index = true
-		textField.IncludeTermVectors = true
-		textField.Analyzer = "en"
-
-		numField := bleve.NewNumericFieldMapping()
-		numField.DocValues = true
-		numField.Store = true
-		numField.Index = true
-
-		boolField := bleve.NewBooleanFieldMapping()
-		boolField.DocValues = true
-		boolField.Store = true
-		boolField.Index = true
-
-		indexMapping := bleve.NewIndexMapping()
-		indexMapping.DefaultMapping.AddFieldMappingsAt("id", numField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("nodeId", numField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("userId", numField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("nickname", textField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("title", textField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("content", textField)
-		// TODO tags
-		indexMapping.DefaultMapping.AddFieldMappingsAt("recommend", boolField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("status", numField)
-		indexMapping.DefaultMapping.AddFieldMappingsAt("createTime", numField)
+		mapping := bleve.NewIndexMapping()
+		mapping.DefaultMapping.AddFieldMappingsAt("id", newNumField())
+		mapping.DefaultMapping.AddFieldMappingsAt("nodeId", newNumField())
+		mapping.DefaultMapping.AddFieldMappingsAt("userId", newNumField())
+		mapping.DefaultMapping.AddFieldMappingsAt("nickname", newTextField())
+		mapping.DefaultMapping.AddFieldMappingsAt("title", newTextField())
+		mapping.DefaultMapping.AddFieldMappingsAt("content", newTextField())
+		mapping.DefaultMapping.AddFieldMappingsAt("tags", newTextField())
+		mapping.DefaultMapping.AddFieldMappingsAt("recommend", newBoolField())
+		mapping.DefaultMapping.AddFieldMappingsAt("status", newNumField())
+		mapping.DefaultMapping.AddFieldMappingsAt("createTime", newNumField())
 
 		// 使用 scorch 索引类型创建索引
-		index, err = bleve.New(indexPath, indexMapping)
+		index, err = bleve.New(indexPath, mapping)
 		if err != nil {
 			log.Fatalf("创建索引失败: %v", err)
 		}
@@ -138,7 +148,11 @@ func UpdateTopicIndex(topic *models.Topic) {
 		return
 	}
 
-	err := index.Index(cast.ToString(topic.Id), structs.Map(topic))
+	// var result map[string]interface{}
+	// if err := mapstructure.Decode(doc, &result); err != nil {
+	// 	slog.Error(err.Error())
+	// }
+	err := index.Index(cast.ToString(topic.Id), doc)
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -148,11 +162,20 @@ func UpdateTopicIndex(topic *models.Topic) {
 func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
 
-	query := bleve.NewMatchQuery("example")
+	query := bleve.NewBooleanQuery()
+	query.AddMust(bleve.NewMatchAllQuery())
+
+	if strs.IsNotBlank(keyword) {
+		query.AddMust(bleve.NewMatchQuery(keyword))
+	}
+
 	searchRequest := bleve.NewSearchRequest(query)
-	searchRequest.Fields = []string{"id", "title", "content", "createTime"}
 	searchRequest.From = paging.Offset()
 	searchRequest.Size = paging.Limit
+	searchRequest.Fields = []string{"*"}
+	searchRequest.Highlight = bleve.NewHighlightWithStyle("html")
+	searchRequest.Highlight.AddField("title")
+	searchRequest.Highlight.AddField("content")
 
 	results, err := index.Search(searchRequest)
 	if err != nil {
@@ -160,7 +183,24 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	}
 
 	for _, hit := range results.Hits {
-		fmt.Println(hit)
+
+		storedDoc := make(map[string]interface{})
+		for key, field := range hit.Fields {
+			storedDoc[key] = field
+		}
+
+		for field, fragments := range hit.Fragments {
+			if len(fragments) > 0 {
+				storedDoc[field] = fragments[0]
+			}
+		}
+
+		var doc TopicDocument
+		if err := mapstructure.Decode(storedDoc, &doc); err != nil {
+			slog.Error(err.Error())
+		}
+
+		docs = append(docs, doc)
 	}
 
 	return
