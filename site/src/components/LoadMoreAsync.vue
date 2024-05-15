@@ -105,7 +105,7 @@ const unshiftResults = (item) => {
 };
 
 defineExpose({
-  // refresh,
+  refresh,
   unshiftResults,
 });
 </script>

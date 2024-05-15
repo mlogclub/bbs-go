@@ -1,31 +1,25 @@
 <template>
   <div class="topic-search-items">
-    <div
-      v-for="item in searchPage.results"
-      :key="item.id"
-      class="topic-search-item"
-    >
-      <a target="_blank" :href="'/topic/' + item.topicId">
-        <h1 class="topic-search-item-title" v-html="item.title"></h1>
+    <div v-for="item in results" :key="item.id" class="topic-search-item">
+      <h1 class="topic-search-item-title">
+        <a target="_blank" :href="'/topic/' + item.id" v-html="item.title" />
+      </h1>
+      <a
+        target="_blank"
+        :href="'/topic/' + item.id"
+        class="topic-search-item-summary content"
+      >
+        <p v-html="item.summary"></p>
       </a>
-      <p class="topic-search-item-summary content" v-html="item.summary"></p>
       <div class="topic-mates">
-        <span v-html="item.nickname"></span>
+        <!-- <span>{{ item.user.nickname }}</span> -->
         <span>{{ useFormatDate(item.createTime) }}</span>
         <span v-if="item.node">{{ item.node.name }}</span>
-        <template v-if="item.tags && item.tags.length">
+        <!-- <template v-if="item.tags && item.tags.length">
           <span v-for="tag in item.tags" :key="tag.id" class="tag">{{
             tag.name
           }}</span>
-        </template>
-        <template v-if="item.tagNames && item.tagNames.length">
-          <span
-            v-for="(tagName, index) in item.tagNames"
-            :key="index"
-            class="tag"
-            v-html="tagName"
-          ></span>
-        </template>
+        </template> -->
       </div>
     </div>
   </div>
@@ -34,7 +28,7 @@
 <script>
 export default {
   props: {
-    searchPage: {
+    results: {
       type: Object,
       default: null,
     },
@@ -44,22 +38,47 @@ export default {
 
 <style lang="scss" scoped>
 .topic-search-items {
-  background-color: var(--bg-color);
   .topic-search-item {
     padding: 10px;
-    margin-bottom: 8px;
-    background-color: var(--bg-color);
-    // box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
+    }
+
     .topic-search-item-title {
-      font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: 600;
+
+      a {
+        color: var(--text-color);
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
+
     .topic-search-item-summary {
-      font-size: 80%;
-      cursor: pointer;
+      margin-bottom: 10px;
+      display: inline-block;
+      font-size: 15px;
+      width: 100%;
+      text-decoration: none;
+      color: var(--text-color2);
+      word-wrap: break-word;
+
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      text-align: justify;
+      word-break: break-all;
+      text-overflow: ellipsis;
     }
+
     .topic-mates {
-      font-size: 80%;
+      font-size: 13px;
       color: var(--text-color3);
       span {
         margin-right: 10px;

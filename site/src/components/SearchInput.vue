@@ -45,10 +45,10 @@
 <script setup>
 const localStorageKey = "bbsgo.search.histories";
 const maxHistoryLen = 10;
-const searchStore = useSearchStore();
+const route = useRoute();
 
 const data = reactive({
-  keyword: "",
+  keyword: route.query.q || "",
   inputFocus: false,
   selectedIndex: -1,
   allHistories: [],
@@ -70,7 +70,6 @@ const histories = computed(() => {
 });
 
 onMounted(() => {
-  data.keyword = searchStore.keyword;
   loadAllHistories();
 });
 

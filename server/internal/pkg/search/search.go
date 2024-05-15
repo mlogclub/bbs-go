@@ -87,6 +87,8 @@ func UpdateTopicIndex(topic *models.Topic) {
 	err := index.Index(cast.ToString(topic.Id), doc)
 	if err != nil {
 		slog.Error(err.Error())
+	} else {
+		slog.Info("add topic search index", slog.Any("id", topic.Id))
 	}
 }
 

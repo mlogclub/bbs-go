@@ -9,6 +9,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/spf13/cast"
 )
 
 type SearchController struct {
@@ -27,16 +28,15 @@ func (c *SearchController) AnyReindex() *web.JsonResult {
 
 func (c *SearchController) GetTopic() *web.JsonResult {
 	var (
-		page      = params.FormValueIntDefault(c.Ctx, "page", 1)
+		cursor    = params.FormValueIntDefault(c.Ctx, "cursor", 1)
 		keyword   = params.FormValue(c.Ctx, "keyword")
 		nodeId    = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
 		timeRange = params.FormValueIntDefault(c.Ctx, "timeRange", 0)
+		limit     = 20
 	)
-
-	docs, paging, err := search.SearchTopic(keyword, nodeId, timeRange, page, 20)
+	list, _, err := search.SearchTopic(keyword, nodeId, timeRange, cursor, limit)
 	if err != nil {
 		return web.JsonError(err)
 	}
-	items := render.BuildSearchTopics(docs)
-	return web.JsonPageData(items, paging)
+	return web.JsonCursorData(render.BuildSearchTopics(list), cast.ToString(cursor+1), len(list) >= limit)
 }

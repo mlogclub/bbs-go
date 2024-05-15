@@ -1,11 +1,11 @@
 <template>
   <div class="topics-nav">
     <ul class="topics-nav-list">
-      <li :class="{ active: searchStore.nodeId === 0 }" class="topics-nav-item">
+      <li :class="{ active: nodeId === 0 }" class="topics-nav-item">
         <a @click="setNodeId(0)">全部</a>
       </li>
       <!-- <li
-        :class="{ active: searchStore.nodeId === -1 }"
+        :class="{ active: nodeId === -1 }"
         class="topics-nav-item"
       >
         <a @click="setNodeId(-1)">推荐</a>
@@ -13,7 +13,7 @@
       <li
         v-for="node in nodes"
         :key="node.id"
-        :class="{ active: searchStore.nodeId === node.id }"
+        :class="{ active: nodeId === node.id }"
         class="topics-nav-item"
       >
         <a @click="setNodeId(node.id)">{{ node.name }}</a>
@@ -38,15 +38,33 @@ const { data: nodes } = await useAsyncData("nodes", () => {
   return useMyFetch("/api/topic/nodes");
 });
 
-const timeRange = ref(0);
-const searchStore = useSearchStore();
+const route = useRoute();
+const router = useRouter();
+const nodeId = ref(parseInt(route.query.nodeId) || 0);
+const timeRange = ref(parseInt(route.query.timeRange) || 0);
 
-const setNodeId = (nodeId) => {
-  searchStore.changeNodeId(nodeId);
+const setNodeId = (changeNodeId) => {
+  nodeId.value = changeNodeId;
+  setQuery("nodeId", changeNodeId);
 };
 
 const setTimeRange = () => {
-  searchStore.changeTimeRange(timeRange.value);
+  setQuery("timeRange", timeRange.value);
+};
+
+const setQuery = (key, value) => {
+  const currentQuery = { ...route.query };
+
+  const newQuery = {
+    ...currentQuery,
+  };
+
+  newQuery[key] = value;
+
+  router.push({
+    path: "/search",
+    query: newQuery,
+  });
 };
 </script>
 
