@@ -2,6 +2,7 @@
   <div
     ref="searchForm"
     class="searchFormDiv"
+    v-click-outside="onBlur"
     :class="{ 'input-focus': data.inputFocus, 'show-histories': showHistories }"
   >
     <div class="search-input">
