@@ -3,6 +3,7 @@ package api
 import (
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
 
@@ -18,9 +19,10 @@ type SearchController struct {
 
 func (c *SearchController) AnyReindex() *web.JsonResult {
 	go services.TopicService.ScanDesc(func(topics []models.Topic) {
-		for _, t := range topics {
-			topic := services.TopicService.Get(t.Id)
-			search.UpdateTopicIndex(topic)
+		for _, topic := range topics {
+			if topic.Status != constants.StatusDeleted {
+				search.UpdateTopicIndex(&topic)
+			}
 		}
 	})
 	return web.JsonSuccess()

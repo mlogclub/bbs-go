@@ -95,7 +95,7 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 	err := repositories.TopicRepository.UpdateColumn(sqls.DB(), topicId, "status", constants.StatusDeleted)
 	if err == nil {
 		// 添加索引
-		search.UpdateTopicIndex(s.Get(topicId))
+		search.DeleteTopicIndex(topicId)
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(topicId)
 		// 发送事件
@@ -427,7 +427,6 @@ func (s *topicService) ScanDesc(callback func(topics []models.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
-			Cols("id", "status", "create_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break

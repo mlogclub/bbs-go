@@ -95,6 +95,10 @@ func UpdateTopicIndex(topic *models.Topic) {
 	}
 }
 
+func DeleteTopicIndex(id int64) error {
+	return index.Delete(cast.ToString(id))
+}
+
 // 分页查询
 func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
