@@ -30,8 +30,8 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <!-- <search-input /> -->
-            <nuxt-link to="/search">xxxx</nuxt-link>
+            <search-input />
+            <!-- <nuxt-link to="/search">xxxx</nuxt-link> -->
           </div>
 
           <div class="navbar-item">

@@ -49,7 +49,7 @@ export default {
     padding: 10px;
     margin-bottom: 8px;
     background-color: var(--bg-color);
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    // box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     .topic-search-item-title {
       font-weight: bold;
       margin-bottom: 6px;
