@@ -8,9 +8,12 @@ import (
 	"bbs-go/internal/repositories"
 	"html"
 	"log/slog"
+	"math"
+	"time"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/mitchellh/mapstructure"
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
@@ -102,32 +105,38 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	if strs.IsNotBlank(keyword) {
 		query.AddMust(bleve.NewMatchQuery(keyword))
 	}
-	if nodeId > 0 {
-		termQuery := bleve.NewTermQuery(cast.ToString(nodeId))
-		termQuery.SetField("nodeId")
-		query.AddMust(termQuery)
-	}
 
-	// if nodeId != 0 {
-	// 	if nodeId == -1 { // 推荐
-	// 		query.Must(elastic.NewTermQuery("recommend", true))
-	// 	} else {
-	// 		query.Must(elastic.NewTermQuery("nodeId", nodeId))
-	// 	}
-	// }
-	// if timeRange == 1 { // 一天内
-	// 	beginTime := dates.Timestamp(time.Now().Add(-24 * time.Hour))
-	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
-	// } else if timeRange == 2 { // 一周内
-	// 	beginTime := dates.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
-	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
-	// } else if timeRange == 3 { // 一月内
-	// 	beginTime := dates.Timestamp(time.Now().AddDate(0, -1, 0))
-	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
-	// } else if timeRange == 4 { // 一年内
-	// 	beginTime := dates.Timestamp(time.Now().AddDate(-1, 0, 0))
-	// 	query.Must(elastic.NewRangeQuery("createTime").Gte(beginTime))
-	// }
+	if nodeId != 0 {
+		if nodeId == -1 { // 推荐
+			boolFieldQuery := bleve.NewBoolFieldQuery(true)
+			boolFieldQuery.SetField("recommend")
+			query.AddMust(boolFieldQuery)
+		} else {
+			f := float64(nodeId)
+			b := true
+			nodeIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)
+			nodeIdQuery.SetField("nodeId")
+			query.AddMust(nodeIdQuery)
+		}
+	}
+	if timeRange != 0 {
+		var beginTime int64
+		if timeRange == 1 { // 一天内
+			beginTime = dates.Timestamp(time.Now().Add(-24 * time.Hour))
+		} else if timeRange == 2 { // 一周内
+			beginTime = dates.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
+		} else if timeRange == 3 { // 一月内
+			beginTime = dates.Timestamp(time.Now().AddDate(0, -1, 0))
+		} else if timeRange == 4 { // 一年内
+			beginTime = dates.Timestamp(time.Now().AddDate(-1, 0, 0))
+		}
+
+		min := float64(beginTime)
+		max := float64(math.MaxInt64)
+		createTimeQuery := bleve.NewNumericRangeQuery(&min, &max)
+		createTimeQuery.SetField("createTime")
+		query.AddMust(createTimeQuery)
+	}
 
 	searchRequest := bleve.NewSearchRequest(query)
 	searchRequest.From = paging.Offset()
