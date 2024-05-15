@@ -54,7 +54,9 @@ const data = reactive({
 });
 
 const showHistories = computed(() => {
-  return data.inputFocus && histories && histories.length;
+  return (
+    data.inputFocus && histories && histories.value && histories.value.length
+  );
 });
 
 const histories = computed(() => {
@@ -75,10 +77,10 @@ const searchBoxOnEnter = () => {
   // 如果选中了历史搜索记录，那么使用历史搜索记录
   if (
     data.selectedIndex >= 0 &&
-    histories &&
-    histories.length > data.selectedIndex
+    histories.value &&
+    histories.value.length > data.selectedIndex
   ) {
-    data.keyword = histories[data.selectedIndex];
+    data.keyword = histories.value[data.selectedIndex];
   }
   submitSearch();
 };
@@ -103,14 +105,14 @@ const onInput = () => {
   data.selectedIndex = -1;
 };
 const changeSelect = (delta) => {
-  if (!histories || !histories.length) {
+  if (!histories.value || !histories.value.length) {
     return;
   }
   let index = data.selectedIndex + delta;
   if (index < 0) {
     // 选中熬第一个了，再往上取消选中
     index = -1;
-  } else if (index >= histories.length) {
+  } else if (index >= histories.value.length) {
     // 选中到最后了，再往下就回到第一个
     index = 0;
   }

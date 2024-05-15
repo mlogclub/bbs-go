@@ -13,11 +13,11 @@
         <span v-html="item.nickname"></span>
         <span>{{ useFormatDate(item.createTime) }}</span>
         <span v-if="item.node">{{ item.node.name }}</span>
-        <!-- <template v-if="item.tags && item.tags.length">
-          <span v-for="tag in item.tags" :key="tag.tagId" class="tag">{{
-            tag.tagName
+        <template v-if="item.tags && item.tags.length">
+          <span v-for="tag in item.tags" :key="tag.id" class="tag">{{
+            tag.name
           }}</span>
-        </template> -->
+        </template>
         <template v-if="item.tagNames && item.tagNames.length">
           <span
             v-for="(tagName, index) in item.tagNames"
