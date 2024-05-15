@@ -88,7 +88,7 @@ if (error.value) {
   // error.value.message
   throw createError({
     statusCode: 500,
-    statusMessage: error.value.message || "你访问的页面发生错误!",
+    message: error.value.message || "你访问的页面发生错误!",
   });
 }
 

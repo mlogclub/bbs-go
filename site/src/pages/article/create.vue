@@ -109,7 +109,7 @@ definePageMeta({
 if (!configStore.isEnabledArticle) {
   throw createError({
     statusCode: 403,
-    statusMessage: "已关闭文章功能",
+    message: "已关闭文章功能",
   });
 }
 
