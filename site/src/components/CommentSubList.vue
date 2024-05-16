@@ -13,7 +13,6 @@ export default {
   data() {
     return {
       replies: this.data,
-      showReplyCommentId: 0,
       reply: {
         quoteId: 0,
         value: {

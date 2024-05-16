@@ -88,6 +88,7 @@ async function refresh() {
 }
 
 function renderData(data) {
+  data = data || {};
   pageData.cursor = data.cursor;
   pageData.hasMore = data.hasMore;
   if (data.results && data.results.length) {
@@ -97,11 +98,11 @@ function renderData(data) {
   }
 }
 
-function unshiftResults(item) {
+const unshiftResults = (item) => {
   if (item && pageData && pageData.results) {
     pageData.results.unshift(item);
   }
-}
+};
 
 defineExpose({
   refresh,

@@ -3,9 +3,9 @@ package services
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/es"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/repositories"
 	"errors"
 	"log/slog"
@@ -89,7 +89,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 		return nil, err
 	}
 	// 添加索引
-	es.UpdateTopicIndex(topic)
+	search.UpdateTopicIndex(topic)
 	// 发送事件
 	event.Send(event.TopicCreateEvent{
 		UserId:     topic.UserId,

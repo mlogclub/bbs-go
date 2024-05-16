@@ -2,11 +2,11 @@ package render
 
 import (
 	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/es"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
 )
 
-func BuildSearchTopics(docs []es.TopicDocument) []models.SearchTopicResponse {
+func BuildSearchTopics(docs []search.TopicDocument) []models.SearchTopicResponse {
 	var items []models.SearchTopicResponse
 	for _, doc := range docs {
 		items = append(items, BuildSearchTopic(doc))
@@ -14,10 +14,9 @@ func BuildSearchTopics(docs []es.TopicDocument) []models.SearchTopicResponse {
 	return items
 }
 
-func BuildSearchTopic(doc es.TopicDocument) models.SearchTopicResponse {
+func BuildSearchTopic(doc search.TopicDocument) models.SearchTopicResponse {
 	rsp := models.SearchTopicResponse{
 		Id:         doc.Id,
-		Tags:       nil,
 		Title:      doc.Title,
 		Summary:    doc.Content,
 		CreateTime: doc.CreateTime,

@@ -10,8 +10,11 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/panjf2000/ants/v2"
+	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
@@ -20,6 +23,27 @@ import (
 
 type ArticleController struct {
 	Ctx iris.Context
+}
+
+func (c *ArticleController) GetClean() *web.JsonResult {
+	go func() {
+		p, _ := ants.NewPool(10)
+		services.ArticleService.ScanDesc(func(articles []models.Article) {
+			var ids []int64
+			for _, article := range articles {
+				if article.ContentType == constants.ContentTypeHtml {
+					ids = append(ids, article.Id)
+				}
+			}
+			if len(ids) > 0 {
+				p.Submit(func() {
+					sqls.DB().Delete(&models.Article{}, "id in ?", ids)
+					logrus.Info("清理文章:", ids)
+				})
+			}
+		})
+	}()
+	return web.JsonSuccess()
 }
 
 // 文章详情
@@ -96,6 +120,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 	}
 
 	return web.NewEmptyRspBuilder().
+		Put("id", article.Id).
 		Put("articleId", article.Id).
 		Put("title", article.Title).
 		Put("content", article.Content).

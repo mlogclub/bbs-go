@@ -3,9 +3,12 @@
     <div v-for="article in articles" :key="article.id" class="article-item">
       <div class="article-item-main">
         <div class="article-info">
-          <nuxt-link class="article-title" :to="'/article/' + article.id">{{
-            article.title
-          }}</nuxt-link>
+          <nuxt-link
+            class="article-title"
+            :to="'/article/' + article.id"
+            target="_blank"
+            >{{ article.title }}</nuxt-link
+          >
 
           <div class="article-summary">
             {{ article.summary }}

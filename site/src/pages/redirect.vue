@@ -23,7 +23,7 @@ const temp = url.toLowerCase();
 if (!temp.startsWith("http://") && !temp.startsWith("https://")) {
   throw createError({
     statusCode: 500,
-    statusMessage: "你访问的页面发生错误!",
+    message: "你访问的页面发生错误!",
   });
 }
 </script>

@@ -51,7 +51,7 @@ export function useLinkTo(path) {
 }
 
 export function useToSignIn(redirect) {
-  if (!redirect && process.client) {
+  if (!redirect && import.meta.client) {
     redirect = window.location.pathname;
   }
   useLinkTo("/user/signin?redirect=" + encodeURIComponent(redirect));

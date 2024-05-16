@@ -4,8 +4,8 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/config"
-	"bbs-go/internal/pkg/es"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/search"
 	"errors"
 	"log/slog"
 	"math"
@@ -70,7 +70,7 @@ func (s *topicService) Updates(id int64, columns map[string]interface{}) error {
 	}
 
 	// 添加索引
-	es.UpdateTopicIndex(s.Get(id))
+	search.UpdateTopicIndex(s.Get(id))
 
 	return nil
 }
@@ -81,7 +81,7 @@ func (s *topicService) UpdateColumn(id int64, name string, value interface{}) er
 	}
 
 	// 添加索引
-	es.UpdateTopicIndex(s.Get(id))
+	search.UpdateTopicIndex(s.Get(id))
 
 	return nil
 }
@@ -95,7 +95,7 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 	err := repositories.TopicRepository.UpdateColumn(sqls.DB(), topicId, "status", constants.StatusDeleted)
 	if err == nil {
 		// 添加索引
-		es.UpdateTopicIndex(s.Get(topicId))
+		search.DeleteTopicIndex(topicId)
 		// 删掉标签文章
 		TopicTagService.DeleteByTopicId(topicId)
 		// 发送事件
@@ -115,7 +115,7 @@ func (s *topicService) Undelete(id int64) error {
 		// 删掉标签文章
 		TopicTagService.UndeleteByTopicId(id)
 		// 添加索引
-		es.UpdateTopicIndex(s.Get(id))
+		search.UpdateTopicIndex(s.Get(id))
 	}
 	return err
 }
@@ -160,7 +160,7 @@ func (s *topicService) Edit(topicId, nodeId int64, tags []string, title, content
 	})
 
 	// 添加索引
-	es.UpdateTopicIndex(s.Get(topicId))
+	search.UpdateTopicIndex(s.Get(topicId))
 
 	return err
 }
@@ -194,7 +194,7 @@ func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
 	})
 
 	// 添加索引
-	es.UpdateTopicIndex(s.Get(topicId))
+	search.UpdateTopicIndex(s.Get(topicId))
 
 	return nil
 }
@@ -427,7 +427,6 @@ func (s *topicService) ScanDesc(callback func(topics []models.Topic)) {
 	var cursor int64 = math.MaxInt64
 	for {
 		list := repositories.TopicRepository.Find(sqls.DB(), sqls.NewCnd().
-			Cols("id", "status", "create_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break

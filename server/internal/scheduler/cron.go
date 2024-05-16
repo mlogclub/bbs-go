@@ -1,7 +1,6 @@
 package scheduler
 
 import (
-	"bbs-go/internal/pkg/sitemap"
 	"log/slog"
 
 	"github.com/robfig/cron/v3"
@@ -18,10 +17,10 @@ func Start() {
 		services.TopicService.GenerateRss()
 	})
 
-	// Generate sitemap
-	addCronFunc(c, "0 4 ? * *", func() {
-		sitemap.Generate()
-	})
+	// // Generate sitemap
+	// addCronFunc(c, "0 4 ? * *", func() {
+	// 	sitemap.Generate()
+	// })
 
 	c.Start()
 }
