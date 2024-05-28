@@ -144,7 +144,7 @@
       .article-header {
         margin-bottom: 6px;
         display: flex;
-        align-item: center;
+        align-items: center;
         justify-content: space-between;
 
         .article-status {
