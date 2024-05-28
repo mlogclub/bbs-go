@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/mlogclub/simple/common/strs"
@@ -41,6 +42,9 @@ func initConfig() {
 	viper.AddConfigPath("$HOME/.bbs-go")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("../../")
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("BBSGO")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
