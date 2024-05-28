@@ -5,11 +5,12 @@ WORKDIR "$APP_HOME"
 
 COPY go.mod ./
 COPY go.sum ./
-RUN go env -w GOPROXY=https://goproxy.cn,direct \
-    && go mod download
+# RUN go env -w GOPROXY=https://goproxy.cn,direct \
+#     && go mod download
+RUN go mod download
 
 COPY . ./
-RUN CGO_ENABLED=0 go build -v -o bbs-go cmd/server/main.go && chmod +x bbs-go
+RUN CGO_ENABLED=0 go build -v -o bbs-go main.go && chmod +x bbs-go
 
 FROM alpine:latest
 
