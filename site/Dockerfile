@@ -4,8 +4,10 @@ ENV APP_HOME /code/bbs-go/site
 WORKDIR "$APP_HOME"
 
 COPY . ./
-RUN npm install -g pnpm --registry=https://registry.npmmirror.com
-RUN pnpm install --registry=https://registry.npmmirror.com
+# RUN npm install -g pnpm --registry=https://registry.npmmirror.com
+# RUN pnpm install --registry=https://registry.npmmirror.com
+RUN npm install -g pnpm
+RUN pnpm install
 RUN pnpm build:docker
 
 FROM node:20-alpine
