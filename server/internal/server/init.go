@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
@@ -53,6 +54,8 @@ func initConfig() {
 	if err := viper.Unmarshal(&config.Instance); err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
+
+	slog.Info("Load config", slog.String("ENV", env), slog.String("config", jsons.ToJsonStr(config.Instance)))
 }
 
 func initDB() {
