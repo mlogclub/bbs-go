@@ -12,7 +12,6 @@ require (
 	github.com/go-resty/resty/v2 v2.11.0
 	github.com/goburrow/cache v0.1.4
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/gorilla/feeds v1.1.2
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/iris-contrib/middleware/cors v0.0.0-20240111010557-e34016a4d6ee
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible

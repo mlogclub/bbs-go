@@ -5,19 +5,13 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/seo"
 	"errors"
-	"log/slog"
 	"math"
-	"path"
 	"strings"
-	"time"
 
 	"bbs-go/internal/cache"
-	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/repositories"
 
-	"github.com/gorilla/feeds"
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/files"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
@@ -27,7 +21,6 @@ import (
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/common"
 )
 
 var ArticleService = newArticleService()
@@ -265,54 +258,6 @@ func (s *articleService) ScanByUser(userId int64, callback func(articles []model
 		}
 		cursor = list[len(list)-1].Id
 		callback(list)
-	}
-}
-
-// rss
-func (s *articleService) GenerateRss() {
-	articles := repositories.ArticleRepository.Find(sqls.DB(),
-		sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
-
-	var items []*feeds.Item
-	for _, article := range articles {
-		articleUrl := bbsurls.ArticleUrl(article.Id)
-		user := cache.UserCache.Get(article.UserId)
-		if user == nil {
-			continue
-		}
-		description := common.GetSummary(article.ContentType, article.Content)
-		item := &feeds.Item{
-			Title:       article.Title,
-			Link:        &feeds.Link{Href: articleUrl},
-			Description: description,
-			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     dates.FromTimestamp(article.CreateTime),
-		}
-		items = append(items, item)
-	}
-
-	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-	siteDescription := cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
-	feed := &feeds.Feed{
-		Title:       siteTitle,
-		Link:        &feeds.Link{Href: config.Instance.BaseUrl},
-		Description: siteDescription,
-		Author:      &feeds.Author{Name: siteTitle},
-		Created:     time.Now(),
-		Items:       items,
-	}
-	atom, err := feed.ToAtom()
-	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	} else {
-		_ = files.WriteString(path.Join(config.Instance.StaticPath, "atom.xml"), atom, false)
-	}
-
-	rss, err := feed.ToRss()
-	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	} else {
-		_ = files.WriteString(path.Join(config.Instance.StaticPath, "rss.xml"), rss, false)
 	}
 }
 

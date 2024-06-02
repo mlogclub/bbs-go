@@ -2,29 +2,21 @@ package services
 
 import (
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/bbsurls"
-	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/search"
 	"errors"
-	"log/slog"
 	"math"
 	"net/http"
-	"path"
-	"time"
 
 	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/files"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
 
-	"github.com/gorilla/feeds"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/repositories"
 )
 
@@ -348,52 +340,6 @@ func (s *topicService) onComment(tx *gorm.DB, topicId int64, comment *models.Com
 		return err
 	}
 	return nil
-}
-
-// rss
-func (s *topicService) GenerateRss() {
-	topics := repositories.TopicRepository.Find(sqls.DB(),
-		sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(200))
-
-	var items []*feeds.Item
-	for _, topic := range topics {
-		topicUrl := bbsurls.TopicUrl(topic.Id)
-		user := cache.UserCache.Get(topic.UserId)
-		if user == nil {
-			continue
-		}
-		item := &feeds.Item{
-			Title:       topic.Title,
-			Link:        &feeds.Link{Href: topicUrl},
-			Description: common.GetMarkdownSummary(topic.Content),
-			Author:      &feeds.Author{Name: user.Avatar, Email: user.Email.String},
-			Created:     dates.FromTimestamp(topic.CreateTime),
-		}
-		items = append(items, item)
-	}
-	siteTitle := cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
-	siteDescription := cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
-	feed := &feeds.Feed{
-		Title:       siteTitle,
-		Link:        &feeds.Link{Href: config.Instance.BaseUrl},
-		Description: siteDescription,
-		Author:      &feeds.Author{Name: siteTitle},
-		Created:     time.Now(),
-		Items:       items,
-	}
-	atom, err := feed.ToAtom()
-	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	} else {
-		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_atom.xml"), atom, false)
-	}
-
-	rss, err := feed.ToRss()
-	if err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	} else {
-		_ = files.WriteString(path.Join(config.Instance.StaticPath, "topic_rss.xml"), rss, false)
-	}
 }
 
 func (s *topicService) ScanByUser(userId int64, callback func(topics []models.Topic)) {

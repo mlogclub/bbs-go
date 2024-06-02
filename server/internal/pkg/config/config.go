@@ -12,7 +12,6 @@ type Config struct {
 	Env        string // 环境
 	BaseUrl    string // base url
 	Port       string // 端口
-	StaticPath string // 静态文件目录
 	IpDataPath string // IP数据文件
 
 	// 日志配置
