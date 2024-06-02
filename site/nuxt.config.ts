@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     // https://color-mode.nuxtjs.org/#configuration
     '@nuxtjs/color-mode',
-    'nuxtjs-naive-ui',
     '@element-plus/nuxt',
     ['nuxt-lazy-load', {
       images: true,
@@ -29,7 +28,6 @@ export default defineNuxtConfig({
         // See IntersectionObserver documentation
       },
     }],
-    "nuxtjs-naive-ui"
   ],
 
   plugins: [
