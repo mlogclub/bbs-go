@@ -1,25 +1,21 @@
 <template>
-  <client-only>
-    <el-dropdown
-      placement="bottom"
-      trigger="click"
-      @command="handlePostCommand"
-    >
-      <el-button type="primary" :icon="Plus"> 发表 </el-button>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item
-            v-for="(item, i) in modules"
-            :key="i"
-            :command="item.command"
-            :class="item.icon"
-          >
-            {{ item.name }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-  </client-only>
+  <!-- <client-only> -->
+  <el-dropdown placement="bottom" trigger="click" @command="handlePostCommand">
+    <el-button type="primary" :icon="Plus"> 发表 </el-button>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item
+          v-for="(item, i) in modules"
+          :key="i"
+          :command="item.command"
+          :class="item.icon"
+        >
+          {{ item.name }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  <!-- </client-only> -->
 </template>
 
 <script setup>

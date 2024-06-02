@@ -170,7 +170,7 @@ watch(
   () => route.query,
   (newQuery, oldQuery) => {
     // eslint-disable-next-line no-console
-    console.log(newQuery, oldQuery);
+    // console.log(newQuery, oldQuery);
 
     init();
   },
