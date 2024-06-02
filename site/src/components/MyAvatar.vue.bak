@@ -1,0 +1,38 @@
+<template>
+  <nuxt-link v-if="user" :to="`/user/${user.id}`" style="display: flex">
+    <el-avatar
+      :src="props.user.avatar"
+      :alt="props.user.nickname"
+      :size="size"
+      :class="{ 'has-border': props.hasBorder }"
+      :style="{
+        'min-width': `${props.size}px`,
+        'min-height': `${props.size}px`,
+      }"
+      >{{ props.user.nickname }}</el-avatar
+    >
+  </nuxt-link>
+</template>
+
+<script setup>
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
+  },
+  size: {
+    type: Number,
+    default: 50,
+  },
+  hasBorder: {
+    type: Boolean,
+    default: false,
+  },
+});
+</script>
+
+<style lang="scss" scoped>
+.has-border {
+  border: 1px solid var(--border-color);
+}
+</style>
