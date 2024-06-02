@@ -118,6 +118,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: "auth",
+});
+
 const userStore = useUserStore();
 const configStore = useConfigStore();
 const route = useRoute();
