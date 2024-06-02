@@ -10,7 +10,7 @@
             <my-avatar
               class="topic-inline-avatar"
               :user="topic.user"
-              size="20"
+              :size="20"
             />
             <nuxt-link :to="`/user/${topic.user.id}`" target="_blank">
               {{ topic.user.nickname }}

@@ -2,7 +2,7 @@
   <div>
     <div v-if="users && users.length">
       <div v-for="item in users" :key="item.id" class="user-follow-item">
-        <my-avatar :user="item" :size="40" has-border round />
+        <my-avatar :user="item" :size="40" has-border />
         <div class="user-follow-item-info">
           <div class="nickname">
             <nuxt-link :to="'/user/' + item.id">{{ item.nickname }}</nuxt-link>

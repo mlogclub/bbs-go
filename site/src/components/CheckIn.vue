@@ -98,12 +98,7 @@
         <div class="rank-title">今日排行</div>
         <ul>
           <li v-for="rank in checkInRank" :key="rank.id" class="rounded">
-            <my-avatar
-              :user="rank.user"
-              :round="true"
-              size="30"
-              class="rank-user-avatar"
-            />
+            <my-avatar :user="rank.user" :size="30" class="rank-user-avatar" />
             <div class="rank-user-info">
               <nuxt-link :to="`/user/${rank.user.id}`">
                 {{ rank.user.nickname }}

@@ -16,7 +16,7 @@
             class="message-item"
           >
             <div class="message-item-left">
-              <my-avatar :user="message.from" size="40" :round="true" />
+              <my-avatar :user="message.from" :size="40" />
             </div>
             <div class="message-item-right">
               <div class="message-item-meta">

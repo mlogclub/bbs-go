@@ -17,7 +17,7 @@
     <my-avatar
       :user="localUser"
       :round="true"
-      size="100"
+      :size="100"
       class="profile-avatar"
     />
     <div class="profile-info">

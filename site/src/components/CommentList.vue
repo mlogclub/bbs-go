@@ -8,7 +8,7 @@
     >
       <div v-for="comment in results" :key="comment.id" class="comment">
         <div class="comment-item-left">
-          <my-avatar :user="comment.user" size="40" round has-border />
+          <my-avatar :user="comment.user" :size="40" has-border />
         </div>
         <div class="comment-item-main">
           <div class="comment-meta">

@@ -116,7 +116,7 @@ export default {
   <div class="replies">
     <div v-for="comment in replies.results" :key="comment.id" class="comment">
       <div class="comment-item-left">
-        <my-avatar :user="comment.user" size="30" round has-border />
+        <my-avatar :user="comment.user" :size="30" has-border />
       </div>
       <div class="comment-item-main">
         <div class="comment-meta">

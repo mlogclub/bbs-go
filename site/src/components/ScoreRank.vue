@@ -6,7 +6,7 @@
     <div class="widget-content">
       <ul class="score-rank">
         <li v-for="user in scoreRank" :key="user.id">
-          <my-avatar :user="user" size="35" round />
+          <my-avatar :user="user" :size="35" />
           <div class="score-user-info">
             <nuxt-link :to="'/user/' + user.id" class="score-nickname">{{
               user.nickname

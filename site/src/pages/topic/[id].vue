@@ -19,7 +19,7 @@
             >
               <div class="topic-header">
                 <div class="topic-header-left">
-                  <my-avatar :user="topic.user" size="45" />
+                  <my-avatar :user="topic.user" :size="45" />
                 </div>
                 <div class="topic-header-center">
                   <div class="topic-nickname" itemprop="headline">
@@ -128,9 +128,8 @@
                   v-for="likeUser in likeUsers"
                   :key="likeUser.id"
                   :user="likeUser"
-                  :round="true"
-                  :has-border="true"
-                  size="24"
+                  :size="24"
+                  has-border
                 />
                 <span class="like-count">{{ topic.likeCount }}</span>
               </div>
