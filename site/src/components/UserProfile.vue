@@ -192,11 +192,13 @@ function onFollowed(userId, _followed) {
   }
 }
 
+[data-theme="dark"],
+.theme-dark,
 .dark-mode {
   .profile-info {
     background-image: linear-gradient(
       90deg,
-      #00000088,
+      #000000dd,
       rgba(255, 255, 255, 0.5),
       #dce9f200
     );
