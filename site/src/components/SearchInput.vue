@@ -171,8 +171,9 @@ const deleteHistory = (kw) => {
     }
   }
 
-  $search-box-width: 380px;
-  $border-color: #4e6ef2; // TODO
+  $search-box-width: 280px;
+  $search-box-unfocus-width: 180px;
+  $focus-color: #0065ff; // TODO
 
   &.input-focus {
     .search-input {
@@ -180,7 +181,7 @@ const deleteHistory = (kw) => {
       border: 1px solid var(--border-color3);
     }
     .icon-search {
-      color: #0065ff;
+      color: $focus-color;
     }
   }
 
@@ -191,7 +192,7 @@ const deleteHistory = (kw) => {
   }
 
   .search-input {
-    width: $search-box-width;
+    width: $search-box-unfocus-width;
     background-color: var(--bg-color2);
     border: 1px solid var(--border-color);
     height: 34px;
@@ -202,13 +203,19 @@ const deleteHistory = (kw) => {
     transition-property: background-color, border, color;
     transition-duration: 0.25s;
     transition-timing-function: ease-in;
+    transition: width 0.5s;
+
+    &:has(.input:focus) {
+      width: $search-box-width;
+      border: 1px solid $focus-color;
+    }
 
     input {
       color: var(--text-color);
       font-weight: 400;
       font-size: 13px;
-      height: 24px;
-      line-height: 24px;
+      height: 100%;
+      width: 100%;
       flex: 1 1;
       padding: 0;
       margin: 0 5px;
