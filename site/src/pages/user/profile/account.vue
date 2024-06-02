@@ -1,5 +1,5 @@
 <template>
-  <div class="widget no-margin">
+  <div v-if="user" class="widget no-margin">
     <div class="widget-header">
       <div class="account">
         <i class="iconfont icon-setting" />
@@ -203,7 +203,7 @@ const { data: user, refresh: userRefresh } = await useAsyncData("user", () =>
 const usernameDialog = ref(null);
 const usernameDialogVisible = ref(false);
 const usernameForm = reactive({
-  username: user.value.username,
+  username: user.value ? user.value.username : "",
 });
 function showUsernameDialog() {
   usernameDialog.value.show();
@@ -226,7 +226,7 @@ async function setUsername() {
 const emailDialog = ref(null);
 const emailDialogVisible = ref(false);
 const emailForm = reactive({
-  email: user.value.email,
+  email: user.value ? user.value.email : "",
 });
 function showEmailDialog() {
   emailDialog.value.show();

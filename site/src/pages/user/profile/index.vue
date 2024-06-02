@@ -1,5 +1,5 @@
 <template>
-  <div class="widget no-margin">
+  <div v-if="user" class="widget no-margin">
     <div class="widget-header">
       <div>
         <i class="iconfont icon-setting" />
@@ -114,11 +114,18 @@ const user = computed(() => {
 });
 
 const form = ref({
-  nickname: user.value.nickname,
-  avatar: user.value.avatar,
-  homePage: user.value.homePage,
-  description: user.value.description,
+  nickname: "",
+  avatar: "",
+  homePage: "",
+  description: "",
 });
+
+if (user.value != null) {
+  form.value.nickname = user.value.nickname;
+  form.value.avatar = user.value.avatar;
+  form.value.homePage = user.value.homePage;
+  form.value.description = user.value.description;
+}
 
 async function submitForm() {
   try {
