@@ -40,11 +40,6 @@ const props = defineProps({
 });
 const localUser = ref(props.user);
 
-const isOwner = computed(() => {
-  const current = userStore.user;
-  return localUser.value && current && localUser.value.id === current.id;
-});
-
 const isSiteOwner = computed(() => {
   return userIsOwner(userStore.user);
 });

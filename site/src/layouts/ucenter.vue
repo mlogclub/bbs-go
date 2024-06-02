@@ -2,7 +2,7 @@
   <div>
     <MyHeader />
 
-    <section class="main">
+    <section v-if="user" class="main">
       <div class="container">
         <user-profile :user="user" />
         <div class="container main-container right-main size-320">
