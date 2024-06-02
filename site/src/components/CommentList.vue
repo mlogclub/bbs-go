@@ -123,6 +123,7 @@ const loadMore = ref(null);
 const append = (data) => {
   // nextTick(() => {
   if (loadMore.value) {
+    console.log(loadMore.value);
     console.log(loadMore.value.unshiftResults);
     loadMore.value.unshiftResults(data);
   }
