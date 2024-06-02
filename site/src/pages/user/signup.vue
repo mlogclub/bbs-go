@@ -96,7 +96,7 @@
 
             <div class="field">
               <div class="control">
-                <button class="button is-success" @click="signup">注册</button>
+                <button class="button is-link" @click="signup">注册</button>
                 <a class="button is-text" @click="toSignin">
                   已有账号，前往登录&gt;&gt;
                 </a>

@@ -23,6 +23,22 @@
   background: var(--bg-color);
   padding: 30px;
 
+  .topic-form-title {
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .field {
+    margin-bottom: 10px;
+
+    input {
+      &:focus-visible {
+        outline-width: 0;
+      }
+    }
+  }
+
   .topic-tag {
     margin-right: 10px;
     margin-bottom: 10px;

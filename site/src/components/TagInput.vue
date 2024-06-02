@@ -270,6 +270,10 @@ function close() {
     box-shadow: none;
     margin: 0;
     padding: 0;
+
+    &:focus-visible {
+      outline-width: 0;
+    }
   }
 
   .tags-selected {

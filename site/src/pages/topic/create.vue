@@ -18,9 +18,9 @@
         </div>
       </article>
       <div v-else class="topic-create-form">
-        <h1 class="title">
+        <div class="topic-form-title">
           {{ postForm.type === 0 ? "发帖子" : "发动态" }}
-        </h1>
+        </div>
 
         <div class="field">
           <div class="control">

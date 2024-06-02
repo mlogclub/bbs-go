@@ -159,4 +159,15 @@ async function reload() {
     }
   }
 }
+
+.field {
+  margin-bottom: 10px;
+
+  input,
+  textarea {
+    &:focus-visible {
+      outline-width: 0;
+    }
+  }
+}
 </style>

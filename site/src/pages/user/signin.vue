@@ -65,7 +65,7 @@
             </div>
 
             <div class="field">
-              <button class="button is-success" @click="signin">登录</button>
+              <button class="button is-link" @click="signin">登录</button>
               <a class="button is-text" @click="toSignup">
                 没有账号？点击这里去注册&gt;&gt;
               </a>

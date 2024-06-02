@@ -3,6 +3,14 @@
   margin: auto !important;
   padding: 0 20px;
 
+  .field {
+    margin-bottom: 10px;
+
+    input:focus-visible {
+      outline-width: 0;
+    }
+  }
+
   .login-captcha-input {
     width: 100%;
     margin-right: 20px;

@@ -305,6 +305,15 @@ async function setPassword() {
 }
 </script>
 <style lang="scss" scoped>
+.field {
+  margin-bottom: 10px;
+
+  input {
+    &:focus-visible {
+      outline-width: 0;
+    }
+  }
+}
 .widget-header {
   padding: 18px 0;
 

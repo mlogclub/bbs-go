@@ -129,4 +129,41 @@ async function submitCreate() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.article-create-form {
+  background-color: var(--bg-color);
+  padding: 30px;
+
+  .article-form-title {
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .field {
+    margin-bottom: 10px;
+
+    input {
+      &:focus-visible {
+        outline-width: 0;
+      }
+    }
+  }
+}
+
+.cover-add-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 24px;
+    color: #1878f3;
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--text-color3);
+  }
+}
+</style>
