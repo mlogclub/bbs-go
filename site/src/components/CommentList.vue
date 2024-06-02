@@ -121,13 +121,12 @@ const userStore = useUserStore();
 const loadMore = ref(null);
 
 const append = (data) => {
-  // nextTick(() => {
   if (loadMore.value) {
-    console.log(loadMore.value);
-    console.log(loadMore.value.unshiftResults);
-    loadMore.value.unshiftResults(data);
+    // console.log(loadMore.value);
+    // console.log(loadMore.value.unshiftResults);
+    // loadMore.value.unshiftResults(data);
+    loadMore.value.refresh();
   }
-  // });
 };
 
 const like = async (comment) => {
