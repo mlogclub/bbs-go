@@ -1,7 +1,7 @@
 <template>
   <div class="comments">
     <load-more-async
-      ref="commentsLoadMore"
+      ref="loadMore"
       v-slot="{ results }"
       :params="{ entityType, entityId }"
       url="/api/comment/comments"
@@ -118,12 +118,15 @@ const reply = reactive({
 });
 
 const userStore = useUserStore();
-const commentsLoadMore = ref(null);
+const loadMore = ref(null);
 
 const append = (data) => {
-  if (commentsLoadMore.value) {
-    commentsLoadMore.value.unshiftResults(data);
+  // nextTick(() => {
+  if (loadMore.value) {
+    console.log(loadMore.value.unshiftResults);
+    loadMore.value.unshiftResults(data);
   }
+  // });
 };
 
 const like = async (comment) => {
