@@ -1,11 +1,14 @@
 <template>
-  <MdEditor
-    v-model="value"
-    @onChange="change"
-    @onUploadImg="uploadImg"
-    :toolbars="toolbars"
-    :style="{ height: height }"
-  />
+  <client-only>
+    <MdEditor
+      v-model="value"
+      :theme="$colorMode.preference"
+      @onChange="change"
+      @onUploadImg="uploadImg"
+      :toolbars="toolbars"
+      :style="{ height: height }"
+    />
+  </client-only>
 </template>
 
 <script setup>
