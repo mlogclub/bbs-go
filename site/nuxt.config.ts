@@ -54,7 +54,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'BBS-GO',
-      htmlAttrs: { class: 'light-mode' },
+      htmlAttrs: { class: 'theme-light' },
       script: [
         {
           src: 'https://hm.baidu.com/hm.js?79b8ff82974d0769ef5c629e4cd46629',

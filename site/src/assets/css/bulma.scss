@@ -1,15 +1,28 @@
-// @import "./variable.scss";
+@use "bulma/sass" with ( //
+    // $widescreen-enabled: true,
+    // $fullhd-enabled: true,
+    $body-background-color: var(--body-bg-color),
 
-// @use "bulma/sass" with ( //
-//     $widescreen-enabled: true,
-//     $fullhd-enabled: true,
-// );
+    $scheme-main: var(--scheme-main),
+    $scheme-main-bis: var(--scheme-main),
+    $scheme-main-ter: var(--scheme-main),
 
-@use "bulma/sass";
+    $scheme-invert: var(--scheme-invert),
+    $scheme-invert-bis: var(--scheme-invert),
+    $scheme-invert-ter: var(--scheme-invert),
+
+    // $text: var(--text),
+    // $text-strong: var(--text),
+    // $navbar-box-shadow-color: var(--navbar-box-shadow-color),
+    // $title-color: var(--text),
+);
 
 [data-theme=light],
 .theme-light {
-    --text: #333;
+    --body-bg-color: #f3f3f3;
+    --color-navbar-icon: #1878f3;
+
+    --text: #333333;
     --border: #fff;
     --navbar-box-shadow-color: whitesmoke;
 
@@ -22,7 +35,6 @@
     --text-link-color: #3273dc;
     --text-link-hover-color: #363636;
 
-    --body-bg-color: #f3f3f3;
     --bg-color: #fff;
     --bg-color2: rgba(247, 248, 250, 0.7);
     --bg-color3: #f2f3f5;
@@ -36,11 +48,13 @@
     --border-hover-color: #1878f3;
 
     --color-red: #fa5151;
-    --color-navbar-icon: #1878f3;
 }
 
 [data-theme=dark],
 .theme-dark {
+    --body-bg-color: #121212;
+    --color-navbar-icon: #e3e3e3;
+
     --text: #fff;
     --border: #000;
     --navbar-box-shadow-color: #333;
@@ -53,8 +67,6 @@
 
     --text-link-color: #3273dc;
     --text-link-hover-color: findColorInvert(#363636);
-
-    --body-bg-color: #121212;
 
     --bg-color: #272727;
     --bg-color2: #3a3a3a;
@@ -69,5 +81,54 @@
     --border-hover-color: findColorInvert(#1878f3);
 
     --color-red: #fa5151;
-    --color-navbar-icon: #e3e3e3;
+
+    .navbar-dropdown {
+        background-color: #3a3a3a !important;
+        border-top-color: #272727 !important;
+
+        .navbar-item {
+
+            &:hover,
+            &.is-hovered,
+            &:focus,
+            &.is-focused {
+                background-color: #272727;
+            }
+        }
+    }
+
+    .tag {
+        background-color: #3a3a3a;
+
+        &>a {
+            color: var(--text);
+        }
+    }
+
+    pre {
+        background-color: #3a3a3a;
+    }
+
+    .content {
+        blockquote {
+            background-color: #3a3a3a;
+            border-left: 5px solid #272727;
+        }
+    }
+
+    .button.is-text:hover,
+    .button.is-text.is-hovered,
+    .button.is-text:focus,
+    .button.is-text.is-focused {
+        background-color: #3a3a3a;
+        color: var(--text);
+    }
+
+    a {
+        color: var(--text-link-color);
+
+        &:hover {
+            color: var(--text-link-hover-color);
+        }
+    }
 }
