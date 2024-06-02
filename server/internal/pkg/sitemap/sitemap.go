@@ -32,7 +32,7 @@ var building = false
 
 // Generate
 func Generate() {
-	if config.Instance.Env != "prod" {
+	if !config.Instance.IsProd() {
 		return
 	}
 	if building {

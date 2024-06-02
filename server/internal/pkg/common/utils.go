@@ -2,7 +2,6 @@ package common
 
 import (
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/pkg/text"
@@ -10,11 +9,6 @@ import (
 	"net/http"
 	"strings"
 )
-
-// IsProd 是否是正式环境
-func IsProd() bool {
-	return config.Instance.Env == "prod"
-}
 
 func GetSummary(contentType string, content string) (summary string) {
 	if contentType == constants.ContentTypeMarkdown {

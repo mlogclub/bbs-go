@@ -2,7 +2,6 @@ package server
 
 import (
 	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/gormlogs"
 	"bbs-go/internal/pkg/iplocator"
@@ -55,6 +54,8 @@ func initConfig() {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
 
+	config.Instance.Env = env
+
 	slog.Info("Load config", slog.String("ENV", env), slog.String("config", jsons.ToJsonStr(config.Instance)))
 }
 
@@ -71,7 +72,7 @@ func initDB() {
 }
 
 func initCron() {
-	if common.IsProd() {
+	if config.Instance.IsProd() {
 		scheduler.Start()
 	}
 }
