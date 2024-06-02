@@ -21,6 +21,7 @@
     "element-plus": "^2.5.5",
     "eslint": "^8.56.0",
     "nuxt": "^3.10.0",
+    "nuxtjs-naive-ui": "^1.0.2",
     "sass": "^1.70.0",
     "typescript": "^5.3.3"
   },

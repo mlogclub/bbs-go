@@ -5,9 +5,10 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    '@nuxtjs/color-mode', // https://color-mode.nuxtjs.org/#configuration
+    // https://color-mode.nuxtjs.org/#configuration
+    '@nuxtjs/color-mode',
+    'nuxtjs-naive-ui',
     '@element-plus/nuxt',
-
     ['nuxt-lazy-load', {
       images: true,
       videos: true,
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
         // See IntersectionObserver documentation
       },
     }],
+    "nuxtjs-naive-ui"
   ],
 
   plugins: [
@@ -67,9 +69,6 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/index.scss',
   ],
-  pinia: {
-    autoImports: ['defineStore', 'storeToRefs'],
-  },
   nitro: {
     routeRules: {
       '/api/**': {
