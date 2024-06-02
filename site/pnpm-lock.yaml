@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^10.7.2
     version: 10.7.2(nuxt@3.10.0)(vue@3.4.15)
   bulma:
-    specifier: ^0.9.4
-    version: 0.9.4
+    specifier: ^1.0.1
+    version: 1.0.1
   element-plus:
     specifier: ^2.5.5
     version: 2.5.5(vue@3.4.15)
@@ -3456,8 +3456,8 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /bulma@0.9.4:
-    resolution: {integrity: sha512-86FlT5+1GrsgKbPLRRY7cGDg8fsJiP/jzTqXXVqiUZZ2aZT8uemEOHlU1CDU+TxklPEZ11HZNNWclRBBecP4CQ==}
+  /bulma@1.0.1:
+    resolution: {integrity: sha512-+xv/BIAEQakHkR0QVz+s+RjNqfC53Mx9ZYexyaFNFo9wx5i76HXArNdwW7bccyJxa5mgV/T5DcVGqsAB19nBJQ==}
     dev: true
 
   /bundle-name@4.1.0:

@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    '@nuxtjs/color-mode',
+    '@nuxtjs/color-mode', // https://color-mode.nuxtjs.org/#configuration
     '@element-plus/nuxt',
 
     ['nuxt-lazy-load', {
@@ -38,6 +38,11 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'system', // default value of $colorMode.preference
     fallback: 'light', // fallback value if not system preference found
+    // classPrefix: '',
+    // classSuffix: '-mode',
+
+    classPrefix: 'theme-',
+    classSuffix: '',
   },
 
   imports: {
@@ -50,8 +55,6 @@ export default defineNuxtConfig({
     head: {
       title: 'BBS-GO',
       htmlAttrs: { class: 'light-mode' },
-      // bodyAttrs: { class: 'bg-gray-50' },
-      // htmlAttrs: { class: 'bg-gray-50' },
       script: [
         {
           src: 'https://hm.baidu.com/hm.js?79b8ff82974d0769ef5c629e4cd46629',

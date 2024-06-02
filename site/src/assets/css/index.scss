@@ -1,15 +1,12 @@
 @charset "UTF-8";
 @import "../iconfont/iconfont.css";
-@import "./variable";
 @import "./common";
 @import "./topic";
 @import "./link";
 @import "./highlightjs";
 @import "./nav";
 @import "./signin";
-
-@import "../node_modules/bulma/bulma.sass";
-
+@import "./bulma.scss";
 
 :root {
     --animate-duration: .3s;

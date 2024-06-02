@@ -17,7 +17,7 @@
     "@nuxtjs/eslint-module": "^4.1.0",
     "@vueuse/core": "^10.7.2",
     "@vueuse/nuxt": "^10.7.2",
-    "bulma": "^0.9.4",
+    "bulma": "^1.0.1",
     "element-plus": "^2.5.5",
     "eslint": "^8.56.0",
     "nuxt": "^3.10.0",
