@@ -140,6 +140,9 @@ async function signout() {
 
 .user-menus {
   .navbar-link {
+    display: flex;
+    align-items: center;
+
     .user-menus-nickname {
       margin-left: 5px;
       padding: 0 4px;
