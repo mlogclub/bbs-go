@@ -89,21 +89,21 @@
     }
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        @include useLightMode();
-    }
-}
+// @media (prefers-color-scheme: light) {
+//     :root {
+//         @include useLightMode();
+//     }
+// }
+
+// @media (prefers-color-scheme: dark) {
+//     :root {
+//         @include useDarkMode();
+//     }
+// }
 
 [data-theme=light],
 .theme-light {
     @include useLightMode();
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        @include useDarkMode();
-    }
 }
 
 [data-theme=dark],
