@@ -61,7 +61,7 @@
             <markdown-editor
               v-model="postForm.hideContent"
               height="200px"
-              placeholder="隐藏内容，评论后可见"
+              placeholder="请输入隐藏内容，隐藏内容，评论后可见"
             />
           </div>
         </div>

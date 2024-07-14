@@ -7,6 +7,8 @@
       @onUploadImg="uploadImg"
       :toolbars="toolbars"
       :style="{ height: height }"
+      :placeholder="placeholder"
+      :preview="false"
     />
   </client-only>
 </template>
