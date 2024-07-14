@@ -36,7 +36,7 @@ export default {
     },
     size: {
       type: [Number, String],
-      default: 50,
+      default: 40,
     },
     round: {
       type: Boolean,

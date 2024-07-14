@@ -42,7 +42,7 @@ export function usePrettyDate(timestamp) {
   } else if (diffValue / day <= 30) {
     return `${Number.parseInt(diffValue / day)}天前`;
   }
-  return useFormatDate(timestamp, "yyyy-MM-dd HH:mm:ss");
+  return useFormatDate(timestamp, "yyyy-MM-dd HH:mm");
 }
 
 export function useLinkTo(path) {
