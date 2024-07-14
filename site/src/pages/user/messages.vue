@@ -1,5 +1,5 @@
 <template>
-  <div class="widget">
+  <div class="widget no-margin">
     <div class="widget-header">
       <span>
         <i class="iconfont icon-message" />

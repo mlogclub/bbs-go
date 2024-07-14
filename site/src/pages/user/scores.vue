@@ -1,5 +1,5 @@
 <template>
-  <div class="widget">
+  <div class="widget no-margin">
     <div class="widget-header">积分记录</div>
     <div class="widget-content">
       <load-more-async v-slot="{ results }" url="/api/user/score_logs">
