@@ -60,7 +60,7 @@ function nodeUrl(node) {
   display: block;
   position: -webkit-sticky;
   position: sticky;
-  top: 10px;
+  top: calc(52px + 1rem);
 
   width: 150px;
   border-radius: 2px;
