@@ -236,8 +236,9 @@ export default {
 
         .infos {
           flex: 1;
+          display: flex;
           .topic-nickname {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-color);
             display: flex;
             max-width: 250px;
@@ -265,6 +266,7 @@ export default {
       }
 
       .topic-time {
+        margin-top: 2px;
         color: var(--text-color3);
         font-size: 12px;
       }
@@ -291,7 +293,6 @@ export default {
         }
 
         .topic-summary {
-          display: inline-block;
           font-size: 14px;
           margin-bottom: 6px;
           width: 100%;
