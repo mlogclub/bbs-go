@@ -5,8 +5,8 @@
         <my-avatar :user="topic.user" />
       </div>
       <div class="topic-main-content">
-        <div class="topic-top">
-          <div class="topic-userinfo">
+        <div class="topic-userinfo">
+          <div class="infos">
             <my-avatar
               class="topic-inline-avatar"
               :user="topic.user"
@@ -15,13 +15,15 @@
             <nuxt-link :to="`/user/${topic.user.id}`" class="topic-nickname">
               {{ topic.user.nickname }}
             </nuxt-link>
+          </div>
+          <div class="icons">
             <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
               >置顶</span
             >
           </div>
-          <div class="topic-time">
-            发布于{{ usePrettyDate(topic.createTime) }}
-          </div>
+        </div>
+        <div class="topic-time">
+          发布于{{ usePrettyDate(topic.createTime) }}
         </div>
         <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
           <template v-if="topic.type === 0">
@@ -172,19 +174,69 @@ export default {
       background: var(--bg-color2);
     }
 
+    .topic-avatar {
+      //
+    }
+
     .topic-main-content {
       flex: 1;
       margin-left: 12px;
 
-      .topic-top {
-        margin-bottom: 8px;
+      // .topic-top {
+      //   margin-bottom: 8px;
 
-        .topic-userinfo {
-          display: inline-flex;
-          align-items: center;
+      //   .topic-userinfo {
+      //     display: inline-flex;
+      //     align-items: center;
 
+      //     .topic-nickname {
+      //       // font-weight: 700;
+      //       font-size: 14px;
+      //       color: var(--text-color);
+      //       display: flex;
+      //       max-width: 250px;
+      //       overflow: hidden;
+      //     }
+
+      //     .topic-inline-avatar {
+      //       display: none;
+      //       margin-right: 5px;
+      //     }
+
+      //     .topic-sticky-icon {
+      //       color: var(--color-red);
+      //       border: 1px solid var(--color-red);
+      //       border-radius: 2px;
+      //       font-size: 12px;
+      //       font-weight: 700;
+      //       padding: 0 5px;
+      //       margin-left: 10px;
+      //     }
+      //   }
+
+      //   .topic-time {
+      //     color: var(--text-color3);
+      //     font-size: 12px;
+      //     float: right;
+      //     display: flex;
+      //   }
+
+      //   @media screen and (max-width: 1024px) {
+      //     .topic-time {
+      //       float: none;
+      //       margin-top: 8px;
+      //     }
+      //   }
+      // }
+
+      .topic-userinfo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .infos {
+          flex: 1;
           .topic-nickname {
-            // font-weight: 700;
             font-size: 14px;
             color: var(--text-color);
             display: flex;
@@ -196,34 +248,29 @@ export default {
             display: none;
             margin-right: 5px;
           }
+        }
 
+        .icons {
+          display: flex;
           .topic-sticky-icon {
             color: var(--color-red);
             border: 1px solid var(--color-red);
             border-radius: 2px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 500;
             padding: 0 5px;
             margin-left: 10px;
           }
         }
+      }
 
-        .topic-time {
-          color: var(--text-color3);
-          font-size: 12px;
-          float: right;
-          display: flex;
-        }
-
-        @media screen and (max-width: 1024px) {
-          .topic-time {
-            float: none;
-            margin-top: 8px;
-          }
-        }
+      .topic-time {
+        color: var(--text-color3);
+        font-size: 12px;
       }
 
       .topic-content {
+        margin-top: 6px;
         .topic-title {
           display: inline-block;
           margin-bottom: 6px;
@@ -232,9 +279,8 @@ export default {
           width: 100%;
 
           a {
-            // color: #3273dc;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 400;
             color: var(--text-color);
 
             &:hover {
@@ -246,11 +292,11 @@ export default {
 
         .topic-summary {
           display: inline-block;
-          font-size: 15px;
+          font-size: 14px;
           margin-bottom: 6px;
           width: 100%;
           text-decoration: none;
-          color: var(--text-color2);
+          color: var(--text-color3);
           word-wrap: break-word;
 
           overflow: hidden;
