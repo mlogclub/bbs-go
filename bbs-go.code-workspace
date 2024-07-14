@@ -1,17 +1,21 @@
 {
   "folders": [
     {
+      "name": "bbs-go",
       "path": "."
     },
     {
-      "path": "./server"
+      "name": "server",
+      "path": "server"
     },
     {
-      "path": "./site"
+      "name": "site",
+      "path": "site"
     },
     {
-      "path": "./admin"
-    },
+      "name": "admin",
+      "path": "admin"
+    }
   ],
   "settings": {
     "nuxt.isNuxtApp": false,

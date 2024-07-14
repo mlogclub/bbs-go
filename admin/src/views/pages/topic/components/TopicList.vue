@@ -76,7 +76,7 @@
             <template v-if="topic.status === 0">
               <a-link
                 class="action-item"
-                :href="useSiteUrl('/topic/' + topic.id)"
+                :href="useSiteURL('/topic/' + topic.id)"
                 target="_blank"
                 >查看详情</a-link
               >
@@ -126,7 +126,7 @@
             <template v-else-if="topic.status === 2">
               <a-link
                 class="action-item"
-                :href="useSiteUrl('/topic/' + topic.id)"
+                :href="useSiteURL('/topic/' + topic.id)"
                 target="_blank"
                 >查看详情</a-link
               >

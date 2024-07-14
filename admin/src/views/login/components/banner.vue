@@ -1,12 +1,19 @@
 <template>
   <div class="banner">
     <div class="banner-inner">
-      <a-carousel class="carousel" animation-name="fade">
+      <a-carousel
+        class="carousel"
+        :auto-play="true"
+        show-arrow="hover"
+        animation-name="slide"
+      >
         <a-carousel-item v-for="item in carouselItem" :key="item.slogan">
           <div :key="item.slogan" class="carousel-item">
-            <div class="carousel-title">{{ item.slogan }}</div>
-            <div class="carousel-sub-title">{{ item.subSlogan }}</div>
-            <img class="carousel-image" :src="item.image" />
+            <div class="carousel-content">
+              <div class="carousel-content-title">{{ item.slogan }}</div>
+              <div class="carousel-content-sub-title">{{ item.subSlogan }}</div>
+            </div>
+            <!-- <img class="carousel-image" :src="item.image" /> -->
           </div>
         </a-carousel-item>
       </a-carousel>
@@ -17,7 +24,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import bannerImage from '@/assets/images/login-banner.png';
+  import bannerImage from '@/assets/images/logo364x364.png';
 
   const { t } = useI18n();
   const carouselItem = computed(() => [
@@ -62,18 +69,22 @@
       height: 100%;
     }
 
-    &-title {
-      color: var(--color-fill-1);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 28px;
-    }
+    &-content {
+      height: 150px;
+      padding: 0 100px;
+      &-title {
+        color: var(--color-fill-1);
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
+      }
 
-    &-sub-title {
-      margin-top: 8px;
-      color: var(--color-text-3);
-      font-size: 14px;
-      line-height: 22px;
+      &-sub-title {
+        margin-top: 18px;
+        color: var(--color-text-3);
+        font-size: 14px;
+        line-height: 22px;
+      }
     }
 
     &-image {

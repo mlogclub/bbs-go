@@ -65,9 +65,14 @@ export function isAnyBlank(
   return strings.some(isBlank);
 }
 
-export function useSiteUrl(url: string) {
-  const base = import.meta.env.VITE_API_SITE_URL || '';
-  return base + url;
+export function useBaseURL() {
+  return import.meta.env.VITE_API_BASE_URL || window.config.baseURL || '/';
+}
+
+export function useSiteURL(path: string) {
+  return (
+    (import.meta.env.VITE_API_SITE_URL || window.config.siteURL || '') + path
+  );
 }
 
 export function useTableHeight() {

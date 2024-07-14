@@ -57,6 +57,16 @@
     .banner {
       width: 550px;
       background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
+      @media screen and (max-width: 1400px) {
+        & {
+          width: 450px !important;
+        }
+      }
+      @media screen and (max-width: 1024px) {
+        & {
+          display: none !important;
+        }
+      }
     }
 
     .content {

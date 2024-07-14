@@ -13,6 +13,7 @@ export default {
   'menu.faq': 'FAQ',
   'navbar.docs': 'Docs',
   'navbar.action.locale': 'Switch to English',
+  'messageBox.logout': 'Logout',
   ...localeSettings,
   ...localeLogin,
 };

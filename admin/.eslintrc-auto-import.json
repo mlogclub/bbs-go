@@ -334,6 +334,8 @@
     "empty": true,
     "useTableHeight": true,
     "convertMenuItem": true,
-    "tabbar": true
+    "tabbar": true,
+    "useBaseURL": true,
+    "useSiteURL": true
   }
 }

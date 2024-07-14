@@ -9,3 +9,7 @@ declare module '*.vue' {
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
 }
+
+interface Window {
+  config: any;
+}
