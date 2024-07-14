@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: 'src/',
+
   // ssr: false,
   modules: [
     '@pinia/nuxt',
@@ -40,9 +41,6 @@ export default defineNuxtConfig({
     preference: 'system', // default value of $colorMode.preference
     fallback: 'light', // fallback value if not system preference found
     storageKey: 'bbsgo-color-mode',
-    // classPrefix: '',
-    // classSuffix: '-mode',
-
     classPrefix: 'theme-',
     classSuffix: '',
   },
@@ -53,6 +51,7 @@ export default defineNuxtConfig({
       'stores',
     ],
   },
+
   app: {
     head: {
       title: 'BBS-GO',
@@ -66,9 +65,11 @@ export default defineNuxtConfig({
       ]
     },
   },
+
   css: [
     '~/assets/css/index.scss',
   ],
+
   nitro: {
     routeRules: {
       '/api/**': {

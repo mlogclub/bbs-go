@@ -38,7 +38,7 @@ declare global {
   const getUserInfo: typeof import('./api/user')['getUserInfo']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
-  const index: typeof import('./store/modules/tab-bar/index')['default']
+  const index: typeof import('./store/modules/user/index')['default']
   const inject: typeof import('vue')['inject']
   const isAnyBlank: typeof import('./composables/index')['isAnyBlank']
   const isBlank: typeof import('./composables/index')['isBlank']
@@ -343,7 +343,7 @@ declare module 'vue' {
     readonly getUserInfo: UnwrapRef<typeof import('./api/user')['getUserInfo']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
-    readonly index: UnwrapRef<typeof import('./store/modules/tab-bar/index')['default']>
+    readonly index: UnwrapRef<typeof import('./store/modules/user/index')['default']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isAnyBlank: UnwrapRef<typeof import('./composables/index')['isAnyBlank']>
     readonly isBlank: UnwrapRef<typeof import('./composables/index')['isBlank']>
@@ -640,7 +640,7 @@ declare module '@vue/runtime-core' {
     readonly getUserInfo: UnwrapRef<typeof import('./api/user')['getUserInfo']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
-    readonly index: UnwrapRef<typeof import('./store/modules/tab-bar/index')['default']>
+    readonly index: UnwrapRef<typeof import('./store/modules/user/index')['default']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isAnyBlank: UnwrapRef<typeof import('./composables/index')['isAnyBlank']>
     readonly isBlank: UnwrapRef<typeof import('./composables/index')['isBlank']>

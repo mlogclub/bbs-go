@@ -10,11 +10,6 @@
     $scheme-invert: var(--scheme-invert),
     $scheme-invert-bis: var(--scheme-invert),
     $scheme-invert-ter: var(--scheme-invert),
-
-    // $text: var(--text),
-    // $text-strong: var(--text),
-    // $navbar-box-shadow-color: var(--navbar-box-shadow-color),
-    // $title-color: var(--text),
 );
 
 @mixin useLightMode() {
