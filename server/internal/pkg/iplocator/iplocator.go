@@ -1,13 +1,13 @@
 package iplocator
 
 import (
+	"log/slog"
 	"strings"
 	"sync"
 
 	"github.com/lionsoul2014/ip2region/binding/golang/xdb"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
-	"golang.org/x/exp/slog"
 )
 
 var (
