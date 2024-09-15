@@ -5,3 +5,4 @@ bbs-go.dev.yaml
 bbs-go.test.yaml
 go.work
 go.work.sum
+cmd/generator
