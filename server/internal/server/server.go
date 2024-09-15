@@ -22,7 +22,7 @@ func NewServer() {
 	conf := config.Instance
 
 	app := iris.New()
-	app.Logger().SetLevel("warn")
+	app.Logger().SetLevel("info")
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Options{
