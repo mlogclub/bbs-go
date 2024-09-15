@@ -36,7 +36,7 @@ WORKDIR "$APP_HOME"
 # RUN apk add --no-cache libjpeg-turbo-utils
 
 # 安装autoconf依赖
-RUN apt update && apt add -y autoconf automake libtool
+# RUN apt add autoconf automake libtool
 
 COPY ./admin ./
 # RUN npm install -g pnpm --registry=https://registry.npmmirror.com
