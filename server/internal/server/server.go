@@ -19,12 +19,14 @@ import (
 )
 
 func NewServer() {
+	conf := config.Instance
+
 	app := iris.New()
 	app.Logger().SetLevel("warn")
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+		AllowedOrigins:   conf.AllowedOrigins,
 		AllowCredentials: true,
 		MaxAge:           600,
 		AllowedMethods:   []string{iris.MethodGet, iris.MethodPost, iris.MethodOptions, iris.MethodHead, iris.MethodDelete, iris.MethodPut},
@@ -48,8 +50,6 @@ func NewServer() {
 			"engine": "bbs-go",
 		})
 	})
-
-	conf := config.Instance
 
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {

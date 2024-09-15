@@ -9,10 +9,11 @@ import (
 var Instance *Config
 
 type Config struct {
-	Env        string // 环境
-	BaseUrl    string // base url
-	Port       string // 端口
-	IpDataPath string // IP数据文件
+	Env            string   // 环境
+	BaseUrl        string   // base url
+	Port           string   // 端口
+	IpDataPath     string   // IP数据文件
+	AllowedOrigins []string // 跨域白名单
 
 	// 日志配置
 	Logger struct {
