@@ -3,7 +3,6 @@ package server
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/config"
-	"bbs-go/internal/pkg/gormlogs"
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
@@ -17,7 +16,9 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func Init() {
@@ -60,15 +61,31 @@ func initConfig() {
 }
 
 func initDB() {
-	gormConf := &gorm.Config{
-		Logger: gormlogs.New(
-			gormlogs.SetLogLevel(gormlogs.SlowQueryLogType, slog.LevelWarn),
-			gormlogs.WithSlowThreshold(time.Second),
-		),
+	conf := config.Instance.DB
+	db, err := gorm.Open(mysql.Open(conf.Url), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "t_",
+			SingularTable: true,
+		},
+	})
+
+	if err != nil {
+		slog.Error(err.Error())
+		panic(err)
 	}
-	if err := sqls.Open(config.Instance.DB, gormConf, models.Models...); err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
+
+	if sqlDB, err := db.DB(); err == nil {
+		sqlDB.SetMaxIdleConns(conf.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(conf.MaxOpenConns)
+		sqlDB.SetConnMaxIdleTime(time.Duration(conf.ConnMaxIdleTimeSeconds) * time.Second)
+		sqlDB.SetConnMaxLifetime(time.Duration(conf.ConnMaxLifetimeSeconds) * time.Second)
 	}
+
+	if err := db.AutoMigrate(models.Models...); nil != err {
+		slog.Error(err.Error(), slog.Any("error", err))
+	}
+
+	sqls.SetDB(db)
 }
 
 func initCron() {
