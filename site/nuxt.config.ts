@@ -35,7 +35,9 @@ export default defineNuxtConfig({
   plugins: [
   ],
 
-  elementPlus: { /** Options */ },
+  elementPlus: {
+    defaultLocale: 'zh-cn',
+  },
 
   colorMode: {
     preference: 'system', // default value of $colorMode.preference
@@ -77,4 +79,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: '2024-09-15',
 })

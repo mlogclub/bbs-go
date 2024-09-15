@@ -1,12 +1,12 @@
-FROM golang:1.22 AS builder
+FROM golang:1.23 AS builder
 
 ENV APP_HOME /code/bbs-go/server
 WORKDIR "$APP_HOME"
 
 COPY go.mod ./
 COPY go.sum ./
-# RUN go env -w GOPROXY=https://goproxy.cn,direct \
-#     && go mod download
+RUN go env -w GOPROXY=https://goproxy.cn,direct \
+    && go mod download
 RUN go mod download
 
 COPY . ./

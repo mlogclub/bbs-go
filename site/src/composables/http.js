@@ -26,7 +26,7 @@ export function useMyFetch(url, options = {}) {
 
   return new Promise((resolve, reject) => {
     useFetch(url, options)
-      .then(({ data, pending, refresh, execute, error }) => {
+      .then(({ data, status, refresh, execute, error }) => {
         if (error.value) {
           reject(error.value);
           return;
