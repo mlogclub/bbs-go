@@ -33,7 +33,10 @@ ENV APP_HOME=/code/bbs-go/admin
 WORKDIR "$APP_HOME"
 
 # 安装 jpegtran 所需库
-RUN apk add --no-cache libjpeg-turbo-utils
+# RUN apk add --no-cache libjpeg-turbo-utils
+
+# 安装autoconf依赖
+RUN apt-get update && apt-get install -y autoconf automake libtool
 
 COPY ./admin ./
 # RUN npm install -g pnpm --registry=https://registry.npmmirror.com
