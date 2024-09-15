@@ -31,7 +31,7 @@ func Init() {
 }
 
 func initConfig() {
-	env := os.Getenv("ENV")
+	env := os.Getenv("BBSGO_ENV")
 	if strs.IsBlank(env) {
 		env = "dev"
 	}

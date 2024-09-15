@@ -19,22 +19,46 @@ services:
       retries: 100
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
-  bbsgo:
-    container_name: bbs-go
-    image: mlogclub/bbs-go:4.0.2
+  server:
+    container_name: bbs-go-server
+    image: mlogclub/bbs-go-server:latest
     depends_on:
       mysql:
         condition: service_healthy
 
     ports:
       - 8082:8082
-      - 3000:3000
     build:
       dockerfile: Dockerfile
+      context: ./server
     volumes:
       - /data/docker:/data
     environment:
-      BBSGO_ENV: docker
       BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
       BBSGO_BASEURL: http://localhost:3000
+    restart: on-failure
+
+  site:
+    container_name: bbs-go-site
+    image: mlogclub/bbs-go-site:latest
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    build:
+      dockerfile: Dockerfile
+      context: ./site
+    restart: on-failure
+
+
+  admin:
+    container_name: bbs-go-admin
+    image: mlogclub/bbs-go-admin:latest
+    depends_on:
+      - server
+    ports:
+      - 8080:80
+    build:
+      dockerfile: Dockerfile
+      context: ./admin
     restart: on-failure
