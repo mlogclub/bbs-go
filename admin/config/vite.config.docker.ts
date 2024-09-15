@@ -8,6 +8,7 @@ import configImageminPlugin from './plugin/imagemin';
 export default mergeConfig(
   {
     mode: 'docker',
+    base: '/admin',
     plugins: [
       // configCompressPlugin('gzip'),
       configVisualizerPlugin(),

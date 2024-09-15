@@ -38,3 +38,15 @@ services:
       BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
       BBSGO_BASEURL: http://localhost:3000
     restart: on-failure
+  
+  nginx:
+    container_name: bbs-go-nginx
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - .docker-compose/nginx.conf:/etc/nginx/conf.d/default.conf # 挂载自定义的 nginx 配置文件
+    depends_on:
+      - bbsgo
+    restart: on-failure
+

@@ -51,8 +51,6 @@ func NewServer() {
 		})
 	})
 
-	app.HandleDir("/admin", "./admin")
-
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
 		m.Party("/topic").Handle(new(api.TopicController))
