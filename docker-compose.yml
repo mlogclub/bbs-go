@@ -10,8 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     volumes:
       - .docker-compose/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d # 初始化脚本件目录, 这个目录中的.sh/sql文件会以字母顺序依次执行
-      # - ./mysql:/var/lib/mysql # 挂载数据件目录.如果非root账号执行，挂载目录必须是登录账号下目录
-      # - .docker-compose/mysql/conf.d:/etc/mysql/conf.d # 挂在配置文件目录
+      - /data/mysql:/var/lib/mysql # 挂载数据件目录.如果非root账号执行，挂载目录必须是登录账号下目录
     restart: always
     healthcheck:
       test: '/usr/bin/mysql --user=bbsgo --password=123456 bbsgo_db --execute "SHOW TABLES;"'
@@ -34,6 +33,9 @@ services:
       context: ./server
     volumes:
       - /data/docker:/data
+    environment:
+      BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+      BBSGO_BASEURL: http://localhost:3000
     restart: on-failure
 
   site:

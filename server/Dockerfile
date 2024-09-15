@@ -15,10 +15,8 @@ RUN CGO_ENABLED=0 go build -v -o bbs-go main.go && chmod +x bbs-go
 FROM alpine:latest
 
 COPY --from=builder /code/bbs-go/server/bbs-go /app/bbs-go
-COPY --from=builder /code/bbs-go/server/bbs-go.docker.yaml /app/bbs-go.docker.yaml
 
 WORKDIR /app
 
 EXPOSE 8082
-ENV ENV=docker
 CMD ["./bbs-go"]
