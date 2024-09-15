@@ -1,29 +1,23 @@
 <template>
-  <ClientOnly>
-    <el-dropdown v-if="hasPermission" trigger="click" @command="handleCommand">
-      <span class="el-dropdown-link">管理</span>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item v-if="topic.type === 0" command="edit"
-            >修改</el-dropdown-item
-          >
-          <el-dropdown-item command="delete">删除</el-dropdown-item>
-          <el-dropdown-item v-if="isOwner || isAdmin" command="recommend">{{
-            topic.recommend ? "取消推荐" : "推荐"
-          }}</el-dropdown-item>
-          <el-dropdown-item v-if="isOwner || isAdmin" command="sticky">{{
-            topic.sticky ? "取消置顶" : "置顶"
-          }}</el-dropdown-item>
-          <el-dropdown-item v-if="isOwner || isAdmin" command="forbidden7Days"
-            >禁言7天</el-dropdown-item
-          >
-          <el-dropdown-item v-if="isOwner" command="forbiddenForever"
-            >永久禁言</el-dropdown-item
-          >
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-  </ClientOnly>
+  <!-- <ClientOnly> -->
+  <el-dropdown
+    v-if="menus && menus.length"
+    trigger="click"
+    @command="handleCommand"
+  >
+    <span class="el-dropdown-link">管理</span>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item
+          v-for="item in menus"
+          :key="item.command"
+          :command="item.command"
+          >{{ item.label }}</el-dropdown-item
+        >
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  <!-- </ClientOnly> -->
 </template>
 
 <script setup>
@@ -41,11 +35,48 @@ const emits = defineEmits(["update:modelValue"]);
 const userStore = useUserStore();
 const isOwner = userIsOwner(userStore.user);
 const isAdmin = userIsAdmin(userStore.user);
-const isTopicOwner = computed(() => {
-  return userStore.user && userStore.user.id === topic.value.user.id;
-});
-const hasPermission = computed(() => {
-  return isTopicOwner || isOwner || isAdmin;
+
+const menus = computed(() => {
+  const isTopicOwner =
+    userStore.user && userStore.user.id === topic.value.user.id;
+  const items = [];
+  if (isTopicOwner && topic.value.type === 0) {
+    items.push({
+      command: "edit",
+      label: "修改",
+    });
+  }
+  if (isTopicOwner || isOwner || isAdmin) {
+    items.push({
+      command: "delete",
+      label: "删除",
+    });
+  }
+  if (isOwner || isAdmin) {
+    items.push({
+      command: "recommend",
+      label: topic.value.recommend ? "取消推荐" : "推荐",
+    });
+  }
+  if (isOwner || isAdmin) {
+    items.push({
+      command: "sticky",
+      label: topic.value.sticky ? "取消置顶" : "置顶",
+    });
+  }
+  if (isOwner || isAdmin) {
+    items.push({
+      command: "forbidden7Days",
+      label: "禁言7天",
+    });
+  }
+  if (isOwner) {
+    items.push({
+      command: "forbiddenForever",
+      label: "永久禁言",
+    });
+  }
+  return items;
 });
 
 async function handleCommand(command) {
