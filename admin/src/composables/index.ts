@@ -66,13 +66,11 @@ export function isAnyBlank(
 }
 
 export function useBaseURL() {
-  return import.meta.env.VITE_API_BASE_URL || window.config.baseURL || '/';
+  return import.meta.env.VITE_API_BASE_URL || '/';
 }
 
 export function useSiteURL(path: string) {
-  return (
-    (import.meta.env.VITE_API_SITE_URL || window.config.siteURL || '') + path
-  );
+  return (import.meta.env.VITE_API_SITE_URL || '') + path;
 }
 
 export function useTableHeight() {

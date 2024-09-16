@@ -14,7 +14,7 @@ RUN CGO_ENABLED=0 go build -v -o bbs-go main.go && chmod +x bbs-go
 
 
 # site builder
-FROM node:20 AS site_builder
+FROM node:20-alpine AS site_builder
 
 ENV APP_HOME=/code/bbs-go/site
 WORKDIR "$APP_HOME"
@@ -60,5 +60,4 @@ RUN chmod +x ${APP_HOME}/start.sh
 EXPOSE 8082
 EXPOSE 3000
 
-ENV ENV=docker
 CMD ["./start.sh"]

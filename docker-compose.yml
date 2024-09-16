@@ -21,7 +21,7 @@ services:
 
   bbsgo:
     container_name: bbs-go
-    image: mlogclub/bbs-go:4.0.2
+    image: mlogclub/bbs-go:4.0.3
     depends_on:
       mysql:
         condition: service_healthy

@@ -7,7 +7,6 @@ import AutoImport from 'unplugin-auto-import/vite';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
-  base: '/',
   plugins: [
     vue(),
     vueJsx(),
