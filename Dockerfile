@@ -6,10 +6,8 @@ ENV APP_HOME=/code/bbs-go/server
 WORKDIR "$APP_HOME"
 
 COPY ./server ./
-RUN go env -w GOPROXY=https://goproxy.cn,direct \
-    && go mod download
+# RUN go env -w GOPROXY=https://goproxy.cn,direct
 RUN go mod download
-
 RUN CGO_ENABLED=0 go build -v -o bbs-go main.go && chmod +x bbs-go
 
 
@@ -46,7 +44,6 @@ FROM node:20-alpine
 ENV APP_HOME=/app/bbs-go
 WORKDIR "$APP_HOME"
 
-
 COPY --from=server_builder /code/bbs-go/server/bbs-go ./server/bbs-go
 COPY --from=server_builder /code/bbs-go/server/*.yaml ./server/
 COPY --from=server_builder /code/bbs-go/server/*.yml ./server/
@@ -57,6 +54,6 @@ COPY --from=admin_builder /code/bbs-go/admin/dist ./server/admin
 COPY ./start.sh ${APP_HOME}/start.sh
 RUN chmod +x ${APP_HOME}/start.sh
 
-EXPOSE 8082 3000 80
+EXPOSE 8082 3000
 
 CMD ["./start.sh"]
