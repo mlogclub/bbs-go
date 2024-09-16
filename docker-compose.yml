@@ -38,14 +38,3 @@ services:
       - 8082:8082
       - 3000:3000
     restart: on-failure
-
-  # nginx:
-  #   container_name: bbs-go-nginx
-  #   image: nginx:latest
-  #   ports:
-  #     - 80:80
-  #   volumes:
-  #     - .docker-compose/nginx.conf:/etc/nginx/conf.d/default.conf
-  #   depends_on:
-  #     - bbsgo
-  #   restart: on-failure
