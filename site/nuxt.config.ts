@@ -77,6 +77,9 @@ export default defineNuxtConfig({
       '/api/**': {
         proxy: `${import.meta.env.SERVER_URL}/api/**`,
       },
+      '/admin/**': {
+        proxy: `${import.meta.env.SERVER_URL}/admin/**`,
+      },
     },
   },
 

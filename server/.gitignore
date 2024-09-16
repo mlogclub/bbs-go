@@ -28,6 +28,7 @@ tags
 logs/*.log
 web/*
 tmp/*
+admin/*
 
 internal/web*
 
