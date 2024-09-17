@@ -66,3 +66,7 @@ Es:
 WeixinConfig:
   AppID:
   AppSecret:
+
+# search
+Search:
+  IndexPath: # 索引路径
