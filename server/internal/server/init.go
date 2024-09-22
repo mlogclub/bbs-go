@@ -16,6 +16,7 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
+	"github.com/tidwall/pretty"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -36,8 +37,6 @@ func initConfig() {
 		env = "dev"
 	}
 
-	slog.Info("Load config", slog.String("ENV", env))
-
 	viper.SetConfigName("bbs-go." + env)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("$HOME/.bbs-go")
@@ -57,7 +56,8 @@ func initConfig() {
 
 	config.Instance.Env = env
 
-	slog.Info("Load config", slog.String("ENV", env), slog.String("config", jsons.ToJsonStr(config.Instance)))
+	slog.Info("Load config", slog.String("ENV", env))
+	fmt.Println(string(pretty.Pretty([]byte(jsons.ToJsonStr(config.Instance)))))
 }
 
 func initDB() {
