@@ -55,9 +55,27 @@
           <ul class="icon_lists dib-box">
           
             <li class="dib">
-              <span class="icon iconfont">&#xe606;</span>
+              <span class="icon iconfont">&#xe601;</span>
+                <div class="name">查看</div>
+                <div class="code-name">&amp;#xe601;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe8b9;</span>
                 <div class="name">收藏</div>
-                <div class="code-name">&amp;#xe606;</div>
+                <div class="code-name">&amp;#xe8b9;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe8ad;</span>
+                <div class="name">点赞</div>
+                <div class="code-name">&amp;#xe8ad;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe8b4;</span>
+                <div class="name">评论</div>
+                <div class="code-name">&amp;#xe8b4;</div>
               </li>
           
             <li class="dib">
@@ -88,18 +106,6 @@
               <span class="icon iconfont">&#xe6c0;</span>
                 <div class="name">lock</div>
                 <div class="code-name">&amp;#xe6c0;</div>
-              </li>
-          
-            <li class="dib">
-              <span class="icon iconfont">&#xe619;</span>
-                <div class="name">view</div>
-                <div class="code-name">&amp;#xe619;</div>
-              </li>
-          
-            <li class="dib">
-              <span class="icon iconfont">&#xe7e0;</span>
-                <div class="name">comment_light</div>
-                <div class="code-name">&amp;#xe7e0;</div>
               </li>
           
             <li class="dib">
@@ -301,12 +307,6 @@
               </li>
           
             <li class="dib">
-              <span class="icon iconfont">&#xe608;</span>
-                <div class="name">like</div>
-                <div class="code-name">&amp;#xe608;</div>
-              </li>
-          
-            <li class="dib">
               <span class="icon iconfont">&#xe68f;</span>
                 <div class="name">loading</div>
                 <div class="code-name">&amp;#xe68f;</div>
@@ -420,9 +420,9 @@
 <pre><code class="language-css"
 >@font-face {
   font-family: 'iconfont';
-  src: url('iconfont.woff2?t=1705419839591') format('woff2'),
-       url('iconfont.woff?t=1705419839591') format('woff'),
-       url('iconfont.ttf?t=1705419839591') format('truetype');
+  src: url('iconfont.woff2?t=1727511198798') format('woff2'),
+       url('iconfont.woff?t=1727511198798') format('woff'),
+       url('iconfont.ttf?t=1727511198798') format('truetype');
 }
 </code></pre>
           <h3 id="-iconfont-">第二步：定义使用 iconfont 的样式</h3>
@@ -449,11 +449,38 @@
         <ul class="icon_lists dib-box">
           
           <li class="dib">
+            <span class="icon iconfont icon-view"></span>
+            <div class="name">
+              查看
+            </div>
+            <div class="code-name">.icon-view
+            </div>
+          </li>
+          
+          <li class="dib">
             <span class="icon iconfont icon-favorite"></span>
             <div class="name">
               收藏
             </div>
             <div class="code-name">.icon-favorite
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-like"></span>
+            <div class="name">
+              点赞
+            </div>
+            <div class="code-name">.icon-like
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-comment"></span>
+            <div class="name">
+              评论
+            </div>
+            <div class="code-name">.icon-comment
             </div>
           </li>
           
@@ -499,24 +526,6 @@
               lock
             </div>
             <div class="code-name">.icon-lock
-            </div>
-          </li>
-          
-          <li class="dib">
-            <span class="icon iconfont icon-view"></span>
-            <div class="name">
-              view
-            </div>
-            <div class="code-name">.icon-view
-            </div>
-          </li>
-          
-          <li class="dib">
-            <span class="icon iconfont icon-comment"></span>
-            <div class="name">
-              comment_light
-            </div>
-            <div class="code-name">.icon-comment
             </div>
           </li>
           
@@ -818,15 +827,6 @@
           </li>
           
           <li class="dib">
-            <span class="icon iconfont icon-like"></span>
-            <div class="name">
-              like
-            </div>
-            <div class="code-name">.icon-like
-            </div>
-          </li>
-          
-          <li class="dib">
             <span class="icon iconfont icon-loading"></span>
             <div class="name">
               loading
@@ -999,10 +999,34 @@
           
             <li class="dib">
                 <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-view"></use>
+                </svg>
+                <div class="name">查看</div>
+                <div class="code-name">#icon-view</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
                   <use xlink:href="#icon-favorite"></use>
                 </svg>
                 <div class="name">收藏</div>
                 <div class="code-name">#icon-favorite</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-like"></use>
+                </svg>
+                <div class="name">点赞</div>
+                <div class="code-name">#icon-like</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-comment"></use>
+                </svg>
+                <div class="name">评论</div>
+                <div class="code-name">#icon-comment</div>
             </li>
           
             <li class="dib">
@@ -1043,22 +1067,6 @@
                 </svg>
                 <div class="name">lock</div>
                 <div class="code-name">#icon-lock</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-view"></use>
-                </svg>
-                <div class="name">view</div>
-                <div class="code-name">#icon-view</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-comment"></use>
-                </svg>
-                <div class="name">comment_light</div>
-                <div class="code-name">#icon-comment</div>
             </li>
           
             <li class="dib">
@@ -1323,14 +1331,6 @@
                 </svg>
                 <div class="name">qq</div>
                 <div class="code-name">#icon-qq</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-like"></use>
-                </svg>
-                <div class="name">like</div>
-                <div class="code-name">#icon-like</div>
             </li>
           
             <li class="dib">

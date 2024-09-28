@@ -12,6 +12,10 @@
   text-overflow: ellipsis;
 }
 
+.EASE {
+  transition: all 0.2s ease-out 0.1s;
+}
+
 @media screen and (max-width: 768px) {
   .main {
     padding: 1rem 0.5rem 0 !important;

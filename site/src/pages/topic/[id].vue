@@ -137,7 +137,7 @@
               <!-- 功能按钮 -->
               <div class="topic-actions">
                 <div class="action disabled">
-                  <i class="action-icon iconfont icon-read" />
+                  <i class="action-icon iconfont icon-view" />
                   <div class="action-text">
                     <span>浏览</span>
                     <span v-if="topic.viewCount > 0" class="action-text">

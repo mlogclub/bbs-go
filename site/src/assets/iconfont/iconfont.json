@@ -6,11 +6,32 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "7116480",
+      "icon_id": "5647273",
+      "name": "查看",
+      "font_class": "view",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "11372701",
       "name": "收藏",
       "font_class": "favorite",
-      "unicode": "e606",
-      "unicode_decimal": 58886
+      "unicode": "e8b9",
+      "unicode_decimal": 59577
+    },
+    {
+      "icon_id": "11372651",
+      "name": "点赞",
+      "font_class": "like",
+      "unicode": "e8ad",
+      "unicode_decimal": 59565
+    },
+    {
+      "icon_id": "11372687",
+      "name": "评论",
+      "font_class": "comment",
+      "unicode": "e8b4",
+      "unicode_decimal": 59572
     },
     {
       "icon_id": "12934669",
@@ -46,20 +67,6 @@
       "font_class": "lock",
       "unicode": "e6c0",
       "unicode_decimal": 59072
-    },
-    {
-      "icon_id": "1327509",
-      "name": "view",
-      "font_class": "view",
-      "unicode": "e619",
-      "unicode_decimal": 58905
-    },
-    {
-      "icon_id": "1496053",
-      "name": "comment_light",
-      "font_class": "comment",
-      "unicode": "e7e0",
-      "unicode_decimal": 59360
     },
     {
       "icon_id": "9782904",
@@ -291,13 +298,6 @@
       "font_class": "qq",
       "unicode": "e6ca",
       "unicode_decimal": 59082
-    },
-    {
-      "icon_id": "6284550",
-      "name": "like",
-      "font_class": "like",
-      "unicode": "e608",
-      "unicode_decimal": 58888
     },
     {
       "icon_id": "631499",

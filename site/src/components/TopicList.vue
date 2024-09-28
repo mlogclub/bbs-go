@@ -1,102 +1,88 @@
 <template>
   <ul class="topic-list">
     <li v-for="topic in topics" :key="topic.id" class="topic-item">
-      <div class="topic-avatar" :title="topic.user.nickname">
+      <div class="topic-header">
         <my-avatar :user="topic.user" />
+        <div class="topic-header-main">
+          <div class="topic-nickname">
+            {{ topic.user.nickname }}
+          </div>
+          <div class="topic-time">
+            发布于{{ usePrettyDate(topic.createTime) }}
+          </div>
+        </div>
       </div>
-      <div class="topic-main-content">
-        <div class="topic-userinfo">
-          <div class="infos">
-            <my-avatar
-              class="topic-inline-avatar"
-              :user="topic.user"
-              :size="20"
-            />
-            <nuxt-link :to="`/user/${topic.user.id}`" class="topic-nickname">
-              {{ topic.user.nickname }}
+      <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
+        <template v-if="topic.type === 0">
+          <h1 class="topic-title">
+            <nuxt-link :to="`/topic/${topic.id}`" target="_blank">
+              {{ topic.title }}
             </nuxt-link>
-          </div>
-          <div class="icons">
-            <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
-              >置顶</span
-            >
-          </div>
-        </div>
-        <div class="topic-time">
-          发布于{{ usePrettyDate(topic.createTime) }}
-        </div>
-        <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
-          <template v-if="topic.type === 0">
-            <h1 class="topic-title">
-              <nuxt-link :to="`/topic/${topic.id}`" target="_blank">
-                {{ topic.title }}
+          </h1>
+          <nuxt-link
+            :to="`/topic/${topic.id}`"
+            class="topic-summary"
+            target="_blank"
+          >
+            {{ topic.summary }}
+          </nuxt-link>
+        </template>
+        <template v-if="topic.type === 1">
+          <nuxt-link
+            v-if="topic.content"
+            :to="`/topic/${topic.id}`"
+            class="topic-summary"
+            target="_blank"
+          >
+            {{ topic.content }}
+          </nuxt-link>
+          <ul
+            v-if="topic.imageList && topic.imageList.length"
+            class="topic-image-list"
+          >
+            <li v-for="(image, index) in topic.imageList" :key="index">
+              <nuxt-link
+                :to="`/topic/${topic.id}`"
+                class="image-item"
+                target="_blank"
+              >
+                <img :src="image.preview" />
               </nuxt-link>
-            </h1>
-            <nuxt-link
-              :to="`/topic/${topic.id}`"
-              class="topic-summary"
-              target="_blank"
-            >
-              {{ topic.summary }}
-            </nuxt-link>
-          </template>
-          <template v-if="topic.type === 1">
-            <nuxt-link
-              v-if="topic.content"
-              :to="`/topic/${topic.id}`"
-              class="topic-summary"
-              target="_blank"
-            >
-              {{ topic.content }}
-            </nuxt-link>
-            <ul
-              v-if="topic.imageList && topic.imageList.length"
-              class="topic-image-list"
-            >
-              <li v-for="(image, index) in topic.imageList" :key="index">
-                <nuxt-link
-                  :to="`/topic/${topic.id}`"
-                  class="image-item"
-                  target="_blank"
-                >
-                  <img :src="image.preview" />
-                </nuxt-link>
-              </li>
-            </ul>
-          </template>
+            </li>
+          </ul>
+        </template>
+      </div>
+      <div class="topic-bottom">
+        <div class="topic-tags">
+          <nuxt-link
+            v-if="topic.node"
+            class="topic-tag"
+            target="_blank"
+            :to="`/topics/node/${topic.node.id}`"
+            :alt="topic.node.name"
+          >
+            <img :src="topic.node.logo" />
+            <span>{{ topic.node.name }}</span>
+          </nuxt-link>
         </div>
-        <div class="topic-bottom">
-          <div class="topic-handlers">
-            <div
-              class="btn"
-              :class="{ liked: topic.liked }"
-              @click="like(topic)"
-            >
-              <i class="iconfont icon-like" />{{ topic.liked ? "已赞" : "赞" }}
-              <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
-            </div>
-            <div class="btn" @click="toTopicDetail(topic.id)">
-              <i class="iconfont icon-comment" />评论
-              <span v-if="topic.commentCount > 0">{{
-                topic.commentCount
-              }}</span>
-            </div>
-            <div class="btn" @click="toTopicDetail(topic.id)">
-              <i class="iconfont icon-read" />浏览
-              <span v-if="topic.viewCount > 0">{{ topic.viewCount }}</span>
-            </div>
+
+        <div class="topic-actions">
+          <div
+            class="btn EASE"
+            :class="{ liked: topic.liked }"
+            @click="like(topic)"
+          >
+            <i class="iconfont icon-like" />
+            <span v-if="topic.likeCount > 0">{{ topic.likeCount }}</span>
           </div>
-          <div class="topic-tags">
-            <nuxt-link
-              v-if="topic.node"
-              class="topic-tag"
-              target="_blank"
-              :to="`/topics/node/${topic.node.id}`"
-              :alt="topic.node.name"
-            >
-              {{ topic.node.name }}
-            </nuxt-link>
+          <div class="btn EASE" @click="toTopicDetail(topic.id)">
+            <i class="iconfont icon-comment" />
+            <span v-if="topic.commentCount > 0">{{ topic.commentCount }}</span>
           </div>
+          <!-- <div class="btn EASE" @click="toTopicDetail(topic.id)">
+            <i class="iconfont icon-view" />
+            <span v-if="topic.viewCount > 0">{{ topic.viewCount }}</span>
+          </div> -->
         </div>
       </div>
     </li>
@@ -158,313 +144,246 @@ export default {
 <style lang="scss" scoped>
 .topic-list {
   .topic-item {
-    padding: 12px 12px;
-    display: flex;
+    padding: 16px 32px;
     position: relative;
     overflow: hidden;
-    transition: background 0.5s;
     border-radius: 3px;
-    background: var(--bg-color);
 
-    &:not(:last-child) {
-      margin-bottom: 10px;
+    &:not(:last-child):after {
+      position: absolute;
+      content: "";
+      bottom: 0;
+      left: 32px;
+      right: 32px;
+      height: 1px;
+      background: var(--border-color);
     }
 
-    &:hover {
-      background: var(--bg-color2);
-    }
+    .topic-header {
+      display: flex;
+      align-items: center;
 
-    .topic-avatar {
-      //
-    }
+      .topic-header-main {
+        margin-left: 10px;
 
-    .topic-main-content {
-      flex: 1;
-      margin-left: 12px;
-
-      // .topic-top {
-      //   margin-bottom: 8px;
-
-      //   .topic-userinfo {
-      //     display: inline-flex;
-      //     align-items: center;
-
-      //     .topic-nickname {
-      //       // font-weight: 700;
-      //       font-size: 14px;
-      //       color: var(--text-color);
-      //       display: flex;
-      //       max-width: 250px;
-      //       overflow: hidden;
-      //     }
-
-      //     .topic-inline-avatar {
-      //       display: none;
-      //       margin-right: 5px;
-      //     }
-
-      //     .topic-sticky-icon {
-      //       color: var(--color-red);
-      //       border: 1px solid var(--color-red);
-      //       border-radius: 2px;
-      //       font-size: 12px;
-      //       font-weight: 700;
-      //       padding: 0 5px;
-      //       margin-left: 10px;
-      //     }
-      //   }
-
-      //   .topic-time {
-      //     color: var(--text-color3);
-      //     font-size: 12px;
-      //     float: right;
-      //     display: flex;
-      //   }
-
-      //   @media screen and (max-width: 1024px) {
-      //     .topic-time {
-      //       float: none;
-      //       margin-top: 8px;
-      //     }
-      //   }
-      // }
-
-      .topic-userinfo {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .infos {
-          flex: 1;
-          display: flex;
-          .topic-nickname {
-            font-size: 15px;
-            color: var(--text-color);
-            display: flex;
-            max-width: 250px;
-            overflow: hidden;
-          }
-
-          .topic-inline-avatar {
-            display: none;
-            margin-right: 5px;
-          }
+        .topic-nickname {
+          font-weight: 500;
+          font-size: 14px;
+          color: var(--text-color);
         }
 
-        .icons {
-          display: flex;
-          .topic-sticky-icon {
-            color: var(--color-red);
-            border: 1px solid var(--color-red);
-            border-radius: 2px;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 0 5px;
-            margin-left: 10px;
+        .topic-time {
+          margin-top: 4px;
+          font-size: 13px;
+          color: var(--text-color3);
+        }
+      }
+    }
+
+    .topic-content {
+      margin-top: 6px;
+      .topic-title {
+        display: inline-block;
+        margin-bottom: 6px;
+        word-wrap: break-word;
+        word-break: break-all;
+        width: 100%;
+
+        a {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--text-color);
+
+          &:hover {
+            //color: #3273dc;
+            text-decoration: underline;
           }
         }
       }
 
-      .topic-time {
-        margin-top: 2px;
+      .topic-summary {
+        font-size: 14px;
+        margin-bottom: 6px;
+        width: 100%;
+        text-decoration: none;
         color: var(--text-color3);
-        font-size: 12px;
+        word-wrap: break-word;
+
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        text-align: justify;
+        word-break: break-all;
+        text-overflow: ellipsis;
       }
 
-      .topic-content {
-        margin-top: 6px;
-        .topic-title {
+      &.topic-tweet {
+        .topic-summary {
+          color: var(--text-color);
+          white-space: pre-line;
+        }
+      }
+
+      .topic-image-list {
+        margin-top: 10px;
+
+        li {
+          cursor: pointer;
+          text-align: center;
+
           display: inline-block;
-          margin-bottom: 6px;
-          word-wrap: break-word;
-          word-break: break-all;
-          width: 100%;
+          vertical-align: middle;
+          margin: 0 8px 8px 0;
+          background-color: var(--bg-color2);
+          background-size: 32px 32px;
+          background-position: 50%;
+          background-repeat: no-repeat;
+          overflow: hidden;
+          position: relative;
 
-          a {
-            font-size: 16px;
-            font-weight: 400;
-            color: var(--text-color);
+          .image-item {
+            display: block;
+            overflow: hidden;
+            transform-style: preserve-3d;
 
-            &:hover {
-              //color: #3273dc;
-              text-decoration: underline;
+            & > img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: all 0.5s ease-out 0.1s;
+
+              &:hover {
+                transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+                backface-visibility: hidden;
+              }
             }
           }
-        }
 
-        .topic-summary {
-          font-size: 14px;
-          margin-bottom: 6px;
-          width: 100%;
-          text-decoration: none;
-          color: var(--text-color3);
-          word-wrap: break-word;
-
-          overflow: hidden;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-          text-align: justify;
-          word-break: break-all;
-          text-overflow: ellipsis;
-        }
-
-        &.topic-tweet {
-          .topic-summary {
-            color: var(--text-color);
-            white-space: pre-line;
-          }
-        }
-
-        .topic-image-list {
-          margin-top: 10px;
-
-          li {
-            cursor: pointer;
-            text-align: center;
-
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0 8px 8px 0;
-            background-color: var(--bg-color2);
-            background-size: 32px 32px;
-            background-position: 50%;
-            background-repeat: no-repeat;
-            overflow: hidden;
-            position: relative;
+          /* 只有一个图片时 */
+          &:first-child:nth-last-child(1) {
+            width: 210px;
+            height: 210px;
+            line-height: 210px;
 
             .image-item {
-              display: block;
-              overflow: hidden;
-              transform-style: preserve-3d;
-
-              & > img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: all 0.5s ease-out 0.1s;
-
-                &:hover {
-                  transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-                  backface-visibility: hidden;
-                }
-              }
-            }
-
-            /* 只有一个图片时 */
-            &:first-child:nth-last-child(1) {
               width: 210px;
               height: 210px;
-              line-height: 210px;
-
-              .image-item {
-                width: 210px;
-                height: 210px;
-              }
             }
+          }
 
-            /* 只有两个图片时 */
-            &:first-child:nth-last-child(2),
-            &:first-child:nth-last-child(2) ~ li {
+          /* 只有两个图片时 */
+          &:first-child:nth-last-child(2),
+          &:first-child:nth-last-child(2) ~ li {
+            width: 180px;
+            height: 180px;
+            line-height: 180px;
+
+            .image-item {
               width: 180px;
               height: 180px;
-              line-height: 180px;
-
-              .image-item {
-                width: 180px;
-                height: 180px;
-              }
             }
+          }
 
-            /*大于两个图片时*/
-            &:first-child:nth-last-child(n + 3),
-            &:first-child:nth-last-child(n + 3) ~ li {
+          /*大于两个图片时*/
+          &:first-child:nth-last-child(n + 3),
+          &:first-child:nth-last-child(n + 3) ~ li {
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+
+            .image-item {
               width: 120px;
               height: 120px;
-              line-height: 120px;
-
-              .image-item {
-                width: 120px;
-                height: 120px;
-              }
             }
           }
         }
-      }
-
-      .topic-bottom {
-        display: flex;
-
-        .topic-handlers {
-          display: flex;
-          align-items: center;
-          margin-top: 6px;
-          font-size: 12px;
-          flex: 1;
-          user-select: none;
-
-          .btn {
-            color: var(--text-color3);
-            cursor: pointer;
-
-            &:not(:last-child) {
-              margin-right: 20px;
-            }
-
-            &:hover {
-              color: var(--text-link-color);
-            }
-
-            i {
-              margin-right: 3px;
-              font-size: 12px;
-              position: relative;
-            }
-          }
-        }
-
-        .topic-tags {
-          .topic-tag {
-            padding: 2px 8px;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12.5px;
-            margin-right: 10px;
-            background: var(--bg-color2);
-            border: 1px solid var(--border-color2);
-            color: var(--text-color3);
-            font-size: 12px;
-
-            &:hover {
-              color: var(--text-link-color);
-              background: var(--bg-color);
-            }
-          }
-        }
-      }
-
-      .liked {
-        color: var(--color-red) !important;
       }
     }
 
-    @media screen and (max-width: 768px) {
-      .topic-avatar {
-        display: none;
-      }
+    .topic-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-      .topic-main-content {
-        margin-left: 0;
+      .topic-tags {
+        display: flex;
 
-        .topic-inline-avatar {
-          display: block !important;
-        }
+        .topic-tag {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px 10px;
+          border-radius: 18px;
+          background: var(--bg-color6);
+          color: var(--text-color3);
+          font-size: 13px;
 
-        .topic-bottom {
-          .topic-tags {
-            display: none;
+          &:hover {
+            color: var(--text-color3-hover);
+            background: var(--bg-color6-hover);
+          }
+
+          img {
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: 0 4px 0 0;
+            border-radius: 50%;
+            object-fit: cover;
           }
         }
+      }
+
+      .topic-actions {
+        display: flex;
+        align-items: center;
+        margin-top: 6px;
+        font-size: 12px;
+        user-select: none;
+
+        .btn {
+          color: var(--text-color3);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          &:not(:last-child) {
+            margin-right: 20px;
+          }
+
+          &:hover {
+            color: var(--text-link-color);
+          }
+
+          i {
+            margin-right: 3px;
+            font-size: 16px;
+            position: relative;
+          }
+
+          span {
+            line-height: 24px;
+            font-size: 15px;
+          }
+
+          &.liked {
+            color: var(--color-red) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .topic-list {
+    .topic-item {
+      padding: 12px 12px;
+
+      &:after {
+        left: 12px;
+        right: 12px;
       }
     }
   }
