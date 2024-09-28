@@ -12,7 +12,7 @@
             class="icon-qz"
             :style="'background-image: url(' + nodeLogo(node) + ')'"
           ></i>
-          <span class="qz-name">{{ node.name }}</span>
+          <div class="qz-name">{{ node.name }}</div>
         </nuxt-link>
       </li>
     </ul>
@@ -80,7 +80,6 @@ function nodeUrl(node) {
     li {
       position: relative;
       // margin: 24px 0 0;
-      padding: 12px 24px;
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
@@ -111,6 +110,7 @@ function nodeUrl(node) {
       }
 
       a {
+        padding: 12px 24px;
         position: relative;
         z-index: 2;
         display: flex;
