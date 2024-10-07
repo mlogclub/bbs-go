@@ -156,7 +156,7 @@ export default {
       left: 32px;
       right: 32px;
       height: 1px;
-      background: var(--border-color);
+      background: var(--border-color4);
     }
 
     .topic-header {
@@ -382,8 +382,8 @@ export default {
       padding: 12px 12px;
 
       &:after {
-        left: 12px;
-        right: 12px;
+        left: 12px !important;
+        right: 12px !important;
       }
     }
   }
