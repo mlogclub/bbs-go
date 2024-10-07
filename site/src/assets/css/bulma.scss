@@ -12,7 +12,12 @@
     $scheme-invert-ter: var(--scheme-invert),
 );
 
+@mixin useCommon() {
+    --border-radius: 12px;
+}
+
 @mixin useLightMode() {
+    @include useCommon();
     --body-bg-color: #f3f3f3;
     --color-navbar-icon: #1878f3;
 
@@ -50,6 +55,8 @@
 }
 
 @mixin useDarkMode() {
+    @include useCommon();
+
     --body-bg-color: #121212;
     --color-navbar-icon: #e3e3e3;
 

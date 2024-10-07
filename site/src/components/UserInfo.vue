@@ -1,14 +1,3 @@
-<script>
-export default {
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
-  },
-};
-</script>
-
 <template>
   <div class="user-simple">
     <div class="base-info">
@@ -45,12 +34,23 @@ export default {
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 .user-simple {
   background-color: var(--bg-color);
   padding: 0;
   margin: 0 0 10px 0;
-  border-radius: 3px;
+  border-radius: var(--border-radius);
 
   .user-background {
     text-align: center;
@@ -88,7 +88,7 @@ export default {
   .extra-info {
     padding: 5px 0;
     background: rgba(0, 0, 0, 0.01);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color4);
     ul.extra-data {
       display: flex;
       li {
