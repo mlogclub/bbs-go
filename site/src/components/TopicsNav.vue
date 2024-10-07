@@ -7,12 +7,11 @@
         :class="{ active: envStore.currentNodeId === node.id }"
       >
         <nuxt-link :to="nodeUrl(node)">
-          <!-- <img class="node-logo" :src="nodeLogo(node)" /> -->
           <i
-            class="icon-qz"
+            class="node-logo"
             :style="'background-image: url(' + nodeLogo(node) + ')'"
           ></i>
-          <div class="qz-name">{{ node.name }}</div>
+          <div class="node-name">{{ node.name }}</div>
         </nuxt-link>
       </li>
     </ul>
@@ -117,7 +116,7 @@ function nodeUrl(node) {
         color: #16181f;
         align-items: center;
 
-        .icon-qz {
+        .node-logo {
           flex-shrink: 0;
           width: 24px;
           height: 24px;
@@ -125,9 +124,10 @@ function nodeUrl(node) {
           background-position: center;
           background-repeat: no-repeat;
           background-size: 100% 100%;
+          border-radius: 4px;
         }
 
-        .qz-name {
+        .node-name {
           height: 12px;
           line-height: 12px;
           overflow: hidden;
