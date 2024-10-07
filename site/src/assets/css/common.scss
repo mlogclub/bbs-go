@@ -184,7 +184,8 @@ $main-container-width: null; // 主栏目的宽度
   background: var(--bg-color);
   padding: 0 12px;
   margin-top: 10px;
-  border-radius: calc(0.25rem - 1px);
+  // border-radius: calc(0.25rem - 1px);
+  border-radius: var(--border-radius);
 
   &:first-child {
     margin: 0;

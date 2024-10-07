@@ -44,7 +44,7 @@ const { data: scoreRank } = useAsyncData(() =>
     padding: 10px 0;
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color4);
     }
 
     .score-user-info {
