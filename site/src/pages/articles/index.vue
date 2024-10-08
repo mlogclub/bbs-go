@@ -2,9 +2,11 @@
   <section class="main">
     <div class="container main-container left-main size-320">
       <div class="left-container">
-        <load-more-async v-slot="{ results }" url="/api/article/articles">
-          <article-list :articles="results" />
-        </load-more-async>
+        <div class="articles-main">
+          <load-more-async v-slot="{ results }" url="/api/article/articles">
+            <article-list :articles="results" />
+          </load-more-async>
+        </div>
       </div>
       <div class="right-container">
         <check-in />
@@ -30,4 +32,9 @@ useHead({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.articles-main {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+}
+</style>

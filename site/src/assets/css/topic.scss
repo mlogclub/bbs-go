@@ -11,7 +11,7 @@
     margin: 0 0 16px 0;
     // padding: 28px 0;
     background: var(--bg-color);
-    border-radius: 12px;
+    border-radius: var(--border-radius);
   }
 
   @media screen and (max-width: 768px) {
