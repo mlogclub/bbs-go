@@ -25,11 +25,6 @@
 </template>
 
 <script setup>
-defineExpose({
-  refresh,
-  unshiftResults,
-});
-
 const props = defineProps({
   // 请求URL
   url: {
@@ -44,6 +39,7 @@ const props = defineProps({
     },
   },
 });
+
 // 是否正在加载中
 const loading = ref(false);
 const pageData = reactive({
@@ -57,7 +53,7 @@ const disabled = computed(() => {
 });
 
 const empty = computed(() => {
-  return pageData.hasMore === false && pageData.results.length === 0;
+  return !pageData.hasMore && pageData.results.length === 0;
 });
 
 const { data: first } = await useAsyncData(() => {
@@ -66,9 +62,7 @@ const { data: first } = await useAsyncData(() => {
   });
 });
 
-renderData(first.value);
-
-async function loadMore() {
+const loadMore = async () => {
   loading.value = true;
   try {
     const filters = Object.assign(props.params || {}, {
@@ -83,16 +77,16 @@ async function loadMore() {
   } finally {
     loading.value = false;
   }
-}
+};
 
-function refresh() {
+const refresh = () => {
   pageData.cursor = "";
   pageData.results = [];
   pageData.hasMore = true;
   return loadMore();
-}
+};
 
-function renderData(data) {
+const renderData = (data) => {
   data = data || {};
   pageData.cursor = data.cursor;
   pageData.hasMore = data.hasMore;
@@ -101,13 +95,20 @@ function renderData(data) {
       pageData.results.push(item);
     });
   }
-}
+};
 
-function unshiftResults(item) {
+const unshiftResults = (item) => {
   if (item && pageData && pageData.results) {
     pageData.results.unshift(item);
   }
-}
+};
+
+renderData(first.value);
+
+defineExpose({
+  refresh,
+  unshiftResults,
+});
 </script>
 
 <style lang="scss" scoped>
