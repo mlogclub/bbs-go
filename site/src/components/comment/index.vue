@@ -1,8 +1,8 @@
 <template>
   <div class="comment-component">
     <div class="comment-header">
-      <span v-if="commentCount > 0">{{ commentCount }}条评论</span>
-      <span v-else>评论</span>
+      <span>全部评论</span>
+      <span v-if="commentCount > 0">&nbsp;{{ commentCount }}</span>
     </div>
 
     <template v-if="isLogin">
@@ -93,19 +93,19 @@ function reply(quote) {
 
 <style lang="scss" scoped>
 .comment-component {
+  padding: 16px;
   background-color: var(--bg-color);
   border-radius: var(--border-radius);
   .comment-header {
     display: flex;
     padding-top: 20px;
-    margin: 0 10px;
     color: var(--text-color);
     font-size: 16px;
     font-weight: 500;
   }
 
   .comment-not-login {
-    margin: 10px;
+    margin: 10px 0;
     border: 1px solid var(--border-color);
     border-radius: 0;
     overflow: hidden;

@@ -122,9 +122,6 @@ const loadMore = ref(null);
 
 const append = (data) => {
   if (loadMore.value) {
-    // console.log(loadMore.value);
-    // console.log(loadMore.value.unshiftResults);
-    // loadMore.value.unshiftResults(data);
     loadMore.value.refresh();
   }
 };
@@ -167,10 +164,6 @@ const switchShowReply = (comment) => {
     hideReply(comment);
   } else {
     reply.commentId = comment.id;
-    // // TODO
-    // setTimeout(() => {
-    //   this.$refs[`editor${comment.id}`][0].focus();
-    // }, 0);
   }
 };
 
@@ -222,7 +215,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .comments {
-  padding: 10px;
+  // padding: 10px;
   font-size: 14px;
 
   .comment {
@@ -230,7 +223,7 @@ defineExpose({
     padding: 10px 0;
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color4);
     }
 
     .comment-item-main {

@@ -4,9 +4,11 @@
       <my-empty />
     </slot>
     <template v-else>
-      <slot name="default" :results="pageData.results" />
-      <div v-if="loading" class="loading">
-        <el-skeleton :rows="3" animated />
+      <div>
+        <slot name="default" :results="pageData.results" />
+        <div v-if="loading" class="loading">
+          <el-skeleton :rows="3" animated />
+        </div>
       </div>
       <div class="has-more">
         <button
