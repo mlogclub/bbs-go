@@ -28,15 +28,13 @@
               </ul>
             </div>
 
-            <div>
-              <load-more-async
-                v-slot="{ results }"
-                url="/api/article/user/articles"
-                :params="{ userId: user.id }"
-              >
-                <article-list :articles="results" />
-              </load-more-async>
-            </div>
+            <load-more-async
+              v-slot="{ results }"
+              url="/api/article/user/articles"
+              :params="{ userId: user.id }"
+            >
+              <article-list :articles="results" />
+            </load-more-async>
           </div>
         </div>
       </div>
@@ -59,6 +57,7 @@ const activeTab = ref("articles");
 .tabs-warp {
   background-color: var(--bg-color);
   padding: 0 10px 10px;
+  border-radius: var(--border-radius);
 
   .tabs {
     margin-bottom: 5px;

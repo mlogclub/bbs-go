@@ -53,6 +53,7 @@ const active = computed(() => {
 
 <style lang="scss" scoped>
 .profile-edit-tabs-pc {
+  border-radius: var(--border-radius);
   background-color: var(--bg-color);
   padding: 10px;
 
@@ -76,6 +77,7 @@ const active = computed(() => {
   }
 }
 .profile-edit-tabs-mobile {
+  border-radius: var(--border-radius);
   background-color: var(--bg-color);
   margin-bottom: 10px !important;
   display: none;

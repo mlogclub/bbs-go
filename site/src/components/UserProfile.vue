@@ -102,8 +102,8 @@ async function uploadBackground(e) {
 .profile {
   display: flex;
   margin-bottom: 10px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   background-size: cover;
   background-position: 50%;
   height: 220px;

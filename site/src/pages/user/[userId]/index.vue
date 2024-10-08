@@ -28,15 +28,13 @@
               </ul>
             </div>
 
-            <div>
-              <load-more-async
-                v-slot="{ results }"
-                url="/api/topic/user/topics"
-                :params="{ userId: user.id }"
-              >
-                <topic-list :topics="results" :show-avatar="false" />
-              </load-more-async>
-            </div>
+            <load-more-async
+              v-slot="{ results }"
+              url="/api/topic/user/topics"
+              :params="{ userId: user.id }"
+            >
+              <topic-list :topics="results" :show-avatar="false" />
+            </load-more-async>
           </div>
         </div>
       </div>
@@ -57,6 +55,7 @@ useHead({
 .tabs-warp {
   background-color: var(--bg-color);
   padding: 0 10px 10px;
+  border-radius: var(--border-radius);
 
   .tabs {
     margin-bottom: 5px;

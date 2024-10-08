@@ -11,11 +11,7 @@
         </div>
       </div>
       <div class="has-more">
-        <button
-          class="button is-primary is-small"
-          :disabled="disabled"
-          @click="loadMore"
-        >
+        <button class="button is-small" :disabled="disabled" @click="loadMore">
           <span v-if="loading" class="icon">
             <i class="iconfont icon-loading" />
           </span>
@@ -119,6 +115,7 @@ defineExpose({
     background-color: var(--bg-color);
     padding: 10px;
   }
+
   .has-more {
     text-align: center;
     padding: 20px;

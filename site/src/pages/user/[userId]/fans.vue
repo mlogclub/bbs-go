@@ -28,15 +28,13 @@
               </ul>
             </div>
 
-            <div>
-              <load-more-async
-                v-slot="{ results }"
-                url="/api/fans/fans"
-                :params="{ userId: user.id }"
-              >
-                <user-follow-list :users="results" />
-              </load-more-async>
-            </div>
+            <load-more-async
+              v-slot="{ results }"
+              url="/api/fans/fans"
+              :params="{ userId: user.id }"
+            >
+              <user-follow-list :users="results" />
+            </load-more-async>
           </div>
         </div>
       </div>
@@ -58,6 +56,7 @@ useHead({
 .tabs-warp {
   background-color: var(--bg-color);
   padding: 0 10px 10px;
+  border-radius: var(--border-radius);
 
   .tabs {
     margin-bottom: 5px;
