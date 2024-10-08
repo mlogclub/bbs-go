@@ -12,34 +12,21 @@
       <div class="container main-container left-main size-360">
         <div class="left-container">
           <div class="main-content no-padding no-bg">
-            <article
-              class="topic-detail"
-              itemscope
-              itemtype="http://schema.org/BlogPosting"
-            >
+            <article class="topic-detail">
               <div class="topic-header">
                 <div class="topic-header-left">
                   <my-avatar :user="topic.user" :size="45" />
                 </div>
                 <div class="topic-header-center">
-                  <div class="topic-nickname" itemprop="headline">
-                    <nuxt-link
-                      itemprop="author"
-                      itemscope
-                      itemtype="http://schema.org/Person"
-                      :to="`/user/${topic.user.id}`"
-                    >
+                  <div class="topic-nickname">
+                    <nuxt-link :to="`/user/${topic.user.id}`">
                       {{ topic.user.nickname }}
                     </nuxt-link>
                   </div>
                   <div class="topic-meta">
                     <span class="meta-item">
                       发布于
-                      <time
-                        :datetime="usePrettyDate(topic.createTime)"
-                        itemprop="datePublished"
-                        >{{ usePrettyDate(topic.createTime) }}</time
-                      >
+                      <time>{{ usePrettyDate(topic.createTime) }}</time>
                     </span>
                     <span v-if="topic.ipLocation" class="meta-item"
                       >IP属地{{ topic.ipLocation }}</span
@@ -57,9 +44,8 @@
                 :class="{
                   'topic-tweet': topic.type === 1,
                 }"
-                itemprop="articleBody"
               >
-                <h1 v-if="topic.title" class="topic-title" itemprop="headline">
+                <h1 v-if="topic.title" class="topic-title">
                   {{ topic.title }}
                 </h1>
                 <div
@@ -312,13 +298,6 @@ async function commentCreated() {
 
   .topic-header {
     display: flex;
-    // margin: 0 10px;
-
-    // @media screen and (max-width: 768px) {
-    //   .topic-header-right {
-    //     display: none;
-    //   }
-    // }
 
     .topic-header-left {
       margin: 10px 10px 0 0;
@@ -371,7 +350,7 @@ async function commentCreated() {
       font-size: 20px;
       word-wrap: break-word;
       word-break: normal;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color4);
       padding-bottom: 10px;
     }
 
