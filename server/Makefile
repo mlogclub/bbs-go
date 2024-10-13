@@ -5,6 +5,10 @@ build:
 	@echo "Building..."
 	@go build -v -o bbs-go main.go
 
+buildlinux:
+	@echo "Building..."
+	@GOOS=linux GOARCH=amd64 go build
+
 # Run the application
 run:
 	@go run main.go
