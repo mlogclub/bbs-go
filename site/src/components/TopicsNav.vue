@@ -57,6 +57,21 @@ function nodeUrl(node) {
 }
 </script>
 
+<style>
+[data-theme="light"],
+.theme-light {
+  --topics-nav-color1: #f7f9ff;
+  --topics-nav-color2: rgba(43, 89, 255, 0.06);
+  --topics-nav-color3: #fff7f7;
+}
+
+[data-theme="dark"],
+.theme-dark {
+  --topics-nav-color1: #0d1a29;
+  --topics-nav-color2: #3a2c2c;
+  --topics-nav-color3: #3a2c2c;
+}
+</style>
 <style lang="scss" scoped>
 .dock-nav {
   display: block;
@@ -70,15 +85,10 @@ function nodeUrl(node) {
   transition: all 0.2s linear;
 
   ul {
-    // height: 100%;
-    // display: flex;
-    // flex-direction: column;
-    // padding: 16px 12px;
     padding: 16px 0;
 
     li {
       position: relative;
-      // margin: 24px 0 0;
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
@@ -99,13 +109,13 @@ function nodeUrl(node) {
         left: 0;
         right: 0;
         bottom: -2px;
-        background-color: #f7f9ff;
-        box-shadow: 0px 4px 4px rgba(43, 89, 255, 0.06);
+        background-color: var(--topics-nav-color1);
+        box-shadow: 0px 4px 4px var(--topics-nav-color2);
         transition: all 0.1s ease-out 0.05s;
       }
 
       &.active {
-        background-color: #fff7f7;
+        background-color: var(--topics-nav-color3);
       }
 
       a {
@@ -113,7 +123,8 @@ function nodeUrl(node) {
         position: relative;
         z-index: 2;
         display: flex;
-        color: #16181f;
+        // color: #16181f;
+        color: var(--text-color);
         align-items: center;
 
         .node-logo {
@@ -124,6 +135,7 @@ function nodeUrl(node) {
           background-position: center;
           background-repeat: no-repeat;
           background-size: 100% 100%;
+          background-color: #fff;
           border-radius: 4px;
         }
 
