@@ -145,6 +145,7 @@ async function submitCreate() {
 
 <style lang="scss" scoped>
 .article-create-form {
+  border-radius: var(--border-radius);
   background-color: var(--bg-color);
   padding: 30px;
 

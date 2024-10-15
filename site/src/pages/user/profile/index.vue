@@ -2,7 +2,7 @@
   <div v-if="user" class="widget no-margin">
     <div class="widget-header">
       <div>
-        <i class="iconfont icon-setting" />
+        <i class="iconfont icon-username" />
         <span>个人资料</span>
       </div>
       <nuxt-link :to="'/user/' + user.id">

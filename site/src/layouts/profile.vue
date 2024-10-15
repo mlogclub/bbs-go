@@ -14,7 +14,7 @@
             </div>
             <div class="profile-edit-tab-item">
               <nuxt-link to="/user/profile/account">
-                <i class="iconfont icon-username" />
+                <i class="iconfont icon-setting" />
                 <span>账号设置</span>
               </nuxt-link>
             </div>
