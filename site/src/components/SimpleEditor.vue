@@ -8,56 +8,60 @@ const props = defineProps({
     type: Object,
     default() {
       return {
-        content: '',
+        content: "",
         imageList: [],
-      }
+      };
     },
   },
   height: {
     type: String,
-    default: '200px',
+    default: "200px",
   },
-})
-const emits = defineEmits(['update:modelValue', 'update:content', 'update:imageList'])
+});
+const emits = defineEmits([
+  "update:modelValue",
+  "update:content",
+  "update:imageList",
+]);
 
 const post = ref({
-  content: '',
+  content: "",
   imageList: ref([]),
-})
-const showImageUpload = ref(false)
-const imageUploaderComponent = ref(null)
+});
+const showImageUpload = ref(false);
+const imageUploaderComponent = ref(null);
 
 const wordCount = computed(() => {
-  return post.value.content ? post.value.content.length : 0
-})
+  return post.value.content ? post.value.content.length : 0;
+});
 const loading = computed(() => {
   if (imageUploaderComponent.value) {
-    return imageUploaderComponent.value.loading
+    return imageUploaderComponent.value.loading;
   }
-  return false
-})
+  return false;
+});
 
 function switchImageUpload() {
   if (!showImageUpload.value) {
     // 打开文件弹窗
-    imageUploaderComponent.value.onClick()
+    imageUploaderComponent.value.onClick();
   }
-  showImageUpload.value = !showImageUpload.value
+  showImageUpload.value = !showImageUpload.value;
 }
 
 function onContentChange() {
-  emits('update:content', post.value.content)
-  emits('update:modelValue', post.value)
+  emits("update:content", post.value.content);
+  emits("update:modelValue", post.value);
 }
 
 function onImageListChange() {
-  emits('update:imageList', post.value.imageList)
-  emits('update:modelValue', post.value)
+  emits("update:imageList", post.value.imageList);
+  emits("update:modelValue", post.value);
 }
 
 defineExpose({
   loading,
-})
+});
 </script>
 
 <template>
@@ -74,7 +78,7 @@ defineExpose({
       <textarea
         v-model="post.content"
         placeholder="请输入您要发表的内容 ..."
-        :style="{ 'min-height': height, 'height': height }"
+        :style="{ 'min-height': height, height: height }"
         @update:model-value="onContentChange"
         @paste="handleParse"
         @drop="handleDrag"
@@ -128,15 +132,7 @@ defineExpose({
     .publish-container {
       margin-left: auto;
 
-      > .button-publish {
-        margin-left: auto;
-
-        ::v-deep span {
-          font-size: 14px;
-        }
-      }
-
-      > .tip {
+      .tip {
         font-size: 14px;
         margin-right: 10px;
         color: var(--text-color4);
