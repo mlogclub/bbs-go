@@ -2,14 +2,21 @@
   <ul class="topic-list">
     <li v-for="topic in topics" :key="topic.id" class="topic-item">
       <div class="topic-header">
-        <my-avatar :user="topic.user" />
         <div class="topic-header-main">
-          <div class="topic-nickname">
-            {{ topic.user.nickname }}
+          <my-avatar :user="topic.user" />
+          <div class="topic-userinfo">
+            <a :href="`/user/${topic.user.id}`" class="topic-nickname">
+              {{ topic.user.nickname }}
+            </a>
+            <div class="topic-time">
+              发布于{{ usePrettyDate(topic.createTime) }}
+            </div>
           </div>
-          <div class="topic-time">
-            发布于{{ usePrettyDate(topic.createTime) }}
-          </div>
+        </div>
+        <div class="topic-header-right">
+          <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
+            >置顶</span
+          >
         </div>
       </div>
       <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
@@ -162,20 +169,37 @@ export default {
     .topic-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
 
       .topic-header-main {
-        margin-left: 10px;
+        display: flex;
+        align-items: center;
 
-        .topic-nickname {
-          font-weight: 500;
-          font-size: 14px;
-          color: var(--text-color);
+        .topic-userinfo {
+          margin-left: 10px;
+          .topic-nickname {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+          }
+
+          .topic-time {
+            margin-top: 3px;
+            font-size: 13px;
+            color: var(--text-color3);
+          }
         }
+      }
 
-        .topic-time {
-          margin-top: 4px;
+      .topic-header-right {
+        .topic-sticky-icon {
           font-size: 13px;
-          color: var(--text-color3);
+          line-height: 13px;
+          color: #ff7827;
+          background: #ffe7d9;
+          border-radius: 2px;
+          padding: 3px 6px;
+          white-space: nowrap;
         }
       }
     }
