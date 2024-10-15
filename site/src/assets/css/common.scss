@@ -1,3 +1,13 @@
+[data-theme=light],
+.theme-light {
+  background: linear-gradient(136deg, #edf0ff99, #e7f6fa99);
+}
+
+[data-theme=dark],
+.theme-dark {
+  background: linear-gradient(136deg, #181818, #121212);
+}
+
 .column {
   padding: 3px !important;
 }
