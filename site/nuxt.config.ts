@@ -60,7 +60,7 @@ export default defineNuxtConfig({
       htmlAttrs: { class: 'theme-light has-navbar-fixed-top' },
       script: [
         {
-          src: 'https://hm.baidu.com/hm.js?79b8ff82974d0769ef5c629e4cd46629',
+          src: 'https://hm.baidu.com/hm.js?f14b836e09b72aedce29a86e809936de',
           type: 'text/javascript',
           async: true
         }
