@@ -41,7 +41,7 @@ export default {
 
 <style lang="scss" scoped>
 .empty-data {
-  background-color: var(--bg-color);
+  // background-color: var(--bg-color);
   padding: 30px 0;
   border-radius: 0 0 0.2rem 0.2rem;
   display: flex;
