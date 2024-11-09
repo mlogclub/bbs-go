@@ -36,7 +36,12 @@ export function useMyFetch(url, options = {}) {
           return;
         }
         if (data.value.success) {
-          resolve(data.value.data);
+          // TODO 这里如果数据是空，那么返回一个空对象
+          if (data.value.data === null || data.value.data === undefined) {
+            resolve(data.value.data || {});
+          } else {
+            resolve(data.value.data);
+          }
         } else {
           reject(data.value);
         }

@@ -35,8 +35,6 @@
         <follow-btn
           v-if="!currentUser || currentUser.id !== localUser.id"
           :user-id="localUser.id"
-          :followed="followed"
-          @onFollowed="onFollowed"
         />
       </div>
     </div>
@@ -70,10 +68,6 @@ const backgroundImage = computed(() => {
   return defaultUserBg;
 });
 
-const { data: followed } = await useAsyncData("followed", () =>
-  useMyFetch(`/api/fans/isfollowed?userId=${localUser.value.id}`)
-);
-
 async function uploadBackground(e) {
   const files = e.target.files;
   if (files.length <= 0) {
@@ -101,10 +95,6 @@ async function uploadBackground(e) {
     useMsgError(e.message || e);
     console.error(e);
   }
-}
-
-function onFollowed(userId, _followed) {
-  followed.value = _followed;
 }
 </script>
 

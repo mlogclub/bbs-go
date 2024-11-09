@@ -18,34 +18,37 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  followed: {
-    type: Boolean,
-    default: false,
-  },
 });
 const emits = defineEmits(["onFollowed"]);
+
+const { data: followed } = await useAsyncData(`followed:${props.userId}`, () =>
+  useMyFetch(`/api/fans/isfollowed?userId=${props.userId}`)
+);
+
 async function follow() {
   if (!userStore.isLogin) {
     useMsgSignIn();
     return;
   }
   try {
-    if (props.followed) {
+    if (followed.value) {
       await useHttpPostForm("/api/fans/unfollow", {
         body: {
           userId: props.userId,
         },
       });
+      followed.value = false;
       emits("onFollowed", props.userId, false);
-      useMsgSuccess("取消关注成功");
+      // useMsgSuccess("取消关注成功");
     } else {
       await useHttpPostForm("/api/fans/follow", {
         body: {
           userId: props.userId,
         },
       });
+      followed.value = true;
       emits("onFollowed", props.userId, true);
-      useMsgSuccess("关注成功");
+      // useMsgSuccess("关注成功");
     }
   } catch (e) {
     useMsgError(e.message || e);
