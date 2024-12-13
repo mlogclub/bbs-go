@@ -1,10 +1,5 @@
-const CONFIG = {
-  baseURL: process.env.BASE_URL_TEST,
-};
-
 // 请求体封装
 function applyOptions(options = {}) {
-  options.baseURL = options.baseURL ?? CONFIG.baseURL;
   options.initialCache = options.initialCache ?? false;
   options.headers = options.headers || {};
   options.method = options.method || "GET";
