@@ -35,7 +35,7 @@ func (c *MenuController) GetTree() *web.JsonResult {
 }
 
 func (c *MenuController) AnyList() *web.JsonResult {
-	list := services.MenuService.Find(params.NewPagedSqlCnd(c.Ctx,
+	list := services.MenuService.Find(params.NewSqlCnd(c.Ctx,
 		params.QueryFilter{
 			ParamName: "status",
 		},
