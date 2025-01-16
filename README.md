@@ -1,8 +1,6 @@
-## 感谢您的支持与鼓励！如果您喜欢这个开源项目，不妨给它点个⭐️⭐️⭐️，您的星星是我们前进的动力 🙏🙏🙏
-
 ## 项目地址
 
-- 交流站：[码农俱乐部](https://mlog.club)
+- 演示站：[https://bbs.bbs-go.com](https://bbs.bbs-go.com)
 - 文档地址：[https://bbs-go.com](https://bbs-go.com)
 - 问题反馈: [https://mlog.club/topics/node/3](https://mlog.club/topics/node/3)
 - Github: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
@@ -17,16 +15,6 @@
 ### 加我微信
 
 ![BBS-GO用户交流群](docs/images/wechat.png)
-
-## 付费服务
-
-付费是为了项目能够更好的生存下去，请谅解。项目将一如既往的开源下去~
-
-| 服务     | 价格  | 服务内容                                         |
-| -------- | ----- | ------------------------------------------------ |
-| 商用授权 | ￥1628 | 提供bbs-go商业使用授权                             |
-| 付费咨询 | 面议  | 付费答疑解惑，协助解决问题                       |
-| 功能定制 | 面议  | 接受各种功能定制，只有你想不到的没有我们做不到的 |
 
 ## 介绍
 
