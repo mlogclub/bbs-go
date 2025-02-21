@@ -1,4 +1,6 @@
 <script setup>
+const configStore = useConfigStore();
+
 defineProps({
   //   {
   //     url: string
@@ -30,7 +32,16 @@ const handleError = () => {
       <div class="container">
         <div class="error">
           <div>
-            <img src="~/assets/images/logo.png" style="max-width: 100px" />
+            <img
+              v-if="configStore.config.siteLogo"
+              :src="configStore.config.siteLogo"
+              style="max-width: 100px"
+            />
+            <img
+              v-else
+              src="~/assets/images/logo.png"
+              style="max-width: 100px"
+            />
           </div>
           <div class="description">
             <div v-if="error.message">

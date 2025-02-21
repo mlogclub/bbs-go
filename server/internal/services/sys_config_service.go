@@ -229,6 +229,7 @@ func (s *sysConfigService) GetConfig() *models.SysConfigResponse {
 		siteTitle                  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
 		siteDescription            = cache.SysConfigCache.GetValue(constants.SysConfigSiteDescription)
 		siteKeywords               = cache.SysConfigCache.GetValue(constants.SysConfigSiteKeywords)
+		siteLogo                   = cache.SysConfigCache.GetValue(constants.SysConfigSiteLogo)
 		siteNotification           = cache.SysConfigCache.GetValue(constants.SysConfigSiteNotification)
 		recommendTags              = cache.SysConfigCache.GetValue(constants.SysConfigRecommendTags)
 		urlRedirect                = cache.SysConfigCache.GetValue(constants.SysConfigUrlRedirect)
@@ -275,6 +276,7 @@ func (s *sysConfigService) GetConfig() *models.SysConfigResponse {
 		SiteTitle:                  siteTitle,
 		SiteDescription:            siteDescription,
 		SiteKeywords:               siteKeywordsArr,
+		SiteLogo:                   siteLogo,
 		SiteNavs:                   siteNavs,
 		SiteNotification:           siteNotification,
 		RecommendTags:              recommendTagsArr,

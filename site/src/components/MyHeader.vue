@@ -7,7 +7,12 @@
     <div class="container">
       <div class="navbar-brand">
         <nuxt-link to="/" class="navbar-item">
-          <img :alt="config.siteTitle" src="~/assets/images/logo.png" />
+          <img
+            v-if="config.siteLogo"
+            :alt="config.siteTitle"
+            :src="config.siteLogo"
+          />
+          <img v-else :alt="config.siteTitle" src="~/assets/images/logo.png" />
         </nuxt-link>
         <a
           :class="{ 'is-active': navbarActive }"

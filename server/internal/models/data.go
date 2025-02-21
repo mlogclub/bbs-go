@@ -27,6 +27,7 @@ type SysConfigResponse struct {
 	SiteTitle                  string        `json:"siteTitle"`
 	SiteDescription            string        `json:"siteDescription"`
 	SiteKeywords               []string      `json:"siteKeywords"`
+	SiteLogo                   string        `json:"siteLogo"`
 	SiteNavs                   []ActionLink  `json:"siteNavs"`
 	SiteNotification           string        `json:"siteNotification"`
 	RecommendTags              []string      `json:"recommendTags"`

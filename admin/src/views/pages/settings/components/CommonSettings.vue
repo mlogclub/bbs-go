@@ -4,6 +4,11 @@
       <a-input v-model="config.siteTitle" type="text" placeholder="网站名称" />
     </a-form-item>
 
+    <a-form-item label="网站LOGO">
+      <image-upload v-model="config.siteLogo" />
+      <div></div>
+    </a-form-item>
+
     <a-form-item label="网站描述">
       <a-textarea
         v-model="config.siteDescription"
@@ -87,10 +92,12 @@
 
 <script setup lang="ts">
   import { NodeDTO } from '@/composables/types';
+  import ImageUpload from '@/components/ImageUpload.vue';
 
   const loading = ref(false);
   const config = reactive({
     siteTitle: '',
+    siteLogo: '',
     siteDescription: '',
     siteKeywords: [],
     siteNotification: '',
@@ -109,6 +116,7 @@
   const loadConfig = async () => {
     const ret = await axios.get<any, any>('/api/admin/sys-config/all');
     config.siteTitle = ret.siteTitle;
+    config.siteLogo = ret.siteLogo;
     config.siteDescription = ret.siteDescription;
     config.siteKeywords = ret.siteKeywords;
     config.siteNotification = ret.siteNotification;

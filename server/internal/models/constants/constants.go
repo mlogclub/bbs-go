@@ -13,6 +13,7 @@ const (
 	SysConfigSiteTitle                  = "siteTitle"                  // 站点标题
 	SysConfigSiteDescription            = "siteDescription"            // 站点描述
 	SysConfigSiteKeywords               = "siteKeywords"               // 站点关键字
+	SysConfigSiteLogo                   = "siteLogo"                   // 站点Logo
 	SysConfigSiteNavs                   = "siteNavs"                   // 站点导航
 	SysConfigSiteNotification           = "siteNotification"           // 站点公告
 	SysConfigRecommendTags              = "recommendTags"              // 推荐标签

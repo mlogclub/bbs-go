@@ -3,12 +3,15 @@
     <div class="container">
       <div class="main-body redirect">
         <div>
-          <img src="~/assets/images/logo.png" style="max-width: 100px" />
+          <img
+            v-if="configStore.config.siteLogo"
+            :src="configStore.config.siteLogo"
+            style="max-width: 100px"
+          />
+          <img v-else src="~/assets/images/logo.png" style="max-width: 100px" />
         </div>
         <div style="margin: 20px 0">
-          <a :href="url" rel="nofollow"
-            >即将跳往站外地址，点击该链接继续跳转&nbsp;&gt;&gt;</a
-          >
+          <a :href="url" rel="nofollow">点击该链接继续跳转&nbsp;&gt;&gt;</a>
         </div>
       </div>
     </div>
@@ -17,6 +20,7 @@
 
 <script setup>
 const route = useRoute();
+const configStore = useConfigStore();
 const url = route.query.url || "";
 const temp = url.toLowerCase();
 
