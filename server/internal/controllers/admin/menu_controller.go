@@ -9,6 +9,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 )
@@ -22,7 +23,13 @@ func (c *MenuController) GetBy(id int64) *web.JsonResult {
 	if t == nil {
 		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
-	return web.JsonData(render.BuildMenu(t))
+
+	apis := services.ApiService.GetByMenuId(id)
+
+	menu := render.BuildMenu(t)
+	b := web.NewRspBuilder(menu)
+	b.Put("apis", apis)
+	return b.JsonResult()
 }
 
 func (c *MenuController) GetTree() *web.JsonResult {
@@ -45,9 +52,7 @@ func (c *MenuController) AnyList() *web.JsonResult {
 
 func (c *MenuController) PostCreate() *web.JsonResult {
 	t := &models.Menu{}
-	if err := params.ReadForm(c.Ctx, t); err != nil {
-		return web.JsonErrorMsg(err.Error())
-	}
+	params.ReadForm(c.Ctx, t)
 
 	if t.SortNo <= 0 {
 		t.SortNo = services.MenuService.GetNextSortNo(t.ParentId)
@@ -57,6 +62,12 @@ func (c *MenuController) PostCreate() *web.JsonResult {
 	if err := services.MenuService.Create(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
+
+	// 设置接口权限
+	var apis []models.Api
+	jsons.Parse(params.FormValue(c.Ctx, "apis"), &apis)
+	services.MenuApiService.SetMenuApis2(t.Id, apis)
+
 	return web.JsonData(t)
 }
 
@@ -69,15 +80,17 @@ func (c *MenuController) PostUpdate() *web.JsonResult {
 	if t == nil {
 		return web.JsonErrorMsg("entity not found")
 	}
-
-	if err := params.ReadForm(c.Ctx, t); err != nil {
-		return web.JsonErrorMsg(err.Error())
-	}
-
+	params.ReadForm(c.Ctx, t)
 	t.UpdateTime = dates.NowTimestamp()
 	if err := services.MenuService.Update(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
+
+	// 设置接口权限
+	var apis []models.Api
+	jsons.Parse(params.FormValue(c.Ctx, "apis"), &apis)
+	services.MenuApiService.SetMenuApis2(id, apis)
+
 	return web.JsonData(t)
 }
 

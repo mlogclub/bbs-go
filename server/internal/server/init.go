@@ -16,11 +16,9 @@ import (
 	m "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
-	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
-	"github.com/tidwall/pretty"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -61,7 +59,6 @@ func initConfig() {
 	config.Instance.Env = env
 
 	slog.Info("Load config", slog.String("ENV", env))
-	fmt.Println(string(pretty.Pretty([]byte(jsons.ToJsonStr(config.Instance)))))
 }
 
 func initDB() {
