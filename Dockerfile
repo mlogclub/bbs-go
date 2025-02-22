@@ -1,6 +1,6 @@
 # server builder
 
-FROM golang:1.23 AS server_builder
+FROM golang:1.24 AS server_builder
 
 ENV APP_HOME=/code/bbs-go/server
 WORKDIR "$APP_HOME"
@@ -47,6 +47,7 @@ WORKDIR "$APP_HOME"
 COPY --from=server_builder /code/bbs-go/server/bbs-go ./server/bbs-go
 COPY --from=server_builder /code/bbs-go/server/*.yaml ./server/
 COPY --from=server_builder /code/bbs-go/server/*.yml ./server/
+COPY --from=server_builder /code/bbs-go/server/migrations ./server/migrations
 COPY --from=site_builder /code/bbs-go/site/.output ./site/.output
 COPY --from=site_builder /code/bbs-go/site/node_modules ./site/node_modules
 COPY --from=admin_builder /code/bbs-go/admin/dist ./server/admin

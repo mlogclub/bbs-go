@@ -32,7 +32,7 @@ services:
       - /data/docker:/data
     environment:
       BBSGO_ENV: docker
-      BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+      BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
       BBSGO_BASEURL: 
     ports:
       - 8082:8082
