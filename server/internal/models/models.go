@@ -7,7 +7,7 @@ import (
 )
 
 var Models = []interface{}{
-	&UserRole{}, &Role{}, &Menu{}, &RoleMenu{},
+	&UserRole{}, &Role{}, &Menu{}, &RoleMenu{}, &Api{}, &MenuApi{},
 
 	&User{}, &UserToken{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{},

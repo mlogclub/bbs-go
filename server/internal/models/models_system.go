@@ -15,14 +15,24 @@ type Role struct {
 type Menu struct {
 	Model
 	ParentId   int64  `json:"parentId" form:"parentId"`                               // 上级菜单
-	Name       string `gorm:"size:256" json:"name" form:"name"`                       // 名称
+	Type       string `gorm:"size:32" json:"type" form:"type"`                        // 类型（menu/func）
+	Name       string `gorm:"size:64" json:"name" form:"name"`                        // 名称
 	Title      string `gorm:"size:64" json:"title" form:"title"`                      // 标题
 	Icon       string `gorm:"size:1024" json:"icon" form:"icon"`                      // ICON
 	Path       string `gorm:"size:1024" json:"path" form:"path"`                      // 路径
+	Component  string `gorm:"size:256" json:"component" form:"component"`             // 组件
 	SortNo     int    `gorm:"not null;default:0" json:"sortNo" form:"sortNo"`         // 排序
 	Status     int    `json:"status" form:"status"`                                   // 状态
 	CreateTime int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
 	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"` // 更新时间
+}
+
+// MenuApi 菜单和接口的权限关联
+type MenuApi struct {
+	Model
+	MenuId     int64 `gorm:"not null;default:0;uniqueIndex:idx_menu_api" json:"menuId" form:"menuId"` // 菜单ID
+	ApiId      int64 `gorm:"not null;default:0;uniqueIndex:idx_menu_api" json:"apiId" form:"apiId"`   // 接口ID
+	CreateTime int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"`                  // 创建时间
 }
 
 type UserRole struct {
@@ -37,4 +47,13 @@ type RoleMenu struct {
 	RoleId     int64 `gorm:"uniqueIndex:idx_role_menu" json:"roleId" form:"roleId"`
 	MenuId     int64 `gorm:"uniqueIndex:idx_role_menu" json:"menuId" form:"menuId"`
 	CreateTime int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
+}
+
+type Api struct {
+	Model
+	Name       string `gorm:"size:512;unique" json:"name" form:"name"`                // 名称
+	Method     string `gorm:"size:16" json:"method" form:"method"`                    // 方法
+	Path       string `gorm:"size:512;unique" json:"path" form:"path"`                // 路径
+	CreateTime int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
+	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"` // 更新时间
 }
