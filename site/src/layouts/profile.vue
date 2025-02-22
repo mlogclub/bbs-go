@@ -66,6 +66,7 @@ const active = computed(() => {
       display: flex;
       align-items: center;
       column-gap: 6px;
+      color: var(--text-color);
 
       &:hover,
       &.active,
