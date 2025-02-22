@@ -6,12 +6,16 @@
     <template v-else>
       <div>
         <slot name="default" :results="pageData.results" />
-        <div v-if="loading" class="loading">
-          <el-skeleton :rows="3" animated />
-        </div>
+      </div>
+      <div v-if="loading" class="loading">
+        <el-skeleton :rows="3" animated />
       </div>
       <div class="has-more">
-        <button class="button is-small" :disabled="disabled" @click="loadMore">
+        <button
+          class="button is-primary is-small"
+          :disabled="disabled"
+          @click="loadMore"
+        >
           <span v-if="loading" class="icon">
             <i class="iconfont icon-loading" />
           </span>
@@ -23,6 +27,11 @@
 </template>
 
 <script setup>
+defineExpose({
+  refresh,
+  unshiftResults,
+});
+
 const props = defineProps({
   // 请求URL
   url: {
@@ -51,7 +60,7 @@ const disabled = computed(() => {
 });
 
 const empty = computed(() => {
-  return !pageData.hasMore && pageData.results.length === 0;
+  return pageData.hasMore === false && pageData.results.length === 0;
 });
 
 const { data: first } = await useAsyncData(() => {
@@ -60,7 +69,9 @@ const { data: first } = await useAsyncData(() => {
   });
 });
 
-const loadMore = async () => {
+renderData(first.value);
+
+async function loadMore() {
   loading.value = true;
   try {
     const filters = Object.assign(props.params || {}, {
@@ -75,16 +86,16 @@ const loadMore = async () => {
   } finally {
     loading.value = false;
   }
-};
+}
 
-const refresh = () => {
+function refresh() {
   pageData.cursor = "";
   pageData.results = [];
   pageData.hasMore = true;
   return loadMore();
-};
+}
 
-const renderData = (data) => {
+function renderData(data) {
   data = data || {};
   pageData.cursor = data.cursor;
   pageData.hasMore = data.hasMore;
@@ -93,20 +104,13 @@ const renderData = (data) => {
       pageData.results.push(item);
     });
   }
-};
+}
 
-const unshiftResults = (item) => {
+function unshiftResults(item) {
   if (item && pageData && pageData.results) {
     pageData.results.unshift(item);
   }
-};
-
-renderData(first.value);
-
-defineExpose({
-  refresh,
-  unshiftResults,
-});
+}
 </script>
 
 <style lang="scss" scoped>

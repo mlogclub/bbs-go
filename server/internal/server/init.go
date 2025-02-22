@@ -16,7 +16,6 @@ import (
 	m "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
-	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
@@ -60,7 +59,6 @@ func initConfig() {
 	config.Instance.Env = env
 
 	slog.Info("Load config", slog.String("ENV", env))
-	slog.Info("Config:", slog.Any("config", jsons.ToJsonStr(config.Instance)))
 }
 
 func initDB() {
@@ -87,9 +85,11 @@ func initDB() {
 	// migrate
 	if err := db.AutoMigrate(models.Models...); nil != err {
 		slog.Error("auto migrate tables failed", slog.Any("error", err))
+		panic(err)
 	}
 	if err := runMigrations(db); err != nil {
 		slog.Error(err.Error())
+		panic(err)
 	}
 
 	sqls.SetDB(db)
