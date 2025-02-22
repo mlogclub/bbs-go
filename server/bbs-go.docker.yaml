@@ -13,7 +13,7 @@ Logger:
 
 # 数据库连接
 DB:
-  Url: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+  Url: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
   MaxIdleConns: 50
   MaxOpenConns: 200
 

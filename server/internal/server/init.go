@@ -12,6 +12,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	m "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
@@ -81,11 +85,38 @@ func initDB() {
 		sqlDB.SetConnMaxLifetime(time.Duration(conf.ConnMaxLifetimeSeconds) * time.Second)
 	}
 
+	// migrate
 	if err := db.AutoMigrate(models.Models...); nil != err {
-		slog.Error(err.Error(), slog.Any("error", err))
+		slog.Error("auto migrate tables failed", slog.Any("error", err))
+	}
+	if err := runMigrations(db); err != nil {
+		slog.Error(err.Error())
 	}
 
 	sqls.SetDB(db)
+}
+
+func runMigrations(db *gorm.DB) error {
+	s, _ := db.DB()
+	driver, err := m.WithInstance(s, &m.Config{})
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations",
+		"mysql",
+		driver,
+	)
+	if err != nil {
+		return err
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return err
+	}
+
+	return nil
 }
 
 func initCron() {

@@ -14,7 +14,7 @@ Logger:
 
 # 数据库连接
 DB:
-  Url: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local
+  Url: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
   MaxIdleConns: 50
   MaxOpenConns: 200
 
