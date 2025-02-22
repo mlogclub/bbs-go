@@ -131,6 +131,13 @@ const (
 	GenderFemale Gender = "Female"
 )
 
+type MenuType string
+
+const (
+	MenuTypeMenu = "menu" // 菜单
+	MenuTypeFunc = "func" // 功能
+)
+
 // 模块
 const (
 	ModuleTweet   = "tweet"

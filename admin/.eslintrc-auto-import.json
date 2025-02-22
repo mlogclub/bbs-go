@@ -337,6 +337,7 @@
     "tabbar": true,
     "useBaseURL": true,
     "useSiteURL": true,
-    "convertMenus": true
+    "convertMenus": true,
+    "convertMenus1": true
   }
 }

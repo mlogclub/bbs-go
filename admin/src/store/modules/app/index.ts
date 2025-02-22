@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { RouteRecordNormalized } from 'vue-router';
-import { getMenuList } from '@/api/user';
+import { getMenuList, convertMenus } from '@/api/user';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
