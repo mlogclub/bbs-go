@@ -336,6 +336,7 @@
     "convertMenuItem": true,
     "tabbar": true,
     "useBaseURL": true,
-    "useSiteURL": true
+    "useSiteURL": true,
+    "convertMenus": true
   }
 }

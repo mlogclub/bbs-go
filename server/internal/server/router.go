@@ -94,6 +94,7 @@ func NewServer() {
 
 		m.Party("/role").Handle(new(admin.RoleController))
 		m.Party("/menu").Handle(new(admin.MenuController))
+		m.Party("/api").Handle(new(admin.ApiController))
 	})
 
 	if err := app.Listen(":"+conf.Port,

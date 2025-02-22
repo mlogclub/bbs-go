@@ -37,11 +37,11 @@ export function login(data: LoginData) {
   formData.append('captchaId', data.captchaId);
   formData.append('captchaUrl', data.captchaUrl);
   formData.append('captchaCode', data.captchaCode);
-  return axios.postForm<LoginRes>('/api/user/login', formData);
+  return axios.postForm<LoginRes>('/api/login/signin', formData);
 }
 
 export function logout() {
-  axios.get('/api/user/logout');
+  axios.get('/api/login/signout');
 }
 
 export function getUserInfo() {

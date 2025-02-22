@@ -5,10 +5,12 @@ import "bbs-go/internal/models"
 func BuildMenu(element *models.Menu) models.MenuResponse {
 	item := models.MenuResponse{
 		Id:         element.Id,
+		Type:       element.Type,
 		Name:       element.Name,
 		Title:      element.Title,
 		Icon:       element.Icon,
 		Path:       element.Path,
+		Component:  element.Component,
 		SortNo:     element.SortNo,
 		Status:     element.Status,
 		CreateTime: element.CreateTime,

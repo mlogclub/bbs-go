@@ -180,10 +180,12 @@ type TreeNode struct {
 type MenuResponse struct {
 	Id         int64  `json:"id"`
 	ParentId   *int64 `json:"parentId"`
+	Type       string `json:"type"`
 	Name       string `json:"name"`
 	Title      string `json:"title"`
 	Icon       string `json:"icon"`
 	Path       string `json:"path"`
+	Component  string `json:"component"`
 	SortNo     int    `json:"sortNo"`
 	Status     int    `json:"status"`
 	CreateTime int64  `json:"createTime"`
