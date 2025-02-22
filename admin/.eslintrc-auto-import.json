@@ -338,6 +338,7 @@
     "useBaseURL": true,
     "useSiteURL": true,
     "convertMenus": true,
-    "convertMenus1": true
+    "convertMenus1": true,
+    "useDictStore": true
   }
 }

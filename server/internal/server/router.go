@@ -76,6 +76,12 @@ func NewServer() {
 	// admin
 	mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
 		m.Router.Use(middleware.AdminAuth)
+		m.Party("/role").Handle(new(admin.RoleController))
+		m.Party("/menu").Handle(new(admin.MenuController))
+		m.Party("/api").Handle(new(admin.ApiController))
+		m.Party("/dict-type").Handle(new(admin.DictTypeController))
+		m.Party("/dict").Handle(new(admin.DictController))
+
 		m.Party("/common").Handle(new(admin.CommonController))
 		m.Party("/user").Handle(new(admin.UserController))
 		m.Party("/tag").Handle(new(admin.TagController))
@@ -92,9 +98,6 @@ func NewServer() {
 		m.Party("/user-report").Handle(new(admin.UserReportController))
 		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
 
-		m.Party("/role").Handle(new(admin.RoleController))
-		m.Party("/menu").Handle(new(admin.MenuController))
-		m.Party("/api").Handle(new(admin.ApiController))
 	})
 
 	if err := app.Listen(":"+conf.Port,

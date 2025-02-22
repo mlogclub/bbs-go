@@ -8,7 +8,7 @@
         @input="onInput"
       >
         <template #prefix>
-          <component :is="modelValue" />
+          <component :is="modelValue" v-if="modelValue" />
         </template>
       </a-input>
       <a-button class="icon-picker-input-btn" type="primary" @click="showIcons"
@@ -152,7 +152,6 @@
       default: '',
     },
   });
-  //   const value = ref(props.modelValue);
 
   const showIcons = () => {
     visible.value = true;

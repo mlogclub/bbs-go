@@ -3,15 +3,10 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-select
-            v-model="filters.status"
-            placeholder="状态"
-            allow-clear
-            @change="list"
-          >
-            <a-option :value="0" label="正常" />
-            <a-option :value="1" label="禁用" />
-          </a-select>
+          <a-input v-model="filters.name" placeholder="名称" />
+        </a-form-item>
+        <a-form-item>
+          <a-input v-model="filters.path" placeholder="路径" />
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
@@ -37,53 +32,29 @@
         :data="data.results"
         :size="appStore.table.size"
         :bordered="appStore.table.bordered"
-        :pagination="false"
-        show-empty-tree
+        :pagination="pagination"
+        :sticky-header="true"
+        style="height: 100%"
         column-resizable
-        :draggable="{ type: 'handle', width: 40 }"
         row-key="id"
-        @change="handleChange"
+        @page-change="onPageChange"
+        @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <!-- <a-table-column title="编号" data-index="id" /> -->
-
-          <a-table-column title="标题" data-index="title" />
-
-          <a-table-column title="类型" data-index="type">
+          <a-table-column title="编号" data-index="id" :width="100" />
+          <a-table-column title="Method" data-index="method" :width="100">
             <template #cell="{ record }">
-              <a-tag :color="record.type === 'menu' ? 'green' : 'red'">{{
-                record.type === 'menu' ? '菜单' : '功能'
-              }}</a-tag>
+              <a-tag>{{ record.method }}</a-tag>
             </template>
           </a-table-column>
-
+          <a-table-column title="Path" data-index="path" />
           <a-table-column title="名称" data-index="name" />
-
-          <a-table-column title="组件" data-index="component" />
-
-          <!-- <a-table-column title="ICON" data-index="icon">
-            <template #cell="{ record }">
-              <component :is="record.icon" v-if="record.icon" :size="18" />
-            </template>
-          </a-table-column> -->
-
-          <a-table-column title="路径" data-index="path" />
-
-          <!-- <a-table-column title="排序" data-index="sortNo" /> -->
-
-          <a-table-column title="状态" data-index="status">
-            <template #cell="{ record }">
-              {{ record.status === 0 ? '正常' : '禁用' }}
-            </template>
-          </a-table-column>
-
-          <a-table-column title="创建时间" data-index="createTime">
+          <a-table-column title="创建时间" data-index="createTime" :width="200">
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
-
-          <a-table-column title="操作">
+          <a-table-column title="操作" :width="100">
             <template #cell="{ record }">
               <a-button
                 type="primary"
@@ -108,20 +79,47 @@
   const loading = ref(false);
   const edit = ref();
   const filters = reactive({
-    status: 0,
+    limit: 20,
+    page: 1,
+
+    name: undefined,
+    path: undefined,
   });
 
   const data = reactive({
+    page: {
+      page: 1,
+      limit: 20,
+      total: 0,
+    },
     results: [],
+  });
+
+  const pagination = computed(() => {
+    return {
+      total: data.page.total,
+      current: data.page.page,
+      pageSize: data.page.limit,
+      showTotal: true,
+      showJumper: true,
+      showPageSize: true,
+      pageSizeOptions: [20, 50, 100, 200, 300, 500],
+    };
+  });
+
+  onMounted(() => {
+    useTableHeight();
   });
 
   const list = async () => {
     loading.value = true;
     try {
-      data.results = await axios.postForm<any>(
-        '/api/admin/menu/list',
+      const ret = await axios.postForm<any>(
+        '/api/admin/api/list',
         jsonToFormData(filters)
       );
+      data.page = ret.page;
+      data.results = ret.results;
     } finally {
       loading.value = false;
     }
@@ -137,23 +135,14 @@
     edit.value.showEdit(id);
   };
 
-  const handleChange = async (_data: any[]) => {
-    const ids: number[] = [];
+  const onPageChange = (page: number) => {
+    filters.page = page;
+    list();
+  };
 
-    getSortedIds(_data);
-
-    function getSortedIds(elements) {
-      elements.forEach((element) => {
-        ids.push(element.id);
-        // 有children，children中的元素同样参与排序
-        if (element.children && element.children.length) {
-          getSortedIds(element.children);
-        }
-      });
-    }
-
-    await axios.post('/api/admin/menu/update_sort', ids);
-    await list();
+  const onPageSizeChange = (pageSize: number) => {
+    filters.limit = pageSize;
+    list();
   };
 </script>
 

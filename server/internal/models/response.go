@@ -197,3 +197,21 @@ type MenuTreeResponse struct {
 	Level    int                `json:"level"`
 	Children []MenuTreeResponse `json:"children"`
 }
+
+type DictResponse struct {
+	Id         int64  `json:"id"`
+	TypeId     int64  `json:"typeId"`
+	ParentId   *int64 `json:"parentId"`   // 上级分类
+	Name       string `json:"name"`       // 名称
+	Label      string `json:"label"`      // 标题
+	Value      string `json:"value"`      // 值
+	SortNo     int    `json:"sortNo"`     // 排序
+	Status     int    `json:"status"`     // 状态
+	CreateTime int64  `json:"createTime"` // 创建时间
+	UpdateTime int64  `json:"updateTime"` // 更新时间
+}
+
+type DictListResponse struct {
+	DictResponse
+	Children []DictListResponse `json:"children"`
+}
