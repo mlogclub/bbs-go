@@ -154,7 +154,8 @@
             :size="32"
             :style="{ marginRight: '8px', cursor: 'pointer' }"
           >
-            <img alt="avatar" :src="avatar" />
+            <img v-if="avatar" :src="avatar" />
+            <span v-else>{{ nickname }}</span>
           </a-avatar>
           <template #content>
             <!--
@@ -208,6 +209,9 @@
   // const locales = [...LOCALE_OPTIONS];
   const avatar = computed(() => {
     return userStore.avatar;
+  });
+  const nickname = computed(() => {
+    return userStore.nickname;
   });
   const theme = computed(() => {
     return appStore.theme;

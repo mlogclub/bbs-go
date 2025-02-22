@@ -15,11 +15,13 @@ export interface LoginData {
 }
 
 export interface MenuItem {
+  type: 'menu' | 'func';
   name: string;
   path: string;
   title: string;
   icon?: string;
-  children?: Array<MenuItem>;
+  component?: string;
+  children?: MenuItem[];
 }
 
 export interface LoginRes {
@@ -35,11 +37,11 @@ export function login(data: LoginData) {
   formData.append('captchaId', data.captchaId);
   formData.append('captchaUrl', data.captchaUrl);
   formData.append('captchaCode', data.captchaCode);
-  return axios.postForm<LoginRes>('/api/login/signin', formData);
+  return axios.postForm<LoginRes>('/api/user/login', formData);
 }
 
 export function logout() {
-  axios.get('/api/login/signout');
+  axios.get('/api/user/logout');
 }
 
 export function getUserInfo() {
@@ -47,11 +49,13 @@ export function getUserInfo() {
 }
 
 export async function getMenuList() {
+  // const ret = await axios.get<any, MenuItem[]>('/api/admin/menu/user_menus');
+  // return convertMenus(ret);
   const ret = await axios.get<any, MenuItem[]>('/api/admin/menu/user_menus');
-  return convertMenus(ret);
+  return ret;
 }
 
-function convertMenus(items: MenuItem[]) {
+export function convertMenus(items: MenuItem[]): RouteRecordRaw[] {
   const menus: RouteRecordRaw[] = [];
   if (items && items.length) {
     items.forEach((item) => {

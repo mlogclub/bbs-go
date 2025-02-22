@@ -3,8 +3,8 @@ export interface UserState {
   nickname?: string;
   username?: string;
   avatar?: string;
-  smallAvatar?: string;
   gender?: string;
+  phone?: string;
   email?: string;
   description?: string;
   status: number;

@@ -8,13 +8,15 @@ import {
 import { setToken, clearToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import useAppStore from '../app';
+import useAppStore from '../app/index';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
     id: 0,
     avatar: undefined,
     email: undefined,
+    phone: undefined,
+    nickname: undefined,
     status: 0,
     role: '',
   }),
@@ -60,6 +62,7 @@ const useUserStore = defineStore('user', {
       clearToken();
       removeRouteListener();
       appStore.clearServerMenu();
+      appStore.setRouteLoaded(false);
     },
 
     // Logout

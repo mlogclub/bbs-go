@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
-// import { Notification } from '@arco-design/web-vue';
-// import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import type { RouteRecordNormalized } from 'vue-router';
 import { getMenuList } from '@/api/user';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
   state: (): AppState => ({
+    title: 'GO-ADMIN',
     theme: 'light',
     colorWeak: false,
     navbar: true,
@@ -22,10 +21,11 @@ const useAppStore = defineStore('app', {
     tabBar: true,
     menuFromServer: true,
     serverMenu: [],
+    routeLoaded: false,
 
     table: {
       size: 'medium',
-      bordered: { wrapper: true, cell: false },
+      bordered: { wrapper: true, cell: true },
       // bordered: {
       //   cell: true,
       // },
@@ -40,7 +40,8 @@ const useAppStore = defineStore('app', {
       return state.device;
     },
     appAsyncMenus(state: AppState): RouteRecordNormalized[] {
-      return state.serverMenu as unknown as RouteRecordNormalized[];
+      const list = convertMenus(state.serverMenu);
+      return list as unknown as RouteRecordNormalized[];
     },
   },
 
@@ -68,32 +69,17 @@ const useAppStore = defineStore('app', {
       this.hideMenu = value;
     },
     async fetchServerMenuConfig() {
-      // let notifyInstance: NotificationReturn | null = null;
       try {
-        // notifyInstance = Notification.info({
-        //   id: 'menuNotice', // Keep the instance id the same
-        //   content: 'loading',
-        //   closable: true,
-        // });
-        const data = await getMenuList();
-        this.serverMenu = data as unknown as RouteRecordNormalized[];
-        // notifyInstance = Notification.success({
-        //   id: 'menuNotice',
-        //   content: 'success',
-        //   closable: true,
-        // });
+        this.serverMenu = await getMenuList();
       } catch (error) {
         useHandleError(error);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        // notifyInstance = Notification.error({
-        //   id: 'menuNotice',
-        //   content: 'error',
-        //   closable: true,
-        // });
       }
     },
     clearServerMenu() {
       this.serverMenu = [];
+    },
+    setRouteLoaded(value: boolean) {
+      this.routeLoaded = value;
     },
   },
 });

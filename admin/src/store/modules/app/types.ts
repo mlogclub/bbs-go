@@ -1,10 +1,11 @@
-import type { RouteRecordNormalized } from 'vue-router';
+// import type { RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
+import type { MenuItem } from '@/api/user';
 
 export interface TableConfig {
   size: 'mini' | 'medium' | 'large' | 'small';
   bordered:
-    | boolean
-    | import('@arco-design/web-vue/es/table/interface').TableBorder;
+  | boolean
+  | import('@arco-design/web-vue/es/table/interface').TableBorder;
 }
 
 export interface AppState {
@@ -22,7 +23,8 @@ export interface AppState {
   device: string;
   tabBar: boolean;
   menuFromServer: boolean;
-  serverMenu: RouteRecordNormalized[];
+  serverMenu: MenuItem[];
+  routeLoaded: boolean; // 路由是否已经加载
 
   table: TableConfig;
   [key: string]: unknown;

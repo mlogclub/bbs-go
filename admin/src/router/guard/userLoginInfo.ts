@@ -3,38 +3,45 @@ import NProgress from 'nprogress'; // progress bar
 
 import { useUserStore } from '@/store';
 import { isLogin } from '@/utils/auth';
+import {
+  DEFAULT_ROUTE_NAME,
+  NOT_FOUND_ROUTE_NAME,
+  WHITE_LIST,
+} from '@/router/constants';
 
-export default function setupUserLoginInfoGuard(router: Router) {
+export default async function setupUserLoginInfoGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
     const userStore = useUserStore();
-    if (isLogin()) {
-      if (userStore.roles && userStore.roles.length) {
+    await userStore.info();
+    if (isLogin() && userStore.id > 0) {
+      if (userStore.id > 0) {
         next();
       } else {
         try {
-          await userStore.info();
           next();
         } catch (error) {
           await userStore.logout();
           next({
             name: 'login',
             query: {
-              redirect: to.name,
+              redirect:
+                to.name !== NOT_FOUND_ROUTE_NAME ? to.name : DEFAULT_ROUTE_NAME,
               ...to.query,
             } as LocationQueryRaw,
           });
         }
       }
     } else {
-      if (to.name === 'login') {
+      if (WHITE_LIST.find((el) => el.name === to.name)) {
         next();
         return;
       }
       next({
         name: 'login',
         query: {
-          redirect: to.name,
+          redirect:
+            to.name !== NOT_FOUND_ROUTE_NAME ? to.name : DEFAULT_ROUTE_NAME,
           ...to.query,
         } as LocationQueryRaw,
       });
