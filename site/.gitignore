@@ -26,4 +26,5 @@ logs
 !.env.docker
 
 nuxt.zip
+output.zip
 .eslintcache
