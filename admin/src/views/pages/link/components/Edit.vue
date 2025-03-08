@@ -13,9 +13,6 @@
       <a-form-item field="url" label="链接">
         <a-input v-model="form.url" />
       </a-form-item>
-      <a-form-item field="logo" label="LOGO">
-        <image-upload v-model="form.logo" />
-      </a-form-item>
       <a-form-item field="summary" label="描述">
         <a-textarea v-model="form.summary" allow-clear />
       </a-form-item>
@@ -30,8 +27,6 @@
 </template>
 
 <script setup lang="ts">
-  import ImageUpload from '@/components/ImageUpload.vue';
-
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();

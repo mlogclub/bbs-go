@@ -5,7 +5,7 @@
     v-click-outside="onBlur"
     :class="{ 'input-focus': data.inputFocus, 'show-histories': showHistories }"
   >
-    <div class="search-input">
+    <form action="/search" method="GET" class="search-input">
       <input
         v-model="data.keyword"
         name="q"
@@ -24,7 +24,7 @@
       <span @click="submitSearch">
         <i class="iconfont icon-search" />
       </span>
-    </div>
+    </form>
     <div class="histories">
       <ul>
         <li
@@ -73,7 +73,9 @@ onMounted(() => {
   loadAllHistories();
 });
 
-const searchBoxOnEnter = () => {
+const searchBoxOnEnter = (e) => {
+  e.stopPropagation();
+
   // 如果选中了历史搜索记录，那么使用历史搜索记录
   if (
     data.selectedIndex >= 0 &&

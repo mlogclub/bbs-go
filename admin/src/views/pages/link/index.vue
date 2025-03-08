@@ -54,17 +54,6 @@
           <a-table-column title="编号" data-index="id"></a-table-column>
           <a-table-column title="标题" data-index="title"></a-table-column>
           <a-table-column title="链接" data-index="url"></a-table-column>
-          <a-table-column title="LOGO" data-index="logo">
-            <template #cell="{ record }">
-              <a-image
-                v-if="record.logo"
-                width="60"
-                height="60"
-                fit="cover"
-                :src="record.logo"
-              />
-            </template>
-          </a-table-column>
           <a-table-column title="描述" data-index="summary"></a-table-column>
           <a-table-column title="状态" data-index="status">
             <template #cell="{ record }">

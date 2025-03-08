@@ -9,22 +9,16 @@
     <div class="widget-content">
       <ul class="links">
         <li v-for="link in links" :key="link.linkId" class="link">
-          <div class="link-logo">
-            <img v-if="link.logo" :src="link.logo" />
-            <img v-if="!link.logo" src="~/assets/images/net.png" />
-          </div>
-          <div class="link-content">
-            <a
-              :href="link.url"
-              :title="link.title"
-              class="link-title"
-              target="_blank"
-              >{{ link.title }}</a
-            >
-            <p class="link-summary">
-              {{ link.summary }}
-            </p>
-          </div>
+          <a
+            :href="link.url"
+            :title="link.title"
+            class="link-title"
+            target="_blank"
+            >{{ link.title }}</a
+          >
+          <p class="link-summary">
+            {{ link.summary }}
+          </p>
         </li>
       </ul>
     </div>
@@ -38,7 +32,7 @@ const { data: links } = useAsyncData(() => useMyFetch("/api/link/toplinks"));
 <style scoped lang="scss">
 .links {
   .link {
-    display: flex;
+    display: block;
     height: 62px;
     padding-top: 5px;
 
@@ -46,46 +40,30 @@ const { data: links } = useAsyncData(() => useMyFetch("/api/link/toplinks"));
       border-bottom: 1px solid var(--border-color4);
     }
 
-    .link-logo {
-      display: inline-block;
-      min-width: 50px;
-      min-height: 50px;
-      img {
-        max-width: 50px;
-        max-height: 50px;
-        border-radius: 50%;
-      }
+    .link-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-link-color);
+
+      overflow: hidden;
+      word-break: break-all;
+      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
     }
 
-    .link-content {
-      display: block;
-      margin-left: 5px;
+    .link-summary {
+      font-size: 13px;
+      margin-top: 3px;
+      color: var(--text-color3);
 
-      .link-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text-link-color);
-
-        overflow: hidden;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-      }
-
-      .link-summary {
-        font-size: 14px;
-        margin-top: 3px;
-        // font-weight: 500;
-
-        overflow: hidden;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-      }
+      overflow: hidden;
+      word-break: break-all;
+      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
     }
   }
 }
