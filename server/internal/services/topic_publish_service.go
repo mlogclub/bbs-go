@@ -115,7 +115,11 @@ func (s *topicPublishService) _IsNeedReview(userId int64, form models.CreateTopi
 }
 
 func (s topicPublishService) _CheckParams(userId int64, form models.CreateTopicForm) (err error) {
+	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
+		if !modules.Tweet {
+			return errors.New("未开启动态功能")
+		}
 		if strs.IsBlank(form.Content) {
 			return errors.New("内容不能为空")
 		}
@@ -123,6 +127,9 @@ func (s topicPublishService) _CheckParams(userId int64, form models.CreateTopicF
 		// 	return errors.New("内容或图片不能为空")
 		// }
 	} else {
+		if !modules.Topic {
+			return errors.New("未开启帖子功能")
+		}
 		if strs.IsBlank(form.Title) {
 			return errors.New("标题不能为空")
 		}

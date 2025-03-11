@@ -139,6 +139,11 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 
 // 发布文章
 func (s *articleService) Publish(userId int64, form models.CreateArticleForm) (article *models.Article, err error) {
+	modules := SysConfigService.GetModules()
+	if !modules.Article {
+		return nil, errors.New("未开启文章功能")
+	}
+
 	form.Title = strings.TrimSpace(form.Title)
 	form.Summary = strings.TrimSpace(form.Summary)
 	form.Content = strings.TrimSpace(form.Content)

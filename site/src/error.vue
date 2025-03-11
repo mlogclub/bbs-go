@@ -2,14 +2,6 @@
 const configStore = useConfigStore();
 
 defineProps({
-  //   {
-  //     url: string
-  //     statusCode: number
-  //     statusMessage: string
-  //     message: string
-  //     description: string
-  //     data: any
-  //   }
   error: {
     type: Object,
     default: null,
@@ -84,7 +76,7 @@ const handleError = () => {
     margin-top: 20px;
     a {
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
     }
   }
 }

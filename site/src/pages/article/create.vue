@@ -98,6 +98,10 @@ const isNeedEmailVerify = computed(() => {
   );
 });
 
+if (!configStore.config.modules.article) {
+  showError("😱 文章功能未开启");
+}
+
 useHead({
   title: useSiteTitle("发表文章"),
 });

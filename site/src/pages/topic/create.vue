@@ -105,11 +105,19 @@ const configStore = useConfigStore();
 const route = useRoute();
 const router = useRouter();
 
+const type = Number.parseInt(route.query.type) || 0;
 const nodeId =
   parseInt(route.query.nodeId) || configStore.config.defaultNodeId || 0;
 
+if (type === 1 && !configStore.config.modules.tweet) {
+  showError("😱 动态功能未开启");
+}
+if (type === 0 && !configStore.config.modules.topic) {
+  showError("😱 帖子功能未开启");
+}
+
 const postForm = ref({
-  type: Number.parseInt(route.query.type) || 0,
+  type: type,
   nodeId: nodeId,
   title: "",
   tags: [],
@@ -154,7 +162,7 @@ watch(
 const init = () => {
   postForm.value.type = Number.parseInt(route.query.type) || 0;
   useHead({
-    title: useSiteTitle(postForm.value.type === 0 ? "发帖" : "发动态"),
+    title: useSiteTitle(type === 0 ? "发帖子" : "发动态"),
   });
 };
 

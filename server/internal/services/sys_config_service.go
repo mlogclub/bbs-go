@@ -141,7 +141,7 @@ func (s *sysConfigService) GetLoginMethod() models.LoginMethod {
 	var loginMethod models.LoginMethod
 	if strs.IsNotBlank(loginMethodStr) {
 		if err := jsons.Parse(loginMethodStr, &loginMethod); err != nil {
-			slog.Warn("登录方式数据错误", err)
+			slog.Warn("登录方式数据错误", slog.Any("err", err))
 		} else {
 			useDefault = false
 		}
@@ -199,7 +199,7 @@ func (s *sysConfigService) GetModules() models.ModulesConfig {
 	var modulesConfig models.ModulesConfig
 	if strs.IsNotBlank(str) {
 		if err := jsons.Parse(str, &modulesConfig); err != nil {
-			slog.Warn("启用模块配置错误", err)
+			slog.Warn("启用模块配置错误", slog.Any("err", err))
 		} else {
 			useDefault = false
 		}
