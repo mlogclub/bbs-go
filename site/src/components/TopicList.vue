@@ -68,7 +68,7 @@
             :to="`/topics/node/${topic.node.id}`"
             :alt="topic.node.name"
           >
-            <img :src="topic.node.logo" />
+            <img v-if="topic.node.logo" :src="topic.node.logo" />
             <span>{{ topic.node.name }}</span>
           </nuxt-link>
         </div>
