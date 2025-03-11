@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <CaptchaDialog ref="captchaDialog" @confirm="captchaConfirm" />
+    <CaptchaDialog ref="captchaDialog" />
   </section>
 </template>
 
@@ -120,28 +120,24 @@ const clickSignup = async () => {
     useMsgError("两次输入密码不一致");
     return;
   }
-  captchaDialog.value.show();
-};
+  captchaDialog.value.show().then(async (captcha) => {
+    form.captchaId = captcha.captchaId;
+    form.captchaCode = captcha.captchaCode;
 
-async function captchaConfirm(captcha, callback) {
-  form.captchaId = captcha.captchaId;
-  form.captchaCode = captcha.captchaCode;
+    try {
+      const userStore = useUserStore();
+      const { user, redirect } = await userStore.signup(form);
 
-  try {
-    const userStore = useUserStore();
-    const { user, redirect } = await userStore.signup(form);
-
-    callback(true);
-    if (redirect) {
-      useLinkTo(redirect);
-    } else {
-      useLinkTo(`/user/${user.id}`);
+      if (redirect) {
+        useLinkTo(redirect);
+      } else {
+        useLinkTo(`/user/${user.id}`);
+      }
+    } catch (err) {
+      useCatchError(err);
     }
-  } catch (err) {
-    callback(false);
-    useCatchError(err);
-  }
-}
+  });
+};
 
 function toSignin() {
   if (form.redirect) {

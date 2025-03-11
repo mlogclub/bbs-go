@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <CaptchaDialog ref="captchaDialog" @confirm="publishSubmit" />
+    <CaptchaDialog ref="captchaDialog" />
   </section>
 </template>
 
@@ -166,13 +166,15 @@ const publish = () => {
   }
 
   if (topicCaptchaEnabled) {
-    captchaDialog.value.show();
+    captchaDialog.value.show().then((captcha) => {
+      publishSubmit(captcha);
+    });
   } else {
     publishSubmit();
   }
 };
 
-const publishSubmit = async (captcha, callback) => {
+const publishSubmit = async (captcha) => {
   if (publishing.value) {
     return;
   }
@@ -197,8 +199,6 @@ const publishSubmit = async (captcha, callback) => {
   } catch (e) {
     useMsgError(e.message || e);
     publishing.value = false;
-  } finally {
-    callback();
   }
 };
 </script>

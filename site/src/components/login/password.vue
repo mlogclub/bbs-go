@@ -33,7 +33,7 @@
       <a @click="toSignup">没有账号？点击这里去注册&gt;&gt;</a>
     </div>
 
-    <CaptchaDialog ref="captchaDialog" @confirm="captchaConfirm" />
+    <CaptchaDialog ref="captchaDialog" />
   </div>
 </template>
 
@@ -59,28 +59,24 @@ const clickLogin = async () => {
     useMsgError("请输入密码");
     return;
   }
-  captchaDialog.value.show();
-};
 
-const captchaConfirm = async (captcha, callback) => {
-  form.captchaId = captcha.captchaId;
-  form.captchaCode = captcha.captchaCode;
+  captchaDialog.value.show().then(async (captcha) => {
+    form.captchaId = captcha.captchaId;
+    form.captchaCode = captcha.captchaCode;
 
-  try {
-    const userStore = useUserStore();
-    const { user, redirect } = await userStore.signin(form);
+    try {
+      const userStore = useUserStore();
+      const { user, redirect } = await userStore.signin(form);
 
-    callback(true);
-
-    if (redirect) {
-      useLinkTo(redirect);
-    } else {
-      useLinkTo(`/user/${user.id}`);
+      if (redirect) {
+        useLinkTo(redirect);
+      } else {
+        useLinkTo(`/user/${user.id}`);
+      }
+    } catch (e) {
+      useCatchError(e);
     }
-  } catch (e) {
-    callback(false);
-    useCatchError(e);
-  }
+  });
 };
 
 const toSignup = async () => {
