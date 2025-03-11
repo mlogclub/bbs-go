@@ -23,7 +23,7 @@
 <script setup>
 const route = useRoute();
 const { data: tag } = await useAsyncData(() => {
-  return useMyFetch(`/api/tag/${route.params.id}`);
+  return useHttpGet(`/api/tag/${route.params.id}`);
 });
 
 useHead({

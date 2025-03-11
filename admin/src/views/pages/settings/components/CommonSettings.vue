@@ -6,7 +6,6 @@
 
     <a-form-item label="网站LOGO">
       <image-upload v-model="config.siteLogo" />
-      <div></div>
     </a-form-item>
 
     <a-form-item label="网站描述">

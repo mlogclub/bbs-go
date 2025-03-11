@@ -17,22 +17,20 @@
           页面设置邮箱，并完成邮箱认证。
         </div>
       </article>
-      <div v-else class="topic-create-form">
-        <div class="topic-form-title">
-          {{ postForm.type === 0 ? "发帖子" : "发动态" }}
+      <div v-else class="publish-form">
+        <div class="form-title">
+          {{ postForm.type === 0 ? "发帖" : "发动态" }}
         </div>
 
-        <div class="field">
-          <div class="control">
-            <div
-              v-for="node in nodes"
-              :key="node.id"
-              class="topic-tag"
-              :class="{ selected: postForm.nodeId === node.id }"
-              @click="postForm.nodeId = node.id"
-            >
-              <span>{{ node.name }}</span>
-            </div>
+        <div class="topic-tags">
+          <div
+            v-for="node in nodes"
+            :key="node.id"
+            class="topic-tag"
+            :class="{ selected: postForm.nodeId === node.id }"
+            @click="postForm.nodeId = node.id"
+          >
+            <span>{{ node.name }}</span>
           </div>
         </div>
 
@@ -82,38 +80,18 @@
           </div>
         </div>
 
-        <div v-if="postForm.captchaUrl" class="field is-horizontal">
-          <div class="field control has-icons-left">
-            <input
-              v-model="postForm.captchaCode"
-              class="input"
-              type="text"
-              placeholder="验证码"
-              style="max-width: 150px; margin-right: 20px"
-            />
-            <span class="icon is-small is-left">
-              <i class="iconfont icon-captcha" />
-            </span>
-          </div>
-          <div class="field">
-            <a @click="showCaptcha">
-              <img :src="postForm.captchaUrl" style="height: 40px" />
-            </a>
-          </div>
-        </div>
-
-        <div class="field is-grouped">
-          <div class="control">
-            <a
-              :class="{ 'is-loading': publishing }"
-              class="button is-success"
-              @click="createTopic"
-              >{{ postForm.type === 1 ? "发表动态" : "发表帖子" }}</a
-            >
-          </div>
+        <div class="form-footer">
+          <a
+            :class="{ 'is-loading': publishing }"
+            class="button is-success btn-publish"
+            @click="publish"
+            >{{ postForm.type === 1 ? "发表动态" : "发表帖子" }}</a
+          >
         </div>
       </div>
     </div>
+
+    <CaptchaDialog ref="captchaDialog" @confirm="publishSubmit" />
   </section>
 </template>
 
@@ -140,11 +118,12 @@ const postForm = ref({
   imageList: [],
 
   captchaId: "",
-  captchaUrl: "",
   captchaCode: "",
+  captchaProtocol: 2,
 });
 const publishing = ref(false);
 const simpleEditorComponent = ref(null);
+const captchaDialog = ref(null);
 
 const isNeedEmailVerify = computed(() => {
   return (
@@ -161,34 +140,39 @@ const topicCaptchaEnabled = computed(() => {
 });
 
 const { data: nodes } = useAsyncData("nodes", () =>
-  useMyFetch("/api/topic/nodes")
+  useHttpGet("/api/topic/nodes")
 );
-
-init();
 
 watch(
   () => route.query,
   (newQuery, oldQuery) => {
-    // eslint-disable-next-line no-console
-    // console.log(newQuery, oldQuery);
-
     init();
   },
   { deep: true }
 );
 
-onMounted(() => {
-  showCaptcha();
-});
-
-function init() {
+const init = () => {
   postForm.value.type = Number.parseInt(route.query.type) || 0;
   useHead({
-    title: postForm.value.type === 0 ? "发帖子" : "发动态",
+    title: useSiteTitle(postForm.value.type === 0 ? "发帖" : "发动态"),
   });
-}
+};
 
-async function createTopic() {
+init();
+
+const publish = () => {
+  if (publishing.value) {
+    return;
+  }
+
+  if (topicCaptchaEnabled) {
+    captchaDialog.value.show();
+  } else {
+    publishSubmit();
+  }
+};
+
+const publishSubmit = async (captcha, callback) => {
   if (publishing.value) {
     return;
   }
@@ -200,6 +184,10 @@ async function createTopic() {
     }
   }
 
+  postForm.value.captchaId = captcha.captchaId;
+  postForm.value.captchaCode = captcha.captchaCode;
+  postForm.value.captchaProtocol = 2;
+
   publishing.value = true;
   try {
     const topic = await useHttpPost("/api/topic/create", {
@@ -207,27 +195,83 @@ async function createTopic() {
     });
     router.push(`/topic/${topic.id}`);
   } catch (e) {
-    showCaptcha();
     useMsgError(e.message || e);
     publishing.value = false;
+  } finally {
+    callback();
   }
-}
+};
+</script>
 
-async function showCaptcha() {
-  if (topicCaptchaEnabled.value) {
-    try {
-      const ret = await useHttpGet("/api/captcha/request", {
-        params: {
-          captchaId: postForm.value.captchaId || "",
-        },
-      });
-      postForm.value.captchaId = ret.captchaId;
-      postForm.value.captchaUrl = ret.captchaUrl;
-    } catch (e) {
-      useMsgError(e.message || e);
+<style lang="scss" scoped>
+.publish-form {
+  border-radius: var(--border-radius);
+  background: var(--bg-color);
+  padding: 10px 18px 18px 18px;
+
+  .form-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .form-footer {
+    text-align: right;
+
+    .btn-publish {
+      width: 130px;
+      color: #fff;
+    }
+  }
+
+  .field {
+    margin-bottom: 10px;
+
+    input {
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-color);
+      border-radius: 3px;
+
+      &:focus-visible {
+        outline-width: 0;
+      }
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .topic-tags {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+
+    .topic-tag {
+      cursor: pointer;
+      padding: 0 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+      background: var(--bg-color3);
+      // border: 1px solid var(--border-color);
+      color: var(--text-color3);
+      font-size: 14px;
+      line-height: 24px;
+
+      &:hover {
+        color: var(--text-link-color);
+        background: var(--bg-color5);
+        // border: 1px solid var(--border-hover-color);
+      }
+
+      &.selected {
+        color: var(--text-color5);
+        background: var(--text-link-color);
+      }
     }
   }
 }
-</script>
-
-<style lang="scss" scoped></style>
+</style>

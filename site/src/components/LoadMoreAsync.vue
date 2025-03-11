@@ -64,7 +64,7 @@ const empty = computed(() => {
 });
 
 const { data: first } = await useAsyncData(() => {
-  return useMyFetch(props.url, {
+  return useHttpGet(props.url, {
     params: props.params || {},
   });
 });

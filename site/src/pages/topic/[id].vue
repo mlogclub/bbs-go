@@ -13,6 +13,15 @@
         <div class="left-container">
           <div class="main-content no-padding no-bg">
             <article class="topic-detail">
+              <side-action-bar
+                class="float-bar"
+                entity-type="topic"
+                :entity-id="topic.id"
+                :liked="topic.liked"
+                :like-count="topic.likeCount"
+                :comment-count="topic.commentCount"
+                :favorited="topic.favorited"
+              />
               <div class="topic-header">
                 <div class="topic-header-left">
                   <my-avatar :user="topic.user" :size="45" />
@@ -181,11 +190,11 @@ const route = useRoute();
 const hideContent = ref(null);
 
 const { data: topic } = await useAsyncData("topic", () =>
-  useMyFetch(`/api/topic/${route.params.id}`)
+  useHttpGet(`/api/topic/${route.params.id}`)
 );
 
 const { data: liked } = await useAsyncData("liked", () => {
-  return useMyFetch("/api/like/liked", {
+  return useHttpGet("/api/like/liked", {
     params: {
       entityType: "topic",
       entityId: route.params.id,
@@ -195,7 +204,7 @@ const { data: liked } = await useAsyncData("liked", () => {
 
 const { data: likeUsers, refresh: refreshLikeUsers } = await useAsyncData(
   () => {
-    return useMyFetch(`/api/topic/recentlikes/${route.params.id}`);
+    return useHttpGet(`/api/topic/recentlikes/${route.params.id}`);
   }
 );
 
@@ -287,6 +296,16 @@ async function commentCreated() {
   margin-bottom: 20px;
   background-color: var(--bg-color);
   border-radius: var(--border-radius);
+
+  .float-bar {
+    position: fixed;
+    margin-left: -58px;
+    top: 300px;
+
+    @media screen and (max-width: 1300px) {
+      display: none;
+    }
+  }
 
   .topic-header,
   .topic-content,

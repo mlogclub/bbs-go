@@ -93,4 +93,10 @@
   };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .custom-upload-avatar {
+    img {
+      object-fit: cover;
+    }
+  }
+</style>

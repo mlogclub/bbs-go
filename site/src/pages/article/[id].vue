@@ -66,7 +66,7 @@
 <script setup>
 const route = useRoute();
 const { data: article, error } = await useAsyncData(() =>
-  useMyFetch(`/api/article/${route.params.id}`)
+  useHttpGet(`/api/article/${route.params.id}`)
 );
 
 if (error.value) {

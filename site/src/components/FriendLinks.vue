@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-const { data: links } = useAsyncData(() => useMyFetch("/api/link/toplinks"));
+const { data: links } = useAsyncData(() => useHttpGet("/api/link/toplinks"));
 </script>
 
 <style scoped lang="scss">

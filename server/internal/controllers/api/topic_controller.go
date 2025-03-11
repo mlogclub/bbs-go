@@ -65,8 +65,8 @@ func (c *TopicController) PostCreate() *web.JsonResult {
 	if err := services.UserService.CheckPostStatus(user); err != nil {
 		return web.JsonError(err)
 	}
-	form := models.GetCreateTopicForm(c.Ctx)
 
+	form := models.GetCreateTopicForm(c.Ctx)
 	if err := spam.CheckTopic(user, form); err != nil {
 		return web.JsonError(err)
 	}

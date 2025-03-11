@@ -32,7 +32,7 @@
 
 <script setup>
 const { data: nodes } = await useAsyncData("nodes", () => {
-  return useMyFetch("/api/topic/nodes");
+  return useHttpGet("/api/topic/nodes");
 });
 
 const route = useRoute();

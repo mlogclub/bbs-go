@@ -3,6 +3,7 @@ package search
 import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
+	"bbs-go/internal/pkg/config"
 	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/repositories"
@@ -21,8 +22,9 @@ import (
 
 var index bleve.Index
 
-func Init(indexPath string) {
+func Init() {
 	var err error
+	indexPath := config.Instance.Search.IndexPath
 	if index, err = bleve.Open(indexPath); err != nil {
 		if err == bleve.ErrorIndexPathDoesNotExist {
 			index = newIndex(indexPath)

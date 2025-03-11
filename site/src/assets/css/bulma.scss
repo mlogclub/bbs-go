@@ -22,7 +22,6 @@
     --color-navbar-icon: #1878f3;
 
     --text: #333333;
-    --border: #fff;
     --navbar-box-shadow-color: whitesmoke;
 
     --text-color: #333333;
@@ -36,6 +35,7 @@
     --text-link-color: #3273dc;
     --text-link-hover-color: #363636;
 
+    --background: #fff;
     --bg-color: #fff;
     --bg-color2: rgba(247, 248, 250, 0.7);
     --bg-color3: #f2f3f5;
@@ -61,7 +61,6 @@
     --color-navbar-icon: #e3e3e3;
 
     --text: #fff;
-    --border: #000;
     --navbar-box-shadow-color: #333;
 
     --text-color: findColorInvert(#4a4a4a);
@@ -74,6 +73,7 @@
     --text-link-color: #3273dc;
     --text-link-hover-color: findColorInvert(#363636);
 
+    --background: #272727;
     --bg-color: #272727;
     --bg-color2: #3a3a3a;
     --bg-color3: #3a3a3a;
@@ -115,9 +115,13 @@
 [data-theme=light],
 .theme-light {
     @include useLightMode();
+
+    background: linear-gradient(136deg, #edf0ff99, #e7f6fa99);
 }
 
 [data-theme=dark],
 .theme-dark {
     @include useDarkMode();
+
+    background: linear-gradient(136deg, #181818, #121212);
 }

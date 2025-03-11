@@ -94,10 +94,10 @@ const isEnableHideContent = computed(() => {
 });
 
 const { data: nodes } = useAsyncData("nodes", () =>
-  useMyFetch("/api/article/nodes")
+  useHttpGet("/api/article/nodes")
 );
 const { data: postForm } = useAsyncData(() =>
-  useMyFetch(`/api/article/edit/${route.params.id}`)
+  useHttpGet(`/api/article/edit/${route.params.id}`)
 );
 const publishing = ref(false);
 

@@ -227,14 +227,14 @@ export default {
 
     .comment-item-main {
       flex: 1 1 auto;
-      margin-left: 8px;
+      margin-left: 6px;
 
       .comment-meta {
         display: flex;
         justify-content: space-between;
         .comment-nickname {
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 500;
           color: var(--text-color);
 
           &:hover {

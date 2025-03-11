@@ -92,11 +92,10 @@ function cancelReply() {
 <style scoped lang="scss">
 .comment-form {
   background-color: var(--bg-color);
-  padding: 10px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 
   .comment-create {
-    border-radius: 4px;
+    // border-radius: 4px;
     overflow: hidden;
     position: relative;
     padding: 0;
@@ -120,8 +119,6 @@ function cancelReply() {
     }
 
     .comment-input-wrapper {
-      margin-bottom: 8px;
-
       .text-input {
         outline: none;
         width: 100%;

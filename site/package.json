@@ -10,24 +10,28 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "2.6.4",
-    "@element-plus/nuxt": "1.0.10",
+    "@antfu/eslint-config": "4.5.1",
+    "@element-plus/nuxt": "1.1.1",
     "@nuxt/devtools": "latest",
-    "@nuxtjs/color-mode": "3.4.2",
+    "@nuxtjs/color-mode": "3.5.2",
     "@nuxtjs/eslint-module": "4.1.0",
-    "@vueuse/core": "10.11.0",
-    "@vueuse/nuxt": "10.11.0",
-    "bulma": "1.0.1",
-    "element-plus": "2.7.7",
-    "eslint": "8.56.0",
-    "nuxt": "3.12.3",
-    "sass": "1.70.0",
-    "typescript": "5.5.3"
+    "@vueuse/core": "12.8.1",
+    "@vueuse/nuxt": "12.8.1",
+    "bulma": "1.0.3",
+    "element-plus": "2.9.5",
+    "eslint": "9.21.0",
+    "sass": "1.85.1",
+    "typescript": "5.8.2"
   },
   "dependencies": {
-    "@pinia/nuxt": "0.5.1",
-    "animate.css": "4.1.1",
-    "md-editor-v3": "4.17.3",
-    "nuxt-lazy-load": "3.0.4"
+    "@asika32764/vue-animate": "^3.0.2",
+    "@pinia/nuxt": "0.10.1",
+    "go-captcha-vue": "^2",
+    "lodash.throttle": "^4.1.1",
+    "md-editor-v3": "5.3.2",
+    "nuxt": "^3.15.4",
+    "nuxt-lazy-load": "3.0.4",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   }
 }

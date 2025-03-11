@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func GetSummary(contentType string, content string) (summary string) {
+func GetSummary(contentType constants.ContentType, content string) (summary string) {
 	if contentType == constants.ContentTypeMarkdown {
 		summary = markdown.GetSummary(content, constants.SummaryLen)
 	} else if contentType == constants.ContentTypeHtml {

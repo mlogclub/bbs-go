@@ -8,9 +8,9 @@
           v-for="(item, i) in modules"
           :key="i"
           :command="item.command"
-          :class="item.icon"
         >
-          {{ item.name }}
+          <i class="iconfont" :class="item.icon"></i>
+          <span>{{ item.name }}</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -25,17 +25,17 @@ const modules = ref([
   {
     command: "tweet",
     name: "发动态",
-    icon: "iconfont icon-tweet2",
+    icon: "icon-tweet2",
   },
   {
     command: "topic",
     name: "发帖子",
-    icon: "iconfont icon-topic",
+    icon: "icon-topic",
   },
   {
     command: "article",
     name: "发文章",
-    icon: "iconfont icon-article",
+    icon: "icon-article",
   },
 ]);
 

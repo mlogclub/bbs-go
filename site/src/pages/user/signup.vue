@@ -2,110 +2,85 @@
   <section class="main">
     <div class="container">
       <div class="main-body no-bg">
-        <div class="widget signin">
-          <div class="widget-header">注册</div>
+        <div class="widget signup">
+          <div class="widget-header" style="text-align: center">注册账号</div>
           <div class="widget-content">
-            <div class="field">
-              <label class="label">昵称</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="form.nickname"
-                  class="input is-success"
-                  type="text"
-                  placeholder="请输入昵称"
-                  @keyup.enter="signup"
-                />
-                <span class="icon is-small is-left">
-                  <i class="iconfont icon-username" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">邮箱</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="form.email"
-                  class="input is-success"
-                  type="text"
-                  placeholder="请输入邮箱"
-                  @keyup.enter="signup"
-                />
-                <span class="icon is-small is-left">
-                  <i class="iconfont icon-email" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">密码</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="form.password"
-                  class="input"
-                  type="password"
-                  placeholder="请输入密码"
-                  @keyup.enter="signup"
-                />
-                <span class="icon is-small is-left">
-                  <i class="iconfont icon-password" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">确认密码</label>
-              <div class="control has-icons-left">
-                <input
-                  v-model="form.rePassword"
-                  class="input"
-                  type="password"
-                  placeholder="请再次输入密码"
-                  @keyup.enter="signup"
-                />
-                <span class="icon is-small is-left">
-                  <i class="iconfont icon-password" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">验证码</label>
-              <div class="control has-icons-left">
-                <div class="field is-horizontal">
-                  <div class="field login-captcha-input">
-                    <input
-                      v-model="form.captchaCode"
-                      class="input"
-                      type="text"
-                      placeholder="验证码"
-                      @keyup.enter="signup"
-                    />
-                    <span class="icon is-small is-left"
-                      ><i class="iconfont icon-captcha"
-                    /></span>
-                  </div>
-                  <div v-if="form.captchaUrl" class="field login-captcha-img">
-                    <a @click="refreshCaptcha"
-                      ><img :src="form.captchaUrl"
-                    /></a>
-                  </div>
+            <form class="signup-form" @submit="clickSignup">
+              <div class="field">
+                <label class="label">
+                  <span>昵称</span>
+                  <span class="is-danger">*</span>
+                </label>
+                <div class="control">
+                  <input
+                    v-model="form.nickname"
+                    class="input"
+                    type="text"
+                    placeholder="请输入昵称"
+                  />
                 </div>
               </div>
-            </div>
 
-            <div class="field">
-              <div class="control">
-                <button class="button is-link" @click="signup">注册</button>
-                <a class="button is-text" @click="toSignin">
-                  已有账号，前往登录&gt;&gt;
-                </a>
+              <div class="field">
+                <label class="label">
+                  <span>邮箱</span>
+                  <span class="is-danger">*</span>
+                </label>
+                <div class="control">
+                  <input
+                    v-model="form.email"
+                    class="input"
+                    type="email"
+                    placeholder="请输入邮箱"
+                  />
+                </div>
               </div>
-            </div>
+
+              <div class="field">
+                <label class="label">
+                  <span>密码</span>
+                  <span class="is-danger">*</span>
+                </label>
+                <div class="control">
+                  <input
+                    v-model="form.password"
+                    class="input"
+                    type="password"
+                    placeholder="请输入密码"
+                  />
+                </div>
+                <p class="help">密码长度必须不少于 6 个字。</p>
+              </div>
+
+              <div class="field">
+                <label class="label">
+                  <span>确认密码</span>
+                  <span class="is-danger">*</span>
+                </label>
+                <div class="control">
+                  <input
+                    v-model="form.rePassword"
+                    class="input"
+                    type="password"
+                    placeholder="请再次输入密码"
+                  />
+                </div>
+              </div>
+
+              <div class="signup-btn">
+                <el-button type="primary" @click="clickSignup">注册</el-button>
+              </div>
+
+              <div class="signup-bottom">
+                <a @click="toSignin">已有账号，前往登录&gt;&gt;</a>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
+
+    <CaptchaDialog ref="captchaDialog" @confirm="captchaConfirm" />
   </section>
 </template>
 
@@ -120,44 +95,51 @@ const form = reactive({
   email: "",
   password: "",
   rePassword: "",
-  captchaId: "",
-  captchaUrl: "",
-  captchaCode: "",
   redirect: route.query.redirect || "",
+  captchaId: "",
+  captchaCode: "",
+  captchaProtocol: 2,
 });
 
-refreshCaptcha();
+const captchaDialog = ref(null);
 
-async function refreshCaptcha() {
-  try {
-    const { data: captcha } = await useAsyncData(() => {
-      return useMyFetch("/api/captcha/request", {
-        params: {
-          captchaId: form.captchaId,
-        },
-      });
-    });
-
-    form.captchaId = captcha.value.captchaId;
-    form.captchaUrl = captcha.value.captchaUrl;
-    form.captchaCode = "";
-  } catch (e) {
-    useCatchError(e);
+const clickSignup = async () => {
+  if (!form.nickname) {
+    useMsgError("请输入昵称");
+    return;
   }
-}
+  if (!form.email) {
+    useMsgError("请输入邮箱");
+    return;
+  }
+  if (!form.password) {
+    useMsgError("请输入密码");
+    return;
+  }
+  if (form.password !== form.rePassword) {
+    useMsgError("两次输入密码不一致");
+    return;
+  }
+  captchaDialog.value.show();
+};
 
-async function signup() {
+async function captchaConfirm(captcha, callback) {
+  form.captchaId = captcha.captchaId;
+  form.captchaCode = captcha.captchaCode;
+
   try {
     const userStore = useUserStore();
     const { user, redirect } = await userStore.signup(form);
+
+    callback(true);
     if (redirect) {
       useLinkTo(redirect);
     } else {
       useLinkTo(`/user/${user.id}`);
     }
   } catch (err) {
+    callback(false);
     useCatchError(err);
-    await refreshCaptcha();
   }
 }
 
@@ -170,4 +152,60 @@ function toSignin() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.signup {
+  max-width: 600px;
+  margin: auto !important;
+
+  .widget-header {
+    justify-content: center;
+  }
+}
+.signup-form {
+  @media screen and (min-width: 768px) {
+    padding: 20px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+    .label {
+      display: flex;
+      align-items: center;
+      column-gap: 6px;
+
+      span {
+        font-size: 15px;
+        font-weight: 500;
+
+        &.is-danger {
+          line-height: 24px;
+          color: red;
+        }
+      }
+    }
+
+    .help {
+      color: var(--text-color3);
+    }
+  }
+
+  .signup-btn {
+    margin-top: 25px;
+    width: 100%;
+    button {
+      width: 100%;
+      height: 40px;
+    }
+  }
+
+  .signup-bottom {
+    margin: 20px 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    a {
+      color: var(--text-color3);
+    }
+  }
+}
+</style>

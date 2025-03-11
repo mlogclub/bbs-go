@@ -173,7 +173,7 @@ func (c *UserController) PostUpdateBirthday() *web.JsonResult {
 }
 
 // 设置用户名
-func (c *UserController) PostSetUsername() *web.JsonResult {
+func (c *UserController) PostSet_username() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return web.JsonError(errs.NotLogin)
@@ -187,7 +187,7 @@ func (c *UserController) PostSetUsername() *web.JsonResult {
 }
 
 // 设置邮箱
-func (c *UserController) PostSetEmail() *web.JsonResult {
+func (c *UserController) PostSet_email() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return web.JsonError(errs.NotLogin)
@@ -201,7 +201,7 @@ func (c *UserController) PostSetEmail() *web.JsonResult {
 }
 
 // 设置密码
-func (c *UserController) PostSetPassword() *web.JsonResult {
+func (c *UserController) PostSet_password() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return web.JsonError(errs.NotLogin)
@@ -216,7 +216,7 @@ func (c *UserController) PostSetPassword() *web.JsonResult {
 }
 
 // 修改密码
-func (c *UserController) PostUpdatePassword() *web.JsonResult {
+func (c *UserController) PostUpdate_password() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
 		return web.JsonError(errs.NotLogin)

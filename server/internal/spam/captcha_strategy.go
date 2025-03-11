@@ -5,6 +5,8 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/services"
 
+	captcha2 "bbs-go/internal/pkg/captcha"
+
 	"github.com/dchest/captcha"
 )
 
@@ -15,8 +17,16 @@ func (CaptchaStrategy) Name() string {
 }
 
 func (CaptchaStrategy) CheckTopic(user *models.User, form models.CreateTopicForm) error {
-	if services.SysConfigService.GetConfig().TopicCaptcha && !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
-		return errs.CaptchaError
+	if services.SysConfigService.GetConfig().TopicCaptcha {
+		if form.CaptchaProtocol == 2 {
+			if !captcha2.Verify(form.CaptchaId, form.CaptchaCode) {
+				return errs.CaptchaError
+			}
+		} else {
+			if !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
+				return errs.CaptchaError
+			}
+		}
 	}
 	return nil
 }

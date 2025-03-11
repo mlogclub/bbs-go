@@ -28,7 +28,7 @@
 
 <script setup>
 const { data: scoreRank } = useAsyncData(() =>
-  useMyFetch("/api/user/score/rank")
+  useHttpGet("/api/user/score/rank")
 );
 </script>
 

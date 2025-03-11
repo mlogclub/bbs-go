@@ -94,6 +94,9 @@ Parameter:
 	redirect - 登录来源地址，需要控制登录成功之后跳转到该地址
 */
 func BuildLoginSuccess(ctx iris.Context, user *models.User, redirect string) *web.JsonResult {
+	if user == nil || user.Status != constants.StatusOk {
+		return web.JsonErrorMsg("用户不存在或已被禁用")
+	}
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {
 		return web.JsonError(err)

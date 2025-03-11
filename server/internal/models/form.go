@@ -14,24 +14,27 @@ import (
 )
 
 type CreateTopicForm struct {
-	Type        constants.TopicType `json:"type"`
-	CaptchaId   string              `json:"captchaId"`
-	CaptchaCode string              `json:"captchaCode"`
-	NodeId      int64               `json:"nodeId"`
-	Title       string              `json:"title"`
-	Content     string              `json:"content"`
-	HideContent string              `json:"hideContent"`
-	Tags        []string            `json:"tags"`
-	ImageList   []ImageDTO          `json:"imageList"`
-	UserAgent   string              `json:"userAgent"`
-	Ip          string              `json:"ip"`
+	Type        constants.TopicType   `json:"type"`
+	NodeId      int64                 `json:"nodeId"`
+	Title       string                `json:"title"`
+	Content     string                `json:"content"`
+	ContentType constants.ContentType `json:"contentType"`
+	HideContent string                `json:"hideContent"`
+	Tags        []string              `json:"tags"`
+	ImageList   []ImageDTO            `json:"imageList"`
+	UserAgent   string                `json:"userAgent"`
+	Ip          string                `json:"ip"`
+
+	CaptchaId       string `json:"captchaId"`
+	CaptchaCode     string `json:"captchaCode"`
+	CaptchaProtocol int    `json:"captchaProtocol"`
 }
 
 type CreateArticleForm struct {
 	Title       string
 	Summary     string
 	Content     string
-	ContentType string
+	ContentType constants.ContentType
 	Cover       *ImageDTO
 	Tags        []string
 	SourceUrl   string
@@ -53,28 +56,29 @@ type ImageDTO struct {
 }
 
 func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
-	contentType := ctx.GetHeader("Content-Type")
-
 	var form *CreateTopicForm
-	if contentType == "application/json" {
+	if ctx.GetHeader("Content-Type") == "application/json" {
 		if err := ctx.ReadJSON(&form); err != nil {
 			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	} else {
 		form = &CreateTopicForm{
-			Type:        constants.TopicType(params.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))),
-			CaptchaId:   params.FormValue(ctx, "captchaId"),
-			CaptchaCode: params.FormValue(ctx, "captchaCode"),
-			NodeId:      params.FormValueInt64Default(ctx, "nodeId", 0),
-			Title:       strings.TrimSpace(params.FormValue(ctx, "title")),
-			Content:     strings.TrimSpace(params.FormValue(ctx, "content")),
-			HideContent: strings.TrimSpace(params.FormValue(ctx, "hideContent")),
-			Tags:        params.FormValueStringArray(ctx, "tags"),
-			ImageList:   GetImageList(ctx, "imageList"),
-			UserAgent:   common.GetUserAgent(ctx.Request()),
-			Ip:          common.GetRequestIP(ctx.Request()),
+			Type:            constants.TopicType(params.FormValueIntDefault(ctx, "type", int(constants.TopicTypeTopic))),
+			NodeId:          params.FormValueInt64Default(ctx, "nodeId", 0),
+			Title:           strings.TrimSpace(params.FormValue(ctx, "title")),
+			Content:         strings.TrimSpace(params.FormValue(ctx, "content")),
+			ContentType:     constants.ContentType(params.FormValue(ctx, "contentType")),
+			HideContent:     strings.TrimSpace(params.FormValue(ctx, "hideContent")),
+			Tags:            params.FormValueStringArray(ctx, "tags"),
+			ImageList:       GetImageList(ctx, "imageList"),
+			CaptchaId:       params.FormValue(ctx, "captchaId"),
+			CaptchaCode:     params.FormValue(ctx, "captchaCode"),
+			CaptchaProtocol: params.FormValueIntDefault(ctx, "captchaProtocol", 0),
 		}
 	}
+
+	form.Ip = common.GetRequestIP(ctx.Request())
+	form.UserAgent = common.GetUserAgent(ctx.Request())
 	return *form
 }
 

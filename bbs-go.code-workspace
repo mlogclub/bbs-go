@@ -24,6 +24,10 @@
       "admin/src/components/message-box/locale",
       "admin/src/views/login/locale",
       "admin/src/views/dashboard/workplace/locale"
+    ],
+    "cSpell.words": [
+      "favorited",
+      "Weixin"
     ]
   }
 }

@@ -25,7 +25,7 @@ import iconNode from "~/assets/images/node.png";
 const envStore = useEnvStore();
 
 const { data: nodes } = await useAsyncData("nodes", () =>
-  useMyFetch(`/api/topic/node_navs`)
+  useHttpGet(`/api/topic/node_navs`)
 );
 
 function nodeLogo(node) {

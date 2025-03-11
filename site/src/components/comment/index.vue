@@ -1,5 +1,5 @@
 <template>
-  <div class="comment-component">
+  <div class="comment-component" id="JComment">
     <div class="comment-header">
       <span>全部评论</span>
       <span v-if="commentCount > 0">&nbsp;{{ commentCount }}</span>

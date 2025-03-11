@@ -9,68 +9,68 @@ export default {
       type: Object,
       default() {
         return {
-          content: '',
+          content: "",
           imageList: [],
-        }
+        };
       },
     },
   },
-  emits: ['submit', 'update:modelValue'],
+  emits: ["submit", "update:modelValue"],
   data() {
     return {
       post: this.value,
       showImageUpload: false, // 是否显示图片上传
       imageUploading: false, // 图片上传中
-    }
+    };
   },
   methods: {
     doSubmit() {
-      this.$emit('submit')
+      this.$emit("submit");
     },
     onInput() {
-      this.$emit('update:modelValue', this.post)
+      this.$emit("update:modelValue", this.post);
     },
     isOnUpload() {
-      return this.imageUploading
+      return this.imageUploading;
     },
     handleParse(e) {
-      const items = e.clipboardData && e.clipboardData.items
+      const items = e.clipboardData && e.clipboardData.items;
       if (!items || !items.length) {
-        return
+        return;
       }
 
-      let file = null
+      let file = null;
       for (let i = 0; i < items.length; i++) {
-        if (items[i].type.includes('image')) {
-          file = items[i].getAsFile()
+        if (items[i].type.includes("image")) {
+          file = items[i].getAsFile();
         }
       }
 
       if (file) {
-        e.preventDefault() // 阻止默认行为即不让剪贴板内容显示出来
-        this.showImageUpload = true // 展开上传面板
-        this.$refs.imageUploader.addFiles([file])
+        e.preventDefault(); // 阻止默认行为即不让剪贴板内容显示出来
+        this.showImageUpload = true; // 展开上传面板
+        this.$refs.imageUploader.addFiles([file]);
       }
     },
     handleDrag(e) {
-      e.stopPropagation()
-      e.preventDefault()
+      e.stopPropagation();
+      e.preventDefault();
 
-      const items = e.dataTransfer.items
+      const items = e.dataTransfer.items;
       if (!items || !items.length) {
-        return
+        return;
       }
 
-      const files = []
+      const files = [];
       for (let i = 0; i < items.length; i++) {
-        if (items[i].type.includes('image')) {
-          files.push(items[i].getAsFile())
+        if (items[i].type.includes("image")) {
+          files.push(items[i].getAsFile());
         }
       }
 
       if (files && files.length) {
-        this.showImageUpload = true // 展开上传面板
-        this.$refs.imageUploader.addFiles(files)
+        this.showImageUpload = true; // 展开上传面板
+        this.$refs.imageUploader.addFiles(files);
       }
     },
     switchImageUpload() {
@@ -78,20 +78,20 @@ export default {
         // 打开文件弹窗
         // this.$refs.imageUploader.onClick()
       }
-      this.showImageUpload = !this.showImageUpload
+      this.showImageUpload = !this.showImageUpload;
     },
     clear() {
-      this.post.content = ''
-      this.post.imageList = []
-      this.showImageUpload = false
-      this.$refs.imageUploader.clear()
-      this.onInput()
+      this.post.content = "";
+      this.post.imageList = [];
+      this.showImageUpload = false;
+      this.$refs.imageUploader.clear();
+      this.onInput();
     },
     focus() {
-      this.$refs.textarea.focus()
+      this.$refs.textarea.focus();
     },
   },
-}
+};
 </script>
 
 <template>
@@ -100,7 +100,7 @@ export default {
       ref="textarea"
       v-model="post.content"
       placeholder="请输入您要发表的内容 ..."
-      :style="{ 'min-height': `${height}px`, 'height': `${height}px` }"
+      :style="{ 'min-height': `${height}px`, height: `${height}px` }"
       @input="onInput"
       @paste="handleParse"
       @drop="handleDrag"
@@ -173,10 +173,13 @@ export default {
         cursor: pointer;
         color: var(--text-color3);
         user-select: none;
+        display: flex;
+        align-items: center;
+        column-gap: 5px;
 
         i,
         span {
-          font-size: 16px;
+          font-size: 14px;
         }
 
         &:hover {

@@ -28,9 +28,7 @@ func Init() {
 	initConfig()
 	initLogger()
 	initDB()
-	initCron()
-	initIpLocator()
-	initSearch()
+	initOthers()
 }
 
 func initConfig() {
@@ -118,16 +116,12 @@ func runMigrations(db *gorm.DB) error {
 	return nil
 }
 
-func initCron() {
+func initOthers() {
 	if config.Instance.IsProd() {
 		scheduler.Start()
 	}
-}
 
-func initIpLocator() {
-	iplocator.InitIpLocator(config.Instance.IpDataPath)
-}
+	iplocator.InitIpLocator()
 
-func initSearch() {
-	search.Init(config.Instance.Search.IndexPath)
+	search.Init()
 }

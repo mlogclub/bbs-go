@@ -5,12 +5,7 @@
       :class="{ visible: visible }"
       :style="{ zIndex: zIndex }"
     ></div>
-    <transition
-      appear
-      enter-active-class="animate__animated animate__fadeIn"
-      leave-active-class="animate__animated animate__fadeOut"
-      mode="out-in"
-    >
+    <transition :name="transition">
       <div
         v-if="visible"
         class="dialog-wrapper"
@@ -33,15 +28,24 @@
             <slot></slot>
           </div>
           <div
+            v-if="footerVisible"
             class="dialog-footer"
             :style="{ justifyContent: btnsCenter ? 'center' : 'flex-end' }"
           >
-            <el-button v-if="cancelBtnVisible" @click="cancel">
-              取消
-            </el-button>
-            <el-button v-if="okBtnVisible" type="primary" @click="ok">
+            <button
+              v-if="cancelBtnVisible"
+              class="button is-small is-light is-danger"
+              @click="cancel"
+            >
+              {{ cancelBtnText }}
+            </button>
+            <button
+              v-if="okBtnVisible"
+              class="button is-small is-light is-success"
+              @click="ok"
+            >
               {{ okBtnText }}
-            </el-button>
+            </button>
           </div>
         </div>
       </div>
@@ -50,12 +54,6 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["update:visible", "ok", "cancel"]);
-defineExpose({
-  show,
-  close,
-});
-
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -79,13 +77,25 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  transition: {
+    type: String,
+    default: "bounce", // bounce, fade
+  },
   btnsCenter: {
     type: Boolean,
     default: false,
   },
+  footerVisible: {
+    type: Boolean,
+    default: true,
+  },
   cancelBtnVisible: {
     type: Boolean,
     default: true,
+  },
+  cancelBtnText: {
+    type: String,
+    default: "取消",
   },
   okBtnVisible: {
     type: Boolean,
@@ -97,6 +107,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["update:visible", "close", "ok"]);
+
 const dialogContentWidth = computed(() => {
   if (props.width > 0) {
     return `${props.width}px`;
@@ -104,6 +116,7 @@ const dialogContentWidth = computed(() => {
   // return 'auto'
   return "100%";
 });
+
 const dialogContentMaxWidth = computed(() => {
   if (props.maxWidth > 0) {
     return `${props.maxWidth}px`;
@@ -111,19 +124,37 @@ const dialogContentMaxWidth = computed(() => {
   return "";
 });
 
-function show() {
-  emits("update:visible", true);
-}
-function close() {
-  emits("update:visible", false);
-}
-function ok() {
-  emits("ok");
-}
-function cancel() {
-  emits("cancel");
+onMounted(() => {
+  window.addEventListener("keydown", handleEscKey);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", handleEscKey);
+});
+
+const handleEscKey = (event) => {
+  if (event.key === "Escape" || event.keyCode === 27) {
+    close();
+  }
+};
+const show = () => {
+  emit("update:visible", true);
+};
+const close = () => {
+  emit("update:visible", false);
+};
+const ok = () => {
+  emit("ok");
+};
+const cancel = () => {
+  emit("cancel");
   close();
-}
+};
+
+defineExpose({
+  show,
+  close,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -155,14 +186,15 @@ function cancel() {
   align-items: center;
   justify-content: center;
 
+  margin-bottom: 50px;
+
   .dialog-content {
     position: relative;
     margin: 0 auto;
     // margin-top: 15vh;
-    background: #ffffff;
+    background: var(--bg-color);
     border-radius: 8px;
-
-    padding: 24px;
+    padding: 12px 18px;
     .dialog-header {
       display: flex;
       align-items: center;
@@ -170,11 +202,13 @@ function cancel() {
       .dialog-title {
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-color);
       }
       .dialog-close {
         cursor: pointer;
-        padding: 0 0 0 10px;
+        padding: 2px;
+        display: flex;
+        border-radius: 50%;
+        background-color: var(--bg-color3);
         img {
           width: 20px;
           height: 20px;
@@ -188,7 +222,7 @@ function cancel() {
       display: flex;
       align-items: center;
       // justify-content: flex-end;
-      column-gap: 12px;
+      column-gap: 24px;
 
       .chaitin-btn {
         width: 78px;

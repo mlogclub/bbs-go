@@ -10,7 +10,6 @@ export interface LoginData {
   username: string;
   password: string;
   captchaId: string;
-  captchaUrl: string;
   captchaCode: string;
 }
 
@@ -35,7 +34,6 @@ export function login(data: LoginData) {
   formData.append('username', data.username);
   formData.append('password', data.password);
   formData.append('captchaId', data.captchaId);
-  formData.append('captchaUrl', data.captchaUrl);
   formData.append('captchaCode', data.captchaCode);
   return axios.postForm<LoginRes>('/api/login/signin', formData);
 }

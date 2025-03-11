@@ -1,19 +1,11 @@
-[data-theme=light],
-.theme-light {
-  background: linear-gradient(136deg, #edf0ff99, #e7f6fa99);
-}
-
-[data-theme=dark],
-.theme-dark {
-  background: linear-gradient(136deg, #181818, #121212);
-}
-
-.column {
-  padding: 3px !important;
-}
-
 .main {
   padding: 1rem 1rem;
+
+  @media screen and (max-width: 768px) {
+    & {
+      padding: 1rem 0.5rem 0 !important;
+    }
+  }
 }
 
 .ellipsis {
@@ -24,12 +16,6 @@
 
 .EASE {
   transition: all 0.2s ease-out 0.1s;
-}
-
-@media screen and (max-width: 768px) {
-  .main {
-    padding: 1rem 0.5rem 0 !important;
-  }
 }
 
 .main-body,

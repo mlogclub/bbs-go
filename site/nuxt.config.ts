@@ -63,7 +63,7 @@ export default defineNuxtConfig({
           src: 'https://hm.baidu.com/hm.js?f14b836e09b72aedce29a86e809936de',
           type: 'text/javascript',
           async: true
-        }
+        },
       ]
     },
   },

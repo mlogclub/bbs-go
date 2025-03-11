@@ -122,13 +122,13 @@ const props = defineProps({
       }
 
       .article-meta-right {
+        margin-left: 10px;
+
         @media screen and (max-width: 768px) {
           & {
             display: none;
           }
         }
-
-        margin-left: 10px;
 
         .article-tag {
           padding: 2px 8px;

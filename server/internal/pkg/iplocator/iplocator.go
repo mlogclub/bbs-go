@@ -1,6 +1,7 @@
 package iplocator
 
 import (
+	"bbs-go/internal/pkg/config"
 	"log/slog"
 	"strings"
 	"sync"
@@ -15,8 +16,9 @@ var (
 	searcher *xdb.Searcher
 )
 
-func InitIpLocator(dbPath string) {
+func InitIpLocator() {
 	once.Do(func() {
+		dbPath := config.Instance.IpDataPath
 		if strs.IsBlank(dbPath) {
 			dbPath = "ip2region.xdb"
 		}

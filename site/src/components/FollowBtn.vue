@@ -22,7 +22,7 @@ const props = defineProps({
 const emits = defineEmits(["onFollowed"]);
 
 const { data: followed } = await useAsyncData(`followed:${props.userId}`, () =>
-  useMyFetch(`/api/fans/isfollowed?userId=${props.userId}`)
+  useHttpGet(`/api/fans/isfollowed?userId=${props.userId}`)
 );
 
 async function follow() {

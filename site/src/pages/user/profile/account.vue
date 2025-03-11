@@ -40,7 +40,7 @@
                 @click="requestEmailVerify"
                 >验证</a
               >
-              <a v-if="!user.email">设置</a>
+              <a v-if="!user.email" @click="showEmailDialog">设置</a>
             </div>
           </div>
         </div>
@@ -62,127 +62,13 @@
       </div>
     </div>
 
-    <my-dialog
-      ref="usernameDialog"
-      v-model:visible="usernameDialogVisible"
-      title="设置用户名"
-      :width="320"
-      @ok="setUsername"
-    >
-      <div style="padding: 30px 0">
-        <input
-          v-model="usernameForm.username"
-          class="input is-small"
-          type="text"
-          placeholder="用户名"
-        />
-      </div>
-    </my-dialog>
-
-    <my-dialog
-      ref="emailDialog"
-      v-model:visible="emailDialogVisible"
-      title="设置邮箱"
-      :width="320"
-      @ok="setEmail"
-    >
-      <div style="padding: 30px 0">
-        <input
-          v-model="emailForm.email"
-          class="input is-small"
-          type="text"
-          placeholder="用户名"
-        />
-      </div>
-    </my-dialog>
-
-    <my-dialog
+    <AccountSetUsernameDialog ref="setUsernameDialog" @success="userRefresh" />
+    <AccountSetEmailDialog ref="setEmailDialog" @success="userRefresh" />
+    <AccountSetPasswordDialog ref="setPasswordDialog" @success="userRefresh" />
+    <AccountUpdatePasswordDialog
       ref="updatePasswordDialog"
-      v-model:visible="updatePasswordDialogVisible"
-      title="修改密码"
-      :width="320"
-      @ok="updatePassword"
-    >
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            v-model="updatePasswordForm.oldPassword"
-            class="input is-small"
-            type="password"
-            placeholder="请输入当前密码"
-            @keydown.enter="updatePassword"
-          />
-          <span class="icon is-small is-left">
-            <i class="iconfont icon-password" />
-          </span>
-        </div>
-      </div>
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            v-model="updatePasswordForm.password"
-            class="input is-small"
-            type="password"
-            placeholder="请输入密码"
-            @keydown.enter="updatePassword"
-          />
-          <span class="icon is-small is-left">
-            <i class="iconfont icon-password" />
-          </span>
-        </div>
-      </div>
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            v-model="updatePasswordForm.rePassword"
-            class="input is-small"
-            type="password"
-            placeholder="请再次确认密码"
-            @keydown.enter="updatePassword"
-          />
-          <span class="icon is-small is-left">
-            <i class="iconfont icon-password" />
-          </span>
-        </div>
-      </div>
-    </my-dialog>
-
-    <my-dialog
-      ref="setPasswordDialog"
-      v-model:visible="setPasswordDialogVisible"
-      title="设置密码"
-      :width="320"
-      @ok="setPassword"
-    >
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            v-model="setPasswordForm.password"
-            class="input is-small"
-            type="password"
-            placeholder="请输入密码"
-            @keydown.enter="setPassword"
-          />
-          <span class="icon is-small is-left">
-            <i class="iconfont icon-password" />
-          </span>
-        </div>
-      </div>
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            v-model="setPasswordForm.rePassword"
-            class="input is-small"
-            type="password"
-            placeholder="请再次确认密码"
-            @keydown.enter="setPassword"
-          />
-          <span class="icon is-small is-left">
-            <i class="iconfont icon-password" />
-          </span>
-        </div>
-      </div>
-    </my-dialog>
+      @success="userRefresh"
+    />
   </div>
 </template>
 
@@ -197,54 +83,17 @@ useHead({
 });
 
 const { data: user, refresh: userRefresh } = await useAsyncData("user", () =>
-  useMyFetch("/api/user/current")
+  useHttpGet("/api/user/current")
 );
 
-const usernameDialog = ref(null);
-const usernameDialogVisible = ref(false);
-const usernameForm = reactive({
-  username: user.value ? user.value.username : "",
-});
-function showUsernameDialog() {
-  usernameDialog.value.show();
-}
-async function setUsername() {
-  try {
-    await useHttpPostForm("/api/user/set/username", {
-      body: {
-        username: usernameForm.username,
-      },
-    });
-    await userRefresh();
-    useMsgSuccess("用户名设置成功");
-    usernameDialog.value.close();
-  } catch (err) {
-    useMsgError("用户名设置失败：" + (err.message || err));
-  }
-}
-
-const emailDialog = ref(null);
-const emailDialogVisible = ref(false);
-const emailForm = reactive({
-  email: user.value ? user.value.email : "",
-});
-function showEmailDialog() {
-  emailDialog.value.show();
-}
-async function setEmail() {
-  try {
-    await useHttpPostForm("/api/user/set/email", {
-      body: {
-        email: emailForm.email,
-      },
-    });
-    await userRefresh();
-    useMsgSuccess("邮箱设置成功");
-    emailDialog.value.close();
-  } catch (err) {
-    useMsgError("邮箱设置失败：" + (err.message || err));
-  }
-}
+const setUsernameDialog = ref(null);
+const setEmailDialog = ref(null);
+const setPasswordDialog = ref(null);
+const updatePasswordDialog = ref(null);
+const showUsernameDialog = () => setUsernameDialog.value.show();
+const showEmailDialog = () => setEmailDialog.value.show();
+const showSetPasswordDialog = () => setPasswordDialog.value.show();
+const showUpdatePasswordDialog = () => updatePasswordDialog.value.show();
 
 async function requestEmailVerify() {
   const loading = useLoading();
@@ -254,53 +103,9 @@ async function requestEmailVerify() {
       "邮件已经发送到你的邮箱：" + user.value.email + "，请注意查收。"
     );
   } catch (err) {
-    useMsgError("请求验证失败：" + (err.message || err));
+    useMsgError(err.message || err);
   } finally {
     loading.close();
-  }
-}
-
-const updatePasswordDialog = ref(null);
-const updatePasswordDialogVisible = ref(false);
-const updatePasswordForm = reactive({
-  password: "",
-  rePassword: "",
-});
-function showUpdatePasswordDialog() {
-  updatePasswordDialog.value.show();
-}
-async function updatePassword() {
-  try {
-    await useHttpPostForm("/api/user/update/password", {
-      body: updatePasswordForm,
-    });
-    await userRefresh();
-    useMsgSuccess("密码修改成功");
-    updatePasswordDialog.value.close();
-  } catch (err) {
-    useMsgError("密码修改失败：" + (err.message || err));
-  }
-}
-
-const setPasswordDialog = ref(null);
-const setPasswordDialogVisible = ref(false);
-const setPasswordForm = reactive({
-  password: "",
-  rePassword: "",
-});
-function showSetPasswordDialog() {
-  setPasswordDialog.value.show();
-}
-async function setPassword() {
-  try {
-    await useHttpPostForm("/api/user/set/password", {
-      body: setPasswordForm,
-    });
-    await userRefresh();
-    useMsgSuccess("密码修改成功");
-    setPasswordDialog.value.close();
-  } catch (err) {
-    useMsgError("密码修改失败：" + (err.message || err));
   }
 }
 </script>
@@ -352,7 +157,7 @@ async function setPassword() {
     }
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color4);
     }
     .settings-item-title {
       width: 100px;

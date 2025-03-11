@@ -35,17 +35,22 @@ const data = reactive({
   email: "",
   message: "",
 });
-const route = useRoute();
-try {
-  const resp = await useMyFetchPost(
-    `/api/user/verify_email?token=${route.query.token}`
-  );
-  data.success = true;
-  data.email = resp.email;
-} catch (e) {
-  data.success = false;
-  data.message = e.message || "";
-}
+
+const verifyEmail = async () => {
+  const route = useRoute();
+  try {
+    const resp = await useHttpPost(
+      `/api/user/verify_email?token=${route.query.token}`
+    );
+    data.success = true;
+    data.email = resp.email;
+  } catch (e) {
+    data.success = false;
+    data.message = e.message || "";
+  }
+};
+
+verifyEmail();
 </script>
 
 <style lang="scss" scoped></style>

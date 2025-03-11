@@ -228,14 +228,14 @@ defineExpose({
 
     .comment-item-main {
       flex: 1 1 auto;
-      margin-left: 16px;
+      margin-left: 10px;
 
       .comment-meta {
         display: flex;
         justify-content: space-between;
         .comment-nickname {
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 500;
           color: var(--text-color);
 
           &:hover {

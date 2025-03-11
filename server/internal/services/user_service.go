@@ -449,17 +449,25 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	}
 	// 如果设置了邮箱白名单
 	if emailWhitelist := SysConfigService.GetEmailWhitelist(); len(emailWhitelist) > 0 {
-		isInWhitelist := false
-		for _, whitelist := range emailWhitelist {
-			if strings.Contains(strings.ToLower(user.Email.String), strings.ToLower(whitelist)) {
-				isInWhitelist = true
-				break
+		isInWhitelist := func() bool {
+			for _, whitelist := range emailWhitelist {
+				if strings.Contains(strings.ToLower(user.Email.String), strings.ToLower(whitelist)) {
+					return true
+				}
 			}
-		}
+			return false
+		}()
+
 		if !isInWhitelist {
-			// 直接返回，也不抛出异常了，就是不发邮件
-			slog.Error("不支持使用该邮箱进行验证.", slog.String("email", user.Email.String))
-			return errors.New("不支持该类型邮箱")
+			suffix := func() string {
+				email := strings.ToLower(user.Email.String)
+				index := strings.Index(email, "@")
+				if index != -1 {
+					return email[index+1:]
+				}
+				return email
+			}()
+			return errors.New("不支持该该邮箱后缀: " + suffix)
 		}
 	}
 	var (

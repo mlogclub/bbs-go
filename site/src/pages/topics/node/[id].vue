@@ -39,7 +39,7 @@ if (route.params.id === "newest") {
   nodeName = "关注";
 } else {
   const { data: node } = await useAsyncData(() =>
-    useMyFetch(`/api/topic/node?nodeId=${nodeId}`)
+    useHttpGet(`/api/topic/node?nodeId=${nodeId}`)
   );
   nodeName = node.value.name;
 }

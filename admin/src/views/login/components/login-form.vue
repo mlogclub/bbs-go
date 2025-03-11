@@ -43,7 +43,7 @@
       </a-form-item>
 
       <a-form-item
-        v-if="form.captchaUrl"
+        v-if="captchaBase64"
         field="captchaCode"
         :rules="[
           { required: true, message: $t('login.form.captchaCode.errMsg') },
@@ -61,7 +61,10 @@
             <icon-copy />
           </template>
           <template #append>
-            <img :src="form.captchaUrl" @click="refreshCaptcha" />
+            <img
+              :src="`data:image/png;base64,${captchaBase64}`"
+              @click="refreshCaptcha"
+            />
           </template>
         </a-input>
       </a-form-item>
@@ -93,27 +96,22 @@
     username: '',
     password: '',
     captchaId: '',
-    captchaUrl: '',
     captchaCode: '',
   });
 
+  const captchaBase64 = ref('');
+
   interface User {
     captchaId: string;
-    captchaUrl: string;
+    captchaBase64: string;
   }
 
   const refreshCaptcha = async () => {
-    const { captchaId, captchaUrl } = await axios.get<any, User>(
-      '/api/captcha/request',
-      {
-        params: {
-          captchaId: form.captchaId,
-        },
-      }
-    );
-    form.captchaId = captchaId;
-    form.captchaUrl = captchaUrl;
+    const ret = await axios.get<any, User>('/api/captcha/request');
+    form.captchaId = ret.captchaId;
     form.captchaCode = '';
+
+    captchaBase64.value = ret.captchaBase64;
   };
 
   refreshCaptcha();
@@ -184,6 +182,7 @@
   .captcha-code {
     img {
       height: 30px;
+      cursor: pointer;
     }
   }
 </style>

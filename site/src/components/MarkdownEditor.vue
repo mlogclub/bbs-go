@@ -9,13 +9,20 @@
       :style="{ height: height }"
       :placeholder="placeholder"
       :preview="false"
-    />
+    >
+      <template #defToolbars>
+        <NormalToolbar title="切换为HTML编辑器" @onClick="switchHTML">
+          <ArrowLeftRight class="md-editor-icon" />
+        </NormalToolbar>
+      </template>
+    </MdEditor>
   </client-only>
 </template>
 
 <script setup>
-import { MdEditor } from "md-editor-v3";
+import { MdEditor, NormalToolbar } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
+import { ArrowLeftRight } from "lucide-vue-next";
 
 const props = defineProps({
   modelValue: {
@@ -32,11 +39,7 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits([
-  "update:modelValue",
-  "update:content",
-  "update:imageList",
-]);
+const emits = defineEmits(["update:modelValue"]);
 
 const value = ref(props.modelValue);
 
@@ -44,9 +47,9 @@ const toolbars = ref([
   "bold",
   "underline",
   "italic",
+  "strikeThrough",
   "-",
   "title",
-  "strikeThrough",
   "sub",
   "sup",
   "quote",
@@ -64,13 +67,15 @@ const toolbars = ref([
   "-",
   "revoke",
   "next",
-  "save",
-  "=",
-  "pageFullscreen",
-  "fullscreen",
+  // "save",
+  "-",
+  // "pageFullscreen",
   "preview",
-  "htmlPreview",
+  // "htmlPreview",
   "catalog",
+  "=",
+  // 0,
+  "fullscreen",
 ]);
 
 function change(v) {
@@ -94,6 +99,11 @@ async function uploadImg(files, callback) {
   );
   callback(res.map((item) => item.url));
 }
+
+const switchHTML = () => {
+  const eventBus = useEditorEventBus();
+  eventBus.emit("switchHtml");
+};
 </script>
 
 <style lang="scss" scoped></style>

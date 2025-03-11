@@ -105,7 +105,7 @@ defineExpose({
 
   .simple-editor-toolbar {
     width: 100%;
-    height: 45px;
+    height: 36px;
     display: flex;
     padding: 0 10px;
     align-items: center;
@@ -116,12 +116,12 @@ defineExpose({
 
     .act-btn {
       display: flex;
-      padding: 0 10px;
+      padding: 0 3px;
 
       i {
         cursor: pointer;
         margin-left: 20px;
-        font-size: 24px;
+        font-size: 18px;
 
         &:first-child {
           margin-left: 0;

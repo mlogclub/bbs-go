@@ -18,7 +18,7 @@
 <script setup>
 const msgcount = ref(0);
 const messages = ref([]);
-const { data } = await useAsyncData(() => useMyFetch("/api/user/msgrecent"));
+const { data } = await useAsyncData(() => useHttpGet("/api/user/msgrecent"));
 msgcount.value = data.value.count || 0;
 messages.value = data.value.messages || [];
 </script>
