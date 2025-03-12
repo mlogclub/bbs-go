@@ -47,14 +47,19 @@ const props = defineProps({
 
 const visible = ref(false);
 const captcha = ref(null);
+let resolveCallback = null;
 
 const show = async () => {
-  try {
-    captcha.value = await useHttpGet("/api/captcha/request_angle");
-    visible.value = true;
-  } catch (error) {
-    console.error(error);
-  }
+  return new Promise(async (resolve) => {
+    try {
+      captcha.value = await useHttpGet("/api/captcha/request_angle");
+      visible.value = true;
+      resolveCallback = resolve;
+    } catch (e) {
+      console.error(e);
+      useCatchError(e);
+    }
+  });
 };
 
 const captchaRefresh = async () => {
@@ -70,23 +75,13 @@ const captchaClose = () => {
 };
 
 const captchaConfirm = (angle, reset) => {
-  emits(
-    "confirm",
-    // 参数1：验证码信息
-    {
+  if (resolveCallback) {
+    resolveCallback({
       captchaId: captcha.value.id,
       captchaCode: angle,
-    },
-    // 参数2：回调
-    (success) => {
-      captchaClose();
-      //   if (success) {
-      //     captchaClose();
-      //   } else {
-      //     captchaRefresh();
-      //   }
-    }
-  );
+    });
+  }
+  captchaClose();
 };
 
 defineExpose({

@@ -1,6 +1,6 @@
 export const REDIRECT_ROUTE_NAME = 'Redirect';
 
-export const DEFAULT_ROUTE_NAME = 'dashboard';
+export const DEFAULT_ROUTE_NAME = 'Dashboard';
 
 export const NOT_FOUND_ROUTE_NAME = 'notFound';
 
