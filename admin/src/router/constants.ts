@@ -1,11 +1,11 @@
 export const REDIRECT_ROUTE_NAME = 'Redirect';
 
-export const DEFAULT_ROUTE_NAME = 'Dashboard';
+export const DEFAULT_ROUTE_NAME = 'dashboard';
 
 export const NOT_FOUND_ROUTE_NAME = 'notFound';
 
 export const WHITE_LIST = [
-  { name: NOT_FOUND_ROUTE_NAME, children: [] },
+  // { name: NOT_FOUND_ROUTE_NAME, children: [] },
   { name: 'login', children: [] },
 ];
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import type {
   RouteRecordNormalized,
   RouteRecordRaw,
@@ -42,8 +42,8 @@ export function logout() {
   axios.get('/api/login/signout');
 }
 
-export function getUserInfo() {
-  return axios.get<UserState>('/api/user/current');
+export function getUserInfo(): Promise<UserState> {
+  return axios.get('/api/user/current');
 }
 
 export async function getMenuList() {

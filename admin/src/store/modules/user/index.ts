@@ -39,8 +39,8 @@ const useUserStore = defineStore('user', {
     },
 
     // Get user's information
-    async info() {
-      const res = await getUserInfo();
+    async info(): Promise<UserState | null> {
+      const res: UserState = await getUserInfo();
       this.setInfo(res);
       return res;
     },
