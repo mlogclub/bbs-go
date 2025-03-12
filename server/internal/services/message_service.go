@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/msg"
@@ -116,7 +117,7 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 		return
 	}
 	var (
-		siteTitle  = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		siteTitle  = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
 		emailTitle = siteTitle + " - 新消息提醒"
 	)
 
@@ -141,7 +142,7 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 		from = cache.UserCache.Get(t.FromId)
 	}
 	err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
-		t.QuoteContent, &models.ActionLink{
+		t.QuoteContent, &dto.ActionLink{
 			Title: "点击查看详情",
 			Url:   bbsurls.AbsUrl("/user/messages"),
 		})

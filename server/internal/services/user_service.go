@@ -2,6 +2,7 @@ package services
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/errs"
@@ -473,8 +474,8 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	var (
 		token     = strs.UUID()
 		url       = bbsurls.AbsUrl("/user/email/verify?token=" + token)
-		link      = &models.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
-		siteTitle = cache.SysConfigCache.GetValue(constants.SysConfigSiteTitle)
+		link      = &dto.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
+		siteTitle = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
 		subject   = "邮箱验证 - " + siteTitle
 		title     = "邮箱验证 - " + siteTitle
 		content   = "该邮件用于验证你在 " + siteTitle + " 中设置邮箱的正确性，请在" + strconv.Itoa(emailVerifyExpireHour) + "小时内完成验证。验证链接：" + url
@@ -538,7 +539,7 @@ func (s *userService) CheckPostStatus(user *models.User) error {
 	if user.IsForbidden() {
 		return errs.ForbiddenError
 	}
-	observeSeconds := SysConfigService.GetInt(constants.SysConfigUserObserveSeconds, 0)
+	observeSeconds := cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds)
 	if user.InObservationPeriod(observeSeconds) {
 		return web.NewError(errs.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
 	}

@@ -1,10 +1,4 @@
-package models
-
-// 站点导航
-type ActionLink struct {
-	Title string `json:"title"`
-	Url   string `json:"url"`
-}
+package dto
 
 // 积分配置
 type ScoreConfig struct {

@@ -2,10 +2,13 @@ package cache
 
 import (
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/goburrow/cache"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/spf13/cast"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
@@ -21,8 +24,9 @@ func newSysConfigCache() *sysConfigCache {
 	return &sysConfigCache{
 		cache: cache.NewLoadingCache(
 			func(key cache.Key) (value cache.Value, e error) {
-				value = repositories.SysConfigRepository.GetByKey(sqls.DB(), key.(string))
-				if value == nil {
+				if ret := repositories.SysConfigRepository.GetByKey(sqls.DB(), key.(string)); ret != nil {
+					value = ret
+				} else {
 					e = errors.New("数据不存在")
 				}
 				return
@@ -44,12 +48,34 @@ func (c *sysConfigCache) Get(key string) *models.SysConfig {
 	return nil
 }
 
-func (c *sysConfigCache) GetValue(key string) string {
-	sysConfig := c.Get(key)
-	if sysConfig == nil {
-		return ""
+func (c *sysConfigCache) GetStr(key string) string {
+	if t := c.Get(key); t != nil {
+		return t.Value
 	}
-	return sysConfig.Value
+	return ""
+}
+
+func (c *sysConfigCache) GetBool(key string) bool {
+	str := c.GetStr(key)
+	return cast.ToBool(str)
+}
+
+func (c *sysConfigCache) GetInt(key string) int {
+	str := c.GetStr(key)
+	return cast.ToInt(str)
+}
+
+func (c *sysConfigCache) GetInt64(key string) int64 {
+	str := c.GetStr(key)
+	return cast.ToInt64(str)
+}
+
+func (c *sysConfigCache) GetStrArr(key string) (ret []string) {
+	str := c.GetStr(key)
+	if err := jsons.Parse(str, &ret); err != nil {
+		slog.Warn("config value error", slog.Any("key", key), slog.Any("err", err))
+	}
+	return
 }
 
 func (c *sysConfigCache) Invalidate(key string) {
