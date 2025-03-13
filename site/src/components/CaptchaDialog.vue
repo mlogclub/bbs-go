@@ -78,7 +78,7 @@ const captchaConfirm = (angle, reset) => {
   if (resolveCallback) {
     resolveCallback({
       captchaId: captcha.value.id,
-      captchaCode: angle,
+      captchaCode: angle === null ? "" : angle + "",
     });
   }
   captchaClose();
