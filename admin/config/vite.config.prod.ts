@@ -8,7 +8,7 @@ import configArcoResolverPlugin from './plugin/arcoResolver';
 export default mergeConfig(
   {
     mode: 'production',
-    base: '/',
+    base: '/admin/',
     plugins: [
       // configCompressPlugin('gzip'),
       configVisualizerPlugin(),
