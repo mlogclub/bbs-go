@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
 	"fmt"
+	"log"
 	"log/slog"
 	"os"
 	"strings"
@@ -21,6 +22,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -66,6 +68,12 @@ func initDB() {
 			TablePrefix:   "t_",
 			SingularTable: true,
 		},
+		Logger: logger.New(log.New(os.Stdout, "", log.LstdFlags), logger.Config{
+			SlowThreshold:             200 * time.Millisecond,
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: false,
+			Colorful:                  true,
+		}),
 	})
 
 	if err != nil {
