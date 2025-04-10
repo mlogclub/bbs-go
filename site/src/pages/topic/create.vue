@@ -173,7 +173,11 @@ const publish = () => {
     return;
   }
 
-  if (topicCaptchaEnabled) {
+  console.log(configStore.config);
+
+  console.log(topicCaptchaEnabled.value);
+
+  if (topicCaptchaEnabled.value) {
     captchaDialog.value.show().then((captcha) => {
       publishSubmit(captcha);
     });
@@ -194,9 +198,11 @@ const publishSubmit = async (captcha) => {
     }
   }
 
-  postForm.value.captchaId = captcha.captchaId;
-  postForm.value.captchaCode = captcha.captchaCode;
-  postForm.value.captchaProtocol = 2;
+  if (captcha) {
+    postForm.value.captchaId = captcha.captchaId;
+    postForm.value.captchaCode = captcha.captchaCode;
+    postForm.value.captchaProtocol = 2;
+  }
 
   publishing.value = true;
   try {

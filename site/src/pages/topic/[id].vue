@@ -187,7 +187,6 @@
 
 <script setup>
 const route = useRoute();
-const hideContent = ref(null);
 
 const { data: topic } = await useAsyncData("topic", () =>
   useHttpGet(`/api/topic/${route.params.id}`)
@@ -205,6 +204,13 @@ const { data: liked } = await useAsyncData("liked", () => {
 const { data: likeUsers, refresh: refreshLikeUsers } = await useAsyncData(
   () => {
     return useHttpGet(`/api/topic/recentlikes/${route.params.id}`);
+  }
+);
+
+
+const { data: hideContent, refresh: refreshHideContent } = await useAsyncData(
+  () => {
+    return useHttpGet(`/api/topic/hide_content?topicId=${route.params.id}`);
   }
 );
 
@@ -287,7 +293,7 @@ async function addFavorite(topicId) {
 }
 
 async function commentCreated() {
-  console.log("commentCreated...");
+  refreshHideContent();
 }
 </script>
 
