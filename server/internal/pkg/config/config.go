@@ -26,7 +26,7 @@ type Config struct {
 	// 数据库配置
 	DB sqls.DbConfig
 
-	// 阿里云oss配置
+	// 上传配置
 	Uploader struct {
 		Enable    string
 		AliyunOss struct {
@@ -40,6 +40,12 @@ type Config struct {
 			StylePreview  string
 			StyleSmall    string
 			StyleDetail   string
+		}
+		TencentCos struct {
+			Bucket    string
+			Region    string
+			SecretId  string
+			SecretKey string
 		}
 		Local struct {
 			Host string

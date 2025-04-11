@@ -21,6 +21,9 @@ var (
 		once:   sync.Once{},
 		bucket: nil,
 	}
+	tencentCos = &tencentCloudCosUploader{
+		once: sync.Once{},
+	}
 	local = &localUploader{}
 )
 
@@ -43,8 +46,12 @@ func CopyImage(url string) (string, error) {
 }
 
 func getUploader() uploader {
-	if IsEnabledOss() {
+	enable := config.Instance.Uploader.Enable
+	if strs.EqualsIgnoreCase(enable, "aliyun") || strs.EqualsIgnoreCase(enable, "oss") ||
+		strs.EqualsIgnoreCase(enable, "aliyunOss") {
 		return aliyun
+	} else if strs.EqualsIgnoreCase(enable, "tencentCloud") || strs.EqualsIgnoreCase(enable, "cos") {
+		return tencentCos
 	} else {
 		return local
 	}
@@ -54,7 +61,8 @@ func getUploader() uploader {
 func IsEnabledOss() bool {
 	enable := config.Instance.Uploader.Enable
 	return strs.EqualsIgnoreCase(enable, "aliyun") || strs.EqualsIgnoreCase(enable, "oss") ||
-		strs.EqualsIgnoreCase(enable, "aliyunOss")
+		strs.EqualsIgnoreCase(enable, "aliyunOss") || strs.EqualsIgnoreCase(enable, "tencentCloud") ||
+		strs.EqualsIgnoreCase(enable, "cos")
 }
 
 // IsOssImageUrl 是否是存放在阿里云oss中的图片
