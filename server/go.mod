@@ -27,6 +27,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cast v1.7.0
 	github.com/spf13/viper v1.19.0
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.65
 	github.com/tidwall/gjson v1.17.3
 	github.com/wenlng/go-captcha-assets v1.0.5
 	github.com/wenlng/go-captcha/v2 v2.0.3
@@ -66,6 +67,7 @@ require (
 	github.com/blevesearch/zapx/v14 v14.3.10 // indirect
 	github.com/blevesearch/zapx/v15 v15.3.13 // indirect
 	github.com/blevesearch/zapx/v16 v16.1.5 // indirect
+	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
@@ -83,6 +85,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gomarkdown/markdown v0.0.0-20240328165702-4d01890c35c0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
@@ -110,6 +113,7 @@ require (
 	github.com/mediocregopher/radix/v3 v3.8.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/mozillazg/go-httpheader v0.4.0 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/nats-io/nats.go v1.34.1 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
