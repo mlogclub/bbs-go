@@ -4,19 +4,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/tencentyun/cos-go-sdk-v5"
 	"net/http"
 	"net/url"
 	"sync"
 
-	"github.com/mlogclub/simple/common/strs"
+	"github.com/tencentyun/cos-go-sdk-v5"
 
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/mlogclub/simple/common/strs"
 
 	"bbs-go/internal/pkg/config"
 )
 
-// 阿里云oss
+// 腾讯云cos
 type tencentCloudCosUploader struct {
 	once   sync.Once
 	client *cos.Client
@@ -53,7 +52,7 @@ func (cosUploader *tencentCloudCosUploader) CopyImage(originUrl string) (string,
 	return tencentCos.PutImage(data, contentType)
 }
 
-func (cosUploader *tencentCloudCosUploader) initClient() *oss.Bucket {
+func (cosUploader *tencentCloudCosUploader) initClient() {
 	tencentCos.once.Do(func() {
 		c := config.Instance.Uploader.TencentCos
 
@@ -67,5 +66,4 @@ func (cosUploader *tencentCloudCosUploader) initClient() *oss.Bucket {
 			},
 		})
 	})
-	return aliyun.bucket
 }
