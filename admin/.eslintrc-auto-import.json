@@ -339,6 +339,13 @@
     "useSiteURL": true,
     "convertMenus": true,
     "convertMenus1": true,
-    "useDictStore": true
+    "useDictStore": true,
+    "DirectiveBinding": true,
+    "MaybeRef": true,
+    "MaybeRefOrGetter": true,
+    "onWatcherCleanup": true,
+    "useId": true,
+    "useModel": true,
+    "useTemplateRef": true
   }
 }
