@@ -28,6 +28,9 @@ func IsAnchor(href string) bool {
 }
 
 func AbsUrl(path string) string {
+	if config.Instance.BaseUrl == "/" {
+		return path
+	}
 	return config.Instance.BaseUrl + path
 }
 
