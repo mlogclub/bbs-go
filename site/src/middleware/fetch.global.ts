@@ -9,11 +9,12 @@ export default defineNuxtRouteMiddleware(async () => {
         ])
     }
 
-    const nuxtApp = useNuxtApp()
+    // const nuxtApp = useNuxtApp()
+    // // 服务端渲染，或者客服端渲染
+    // if (import.meta.server || (import.meta.client && !nuxtApp.isHydrating)) {
+    //     await load()
+    // }
 
-    // 服务端渲染，或者客服端渲染
-    if (import.meta.server || (import.meta.client && !nuxtApp.isHydrating)) {
-        await load()
-    }
+    await load()
 
 })
