@@ -45,14 +45,12 @@ func NewServer() {
 		}
 	})
 
-	// admin
 	app.HandleDir("/admin", "./admin")
-
-	// site
 	app.HandleDir("/", "./site", iris.DirOptions{
-		ShowList: false,
-		Compress: true,
-		SPA:      true,
+		ShowList:  false,
+		Compress:  true,
+		SPA:       true,
+		IndexName: "index.html",
 	})
 
 	// api

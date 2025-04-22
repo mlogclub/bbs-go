@@ -7,10 +7,8 @@ import (
 	"bbs-go/internal/pkg/validate"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
@@ -59,8 +57,6 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 		homePage    = params.FormValue(c.Ctx, "homePage")
 		description = params.FormValue(c.Ctx, "description")
 		gender      = strings.TrimSpace(params.FormValue(c.Ctx, "gender"))
-		birthdayStr = strings.TrimSpace(params.FormValue(c.Ctx, "birthday"))
-		birthday    *time.Time
 		err         error
 	)
 
@@ -73,12 +69,6 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 			return web.JsonErrorMsg("性别数据错误")
 		}
 	}
-	if strs.IsNotBlank(birthdayStr) {
-		*birthday, err = dates.Parse(birthdayStr, dates.FmtDate)
-		if err != nil {
-			return web.JsonError(err)
-		}
-	}
 
 	if len(homePage) > 0 && validate.IsURL(homePage) != nil {
 		return web.JsonErrorMsg("个人主页地址错误")
@@ -89,9 +79,6 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 		"home_page":   homePage,
 		"description": description,
 		"gender":      gender,
-	}
-	if birthday != nil {
-		columns["birthday"] = birthday
 	}
 	err = services.UserService.Updates(user.Id, columns)
 	if err != nil {
