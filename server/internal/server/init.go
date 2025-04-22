@@ -29,7 +29,7 @@ import (
 func Init() {
 	initConfig()
 	initLogger()
-	initDB()
+	// initDB()
 	initOthers()
 }
 
