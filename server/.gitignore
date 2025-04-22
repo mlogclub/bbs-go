@@ -28,7 +28,8 @@ tags
 logs/*.log
 web/*
 tmp/*
-admin/*
+admin
+site
 
 internal/web*
 

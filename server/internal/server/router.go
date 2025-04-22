@@ -45,13 +45,14 @@ func NewServer() {
 		}
 	})
 
-	app.Any("/", func(i iris.Context) {
-		_ = i.JSON(map[string]interface{}{
-			"engine": "bbs-go",
-		})
-	})
+	// app.Any("/", func(i iris.Context) {
+	// 	_ = i.JSON(map[string]interface{}{
+	// 		"engine": "bbs-go",
+	// 	})
+	// })
 
 	app.HandleDir("/admin", "./admin")
+	app.HandleDir("/", "./site")
 
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {

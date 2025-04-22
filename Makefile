@@ -6,7 +6,7 @@ all: build
 
 # 构建所有组件
 .PHONY: build
-build: build-server build-site build-admin
+build: clean build-server build-site build-admin
 	@mkdir -p dist
 	@cp -r server/bbs-go dist/
 	@cp -r site/dist dist/site
@@ -28,7 +28,7 @@ build-server-linux:
 .PHONY: build-site
 build-site:
 	@echo "构建前端站点..."
-	@cd site && pnpm install && pnpm build
+	@cd site && pnpm install && pnpm generate
 
 # 构建管理后台
 .PHONY: build-admin
@@ -47,6 +47,9 @@ clean:
 
 	@echo "清理管理后台构建产物..."
 	@cd admin && rm -rf dist
+
+	@echo "清理dist目录..."
+	@rm -rf dist
 
 
 # 帮助信息
