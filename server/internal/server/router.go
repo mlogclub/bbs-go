@@ -45,14 +45,15 @@ func NewServer() {
 		}
 	})
 
-	// app.Any("/", func(i iris.Context) {
-	// 	_ = i.JSON(map[string]interface{}{
-	// 		"engine": "bbs-go",
-	// 	})
-	// })
-
+	// admin
 	app.HandleDir("/admin", "./admin")
-	app.HandleDir("/", "./site")
+
+	// site
+	app.HandleDir("/", "./site", iris.DirOptions{
+		ShowList: false,
+		Compress: true,
+		SPA:      true,
+	})
 
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
@@ -98,7 +99,6 @@ func NewServer() {
 		m.Party("/operate-log").Handle(new(admin.OperateLogController))
 		m.Party("/user-report").Handle(new(admin.UserReportController))
 		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
-
 	})
 
 	if err := app.Listen(":"+conf.Port,
