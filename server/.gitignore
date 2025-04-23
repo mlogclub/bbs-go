@@ -13,6 +13,9 @@
 *.out
 
 bbs-go
+bbs-go-linux-*
+bbs-go-macos-*
+bbs-go-windows-*
 
 bbs-go.yaml
 bbs-go.prod.yaml
