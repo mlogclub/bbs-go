@@ -28,6 +28,7 @@ tags
 logs/*.log
 web/*
 tmp/*
+logs/*
 admin
 site
 

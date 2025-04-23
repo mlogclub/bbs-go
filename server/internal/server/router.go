@@ -13,6 +13,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/mlogclub/simple/web"
+	"github.com/spf13/cast"
 
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
@@ -45,9 +46,11 @@ func NewServer() {
 		}
 	})
 
+	// admin
 	app.HandleDir("/admin", "./admin")
+	// site
 	app.HandleDir("/", "./site", iris.DirOptions{
-		ShowList:  false,
+		ShowList:  true,
 		Compress:  true,
 		SPA:       true,
 		IndexName: "index.html",
@@ -71,6 +74,7 @@ func NewServer() {
 		m.Party("/search").Handle(new(api.SearchController))
 		m.Party("/fans").Handle(new(api.FansController))
 		m.Party("/user-report").Handle(new(api.UserReportController))
+		m.Party("/install").Handle(new(api.InstallController))
 	})
 
 	// admin
@@ -99,7 +103,7 @@ func NewServer() {
 		m.Party("/forbidden-word").Handle(new(admin.ForbiddenWordController))
 	})
 
-	if err := app.Listen(":"+conf.Port,
+	if err := app.Listen(":"+cast.ToString(conf.Port),
 		iris.WithConfiguration(iris.Configuration{
 			DisableStartupLog:                 false,
 			DisableInterruptHandler:           false,

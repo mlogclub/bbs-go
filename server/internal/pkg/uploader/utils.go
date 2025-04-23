@@ -21,7 +21,7 @@ func generateImageKey(data []byte, contentType string) string {
 			ext = exts[0]
 		}
 	}
-	if config.Instance.IsProd() {
+	if config.IsProd() {
 		return "images/" + dates.Format(time.Now(), "2006/01/02/") + md5 + ext
 	} else {
 		return "test/images/" + dates.Format(time.Now(), "2006/01/02/") + md5 + ext

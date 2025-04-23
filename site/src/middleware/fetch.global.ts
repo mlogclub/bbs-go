@@ -1,8 +1,9 @@
-export default defineNuxtRouteMiddleware(async () => {
+export default defineNuxtRouteMiddleware(async (to) => {
+
+    const configStore = useConfigStore()
+    const userStore = useUserStore()
 
     const load = async () => {
-        const configStore = useConfigStore()
-        const userStore = useUserStore()
         await Promise.all([
             configStore.fetchConfig(),
             userStore.fetchCurrent(),
@@ -15,6 +16,17 @@ export default defineNuxtRouteMiddleware(async () => {
     //     await load()
     // }
 
-    await load()
+    const isInstallPage = () => {
+        return to.path.startsWith('/install')
+    }
 
+    await load()
+    const config: any = configStore.config
+
+    if (!isInstallPage() && !config.installed) {
+        return navigateTo('/install')
+    }
+    if (isInstallPage() && config.installed) {
+        return navigateTo('/')
+    }
 })

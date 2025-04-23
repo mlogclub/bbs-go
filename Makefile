@@ -9,6 +9,7 @@ all: build
 build: clean build-server build-site build-admin
 	@mkdir -p dist
 	@cp -r server/bbs-go dist/
+	@cp -r server/migrations dist/migrations
 	@cp -r site/dist dist/site
 	@cp -r admin/dist dist/admin
 

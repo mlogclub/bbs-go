@@ -24,7 +24,6 @@ var (
 	tencentCos = &tencentCloudCosUploader{
 		once: sync.Once{},
 	}
-	local = &localUploader{}
 )
 
 func PutImage(data []byte, contentType string) (string, error) {
@@ -37,7 +36,7 @@ func PutObject(key string, data []byte, contentType string) (string, error) {
 
 func CopyImage(url string) (string, error) {
 	u1 := urls.ParseUrl(url).GetURL()
-	u2 := urls.ParseUrl(config.Instance.BaseUrl).GetURL()
+	u2 := urls.ParseUrl(config.Instance.BaseURL).GetURL()
 	// 本站host，不下载
 	if u1.Host == u2.Host {
 		return url, nil
@@ -52,9 +51,8 @@ func getUploader() uploader {
 		return aliyun
 	} else if strs.EqualsIgnoreCase(enable, "tencentCloud") || strs.EqualsIgnoreCase(enable, "cos") {
 		return tencentCos
-	} else {
-		return local
 	}
+	return nil
 }
 
 // IsEnabledOss 是否启用阿里云oss

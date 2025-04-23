@@ -1,15 +1,7 @@
--- 初始化用户数据（用户名：admin、密码：123456）
-INSERT INTO `t_user` (`id`, `type`, `username`, `email`, `email_verified`, `nickname`, `avatar`, `gender`, `birthday`, `background_image`, `password`, `home_page`, `description`, `score`, `status`, `topic_count`, `comment_count`, `follow_count`, `fans_count`, `roles`, `forbidden_end_time`, `create_time`, `update_time`) VALUES
-(1, 0, 'admin', 'a@example.com', 0, 'bbsgo站长', '', '', NULL, NULL, '$2a$10$ofA39bAFMpYpIX/Xiz7jtOMH9JnPvYfPRlzHXqAtLPFpbE/cLdjmS', NULL, '轻轻地我走了，正如我轻轻的来。', 0, 0, 0, 0, 0, 0, 'owner', 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000));
-
 -- 初始化角色数据
 INSERT INTO `t_role` (`id`, `type`, `name`, `code`, `sort_no`, `remark`, `status`, `create_time`, `update_time`) VALUES
 (1, 0, '超级管理员', 'owner', 0, '超级管理员', 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000)),
 (2, 0, '管理员', 'admin', 1, '管理员', 0, (UNIX_TIMESTAMP(now()) * 1000), (UNIX_TIMESTAMP(now()) * 1000));
-
--- 初始化用户角色数据
-INSERT INTO `t_user_role` (`id`, `user_id`, `role_id`, `create_time`) VALUES
-(1, 1, 1, (UNIX_TIMESTAMP(now()) * 1000));
 
 -- 初始化节点数据
 INSERT INTO `t_topic_node` (`id`, `name`, `description`, `logo`, `sort_no`, `status`, `create_time`) VALUES

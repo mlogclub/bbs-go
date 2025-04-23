@@ -2,6 +2,7 @@ package api
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/pkg/validate"
@@ -27,6 +28,9 @@ type UserController struct {
 
 // 获取当前登录用户
 func (c *UserController) GetCurrent() *web.JsonResult {
+	if !config.Instance.Installed {
+		return web.JsonSuccess()
+	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user != nil {
 		return web.JsonData(render.BuildUserProfile(user))

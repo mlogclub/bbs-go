@@ -1,4 +1,4 @@
-package server
+package install
 
 import (
 	"bbs-go/internal/pkg/config"
@@ -15,7 +15,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func initLogger() {
+func InitLogger() {
 	conf := config.Instance.Logger
 	var writer io.Writer = os.Stdout
 	if strs.IsNotBlank(conf.Filename) {
@@ -31,7 +31,6 @@ func initLogger() {
 			},
 		)
 	}
-
 	handler := slog.NewTextHandler(writer, &slog.HandlerOptions{
 		ReplaceAttr: replaceAttr,
 		AddSource:   true,
