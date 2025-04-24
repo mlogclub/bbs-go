@@ -1,0 +1,1 @@
+import{_ as t}from"./index.f21f3c04.js";import{C as _,aE as a,aH as s,aK as n,bc as r}from"./arco.8a931ad5.js";const c={};function d(f,o){const e=r;return _(),a(e,{class:"footer"},{default:s(()=>o[0]||(o[0]=[n("BBS-GO")])),_:1})}const x=t(c,[["render",d],["__scopeId","data-v-b96108da"]]);export{x as F};
