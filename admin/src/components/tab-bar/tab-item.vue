@@ -75,10 +75,8 @@
 
   const props = defineProps({
     itemData: {
-      type: Object as PropType<TagProps>,
-      default() {
-        return [];
-      },
+      type: Object,
+      default: () => ({})
     },
     index: {
       type: Number,
