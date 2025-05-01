@@ -62,7 +62,7 @@ func (c *InstallController) PostInstall() *web.JsonResult {
 
 	// 初始化数据库
 	if err := install.Install(req); err != nil {
-		return web.JsonErrorMsg("数据库初始化失败：" + err.Error())
+		return web.JsonError(err)
 	}
 
 	return web.JsonData(true)
