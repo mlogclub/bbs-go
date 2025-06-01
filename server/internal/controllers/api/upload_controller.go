@@ -2,7 +2,6 @@ package api
 
 import (
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/uploader"
 	"io"
 	"log/slog"
 	"strconv"
@@ -41,7 +40,7 @@ func (c *UploadController) Post() *web.JsonResult {
 
 	slog.Info("上传文件：", slog.Any("filename", header.Filename), slog.Any("size", header.Size))
 
-	url, err := uploader.PutImage(fileBytes, contentType)
+	url, err := services.UploadService.PutImage(fileBytes, contentType)
 	if err != nil {
 		return web.JsonError(err)
 	}

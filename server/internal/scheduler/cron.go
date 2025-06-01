@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"bbs-go/internal/pkg/sitemap"
+	"fmt"
 	"log/slog"
 
 	"github.com/robfig/cron/v3"
@@ -11,7 +11,7 @@ func Start() {
 	c := cron.New()
 
 	addCronFunc(c, "0 4 ? * *", func() {
-		sitemap.Generate()
+		fmt.Println("test")
 	})
 
 	c.Start()

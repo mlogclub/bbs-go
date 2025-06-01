@@ -54,7 +54,6 @@ type Config struct {
 	Installed      bool           `yaml:"installed"`      // 是否已安装
 	Logger         LoggerConfig   `yaml:"logger"`         // 日志配置
 	DB             sqls.DbConfig  `yaml:"db"`             // 数据库配置
-	Uploader       UploaderConfig `yaml:"uploader"`       // 上传配置
 	Smtp           SmtpConfig     `yaml:"smtp"`           // smtp
 	Search         SearchConfig   `yaml:"search"`         // 搜索配置
 	BaiduSEO       BaiduSEOConfig `yaml:"baiduSEO"`       // 百度SEO配置
@@ -66,32 +65,6 @@ type LoggerConfig struct {
 	MaxSize    int    `yaml:"maxSize"`    // 文件最大尺寸（以MB为单位）
 	MaxAge     int    `yaml:"maxAge"`     // 保留旧文件的最大天数
 	MaxBackups int    `yaml:"maxBackups"` // 保留的最大旧文件数量
-}
-
-type UploaderConfig struct {
-	Enable     string           `yaml:"enable"`
-	AliyunOss  AliyunOssConfig  `yaml:"aliyunOss"`
-	TencentCos TencentCosConfig `yaml:"tencentCos"`
-}
-
-type AliyunOssConfig struct {
-	Host          string `yaml:"host"`
-	Bucket        string `yaml:"bucket"`
-	Endpoint      string `yaml:"endpoint"`
-	AccessId      string `yaml:"accessId"`
-	AccessSecret  string `yaml:"accessSecret"`
-	StyleSplitter string `yaml:"styleSplitter"`
-	StyleAvatar   string `yaml:"styleAvatar"`
-	StylePreview  string `yaml:"stylePreview"`
-	StyleSmall    string `yaml:"styleSmall"`
-	StyleDetail   string `yaml:"styleDetail"`
-}
-
-type TencentCosConfig struct {
-	Bucket    string `yaml:"bucket"`
-	Region    string `yaml:"region"`
-	SecretId  string `yaml:"secretId"`
-	SecretKey string `yaml:"secretKey"`
 }
 
 type SmtpConfig struct {

@@ -160,7 +160,9 @@ const uploadFiles = (promiseList) => {
       loading.value = false;
       emit("update:modelValue", fileList);
     },
-    (e) => {
+    (e) => {      
+      useMsgError(e.message || e)
+
       if (currentInput.value) {
         currentInput.value.value = "";
       }

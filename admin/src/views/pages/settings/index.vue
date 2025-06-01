@@ -22,6 +22,16 @@
             <SpamSettings />
           </div>
         </a-tab-pane>
+        <a-tab-pane key="5" title="登录配置">
+          <div class="settings-container">
+            <LoginSettings />
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="6" title="上传配置">
+          <div class="settings-container">
+            <UploadSettings />
+          </div>
+        </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -32,6 +42,8 @@
   import NavSettings from './components/NavSettings.vue';
   import ScoreSettings from './components/ScoreSettings.vue';
   import SpamSettings from './components/SpamSettings.vue';
+  import LoginSettings from './components/LoginSettings.vue';
+  import UploadSettings from './components/UploadSettings.vue';
 </script>
 
 <style lang="less" scoped>

@@ -1,54 +1,54 @@
 package render
 
 import (
-	"bbs-go/internal/pkg/config"
-	"bbs-go/internal/pkg/uploader"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/services"
 	"strings"
 
 	"github.com/mlogclub/simple/common/strs"
 )
 
 func HandleOssImageStyleAvatar(url string) string {
-	if !uploader.IsEnabledOss() {
+	cfg := services.SysConfigService.GetUploadConfig()
+	if cfg.EnableUploadMethod != dto.AliyunOss {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleAvatar)
+	return HandleOssImageStyle(url, cfg.AliyunOss.StyleSplitter, cfg.AliyunOss.StyleAvatar)
 }
 
 func HandleOssImageStyleDetail(url string) string {
-	if !uploader.IsEnabledOss() {
+	cfg := services.SysConfigService.GetUploadConfig()
+	if cfg.EnableUploadMethod != dto.AliyunOss {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleDetail)
+	return HandleOssImageStyle(url, cfg.AliyunOss.StyleSplitter, cfg.AliyunOss.StyleDetail)
 }
 
 func HandleOssImageStyleSmall(url string) string {
-	if !uploader.IsEnabledOss() {
+	cfg := services.SysConfigService.GetUploadConfig()
+	if cfg.EnableUploadMethod != dto.AliyunOss {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StyleSmall)
+	return HandleOssImageStyle(url, cfg.AliyunOss.StyleSplitter, cfg.AliyunOss.StyleSmall)
 }
 
 func HandleOssImageStylePreview(url string) string {
-	if !uploader.IsEnabledOss() {
+	cfg := services.SysConfigService.GetUploadConfig()
+	if cfg.EnableUploadMethod != dto.AliyunOss {
 		return url
 	}
-	return HandleOssImageStyle(url, config.Instance.Uploader.AliyunOss.StylePreview)
+	return HandleOssImageStyle(url, cfg.AliyunOss.StyleSplitter, cfg.AliyunOss.StylePreview)
 }
 
-func HandleOssImageStyle(url, style string) string {
+func HandleOssImageStyle(url, splitter, style string) string {
 	if strs.IsBlank(style) || strs.IsBlank(url) {
-		return url
-	}
-	if !uploader.IsOssImageUrl(url) {
 		return url
 	}
 	if strings.HasSuffix(strings.ToLower(url), ".gif") {
 		return url
 	}
-	sep := config.Instance.Uploader.AliyunOss.StyleSplitter
-	if strs.IsBlank(sep) {
+	if strs.IsBlank(splitter) {
 		return url
 	}
-	return strings.Join([]string{url, style}, sep)
+	return strings.Join([]string{url, style}, splitter)
 }

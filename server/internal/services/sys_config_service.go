@@ -141,6 +141,7 @@ func (s *sysConfigService) GetConfig() *dto.SysConfigResponse {
 		EnableHideContent:          s.IsEnableHideContent(),
 		Modules:                    s.GetModules(),
 		EmailWhitelist:             s.GetEmailWhitelist(),
+		UploadConfig:               s.GetUploadConfig(),
 	}
 }
 
@@ -222,4 +223,13 @@ func (s *sysConfigService) GetScoreConfig() dto.ScoreConfig {
 		slog.Warn("积分配置错误", slog.Any("err", err))
 	}
 	return scoreConfig
+}
+
+func (s *sysConfigService) GetUploadConfig() dto.UploadConfig {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigUploadConfig)
+	var uploadConfig dto.UploadConfig
+	if err := jsons.Parse(str, &uploadConfig); err != nil {
+		slog.Warn("上传配置错误", slog.Any("err", err))
+	}
+	return uploadConfig
 }

@@ -2,7 +2,6 @@ package admin
 
 import (
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/sitemap"
 	"strconv"
 
 	"bbs-go/internal/models"
@@ -20,13 +19,6 @@ import (
 
 type ArticleController struct {
 	Ctx iris.Context
-}
-
-func (c *ArticleController) GetSitemap() *web.JsonResult {
-	go func() {
-		sitemap.Generate()
-	}()
-	return web.JsonSuccess()
 }
 
 func (c *ArticleController) GetBy(id int64) *web.JsonResult {

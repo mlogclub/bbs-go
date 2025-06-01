@@ -31,6 +31,7 @@ type SysConfigResponse struct {
 	EnableHideContent          bool          `json:"enableHideContent"`
 	Modules                    ModulesConfig `json:"modules"`
 	EmailWhitelist             []string      `json:"emailWhitelist"` // 邮箱白名单
+	UploadConfig               UploadConfig  `json:"uploadConfig"`   // 上传配置
 }
 
 // ModulesConfig
@@ -40,4 +41,37 @@ type ModulesConfig struct {
 	Tweet   bool `json:"tweet"`
 	Topic   bool `json:"topic"`
 	Article bool `json:"article"`
+}
+
+type UploadMethod string
+
+const (
+	AliyunOss  UploadMethod = "AliyunOss"
+	TencentCos UploadMethod = "TencentCos"
+)
+
+type UploadConfig struct {
+	EnableUploadMethod UploadMethod           `json:"enableUploadMethod"`
+	AliyunOss          AliyunOssUploadConfig  `json:"aliyunOss"`
+	TencentCos         TencentCosUploadConfig `json:"tencentCos"`
+}
+
+type AliyunOssUploadConfig struct {
+	Host            string `json:"host"`
+	Bucket          string `json:"bucket"`
+	Endpoint        string `json:"endpoint"`
+	AccessKeyId     string `json:"accessKeyId"`
+	AccessKeySecret string `json:"accessKeySecret"`
+	StyleSplitter   string `json:"styleSplitter"`
+	StyleAvatar     string `json:"styleAvatar"`
+	StylePreview    string `json:"stylePreview"`
+	StyleSmall      string `json:"styleSmall"`
+	StyleDetail     string `json:"styleDetail"`
+}
+
+type TencentCosUploadConfig struct {
+	Bucket    string `json:"bucket"`
+	Region    string `json:"region"`
+	SecretId  string `json:"secretId"`
+	SecretKey string `json:"secretKey"`
 }
