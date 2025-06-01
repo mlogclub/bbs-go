@@ -27,9 +27,7 @@
 </template>
 
 <script setup>
-const { data: scoreRank } = useAsyncData(() =>
-  useHttpGet("/api/user/score/rank")
-);
+const { data: scoreRank } = await useMyFetch("/api/user/score/rank");
 </script>
 
 <style scoped lang="scss">

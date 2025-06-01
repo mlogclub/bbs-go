@@ -269,7 +269,7 @@ func (c *UserController) GetFavorites() *web.JsonResult {
 }
 
 // 获取最近3条未读消息
-func (c *UserController) GetMsgrecent() *web.JsonResult {
+func (c *UserController) GetMsg_recent() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	var count int64 = 0
 	var messages []models.Message

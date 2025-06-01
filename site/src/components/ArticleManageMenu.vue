@@ -51,12 +51,13 @@ async function handleCommand(command) {
 }
 async function forbidden(days) {
   try {
-    await useHttpPostForm("/api/user/forbidden", {
-      body: {
+    await useHttpPost(
+      "/api/user/forbidden",
+      useJsonToForm({
         userId: props.article.user.id,
         days,
-      },
-    });
+      })
+    );
     useMsgSuccess("禁言成功");
   } catch (e) {
     useMsgError("禁言失败");

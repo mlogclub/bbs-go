@@ -22,7 +22,7 @@
 <script setup>
 const route = useRoute();
 const tagId = route.params.id;
-const { data: tag } = await useAsyncData(() => useHttpGet(`/api/tag/${tagId}`));
+const { data: tag } = await useMyFetch(`/api/tag/${tagId}`);
 
 useHead({
   title: useSiteTitle(tag.value.name, "话题"),

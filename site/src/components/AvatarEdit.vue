@@ -39,14 +39,15 @@ export default {
         const file = files[0];
         const formData = new FormData();
         formData.append("image", file, file.name);
-        const ret = await useHttpPostMultipart("/api/upload", formData);
+        const ret = await useHttpPost("/api/upload", formData);
 
         // 设置头像
-        await useHttpPostForm("/api/user/update/avatar", {
-          body: {
+        await useHttpPost(
+          "/api/user/update/avatar",
+          useJsonToForm({
             avatar: ret.url,
-          },
-        });
+          })
+        );
 
         // 重新加载数据
         const userStore = useUserStore();

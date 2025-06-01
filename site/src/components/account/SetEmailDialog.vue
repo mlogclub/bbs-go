@@ -25,11 +25,12 @@ const show = async () => {
 
 const submit = async () => {
   try {
-    await useHttpPostForm("/api/user/set_email", {
-      body: {
+    await useHttpPost(
+      "/api/user/set_email",
+      useJsonToForm({
         email: email.value,
-      },
-    });
+      })
+    );
     visible.value = false;
     emits("success");
     useMsgSuccess("邮箱设置成功");

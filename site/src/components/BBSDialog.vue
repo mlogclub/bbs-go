@@ -41,7 +41,7 @@
             </button>
             <button
               v-if="okBtnVisible"
-              class="button is-small is-light is-success"
+              class="button is-small is-light is-primary"
               @click="ok"
             >
               {{ okBtnText }}

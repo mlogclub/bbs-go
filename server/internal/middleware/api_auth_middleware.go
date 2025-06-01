@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	config = []PathRole{
+	authCfg = []PathRole{
 		{Pattern: "/api/admin/sys-config/**", Roles: []string{constants.RoleOwner}},
 		{Pattern: "/api/admin/user/create", Roles: []string{constants.RoleOwner}},
 		{Pattern: "/api/admin/user/update", Roles: []string{constants.RoleOwner}},
@@ -49,7 +49,7 @@ func AdminAuth(ctx iris.Context) {
 // getPathRoles 获取请求该路径所需的角色
 func getPathRoles(ctx iris.Context) []string {
 	p := ctx.Path()
-	for _, pathRole := range config {
+	for _, pathRole := range authCfg {
 		if antPathMatcher.Match(pathRole.Pattern, p) {
 			return pathRole.Roles
 		}

@@ -1,3 +1,25 @@
+<template>
+  <div class="comment-form">
+    <div class="comment-create">
+      <div ref="commentEditor" class="comment-input-wrapper">
+        <div v-if="quote" class="comment-quote-info">
+          回复：
+          <label v-text="quote.user.nickname" />
+          <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
+        </div>
+        <text-editor
+          ref="textEditorRef"
+          v-model:content="content"
+          v-model:imageList="imageList"
+          :height="90"
+          :focus-height="120"
+          @submit="create"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 const props = defineProps({
   entityType: {
@@ -11,49 +33,46 @@ const props = defineProps({
     required: true,
   },
 });
+
 const emits = defineEmits(["created"]);
-const value = ref({
-  content: "", // 内容
-  imageList: [],
-});
+
+const textEditorRef = ref(null);
+const content = ref("");
+const imageList = ref(null);
 const sending = ref(false); // 发送中
 const quote = ref(null); // 引用的对象
 const commentEditor = ref(null); // 编辑器组件
-const simpleEditor = ref(null); // 编辑器组件
 
 async function create() {
-  if (!value.value.content) {
+  if (!content.value) {
     useMsgError("请输入评论内容");
     return;
   }
   if (sending.value) {
     return;
   }
-  if (simpleEditor.value && simpleEditor.value.isOnUpload()) {
-    useMsgWarning("正在上传中...请上传完成后提交");
-    return;
-  }
   sending.value = true;
   try {
-    const data = await useHttpPostForm("/api/comment/create", {
-      body: {
+    const data = await useHttpPost(
+      "/api/comment/create",
+      useJsonToForm({
         contentType: props.contentType,
         entityType: props.entityType,
         entityId: props.entityId,
-        content: value.value.content,
+        content: content.value,
         imageList:
-          value.value.imageList && value.value.imageList.length
-            ? JSON.stringify(value.value.imageList)
+          imageList.value && imageList.value.length
+            ? JSON.stringify(imageList.value)
             : "",
         quoteId: quote.value ? quote.value.id : "",
-      },
-    });
+      })
+    );
     emits("created", data);
 
-    value.value.content = "";
-    value.value.imageList = [];
+    textEditorRef.value.reset();
+    content.value = "";
+    imageList.value = [];
     quote.value = null;
-    simpleEditor.value.clear();
     useMsgSuccess("发布成功");
   } catch (e) {
     console.error(e);
@@ -73,21 +92,6 @@ function cancelReply() {
   quote.value = null;
 }
 </script>
-
-<template>
-  <div class="comment-form">
-    <div class="comment-create">
-      <div ref="commentEditor" class="comment-input-wrapper">
-        <div v-if="quote" class="comment-quote-info">
-          回复：
-          <label v-text="quote.user.nickname" />
-          <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
-        </div>
-        <text-editor ref="simpleEditor" v-model="value" @submit="create" />
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped lang="scss">
 .comment-form {

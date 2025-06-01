@@ -135,7 +135,6 @@ func (s *sysConfigService) GetConfig() *dto.SysConfigResponse {
 		TopicCaptcha:               cache.SysConfigCache.GetBool(constants.SysConfigTopicCaptcha),
 		UserObserveSeconds:         cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds),
 		TokenExpireDays:            s.GetTokenExpireDays(),
-		LoginMethod:                s.GetLoginMethod(),
 		CreateTopicEmailVerified:   s.IsCreateTopicEmailVerified(),
 		CreateArticleEmailVerified: s.IsCreateArticleEmailVerified(),
 		CreateCommentEmailVerified: s.IsCreateCommentEmailVerified(),
@@ -151,28 +150,6 @@ func (s *sysConfigService) GetTokenExpireDays() int {
 		tokenExpireDays = constants.DefaultTokenExpireDays
 	}
 	return tokenExpireDays
-}
-
-func (s *sysConfigService) GetLoginMethod() dto.LoginMethod {
-	loginMethodStr := cache.SysConfigCache.GetStr(constants.SysConfigLoginMethod)
-
-	useDefault := true
-	var loginMethod dto.LoginMethod
-	if strs.IsNotBlank(loginMethodStr) {
-		if err := jsons.Parse(loginMethodStr, &loginMethod); err != nil {
-			slog.Warn("登录方式数据错误", slog.Any("err", err))
-		} else {
-			useDefault = false
-		}
-	}
-	if useDefault {
-		loginMethod = dto.LoginMethod{
-			Password: true,
-			QQ:       true,
-			Github:   true,
-		}
-	}
-	return loginMethod
 }
 
 func (s *sysConfigService) IsCreateTopicEmailVerified() bool {

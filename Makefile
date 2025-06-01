@@ -6,8 +6,9 @@ all: build
 
 # 构建所有组件
 .PHONY: build
-build: clean build-server build-site build-admin
+build: clean build-site build-admin
 	@mkdir -p dist
+	@cd server && go build -v -o bbs-go main.go
 	@cp -r server/bbs-go dist/
 	@cp -r server/migrations dist/migrations
 	@cp -r site/dist dist/site
@@ -84,12 +85,6 @@ build-all-platforms: clean build-site build-admin
 
 	@echo "all done"
 
-# 构建服务器
-.PHONY: build-server
-build-server:
-	@echo "build server..."
-	@cd server && go build -v -o bbs-go main.go
-
 # 构建前端站点
 .PHONY: build-site
 build-site:
@@ -124,7 +119,6 @@ help:
 	@echo "BBS-GO Makefile 帮助信息:"
 	@echo "  make build               - 构建所有组件"
 	@echo "  make build-all-platforms - 构建所有平台的服务器"
-	@echo "  make build-server        - 构建服务器"
 	@echo "  make build-site          - 构建前端站点"
 	@echo "  make build-admin         - 构建管理后台"
 	@echo "  make clean               - 清理所有构建产物"

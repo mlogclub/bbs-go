@@ -15,7 +15,8 @@ export const useConfigStore = defineStore("config", {
   },
   actions: {
     async fetchConfig() {
-      this.config = await useHttpGet("/api/config/configs");
+      const { data } = await useMyFetch("/api/config/configs");
+      this.config = data.value;
     },
   },
 });

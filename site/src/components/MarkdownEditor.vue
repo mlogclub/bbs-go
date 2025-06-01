@@ -9,6 +9,7 @@
       :style="{ height: height }"
       :placeholder="placeholder"
       :preview="false"
+      :footers="[]"
     >
       <template #defToolbars>
         <NormalToolbar title="切换为HTML编辑器" @onClick="switchHTML">
@@ -85,16 +86,7 @@ function change(v) {
 async function uploadImg(files, callback) {
   const res = await Promise.all(
     files.map((file) => {
-      return new Promise((rev, rej) => {
-        const formData = new FormData();
-        formData.append("image", file, file.name);
-        useHttp("/api/upload", {
-          method: "POST",
-          body: formData,
-        })
-          .then((res) => rev(res))
-          .catch((error) => rej(error));
-      });
+      return useUploadImage(file)
     })
   );
   callback(res.map((item) => item.url));

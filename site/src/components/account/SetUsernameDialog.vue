@@ -30,11 +30,12 @@ const show = async () => {
 
 const submit = async () => {
   try {
-    await useHttpPostForm("/api/user/set_username", {
-      body: {
+    await useHttpPost(
+      "/api/user/set_username",
+      useJsonToForm({
         username: username.value,
-      },
-    });
+      })
+    );
     visible.value = false;
     emits("success");
     useMsgSuccess("用户名设置成功");

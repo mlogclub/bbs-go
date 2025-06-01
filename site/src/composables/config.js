@@ -21,6 +21,9 @@ export function useSiteKeywords() {
 }
 
 export function useTopicSiteTitle(topic) {
+  if (!topic) {
+    return useSiteTitle();
+  }
   if (topic.type === 0) {
     return useSiteTitle(topic.title);
   } else {

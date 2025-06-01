@@ -1,7 +1,7 @@
 <template>
   <div class="comment-component" id="JComment">
     <div class="comment-header">
-      <span>全部评论</span>
+      <span>评论</span>
       <span v-if="commentCount > 0">&nbsp;{{ commentCount }}</span>
     </div>
 
@@ -30,12 +30,7 @@
       </div>
     </div>
 
-    <comment-list
-      ref="list"
-      :entity-id="entityId"
-      :entity-type="entityType"
-      @reply="reply"
-    />
+    <comment-list ref="list" :entity-id="entityId" :entity-type="entityType" />
   </div>
 </template>
 
@@ -79,16 +74,10 @@ const isNeedEmailVerify = computed(() => {
   return config.createCommentEmailVerified && user && user.emailVerified;
 });
 
-function commentCreated(data) {
+const commentCreated = (data) => {
   list.value.append(data);
   emits("created", data);
-}
-function reply(quote) {
-  // this.$refs.input.reply(quote)
-}
-// function toLogin() {
-//   toSignin()
-// }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -98,7 +87,6 @@ function reply(quote) {
   border-radius: var(--border-radius);
   .comment-header {
     display: flex;
-    padding-top: 20px;
     color: var(--text-color);
     font-size: 16px;
     font-weight: 500;

@@ -63,12 +63,13 @@ function forbidden(days) {
 
 async function doForbidden(days) {
   try {
-    await useHttpPostForm("/api/user/forbidden", {
-      body: {
+    await useHttpPost(
+      "/api/user/forbidden",
+      useJsonToForm({
         userId: localUser.value.id,
         days,
-      },
-    });
+      })
+    );
     localUser.value.forbidden = true;
     useMsgSuccess("禁言成功");
   } catch (e) {
@@ -78,12 +79,13 @@ async function doForbidden(days) {
 
 async function removeForbidden() {
   try {
-    await useHttpPostForm("/api/user/forbidden", {
-      body: {
+    await useHttpPost(
+      "/api/user/forbidden",
+      useJsonToForm({
         userId: localUser.value.id,
         days: 0,
-      },
-    });
+      })
+    );
     localUser.value.forbidden = false;
     useMsgSuccess("取消禁言成功");
   } catch (e) {

@@ -1,9 +1,10 @@
+const ssr = process.env.NUXT_SSR === 'false' ? false : true
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: 'src/',
-
-  ssr: false,
+  ssr: ssr,
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',

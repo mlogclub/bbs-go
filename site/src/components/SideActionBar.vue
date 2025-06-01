@@ -110,12 +110,13 @@ const handleActionClick = (action) => {
 const handleLike = async () => {
   if (_liked.value) {
     try {
-      await useHttpPostForm("/api/like/unlike", {
-        body: {
+      await useHttpPost(
+        "/api/like/unlike",
+        useJsonToForm({
           entityType: props.entityType,
           entityId: props.entityId,
-        },
-      });
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -125,12 +126,13 @@ const handleLike = async () => {
     useMsgSuccess("已取消点赞");
   } else {
     try {
-      await useHttpPostForm("/api/like/like", {
-        body: {
+      await useHttpPost(
+        "/api/like/like",
+        useJsonToForm({
           entityType: props.entityType,
           entityId: props.entityId,
-        },
-      });
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -144,12 +146,13 @@ const handleLike = async () => {
 const handleFavorite = async () => {
   if (_favorited.value) {
     try {
-      await useHttpPostForm("/api/favorite/delete", {
-        body: {
+      await useHttpPost(
+        "/api/favorite/delete",
+        useJsonToForm({
           entityType: props.entityType,
           entityId: props.entityId,
-        },
-      });
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -158,12 +161,13 @@ const handleFavorite = async () => {
     useMsgSuccess("已取消收藏");
   } else {
     try {
-      await useHttpPostForm("/api/favorite/add", {
-        body: {
+      await useHttpPost(
+        "/api/favorite/add",
+        useJsonToForm({
           entityType: props.entityType,
           entityId: props.entityId,
-        },
-      });
+        })
+      );
     } catch (e) {
       console.log(e);
     }

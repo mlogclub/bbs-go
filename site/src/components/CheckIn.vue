@@ -123,16 +123,16 @@ const user = computed(() => {
   return userStore.user;
 });
 
-const { data: checkIn, refresh: refreshCheckIn } = await useAsyncData(() =>
-  useHttpGet(`/api/checkin/checkin`)
+const { data: checkIn, refresh: refreshCheckIn } = await useMyFetch(
+  `/api/checkin/checkin`
 );
-const { data: checkInRank, refresh: refreshCheckInRank } = await useAsyncData(
-  () => useHttpGet(`/api/checkin/rank`)
+const { data: checkInRank, refresh: refreshCheckInRank } = await useMyFetch(
+  `/api/checkin/rank`
 );
 
 async function doCheckIn() {
   try {
-    checkIn.value = await useHttpPostForm("/api/checkin/checkin");
+    checkIn.value = await useHttpPost("/api/checkin/checkin");
     useMsgSuccess("签到成功");
     refreshCheckIn();
     refreshCheckInRank();

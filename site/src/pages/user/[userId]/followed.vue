@@ -12,7 +12,7 @@
                 <li :class="{ 'is-active': activeTab === 'fans' }">
                   <nuxt-link :to="`/user/${user.id}/fans`">
                     <span class="icon is-small">
-                      <i class="iconfont icon-topic" aria-hidden="true" />
+                      <i class="iconfont icon-fans" aria-hidden="true" />
                     </span>
                     <span>粉丝</span>
                   </nuxt-link>
@@ -20,7 +20,7 @@
                 <li :class="{ 'is-active': activeTab === 'followed' }">
                   <nuxt-link :to="`/user/${user.id}/followed`">
                     <span class="icon is-small">
-                      <i class="iconfont icon-article" aria-hidden="true" />
+                      <i class="iconfont icon-follow" aria-hidden="true" />
                     </span>
                     <span>关注</span>
                   </nuxt-link>

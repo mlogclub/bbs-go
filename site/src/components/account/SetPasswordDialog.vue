@@ -50,9 +50,7 @@ const show = async () => {
 
 const submit = async () => {
   try {
-    await useHttpPostForm("/api/user/set_password", {
-      body: form.value,
-    });
+    await useHttpPost("/api/user/set_password", useJsonToForm(form.value));
     visible.value = false;
     emits("success");
     useMsgSuccess("设置密码成功");

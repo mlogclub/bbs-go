@@ -50,7 +50,7 @@ func NewServer() {
 	app.HandleDir("/admin", "./admin")
 	// site
 	app.HandleDir("/", "./site", iris.DirOptions{
-		ShowList:  true,
+		ShowList:  false,
 		Compress:  true,
 		SPA:       true,
 		IndexName: "index.html",
@@ -58,6 +58,7 @@ func NewServer() {
 
 	// api
 	mvc.Configure(app.Party("/api"), func(m *mvc.Application) {
+		m.Router.Use(middleware.Install)
 		m.Party("/topic").Handle(new(api.TopicController))
 		m.Party("/article").Handle(new(api.ArticleController))
 		m.Party("/login").Handle(new(api.LoginController))
@@ -79,6 +80,7 @@ func NewServer() {
 
 	// admin
 	mvc.Configure(app.Party("/api/admin"), func(m *mvc.Application) {
+		m.Router.Use(middleware.Install)
 		m.Router.Use(middleware.AdminAuth)
 		m.Party("/role").Handle(new(admin.RoleController))
 		m.Party("/menu").Handle(new(admin.MenuController))

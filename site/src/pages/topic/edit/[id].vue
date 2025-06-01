@@ -1,20 +1,31 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="topic-create-form" v-if="postForm">
-        <div class="topic-form-title">修改话题</div>
-
-        <div class="field">
-          <div class="control">
-            <div
-              v-for="node in nodes"
-              :key="node.id"
-              class="topic-tag"
-              :class="{ selected: postForm.nodeId === node.id }"
-              @click="postForm.nodeId = node.id"
-            >
-              <span>{{ node.name }}</span>
+      <div class="publish-form" v-if="postForm">
+        <div class="form-title">
+          <div class="form-title-name">修改帖子</div>
+          <div class="form-title-switch" @click="switchEditor">
+            <div v-if="postForm.contentType === 'markdown'" class="editor-type">
+              <img src="~/assets/images/markdown.svg" />
+              <span>Markdown</span>
             </div>
+            <div v-else class="editor-type">
+              <img src="~/assets/images/html.svg" />
+              <span>HTML</span>
+            </div>
+            <i class="iconfont icon-switch" />
+          </div>
+        </div>
+
+        <div class="topic-tags">
+          <div
+            v-for="node in nodes"
+            :key="node.id"
+            class="topic-tag"
+            :class="{ selected: postForm.nodeId === node.id }"
+            @click="postForm.nodeId = node.id"
+          >
+            <span>{{ node.name }}</span>
           </div>
         </div>
 
@@ -32,20 +43,21 @@
         <div class="field">
           <div class="control">
             <markdown-editor
+              v-if="postForm.contentType === 'markdown'"
               v-model="postForm.content"
-              placeholder="可空，将图片复制或拖入编辑器可上传"
+              placeholder="请输入你要发表的内容..."
+            />
+            <MEditor
+              v-else
+              v-model="postForm.content"
+              :uploadImage="useUploadImage"
             />
           </div>
         </div>
 
         <div v-if="isEnableHideContent || postForm.hideContent" class="field">
           <div class="control">
-            <markdown-editor
-              ref="mdEditor"
-              v-model="postForm.hideContent"
-              height="200px"
-              placeholder="隐藏内容，评论后可见"
-            />
+            <MEditor v-model="postForm.hideContent" height="200px" />
           </div>
         </div>
 
@@ -61,13 +73,13 @@
               v-if="publishing"
               :class="{ 'is-loading': publishing }"
               disabled
-              class="button is-success"
+              class="button is-primary"
               >提交更改</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
-              class="button is-success"
+              class="button is-primary"
               @click="submitCreate"
               >提交更改</a
             >
@@ -94,13 +106,24 @@ const isEnableHideContent = computed(() => {
   return configStore.config.enableHideContent;
 });
 
-const { data: nodes } = useAsyncData("nodes", () =>
-  useHttpGet("/api/topic/nodes")
-);
-const { data: postForm } = useAsyncData(() =>
-  useHttpGet(`/api/topic/edit/${route.params.id}`)
+const { data: nodes } = await useMyFetch("/api/topic/nodes");
+const { data: postForm } = await useMyFetch(
+  `/api/topic/edit/${route.params.id}`
 );
 const publishing = ref(false);
+
+const switchEditor = () => {
+  useConfirm("切换编辑器将会清空当前内容，是否继续？")
+    .then(() => {
+      postForm.value.content = "";
+      if (postForm.value.contentType === "markdown") {
+        postForm.value.contentType = "html";
+      } else {
+        postForm.value.contentType = "markdown";
+      }
+    })
+    .catch(() => {});
+};
 
 async function submitCreate() {
   if (publishing.value) {
@@ -109,15 +132,16 @@ async function submitCreate() {
   publishing.value = true;
 
   try {
-    useHttpPostForm(`/api/topic/edit/${postForm.value.id}`, {
-      body: {
+    useHttpPost(
+      `/api/topic/edit/${postForm.value.id}`,
+      useJsonToForm({
         nodeId: postForm.value.nodeId,
         title: postForm.value.title,
         content: postForm.value.content,
         hideContent: postForm.value.hideContent,
         tags: postForm.value.tags ? postForm.value.tags.join(",") : "",
-      },
-    });
+      })
+    );
     useMsg({
       message: "修改成功",
       onClose() {

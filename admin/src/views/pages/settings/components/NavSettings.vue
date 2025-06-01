@@ -67,7 +67,7 @@
   ];
 
   const loadConfig = async () => {
-    const ret = await axios.get<any, any>('/api/admin/sys-config/all');
+    const ret = await axios.get<any, any>('/api/admin/sys-config/configs');
     data.value = ret.siteNavs as NavDTO[];
   };
 

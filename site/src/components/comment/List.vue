@@ -8,7 +8,7 @@
     >
       <div v-for="comment in results" :key="comment.id" class="comment">
         <div class="comment-item-left">
-          <my-avatar :user="comment.user" :size="40" has-border />
+          <my-avatar :user="comment.user" :size="30" has-border />
         </div>
         <div class="comment-item-main">
           <div class="comment-meta">
@@ -74,9 +74,10 @@
           </div>
           <div v-if="reply.commentId === comment.id" class="comment-reply-form">
             <text-editor
-              :ref="`editor${comment.id}`"
-              v-model="reply.value"
-              :height="100"
+              :ref="setEditorRef(comment.id)"
+              v-model:content="reply.value.content"
+              v-model:imageList="reply.value.imageList"
+              :height="80"
               @submit="submitReply(comment)"
             />
           </div>
@@ -117,6 +118,7 @@ const reply = reactive({
   },
 });
 
+const editorRefs = ref({});
 const userStore = useUserStore();
 const loadMore = ref(null);
 
@@ -129,22 +131,24 @@ const append = (data) => {
 const like = async (comment) => {
   try {
     if (comment.liked) {
-      await useHttpPostForm("/api/like/unlike", {
-        body: {
+      await useHttpPost(
+        "/api/like/unlike",
+        useJsonToForm({
           entityType: "comment",
           entityId: comment.id,
-        },
-      });
+        })
+      );
       comment.liked = false;
       comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
       useMsgSuccess("已取消点赞");
     } else {
-      await useHttpPostForm("/api/like/like", {
-        body: {
+      await useHttpPost(
+        "/api/like/like",
+        useJsonToForm({
           entityType: "comment",
           entityId: comment.id,
-        },
-      });
+        })
+      );
       comment.liked = true;
       comment.likeCount = comment.likeCount + 1;
       useMsgSuccess("点赞成功");
@@ -164,7 +168,24 @@ const switchShowReply = (comment) => {
     hideReply(comment);
   } else {
     reply.commentId = comment.id;
+
+    setTimeout(() => {
+      const editorRef = editorRefs.value[`editor${comment.id}`];
+      if (editorRef && typeof editorRef.focus === "function") {
+        editorRef.focus();
+      } else {
+        console.warn(`Editor with id editor${comment.id} not found.`);
+      }
+    }, 100);
   }
+};
+
+const setEditorRef = (id) => {
+  return (el) => {
+    if (el) {
+      editorRefs.value[`editor${id}`] = el;
+    }
+  };
 };
 
 const hideReply = (comment) => {
@@ -175,8 +196,9 @@ const hideReply = (comment) => {
 
 const submitReply = async (parent) => {
   try {
-    const ret = await useHttpPostForm("/api/comment/create", {
-      body: {
+    const ret = await useHttpPost(
+      "/api/comment/create",
+      useJsonToForm({
         entityType: "comment",
         entityId: parent.id,
         content: reply.value.content,
@@ -184,8 +206,8 @@ const submitReply = async (parent) => {
           reply.value.imageList && reply.value.imageList.length
             ? JSON.stringify(reply.value.imageList)
             : "",
-      },
-    });
+      })
+    );
     hideReply();
     appendReply(parent, ret);
     useMsgSuccess("发布成功");
@@ -215,7 +237,6 @@ defineExpose({
 
 <style scoped lang="scss">
 .comments {
-  // padding: 10px;
   font-size: 14px;
 
   .comment {
@@ -235,8 +256,7 @@ defineExpose({
         justify-content: space-between;
         .comment-nickname {
           font-size: 14px;
-          font-weight: 500;
-          color: var(--text-color);
+          color: var(--text-color2);
 
           &:hover {
             color: var(--text-link-color);
@@ -245,11 +265,11 @@ defineExpose({
 
         .comment-meta-right {
           .comment-time {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-color3);
           }
           .comment-ip-area {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-color3);
             margin-left: 10px;
           }
@@ -290,13 +310,16 @@ defineExpose({
         margin-top: 10px;
         display: flex;
         align-items: center;
+        column-gap: 10px;
 
         .comment-action-item {
-          line-height: 22px;
-          font-size: 13px;
+          font-size: 12px;
           cursor: pointer;
           color: var(--text-color3);
           user-select: none;
+          display: flex;
+          align-items: center;
+          column-gap: 2px;
 
           &:hover {
             color: var(--text-link-color);
@@ -307,8 +330,8 @@ defineExpose({
             font-weight: 500;
           }
 
-          &:not(:last-child) {
-            margin-right: 16px;
+          i {
+            font-size: 12px;
           }
         }
       }

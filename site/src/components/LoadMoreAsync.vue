@@ -63,10 +63,8 @@ const empty = computed(() => {
   return pageData.hasMore === false && pageData.results.length === 0;
 });
 
-const { data: first } = await useAsyncData(() => {
-  return useHttpGet(props.url, {
-    params: props.params || {},
-  });
+const { data: first } = await useMyFetch(props.url, {
+  params: props.params || {},
 });
 
 renderData(first.value);

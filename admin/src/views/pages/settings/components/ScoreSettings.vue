@@ -41,7 +41,7 @@
     checkInScore: undefined,
   });
   const loadConfig = async () => {
-    const ret = await axios.get<any, any>('/api/admin/sys-config/all');
+    const ret = await axios.get<any, any>('/api/admin/sys-config/configs');
     config.postTopicScore = ret.scoreConfig.postTopicScore;
     config.postCommentScore = ret.scoreConfig.postCommentScore;
     config.checkInScore = ret.scoreConfig.checkInScore;

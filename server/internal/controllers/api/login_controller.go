@@ -30,10 +30,6 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 		nickname           = c.Ctx.PostValueTrim("nickname")
 		redirect           = c.Ctx.FormValue("redirect")
 	)
-	loginMethod := services.SysConfigService.GetLoginMethod()
-	if !loginMethod.Password {
-		return web.JsonErrorMsg("账号密码登录/注册已禁用")
-	}
 	// 根据验证码协议版本校验验证码
 	if captchaProtocol == 2 {
 		if !captcha2.Verify(captchaId, captchaCode) {
@@ -61,10 +57,6 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 		password           = c.Ctx.PostValueTrim("password")
 		redirect           = c.Ctx.FormValue("redirect")
 	)
-	loginMethod := services.SysConfigService.GetLoginMethod()
-	if !loginMethod.Password {
-		return web.JsonErrorMsg("账号密码登录/注册已禁用")
-	}
 
 	// 根据验证码协议版本校验验证码
 	if captchaProtocol == 2 {

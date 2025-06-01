@@ -118,7 +118,7 @@
         <div v-if="dbError" class="notification is-warning is-light">
           {{ dbError }}
         </div>
-        <div v-if="dbSuccess" class="notification is-success is-light">
+        <div v-if="dbSuccess" class="notification is-primary is-light">
           {{ dbSuccess }}
         </div>
         <div class="field is-grouped">
@@ -459,9 +459,7 @@ const installStatus = ref({
   type: "is-info",
 });
 
-const { data: status } = await useAsyncData(() =>
-  useHttpGet(`/api/install/status`)
-);
+const { data: status } = await useMyFetch(`/api/install/status`);
 
 if (status.value.installed) {
   const router = useRouter();
@@ -483,13 +481,11 @@ const goToStep = async (step) => {
 
     try {
       await useHttpPost("/api/install/test_db_connection", {
-        body: {
-          host: dbConfig.value.host,
-          port: dbConfig.value.port,
-          database: dbConfig.value.database,
-          username: dbConfig.value.username,
-          password: dbConfig.value.password,
-        },
+        host: dbConfig.value.host,
+        port: dbConfig.value.port,
+        database: dbConfig.value.database,
+        username: dbConfig.value.username,
+        password: dbConfig.value.password,
       });
 
       // 连接成功才进入下一步
@@ -530,13 +526,11 @@ const testDbConnection = async () => {
 
   try {
     await useHttpPost("/api/install/test_db_connection", {
-      body: {
-        host: dbConfig.value.host,
-        port: dbConfig.value.port,
-        database: dbConfig.value.database,
-        username: dbConfig.value.username,
-        password: dbConfig.value.password,
-      },
+      host: dbConfig.value.host,
+      port: dbConfig.value.port,
+      database: dbConfig.value.database,
+      username: dbConfig.value.username,
+      password: dbConfig.value.password,
     });
 
     dbSuccess.value = "数据库连接成功";

@@ -32,8 +32,10 @@
     --text-color5: #fff;
 
 
-    --text-link-color: #3273dc;
-    --text-link-hover-color: #363636;
+    // --text-link-color: #3273dc;
+    // --text-link-hover-color: #363636;
+    --text-link-color: #1e80ff;
+    --text-link-hover-color: #1171ee;
 
     --background: #fff;
     --bg-color: #fff;
@@ -52,6 +54,8 @@
     --border-hover-color: #1878f3;
 
     --color-red: #fa5151;
+
+    --button-text-color: #fff;
 }
 
 @mixin useDarkMode() {
@@ -70,8 +74,10 @@
     --text-color4: findColorInvert(#d8d8d8);
     --text-color5: findColorInvert(#fff);
 
-    --text-link-color: #3273dc;
-    --text-link-hover-color: findColorInvert(#363636);
+    // --text-link-color: #3273dc;
+    // --text-link-hover-color: findColorInvert(#363636);
+    --text-link-color: #1e80ff;
+    --text-link-hover-color: #1171ee;
 
     --background: #272727;
     --bg-color: #272727;
@@ -90,6 +96,8 @@
     --border-hover-color: findColorInvert(#1878f3);
 
     --color-red: #fa5151;
+
+    --button-text-color: #3a3a3a;
 
     .tag {
         background-color: #3a3a3a;

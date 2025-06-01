@@ -27,7 +27,7 @@ func (c *SysConfigController) AnyList() *web.JsonResult {
 	return web.JsonData(&web.PageResult{Results: list, Page: paging})
 }
 
-func (c *SysConfigController) GetAll() *web.JsonResult {
+func (c *SysConfigController) GetConfigs() *web.JsonResult {
 	config := services.SysConfigService.GetConfig()
 	return web.JsonData(config)
 }

@@ -11,15 +11,14 @@ export const useUserStore = defineStore("user", {
   },
   actions: {
     async fetchCurrent() {
-      this.user = await useHttpGet("/api/user/current");
+      const { data } = await useMyFetch("/api/user/current");
+      this.user = data.value;
       return this.user;
     },
     async signin(body) {
-      const { user, token, redirect } = await useHttpPostForm(
+      const { user, token, redirect } = await useHttpPost(
         "/api/login/signin",
-        {
-          body: body,
-        }
+        useJsonToForm(body)
       );
       this.user = user;
       return {
@@ -33,11 +32,9 @@ export const useUserStore = defineStore("user", {
       this.user = null;
     },
     async signup(form) {
-      const { user, token, redirect } = await useHttpPostForm(
+      const { user, token, redirect } = await useHttpPost(
         "/api/login/signup",
-        {
-          body: form,
-        }
+        useJsonToForm(form)
       );
       this.user = user;
       return {

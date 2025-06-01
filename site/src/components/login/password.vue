@@ -1,5 +1,5 @@
 <template>
-  <div class="sms-login">
+  <div class="password-login">
     <div class="login-field">
       <input
         v-model="form.username"
@@ -89,7 +89,7 @@ const toSignup = async () => {
 </script>
 
 <style lang="scss" scoped>
-.sms-login {
+.password-login {
   max-width: 400px;
   margin: auto;
   .login-field {

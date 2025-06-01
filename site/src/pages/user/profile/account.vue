@@ -82,8 +82,8 @@ useHead({
   title: useSiteTitle("账号设置"),
 });
 
-const { data: user, refresh: userRefresh } = await useAsyncData("user", () =>
-  useHttpGet("/api/user/current")
+const { data: user, refresh: userRefresh } = await useMyFetch(
+  "/api/user/current"
 );
 
 const setUsernameDialog = ref(null);

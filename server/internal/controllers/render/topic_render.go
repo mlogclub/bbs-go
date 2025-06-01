@@ -3,7 +3,9 @@ package render
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
+	"bbs-go/internal/pkg/text"
 	"bbs-go/internal/services"
 	"html"
 
@@ -74,13 +76,24 @@ func _buildTopic(topic *models.Topic, buildContent bool) *models.TopicResponse {
 	// 构建内容
 	if buildContent {
 		if topic.Type == constants.TopicTypeTopic {
-			content := markdown.ToHTML(topic.Content)
-			rsp.Content = handleHtmlContent(content)
+			contentHtml := topic.Content
+			if topic.ContentType == constants.ContentTypeMarkdown {
+				contentHtml = markdown.ToHTML(topic.Content)
+			}
+			rsp.Content = handleHtmlContent(contentHtml)
 		} else {
 			rsp.Content = html.EscapeString(topic.Content)
 		}
 	} else {
-		rsp.Summary = markdown.GetSummary(topic.Content, 128)
+		if topic.Type == constants.TopicTypeTopic {
+			contentHtml := topic.Content
+			if topic.ContentType == constants.ContentTypeMarkdown {
+				contentHtml = markdown.ToHTML(topic.Content)
+			}
+			rsp.Summary = html2.GetSummary(contentHtml, 128)
+		} else {
+			rsp.Summary = text.GetSummary(topic.Content, 128)
+		}
 	}
 
 	if topic.Type == constants.TopicTypeTweet {

@@ -19,7 +19,24 @@
       </article>
       <div v-else class="publish-form">
         <div class="form-title">
-          {{ postForm.type === 0 ? "发帖" : "发动态" }}
+          <div class="form-title-name">
+            {{ postForm.type === 0 ? "发帖" : "发动态" }}
+          </div>
+          <div
+            v-if="postForm.type === 0"
+            class="form-title-switch"
+            @click="switchEditor"
+          >
+            <div v-if="postForm.contentType === 'markdown'" class="editor-type">
+              <img src="~/assets/images/markdown.svg" />
+              <span>Markdown</span>
+            </div>
+            <div v-else class="editor-type">
+              <img src="~/assets/images/html.svg" />
+              <span>HTML</span>
+            </div>
+            <i class="iconfont icon-switch" />
+          </div>
         </div>
 
         <div class="topic-tags">
@@ -48,19 +65,21 @@
         <div v-if="postForm.type === 0" class="field">
           <div class="control">
             <markdown-editor
+              v-if="postForm.contentType === 'markdown'"
               v-model="postForm.content"
               placeholder="请输入你要发表的内容..."
+            />
+            <MEditor
+              v-else
+              v-model="postForm.content"
+              :uploadImage="useUploadImage"
             />
           </div>
         </div>
 
         <div v-if="postForm.type === 0 && isEnableHideContent" class="field">
           <div class="control">
-            <markdown-editor
-              v-model="postForm.hideContent"
-              height="200px"
-              placeholder="请输入隐藏内容，隐藏内容，评论后可见"
-            />
+            <MEditor v-model="postForm.hideContent" height="200px" />
           </div>
         </div>
 
@@ -83,7 +102,7 @@
         <div class="form-footer">
           <a
             :class="{ 'is-loading': publishing }"
-            class="button is-success btn-publish"
+            class="button is-primary btn-publish"
             @click="publish"
             >{{ postForm.type === 1 ? "发表动态" : "发表帖子" }}</a
           >
@@ -121,6 +140,7 @@ const postForm = ref({
   nodeId: nodeId,
   title: "",
   tags: [],
+  contentType: "html",
   content: "",
   hideContent: "",
   imageList: [],
@@ -147,9 +167,7 @@ const topicCaptchaEnabled = computed(() => {
   return configStore.config.topicCaptcha;
 });
 
-const { data: nodes } = useAsyncData("nodes", () =>
-  useHttpGet("/api/topic/nodes")
-);
+const { data: nodes } = await useMyFetch("/api/topic/nodes");
 
 watch(
   () => route.query,
@@ -161,12 +179,32 @@ watch(
 
 const init = () => {
   postForm.value.type = Number.parseInt(route.query.type) || 0;
+
+  let contentType = route.query.contentType;
+  if (!contentType) {
+    contentType = "html";
+  }
+  postForm.value.contentType = "contentType";
+
   useHead({
     title: useSiteTitle(type === 0 ? "发帖子" : "发动态"),
   });
 };
 
 init();
+
+const switchEditor = () => {
+  useConfirm("切换编辑器将会清空当前内容，是否继续？")
+    .then(() => {
+      postForm.value.content = "";
+      if (postForm.value.contentType === "markdown") {
+        postForm.value.contentType = "html";
+      } else {
+        postForm.value.contentType = "markdown";
+      }
+    })
+    .catch(() => {});
+};
 
 const publish = () => {
   if (publishing.value) {
@@ -206,9 +244,7 @@ const publishSubmit = async (captcha) => {
 
   publishing.value = true;
   try {
-    const topic = await useHttpPost("/api/topic/create", {
-      body: postForm.value,
-    });
+    const topic = await useHttpPost("/api/topic/create", postForm.value);
     router.push(`/topic/${topic.id}`);
   } catch (e) {
     useMsgError(e.message || e);
@@ -216,76 +252,3 @@ const publishSubmit = async (captcha) => {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.publish-form {
-  border-radius: var(--border-radius);
-  background: var(--bg-color);
-  padding: 10px 18px 18px 18px;
-
-  .form-title {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .form-footer {
-    text-align: right;
-
-    .btn-publish {
-      width: 130px;
-      color: #fff;
-    }
-  }
-
-  .field {
-    margin-bottom: 10px;
-
-    input {
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      border-radius: 3px;
-
-      &:focus-visible {
-        outline-width: 0;
-      }
-      &:focus {
-        box-shadow: none;
-      }
-    }
-  }
-
-  .topic-tags {
-    margin-bottom: 10px;
-    display: flex;
-    gap: 10px;
-
-    .topic-tag {
-      cursor: pointer;
-      padding: 0 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 3px;
-      background: var(--bg-color3);
-      // border: 1px solid var(--border-color);
-      color: var(--text-color3);
-      font-size: 14px;
-      line-height: 24px;
-
-      &:hover {
-        color: var(--text-link-color);
-        background: var(--bg-color5);
-        // border: 1px solid var(--border-hover-color);
-      }
-
-      &.selected {
-        color: var(--text-color5);
-        background: var(--text-link-color);
-      }
-    }
-  }
-}
-</style>

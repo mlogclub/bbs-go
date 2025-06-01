@@ -76,7 +76,7 @@
     emailWhitelist: undefined,
   });
   const loadConfig = async () => {
-    const ret = await axios.get<any, any>('/api/admin/sys-config/all');
+    const ret = await axios.get<any, any>('/api/admin/sys-config/configs');
     config.topicCaptcha = ret.topicCaptcha;
     config.createTopicEmailVerified = ret.createTopicEmailVerified;
     config.createArticleEmailVerified = ret.createArticleEmailVerified;

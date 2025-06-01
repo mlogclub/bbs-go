@@ -1,13 +1,18 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "nuxt build --dotenv .env.production",
     "build:docker": "nuxt build --dotenv .env.docker",
     "dev": "nuxt dev --dotenv .env.local",
-    "generate": "nuxt generate --dotenv .env.production",
+    "generate": "NUXT_SSR=false nuxt generate --dotenv .env.production",
     "preview": "nuxt preview --dotenv .env.production",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "packages:dev": "pnpm -r --filter \"./packages/**\" --parallel dev",
+    "packages:build": "pnpm -r --filter \"./packages/**\" build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "4.5.1",
@@ -23,6 +28,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
+    "html-editor": "workspace:*",
     "@asika32764/vue-animate": "^3.0.2",
     "@pinia/nuxt": "0.10.1",
     "go-captcha-vue": "^2",

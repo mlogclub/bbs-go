@@ -7,13 +7,6 @@ type ScoreConfig struct {
 	CheckInScore     int `json:"checkInScore"`     // 签到积分
 }
 
-type LoginMethod struct {
-	Password bool `json:"password"`
-	QQ       bool `json:"qq"`
-	Github   bool `json:"github"`
-	Osc      bool `json:"osc"`
-}
-
 // SysConfigResponse
 //
 //	配置返回结构体
@@ -32,7 +25,6 @@ type SysConfigResponse struct {
 	TopicCaptcha               bool          `json:"topicCaptcha"`
 	UserObserveSeconds         int           `json:"userObserveSeconds"`
 	TokenExpireDays            int           `json:"tokenExpireDays"`
-	LoginMethod                LoginMethod   `json:"loginMethod"`
 	CreateTopicEmailVerified   bool          `json:"createTopicEmailVerified"`
 	CreateArticleEmailVerified bool          `json:"createArticleEmailVerified"`
 	CreateCommentEmailVerified bool          `json:"createCommentEmailVerified"`

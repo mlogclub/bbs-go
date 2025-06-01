@@ -61,3 +61,13 @@ func Distinct[T any](input []T, getKey func(T) any) (output []T) {
 	}
 	return
 }
+
+func StrRight(str string, size int) string {
+	if str == "" || size < 0 {
+		return ""
+	}
+	if len(str) <= size {
+		return str
+	}
+	return str[len(str)-size:]
+}

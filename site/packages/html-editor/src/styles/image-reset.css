@@ -1,0 +1,49 @@
+/**
+ * 图片边框重置样式
+ * 确保编辑器中的图片没有任何默认边框
+ */
+
+/* 全局重置所有图片的边框和轮廓 */
+.ProseMirror img,
+.editor-content img,
+.tiptap img {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* 特别针对Base64图片的样式重置 */
+img[src^="data:image"] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* 移除浏览器默认的图片聚焦样式 */
+img:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+/* 确保图片在不同状态下都没有边框 */
+img:hover,
+img:active,
+img:visited {
+  border: none !important;
+  outline: none !important;
+}
+
+/* 移除可能的浏览器默认样式 */
+.ProseMirror * {
+  box-sizing: border-box;
+}
+
+/* 确保编辑器图片没有任何默认样式干扰 */
+.editor-image {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}

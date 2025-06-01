@@ -1,122 +1,8 @@
-<script>
-export default {
-  props: {
-    commentId: {
-      type: Number,
-      required: true,
-    },
-    data: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      replies: this.data,
-      reply: {
-        quoteId: 0,
-        value: {
-          content: "",
-          imageList: [],
-        },
-      },
-    };
-  },
-  computed: {
-    user() {
-      const userStore = useUserStore();
-      return userStore.user;
-    },
-  },
-  methods: {
-    async loadMore() {
-      const ret = await useHttpGet("/api/comment/replies", {
-        params: {
-          commentId: this.commentId,
-          cursor: this.replies.cursor,
-        },
-      });
-      this.replies.cursor = ret.cursor;
-      this.replies.hasMore = ret.hasMore;
-      this.replies.results.push(...ret.results);
-    },
-    async like(comment) {
-      try {
-        if (comment.liked) {
-          await useHttpPostForm("/api/like/unlike", {
-            body: {
-              entityType: "comment",
-              entityId: comment.id,
-            },
-          });
-          comment.liked = false;
-          comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
-          useMsgSuccess("已取消点赞");
-        } else {
-          await useHttpPostForm("/api/like/like", {
-            body: {
-              entityType: "comment",
-              entityId: comment.id,
-            },
-          });
-          comment.liked = true;
-          comment.likeCount = comment.likeCount + 1;
-          useMsgSuccess("点赞成功");
-        }
-      } catch (e) {
-        useCatchError(e);
-      }
-    },
-    switchShowReply(comment) {
-      if (!this.user) {
-        useMsgSignIn();
-        return;
-      }
-
-      if (this.reply.quoteId === comment.id) {
-        this.hideReply(comment);
-      } else {
-        this.reply.quoteId = comment.id;
-        setTimeout(() => {
-          this.$refs[`editor${comment.id}`][0].focus();
-        }, 0);
-      }
-    },
-    hideReply(comment) {
-      this.reply.quoteId = 0;
-      this.reply.value.content = "";
-      this.reply.value.imageList = [];
-    },
-    async submitReply(parent) {
-      try {
-        const ret = await useHttpPostForm("/api/comment/create", {
-          body: {
-            entityType: "comment",
-            entityId: this.commentId,
-            quoteId: this.reply.quoteId,
-            content: this.reply.value.content,
-            imageList:
-              this.reply.value.imageList && this.reply.value.imageList.length
-                ? JSON.stringify(this.reply.value.imageList)
-                : "",
-          },
-        });
-        this.hideReply();
-        this.$emit("reply", ret);
-        useMsgSuccess("发布成功");
-      } catch (e) {
-        useCatchError(e);
-      }
-    },
-  },
-};
-</script>
-
 <template>
   <div class="replies">
     <div v-for="comment in replies.results" :key="comment.id" class="comment">
       <div class="comment-item-left">
-        <my-avatar :user="comment.user" :size="30" has-border />
+        <my-avatar :user="comment.user" :size="24" has-border />
       </div>
       <div class="comment-item-main">
         <div class="comment-meta">
@@ -128,7 +14,7 @@ export default {
               {{ comment.user.nickname }}
             </nuxt-link>
             <template v-if="comment.quote">
-              <span>回复</span>
+              &nbsp;<span>回复</span>&nbsp;
               <nuxt-link
                 :to="`/user/${comment.quote.user.id}`"
                 class="comment-nickname"
@@ -197,33 +83,157 @@ export default {
         <div v-if="reply.quoteId === comment.id" class="comment-reply-form">
           <text-editor
             :ref="`editor${comment.id}`"
-            v-model="reply.value"
+            v-model:content="reply.value.content"
+            v-model:imageList="reply.value.imageList"
             :height="80"
-            @submit="submitReply()"
+            @submit="submitReply(comment)"
           />
         </div>
       </div>
     </div>
     <div v-if="replies.hasMore === true" class="comment-more">
-      <a @click="loadMore">查看更多回复...</a>
+      <a @click="loadMore">
+        <span>查看更多回复</span>
+        <i class="iconfont icon-right" />
+      </a>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    commentId: {
+      type: Number,
+      required: true,
+    },
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      replies: this.data,
+      reply: {
+        quoteId: 0,
+        value: {
+          content: "",
+          imageList: [],
+        },
+      },
+    };
+  },
+  computed: {
+    user() {
+      const userStore = useUserStore();
+      return userStore.user;
+    },
+  },
+  methods: {
+    async loadMore() {
+      const ret = await useHttpGet("/api/comment/replies", {
+        params: {
+          commentId: this.commentId,
+          cursor: this.replies.cursor,
+        },
+      });
+      this.replies.cursor = ret.cursor;
+      this.replies.hasMore = ret.hasMore;
+      this.replies.results.push(...ret.results);
+    },
+    async like(comment) {
+      try {
+        if (comment.liked) {
+          await useHttpPost(
+            "/api/like/unlike",
+            useJsonToForm({
+              entityType: "comment",
+              entityId: comment.id,
+            })
+          );
+          comment.liked = false;
+          comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
+          useMsgSuccess("已取消点赞");
+        } else {
+          await useHttpPost(
+            "/api/like/like",
+            useJsonToForm({
+              entityType: "comment",
+              entityId: comment.id,
+            })
+          );
+          comment.liked = true;
+          comment.likeCount = comment.likeCount + 1;
+          useMsgSuccess("点赞成功");
+        }
+      } catch (e) {
+        useCatchError(e);
+      }
+    },
+    switchShowReply(comment) {
+      if (!this.user) {
+        useMsgSignIn();
+        return;
+      }
+
+      if (this.reply.quoteId === comment.id) {
+        this.hideReply(comment);
+      } else {
+        this.reply.quoteId = comment.id;
+        setTimeout(() => {
+          const refs = this.$refs[`editor${comment.id}`];
+          if (refs && refs.length > 0) {
+            refs[0].focus();
+          }
+        }, 100);
+      }
+    },
+    hideReply(comment) {
+      this.reply.quoteId = 0;
+      this.reply.value.content = "";
+      this.reply.value.imageList = [];
+    },
+    async submitReply(parent) {
+      try {
+        const ret = await useHttpPost(
+          "/api/comment/create",
+          useJsonToForm({
+            entityType: "comment",
+            entityId: this.commentId,
+            quoteId: this.reply.quoteId,
+            content: this.reply.value.content,
+            imageList:
+              this.reply.value.imageList && this.reply.value.imageList.length
+                ? JSON.stringify(this.reply.value.imageList)
+                : "",
+          })
+        );
+        this.hideReply(parent);
+        this.$emit("reply", ret);
+        useMsgSuccess("发布成功");
+      } catch (e) {
+        useCatchError(e);
+      }
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 .replies {
   margin-top: 10px;
-  padding: 1px 10px;
   font-size: 12px;
-  background-color: var(--bg-color2);
+  // padding: 1px 10px;
+  // background-color: var(--bg-color2);
 
   .comment {
     display: flex;
     padding: 8px 0;
 
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
-    }
+    // &:not(:last-child) {
+    //   border-bottom: 1px solid var(--border-color);
+    // }
 
     .comment-item-main {
       flex: 1 1 auto;
@@ -234,8 +244,7 @@ export default {
         justify-content: space-between;
         .comment-nickname {
           font-size: 12px;
-          font-weight: 500;
-          color: var(--text-color);
+          color: var(--text-color2);
 
           &:hover {
             color: var(--text-link-color);
@@ -331,13 +340,16 @@ export default {
         margin-top: 5px;
         display: flex;
         align-items: center;
+        column-gap: 10px;
 
         .comment-action-item {
-          line-height: 22px;
           font-size: 11px;
           cursor: pointer;
           color: var(--text-color3);
           user-select: none;
+          display: flex;
+          align-items: center;
+          column-gap: 2px;
 
           &:hover {
             color: var(--text-link-color);
@@ -348,8 +360,8 @@ export default {
             font-weight: 500;
           }
 
-          &:not(:last-child) {
-            margin-right: 16px;
+          i {
+            font-size: 11px;
           }
         }
       }
@@ -365,10 +377,21 @@ export default {
   }
 
   .comment-more {
-    margin: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-link-color);
+    margin: 10px 10px 10px 30px;
+    a {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      color: var(--text-color2);
+      &:hover {
+        color: var(--text-link-color);
+      }
+
+      i {
+        font-size: 13px;
+        rotate: 90deg;
+      }
+    }
   }
 }
 </style>

@@ -64,13 +64,13 @@
               v-if="publishing"
               :class="{ 'is-loading': publishing }"
               disabled
-              class="button is-success"
+              class="button is-primary"
               >发表</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
-              class="button is-success"
+              class="button is-primary"
               @click="submitCreate"
               >发表</a
             >
@@ -123,8 +123,9 @@ async function submitCreate() {
   }
   publishing.value = true;
   try {
-    const article = await useHttpPostForm("/api/article/create", {
-      body: {
+    const article = await useHttpPost(
+      "/api/article/create",
+      useJsonToForm({
         title: postForm.value.title,
         content: postForm.value.content,
         tags: postForm.value.tags ? postForm.value.tags.join(",") : "",
@@ -132,8 +133,8 @@ async function submitCreate() {
           postForm.value.cover && postForm.value.cover.length
             ? JSON.stringify(postForm.value.cover[0])
             : null,
-      },
-    });
+      })
+    );
     useMsg({
       message: "提交成功",
       onClose() {

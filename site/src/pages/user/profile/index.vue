@@ -89,7 +89,7 @@
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <a class="button is-success" @click="submitForm">保存</a>
+              <a class="button is-primary" @click="submitForm">保存</a>
             </div>
           </div>
         </div>
@@ -129,19 +129,15 @@ if (user.value != null) {
 
 async function submitForm() {
   try {
-    await useHttpPostForm(`/api/user/edit/${user.value.id}`, {
-      body: form.value,
-    });
-    await reload();
+    await useHttpPost(
+      `/api/user/edit/${user.value.id}`,
+      useJsonToForm(form.value)
+    );
     useMsgSuccess("资料修改成功");
   } catch (e) {
     console.error(e);
     useMsgError("资料修改失败：" + (e.message || e));
   }
-}
-async function reload() {
-  user.value = await useHttpGet("/api/user/current");
-  form.value = { ...user.value };
 }
 </script>
 <style lang="scss" scoped>

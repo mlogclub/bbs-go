@@ -29,7 +29,7 @@
       @blur="closeRecommendTags"
       @click="openRecommendTags"
     />
-    <transition name="el-zoom-in-bottom">
+    <transition name="fade">
       <div v-show="autocompleteTags.length > 0" class="autocomplete-tags">
         <div class="tags-container">
           <section class="tag-section">
@@ -45,14 +45,14 @@
         </div>
       </div>
     </transition>
-    <transition name="el-zoom-in-bottom">
+    <transition name="fade">
       <div v-show="showRecommendTags" class="recommend-tags">
         <div class="tags-container">
           <div class="header">
             <span>推荐标签</span>
-            <span class="close-recommend"
-              ><i class="iconfont icon-close" @click="closeRecommendTags"
-            /></span>
+            <span class="close-recommend">
+              <i class="iconfont icon-close" @click="closeRecommendTags" />
+            </span>
           </div>
           <a
             v-for="tag in recommendTags"
@@ -195,11 +195,12 @@ async function autocomplete() {
   if (!inputTag.value) {
     autocompleteTags.value = [];
   } else {
-    const ret = await useHttpPostForm("/api/tag/autocomplete", {
-      body: {
+    const ret = await useHttpPost(
+      "/api/tag/autocomplete",
+      useJsonToForm({
         input: inputTag.value,
-      },
-    });
+      })
+    );
     autocompleteTags.value = [];
     if (ret.length > 0) {
       for (let i = 0; i < ret.length; i++) {
@@ -233,16 +234,18 @@ function selectDown(event) {
   selectIndex.value++;
 }
 
-// 关闭推荐
+// 开启推荐
 function openRecommendTags() {
-  showRecommendTags.value = true;
+  if (recommendTags.value && recommendTags.value.length) {
+    showRecommendTags.value = true;
+  }
 }
 
-// 开启推荐
+// 关闭推荐
 function closeRecommendTags() {
   setTimeout(() => {
     showRecommendTags.value = false;
-  }, 300);
+  }, 100);
 }
 
 // 关闭自动补全
@@ -260,16 +263,25 @@ function close() {
   display: flex;
   background-color: var(--bg-color);
   border: 1px solid var(--border-color2);
-  border-radius: 4px;
+  border-radius: 3px;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
   color: var(--text-color);
-  padding: 0 8px;
+  padding: 0 12px;
+  transition: border-color 0.15s ease-in-out;
+
+  // &:hover {
+  //   border-color: var(--border-hover-color);
+  // }
 
   .input {
     border: none;
     box-shadow: none;
     margin: 0;
     padding: 0;
+    height: 38px;
+    flex: 1;
+    background: transparent;
+    color: var(--text-color);
 
     &:focus-visible {
       outline-width: 0;
@@ -278,27 +290,36 @@ function close() {
 
   .tags-selected {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
     .tag-item {
-      margin: 5px;
-      padding: 0 10px;
+      margin: 4px 6px 4px 0;
+      padding: 4px 12px;
       background: var(--bg-color3);
       color: var(--text-color);
-      line-height: 30px;
-      border-radius: 5px;
-
+      line-height: 1.4;
+      border-radius: 6px;
       text-align: center;
       font-size: 12px;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        background: var(--bg-color2);
+      }
 
       i {
         font-size: 12px;
-        margin-left: 4px;
-      }
+        margin-left: 6px;
+        transition: color 0.15s ease-in-out;
 
-      i:hover {
-        color: red;
-        cursor: pointer;
+        &:hover {
+          color: var(--color-red);
+          cursor: pointer;
+        }
       }
     }
   }
@@ -307,32 +328,36 @@ function close() {
     z-index: 2000;
     left: 0;
     right: 0;
-    top: 42px;
-    bottom: 0;
+    top: 100%;
     position: absolute;
 
     .tags-container {
       scroll-behavior: smooth;
       position: relative;
-      // background: #f7f7f7;
       background-color: var(--bg-color);
-      border-left: 1px solid var(--border-color2);
-      border-right: 1px solid var(--border-color2);
-      border-bottom: 1px solid var(--border-color2);
+      border: 1px solid var(--border-color2);
+      border-top: none;
+      padding: 0 0 3px 0;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       .tag-section {
         font-size: 14px;
-        line-height: 16px;
 
         .tag-item {
-          padding: 8px 15px;
+          padding: 8px 10px;
           cursor: pointer;
+          transition: all 0.15s ease-in-out;
+          border-bottom: 1px solid var(--border-color4);
+
+          &:last-child {
+            border-bottom: none;
+          }
 
           &.active,
           &:hover {
             color: var(--text-color5);
-            background: #006bde;
-            // background-color: var(--bg-color2);
+            background: var(--text-link-color);
           }
         }
       }
@@ -343,67 +368,72 @@ function close() {
     z-index: 2000;
     left: 0;
     right: 0;
-    top: 42px;
-    bottom: 0;
+    top: 100%;
     position: absolute;
 
     .tags-container {
       scroll-behavior: smooth;
       position: relative;
-      background: #f7f7f7;
-      border-left: 1px solid var(--border-color2);
-      border-right: 1px solid var(--border-color2);
-      border-bottom: 1px solid var(--border-color2);
-      padding: 0 10px 10px 10px;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color2);
+      border-top: none;
+      padding: 12px;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       .header {
-        font-weight: bold;
-        font-size: 15px;
-        color: #017e66;
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--text-link-color);
         border-bottom: 1px solid var(--border-color2);
-        margin-bottom: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
         .close-recommend {
-          float: right;
           cursor: pointer;
+          color: var(--text-color3);
+          transition: color 0.15s ease-in-out;
+          font-size: 16px;
+
           &:hover {
-            color: red;
+            color: var(--color-red);
           }
         }
       }
 
       .tag-item {
-        padding: 0 11px;
-        border-radius: 5px;
+        padding: 4px 12px;
+        border-radius: 6px;
         display: inline-block;
-        color: #017e66;
-        background-color: rgba(1, 126, 102, 0.08);
-        height: 22px;
-        line-height: 22px;
+        color: var(--text-link-color);
+        background-color: var(--bg-color5);
+        height: auto;
+        line-height: 1.4;
         font-weight: normal;
         font-size: 13px;
         text-align: center;
-
-        &:not(:last-child) {
-          margin-right: 5px;
-        }
+        margin: 0 6px 6px 0;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
 
         img {
           width: 16px;
           height: 16px;
-          margin-right: 5px;
+          margin-right: 6px;
           margin-top: -1px;
           vertical-align: middle;
         }
-      }
 
-      .tag-item:hover,
-      .tag-item:focus {
-        background-color: #017e66;
-        color: var(--text-color5);
-        text-decoration: none;
+        &:hover,
+        &:focus {
+          background-color: var(--text-link-color);
+          color: var(--text-color5);
+          text-decoration: none;
+          transform: translateY(-1px);
+        }
       }
     }
   }

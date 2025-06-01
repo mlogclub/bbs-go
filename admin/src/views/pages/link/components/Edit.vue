@@ -37,14 +37,14 @@
     title: '',
   });
 
-  const form = ref({
-    id: '',
-    title: '',
-    url: '',
-    logo: '',
-    summary: '',
+  const fields = {
+    id: undefined,
+    title: undefined,
+    url: undefined,
+    summary: undefined,
     status: 0,
-  });
+  };
+  const form = ref(fields);
   const rules = {
     title: [{ required: true, message: '请填写标题' }],
     url: [{ required: true, message: '请填写链接' }],
@@ -52,6 +52,7 @@
 
   const show = () => {
     formRef.value.resetFields();
+    form.value = fields;
 
     config.isCreate = true;
     config.title = '新增';

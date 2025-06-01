@@ -113,7 +113,7 @@
   const nodes = ref<NodeDTO[]>([]);
 
   const loadConfig = async () => {
-    const ret = await axios.get<any, any>('/api/admin/sys-config/all');
+    const ret = await axios.get<any, any>('/api/admin/sys-config/configs');
     config.siteTitle = ret.siteTitle;
     config.siteLogo = ret.siteLogo;
     config.siteDescription = ret.siteDescription;

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑器样式测试</title>
+    <style>
+        /* 测试用的基础样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 包含我们的编辑器样式变量 */
+        :root {
+            --editor-bg: white;
+            --editor-border: #e5e7eb;
+            --editor-text: #374151;
+            --editor-placeholder: rgb(100, 100, 100);
+            --editor-toolbar-bg: #ffffff;
+            --editor-hover: #f3f4f6;
+            --editor-focus: #60a5fa;
+            --editor-selection: rgba(200, 200, 255, 0.4);
+            --editor-table-header: #f9fafb;
+            --editor-table-border: #e5e7eb;
+            --editor-scrollbar-thumb: #c1c1c1;
+            --editor-scrollbar-track: #f1f1f1;
+            --editor-link-color: #2563eb;
+            --editor-code-bg: #f1f5f9;
+            --editor-code-text: #e11d48;
+            --editor-blockquote-border: #60a5fa;
+            --editor-blockquote-bg: rgba(96, 165, 250, 0.05);
+            --editor-shadow: rgba(0, 0, 0, 0.1);
+            --editor-shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 应用我们的编辑器样式 */
+        .content {
+            color: var(--editor-text);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+        
+        .content p {
+            margin: 0 0 16px 0;
+            line-height: 1.7;
+        }
+        
+        .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+            font-weight: 600;
+            margin: 32px 0 16px 0;
+            line-height: 1.4;
+        }
+        
+        .content h1:first-child,
+        .content h2:first-child,
+        .content h3:first-child,
+        .content h4:first-child,
+        .content h5:first-child,
+        .content h6:first-child {
+            margin-top: 0;
+        }
+        
+        .content h1 {
+            font-size: 1.75em;
+            border-bottom: 2px solid var(--editor-border);
+            padding-bottom: 8px;
+        }
+        
+        .content h2 {
+            font-size: 1.375em;
+            border-bottom: 1px solid var(--editor-border);
+            padding-bottom: 6px;
+        }
+        
+        .content h3 {
+            font-size: 1.125em;
+        }
+        
+        .content blockquote {
+            border-left: 4px solid var(--editor-blockquote-border);
+            background-color: var(--editor-blockquote-bg);
+            margin: 16px 0;
+            padding: 12px 16px;
+            font-style: italic;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .content code {
+            background-color: var(--editor-code-bg);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+            font-size: 0.8em;
+            color: var(--editor-code-text);
+        }
+        
+        .content pre {
+            background-color: var(--editor-code-bg);
+            border-radius: 8px;
+            margin: 16px 0;
+            padding: 16px;
+            overflow-x: auto;
+            border: 1px solid var(--editor-border);
+        }
+        
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            color: inherit;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        .content li {
+            margin: 8px 0;
+            line-height: 1.7;
+        }
+        
+        .content a {
+            color: var(--editor-link-color);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .content a:hover {
+            border-bottom-color: var(--editor-link-color);
+        }
+        
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px var(--editor-shadow);
+        }
+        
+        .content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--editor-border);
+        }
+        
+        .content th, .content td {
+            border: 1px solid var(--editor-border);
+            padding: 12px 16px;
+            text-align: left;
+            line-height: 1.5;
+        }
+        
+        .content th {
+            background-color: var(--editor-table-header);
+            font-weight: 600;
+        }
+        
+        .content tr:nth-child(even) {
+            background-color: var(--editor-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <h1>编辑器样式预览</h1>
+        <p>这是一个编辑器内容排版样式的预览页面，展示了各种元素的样式效果。</p>
+        
+        <div class="content">
+            <h1>一级标题样例</h1>
+            <p>这是一个普通段落，展示了基本的文本排版效果。行间距设置为1.7，字体大小为16px，确保良好的阅读体验。</p>
+            
+            <h2>二级标题样例</h2>
+            <p>这里是更多的文本内容，包含<strong>粗体文本</strong>、<em>斜体文本</em>、<u>下划线文本</u>和<code>内联代码</code>。</p>
+            
+            <h3>三级标题样例</h3>
+            <p>你还可以添加<a href="#">链接文本</a>，链接会有下划线悬停效果。</p>
+            
+            <blockquote>
+                <p>这是一个引用块的示例。引用块具有左边框和浅色背景，斜体显示，非常适合突出重要的引用内容。</p>
+            </blockquote>
+            
+            <h3>列表示例</h3>
+            <p>无序列表：</p>
+            <ul>
+                <li>第一个列表项</li>
+                <li>第二个列表项</li>
+                <li>第三个列表项
+                    <ul>
+                        <li>嵌套列表项</li>
+                        <li>另一个嵌套项</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <p>有序列表：</p>
+            <ol>
+                <li>第一步</li>
+                <li>第二步</li>
+                <li>第三步</li>
+            </ol>
+            
+            <h3>代码块示例</h3>
+            <pre><code>function hello() {
+    console.log('Hello, World!');
+    return 'success';
+}</code></pre>
+            
+            <h3>表格示例</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>职业</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>张三</td>
+                        <td>25</td>
+                        <td>工程师</td>
+                    </tr>
+                    <tr>
+                        <td>李四</td>
+                        <td>30</td>
+                        <td>设计师</td>
+                    </tr>
+                    <tr>
+                        <td>王五</td>
+                        <td>28</td>
+                        <td>产品经理</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

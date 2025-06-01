@@ -24,7 +24,7 @@ type topicPublishService struct{}
 
 // Publish 发表
 func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm) (*models.Topic, error) {
-	if err := s._CheckParams(userId, form); err != nil {
+	if err := s._CheckParams(form); err != nil {
 		return nil, err
 	}
 
@@ -34,6 +34,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 		UserId:          userId,
 		NodeId:          form.NodeId,
 		Title:           form.Title,
+		ContentType:     form.ContentType,
 		Content:         form.Content,
 		HideContent:     form.HideContent,
 		Status:          constants.StatusOk,
@@ -54,7 +55,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 	}
 
 	// 检查是否需要审核
-	if s._IsNeedReview(userId, form) {
+	if s._IsNeedReview(form) {
 		topic.Status = constants.StatusReview
 	}
 
@@ -100,7 +101,7 @@ func (s *topicPublishService) Publish(userId int64, form models.CreateTopicForm)
 }
 
 // IsNeedReview 是否需要审核
-func (s *topicPublishService) _IsNeedReview(userId int64, form models.CreateTopicForm) bool {
+func (s *topicPublishService) _IsNeedReview(form models.CreateTopicForm) bool {
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
 		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
@@ -114,7 +115,7 @@ func (s *topicPublishService) _IsNeedReview(userId int64, form models.CreateTopi
 	return false
 }
 
-func (s topicPublishService) _CheckParams(userId int64, form models.CreateTopicForm) (err error) {
+func (s topicPublishService) _CheckParams(form models.CreateTopicForm) (err error) {
 	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
 		if !modules.Tweet {

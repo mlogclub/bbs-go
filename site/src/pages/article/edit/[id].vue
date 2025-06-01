@@ -6,20 +6,6 @@
 
         <div class="field">
           <div class="control">
-            <div
-              v-for="node in nodes"
-              :key="node.id"
-              class="article-tag"
-              :class="{ selected: postForm.nodeId === node.id }"
-              @click="postForm.nodeId = node.id"
-            >
-              <span>{{ node.name }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
             <input
               v-model="postForm.title"
               class="input article-title"
@@ -61,13 +47,13 @@
               v-if="publishing"
               :class="{ 'is-loading': publishing }"
               disabled
-              class="button is-success"
+              class="button is-primary"
               >提交更改</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
-              class="button is-success"
+              class="button is-primary"
               @click="submitCreate"
               >提交更改</a
             >
@@ -93,11 +79,8 @@ const isEnableHideContent = computed(() => {
   return configStore.config.enableHideContent;
 });
 
-const { data: nodes } = useAsyncData("nodes", () =>
-  useHttpGet("/api/article/nodes")
-);
-const { data: postForm } = useAsyncData(() =>
-  useHttpGet(`/api/article/edit/${route.params.id}`)
+const { data: postForm } = await useMyFetch(
+  `/api/article/edit/${route.params.id}`
 );
 const publishing = ref(false);
 
@@ -108,14 +91,15 @@ async function submitCreate() {
   publishing.value = true;
 
   try {
-    useHttpPostForm(`/api/article/edit/${postForm.value.id}`, {
-      body: {
+    useHttpPost(
+      `/api/article/edit/${postForm.value.id}`,
+      useJsonToForm({
         title: postForm.value.title,
         content: postForm.value.content,
         cover: postForm.value.cover,
         tags: postForm.value.tags ? postForm.value.tags.join(",") : "",
-      },
-    });
+      })
+    );
     useMsg({
       message: "修改成功",
       onClose() {

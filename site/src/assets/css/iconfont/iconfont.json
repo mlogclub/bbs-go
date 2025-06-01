@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3855603",
+      "name": "关注",
+      "font_class": "follow",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "8679359",
+      "name": "粉丝",
+      "font_class": "fans",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "12904125",
+      "name": "html",
+      "font_class": "html",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "19702974",
+      "name": "markdown",
+      "font_class": "markdown",
+      "unicode": "ebb1",
+      "unicode_decimal": 60337
+    },
+    {
+      "icon_id": "36622650",
+      "name": "switch",
+      "font_class": "switch",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
       "icon_id": "5647273",
       "name": "查看",
       "font_class": "view",
@@ -76,27 +111,6 @@
       "unicode_decimal": 59418
     },
     {
-      "icon_id": "24563312",
-      "name": "size",
-      "font_class": "size",
-      "unicode": "e60a",
-      "unicode_decimal": 58890
-    },
-    {
-      "icon_id": "15838495",
-      "name": "fullscreen-shrink",
-      "font_class": "exit-fullscreen",
-      "unicode": "e676",
-      "unicode_decimal": 58998
-    },
-    {
-      "icon_id": "15838498",
-      "name": "fullscreen-expand",
-      "font_class": "fullscreen",
-      "unicode": "e677",
-      "unicode_decimal": 58999
-    },
-    {
       "icon_id": "10936613",
       "name": "nav_其他3",
       "font_class": "nav",
@@ -160,13 +174,6 @@
       "unicode_decimal": 59871
     },
     {
-      "icon_id": "16553788",
-      "name": "read",
-      "font_class": "read",
-      "unicode": "e890",
-      "unicode_decimal": 59536
-    },
-    {
       "icon_id": "933646",
       "name": "微信",
       "font_class": "weixin",
@@ -186,13 +193,6 @@
       "font_class": "forbidden",
       "unicode": "e638",
       "unicode_decimal": 58936
-    },
-    {
-      "icon_id": "10793067",
-      "name": "log",
-      "font_class": "log",
-      "unicode": "e624",
-      "unicode_decimal": 58916
     },
     {
       "icon_id": "13087827",

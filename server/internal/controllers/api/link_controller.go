@@ -28,7 +28,7 @@ func (c *LinkController) GetList() *web.JsonResult {
 }
 
 // 前10个链接
-func (c *LinkController) GetToplinks() *web.JsonResult {
+func (c *LinkController) GetTop_links() *web.JsonResult {
 	links := services.LinkService.Find(sqls.NewCnd().
 		Eq("status", constants.StatusOk).Limit(10).Asc("id"))
 

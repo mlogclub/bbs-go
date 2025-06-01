@@ -65,13 +65,11 @@
 
 <script setup>
 const route = useRoute();
-const { data: article, error } = await useAsyncData(() =>
-  useHttpGet(`/api/article/${route.params.id}`)
+const { data: article, error } = await useMyFetch(
+  `/api/article/${route.params.id}`
 );
 
 if (error.value) {
-  // error.value.cause
-  // error.value.message
   throw createError({
     statusCode: 500,
     message: error.value.message || "你访问的页面发生错误!",

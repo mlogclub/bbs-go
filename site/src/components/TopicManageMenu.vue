@@ -98,12 +98,13 @@ async function handleCommand(command) {
 }
 async function forbidden(days) {
   try {
-    await useHttpPostForm("/api/user/forbidden", {
-      body: {
+    await useHttpPost(
+      "/api/user/forbidden",
+      useJsonToForm({
         userId: topic.value.user.id,
         days,
-      },
-    });
+      })
+    );
     useMsgSuccess("禁言成功");
   } catch (e) {
     useMsgError("禁言失败");
@@ -132,11 +133,12 @@ function switchRecommend() {
   const action = topic.value.recommend ? "取消推荐" : "推荐";
   useConfirm(`是否确认${action}该帖子？`).then(function () {
     const recommend = !topic.value.recommend;
-    useHttpPostForm(`/api/topic/recommend/${topic.value.id}`, {
-      body: {
+    useHttpPost(
+      `/api/topic/recommend/${topic.value.id}`,
+      useJsonToForm({
         recommend,
-      },
-    })
+      })
+    )
       .then(() => {
         topic.value.recommend = recommend;
         emits("update:modelValue", topic.value);
@@ -153,11 +155,12 @@ function switchSticky() {
   const action = topic.value.sticky ? "取消置顶" : "置顶";
   useConfirm(`是否确认${action}该帖子？`).then(function () {
     const sticky = !topic.value.sticky;
-    useHttpPostForm(`/api/topic/sticky/${topic.value.id}`, {
-      body: {
+    useHttpPost(
+      `/api/topic/sticky/${topic.value.id}`,
+      useJsonToForm({
         sticky,
-      },
-    })
+      })
+    )
       .then(() => {
         topic.value.sticky = sticky;
         emits("update:modelValue", topic.value);

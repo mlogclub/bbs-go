@@ -65,9 +65,7 @@ const show = async () => {
 
 const submit = async () => {
   try {
-    await useHttpPostForm("/api/user/update_password", {
-      body: form.value,
-    });
+    await useHttpPost("/api/user/update_password", useJsonToForm(form.value));
     visible.value = false;
     emits("success");
     useMsgSuccess("修改密码成功");

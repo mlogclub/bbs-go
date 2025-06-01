@@ -24,7 +24,6 @@ const (
 	SysConfigTopicCaptcha               = "topicCaptcha"               // 是否开启发帖验证码
 	SysConfigUserObserveSeconds         = "userObserveSeconds"         // 新用户观察期
 	SysConfigTokenExpireDays            = "tokenExpireDays"            // 登录Token有效天数
-	SysConfigLoginMethod                = "loginMethod"                // 登录方式
 	SysConfigEnableHideContent          = "enableHideContent"          // 启用回复可见功能
 	SysConfigCreateTopicEmailVerified   = "createTopicEmailVerified"   // 发话题需要邮箱认证
 	SysConfigCreateArticleEmailVerified = "createArticleEmailVerified" // 发话题需要邮箱认证
@@ -95,8 +94,8 @@ const (
 type TopicType int
 
 const (
-	TopicTypeTopic TopicType = 0
-	TopicTypeTweet TopicType = 1
+	TopicTypeTopic TopicType = 0 // 帖子
+	TopicTypeTweet TopicType = 1 // 动态
 )
 
 const (

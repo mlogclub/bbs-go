@@ -427,3 +427,15 @@ code {
 .v-md-editor__preview-wrapper {
   color: #000;
 }
+
+.button:not(.is-light) {
+
+  &.is-success,
+  &.is-primary,
+  &.is-info,
+  &.is-warning,
+  &.is-danger {
+    color: var(--button-text-color) !important;
+  }
+
+}

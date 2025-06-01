@@ -31,9 +31,7 @@
 </template>
 
 <script setup>
-const { data: nodes } = await useAsyncData("nodes", () => {
-  return useHttpGet("/api/topic/nodes");
-});
+const { data: nodes } = await useMyFetch("/api/topic/nodes");
 
 const route = useRoute();
 const router = useRouter();

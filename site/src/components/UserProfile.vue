@@ -78,14 +78,15 @@ async function uploadBackground(e) {
     const file = files[0];
     const formData = new FormData();
     formData.append("image", file, file.name);
-    const ret = await useHttpPostMultipart("/api/upload", formData);
+    const ret = await useHttpPost("/api/upload", formData);
 
     // 设置背景
-    await useHttpPostForm("/api/user/set_background_image", {
-      body: {
+    await useHttpPost(
+      "/api/user/set_background_image",
+      useJsonToForm({
         backgroundImage: ret.url,
-      },
-    });
+      })
+    );
 
     // 重新加载数据
     localUser.value = await userStore.fetchCurrent();

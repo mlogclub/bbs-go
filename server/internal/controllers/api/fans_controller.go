@@ -53,7 +53,7 @@ func (c *FansController) PostUnfollow() *web.JsonResult {
 	return web.JsonSuccess()
 }
 
-func (c *FansController) GetIsfollowed() *web.JsonResult {
+func (c *FansController) GetIs_followed() *web.JsonResult {
 	userId := params.FormValueInt64Default(c.Ctx, "userId", 0)
 	current := services.UserTokenService.GetCurrent(c.Ctx)
 	var followed = false

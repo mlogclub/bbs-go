@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 1142441 */
-  src: url('iconfont.woff2?t=1727511198798') format('woff2'),
-       url('iconfont.woff?t=1727511198798') format('woff'),
-       url('iconfont.ttf?t=1727511198798') format('truetype');
+  src: url('iconfont.woff2?t=1748783965059') format('woff2'),
+       url('iconfont.woff?t=1748783965059') format('woff'),
+       url('iconfont.ttf?t=1748783965059') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-follow:before {
+  content: "\e61e";
+}
+
+.icon-fans:before {
+  content: "\e688";
+}
+
+.icon-html:before {
+  content: "\e620";
+}
+
+.icon-markdown:before {
+  content: "\ebb1";
+}
+
+.icon-switch:before {
+  content: "\e615";
 }
 
 .icon-view:before {
@@ -53,18 +73,6 @@
   content: "\e81a";
 }
 
-.icon-size:before {
-  content: "\e60a";
-}
-
-.icon-exit-fullscreen:before {
-  content: "\e676";
-}
-
-.icon-fullscreen:before {
-  content: "\e677";
-}
-
 .icon-nav:before {
   content: "\e617";
 }
@@ -101,10 +109,6 @@
   content: "\e9df";
 }
 
-.icon-read:before {
-  content: "\e890";
-}
-
 .icon-weixin:before {
   content: "\e61c";
 }
@@ -115,10 +119,6 @@
 
 .icon-forbidden:before {
   content: "\e638";
-}
-
-.icon-log:before {
-  content: "\e624";
 }
 
 .icon-tweet2:before {
