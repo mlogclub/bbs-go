@@ -17,8 +17,11 @@
           页面设置邮箱，并完成邮箱认证。
         </div>
       </article>
-      <div v-else class="article-create-form">
-        <div class="article-form-title">发文章</div>
+      <div v-else class="publish-form">
+        <div class="form-title">
+          <div class="form-title-name">发文章</div>
+        </div>
+
         <div class="field">
           <div class="control">
             <input
@@ -149,27 +152,6 @@ async function submitCreate() {
 </script>
 
 <style lang="scss" scoped>
-.article-create-form {
-  border-radius: var(--border-radius);
-  background-color: var(--bg-color);
-  padding: 30px;
-
-  .article-form-title {
-    font-size: 36px;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  .field {
-    margin-bottom: 10px;
-
-    input {
-      &:focus-visible {
-        outline-width: 0;
-      }
-    }
-  }
-}
-
 .cover-add-btn {
   display: flex;
   flex-direction: column;
@@ -177,13 +159,14 @@ async function submitCreate() {
   justify-content: center;
 
   i {
-    font-size: 24px;
-    color: #1878f3;
+    font-size: 18px;
+    color: var(--text-color3);
   }
 
   span {
     font-size: 14px;
     color: var(--text-color3);
+    font-weight: 500;
   }
 }
 </style>
