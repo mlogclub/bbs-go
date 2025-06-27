@@ -5,10 +5,10 @@
         :class="{ 'msg-flicker': msgcount > 0 }"
         to="/user/messages"
         class="msgicon"
-        title="消息"
+        :title="$t('common.message')"
       >
         <i class="iconfont icon-message"></i>
-        <span>消息</span>
+        <span>{{ $t("common.message") }}</span>
         <sup v-if="msgcount > 0">{{ msgcount > 9 ? "9+" : msgcount }}</sup>
       </nuxt-link>
     </div>

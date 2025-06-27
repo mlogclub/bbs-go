@@ -3,24 +3,37 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input v-model="filters.id" placeholder="用户ID" />
+          <a-input
+            v-model="filters.id"
+            :placeholder="$t('pages.user.filter.id')"
+          />
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.username" placeholder="用户名" />
+          <a-input
+            v-model="filters.username"
+            :placeholder="$t('pages.user.filter.username')"
+          />
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.nickname" placeholder="昵称" />
+          <a-input
+            v-model="filters.nickname"
+            :placeholder="$t('pages.user.filter.nickname')"
+          />
         </a-form-item>
         <a-form-item>
-          <a-select v-model="filters.type" placeholder="用户类型" allow-clear>
-            <a-option :value="0" label="用户" />
-            <a-option :value="1" label="员工" />
+          <a-select
+            v-model="filters.type"
+            :placeholder="$t('pages.user.filter.type')"
+            allow-clear
+          >
+            <a-option :value="0" :label="$t('pages.user.filter.typeUser')" />
+            <a-option :value="1" :label="$t('pages.user.filter.typeStaff')" />
           </a-select>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.user.filter.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -30,7 +43,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.user.table.add') }}
         </a-button> -->
       </div>
     </div>
@@ -48,14 +61,25 @@
         @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id"></a-table-column>
-          <a-table-column title="类型" data-index="type">
+          <a-table-column
+            :title="$t('pages.user.table.id')"
+            data-index="id"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.user.table.type')"
+            data-index="type"
+          >
             <template #cell="{ record }">
-              <a-tag v-if="record.type === 1" color="blue">员工</a-tag>
-              <a-tag v-else>用户</a-tag>
+              <a-tag v-if="record.type === 1" color="blue">{{
+                $t('pages.user.filter.typeStaff')
+              }}</a-tag>
+              <a-tag v-else>{{ $t('pages.user.filter.typeUser') }}</a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="头像" data-index="avatar">
+          <a-table-column
+            :title="$t('pages.user.table.avatar')"
+            data-index="avatar"
+          >
             <template #cell="{ record }">
               <a-avatar>
                 <img v-if="record.avatar" :src="record.avatar" />
@@ -63,26 +87,45 @@
               </a-avatar>
             </template>
           </a-table-column>
-          <a-table-column title="昵称" data-index="nickname"></a-table-column>
-          <a-table-column title="邮箱" data-index="email"></a-table-column>
-          <a-table-column title="积分" data-index="score"></a-table-column>
-          <a-table-column title="是否禁言" data-index="forbidden">
+          <a-table-column
+            :title="$t('pages.user.table.nickname')"
+            data-index="nickname"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.user.table.email')"
+            data-index="email"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.user.table.score')"
+            data-index="score"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.user.table.forbidden')"
+            data-index="forbidden"
+          >
             <template #cell="{ record }">
-              {{ record.forbidden ? '禁言' : '-' }}
+              {{
+                record.forbidden
+                  ? $t('pages.user.table.forbiddenYes')
+                  : $t('pages.user.table.forbiddenNo')
+              }}
             </template>
           </a-table-column>
-          <a-table-column title="注册时间" data-index="createTime">
+          <a-table-column
+            :title="$t('pages.user.table.createTime')"
+            data-index="createTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
-          <a-table-column title="操作">
+          <a-table-column :title="$t('pages.user.table.action')">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.user.table.edit') }}</a-button
               >
             </template>
           </a-table-column>

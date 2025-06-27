@@ -11,6 +11,7 @@ build: clean build-site build-admin
 	@cd server && go build -v -o bbs-go main.go
 	@cp -r server/bbs-go dist/
 	@cp -r server/migrations dist/migrations
+	@cp -r server/locales dist/locales
 	@cp -r site/dist dist/site
 	@cp -r admin/dist dist/admin
 
@@ -22,6 +23,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-macos-amd64
 	@cp -r server/bbs-go-macos-amd64 dist/bbs-go-macos-amd64/bbs-go
 	@cp -r server/migrations dist/bbs-go-macos-amd64/migrations
+	@cp -r server/locales dist/bbs-go-macos-amd64/locales
 	@cp -r site/dist dist/bbs-go-macos-amd64/site
 	@cp -r admin/dist dist/bbs-go-macos-amd64/admin
 	@zip -r dist/bbs-go-macos-amd64.zip dist/bbs-go-macos-amd64
@@ -33,6 +35,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-macos-arm64
 	@cp -r server/bbs-go-macos-arm64 dist/bbs-go-macos-arm64/bbs-go
 	@cp -r server/migrations dist/bbs-go-macos-arm64/migrations
+	@cp -r server/locales dist/bbs-go-macos-arm64/locales
 	@cp -r site/dist dist/bbs-go-macos-arm64/site
 	@cp -r admin/dist dist/bbs-go-macos-arm64/admin
 	@zip -r dist/bbs-go-macos-arm64.zip dist/bbs-go-macos-arm64
@@ -44,6 +47,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-windows-amd64
 	@cp -r server/bbs-go-windows-amd64.exe dist/bbs-go-windows-amd64/bbs-go.exe
 	@cp -r server/migrations dist/bbs-go-windows-amd64/migrations
+	@cp -r server/locales dist/bbs-go-windows-amd64/locales
 	@cp -r site/dist dist/bbs-go-windows-amd64/site
 	@cp -r admin/dist dist/bbs-go-windows-amd64/admin
 	@zip -r dist/bbs-go-windows-amd64.zip dist/bbs-go-windows-amd64
@@ -55,6 +59,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-windows-386
 	@cp -r server/bbs-go-windows-386.exe dist/bbs-go-windows-386/bbs-go.exe
 	@cp -r server/migrations dist/bbs-go-windows-386/migrations
+	@cp -r server/locales dist/bbs-go-windows-386/locales
 	@cp -r site/dist dist/bbs-go-windows-386/site
 	@cp -r admin/dist dist/bbs-go-windows-386/admin
 	@zip -r dist/bbs-go-windows-386.zip dist/bbs-go-windows-386
@@ -66,6 +71,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-linux-amd64
 	@cp -r server/bbs-go-linux-amd64 dist/bbs-go-linux-amd64/bbs-go
 	@cp -r server/migrations dist/bbs-go-linux-amd64/migrations
+	@cp -r server/locales dist/bbs-go-linux-amd64/locales
 	@cp -r site/dist dist/bbs-go-linux-amd64/site
 	@cp -r admin/dist dist/bbs-go-linux-amd64/admin
 	@zip -r dist/bbs-go-linux-amd64.zip dist/bbs-go-linux-amd64
@@ -77,6 +83,7 @@ build-all-platforms: clean build-site build-admin
 	@mkdir -p dist/bbs-go-linux-386
 	@cp -r server/bbs-go-linux-386 dist/bbs-go-linux-386/bbs-go
 	@cp -r server/migrations dist/bbs-go-linux-386/migrations
+	@cp -r server/locales dist/bbs-go-linux-386/locales
 	@cp -r site/dist dist/bbs-go-linux-386/site
 	@cp -r admin/dist dist/bbs-go-linux-386/admin
 	@zip -r dist/bbs-go-linux-386.zip dist/bbs-go-linux-386

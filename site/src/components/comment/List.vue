@@ -23,7 +23,7 @@
                 usePrettyDate(comment.createTime)
               }}</time>
               <span v-if="comment.ipLocation" class="comment-ip-area"
-                >IP属地{{ comment.ipLocation }}</span
+                >{{ t('component.comment.list.ipLocation') }}{{ comment.ipLocation }}</span
               >
             </div>
           </div>
@@ -58,7 +58,7 @@
               @click="like(comment)"
             >
               <i class="iconfont icon-like" />
-              <span>{{ comment.liked ? "已赞" : "点赞" }}</span>
+              <span>{{ comment.liked ? t('component.comment.list.liked') : t('component.comment.list.like') }}</span>
               <span v-if="comment.likeCount > 0">{{ comment.likeCount }}</span>
             </div>
             <div
@@ -67,9 +67,7 @@
               @click="switchShowReply(comment)"
             >
               <i class="iconfont icon-comment" />
-              <span>{{
-                reply.commentId === comment.id ? "取消评论" : "评论"
-              }}</span>
+              <span>{{ reply.commentId === comment.id ? t('component.comment.list.cancelReply') : t('component.comment.list.reply') }}</span>
             </div>
           </div>
           <div v-if="reply.commentId === comment.id" class="comment-reply-form">
@@ -98,6 +96,8 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 const props = defineProps({
   entityType: {
     type: String,
@@ -140,7 +140,6 @@ const like = async (comment) => {
       );
       comment.liked = false;
       comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
-      useMsgSuccess("已取消点赞");
     } else {
       await useHttpPost(
         "/api/like/like",
@@ -151,7 +150,6 @@ const like = async (comment) => {
       );
       comment.liked = true;
       comment.likeCount = comment.likeCount + 1;
-      useMsgSuccess("点赞成功");
     }
   } catch (e) {
     useCatchError(e);
@@ -210,7 +208,7 @@ const submitReply = async (parent) => {
     );
     hideReply();
     appendReply(parent, ret);
-    useMsgSuccess("发布成功");
+    useMsgSuccess(t('component.comment.list.publishSuccess'));
   } catch (e) {
     useCatchError(e);
   }

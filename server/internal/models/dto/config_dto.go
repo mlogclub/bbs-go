@@ -43,6 +43,13 @@ type ModulesConfig struct {
 	Article bool `json:"article"`
 }
 
+type AliyunSmsConfig struct {
+	AccessKeyId     string `json:"accessKeyId"`
+	AccessKeySecret string `json:"accessKeySecret"`
+	SignName        string `json:"signName"`
+	TemplateCode    string `json:"templateCode"`
+}
+
 type UploadMethod string
 
 const (

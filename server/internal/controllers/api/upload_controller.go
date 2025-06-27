@@ -2,9 +2,9 @@ package api
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"io"
 	"log/slog"
-	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
@@ -29,7 +29,7 @@ func (c *UploadController) Post() *web.JsonResult {
 	defer file.Close()
 
 	if header.Size > constants.UploadMaxBytes {
-		return web.JsonErrorMsg("图片不能超过" + strconv.Itoa(constants.UploadMaxM) + "M")
+		return web.JsonErrorMsg(locales.Getf("upload.image_too_large", constants.UploadMaxM))
 	}
 
 	contentType := header.Header.Get("Content-Type")

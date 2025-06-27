@@ -1,3 +1,5 @@
+import i18n from '@/locale';
+
 export const REDIRECT_ROUTE_NAME = 'Redirect';
 
 export const DEFAULT_ROUTE_NAME = 'Dashboard';
@@ -14,7 +16,7 @@ export const NOT_FOUND = {
 };
 
 export const DEFAULT_ROUTE = {
-  title: '仪表盘',
+  title: i18n.global.t('router.dashboard'),
   name: DEFAULT_ROUTE_NAME,
   fullPath: '/dashboard',
 };

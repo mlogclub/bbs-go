@@ -7,7 +7,7 @@
             <div class="tabs is-centered">
               <ul>
                 <li class="is-active">
-                  <a @click="switchLoginMethod('password')">账号登录</a>
+                  <a>{{ $t("user.signin.passwordLogin") }}</a>
                 </li>
               </ul>
             </div>
@@ -23,8 +23,9 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 useHead({
-  title: useSiteTitle("登录"),
+  title: useSiteTitle(t("user.signin.title")),
 });
 </script>
 

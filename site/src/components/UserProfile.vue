@@ -10,7 +10,7 @@
           <span class="file-icon">
             <i class="iconfont icon-upload" />
           </span>
-          <span class="file-label">设置背景</span>
+          <span class="file-label">{{ $t("component.userProfile.setBackground") }}</span>
         </span>
       </label>
     </div>
@@ -43,6 +43,7 @@
 
 <script setup>
 import defaultUserBg from "~/assets/images/default-user-bg.jpg";
+const { t } = useI18n();
 const props = defineProps({
   user: {
     type: Object,
@@ -91,7 +92,7 @@ async function uploadBackground(e) {
     // 重新加载数据
     localUser.value = await userStore.fetchCurrent();
 
-    useMsgSuccess("背景设置成功");
+    useMsgSuccess(t("component.userProfile.backgroundSuccess"));
   } catch (e) {
     useMsgError(e.message || e);
     console.error(e);

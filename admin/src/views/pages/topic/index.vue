@@ -3,41 +3,65 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input v-model="filters.id" placeholder="ID" />
+          <a-input
+            v-model="filters.id"
+            :placeholder="$t('pages.topic.filter.id')"
+          />
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.userId" placeholder="用户ID" />
+          <a-input
+            v-model="filters.userId"
+            :placeholder="$t('pages.topic.filter.userId')"
+          />
         </a-form-item>
         <a-form-item>
           <a-select
             v-model="filters.status"
-            placeholder="状态"
+            :placeholder="$t('pages.topic.filter.status')"
             allow-clear
             @change="list"
           >
-            <a-option :value="0" label="正常" />
-            <a-option :value="1" label="删除" />
-            <a-option :value="2" label="待审核" />
+            <a-option
+              :value="0"
+              :label="$t('pages.topic.filter.statusNormal')"
+            />
+            <a-option
+              :value="1"
+              :label="$t('pages.topic.filter.statusDeleted')"
+            />
+            <a-option
+              :value="2"
+              :label="$t('pages.topic.filter.statusPending')"
+            />
           </a-select>
         </a-form-item>
         <a-form-item>
           <a-select
             v-model="filters.recommend"
-            placeholder="是否推荐"
+            :placeholder="$t('pages.topic.filter.recommend')"
             allow-clear
             @change="list"
           >
-            <a-option :value="1" label="推荐" />
-            <a-option :value="0" label="未推荐" />
+            <a-option
+              :value="1"
+              :label="$t('pages.topic.filter.recommendYes')"
+            />
+            <a-option
+              :value="0"
+              :label="$t('pages.topic.filter.recommendNo')"
+            />
           </a-select>
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.title" placeholder="标题" />
+          <a-input
+            v-model="filters.title"
+            :placeholder="$t('pages.topic.filter.title')"
+          />
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.topic.filter.search') }}
           </a-button>
         </a-form-item>
       </a-form>

@@ -14,7 +14,7 @@
               {{ comment.user.nickname }}
             </nuxt-link>
             <template v-if="comment.quote">
-              &nbsp;<span>回复</span>&nbsp;
+              &nbsp;<span>{{ $t('component.comment.subList.replyTo') }}</span>&nbsp;
               <nuxt-link
                 :to="`/user/${comment.quote.user.id}`"
                 class="comment-nickname"
@@ -66,7 +66,7 @@
             @click="like(comment)"
           >
             <i class="iconfont icon-like" />
-            <span>{{ comment.liked ? "已赞" : "点赞" }}</span>
+            <span>{{ comment.liked ? $t('component.comment.subList.liked') : $t('component.comment.subList.like') }}</span>
             <span v-if="comment.likeCount > 0">{{ comment.likeCount }}</span>
           </div>
           <div
@@ -76,7 +76,7 @@
           >
             <i class="iconfont icon-comment" />
             <span>{{
-              reply.quoteId === comment.id ? "取消评论" : "评论"
+              reply.quoteId === comment.id ? $t('component.comment.subList.cancelReply') : $t('component.comment.subList.reply')
             }}</span>
           </div>
         </div>
@@ -93,7 +93,7 @@
     </div>
     <div v-if="replies.hasMore === true" class="comment-more">
       <a @click="loadMore">
-        <span>查看更多回复</span>
+        <span>{{ $t('component.comment.subList.loadMore') }}</span>
         <i class="iconfont icon-right" />
       </a>
     </div>
@@ -154,7 +154,6 @@ export default {
           );
           comment.liked = false;
           comment.likeCount = comment.likeCount > 0 ? comment.likeCount - 1 : 0;
-          useMsgSuccess("已取消点赞");
         } else {
           await useHttpPost(
             "/api/like/like",
@@ -165,7 +164,6 @@ export default {
           );
           comment.liked = true;
           comment.likeCount = comment.likeCount + 1;
-          useMsgSuccess("点赞成功");
         }
       } catch (e) {
         useCatchError(e);
@@ -211,7 +209,6 @@ export default {
         );
         this.hideReply(parent);
         this.$emit("reply", ret);
-        useMsgSuccess("发布成功");
       } catch (e) {
         useCatchError(e);
       }

@@ -37,14 +37,14 @@
               class="button is-small is-light is-danger"
               @click="cancel"
             >
-              {{ cancelBtnText }}
+              {{ $t("component.dialog.cancel") }}
             </button>
             <button
               v-if="okBtnVisible"
               class="button is-small is-light is-primary"
               @click="ok"
             >
-              {{ okBtnText }}
+              {{ $t("component.dialog.ok") }}
             </button>
           </div>
         </div>
@@ -93,17 +93,9 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  cancelBtnText: {
-    type: String,
-    default: "取消",
-  },
   okBtnVisible: {
     type: Boolean,
     default: true,
-  },
-  okBtnText: {
-    type: String,
-    default: "确定",
   },
 });
 

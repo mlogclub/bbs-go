@@ -20,12 +20,13 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 const route = useRoute();
 const tagId = route.params.id;
 const { data: tag } = await useMyFetch(`/api/tag/${tagId}`);
 
 useHead({
-  title: useSiteTitle(tag.value.name, "话题"),
+  title: useSiteTitle(tag.value.name, t("pages.topics.title")),
   meta: [
     {
       hid: "description",

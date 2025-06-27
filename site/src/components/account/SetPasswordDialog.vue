@@ -1,5 +1,9 @@
 <template>
-  <BBSDialog v-model:visible="visible" title="设置密码" @ok="submit">
+  <BBSDialog
+    v-model:visible="visible"
+    :title="$t('component.setPasswordDialog.title')"
+    @ok="submit"
+  >
     <div class="set-password-dialog">
       <div class="field">
         <div class="control has-icons-left">
@@ -7,7 +11,7 @@
             v-model="form.password"
             class="input"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="$t('component.setPasswordDialog.passwordPlaceholder')"
             @keydown.enter="submit"
           />
           <span class="icon is-left">
@@ -21,7 +25,9 @@
             v-model="form.rePassword"
             class="input"
             type="password"
-            placeholder="请再次输入密码"
+            :placeholder="
+              $t('component.setPasswordDialog.rePasswordPlaceholder')
+            "
             @keydown.enter="submit"
           />
           <span class="icon is-left">
@@ -34,6 +40,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 const visible = ref(false);
 const emits = defineEmits(["success"]);
 const form = ref({
@@ -53,7 +60,7 @@ const submit = async () => {
     await useHttpPost("/api/user/set_password", useJsonToForm(form.value));
     visible.value = false;
     emits("success");
-    useMsgSuccess("设置密码成功");
+    useMsgSuccess(t("component.setPasswordDialog.success"));
   } catch (err) {
     useMsgError(err.message || err);
   }

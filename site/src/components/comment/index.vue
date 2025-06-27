@@ -1,17 +1,17 @@
 <template>
   <div class="comment-component" id="JComment">
     <div class="comment-header">
-      <span>评论</span>
+      <span>{{ $t("component.comment.title") }}</span>
       <span v-if="commentCount > 0">&nbsp;{{ commentCount }}</span>
     </div>
 
     <template v-if="isLogin">
       <div v-if="isNeedEmailVerify" class="comment-not-login">
         <div class="comment-login-div">
-          请先前往
-          <nuxt-link style="font-weight: 700" to="/user/profile/account">
-            个人中心 &gt; 账号设置 </nuxt-link
-          >页面设置邮箱，并完成邮箱认证。
+          {{ $t("component.comment.emailVerifyPrompt") }}
+          <nuxt-link to="/user/profile/account">
+            {{ $t("component.comment.accountSettingsLink") }} </nuxt-link
+          >{{ $t("component.comment.emailVerifyAction") }}
         </div>
       </div>
       <template v-else>
@@ -25,8 +25,7 @@
     </template>
     <div v-else class="comment-not-login">
       <div class="comment-login-div">
-        请
-        <a style="font-weight: 700" @click="useToSignIn()">登录</a>后发表观点
+        <a @click="useToSignIn()">{{ $t("component.comment.loginLink") }}</a>
       </div>
     </div>
 
@@ -54,16 +53,9 @@ const props = defineProps({
 const emits = defineEmits(["created"]);
 const userStore = useUserStore();
 const configStore = useConfigStore();
-const user = computed(() => {
-  return userStore.user;
-});
 
 const isLogin = computed(() => {
-  return userStore.user !== null;
-});
-
-const config = computed(() => {
-  return configStore.config;
+  return userStore.isLogin;
 });
 
 const input = ref(null);
@@ -71,7 +63,10 @@ const list = ref(null);
 
 // 是否需要先邮箱认证
 const isNeedEmailVerify = computed(() => {
-  return config.createCommentEmailVerified && user && user.emailVerified;
+  return (
+    configStore.config.createCommentEmailVerified &&
+    !userStore.user.emailVerified
+  );
 });
 
 const commentCreated = (data) => {
@@ -95,7 +90,7 @@ const commentCreated = (data) => {
   .comment-not-login {
     margin: 10px 0;
     border: 1px solid var(--border-color);
-    border-radius: 0;
+    border-radius: 3px;
     overflow: hidden;
     position: relative;
     padding: 10px;
@@ -108,6 +103,7 @@ const commentCreated = (data) => {
       padding: 0 10px;
 
       a {
+        // color: var(--text-color2);
         margin-left: 10px;
         margin-right: 10px;
       }

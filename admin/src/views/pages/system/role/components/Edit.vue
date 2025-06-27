@@ -7,26 +7,22 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="角色名称" field="name">
+      <a-form-item :label="$t('pages.role.name')" field="name">
         <a-input v-model="form.name" />
       </a-form-item>
 
-      <a-form-item label="角色编码" field="code">
+      <a-form-item :label="$t('pages.role.code')" field="code">
         <a-input v-model="form.code" />
       </a-form-item>
 
-      <!-- <a-form-item label="排序" field="sortNo">
-        <a-input-number v-model="form.sortNo" mode="button" />
-      </a-form-item> -->
-
-      <a-form-item label="备注" field="remark">
+      <a-form-item :label="$t('pages.role.remark')" field="remark">
         <a-input v-model="form.remark" />
       </a-form-item>
 
-      <a-form-item label="状态" field="status">
+      <a-form-item :label="$t('pages.role.status')" field="status">
         <a-select v-model="form.status">
-          <a-option :value="0">正常</a-option>
-          <a-option :value="1">禁用</a-option>
+          <a-option :value="0">{{ $t('pages.role.statusNormal') }}</a-option>
+          <a-option :value="1">{{ $t('pages.role.statusDisabled') }}</a-option>
         </a-select>
       </a-form-item>
     </a-form>
@@ -34,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();
@@ -52,16 +49,16 @@
     status: 0,
   });
   const rules = {
-    name: [{ required: true, message: '请输入角色名称' }],
-    code: [{ required: true, message: '请输入角色编码' }],
-    status: [{ required: true, message: '请选择状态' }],
+    name: [{ required: true, message: t('pages.role.pleaseInputName') }],
+    code: [{ required: true, message: t('pages.role.pleaseInputCode') }],
+    status: [{ required: true, message: t('pages.role.pleaseSelectStatus') }],
   };
 
   const show = () => {
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.role.new');
     config.visible = true;
   };
 
@@ -69,7 +66,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.role.editTitle');
 
     try {
       form.value = await axios.get(`/api/admin/role/${id}`);
@@ -94,7 +91,7 @@
         ? '/api/admin/role/create'
         : '/api/admin/role/update';
       await axios.postForm<any>(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('role.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e: any) {

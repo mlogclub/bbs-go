@@ -7,7 +7,7 @@
     <textarea
       ref="textarea"
       v-model="post.content"
-      placeholder="请输入您要发表的内容 ..."
+      :placeholder="$t('component.textEditor.placeholder')"
       @paste="handleParse"
       @drop="handleDrag"
       @keydown.ctrl.enter="doSubmit"
@@ -38,13 +38,16 @@
         </div>
       </div>
       <div class="text-editor-btn">
-        <button class="button is-primary" @click="doSubmit">发布</button>
+        <button class="button is-primary" @click="doSubmit">
+          {{ $t("component.textEditor.publish") }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+const { t } = useI18n();
 const props = defineProps({
   height: {
     type: Number,
@@ -116,7 +119,7 @@ watch(
 
 const doSubmit = () => {
   if (imageUploading.value === true) {
-    useMsgWarning("请先等待图片上传完成...");
+    useMsgWarning(t("component.textEditor.pleaseWait"));
     return;
   }
   emit("submit");

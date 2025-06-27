@@ -14,7 +14,7 @@
                     <span class="icon is-small">
                       <i class="iconfont icon-fans" aria-hidden="true" />
                     </span>
-                    <span>粉丝</span>
+                    <span>{{ $t("pages.user.fans") }}</span>
                   </nuxt-link>
                 </li>
                 <li :class="{ 'is-active': activeTab === 'followed' }">
@@ -22,7 +22,7 @@
                     <span class="icon is-small">
                       <i class="iconfont icon-follow" aria-hidden="true" />
                     </span>
-                    <span>关注</span>
+                    <span>{{ $t("pages.user.followed") }}</span>
                   </nuxt-link>
                 </li>
               </ul>
@@ -46,9 +46,10 @@
 const route = useRoute();
 const user = await useHttpGet(`/api/user/${route.params.userId}`);
 const activeTab = ref("followed");
+const { t } = useI18n();
 
 useHead({
-  title: useSiteTitle("关注", user.nickname),
+  title: useSiteTitle(t("pages.user.followed"), user.nickname),
 });
 </script>
 

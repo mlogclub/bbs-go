@@ -3,15 +3,15 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input v-model="filters.name" placeholder="名称" />
+          <a-input v-model="filters.name" :placeholder="$t('pages.api.name')" />
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.path" placeholder="路径" />
+          <a-input v-model="filters.path" :placeholder="$t('pages.api.path')" />
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.api.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -21,7 +21,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.api.add') }}
         </a-button>
       </div>
     </div>
@@ -41,26 +41,38 @@
         @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id" :width="100" />
-          <a-table-column title="Method" data-index="method" :width="100">
+          <a-table-column
+            :title="$t('pages.api.id')"
+            data-index="id"
+            :width="100"
+          />
+          <a-table-column
+            :title="$t('pages.api.method')"
+            data-index="method"
+            :width="100"
+          >
             <template #cell="{ record }">
               <a-tag>{{ record.method }}</a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="Path" data-index="path" />
-          <a-table-column title="名称" data-index="name" />
-          <a-table-column title="创建时间" data-index="createTime" :width="200">
+          <a-table-column :title="$t('pages.api.path')" data-index="path" />
+          <a-table-column :title="$t('pages.api.name')" data-index="name" />
+          <a-table-column
+            :title="$t('pages.api.createTime')"
+            data-index="createTime"
+            :width="200"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
-          <a-table-column title="操作" :width="100">
+          <a-table-column :title="$t('pages.api.actions')" :width="100">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.api.edit') }}</a-button
               >
             </template>
           </a-table-column>

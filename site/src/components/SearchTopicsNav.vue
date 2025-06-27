@@ -2,10 +2,10 @@
   <div class="topics-nav">
     <ul class="topics-nav-list">
       <li :class="{ active: nodeId === 0 }" class="topics-nav-item">
-        <a @click="setNodeId(0)">全部</a>
+        <a @click="setNodeId(0)">{{ $t("component.search.all") }}</a>
       </li>
       <li :class="{ active: nodeId === -1 }" class="topics-nav-item">
-        <a @click="setNodeId(-1)">推荐</a>
+        <a @click="setNodeId(-1)">{{ $t("component.search.recommend") }}</a>
       </li>
       <li
         v-for="node in nodes"
@@ -19,11 +19,11 @@
     <div class="search-time-range">
       <div class="select is-small">
         <select v-model="timeRange" @change="setTimeRange">
-          <option :value="0">时间不限</option>
-          <option :value="1">一天内</option>
-          <option :value="2">一周内</option>
-          <option :value="3">一月内</option>
-          <option :value="4">一年内</option>
+          <option :value="0">{{ $t("component.search.timeRange.all") }}</option>
+          <option :value="1">{{ $t("component.search.timeRange.day") }}</option>
+          <option :value="2">{{ $t("component.search.timeRange.week") }}</option>
+          <option :value="3">{{ $t("component.search.timeRange.month") }}</option>
+          <option :value="4">{{ $t("component.search.timeRange.year") }}</option>
         </select>
       </div>
     </div>

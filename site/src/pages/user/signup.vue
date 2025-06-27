@@ -3,12 +3,14 @@
     <div class="container">
       <div class="main-body no-bg">
         <div class="widget signup">
-          <div class="widget-header" style="text-align: center">注册账号</div>
+          <div class="widget-header" style="text-align: center">
+            {{ $t("user.signup.title") }}
+          </div>
           <div class="widget-content">
             <form class="signup-form" @submit="clickSignup">
               <div class="field">
                 <label class="label">
-                  <span>昵称</span>
+                  <span>{{ $t("user.signup.nickname") }}</span>
                   <span class="is-danger">*</span>
                 </label>
                 <div class="control">
@@ -16,14 +18,14 @@
                     v-model="form.nickname"
                     class="input"
                     type="text"
-                    placeholder="请输入昵称"
+                    :placeholder="$t('user.signup.nicknamePlaceholder')"
                   />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">
-                  <span>邮箱</span>
+                  <span>{{ $t("user.signup.email") }}</span>
                   <span class="is-danger">*</span>
                 </label>
                 <div class="control">
@@ -31,14 +33,14 @@
                     v-model="form.email"
                     class="input"
                     type="email"
-                    placeholder="请输入邮箱"
+                    :placeholder="$t('user.signup.emailPlaceholder')"
                   />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">
-                  <span>密码</span>
+                  <span>{{ $t("user.signup.password") }}</span>
                   <span class="is-danger">*</span>
                 </label>
                 <div class="control">
@@ -46,15 +48,15 @@
                     v-model="form.password"
                     class="input"
                     type="password"
-                    placeholder="请输入密码"
+                    :placeholder="$t('user.signup.passwordPlaceholder')"
                   />
                 </div>
-                <p class="help">密码长度必须不少于 6 个字。</p>
+                <p class="help">{{ $t("user.signup.passwordHelp") }}</p>
               </div>
 
               <div class="field">
                 <label class="label">
-                  <span>确认密码</span>
+                  <span>{{ $t("user.signup.confirmPassword") }}</span>
                   <span class="is-danger">*</span>
                 </label>
                 <div class="control">
@@ -62,17 +64,21 @@
                     v-model="form.rePassword"
                     class="input"
                     type="password"
-                    placeholder="请再次输入密码"
+                    :placeholder="$t('user.signup.confirmPasswordPlaceholder')"
                   />
                 </div>
               </div>
 
               <div class="signup-btn">
-                <el-button type="primary" @click="clickSignup">注册</el-button>
+                <el-button type="primary" @click="clickSignup">{{
+                  $t("user.signup.signupBtn")
+                }}</el-button>
               </div>
 
               <div class="signup-bottom">
-                <a @click="toSignin">已有账号，前往登录&gt;&gt;</a>
+                <a @click="toSignin">{{
+                  $t("user.signup.alreadyHaveAccount")
+                }}</a>
               </div>
             </form>
           </div>
@@ -85,8 +91,10 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 useHead({
-  title: useSiteTitle("注册"),
+  title: useSiteTitle(t("user.signup.title")),
 });
 
 const route = useRoute();
@@ -105,19 +113,19 @@ const captchaDialog = ref(null);
 
 const clickSignup = async () => {
   if (!form.nickname) {
-    useMsgError("请输入昵称");
+    useMsgError(t("user.signup.nicknameRequired"));
     return;
   }
   if (!form.email) {
-    useMsgError("请输入邮箱");
+    useMsgError(t("user.signup.emailRequired"));
     return;
   }
   if (!form.password) {
-    useMsgError("请输入密码");
+    useMsgError(t("user.signup.passwordRequired"));
     return;
   }
   if (form.password !== form.rePassword) {
-    useMsgError("两次输入密码不一致");
+    useMsgError(t("user.signup.passwordMismatch"));
     return;
   }
   captchaDialog.value.show().then(async (captcha) => {

@@ -18,9 +18,19 @@ import (
 const (
 	BBSGO_ENV  = "BBSGO_ENV"
 	ENV_PREFIX = "BBSGO"
-	EnvDev     = "dev"
-	EnvTest    = "test"
-	EnvProd    = "prod"
+
+	EnvDev  = "dev"
+	EnvTest = "test"
+	EnvProd = "prod"
+)
+
+type Language string
+
+const (
+	LanguageZhCN Language = "zh-CN"
+	LanguageEnUS Language = "en-US"
+
+	DefaultLanguage = LanguageEnUS
 )
 
 var (
@@ -32,21 +42,23 @@ var (
 
 func init() {
 	var (
-		configName = "bbs-go." + GetEnv()
-		configType = "yaml"
+		configFileName = "bbs-go.yaml"
 	)
 	v = viper.New()
-	v.SetConfigName(configName)
-	v.SetConfigType(configType)
+	v.SetConfigFile(configFileName)
 	v.AddConfigPath(".")
+	if workDir, err := os.Executable(); err == nil {
+		v.AddConfigPath(filepath.Dir(workDir))
+	}
 	v.AutomaticEnv()
 	v.SetEnvPrefix(ENV_PREFIX)
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	configFile = getConfigFilePath(configName, configType)
+	configFile = getConfigFilePath(configFileName)
 }
 
 type Config struct {
+	Language       Language       `yaml:"language"`       // 语言
 	BaseURL        string         `yaml:"baseURL"`        // baseURL
 	Port           int            `yaml:"port"`           // 端口
 	IpDataPath     string         `yaml:"ipDataPath"`     // IP数据文件
@@ -97,14 +109,8 @@ type SmSEOConfig struct {
 func ReadConfig() (cfg *Config, exists bool, err error) {
 	exists = true
 	if e := v.ReadInConfig(); e != nil {
-		// 如果配置文件不存在，不报错，所有配置都为空
-		if _, ok := e.(viper.ConfigFileNotFoundError); ok {
-			exists = false
-			slog.Warn("Config file not found, will create a new one")
-		} else {
-			err = fmt.Errorf("fatal error reading config file: %w", e)
-			return
-		}
+		exists = false
+		slog.Warn("Config file not found, use default", slog.Any("error", e))
 	}
 
 	if exists {
@@ -112,9 +118,14 @@ func ReadConfig() (cfg *Config, exists bool, err error) {
 			err = fmt.Errorf("fatal error unmarshal config: %w", err)
 			return
 		}
+		// 如果配置文件存在但没有语言设置，使用默认语言
+		if strs.IsBlank(string(cfg.Language)) {
+			cfg.Language = DefaultLanguage
+		}
 	} else {
 		// default config
 		cfg = &Config{
+			Language:  DefaultLanguage,
 			Port:      8082,
 			Installed: false,
 			Logger: LoggerConfig{
@@ -162,19 +173,18 @@ func IsProd() bool {
 func GetEnv() string {
 	env := os.Getenv("BBSGO_ENV")
 	if strs.IsBlank(env) {
-		env = "dev"
+		env = EnvDev
 	}
 	return env
 }
 
-func getConfigFilePath(configName, configType string) string {
-	// 获取当前工作目录
-	workDir, err := os.Getwd()
+func getConfigFilePath(configName string) string {
+	workDir, err := os.Executable()
 	if err != nil {
 		slog.Error("Failed to get working directory", slog.Any("error", err))
 		return ""
 	}
-	return filepath.Join(workDir, configName+"."+configType)
+	return filepath.Join(filepath.Dir(workDir), configName)
 }
 
 func getLogFilename() string {

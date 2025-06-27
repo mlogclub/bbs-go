@@ -35,9 +35,9 @@
       </template>
     </a-table>
     <div style="margin-top: 20px">
-      <a-button type="primary" :loading="loading" @click="submit"
-        >提交</a-button
-      >
+      <a-button type="primary" :loading="loading" @click="submit">{{
+        t('pages.settings.nav.submit')
+      }}</a-button>
     </div>
   </div>
 </template>
@@ -46,16 +46,18 @@
   import { NavDTO } from '@/composables/types';
   import { TableData } from '@arco-design/web-vue';
 
+  const { t } = useI18n();
+
   const loading = ref(false);
   const data = ref<NavDTO[]>([]);
   const columns = [
     {
-      title: '标题',
+      title: t('pages.settings.nav.tableTitle'),
       dataIndex: 'title',
       slotName: 'name',
     },
     {
-      title: '链接',
+      title: t('pages.settings.nav.tableUrl'),
       dataIndex: 'url',
       slotName: 'url',
     },
@@ -93,14 +95,14 @@
     loading.value = true;
     try {
       if (data.value.some((item) => isAnyBlank(item.title, item.url))) {
-        useNotificationError('请检查你的导航配置，导航标题和链接不能为空');
+        useNotificationError(t('pages.settings.nav.message.validation'));
         return;
       }
       await axios.post('/api/admin/sys-config/save', {
         siteNavs: data.value,
       });
       await loadConfig();
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.settings.nav.message.submitSuccess'));
     } catch (e) {
       useHandleError(e);
     } finally {

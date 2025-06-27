@@ -13,6 +13,10 @@ const props = defineProps({
       };
     },
   },
+  placeholder: {
+    type: String,
+    default: "",
+  },
   height: {
     type: String,
     default: "200px",
@@ -77,7 +81,7 @@ defineExpose({
     <label class="simple-editor-input">
       <textarea
         v-model="post.content"
-        placeholder="请输入您要发表的内容 ..."
+        :placeholder="placeholder"
         :style="{ 'min-height': height, height: height }"
         @update:model-value="onContentChange"
         @paste="handleParse"

@@ -8,51 +8,73 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" layout="vertical" :model="form" :rules="rules">
-      <a-form-item label="上级" field="parentId">
+      <a-form-item :label="$t('pages.menu.parent')" field="parentId">
         <a-tree-select
           v-model="form.parentId"
           allow-clear
           :data="menus"
-          placeholder="请选择上级"
+          :placeholder="$t('pages.menu.pleaseSelectParent')"
         >
         </a-tree-select>
       </a-form-item>
 
-      <a-form-item label="类型" field="type">
-        <a-select v-model="form.type" placeholder="请选择类型">
-          <a-option value="menu" label="菜单" />
-          <a-option value="func" label="功能" />
+      <a-form-item :label="$t('pages.menu.type')" field="type">
+        <a-select
+          v-model="form.type"
+          :placeholder="$t('pages.menu.pleaseSelectType')"
+        >
+          <a-option value="menu" :label="$t('pages.menu.typeMenu')" />
+          <a-option value="func" :label="$t('pages.menu.typeFunc')" />
         </a-select>
       </a-form-item>
 
-      <a-form-item label="标题" field="title">
+      <a-form-item :label="$t('pages.menu.title')" field="title">
         <a-input v-model="form.title" />
       </a-form-item>
 
-      <a-form-item v-if="form.type === 'menu'" label="名称" field="name">
-        <a-input v-model="form.name" placeholder="组件/功能名称，全局唯一" />
+      <a-form-item
+        v-if="form.type === 'menu'"
+        :label="$t('pages.menu.name')"
+        field="name"
+      >
+        <a-input
+          v-model="form.name"
+          :placeholder="$t('pages.menu.namePlaceholder')"
+        />
       </a-form-item>
 
-      <a-form-item v-if="form.type === 'menu'" label="组件" field="component">
+      <a-form-item
+        v-if="form.type === 'menu'"
+        :label="$t('pages.menu.component')"
+        field="component"
+      >
         <a-input v-model="form.component" />
       </a-form-item>
 
-      <a-form-item v-if="form.type === 'menu'" label="路径" field="path">
+      <a-form-item
+        v-if="form.type === 'menu'"
+        :label="$t('pages.menu.path')"
+        field="path"
+      >
         <a-input v-model="form.path" />
       </a-form-item>
 
-      <a-form-item v-if="form.type === 'menu'" label="ICON" field="icon">
+      <a-form-item
+        v-if="form.type === 'menu'"
+        :label="$t('pages.menu.icon')"
+        field="icon"
+      >
         <icon-picker v-model="form.icon" />
       </a-form-item>
 
-      <a-form-item label="状态" field="status">
+      <a-form-item :label="$t('pages.menu.status')" field="status">
         <a-select v-model="form.status">
-          <a-option :value="0">正常</a-option>
-          <a-option :value="1">禁用</a-option>
+          <a-option :value="0">{{ $t('pages.menu.statusNormal') }}</a-option>
+          <a-option :value="1">{{ $t('pages.menu.statusDisabled') }}</a-option>
         </a-select>
       </a-form-item>
 
-      <a-form-item label="接口">
+      <a-form-item :label="$t('pages.menu.api')">
         <div class="api-panel">
           <a-table
             class="api-table"
@@ -80,7 +102,7 @@
           <div class="api-btns">
             <a-button type="primary" size="mini" @click="showApiDialog">
               <icon-plus />
-              <span>添加</span>
+              <span>{{ $t('pages.menu.apiAdd') }}</span>
             </a-button>
           </div>
         </div>
@@ -89,7 +111,7 @@
 
     <a-modal v-model:visible="apiDialogVisible" :width="950" height="300">
       <div style="margin-bottom: 10px">
-        <a-input v-model="apiFilter" placeholder="搜索接口">
+        <a-input v-model="apiFilter" :placeholder="$t('pages.menu.apiSearch')">
           <template #suffix>
             <icon-search />
           </template>
@@ -107,14 +129,22 @@
         @row-click="selectApi"
       >
         <template #columns>
-          <a-table-column title="ID" data-index="id" :width="80" />
-          <a-table-column title="Method" data-index="method" :width="80">
+          <a-table-column
+            :title="$t('pages.menu.apiId')"
+            data-index="id"
+            :width="80"
+          />
+          <a-table-column
+            :title="$t('pages.menu.apiMethod')"
+            data-index="method"
+            :width="80"
+          >
             <template #cell="{ record }">
               <a-tag>{{ record.method }}</a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="Path" data-index="path" />
-          <a-table-column title="Name" data-index="name" />
+          <a-table-column :title="$t('pages.menu.apiPath')" data-index="path" />
+          <a-table-column :title="$t('pages.menu.apiName')" data-index="name" />
         </template>
       </a-table>
     </a-modal>
@@ -125,6 +155,8 @@
   import IconPicker from './IconPicker.vue';
 
   const emit = defineEmits(['ok']);
+
+  const { t } = useI18n();
 
   const appStore = useAppStore();
   const formRef = ref();
@@ -146,9 +178,9 @@
     apis: [],
   });
   const rules = {
-    type: [{ required: true, message: '请选择类型' }],
-    title: [{ required: true, message: '请输入标题' }],
-    // name: [{ required: true, message: '请输入名称' }],
+    type: [{ required: true, message: t('pages.menu.pleaseSelectType') }],
+    title: [{ required: true, message: t('pages.menu.pleaseInputTitle') }],
+    // name: [{ required: true, message: t('pages.menu.pleaseInputName') }],
   };
 
   const menus = ref([]);
@@ -162,7 +194,7 @@
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.menu.new');
 
     await loadMenus();
 
@@ -173,7 +205,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.menu.editTitle');
 
     await loadMenus();
 
@@ -200,8 +232,8 @@
       const url = config.isCreate
         ? '/api/admin/menu/create'
         : '/api/admin/menu/update';
-      await axios.postForm(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      (await axios.postForm) < any > (url, jsonToFormData(form.value));
+      useNotificationSuccess(t('pages.menu.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e) {

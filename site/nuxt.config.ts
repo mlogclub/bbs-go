@@ -1,4 +1,5 @@
 const ssr = process.env.NUXT_SSR === 'false' ? false : true
+const serverURL = import.meta.env.SERVER_URL || 'http://localhost:8082'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -31,6 +32,7 @@ export default defineNuxtConfig({
         // See IntersectionObserver documentation
       },
     }],
+    '@nuxtjs/i18n',
   ],
 
   plugins: [
@@ -59,6 +61,13 @@ export default defineNuxtConfig({
     head: {
       title: 'BBS-GO',
       htmlAttrs: { class: 'theme-light has-navbar-fixed-top' },
+      script: [
+        {
+          src: 'https://hm.baidu.com/hm.js?79b8ff82974d0769ef5c629e4cd46629',
+          type: 'text/javascript',
+          async: true
+        }
+      ]
     },
   },
 
@@ -69,13 +78,24 @@ export default defineNuxtConfig({
   nitro: {
     routeRules: {
       '/api/**': {
-        proxy: `${import.meta.env.SERVER_URL}/api/**`,
+        proxy: `${serverURL}/api/**`,
       },
       '/admin/**': {
-        proxy: `${import.meta.env.SERVER_URL}/admin/**`,
+        proxy: `${serverURL}/admin/**`,
       },
     },
   },
 
-  compatibilityDate: '2024-09-15',
+  // @ts-ignore
+  i18n: {
+    langDir: '../src/locales/',
+    locales: [
+      { code: 'en-US', language: 'en-US', file: "en-US.js" },
+      { code: 'zh-CN', language: 'zh-CN', file: "zh-CN.js" }
+    ],
+    defaultLocale: 'en-US',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false,
+    lazy: false,
+  },
 })

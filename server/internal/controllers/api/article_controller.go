@@ -4,17 +4,15 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/spam"
 	"log/slog"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
-	"github.com/panjf2000/ants/v2"
-	"github.com/sirupsen/logrus"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
@@ -25,32 +23,11 @@ type ArticleController struct {
 	Ctx iris.Context
 }
 
-func (c *ArticleController) GetClean() *web.JsonResult {
-	go func() {
-		p, _ := ants.NewPool(10)
-		services.ArticleService.ScanDesc(func(articles []models.Article) {
-			var ids []int64
-			for _, article := range articles {
-				if article.ContentType == constants.ContentTypeHtml {
-					ids = append(ids, article.Id)
-				}
-			}
-			if len(ids) > 0 {
-				p.Submit(func() {
-					sqls.DB().Delete(&models.Article{}, "id in ?", ids)
-					logrus.Info("清理文章:", ids)
-				})
-			}
-		})
-	}()
-	return web.JsonSuccess()
-}
-
 // 文章详情
 func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		return web.JsonErrorCode(404, "文章不存在")
+		return web.JsonErrorCode(404, locales.Get("article.not_found"))
 	}
 
 	user := services.UserTokenService.GetCurrent(c.Ctx)
@@ -59,14 +36,15 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 	if article.Status == constants.StatusReview {
 		if user != nil {
 			if article.UserId != user.Id && !user.IsOwnerOrAdmin() {
-				return web.JsonErrorCode(403, "文章审核中")
+				return web.JsonErrorCode(403, locales.Get("article.under_review"))
 			}
 		} else {
-			return web.JsonErrorCode(403, "文章审核中")
+			return web.JsonErrorCode(403, locales.Get("article.under_review"))
 		}
 	}
 
-	services.ArticleService.IncrViewCount(articleId) // 增加浏览量
+	// 增加浏览量
+	services.ArticleService.IncrViewCount(articleId)
 	return web.JsonData(render.BuildArticle(article, user))
 }
 
@@ -98,12 +76,12 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		return web.JsonErrorMsg("话题不存在或已被删除")
+		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
 	// 非作者、且非管理员
 	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
 	tags := services.ArticleService.GetArticleTags(articleId)
@@ -145,12 +123,12 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		return web.JsonErrorMsg("文章不存在")
+		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
 	// 非作者、且非管理员
 	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
 	if err := services.ArticleService.Edit(articleId, tags, title, content, cover); err != nil {
@@ -171,12 +149,12 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		return web.JsonErrorMsg("文章不存在")
+		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
 	// 非作者、且非管理员
 	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
 	if err := services.ArticleService.Delete(articleId); err != nil {
@@ -192,7 +170,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 func (c *ArticleController) PostFavoriteBy(articleId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	err := services.FavoriteService.AddArticleFavorite(user.Id, articleId)
 	if err != nil {
@@ -205,7 +183,7 @@ func (c *ArticleController) PostFavoriteBy(articleId int64) *web.JsonResult {
 func (c *ArticleController) GetRedirectBy(articleId int64) *web.JsonResult {
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != constants.StatusOk {
-		return web.JsonErrorMsg("文章不存在")
+		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 	return web.NewEmptyRspBuilder().Put("url", bbsurls.ArticleUrl(articleId)).JsonResult()
 }

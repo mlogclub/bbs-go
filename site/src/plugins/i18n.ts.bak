@@ -1,0 +1,12 @@
+export default defineNuxtPlugin(async () => {
+    const { $i18n } = useNuxtApp()
+    const configStore = useConfigStore()
+    const config: any = configStore.config
+    const language = config.language
+    console.log('configStore', language)
+
+    if (language) {
+        console.log('从服务端获取的语言配置:', language)
+        await $i18n.setLocale(language)
+    }
+}) 

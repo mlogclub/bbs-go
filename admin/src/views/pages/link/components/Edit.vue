@@ -7,19 +7,19 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item field="title" label="标题">
+      <a-form-item field="title" :label="$t('pages.link.title')">
         <a-input v-model="form.title" />
       </a-form-item>
-      <a-form-item field="url" label="链接">
+      <a-form-item field="url" :label="$t('pages.link.url')">
         <a-input v-model="form.url" />
       </a-form-item>
-      <a-form-item field="summary" label="描述">
+      <a-form-item field="summary" :label="$t('pages.link.summary')">
         <a-textarea v-model="form.summary" allow-clear />
       </a-form-item>
-      <a-form-item field="status" label="状态">
+      <a-form-item field="status" :label="$t('pages.link.status')">
         <a-select v-model="form.status">
-          <a-option :value="0">正常</a-option>
-          <a-option :value="1">删除</a-option>
+          <a-option :value="0">{{ $t('pages.link.statusNormal') }}</a-option>
+          <a-option :value="1">{{ $t('pages.link.statusDeleted') }}</a-option>
         </a-select>
       </a-form-item>
     </a-form>
@@ -29,6 +29,7 @@
 <script setup lang="ts">
   const emit = defineEmits(['ok']);
 
+  const { t } = useI18n();
   const appStore = useAppStore();
   const formRef = ref();
   const config = reactive({
@@ -46,8 +47,8 @@
   };
   const form = ref(fields);
   const rules = {
-    title: [{ required: true, message: '请填写标题' }],
-    url: [{ required: true, message: '请填写链接' }],
+    title: [{ required: true, message: t('pages.link.pleaseInputTitle') }],
+    url: [{ required: true, message: t('pages.link.pleaseInputUrl') }],
   };
 
   const show = () => {
@@ -55,7 +56,7 @@
     form.value = fields;
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.link.new');
     config.visible = true;
   };
 
@@ -63,7 +64,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.link.editTitle');
 
     try {
       form.value = await axios.get(`/api/admin/link/${id}`);
@@ -88,7 +89,7 @@
         ? '/api/admin/link/create'
         : '/api/admin/link/update';
       await axios.postForm<any>(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.link.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e: any) {

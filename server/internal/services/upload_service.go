@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/common/urls"
 )
 
@@ -62,9 +63,14 @@ func (s *uploadService) getUploader() (uploader.Uploader, error) {
 		s.uploaderMap[dto.TencentCos] = &uploader.TencentCosUploader{}
 	})
 	cfg := SysConfigService.GetUploadConfig()
+
+	if strs.IsBlank(string(cfg.EnableUploadMethod)) {
+		return nil, fmt.Errorf("error: Please set the upload method in the configuration")
+	}
+
 	u, ok := s.uploaderMap[cfg.EnableUploadMethod]
 	if !ok {
-		return nil, fmt.Errorf("upload method: %s not found", cfg.EnableUploadMethod)
+		return nil, fmt.Errorf("error: Upload method: %s not found", cfg.EnableUploadMethod)
 	}
 	return u, nil
 }

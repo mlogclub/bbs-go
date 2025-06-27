@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/locales"
 	"strconv"
 	"strings"
 
@@ -21,7 +22,7 @@ func BuildUserInfoDefaultIfNull(id int64) *models.UserInfo {
 		user.Id = id
 		user.Type = constants.UserTypeNormal
 		user.Username = sqls.SqlNullString(strconv.FormatInt(id, 10))
-		user.Nickname = "匿名用户" + strconv.FormatInt(id, 10)
+		user.Nickname = locales.Getf("user.anonymous", id)
 		user.CreateTime = dates.NowTimestamp()
 	}
 	return BuildUserInfo(user)
@@ -50,15 +51,15 @@ func BuildUserInfo(user *models.User) *models.UserInfo {
 		ret.Avatar = user.Avatar
 		ret.SmallAvatar = HandleOssImageStyleAvatar(user.Avatar)
 	} else {
-		avatar := RandomAvatar(user.Id)
-		ret.Avatar = avatar
-		ret.SmallAvatar = avatar
+		// avatar := RandomAvatar(user.Id)
+		// ret.Avatar = avatar
+		// ret.SmallAvatar = avatar
 	}
 	if len(ret.Description) == 0 {
-		ret.Description = "这家伙很懒，什么都没留下"
+		ret.Description = locales.Get("user.default_description")
 	}
 	if user.Status == constants.StatusDeleted {
-		ret.Nickname = "黑名单用户"
+		ret.Nickname = locales.Get("user.blacklist")
 		ret.Description = ""
 		ret.Score = 0
 		ret.Forbidden = true

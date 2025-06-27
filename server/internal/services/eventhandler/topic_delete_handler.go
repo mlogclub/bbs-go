@@ -3,6 +3,7 @@ package eventhandler
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/repositories"
 	"bbs-go/internal/services"
@@ -41,7 +42,7 @@ func sendTopicDeleteMsg(topicId, deleteUserId int64) {
 	var (
 		from         int64 = 0
 		to                 = topic.UserId
-		title              = "你的话题被删除"
+		title              = locales.Get("message.topic_delete_msg_title")
 		quoteContent       = "《" + topic.GetTitle() + "》"
 	)
 	services.MessageService.SendMsg(from, to, msg.TypeTopicDelete, title, "", quoteContent,

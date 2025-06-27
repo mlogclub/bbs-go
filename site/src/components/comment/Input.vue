@@ -3,9 +3,9 @@
     <div class="comment-create">
       <div ref="commentEditor" class="comment-input-wrapper">
         <div v-if="quote" class="comment-quote-info">
-          回复：
+          {{ t('component.comment.input.replyTo') }}
           <label v-text="quote.user.nickname" />
-          <i class="iconfont icon-close" alt="取消回复" @click="cancelReply" />
+          <i class="iconfont icon-close" :alt="t('component.comment.input.cancelReply')" @click="cancelReply" />
         </div>
         <text-editor
           ref="textEditorRef"
@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 const props = defineProps({
   entityType: {
     type: String,
@@ -45,7 +47,7 @@ const commentEditor = ref(null); // 编辑器组件
 
 async function create() {
   if (!content.value) {
-    useMsgError("请输入评论内容");
+    useMsgError(t('component.comment.input.pleaseInput'));
     return;
   }
   if (sending.value) {
@@ -73,7 +75,7 @@ async function create() {
     content.value = "";
     imageList.value = [];
     quote.value = null;
-    useMsgSuccess("发布成功");
+    useMsgSuccess(t('component.comment.input.publishSuccess'));
   } catch (e) {
     console.error(e);
     useMsgError(e.message || e);

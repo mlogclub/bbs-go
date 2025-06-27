@@ -11,7 +11,7 @@ func Start() {
 	c := cron.New()
 
 	addCronFunc(c, "0 4 ? * *", func() {
-		fmt.Println("test")
+		fmt.Println("cron test")
 	})
 
 	c.Start()

@@ -3,6 +3,7 @@ package eventhandler
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/services"
 	"reflect"
@@ -34,7 +35,7 @@ func sendTopicFavoriteMsg(topicId, favoriteUserId int64) {
 	var (
 		from         = favoriteUserId
 		to           = topic.UserId
-		title        = "收藏了你的话题"
+		title        = locales.Get("message.topic_favorite_msg_title")
 		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	services.MessageService.SendMsg(from, to, msg.TypeTopicFavorite, title, "", quoteContent,

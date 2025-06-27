@@ -7,22 +7,22 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="名称" field="name">
+      <a-form-item :label="$t('pages.dictType.name')" field="name">
         <a-input v-model="form.name" />
       </a-form-item>
 
-      <a-form-item label="编码" field="code">
+      <a-form-item :label="$t('pages.dictType.code')" field="code">
         <a-input v-model="form.code" />
       </a-form-item>
 
-      <a-form-item label="状态" field="status">
+      <a-form-item :label="$t('pages.dictType.status')" field="status">
         <a-select v-model="form.status">
-          <a-option :value="0" label="启用" />
-          <a-option :value="1" label="禁用" />
+          <a-option :value="0" :label="$t('pages.dictType.enabled')" />
+          <a-option :value="1" :label="$t('pages.dictType.disabled')" />
         </a-select>
       </a-form-item>
 
-      <a-form-item label="备注" field="remark">
+      <a-form-item :label="$t('pages.dictType.remark')" field="remark">
         <a-textarea v-model="form.remark" :max-length="128" />
       </a-form-item>
     </a-form>
@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
+
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();
@@ -40,16 +42,10 @@
     title: '',
   });
 
-  // const form = ref({
-  //   name: undefined,
-  //   code: undefined,
-  //   status: 0,
-  //   remark: undefined,
-  // });
   const form = ref<any>({});
   const rules = {
-    name: [{ required: true, message: '请输入名称' }],
-    code: [{ required: true, message: '请输入编码' }],
+    name: [{ required: true, message: t('pages.dictType.pleaseInputName') }],
+    code: [{ required: true, message: t('pages.dictType.pleaseInputCode') }],
     status: [{ required: true }],
   };
 
@@ -60,7 +56,7 @@
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.dictType.add');
     config.visible = true;
   };
 
@@ -68,7 +64,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.dictType.edit');
 
     try {
       form.value = await axios.get(`/api/admin/dict-type/${id}`);
@@ -93,7 +89,7 @@
         ? '/api/admin/dict-type/create'
         : '/api/admin/dict-type/update';
       await axios.postForm<any>(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.dictType.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e: any) {

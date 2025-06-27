@@ -3,26 +3,29 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input v-model="filters.title" placeholder="标题" />
+          <a-input
+            v-model="filters.title"
+            :placeholder="$t('pages.link.title')"
+          />
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.url" placeholder="链接" />
+          <a-input v-model="filters.url" :placeholder="$t('pages.link.url')" />
         </a-form-item>
         <a-form-item>
           <a-select
             v-model="filters.status"
-            placeholder="状态"
+            :placeholder="$t('pages.link.status')"
             allow-clear
             @change="list"
           >
-            <a-option :value="0" label="正常" />
-            <a-option :value="1" label="删除" />
+            <a-option :value="0" :label="$t('pages.link.statusNormal')" />
+            <a-option :value="1" :label="$t('pages.link.statusDeleted')" />
           </a-select>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.link.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -32,7 +35,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.link.add') }}
         </a-button>
       </div>
     </div>
@@ -51,27 +54,46 @@
         @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id"></a-table-column>
-          <a-table-column title="标题" data-index="title"></a-table-column>
-          <a-table-column title="链接" data-index="url"></a-table-column>
-          <a-table-column title="描述" data-index="summary"></a-table-column>
-          <a-table-column title="状态" data-index="status">
+          <a-table-column
+            :title="$t('pages.link.id')"
+            data-index="id"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.link.title')"
+            data-index="title"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.link.url')"
+            data-index="url"
+          ></a-table-column>
+          <a-table-column
+            :title="$t('pages.link.summary')"
+            data-index="summary"
+          ></a-table-column>
+          <a-table-column :title="$t('pages.link.status')" data-index="status">
             <template #cell="{ record }">
-              {{ record.status === 0 ? '正常' : '删除' }}
+              {{
+                record.status === 0
+                  ? $t('pages.link.statusNormal')
+                  : $t('pages.link.statusDeleted')
+              }}
             </template>
           </a-table-column>
-          <a-table-column title="创建时间" data-index="createTime">
+          <a-table-column
+            :title="$t('pages.link.createTime')"
+            data-index="createTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
-          <a-table-column title="操作">
+          <a-table-column :title="$t('pages.link.actions')">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.link.edit') }}</a-button
               >
             </template>
           </a-table-column>

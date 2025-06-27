@@ -1,22 +1,29 @@
 <template>
-  <BBSDialog v-model:visible="visible" title="设置用户名" @ok="submit">
+  <BBSDialog
+    v-model:visible="visible"
+    :title="$t('component.setUsernameDialog.title')"
+    @ok="submit"
+  >
     <div class="set-username-dialog">
       <div class="notification is-small is-light">
         <ul>
-          用户名只能设置一次，请谨慎操作。用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。
+          {{
+            $t("component.setUsernameDialog.usernameRule")
+          }}
         </ul>
       </div>
       <input
         v-model="username"
         class="input"
         type="text"
-        placeholder="请输入用户名"
+        :placeholder="$t('component.setUsernameDialog.usernamePlaceholder')"
       />
     </div>
   </BBSDialog>
 </template>
 
 <script setup>
+const { t } = useI18n();
 const visible = ref(false);
 const emits = defineEmits(["success"]);
 const username = ref(null);
@@ -38,7 +45,7 @@ const submit = async () => {
     );
     visible.value = false;
     emits("success");
-    useMsgSuccess("用户名设置成功");
+    useMsgSuccess(t("component.setUsernameDialog.success"));
   } catch (err) {
     useMsgError(err.message || err);
   }

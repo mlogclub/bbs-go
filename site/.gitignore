@@ -18,12 +18,6 @@ logs
 .fleet
 .idea
 
-# Local env files
-.env
-.env.*
-!.env.example
-!.env.docker
-
 nuxt.zip
 output.zip
 .eslintcache

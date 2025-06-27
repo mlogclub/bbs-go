@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/email"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/repositories"
 	"log/slog"
@@ -118,23 +119,23 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 	}
 	var (
 		siteTitle  = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
-		emailTitle = siteTitle + " - 新消息提醒"
+		emailTitle = siteTitle + " - " + locales.Get("email.new_message")
 	)
 
 	if msgType == msg.TypeTopicComment {
-		emailTitle = siteTitle + " - 收到话题评论"
+		emailTitle = siteTitle + " - " + locales.Get("email.topic_comment")
 	} else if msgType == msg.TypeCommentReply {
-		emailTitle = siteTitle + " - 收到他人回复"
+		emailTitle = siteTitle + " - " + locales.Get("email.comment_reply")
 	} else if msgType == msg.TypeTopicLike {
-		emailTitle = siteTitle + " - 收到点赞"
+		emailTitle = siteTitle + " - " + locales.Get("email.topic_like")
 	} else if msgType == msg.TypeTopicFavorite {
-		emailTitle = siteTitle + " - 话题被收藏"
+		emailTitle = siteTitle + " - " + locales.Get("email.topic_favorite")
 	} else if msgType == msg.TypeTopicRecommend {
-		emailTitle = siteTitle + " - 话题被设为推荐"
+		emailTitle = siteTitle + " - " + locales.Get("email.topic_recommend")
 	} else if msgType == msg.TypeTopicDelete {
-		emailTitle = siteTitle + " - 话题被删除"
+		emailTitle = siteTitle + " - " + locales.Get("email.topic_delete")
 	} else if msgType == msg.TypeArticleComment {
-		emailTitle = siteTitle + " - 收到文章评论"
+		emailTitle = siteTitle + " - " + locales.Get("email.article_comment")
 	}
 
 	var from *models.User
@@ -143,7 +144,7 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 	}
 	err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
 		t.QuoteContent, &dto.ActionLink{
-			Title: "点击查看详情",
+			Title: locales.Get("email.view_details"),
 			Url:   bbsurls.AbsUrl("/user/messages"),
 		})
 	if err != nil {

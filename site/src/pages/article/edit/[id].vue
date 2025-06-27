@@ -1,8 +1,12 @@
 <template>
   <section class="main">
     <div class="container" v-if="postForm">
-      <div class="article-create-form">
-        <h1 class="title">修改文章</h1>
+      <div class="publish-form">
+        <div class="form-title">
+          <div class="form-title-name">
+            {{ $t("pages.article.edit.title") }}
+          </div>
+        </div>
 
         <div class="field">
           <div class="control">
@@ -10,7 +14,7 @@
               v-model="postForm.title"
               class="input article-title"
               type="text"
-              placeholder="请输入文章标题"
+              :placeholder="$t('pages.article.edit.titlePlaceholder')"
             />
           </div>
         </div>
@@ -19,18 +23,7 @@
           <div class="control">
             <markdown-editor
               v-model="postForm.content"
-              placeholder="可空，将图片复制或拖入编辑器可上传"
-            />
-          </div>
-        </div>
-
-        <div v-if="isEnableHideContent || postForm.hideContent" class="field">
-          <div class="control">
-            <markdown-editor
-              ref="mdEditor"
-              v-model="postForm.hideContent"
-              height="200px"
-              placeholder="隐藏内容，评论后可见"
+              :placeholder="$t('pages.article.edit.contentPlaceholder')"
             />
           </div>
         </div>
@@ -48,14 +41,14 @@
               :class="{ 'is-loading': publishing }"
               disabled
               class="button is-primary"
-              >提交更改</a
+              >{{ $t("pages.article.edit.submitBtn") }}</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
               class="button is-primary"
               @click="submitCreate"
-              >提交更改</a
+              >{{ $t("pages.article.edit.submitBtn") }}</a
             >
           </div>
         </div>
@@ -65,19 +58,15 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 definePageMeta({
   middleware: "auth",
 });
 useHead({
-  title: useSiteTitle("修改文章"),
+  title: useSiteTitle(t("pages.article.edit.title")),
 });
 
 const route = useRoute();
-const configStore = useConfigStore();
-
-const isEnableHideContent = computed(() => {
-  return configStore.config.enableHideContent;
-});
 
 const { data: postForm } = await useMyFetch(
   `/api/article/edit/${route.params.id}`
@@ -101,40 +90,19 @@ async function submitCreate() {
       })
     );
     useMsg({
-      message: "修改成功",
+      message: $t("pages.article.edit.editSuccess"),
       onClose() {
         useLinkTo(`/article/${postForm.value.id}`);
       },
     });
   } catch (e) {
     publishing.value = false;
-    useMsgError("提交失败：" + (e.message || e));
+    useMsgError($t("pages.article.edit.editFailed") + (e.message || e));
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.article-create-form {
-  border-radius: var(--border-radius);
-  background-color: var(--bg-color);
-  padding: 30px;
-
-  .article-form-title {
-    font-size: 36px;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  .field {
-    margin-bottom: 10px;
-
-    input {
-      &:focus-visible {
-        outline-width: 0;
-      }
-    }
-  }
-}
-
 .cover-add-btn {
   display: flex;
   flex-direction: column;

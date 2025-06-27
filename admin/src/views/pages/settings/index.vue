@@ -2,27 +2,27 @@
   <div class="container">
     <div class="container-main">
       <a-tabs position="top" lazy-load animation destroy-on-hide>
-        <a-tab-pane key="1" title="通用配置">
+        <a-tab-pane key="1" :title="$t('pages.settings.common.title')">
           <div class="settings-container">
             <CommonSettings />
           </div>
         </a-tab-pane>
-        <a-tab-pane key="2" title="导航配置">
+        <a-tab-pane key="2" :title="$t('pages.settings.nav.title')">
           <div class="settings-container">
             <NavSettings />
           </div>
         </a-tab-pane>
-        <a-tab-pane key="3" title="积分配置">
+        <a-tab-pane key="3" :title="$t('pages.settings.score.title')">
           <div class="settings-container">
             <ScoreSettings />
           </div>
         </a-tab-pane>
-        <a-tab-pane key="4" title="反作弊配置">
+        <a-tab-pane key="4" :title="$t('pages.settings.spam.title')">
           <div class="settings-container">
             <SpamSettings />
           </div>
         </a-tab-pane>
-        <a-tab-pane key="5" title="上传配置">
+        <a-tab-pane key="5" :title="$t('pages.settings.upload.title')">
           <div class="settings-container">
             <UploadSettings />
           </div>

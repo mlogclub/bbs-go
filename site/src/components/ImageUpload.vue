@@ -15,7 +15,9 @@
         :show-text="false"
         class="progress"
       />
-      <div v-show="image.progress < 100" class="cover">上传中...</div>
+      <div v-show="image.progress < 100" class="cover">
+        {{ $t("component.imageUpload.uploading") }}
+      </div>
       <div
         class="upload-delete"
         :class="{
@@ -49,6 +51,8 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 const props = defineProps({
   modelValue: {
     type: Array,
@@ -160,8 +164,8 @@ const uploadFiles = (promiseList) => {
       loading.value = false;
       emit("update:modelValue", fileList);
     },
-    (e) => {      
-      useMsgError(e.message || e)
+    (e) => {
+      useMsgError(e.message || e);
 
       if (currentInput.value) {
         currentInput.value.value = "";
@@ -176,18 +180,21 @@ const uploadFiles = (promiseList) => {
   );
 };
 const removeItem = (index) => {
-  ElMessageBox.confirm("确定删除此内容吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(
+  ElMessageBox.confirm(
+    t("component.imageUpload.confirmDelete"),
+    t("component.imageUpload.deleteTitle"),
+    {
+      confirmButtonText: t("component.imageUpload.confirmButton"),
+      cancelButtonText: t("component.imageUpload.cancelButton"),
+      type: "warning",
+    }
+  ).then(
     () => {
       previewFiles.value[index].deleted = true; // 删除动画
       fileList.value.splice(index, 1);
       emit("update:modelValue", fileList.value); // 避免和回显冲突，先修改 fileList
       setTimeout(() => {
         previewFiles.value.splice(index, 1);
-        useMsgSuccess("删除成功");
       }, 900);
     },
     () => console.log("取消删除")
@@ -201,12 +208,18 @@ const checkSizeLimit = (files) => {
     }
   }
   if (!pass)
-    useMsgError(`图片大小不可超过 ${props.sizeLimit / 1024 / 1024} MB`);
+    useMsgError(
+      t("component.imageUpload.sizeLimitError", {
+        size: props.sizeLimit / 1024 / 1024,
+      })
+    );
   return pass;
 };
 const checkLengthLimit = (files) => {
   if (previewFiles.value.length + files.length > props.limit) {
-    useMsgWarning(`图片最多上传${props.limit}张`);
+    useMsgWarning(
+      t("component.imageUpload.countLimitError", { limit: props.limit })
+    );
     return false;
   } else {
     return true;

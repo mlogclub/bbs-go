@@ -1,7 +1,9 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.subtitle') }}</div>
+    <div class="login-form-title">{{ $t('pages.login.form.title') }}</div>
+    <div class="login-form-sub-title">{{
+      $t('pages.login.form.subtitle')
+    }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -12,13 +14,15 @@
     >
       <a-form-item
         field="username"
-        :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
+        :rules="[
+          { required: true, message: $t('pages.login.form.userName.errMsg') },
+        ]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
           v-model="form.username"
-          :placeholder="$t('login.form.userName.placeholder')"
+          :placeholder="$t('pages.login.form.userName.placeholder')"
         >
           <template #prefix>
             <icon-user />
@@ -27,13 +31,15 @@
       </a-form-item>
       <a-form-item
         field="password"
-        :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
+        :rules="[
+          { required: true, message: $t('pages.login.form.password.errMsg') },
+        ]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input-password
           v-model="form.password"
-          :placeholder="$t('login.form.password.placeholder')"
+          :placeholder="$t('pages.login.form.password.placeholder')"
           allow-clear
         >
           <template #prefix>
@@ -46,14 +52,17 @@
         v-if="captchaBase64"
         field="captchaCode"
         :rules="[
-          { required: true, message: $t('login.form.captchaCode.errMsg') },
+          {
+            required: true,
+            message: $t('pages.login.form.captchaCode.errMsg'),
+          },
         ]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
           v-model="form.captchaCode"
-          :placeholder="$t('login.form.captchaCode.placeholder')"
+          :placeholder="$t('pages.login.form.captchaCode.placeholder')"
           allow-clear
           class="captcha-code"
         >
@@ -71,7 +80,7 @@
 
       <a-space :size="16" direction="vertical">
         <a-button type="primary" html-type="submit" long :loading="loading">
-          {{ $t('login.form.login') }}
+          {{ $t('pages.login.form.login.submit') }}
         </a-button>
       </a-space>
     </a-form>
@@ -133,7 +142,7 @@
             ...othersQuery,
           },
         });
-        Message.success(t('login.form.login.success'));
+        Message.success(t('pages.login.form.login.success'));
       } catch (err) {
         refreshCaptcha();
         errorMessage.value = (err as Error).message;

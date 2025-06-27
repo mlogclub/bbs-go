@@ -5,18 +5,18 @@
         <a-form-item>
           <a-select
             v-model="filters.status"
-            placeholder="状态"
+            :placeholder="$t('pages.menu.status')"
             allow-clear
             @change="list"
           >
-            <a-option :value="0" label="正常" />
-            <a-option :value="1" label="禁用" />
+            <a-option :value="0" :label="$t('pages.menu.statusNormal')" />
+            <a-option :value="1" :label="$t('pages.menu.statusDisabled')" />
           </a-select>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.menu.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -26,7 +26,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.menu.add') }}
         </a-button>
       </div>
     </div>
@@ -45,51 +45,55 @@
         @change="handleChange"
       >
         <template #columns>
-          <!-- <a-table-column title="编号" data-index="id" /> -->
+          <a-table-column :title="$t('pages.menu.title')" data-index="title" />
 
-          <a-table-column title="标题" data-index="title" />
-
-          <a-table-column title="类型" data-index="type">
+          <a-table-column :title="$t('pages.menu.type')" data-index="type">
             <template #cell="{ record }">
-              <a-tag :color="record.type === 'menu' ? 'green' : 'red'">{{
-                record.type === 'menu' ? '菜单' : '功能'
-              }}</a-tag>
+              <a-tag :color="record.type === 'menu' ? 'green' : 'red'">
+                {{
+                  record.type === 'menu'
+                    ? $t('pages.menu.typeMenu')
+                    : $t('pages.menu.typeFunc')
+                }}
+              </a-tag>
             </template>
           </a-table-column>
 
-          <a-table-column title="名称" data-index="name" />
+          <a-table-column :title="$t('pages.menu.name')" data-index="name" />
 
-          <a-table-column title="组件" data-index="component" />
+          <a-table-column
+            :title="$t('pages.menu.component')"
+            data-index="component"
+          />
 
-          <!-- <a-table-column title="ICON" data-index="icon">
+          <a-table-column :title="$t('pages.menu.path')" data-index="path" />
+
+          <a-table-column :title="$t('pages.menu.status')" data-index="status">
             <template #cell="{ record }">
-              <component :is="record.icon" v-if="record.icon" :size="18" />
-            </template>
-          </a-table-column> -->
-
-          <a-table-column title="路径" data-index="path" />
-
-          <!-- <a-table-column title="排序" data-index="sortNo" /> -->
-
-          <a-table-column title="状态" data-index="status">
-            <template #cell="{ record }">
-              {{ record.status === 0 ? '正常' : '禁用' }}
+              {{
+                record.status === 0
+                  ? $t('pages.menu.statusNormal')
+                  : $t('pages.menu.statusDisabled')
+              }}
             </template>
           </a-table-column>
 
-          <a-table-column title="创建时间" data-index="createTime">
+          <a-table-column
+            :title="$t('pages.menu.createTime')"
+            data-index="createTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
 
-          <a-table-column title="操作">
+          <a-table-column :title="$t('pages.menu.actions')">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.menu.edit') }}</a-button
               >
             </template>
           </a-table-column>

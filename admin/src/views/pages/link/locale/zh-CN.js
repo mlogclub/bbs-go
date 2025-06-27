@@ -1,0 +1,21 @@
+export default {
+  link: {
+    id: '编号',
+    title: '标题',
+    url: '链接',
+    summary: '描述',
+    status: '状态',
+    statusNormal: '正常',
+    statusDeleted: '删除',
+    createTime: '创建时间',
+    search: '查询',
+    add: '新增',
+    edit: '编辑',
+    actions: '操作',
+    submitSuccess: '提交成功',
+    pleaseInputTitle: '请输入标题',
+    pleaseInputUrl: '请输入链接',
+    new: '新增',
+    editTitle: '编辑',
+  },
+};

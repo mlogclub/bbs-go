@@ -1,38 +1,53 @@
 <template>
   <a-form :model="config" auto-label-width>
-    <a-form-item label="发帖验证码">
-      <a-tooltip content="发帖时是否开启验证码校验" placement="top">
+    <a-form-item :label="$t('pages.settings.spam.topicCaptcha')">
+      <a-tooltip
+        :content="$t('pages.settings.spam.topicCaptchaTooltip')"
+        placement="top"
+      >
         <a-switch v-model="config.topicCaptcha" />
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="邮箱验证后发帖">
-      <a-tooltip content="需要验证邮箱后才能发帖" placement="top">
+    <a-form-item :label="$t('pages.settings.spam.createTopicEmailVerified')">
+      <a-tooltip
+        :content="$t('pages.settings.spam.createTopicEmailVerifiedTooltip')"
+        placement="top"
+      >
         <a-switch v-model="config.createTopicEmailVerified" />
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="邮箱验证后发表文章">
-      <a-tooltip content="需要验证邮箱后才能发表文章" placement="top">
+    <a-form-item :label="$t('pages.settings.spam.createArticleEmailVerified')">
+      <a-tooltip
+        :content="$t('pages.settings.spam.createArticleEmailVerifiedTooltip')"
+        placement="top"
+      >
         <a-switch v-model="config.createArticleEmailVerified" />
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="邮箱验证后评论">
-      <a-tooltip content="需要验证邮箱后才能发表评论" placement="top">
+    <a-form-item :label="$t('pages.settings.spam.createCommentEmailVerified')">
+      <a-tooltip
+        :content="$t('pages.settings.spam.createCommentEmailVerifiedTooltip')"
+        placement="top"
+      >
         <a-switch v-model="config.createCommentEmailVerified" />
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="发表文章审核">
-      <a-tooltip content="发布文章后是否开启审核" placement="top">
+    <a-form-item :label="$t('pages.settings.spam.articlePending')">
+      <a-tooltip
+        :content="$t('pages.settings.spam.articlePendingTooltip')"
+        placement="top"
+      >
         <a-switch v-model="config.articlePending" />
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="用户观察期(秒)">
+    <a-form-item :label="$t('pages.settings.spam.userObserveSeconds')">
       <a-tooltip
-        content="观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。"
+        :content="$t('pages.settings.spam.userObserveSecondsTooltip')"
         placement="top"
       >
         <a-input-number
@@ -44,7 +59,7 @@
       </a-tooltip>
     </a-form-item>
 
-    <a-form-item label="邮箱白名单">
+    <a-form-item :label="$t('pages.settings.spam.emailWhitelist')">
       <a-select
         v-model="config.emailWhitelist"
         style="width: 100%"
@@ -52,19 +67,21 @@
         filterable
         allow-create
         default-first-option
-        placeholder="邮箱白名单"
+        :placeholder="$t('pages.settings.spam.placeholder.emailWhitelist')"
       />
     </a-form-item>
 
     <a-form-item>
-      <a-button type="primary" :loading="loading" @click="submit"
-        >提交</a-button
-      >
+      <a-button type="primary" :loading="loading" @click="submit">{{
+        $t('pages.settings.spam.submit')
+      }}</a-button>
     </a-form-item>
   </a-form>
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
+
   const loading = ref(false);
   const config = reactive({
     topicCaptcha: undefined,
@@ -93,7 +110,7 @@
     try {
       await axios.post('/api/admin/sys-config/save', config);
       await loadConfig();
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.settings.spam.message.submitSuccess'));
     } catch (e) {
       useHandleError(e);
     } finally {

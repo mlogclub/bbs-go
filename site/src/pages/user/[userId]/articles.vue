@@ -14,7 +14,7 @@
                     <span class="icon is-small">
                       <i class="iconfont icon-topic" aria-hidden="true" />
                     </span>
-                    <span>话题</span>
+                    <span>{{ $t("pages.user.topics") }}</span>
                   </nuxt-link>
                 </li>
                 <li :class="{ 'is-active': activeTab === 'articles' }">
@@ -22,7 +22,7 @@
                     <span class="icon is-small">
                       <i class="iconfont icon-article" aria-hidden="true" />
                     </span>
-                    <span>文章</span>
+                    <span>{{ $t("pages.user.articles") }}</span>
                   </nuxt-link>
                 </li>
               </ul>
@@ -44,8 +44,9 @@
 
 <script setup>
 const route = useRoute();
+const { t } = useI18n();
 useHead({
-  title: "个人中心",
+  title: t("pages.user.personalCenter"),
 });
 
 const user = await useHttpGet(`/api/user/${route.params.userId}`);

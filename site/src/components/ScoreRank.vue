@@ -1,7 +1,7 @@
 <template>
   <div v-if="scoreRank && scoreRank.length" class="widget">
     <div class="widget-header">
-      <span class="widget-title">积分排行</span>
+      <span class="widget-title">{{ $t("component.scoreRank.title") }}</span>
     </div>
     <div class="widget-content">
       <ul class="score-rank">
@@ -12,7 +12,9 @@
               user.nickname
             }}</nuxt-link>
             <p class="score-desc">
-              {{ user.topicCount }} 帖子 • {{ user.commentCount }} 评论
+              {{ user.topicCount }} {{ $t("component.scoreRank.topic") }}
+              •
+              {{ user.commentCount }} {{ $t("component.scoreRank.comment") }}
             </p>
           </div>
           <div class="score-rank-info">

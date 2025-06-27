@@ -8,22 +8,22 @@
       :toolbars="toolbars"
       :style="{ height: height }"
       :placeholder="placeholder"
-      :preview="false"
+      :preview="true"
+      :language="language"
       :footers="[]"
     >
-      <template #defToolbars>
-        <NormalToolbar title="切换为HTML编辑器" @onClick="switchHTML">
-          <ArrowLeftRight class="md-editor-icon" />
-        </NormalToolbar>
-      </template>
     </MdEditor>
   </client-only>
 </template>
 
 <script setup>
-import { MdEditor, NormalToolbar } from "md-editor-v3";
+import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-import { ArrowLeftRight } from "lucide-vue-next";
+
+const language = computed(() => {
+  const { locale } = useI18n();
+  return locale.value;
+});
 
 const props = defineProps({
   modelValue: {
@@ -36,7 +36,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "请输入...",
+    default: "",
   },
 });
 
@@ -86,16 +86,11 @@ function change(v) {
 async function uploadImg(files, callback) {
   const res = await Promise.all(
     files.map((file) => {
-      return useUploadImage(file)
+      return useUploadImage(file);
     })
   );
   callback(res.map((item) => item.url));
 }
-
-const switchHTML = () => {
-  const eventBus = useEditorEventBus();
-  eventBus.emit("switchHtml");
-};
 </script>
 
 <style lang="scss" scoped></style>

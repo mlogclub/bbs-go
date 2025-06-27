@@ -54,7 +54,7 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *models.User {
 func (s *userTokenService) CheckLogin(ctx iris.Context) (*models.User, error) {
 	user := s.GetCurrent(ctx)
 	if user == nil {
-		return nil, errs.NotLogin
+		return nil, errs.NotLogin()
 	}
 	return user, nil
 }

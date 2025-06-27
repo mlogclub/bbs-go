@@ -3,18 +3,18 @@
     <div class="widget-header">
       <div>
         <i class="iconfont icon-username" />
-        <span>个人资料</span>
+        <span>{{ $t("user.profile.title") }}</span>
       </div>
       <nuxt-link :to="'/user/' + user.id">
         <i class="iconfont icon-return" />
-        <span>返回个人主页</span>
+        <span>{{ $t("user.profile.backToProfile") }}</span>
       </nuxt-link>
     </div>
     <div class="widget-content">
       <!-- 头像 -->
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">头像</label>
+          <label class="label">{{ $t("user.profile.avatar") }}</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -28,7 +28,7 @@
       <!-- 昵称 -->
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">昵称</label>
+          <label class="label">{{ $t("user.profile.nickname") }}</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -38,7 +38,7 @@
                 class="input"
                 type="text"
                 autocomplete="off"
-                placeholder="请输入昵称"
+                :placeholder="$t('user.profile.nicknamePlaceholder')"
               />
             </div>
           </div>
@@ -48,7 +48,7 @@
       <!-- 个性签名 -->
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">个性签名</label>
+          <label class="label">{{ $t("user.profile.signature") }}</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -57,7 +57,7 @@
                 v-model="form.description"
                 class="textarea"
                 rows="2"
-                placeholder="一句话介绍你自己"
+                :placeholder="$t('user.profile.signaturePlaceholder')"
               />
             </div>
           </div>
@@ -67,7 +67,7 @@
       <!-- 个人主页 -->
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label">个人主页</label>
+          <label class="label">{{ $t("user.profile.homepage") }}</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -77,7 +77,7 @@
                 class="input"
                 type="text"
                 autocomplete="off"
-                placeholder="请输入个人主页"
+                :placeholder="$t('user.profile.homepagePlaceholder')"
               />
             </div>
           </div>
@@ -89,7 +89,9 @@
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <a class="button is-primary" @click="submitForm">保存</a>
+              <a class="button is-primary" @click="submitForm">{{
+                $t("user.profile.save")
+              }}</a>
             </div>
           </div>
         </div>
@@ -104,8 +106,10 @@ definePageMeta({
   layout: "profile",
 });
 
+const { t } = useI18n();
+
 useHead({
-  title: useSiteTitle("个人资料"),
+  title: useSiteTitle(t("user.profile.title")),
 });
 
 const userStore = useUserStore();
@@ -133,10 +137,10 @@ async function submitForm() {
       `/api/user/edit/${user.value.id}`,
       useJsonToForm(form.value)
     );
-    useMsgSuccess("资料修改成功");
+    useMsgSuccess(t("user.profile.editSuccess"));
   } catch (e) {
     console.error(e);
-    useMsgError("资料修改失败：" + (e.message || e));
+    useMsgError(t("user.profile.editFailed") + "：" + (e.message || e));
   }
 }
 </script>

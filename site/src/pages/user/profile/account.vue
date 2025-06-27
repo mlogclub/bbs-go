@@ -3,59 +3,77 @@
     <div class="widget-header">
       <div class="account">
         <i class="iconfont icon-setting" />
-        <span>账号设置</span>
+        <span>{{ $t("user.profile.account.title") }}</span>
       </div>
       <nuxt-link :to="'/user/' + user.id">
         <i class="iconfont icon-return" />
-        <span>返回个人主页</span>
+        <span>{{ $t("user.profile.backToProfile") }}</span>
       </nuxt-link>
     </div>
     <div class="widget-content">
       <div class="settings">
         <div class="settings-item">
-          <div class="settings-item-title">用户名</div>
+          <div class="settings-item-title">
+            {{ $t("user.profile.account.username") }}
+          </div>
           <div class="settings-item-input">
             <div class="input-value">{{ user.username }}</div>
             <div class="action-box">
-              <a v-if="!user.username" @click="showUsernameDialog">设置</a>
+              <a v-if="!user.username" @click="showUsernameDialog">{{
+                $t("user.profile.account.set")
+              }}</a>
             </div>
           </div>
         </div>
 
         <div class="settings-item">
-          <div class="settings-item-title">邮箱</div>
+          <div class="settings-item-title">
+            {{ $t("user.profile.account.email") }}
+          </div>
           <div class="settings-item-input">
             <div class="input-value">
               <span>{{ user.email }}</span>
               <span
                 v-if="user.emailVerified"
                 style="margin-left: 4px; font-size: 80%"
-                >(已验证)</span
+                >({{ $t("user.profile.account.verified") }})</span
               >
             </div>
             <div class="action-box">
-              <a v-if="user.email" @click="showEmailDialog">修改</a>
+              <a v-if="user.email" @click="showEmailDialog">{{
+                $t("user.profile.account.modify")
+              }}</a>
               <a
                 v-if="user.email && !user.emailVerified"
                 @click="requestEmailVerify"
-                >验证</a
+                >{{ $t("user.profile.account.verify") }}</a
               >
-              <a v-if="!user.email" @click="showEmailDialog">设置</a>
+              <a v-if="!user.email" @click="showEmailDialog">{{
+                $t("user.profile.account.set")
+              }}</a>
             </div>
           </div>
         </div>
 
         <div class="settings-item">
-          <div class="settings-item-title">密码</div>
+          <div class="settings-item-title">
+            {{ $t("user.profile.account.password") }}
+          </div>
           <div class="settings-item-input">
             <div class="input-value">
-              {{ user.passwordSet ? "已设置" : "未设置" }}
+              {{
+                user.passwordSet
+                  ? $t("user.profile.account.passwordSet")
+                  : $t("user.profile.account.passwordNotSet")
+              }}
             </div>
             <div class="action-box">
-              <a v-if="user.passwordSet" @click="showUpdatePasswordDialog"
-                >修改</a
-              >
-              <a v-else @click="showSetPasswordDialog">设置</a>
+              <a v-if="user.passwordSet" @click="showUpdatePasswordDialog">{{
+                $t("user.profile.account.modify")
+              }}</a>
+              <a v-else @click="showSetPasswordDialog">{{
+                $t("user.profile.account.set")
+              }}</a>
             </div>
           </div>
         </div>
@@ -69,6 +87,7 @@
       ref="updatePasswordDialog"
       @success="userRefresh"
     />
+    <AccountWxBindDialog ref="wxBindDialog" />
   </div>
 </template>
 
@@ -78,8 +97,10 @@ definePageMeta({
   layout: "profile",
 });
 
+const { t } = useI18n();
+
 useHead({
-  title: useSiteTitle("账号设置"),
+  title: useSiteTitle(t("user.profile.account.title")),
 });
 
 const { data: user, refresh: userRefresh } = await useMyFetch(
@@ -90,17 +111,19 @@ const setUsernameDialog = ref(null);
 const setEmailDialog = ref(null);
 const setPasswordDialog = ref(null);
 const updatePasswordDialog = ref(null);
+const wxBindDialog = ref(null);
 const showUsernameDialog = () => setUsernameDialog.value.show();
 const showEmailDialog = () => setEmailDialog.value.show();
 const showSetPasswordDialog = () => setPasswordDialog.value.show();
 const showUpdatePasswordDialog = () => updatePasswordDialog.value.show();
+const showWxBindDialog = () => wxBindDialog.value.show();
 
 async function requestEmailVerify() {
   const loading = useLoading();
   try {
     await useHttpPost("/api/user/send_verify_email");
     useMsgSuccess(
-      "邮件已经发送到你的邮箱：" + user.value.email + "，请注意查收。"
+      t("user.profile.account.emailVerifySuccess", { email: user.value.email })
     );
   } catch (err) {
     useMsgError(err.message || err);

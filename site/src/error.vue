@@ -1,22 +1,3 @@
-<script setup>
-const configStore = useConfigStore();
-
-defineProps({
-  error: {
-    type: Object,
-    default: null,
-  },
-});
-
-definePageMeta({
-  layout: "default",
-});
-
-const handleError = () => {
-  clearError({ redirect: "/" });
-};
-</script>
-
 <template>
   <div>
     <MyHeader />
@@ -41,13 +22,13 @@ const handleError = () => {
             </div>
 
             <template v-else>
-              <div v-if="error.statusCode === 404">页面没找到</div>
-              <div v-if="error.statusCode === 403">Forbidden</div>
-              <div v-else>{{ error.statusCode }} 异常</div>
+              <div v-if="error.statusCode === 404">{{ $t('pages.error.notFound') }}</div>
+              <div v-if="error.statusCode === 403">{{ $t('pages.error.forbidden') }}</div>
+              <div v-else>{{ error.statusCode }} {{ $t('pages.error.unknown') }}</div>
             </template>
           </div>
           <div class="report">
-            <a @click="handleError">返回首页</a>
+            <a @click="handleError">{{ $t('pages.error.backHome') }}</a>
           </div>
         </div>
       </div>
@@ -55,6 +36,25 @@ const handleError = () => {
     <MyFooter />
   </div>
 </template>
+
+<script setup>
+const configStore = useConfigStore();
+
+defineProps({
+  error: {
+    type: Object,
+    default: null,
+  },
+});
+
+definePageMeta({
+  layout: "default",
+});
+
+const handleError = () => {
+  clearError({ redirect: "/" });
+};
+</script>
 
 <style lang="scss" scoped>
 .error {

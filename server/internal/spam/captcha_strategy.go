@@ -20,11 +20,11 @@ func (CaptchaStrategy) CheckTopic(user *models.User, form models.CreateTopicForm
 	if services.SysConfigService.GetConfig().TopicCaptcha {
 		if form.CaptchaProtocol == 2 {
 			if !captcha2.Verify(form.CaptchaId, form.CaptchaCode) {
-				return errs.CaptchaError
+				return errs.CaptchaError()
 			}
 		} else {
 			if !captcha.VerifyString(form.CaptchaId, form.CaptchaCode) {
-				return errs.CaptchaError
+				return errs.CaptchaError()
 			}
 		}
 	}

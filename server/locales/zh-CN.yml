@@ -1,0 +1,76 @@
+common:
+  not_found: "数据不存在"
+topic:
+  node:
+    latest: 最新
+    recommend: 推荐
+    follow: 关注
+  under_review: "内容审核中"
+  no_permission: "无权限"
+  type_not_supported: "当前类型帖子不支持修改"
+
+user:
+  anonymous: "匿名用户%d"
+  default_description: "这家伙很懒，什么都没留下"
+  blacklist: "黑名单用户"
+  not_found: "用户不存在"
+  no_permission: "无权限"
+  nickname_empty: "昵称不能为空"
+  gender_error: "性别数据错误"
+  homepage_error: "个人主页地址错误"
+  avatar_empty: "头像不能为空"
+  upload_image_required: "请上传图片"
+  email_verified: "用户邮箱已验证"
+  email_required: "请输入邮箱"
+  email_invalid: "邮箱格式不正确"
+  email_occupied: "邮箱：%s 已被占用"
+  email_suffix_not_supported: "不支持该邮箱后缀: %s"
+  email_verify_title: "邮箱验证 - %s"
+  email_verify_content: "该邮件用于验证你在 %s 中设置邮箱的正确性，请在%d小时内完成验证。验证链接：%s"
+  email_verify_link: "点击这里验证邮箱>>"
+  email_verify_expired: "验证邮件已过期"
+  email_verify_illegal: "非法请求"
+
+errors:
+  not_login: "请先登录"
+  captcha_error: "验证码错误"
+  forbidden: "已被禁言"
+  user_disabled: "账号已禁用"
+  email_not_verified: "请先验证邮箱"
+  in_observation: "账号尚在观察期，观察期剩余 %d 秒，请稍后再试"
+
+auth:
+  password_login_disabled: "账号密码登录/注册已禁用"
+  phone_required: "请输入手机号码"
+  sms_login_disabled: "短信登录已禁用"
+  login_data_error: "登录数据错误"
+  weixin_login_disabled: "微信登录已禁用"
+
+article:
+  not_found: "文章不存在"
+  under_review: "文章审核中"
+  no_permission: "无权限"
+
+install:
+  already_installed: "系统已安装，无需重复安装"
+
+upload:
+  image_too_large: "图片不能超过 %d M"
+
+message:
+  system_nickname: "系统通知"
+  topic_recommend_msg_title: "你的话题被设为推荐"
+  topic_delete_msg_title: "你的话题被删除"
+  topic_favorite_msg_title: "收藏了你的话题"
+  topic_like_msg_title: "点赞了你的话题"
+
+email:
+  new_message: "新消息提醒"
+  topic_comment: "收到话题评论"
+  comment_reply: "收到他人回复"
+  topic_like: "收到点赞"
+  topic_favorite: "话题被收藏"
+  topic_recommend: "话题被设为推荐"
+  topic_delete: "话题被删除"
+  article_comment: "收到文章评论"
+  view_details: "点击查看详情"

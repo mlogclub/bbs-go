@@ -1,9 +1,11 @@
 <template>
   <div v-if="links && links.length" class="widget">
     <div class="widget-header">
-      <span>友情链接</span>
+      <span>{{ $t("component.friendLinks.title") }}</span>
       <span class="slot"
-        ><nuxt-link to="/links">查看更多&gt;&gt;</nuxt-link></span
+        ><nuxt-link to="/links">{{
+          $t("component.friendLinks.more")
+        }}</nuxt-link></span
       >
     </div>
     <div class="widget-content">

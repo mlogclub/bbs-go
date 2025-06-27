@@ -1,6 +1,6 @@
 <template>
   <div v-if="siteNotification" class="widget">
-    <div class="widget-header">公告</div>
+    <div class="widget-header">{{ $t("component.siteNotice.title") }}</div>
     <div class="widget-content content notice-content">
       <p v-html="siteNotification"></p>
     </div>

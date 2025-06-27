@@ -75,9 +75,9 @@ func (s *sysConfigService) SetAll(configStr string) error {
 }
 
 // Set 设置配置，如果配置不存在，那么创建
-func (s *sysConfigService) Set(key, value, name, description string) error {
+func (s *sysConfigService) Set(key, value string) error {
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
-		if err := s.setSingle(tx, key, value, name, description); err != nil {
+		if err := s.setSingle(tx, key, value, "", ""); err != nil {
 			return err
 		}
 		return nil

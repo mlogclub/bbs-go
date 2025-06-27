@@ -3,7 +3,10 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input-search v-model="filters.query" placeholder="搜索" />
+          <a-input-search
+            v-model="filters.query"
+            :placeholder="$t('pages.dict.search')"
+          />
         </a-form-item>
         <!-- <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
@@ -23,7 +26,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.dict.add') }}
         </a-button>
       </div>
     </div>
@@ -44,35 +47,40 @@
         @change="handleChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id" />
+          <a-table-column title="ID" data-index="id" />
 
-          <!-- <a-table-column title="类型" data-index="typeId" /> -->
+          <a-table-column :title="$t('pages.dict.name')" data-index="name" />
 
-          <a-table-column title="Name" data-index="name" />
+          <a-table-column :title="$t('pages.dict.label')" data-index="label" />
 
-          <a-table-column title="Label" data-index="label" />
+          <a-table-column :title="$t('pages.dict.value')" data-index="value" />
 
-          <a-table-column title="Value" data-index="value" />
-
-          <a-table-column title="状态" data-index="status">
+          <a-table-column :title="$t('pages.dict.status')" data-index="status">
             <template #cell="{ record }">
-              {{ record.status === 0 ? '启用' : '禁用' }}
+              {{
+                record.status === 0
+                  ? $t('pages.dict.enabled')
+                  : $t('pages.dict.disabled')
+              }}
             </template>
           </a-table-column>
 
-          <a-table-column title="更新时间" data-index="updateTime">
+          <a-table-column
+            :title="$t('pages.dict.updateTime')"
+            data-index="updateTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.updateTime) }}
             </template>
           </a-table-column>
 
-          <a-table-column title="操作">
+          <a-table-column :title="$t('pages.dict.actions')">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.dict.edit') }}</a-button
               >
             </template>
           </a-table-column>

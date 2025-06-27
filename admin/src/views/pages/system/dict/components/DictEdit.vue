@@ -7,7 +7,7 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="类型" field="typeId">
+      <a-form-item :label="$t('pages.dict.type')" field="typeId">
         <span v-if="dictStore.currentType">
           {{ dictStore.currentType.code }}&nbsp;({{
             dictStore.currentType.name
@@ -15,37 +15,33 @@
         >
       </a-form-item>
 
-      <a-form-item label="上级" field="parentId">
+      <a-form-item :label="$t('pages.dict.parent')" field="parentId">
         <a-tree-select
           v-model="form.parentId"
           allow-clear
           :data="dicts"
           :field-names="{ key: 'id', title: 'label' }"
-          placeholder="请选择上级"
+          :placeholder="$t('pages.dict.pleaseSelectParent')"
         >
         </a-tree-select>
       </a-form-item>
 
-      <a-form-item label="Name" field="label">
+      <a-form-item :label="$t('pages.dict.name')" field="name">
         <a-input v-model="form.name" />
       </a-form-item>
 
-      <a-form-item label="Label" field="label">
+      <a-form-item :label="$t('pages.dict.label')" field="label">
         <a-input v-model="form.label" />
       </a-form-item>
 
-      <a-form-item label="Value" field="value">
+      <a-form-item :label="$t('pages.dict.value')" field="value">
         <a-input v-model="form.value" />
       </a-form-item>
 
-      <!-- <a-form-item label="sortNo" field="sortNo">
-        <a-input v-model="form.sortNo" />
-      </a-form-item> -->
-
-      <a-form-item label="状态" field="status">
+      <a-form-item :label="$t('pages.dict.status')" field="status">
         <a-select v-model="form.status">
-          <a-option :value="0" label="启用" />
-          <a-option :value="1" label="禁用" />
+          <a-option :value="0" :label="$t('pages.dict.enabled')" />
+          <a-option :value="1" :label="$t('pages.dict.disabled')" />
         </a-select>
       </a-form-item>
     </a-form>
@@ -53,6 +49,8 @@
 </template>
 
 <script setup>
+  const { t } = useI18n();
+
   const emit = defineEmits(['ok']);
 
   const dictStore = useDictStore();
@@ -72,9 +70,9 @@
     status: 0,
   });
   const rules = {
-    name: [{ required: true, message: '请输入Name' }],
-    label: [{ required: true, message: '请输入Label' }],
-    value: [{ required: true, message: '请输入Value' }],
+    name: [{ required: true, message: t('pages.dict.pleaseInputName') }],
+    label: [{ required: true, message: t('pages.dict.pleaseInputLabel') }],
+    value: [{ required: true, message: t('pages.dict.pleaseInputValue') }],
     status: [{ required: true }],
   };
 
@@ -89,7 +87,7 @@
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.dict.add');
 
     await loadDicts();
 
@@ -100,7 +98,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.dict.edit');
 
     await loadDicts();
 
@@ -130,7 +128,7 @@
         form.value.typeId = dictStore.currentTypeId;
       }
       await axios.postForm(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.dict.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e) {

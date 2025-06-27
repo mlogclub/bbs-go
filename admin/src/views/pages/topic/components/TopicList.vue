@@ -3,8 +3,12 @@
     <template v-if="results && results.length">
       <div v-for="topic in results" :key="topic.id" class="topic-item">
         <div class="topic-status">
-          <a-tag v-if="topic.recommend" color="green">已推荐</a-tag>
-          <a-tag v-if="topic.status === 1" color="red">已删除</a-tag>
+          <a-tag v-if="topic.recommend" color="green">{{
+            $t('pages.topic.table.recommended')
+          }}</a-tag>
+          <a-tag v-if="topic.status === 1" color="red">{{
+            $t('pages.topic.table.deleted')
+          }}</a-tag>
         </div>
 
         <div class="topic-header">
@@ -20,19 +24,19 @@
                 <span>{{ topic.id }}</span>
               </div>
               <div class="meta-item">
-                <span>时间:</span>
+                <span>{{ $t('pages.topic.table.time') }}:</span>
                 <span>{{ useFormatDate(topic.createTime) }}</span>
               </div>
               <div class="meta-item">
-                <span>查看:</span>
+                <span>{{ $t('pages.topic.table.view') }}:</span>
                 <span>{{ topic.viewCount }}</span>
               </div>
               <div class="meta-item">
-                <span>点赞:</span>
+                <span>{{ $t('pages.topic.table.like') }}:</span>
                 <span>{{ topic.likeCount }}</span>
               </div>
               <div class="meta-item">
-                <span>评论:</span>
+                <span>{{ $t('pages.topic.table.comment') }}:</span>
                 <span>{{ topic.commentCount }}</span>
               </div>
             </div>
@@ -78,49 +82,49 @@
                 class="action-item"
                 :href="useSiteURL('/topic/' + topic.id)"
                 target="_blank"
-                >查看详情</a-link
+                >{{ $t('pages.topic.table.detail') }}</a-link
               >
-              <a-link class="action-item" @click="showComments(topic.id)">
-                查看评论
-              </a-link>
+              <!-- <a-link class="action-item" @click="showComments(topic.id)">
+                {{ $t('pages.topic.table.comments') }}
+              </a-link> -->
 
               <a-popconfirm
                 v-if="topic.recommend"
-                content="是否确定取消推荐？"
+                :content="$t('pages.topic.popconfirm.cancelRecommend')"
                 @ok="cancelRecommend(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >取消推荐</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.cancelRecommend')
+                }}</a-button>
               </a-popconfirm>
 
               <a-popconfirm
                 v-else-if="!topic.recommend && topic.status === 0"
-                content="是否确定推荐？"
+                :content="$t('pages.topic.popconfirm.recommend')"
                 @ok="recommend(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >推荐</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.recommend')
+                }}</a-button>
               </a-popconfirm>
 
               <a-popconfirm
-                content="是否确定删除？"
+                :content="$t('pages.topic.popconfirm.delete')"
                 @ok="deleteSubmit(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >删除</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.delete')
+                }}</a-button>
               </a-popconfirm>
             </template>
             <template v-else-if="topic.status === 1">
               <a-popconfirm
-                content="是否确定取消删除？"
+                :content="$t('pages.topic.popconfirm.undelete')"
                 @ok="undeleteSubmit(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >取消删除</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.undelete')
+                }}</a-button>
               </a-popconfirm>
             </template>
             <template v-else-if="topic.status === 2">
@@ -128,26 +132,26 @@
                 class="action-item"
                 :href="useSiteURL('/topic/' + topic.id)"
                 target="_blank"
-                >查看详情</a-link
+                >{{ $t('pages.topic.table.detail') }}</a-link
               >
-              <a-link class="action-item" @click="showComments(topic.id)"
-                >查看评论</a-link
-              >
+              <!-- <a-link class="action-item" @click="showComments(topic.id)">{{
+                $t('pages.topic.table.comments')
+              }}</a-link> -->
               <a-popconfirm
-                content="是否确定删除？"
+                :content="$t('pages.topic.popconfirm.delete')"
                 @ok="deleteSubmit(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >删除</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.delete')
+                }}</a-button>
               </a-popconfirm>
               <a-popconfirm
-                content="是否确定删除？"
+                :content="$t('pages.topic.popconfirm.audit')"
                 @ok="auditSubmit(topic.id)"
               >
-                <a-button class="action-item" size="mini" type="primary"
-                  >审核通过</a-button
-                >
+                <a-button class="action-item" size="mini" type="primary">{{
+                  $t('pages.topic.table.auditPass')
+                }}</a-button>
               </a-popconfirm>
             </template>
           </div>
@@ -159,6 +163,8 @@
 </template>
 
 <script setup>
+  const { t } = useI18n();
+
   defineProps({
     results: {
       type: Array,
@@ -176,7 +182,7 @@
         '/api/admin/topic/delete',
         jsonToFormData({ id: topicId })
       );
-      useNotificationSuccess('删除成功');
+      useNotificationSuccess(t('pages.topic.notify.deleteSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);
@@ -188,7 +194,7 @@
         '/api/admin/topic/undelete',
         jsonToFormData({ id: topicId })
       );
-      useNotificationSuccess('取消删除成功');
+      useNotificationSuccess(t('pages.topic.notify.undeleteSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);
@@ -200,7 +206,7 @@
         '/api/admin/topic/recommend',
         jsonToFormData({ id: topicId })
       );
-      useNotificationSuccess('推荐成功');
+      useNotificationSuccess(t('pages.topic.notify.recommendSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);
@@ -209,7 +215,7 @@
   const cancelRecommend = async (topicId) => {
     try {
       await axios.delete(`/api/admin/topic/recommend?id=${topicId}`);
-      useNotificationSuccess('取消推荐成功');
+      useNotificationSuccess(t('pages.topic.notify.cancelRecommendSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);
@@ -221,7 +227,7 @@
         '/api/admin/topic/audit',
         jsonToFormData({ id: topicId })
       );
-      useNotificationSuccess('审核成功');
+      useNotificationSuccess(t('pages.topic.notify.auditSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);

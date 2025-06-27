@@ -2,7 +2,10 @@
   <div class="container">
     <div class="container-main">
       <div class="type-tool-bar">
-        <a-input-search v-model="filters.query" placeholder="搜索" />
+        <a-input-search
+          v-model="filters.query"
+          :placeholder="$t('pages.dictType.search')"
+        />
         <div class="btn-add">
           <a-button type="primary" @click="showAdd">
             <template #icon>

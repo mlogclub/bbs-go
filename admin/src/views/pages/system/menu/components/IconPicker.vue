@@ -4,7 +4,7 @@
       <a-input
         :model-value="modelValue"
         class="icon-picker-input-input"
-        placeholder="请选择图标"
+        placeholder="icon"
         @input="onInput"
       >
         <template #prefix>
@@ -12,12 +12,12 @@
         </template>
       </a-input>
       <a-button class="icon-picker-input-btn" type="primary" @click="showIcons"
-        >选择图标</a-button
+        >Icon</a-button
       >
     </div>
 
     <a-modal v-model:visible="visible" :width="650">
-      <template #title> 选择图标 </template>
+      <template #title> Icon </template>
       <div class="icons">
         <div
           v-for="(icon, i) in icons"

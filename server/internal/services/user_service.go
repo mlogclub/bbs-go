@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/validate"
 	"errors"
 	"log/slog"
@@ -185,6 +186,10 @@ func (s *userService) GetByEmail(email string) *models.User {
 // GetByUsername 根据用户名查找
 func (s *userService) GetByUsername(username string) *models.User {
 	return repositories.UserRepository.GetByUsername(sqls.DB(), username)
+}
+
+func (s *userService) GetByPhone(phone string) *models.User {
+	return repositories.UserRepository.GetByPhone(sqls.DB(), phone)
 }
 
 // SignUp 注册
@@ -440,10 +445,10 @@ func (s *userService) SyncUserCount() {
 func (s *userService) SendEmailVerifyEmail(userId int64) error {
 	user := s.Get(userId)
 	if user == nil {
-		return errors.New("用户不存在")
+		return errors.New(locales.Get("user.not_found"))
 	}
 	if user.EmailVerified {
-		return errors.New("用户邮箱已验证")
+		return errors.New(locales.Get("user.email_verified"))
 	}
 	if err := validate.IsEmail(user.Email.String); err != nil {
 		return err
@@ -468,17 +473,17 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 				}
 				return email
 			}()
-			return errors.New("不支持该该邮箱后缀: " + suffix)
+			return errors.New(locales.Getf("user.email_suffix_not_supported", suffix))
 		}
 	}
 	var (
 		token     = strs.UUID()
 		url       = bbsurls.AbsUrl("/user/email/verify?token=" + token)
-		link      = &dto.ActionLink{Title: "点击这里验证邮箱>>", Url: url}
+		link      = &dto.ActionLink{Title: locales.Get("user.email_verify_link"), Url: url}
 		siteTitle = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
-		subject   = "邮箱验证 - " + siteTitle
-		title     = "邮箱验证 - " + siteTitle
-		content   = "该邮件用于验证你在 " + siteTitle + " 中设置邮箱的正确性，请在" + strconv.Itoa(emailVerifyExpireHour) + "小时内完成验证。验证链接：" + url
+		subject   = locales.Getf("user.email_verify_title", siteTitle)
+		title     = locales.Getf("user.email_verify_title", siteTitle)
+		content   = locales.Getf("user.email_verify_content", siteTitle, emailVerifyExpireHour, url)
 	)
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.EmailCodeRepository.Create(tx, &models.EmailCode{
@@ -505,15 +510,15 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 func (s *userService) VerifyEmail(token string) (string, error) {
 	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
 	if emailCode == nil || emailCode.Used {
-		return "", errors.New("非法请求")
+		return "", errors.New(locales.Get("user.email_verify_illegal"))
 	}
 
 	user := s.Get(emailCode.UserId)
 	if user == nil || emailCode.Email != user.Email.String {
-		return "", errors.New("验证码过期")
+		return "", errors.New(locales.Get("user.email_verify_expired"))
 	}
 	if dates.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(emailVerifyExpireHour)).Before(time.Now()) {
-		return "", errors.New("验证邮件已过期")
+		return "", errors.New(locales.Get("user.email_verify_expired"))
 	}
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
 		if err := repositories.UserRepository.UpdateColumn(tx, emailCode.UserId, "email_verified", true); err != nil {
@@ -531,17 +536,17 @@ func (s *userService) VerifyEmail(token string) (string, error) {
 // CheckPostStatus 用于在发表内容时检查用户状态
 func (s *userService) CheckPostStatus(user *models.User) error {
 	if user == nil {
-		return errs.NotLogin
+		return errs.NotLogin()
 	}
 	if user.Status != constants.StatusOk {
-		return errs.UserDisabled
+		return errs.UserDisabled()
 	}
 	if user.IsForbidden() {
-		return errs.ForbiddenError
+		return errs.ForbiddenError()
 	}
 	observeSeconds := cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds)
 	if user.InObservationPeriod(observeSeconds) {
-		return web.NewError(errs.InObservationPeriod.Code, "账号尚在观察期，观察期时长："+strconv.Itoa(observeSeconds)+"秒，请稍后再试")
+		return web.NewError(errs.CodeInObservationPeriod, locales.Getf("errors.in_observation", observeSeconds))
 	}
 	return nil
 }

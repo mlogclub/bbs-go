@@ -3,6 +3,7 @@ package api
 import (
 	"bbs-go/internal/install"
 	"bbs-go/internal/pkg/config"
+	"bbs-go/internal/pkg/locales"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
@@ -28,19 +29,8 @@ func (c *InstallController) PostTest_db_connection() *web.JsonResult {
 
 	// 检查是否已安装
 	if config.Instance.Installed {
-		return web.JsonErrorMsg("系统已安装，无需重复安装")
+		return web.JsonErrorMsg(locales.Get("install.already_installed"))
 	}
-
-	// // 尝试连接数据库
-	// sqlDB, err := sql.Open("mysql", req.GetConnStr())
-	// if err != nil {
-	// 	return web.JsonError(err)
-	// }
-	// defer sqlDB.Close()
-
-	// if err = sqlDB.Ping(); err != nil {
-	// 	return web.JsonError(err)
-	// }
 
 	if err := install.TestDbConnection(req); err != nil {
 		return web.JsonError(err)
@@ -57,7 +47,7 @@ func (c *InstallController) PostInstall() *web.JsonResult {
 
 	// 检查是否已安装
 	if config.Instance.Installed {
-		return web.JsonErrorMsg("系统已安装，无需重复安装")
+		return web.JsonErrorMsg(locales.Get("install.already_installed"))
 	}
 
 	// 初始化数据库

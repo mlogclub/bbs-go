@@ -2,7 +2,7 @@
   <section class="main">
     <div v-if="isPending" class="container main-container">
       <div class="notification is-warning" style="width: 100%; margin: 20px 0">
-        文章正在审核中
+        {{ t("pages.article.detail.pending") }}
       </div>
     </div>
     <div class="container main-container left-main size-320">
@@ -19,12 +19,11 @@
             </div>
             <div class="article-meta">
               <span class="article-meta-item">
-                由
                 <nuxt-link
                   :to="'/user/' + article.user.id"
                   class="article-author"
                   >{{ article.user.nickname }}</nuxt-link
-                >发布于
+                >{{ t("pages.article.detail.publishedAt") }}
                 <time :datetime="useFormatDate(article.createTime)">{{
                   usePrettyDate(article.createTime)
                 }}</time>
@@ -64,6 +63,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 const route = useRoute();
 const { data: article, error } = await useMyFetch(
   `/api/article/${route.params.id}`
@@ -72,7 +72,7 @@ const { data: article, error } = await useMyFetch(
 if (error.value) {
   throw createError({
     statusCode: 500,
-    message: error.value.message || "你访问的页面发生错误!",
+    message: error.value.message || t("pages.redirect.error"),
   });
 }
 

@@ -9,14 +9,16 @@
               {{ topic.user.nickname }}
             </a>
             <div class="topic-time">
-              发布于{{ usePrettyDate(topic.createTime) }}
+              {{ $t("component.topicList.publishedAt") }}&nbsp;{{
+                usePrettyDate(topic.createTime)
+              }}
             </div>
           </div>
         </div>
         <div class="topic-header-right">
-          <span v-if="showSticky && topic.sticky" class="topic-sticky-icon"
-            >置顶</span
-          >
+          <span v-if="showSticky && topic.sticky" class="topic-sticky-icon">{{
+            $t("component.topicList.sticky")
+          }}</span>
         </div>
       </div>
       <div class="topic-content" :class="{ 'topic-tweet': topic.type === 1 }">
@@ -95,59 +97,59 @@
     </li>
   </ul>
 </template>
-<script>
-export default {
-  props: {
-    topics: {
-      type: Array,
-      default() {
-        return [];
-      },
-      required: false,
+<script setup>
+const { t } = useI18n();
+
+const props = defineProps({
+  topics: {
+    type: Array,
+    default() {
+      return [];
     },
-    showAvatar: {
-      type: Boolean,
-      default: true,
-    },
-    showSticky: {
-      type: Boolean,
-      default: false,
-    },
+    required: false,
   },
-  methods: {
-    async like(topic) {
-      try {
-        if (topic.liked) {
-          await useHttpPost(
-            "/api/like/unlike",
-            useJsonToForm({
-              entityType: "topic",
-              entityId: topic.id,
-            })
-          );
-          topic.liked = false;
-          topic.likeCount = topic.likeCount > 0 ? topic.likeCount - 1 : 0;
-          useMsgSuccess("已取消点赞");
-        } else {
-          await useHttpPost(
-            "/api/like/like",
-            useJsonToForm({
-              entityType: "topic",
-              entityId: topic.id,
-            })
-          );
-          topic.liked = true;
-          topic.likeCount++;
-          useMsgSuccess("点赞成功");
-        }
-      } catch (e) {
-        useCatchError(e);
-      }
-    },
-    toTopicDetail(topicId) {
-      useLinkTo(`/topic/${topicId}`);
-    },
+  showAvatar: {
+    type: Boolean,
+    default: true,
   },
+  showSticky: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const like = async (topic) => {
+  try {
+    if (topic.liked) {
+      await useHttpPost(
+        "/api/like/unlike",
+        useJsonToForm({
+          entityType: "topic",
+          entityId: topic.id,
+        })
+      );
+      topic.liked = false;
+      topic.likeCount = topic.likeCount > 0 ? topic.likeCount - 1 : 0;
+      useMsgSuccess(t("component.topicList.unlikeSuccess"));
+    } else {
+      await useHttpPost(
+        "/api/like/like",
+        useJsonToForm({
+          entityType: "topic",
+          entityId: topic.id,
+        })
+      );
+      topic.liked = true;
+      topic.likeCount++;
+      useMsgSuccess(t("component.topicList.likeSuccess"));
+    }
+  } catch (e) {
+    useCatchError(e);
+  }
+};
+
+const toTopicDetail = (topicId) => {
+  useLinkTo(`/topic/${topicId}`);
 };
 </script>
 <style lang="scss" scoped>

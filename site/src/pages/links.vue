@@ -2,7 +2,7 @@
   <section class="main">
     <div class="container">
       <div class="widget">
-        <div class="widget-header">友情链接</div>
+        <div class="widget-header">{{ $t("pages.links.title") }}</div>
         <div class="widget-content">
           <ul v-if="links && links.length" class="links">
             <li v-for="link in links" :key="link.id" class="link">
@@ -25,9 +25,12 @@
   </section>
 </template>
 <script setup>
+const { t } = useI18n();
+
 useHead({
-  title: "友情链接",
+  title: t("pages.links.title"),
 });
+
 const links = await useHttpGet("/api/link/list");
 </script>
 

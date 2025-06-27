@@ -22,6 +22,7 @@ type Model struct {
 type User struct {
 	Model
 	Type             int              `gorm:"not null;default:0" json:"type" form:"type"`                              // 用户类型（0：用户、1：员工）
+	Phone            sql.NullString   `gorm:"size:16;unique;" json:"phone" form:"phone"`                               // 电话
 	Username         sql.NullString   `gorm:"size:32;unique;" json:"username" form:"username"`                         // 用户名
 	Email            sql.NullString   `gorm:"size:128;unique;" json:"email" form:"email"`                              // 邮箱
 	EmailVerified    bool             `gorm:"not null;default:false" json:"emailVerified" form:"emailVerified"`        // 邮箱是否验证
@@ -195,12 +196,12 @@ type Message struct {
 // 系统配置
 type SysConfig struct {
 	Model
-	Key         string `gorm:"not null;size:128;unique" json:"key" form:"key"` // 配置key
-	Value       string `gorm:"type:text" json:"value" form:"value"`            // 配置值
-	Name        string `gorm:"not null;size:32" json:"name" form:"name"`       // 配置名称
-	Description string `gorm:"size:128" json:"description" form:"description"` // 配置描述
-	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`   // 创建时间
-	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`   // 更新时间
+	Key         string `gorm:"not null;size:128;unique" json:"key" form:"key"`  // 配置key
+	Value       string `gorm:"type:text" json:"value" form:"value"`             // 配置值
+	Name        string `gorm:"not null;size:128" json:"name" form:"name"`       // 配置名称
+	Description string `gorm:"size:1024" json:"description" form:"description"` // 配置描述
+	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`    // 创建时间
+	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`    // 更新时间
 }
 
 // 友链

@@ -1,17 +1,22 @@
 <template>
-  <BBSDialog v-model:visible="visible" title="设置邮箱" @ok="submit">
+  <BBSDialog
+    v-model:visible="visible"
+    :title="$t('component.setEmailDialog.title')"
+    @ok="submit"
+  >
     <div style="padding: 60px 30px">
       <input
         v-model="email"
         class="input"
         type="text"
-        placeholder="请输入邮箱"
+        :placeholder="$t('component.setEmailDialog.emailPlaceholder')"
       />
     </div>
   </BBSDialog>
 </template>
 
 <script setup>
+const { t } = useI18n();
 const visible = ref(false);
 const emits = defineEmits(["success"]);
 const email = ref(null);
@@ -33,7 +38,7 @@ const submit = async () => {
     );
     visible.value = false;
     emits("success");
-    useMsgSuccess("邮箱设置成功");
+    useMsgSuccess(t("component.setEmailDialog.success"));
   } catch (err) {
     useMsgError(err.message || err);
   }

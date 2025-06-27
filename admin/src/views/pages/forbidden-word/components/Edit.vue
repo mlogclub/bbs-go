@@ -7,18 +7,24 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="类型" field="type">
-        <a-select v-model="form.type" placeholder="类型">
-          <a-option label="词组" value="word" />
-          <a-option label="正则表达式" value="regex" />
+      <a-form-item :label="$t('pages.forbiddenWord.type')" field="type">
+        <a-select
+          v-model="form.type"
+          :placeholder="$t('pages.forbiddenWord.type')"
+        >
+          <a-option :label="$t('pages.forbiddenWord.typeWord')" value="word" />
+          <a-option
+            :label="$t('pages.forbiddenWord.typeRegex')"
+            value="regex"
+          />
         </a-select>
       </a-form-item>
 
-      <a-form-item label="违禁词" field="word">
+      <a-form-item :label="$t('pages.forbiddenWord.word')" field="word">
         <a-input v-model="form.word" />
       </a-form-item>
 
-      <a-form-item label="备注" field="remark">
+      <a-form-item :label="$t('pages.forbiddenWord.remark')" field="remark">
         <a-input v-model="form.remark" />
       </a-form-item>
     </a-form>
@@ -26,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();
@@ -42,14 +49,16 @@
     remark: undefined,
   });
   const rules = {
-    word: [{ required: true, message: '请输入违禁词' }],
+    word: [
+      { required: true, message: t('pages.forbiddenWord.pleaseInputWord') },
+    ],
   };
 
   const show = () => {
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.forbiddenWord.new');
     config.visible = true;
   };
 
@@ -57,7 +66,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.forbiddenWord.editTitle');
 
     try {
       form.value = await axios.get(`/api/admin/forbidden-word/${id}`);
@@ -83,6 +92,7 @@
         : '/api/admin/forbidden-word/update';
       await axios.postForm<any>(url, jsonToFormData(form.value));
       useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('forbiddenWord.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e: any) {

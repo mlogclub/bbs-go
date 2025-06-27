@@ -1,4 +1,0 @@
-import mitt from "mitt";
-
-const editorEventBus = mitt();
-export const useEditorEventBus = () => editorEventBus;

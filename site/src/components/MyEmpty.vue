@@ -1,18 +1,3 @@
-<script>
-export default {
-  props: {
-    showLogo: {
-      type: Boolean,
-      default: true,
-    },
-    description: {
-      type: String,
-      default: "暂无数据",
-    },
-  },
-};
-</script>
-
 <template>
   <div class="empty-data">
     <svg v-if="showLogo" viewBox="0 0 66 68">
@@ -33,11 +18,22 @@ export default {
         />
       </g>
     </svg>
-    <span>
-      {{ description }}
-    </span>
+    <span> {{ description || $t("common.noData") }}</span>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  showLogo: {
+    type: Boolean,
+    default: true,
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 .empty-data {

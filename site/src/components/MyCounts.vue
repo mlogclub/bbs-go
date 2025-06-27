@@ -1,24 +1,28 @@
 <template>
   <div class="widget">
-    <div class="widget-header">个人成就</div>
+    <div class="widget-header">{{ $t("component.myCounts.title") }}</div>
     <div class="widget-content extra-info">
       <ul>
         <li>
-          <span>积分</span><br />
+          <span>{{ $t("component.myCounts.score") }}</span
+          ><br />
           <nuxt-link to="/user/scores">
             <b>{{ user.score }}</b>
           </nuxt-link>
         </li>
         <li>
-          <span>话题</span><br />
+          <span>{{ $t("component.myCounts.topicCount") }}</span
+          ><br />
           <b>{{ user.topicCount }}</b>
         </li>
         <li>
-          <span>评论</span><br />
+          <span>{{ $t("component.myCounts.commentCount") }}</span
+          ><br />
           <b>{{ user.commentCount }}</b>
         </li>
         <li>
-          <span>注册排名</span><br />
+          <span>{{ $t("component.myCounts.registrationRank") }}</span
+          ><br />
           <b>{{ user.id }}</b>
         </li>
       </ul>
@@ -26,15 +30,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

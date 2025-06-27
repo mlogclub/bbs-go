@@ -9,7 +9,6 @@ services:
       MYSQL_PASSWORD: 123456
       MYSQL_ROOT_PASSWORD: 123456
     volumes:
-      - .docker-compose/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d # 初始化脚本件目录, 这个目录中的.sh/sql文件会以字母顺序依次执行
       - .docker-compose/mysql/data:/var/lib/mysql # 挂载数据件目录；如果非root账号执行，挂载目录必须是登录账号下目录
     restart: always
     healthcheck:
@@ -21,19 +20,12 @@ services:
 
   bbsgo:
     container_name: bbs-go
-    image: mlogclub/bbs-go:4.0.3
+    image: mlogclub/bbs-go:latest
     depends_on:
       mysql:
         condition: service_healthy
-    build:
-      dockerfile: Dockerfile
-      context: ./
-    volumes:
-      - /data/docker:/data
     environment:
-      BBSGO_ENV: docker
-      BBSGO_DB_URL: root:123456@tcp(bbs-go-mysql:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
-      BBSGO_BASEURL: 
+      BBSGO_ENV: prod
     ports:
       - 8082:8082
       - 3000:3000

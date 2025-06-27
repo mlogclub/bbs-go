@@ -42,7 +42,6 @@ var emailTemplate = `
 </div>
 `
 
-// SendTemplateEmail 发送模版邮件
 func SendTemplateEmail(from *models.User, to, subject, title, content, quote string, link *dto.ActionLink) error {
 	tpl, err := template.New("emailTemplate").Parse(emailTemplate)
 	if err != nil {
@@ -94,12 +93,12 @@ func SendEmail(to string, subject, html string) error {
 
 	if ssl {
 		if err := e.SendWithTLS(addr, auth, tlsConfig); err != nil {
-			slog.Error("发送邮件异常", slog.Any("err", err))
+			slog.Error("Send email failed", slog.Any("err", err))
 			return err
 		}
 	} else {
 		if err := e.Send(addr, auth); err != nil {
-			slog.Error("发送邮件异常", slog.Any("err", err))
+			slog.Error("Send email failed", slog.Any("err", err))
 			return err
 		}
 	}

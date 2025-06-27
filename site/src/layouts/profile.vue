@@ -9,13 +9,13 @@
             <div class="profile-edit-tab-item">
               <nuxt-link to="/user/profile">
                 <i class="iconfont icon-username" />
-                <span>个人资料</span>
+                <span>{{ $t("layout.profile.profile") }}</span>
               </nuxt-link>
             </div>
             <div class="profile-edit-tab-item">
               <nuxt-link to="/user/profile/account">
                 <i class="iconfont icon-setting" />
-                <span>账号设置</span>
+                <span>{{ $t("layout.profile.accountSettings") }}</span>
               </nuxt-link>
             </div>
           </div>
@@ -24,15 +24,18 @@
           <div class="profile-edit-tabs-mobile tabs">
             <ul>
               <li :class="{ 'is-active': active === 'profile' }">
-                <nuxt-link to="/user/profile">个人资料</nuxt-link>
+                <nuxt-link to="/user/profile">{{
+                  $t("layout.profile.profile")
+                }}</nuxt-link>
               </li>
               <li :class="{ 'is-active': active === 'account' }">
-                <nuxt-link to="/user/profile/account">账号设置</nuxt-link>
+                <nuxt-link to="/user/profile/account">{{
+                  $t("layout.profile.accountSettings")
+                }}</nuxt-link>
               </li>
             </ul>
           </div>
           <slot />
-          <!-- <NuxtPage /> -->
         </div>
       </div>
     </section>

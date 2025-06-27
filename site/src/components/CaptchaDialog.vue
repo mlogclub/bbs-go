@@ -12,7 +12,9 @@
         <div class="dialog-content" style="width: max-content">
           <Rotate
             v-if="visible"
-            :config="{}"
+            :config="{
+              title: $t('component.captcha.title'),
+            }"
             :data="{
               image: captcha.imageBase64,
               thumb: captcha.thumbBase64,

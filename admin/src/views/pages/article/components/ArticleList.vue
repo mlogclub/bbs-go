@@ -11,12 +11,12 @@
           >
 
           <div class="article-status">
-            <a-tag v-if="item.status === 1" color="red" size="mini"
-              >已删除</a-tag
-            >
-            <a-tag v-if="item.status === 2" color="blue" size="mini"
-              >待审核</a-tag
-            >
+            <a-tag v-if="item.status === 1" color="red" size="mini">{{
+              $t('pages.article.deleted')
+            }}</a-tag>
+            <a-tag v-if="item.status === 2" color="blue" size="mini">{{
+              $t('pages.article.pending')
+            }}</a-tag>
           </div>
         </div>
 
@@ -35,9 +35,10 @@
                 >
                   <span>{{ item.user.nickname }}</span>
                 </a>
-                <span class="article-meta-item"
-                  >发布于{{ useFormatDate(item.createTime) }}</span
-                >
+                <span class="article-meta-item">
+                  {{ $t('pages.article.publishedAt') }}&nbsp;
+                  {{ useFormatDate(item.createTime) }}
+                </span>
               </div>
 
               <div
@@ -63,7 +64,7 @@
         <div class="article-item-actions">
           <a-popconfirm
             v-if="item.status === 0 || item.status === 2"
-            content="是否确定删除？"
+            :content="$t('pages.article.confirmDelete')"
             @ok="deleteSubmit(item)"
           >
             <a-button
@@ -71,12 +72,12 @@
               size="mini"
               type="primary"
               status="warning"
-              >删除</a-button
+              >{{ $t('pages.article.delete') }}</a-button
             >
           </a-popconfirm>
           <a-popconfirm
             v-if="item.status === 2"
-            content="是否确定取消删除？"
+            :content="$t('pages.article.confirmAudit')"
             @ok="auditSubmit(item)"
           >
             <a-button
@@ -84,7 +85,7 @@
               size="mini"
               type="primary"
               status="success"
-              >审核通过</a-button
+              >{{ $t('pages.article.auditPass') }}</a-button
             >
           </a-popconfirm>
         </div>
@@ -95,6 +96,8 @@
 </template>
 
 <script setup>
+  const { t } = useI18n();
+
   defineProps({
     results: {
       type: Array,
@@ -112,7 +115,7 @@
         '/api/admin/article/delete',
         jsonToFormData({ id: row.id })
       );
-      useNotificationSuccess('删除成功');
+      useNotificationSuccess(t('pages.article.deleteSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);
@@ -124,7 +127,7 @@
         '/api/admin/article/audit',
         jsonToFormData({ id: row.id })
       );
-      useNotificationSuccess('审核成功');
+      useNotificationSuccess(t('pages.article.auditSuccess'));
       emits('change');
     } catch (e) {
       useHandleError(e);

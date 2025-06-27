@@ -40,7 +40,6 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <search-input />
-            <!-- <nuxt-link to="/search">xxxx</nuxt-link> -->
           </div>
 
           <div class="navbar-item">
@@ -64,26 +63,26 @@
             <div class="navbar-dropdown">
               <nuxt-link class="navbar-item" :to="`/user/${user.id}`">
                 <i class="iconfont icon-username" />
-                <span>个人中心</span>
+                <span>{{ $t("common.header.profile") }}</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/favorites">
                 <i class="iconfont icon-favorite" />
-                <span>我的收藏</span>
+                <span>{{ $t("common.header.favorites") }}</span>
               </nuxt-link>
               <nuxt-link class="navbar-item" to="/user/profile">
                 <i class="iconfont icon-edit" />
-                <span>编辑资料</span>
+                <span>{{ $t("common.header.editProfile") }}</span>
               </nuxt-link>
               <a class="navbar-item" @click="signout">
                 <i class="iconfont icon-log-out" />
-                <span>退出登录</span>
+                <span>{{ $t("common.header.logout") }}</span>
               </a>
             </div>
           </div>
           <div v-else class="navbar-item">
             <div class="buttons">
               <nuxt-link class="button login-btn" to="/user/signin">
-                登录
+                {{ $t("common.header.login") }}
               </nuxt-link>
             </div>
           </div>
@@ -102,6 +101,7 @@ const configStore = useConfigStore();
 
 const { user } = storeToRefs(userStore);
 const { config } = storeToRefs(configStore);
+const { t } = useI18n();
 
 const navbarActive = ref(false);
 
@@ -110,7 +110,7 @@ function toggleNav() {
 }
 
 async function signout() {
-  if (confirm("确定退出登录吗？")) {
+  if (confirm(t("common.header.confirmLogout"))) {
     await userStore.signout();
     useLinkTo("/");
   }

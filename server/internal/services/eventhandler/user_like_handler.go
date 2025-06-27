@@ -3,6 +3,7 @@ package eventhandler
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/services"
 	"reflect"
@@ -42,7 +43,7 @@ func sendTopicLikeMsg(topicId, likeUserId int64) {
 	var (
 		from         = likeUserId
 		to           = topic.UserId
-		title        = "点赞了你的话题"
+		title        = locales.Get("message.topic_like_msg_title")
 		quoteContent = "《" + topic.GetTitle() + "》"
 	)
 	services.MessageService.SendMsg(from, to, msg.TypeTopicLike, title, "", quoteContent,

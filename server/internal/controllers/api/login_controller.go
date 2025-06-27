@@ -33,11 +33,11 @@ func (c *LoginController) PostSignup() *web.JsonResult {
 	// 根据验证码协议版本校验验证码
 	if captchaProtocol == 2 {
 		if !captcha2.Verify(captchaId, captchaCode) {
-			return web.JsonError(errs.CaptchaError)
+			return web.JsonError(errs.CaptchaError())
 		}
 	} else {
 		if !captcha.VerifyString(captchaId, captchaCode) {
-			return web.JsonError(errs.CaptchaError)
+			return web.JsonError(errs.CaptchaError())
 		}
 	}
 	user, err := services.UserService.SignUp(username, email, nickname, password, rePassword)
@@ -61,15 +61,16 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 	// 根据验证码协议版本校验验证码
 	if captchaProtocol == 2 {
 		if !captcha2.Verify(captchaId, captchaCode) {
-			return web.JsonError(errs.CaptchaError)
+			return web.JsonError(errs.CaptchaError())
 		}
 	} else {
 		if !captcha.VerifyString(captchaId, captchaCode) {
-			return web.JsonError(errs.CaptchaError)
+			return web.JsonError(errs.CaptchaError())
 		}
 	}
 
 	user, err := services.UserService.SignIn(username, password)
+
 	if err != nil {
 		return web.JsonError(err)
 	}

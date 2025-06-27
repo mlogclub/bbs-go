@@ -1,0 +1,76 @@
+common:
+  not_found: "Data not found"
+topic:
+  node:
+    latest: Latest
+    recommend: Recommended
+    follow: Following
+  under_review: "Content under review"
+  no_permission: "No permission"
+  type_not_supported: "Current topic type does not support modification"
+
+user:
+  anonymous: "Anonymous %d"
+  default_description: "This user is lazy and left nothing"
+  blacklist: "Blacklisted User"
+  not_found: "User not found"
+  no_permission: "No permission"
+  nickname_empty: "Nickname cannot be empty"
+  gender_error: "Invalid gender data"
+  homepage_error: "Invalid homepage URL"
+  avatar_empty: "Avatar cannot be empty"
+  upload_image_required: "Please upload an image"
+  email_verified: "Email already verified"
+  email_required: "Please enter email"
+  email_invalid: "Invalid email format"
+  email_occupied: "Email: %s is already taken"
+  email_suffix_not_supported: "Email suffix not supported: %s"
+  email_verify_title: "Email Verification - %s"
+  email_verify_content: "This email is used to verify the correctness of your email address in %s. Please complete the verification within %d hours. Verification link: %s"
+  email_verify_link: "Click here to verify email>>"
+  email_verify_expired: "Verification email has expired"
+  email_verify_illegal: "Illegal request"
+
+errors:
+  not_login: "Please login first"
+  captcha_error: "Captcha error"
+  forbidden: "Account is muted"
+  user_disabled: "Account is disabled"
+  email_not_verified: "Please verify your email first"
+  in_observation: "Account is in observation period, %d seconds remaining, please try again later"
+
+auth:
+  password_login_disabled: "Password login/registration is disabled"
+  phone_required: "Please enter phone number"
+  sms_login_disabled: "SMS login is disabled"
+  login_data_error: "Login data error"
+  weixin_login_disabled: "WeChat login is disabled"
+
+article:
+  not_found: "Article not found"
+  under_review: "Article under review"
+  no_permission: "No permission"
+
+install:
+  already_installed: "System already installed, no need to reinstall"
+
+upload:
+  image_too_large: "Image cannot exceed %d M"
+
+message:
+  system_nickname: "System"
+  topic_recommend_msg_title: "Your topic has been set to recommend"
+  topic_delete_msg_title: "Your topic has been deleted"
+  topic_favorite_msg_title: "Your topic has been favorited"
+  topic_like_msg_title: "Your topic has been liked"
+
+email:
+  new_message: "Notification"
+  topic_comment: "Topic Comment"
+  comment_reply: "Reply"
+  topic_like: "Like"
+  topic_favorite: "Topic Favorited"
+  topic_recommend: "Topic Recommended"
+  topic_delete: "Topic Deleted"
+  article_comment: "Article Comment"
+  view_details: "View Details"

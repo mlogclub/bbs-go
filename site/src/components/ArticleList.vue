@@ -21,7 +21,8 @@
               <span>{{ article.user.nickname }}</span>
             </nuxt-link>
             <time :datetime="useFormatDate(article.createTime)"
-              >发布于 {{ usePrettyDate(article.createTime) }}</time
+              >{{ $t("component.articleList.publishedAt") }}
+              {{ usePrettyDate(article.createTime) }}</time
             >
           </span>
         </div>

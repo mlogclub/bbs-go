@@ -14,7 +14,7 @@
     <input
       ref="tagInput"
       v-model="inputTag"
-      placeholder="标签"
+      :placeholder="$t('component.tagInput.placeholder')"
       class="input"
       type="text"
       @input="autocomplete"
@@ -49,7 +49,7 @@
       <div v-show="showRecommendTags" class="recommend-tags">
         <div class="tags-container">
           <div class="header">
-            <span>推荐标签</span>
+            <span>{{ $t("component.tagInput.recommendTags") }}</span>
             <span class="close-recommend">
               <i class="iconfont icon-close" @click="closeRecommendTags" />
             </span>
@@ -285,6 +285,10 @@ function close() {
 
     &:focus-visible {
       outline-width: 0;
+    }
+
+    &::placeholder {
+      font-size: 14px;
     }
   }
 

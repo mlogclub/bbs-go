@@ -11,7 +11,7 @@
     unmount-on-close
     :visible="visible"
     :cancel-text="$t('settings.close')"
-    :ok-text="$t('settings.copySettings')"
+    :ok-text="$t('settings.copySettings.title')"
     @ok="copySettings"
     @cancel="cancel"
   >
@@ -37,7 +37,11 @@
   const { copy } = useClipboard();
   const visible = computed(() => appStore.globalSettings);
   const contentOpts = computed(() => [
-    { name: 'settings.navbar', key: 'navbar', defaultVal: appStore.navbar },
+    {
+      name: 'settings.navbar.title',
+      key: 'navbar',
+      defaultVal: appStore.navbar,
+    },
     {
       name: 'settings.menu',
       key: 'menu',

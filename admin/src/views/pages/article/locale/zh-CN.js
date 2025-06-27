@@ -1,0 +1,21 @@
+export default {
+  article: {
+    id: 'ID',
+    userId: '用户编号',
+    title: '标题',
+    status: '状态',
+    statusNormal: '正常',
+    statusDeleted: '删除',
+    statusPending: '待审核',
+    search: '查询',
+    deleted: '已删除',
+    pending: '待审核',
+    publishedAt: '发布于',
+    confirmDelete: '是否确定删除？',
+    confirmAudit: '是否确定取消删除？',
+    delete: '删除',
+    auditPass: '审核通过',
+    deleteSuccess: '删除成功',
+    auditSuccess: '审核成功',
+  },
+};

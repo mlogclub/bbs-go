@@ -3,23 +3,24 @@
     <div class="container">
       <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
-          <p>请先验证邮箱</p>
+          <p>{{ $t("pages.article.create.needEmailTitle") }}</p>
         </div>
         <div class="message-body">
-          发表话题前，请先前往
-          <strong
-            ><nuxt-link
+          {{ $t("pages.article.create.needEmailBody") }}
+          <strong>
+            <nuxt-link
               to="/user/profile/account"
               style="color: var(--text-link-color)"
-              >个人中心 &gt; 账号设置</nuxt-link
-            ></strong
-          >
-          页面设置邮箱，并完成邮箱认证。
+              >{{ $t("pages.article.create.goVerify") }}</nuxt-link
+            >
+          </strong>
         </div>
       </article>
       <div v-else class="publish-form">
         <div class="form-title">
-          <div class="form-title-name">发文章</div>
+          <div class="form-title-name">
+            {{ $t("pages.article.create.title") }}
+          </div>
         </div>
 
         <div class="field">
@@ -28,7 +29,7 @@
               v-model="postForm.title"
               class="input"
               type="text"
-              placeholder="标题"
+              :placeholder="$t('pages.article.create.titlePlaceholder')"
             />
           </div>
         </div>
@@ -37,7 +38,7 @@
           <div class="control">
             <markdown-editor
               v-model="postForm.content"
-              placeholder="请输入内容，将图片复制或拖入编辑器可上传"
+              :placeholder="$t('pages.article.create.contentPlaceholder')"
             />
           </div>
         </div>
@@ -54,7 +55,7 @@
               <template #add-image-button>
                 <div class="cover-add-btn">
                   <i class="iconfont icon-add" />
-                  <span>封面</span>
+                  <span>{{ $t("pages.article.create.cover") }}</span>
                 </div>
               </template>
             </image-upload>
@@ -68,14 +69,14 @@
               :class="{ 'is-loading': publishing }"
               disabled
               class="button is-primary"
-              >发表</a
+              >{{ $t("pages.article.create.publishBtn") }}</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
               class="button is-primary"
               @click="submitCreate"
-              >发表</a
+              >{{ $t("pages.article.create.publishBtn") }}</a
             >
           </div>
         </div>
@@ -85,7 +86,8 @@
 </template>
 
 <script setup>
-const publishing = ref(false); // 当前是否正处于发布中...
+const { t } = useI18n();
+const publishing = ref(false);
 const postForm = ref({
   title: "",
   tags: [],
@@ -102,11 +104,11 @@ const isNeedEmailVerify = computed(() => {
 });
 
 if (!configStore.config.modules.article) {
-  showError("😱 文章功能未开启");
+  showError(t("pages.article.create.featureClosed"));
 }
 
 useHead({
-  title: useSiteTitle("发表文章"),
+  title: useSiteTitle(t("pages.article.create.title")),
 });
 
 definePageMeta({
@@ -116,7 +118,7 @@ definePageMeta({
 if (!configStore.isEnabledArticle) {
   throw createError({
     statusCode: 403,
-    message: "已关闭文章功能",
+    message: t("pages.article.create.featureForbidden"),
   });
 }
 
@@ -139,13 +141,13 @@ async function submitCreate() {
       })
     );
     useMsg({
-      message: "提交成功",
+      message: t("pages.article.create.success"),
       onClose() {
         useLinkTo(`/article/${article.id}`);
       },
     });
   } catch (e) {
-    useMsgError(e.message || e);
+    useMsgError(e.message || t("pages.article.create.error"));
     publishing.value = false;
   }
 }

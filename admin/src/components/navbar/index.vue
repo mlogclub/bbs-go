@@ -2,11 +2,9 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img
-          alt="logo"
-          src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-        />
+        <img alt="logo" src="~/assets/images/logo.png" class="logo" />
         <a-typography-title
+          v-if="appStore.device !== 'mobile'"
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
@@ -33,6 +31,7 @@
           </a-button>
         </a-tooltip>
       </li>
+      -->
       <li>
         <a-tooltip :content="$t('settings.language')">
           <a-button
@@ -62,7 +61,6 @@
           </template>
         </a-dropdown>
       </li>
-      -->
       <li>
         <a-tooltip
           :content="
@@ -134,7 +132,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- <li>
         <a-tooltip :content="$t('settings.title')">
           <a-button
             class="nav-btn"
@@ -147,7 +145,7 @@
             </template>
           </a-button>
         </a-tooltip>
-      </li>
+      </li> -->
       <li>
         <a-dropdown trigger="click">
           <a-avatar
@@ -195,8 +193,8 @@
   import { computed, /* ref, */ inject } from 'vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
   import { useAppStore, useUserStore } from '@/store';
-  // import { LOCALE_OPTIONS } from '@/locale';
-  // import useLocale from '@/hooks/locale';
+  import { LOCALE_OPTIONS } from '@/locale';
+  import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
   // import MessageBox from '../message-box/index.vue';
@@ -204,9 +202,9 @@
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logout } = useUser();
-  // const { changeLocale, currentLocale } = useLocale();
+  const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  // const locales = [...LOCALE_OPTIONS];
+  const locales = [...LOCALE_OPTIONS];
   const avatar = computed(() => {
     return userStore.avatar;
   });
@@ -235,27 +233,27 @@
   const setVisible = () => {
     appStore.updateSettings({ globalSettings: true });
   };
-  // const refBtn = ref();
-  // const triggerBtn = ref();
-  // const setPopoverVisible = () => {
-  //   const event = new MouseEvent('click', {
-  //     view: window,
-  //     bubbles: true,
-  //     cancelable: true,
-  //   });
-  //   refBtn.value.dispatchEvent(event);
-  // };
+  const refBtn = ref();
+  const triggerBtn = ref();
+  const setPopoverVisible = () => {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    refBtn.value.dispatchEvent(event);
+  };
   const handleLogout = () => {
     logout();
   };
-  // const setDropDownVisible = () => {
-  //   const event = new MouseEvent('click', {
-  //     view: window,
-  //     bubbles: true,
-  //     cancelable: true,
-  //   });
-  //   triggerBtn.value.dispatchEvent(event);
-  // };
+  const setDropDownVisible = () => {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    triggerBtn.value.dispatchEvent(event);
+  };
   const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
 </script>
 
@@ -272,6 +270,11 @@
     display: flex;
     align-items: center;
     padding-left: 20px;
+
+    .logo {
+      height: 28px;
+      // margin-right: 10px;
+    }
   }
 
   .center-side {

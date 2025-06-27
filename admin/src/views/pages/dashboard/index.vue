@@ -1,43 +1,47 @@
 <template>
   <div class="dashboard">
-    <a-card v-if="systemInfo" title="服务器信息">
+    <a-card v-if="systemInfo" :title="$t('pages.dashboard.systemInfo')">
       <div class="attr">
-        <span class="attr-name">OS:</span>
+        <span class="attr-name">{{ $t('pages.dashboard.os') }}:</span>
         <span class="attr-value">{{ systemInfo.os }}</span>
       </div>
       <div class="attr">
-        <span class="attr-name">Arch:</span>
+        <span class="attr-name">{{ $t('pages.dashboard.arch') }}:</span>
         <span class="attr-value">{{ systemInfo.arch }}</span>
       </div>
       <div class="attr">
-        <span class="attr-name">Cpu:</span>
+        <span class="attr-name">{{ $t('pages.dashboard.cpu') }}:</span>
         <span class="attr-value">{{ systemInfo.numCpu }}</span>
       </div>
       <div class="attr">
-        <span class="attr-name">Go version:</span>
+        <span class="attr-name">{{ $t('pages.dashboard.goVersion') }}:</span>
         <span class="attr-value">{{ systemInfo.goVersion }}</span>
       </div>
       <div class="attr">
-        <span class="attr-name">Hostname:</span>
+        <span class="attr-name">{{ $t('pages.dashboard.hostname') }}:</span>
         <span class="attr-value">{{ systemInfo.hostname }}</span>
       </div>
     </a-card>
 
-    <a-card v-if="systemInfo" title="开发团队信息">
+    <a-card v-if="systemInfo" :title="$t('pages.dashboard.teamInfo')">
       <div class="attr">
-        <span class="attr-name">Official Site:&nbsp;</span>
+        <span class="attr-name"
+          >{{ $t('pages.dashboard.officialSite') }}:&nbsp;</span
+        >
         <a class="attr-value" href="https://mlog.club" target="_blank"
           >https://mlog.club</a
         >
       </div>
       <div class="attr">
-        <span class="attr-name">Dev Team:&nbsp;</span>
+        <span class="attr-name"
+          >{{ $t('pages.dashboard.devTeam') }}:&nbsp;</span
+        >
         <a class="attr-value" href="https://github.com/mlogclub" target="_blank"
-          >码农俱乐部</a
+          >mlogclub</a
         >
       </div>
       <div class="attr">
-        <span class="attr-name">Github:&nbsp;</span>
+        <span class="attr-name">{{ $t('pages.dashboard.github') }}:&nbsp;</span>
         <a
           class="attr-value"
           href="https://github.com/mlogclub/bbs-go"
@@ -46,7 +50,7 @@
         >
       </div>
       <div class="attr">
-        <span class="attr-name">Gitee:&nbsp;</span>
+        <span class="attr-name">{{ $t('pages.dashboard.gitee') }}:&nbsp;</span>
         <a
           class="attr-value"
           href="https://gitee.com/mlogclub/bbs-go"

@@ -3,12 +3,15 @@
     <div class="container-header">
       <a-form :model="filters" layout="inline" :size="appStore.table.size">
         <a-form-item>
-          <a-input v-model="filters.name" placeholder="名称" />
+          <a-input
+            v-model="filters.name"
+            :placeholder="$t('pages.topicNode.filter.name')"
+          />
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.topicNode.filter.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -18,7 +21,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.topicNode.table.add') }}
         </a-button>
       </div>
     </div>
@@ -37,13 +40,25 @@
         @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id" />
+          <a-table-column
+            :title="$t('pages.topicNode.table.id')"
+            data-index="id"
+          />
 
-          <a-table-column title="名称" data-index="name" />
+          <a-table-column
+            :title="$t('pages.topicNode.table.name')"
+            data-index="name"
+          />
 
-          <a-table-column title="描述" data-index="description" />
+          <a-table-column
+            :title="$t('pages.topicNode.table.description')"
+            data-index="description"
+          />
 
-          <a-table-column title="LOGO" data-index="logo">
+          <a-table-column
+            :title="$t('pages.topicNode.table.logo')"
+            data-index="logo"
+          >
             <template #cell="{ record }">
               <a-image
                 v-if="record.logo"
@@ -55,27 +70,40 @@
             </template>
           </a-table-column>
 
-          <a-table-column title="排序" data-index="sortNo" />
+          <a-table-column
+            :title="$t('pages.topicNode.table.sortNo')"
+            data-index="sortNo"
+          />
 
-          <a-table-column title="状态" data-index="status">
+          <a-table-column
+            :title="$t('pages.topicNode.table.status')"
+            data-index="status"
+          >
             <template #cell="{ record }">
-              {{ record.status === 0 ? '正常' : '删除' }}
+              {{
+                record.status === 0
+                  ? $t('pages.topicNode.table.statusNormal')
+                  : $t('pages.topicNode.table.statusDeleted')
+              }}
             </template>
           </a-table-column>
 
-          <a-table-column title="创建时间" data-index="createTime">
+          <a-table-column
+            :title="$t('pages.topicNode.table.createTime')"
+            data-index="createTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
 
-          <a-table-column title="操作">
+          <a-table-column :title="$t('pages.topicNode.table.action')">
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.topicNode.table.edit') }}</a-button
               >
             </template>
           </a-table-column>

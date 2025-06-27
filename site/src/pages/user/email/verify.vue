@@ -1,26 +1,29 @@
 <template>
   <section class="main">
     <div class="container">
-      <div class="main-body no-bg">
+      <div v-if="!data.loading" class="main-body no-bg">
         <article
           class="message"
           :class="{ 'is-success': data.success, 'is-warning': !data.success }"
         >
           <div class="message-header">
-            <p>邮箱验证</p>
+            <p>{{ $t("user.email.verify.title") }}</p>
           </div>
           <div class="message-body">
             <div v-if="data.success">
-              恭喜，邮箱验证成功。你的邮箱为：{{ data.email }}
+              {{ $t("user.email.verify.success", { email: data.email }) }}
             </div>
             <div v-else>
-              邮箱验证失败<span v-if="data.message" class="has-text-danger"
-                >&nbsp;原因：{{ data.message }}</span
-              >，请前往&nbsp;<nuxt-link
-                to="/user/profile"
+              {{ $t("user.email.verify.failed")
+              }}<span v-if="data.message" class="has-text-danger"
+                >&nbsp;{{
+                  $t("user.email.verify.reason", { reason: data.message })
+                }}</span
+              >{{ $t("user.email.verify.retryInstructions") }}&nbsp;<nuxt-link
+                to="/user/profile/account"
                 style="font-weight: 700"
-                >个人资料 &gt; 账号设置</nuxt-link
-              >&nbsp;页面尝试重新发送验证邮件。
+                >{{ $t("user.email.verify.accountSettings") }}</nuxt-link
+              >&nbsp;{{ $t("user.email.verify.retryAction") }}
             </div>
           </div>
         </article>
@@ -30,7 +33,14 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
+useHead({
+  title: useSiteTitle(t("user.email.verify.title")),
+});
+
 const data = reactive({
+  loading: true,
   success: false,
   email: "",
   message: "",
@@ -47,10 +57,14 @@ const verifyEmail = async () => {
   } catch (e) {
     data.success = false;
     data.message = e.message || "";
+  } finally {
+    data.loading = false;
   }
 };
 
-verifyEmail();
+onMounted(() => {
+  verifyEmail();
+});
 </script>
 
 <style lang="scss" scoped></style>

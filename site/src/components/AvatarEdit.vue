@@ -3,7 +3,7 @@
     <div class="avatar-view" :style="{ backgroundImage: 'url(' + value + ')' }">
       <div class="upload-view" @click="pickImage">
         <i class="iconfont icon-upload" />
-        <span>点击修改</span>
+        <span>{{ $t("component.avatarEdit.update") }}</span>
       </div>
     </div>
 
@@ -16,50 +16,51 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    value: {
-      type: String,
-      default: "",
-    },
+<script setup>
+const props = defineProps({
+  value: {
+    type: String,
+    default: "",
   },
-  methods: {
-    pickImage() {
-      const currentObj = this.$refs.uploadImage;
-      currentObj.dispatchEvent(new MouseEvent("click"));
-    },
-    async uploadAvatar(e) {
-      const files = e.target.files;
-      if (files.length <= 0) {
-        return;
-      }
-      try {
-        // 上传头像
-        const file = files[0];
-        const formData = new FormData();
-        formData.append("image", file, file.name);
-        const ret = await useHttpPost("/api/upload", formData);
+});
 
-        // 设置头像
-        await useHttpPost(
-          "/api/user/update/avatar",
-          useJsonToForm({
-            avatar: ret.url,
-          })
-        );
+const { t } = useI18n();
+const uploadImage = ref(null);
 
-        // 重新加载数据
-        const userStore = useUserStore();
-        userStore.fetchCurrent();
-        useMsgSuccess("头像更新成功");
-      } catch (e) {
-        console.error(e);
-        useMsgError("头像更新失败");
-      }
-    },
-  },
-};
+function pickImage() {
+  const currentObj = uploadImage.value;
+  currentObj.dispatchEvent(new MouseEvent("click"));
+}
+
+async function uploadAvatar(e) {
+  const files = e.target.files;
+  if (files.length <= 0) {
+    return;
+  }
+  try {
+    // 上传头像
+    const file = files[0];
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+    const ret = await useHttpPost("/api/upload", formData);
+
+    // 设置头像
+    await useHttpPost(
+      "/api/user/update/avatar",
+      useJsonToForm({
+        avatar: ret.url,
+      })
+    );
+
+    // 重新加载数据
+    const userStore = useUserStore();
+    userStore.fetchCurrent();
+    useMsgSuccess(t("component.avatarEdit.updateSuccess"));
+  } catch (e) {
+    console.error(e);
+    useMsgError(t("component.avatarEdit.updateFailed"));
+  }
+}
 </script>
 
 <style lang="scss" scoped>

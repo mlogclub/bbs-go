@@ -12,7 +12,7 @@
         class="input"
         type="text"
         maxlength="30"
-        placeholder="输入你想查找的内容"
+        :placeholder="$t('component.searchInput.placeholder')"
         autocomplete="off"
         aria-autocomplete="off"
         @focus="onFocus"

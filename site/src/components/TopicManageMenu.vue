@@ -1,11 +1,10 @@
 <template>
-  <!-- <ClientOnly> -->
   <el-dropdown
     v-if="menus && menus.length"
     trigger="click"
     @command="handleCommand"
   >
-    <span class="el-dropdown-link">管理</span>
+    <span class="el-dropdown-link">{{ t("component.topicManageMenu.manage") }}</span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
@@ -17,10 +16,11 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <!-- </ClientOnly> -->
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -43,43 +43,47 @@ const menus = computed(() => {
   if (isTopicOwner && topic.value.type === 0) {
     items.push({
       command: "edit",
-      label: "修改",
+      label: t("component.topicManageMenu.edit"),
     });
   }
   if (isTopicOwner || isOwner || isAdmin) {
     items.push({
       command: "delete",
-      label: "删除",
+      label: t("component.topicManageMenu.delete"),
     });
   }
   if (isOwner || isAdmin) {
     items.push({
       command: "recommend",
-      label: topic.value.recommend ? "取消推荐" : "推荐",
+      label: topic.value.recommend 
+        ? t("component.topicManageMenu.cancelRecommend") 
+        : t("component.topicManageMenu.recommend"),
     });
   }
   if (isOwner || isAdmin) {
     items.push({
       command: "sticky",
-      label: topic.value.sticky ? "取消置顶" : "置顶",
+      label: topic.value.sticky 
+        ? t("component.topicManageMenu.cancelSticky") 
+        : t("component.topicManageMenu.sticky"),
     });
   }
   if (isOwner || isAdmin) {
     items.push({
       command: "forbidden7Days",
-      label: "禁言7天",
+      label: t("component.topicManageMenu.forbidden7Days"),
     });
   }
   if (isOwner) {
     items.push({
       command: "forbiddenForever",
-      label: "永久禁言",
+      label: t("component.topicManageMenu.forbiddenForever"),
     });
   }
   return items;
 });
 
-async function handleCommand(command) {
+const handleCommand = async (command) => {
   if (command === "edit") {
     editTopic();
   } else if (command === "delete") {
@@ -95,8 +99,9 @@ async function handleCommand(command) {
   } else {
     console.log("click on item " + command);
   }
-}
-async function forbidden(days) {
+};
+
+const forbidden = async (days) => {
   try {
     await useHttpPost(
       "/api/user/forbidden",
@@ -105,33 +110,38 @@ async function forbidden(days) {
         days,
       })
     );
-    useMsgSuccess("禁言成功");
+    useMsgSuccess(t("component.topicManageMenu.forbiddenSuccess"));
   } catch (e) {
-    useMsgError("禁言失败");
+    useMsgError(t("component.topicManageMenu.forbiddenFailed"));
   }
-}
-function deleteTopic() {
-  useConfirm("是否确认删除该帖子？").then(function () {
+};
+
+const deleteTopic = () => {
+  useConfirm(t("component.topicManageMenu.confirmDelete")).then(function () {
     useHttpPost(`/api/topic/delete/${topic.value.id}`)
       .then(() => {
         useMsg({
-          message: "删除成功",
+          message: t("component.topicManageMenu.deleteSuccess"),
           onClose() {
             useLinkTo("/topics");
           },
         });
       })
       .catch((e) => {
-        useMsgError("删除失败：" + (e.message || e));
+        useMsgError(t("component.topicManageMenu.deleteFailed") + (e.message || e));
       });
   });
-}
-function editTopic() {
+};
+
+const editTopic = () => {
   useLinkTo(`/topic/edit/${topic.value.id}`);
-}
-function switchRecommend() {
-  const action = topic.value.recommend ? "取消推荐" : "推荐";
-  useConfirm(`是否确认${action}该帖子？`).then(function () {
+};
+
+const switchRecommend = () => {
+  const action = topic.value.recommend 
+    ? t("component.topicManageMenu.cancelRecommend") 
+    : t("component.topicManageMenu.recommend");
+  useConfirm(t("component.topicManageMenu.confirmAction", { action })).then(function () {
     const recommend = !topic.value.recommend;
     useHttpPost(
       `/api/topic/recommend/${topic.value.id}`,
@@ -143,17 +153,20 @@ function switchRecommend() {
         topic.value.recommend = recommend;
         emits("update:modelValue", topic.value);
         useMsgSuccess({
-          message: `${action}成功`,
+          message: t("component.topicManageMenu.actionSuccess", { action }),
         });
       })
       .catch((e) => {
-        useMsgError(`${action}失败：` + (e.message || e));
+        useMsgError(t("component.topicManageMenu.actionFailed", { action }) + (e.message || e));
       });
   });
-}
-function switchSticky() {
-  const action = topic.value.sticky ? "取消置顶" : "置顶";
-  useConfirm(`是否确认${action}该帖子？`).then(function () {
+};
+
+const switchSticky = () => {
+  const action = topic.value.sticky 
+    ? t("component.topicManageMenu.cancelSticky") 
+    : t("component.topicManageMenu.sticky");
+  useConfirm(t("component.topicManageMenu.confirmAction", { action })).then(function () {
     const sticky = !topic.value.sticky;
     useHttpPost(
       `/api/topic/sticky/${topic.value.id}`,
@@ -165,11 +178,11 @@ function switchSticky() {
         topic.value.sticky = sticky;
         emits("update:modelValue", topic.value);
         useMsgSuccess({
-          message: `${action}成功`,
+          message: t("component.topicManageMenu.actionSuccess", { action }),
         });
       })
       .catch((e) => {
-        useMsgError(`${action}失败：` + (e.message || e));
+        useMsgError(t("component.topicManageMenu.actionFailed", { action }) + (e.message || e));
       });
   });
 }

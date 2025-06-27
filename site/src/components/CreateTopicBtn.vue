@@ -5,7 +5,9 @@
     trigger="click"
     @command="handlePostCommand"
   >
-    <el-button type="primary" :icon="Plus"> 发表 </el-button>
+    <el-button type="primary" :icon="Plus">
+      {{ $t("common.createBtn.create") }}
+    </el-button>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
@@ -23,6 +25,7 @@
 
 <script setup>
 import { Plus } from "@element-plus/icons-vue";
+const { t } = useI18n();
 
 const configStore = useConfigStore();
 
@@ -30,21 +33,21 @@ let modules = [];
 if (configStore.config.modules.tweet) {
   modules.push({
     command: "tweet",
-    name: "发动态",
+    name: t("common.createBtn.tweet"),
     icon: "icon-tweet2",
   });
 }
 if (configStore.config.modules.topic) {
   modules.push({
     command: "topic",
-    name: "发帖子",
+    name: t("common.createBtn.topic"),
     icon: "icon-topic",
   });
 }
 if (configStore.config.modules.article) {
   modules.push({
     command: "article",
-    name: "发文章",
+    name: t("common.createBtn.article"),
     icon: "icon-article",
   });
 }

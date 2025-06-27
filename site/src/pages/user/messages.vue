@@ -3,7 +3,7 @@
     <div class="widget-header">
       <span>
         <i class="iconfont icon-message" />
-        <span>消息</span>
+        <span>{{ $t("user.messages.title") }}</span>
       </span>
     </div>
 
@@ -48,9 +48,9 @@
                   v-if="message.detailUrl"
                   class="msg-attr message-show-more"
                 >
-                  <a :href="message.detailUrl" target="_blank"
-                    >点击查看详情&gt;&gt;</a
-                  >
+                  <a :href="message.detailUrl" target="_blank">{{
+                    $t("user.messages.viewDetails")
+                  }}</a>
                 </div>
               </div>
             </div>
@@ -67,8 +67,10 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+const { t } = useI18n();
+
 useHead({
-  title: useSiteTitle("消息"),
+  title: useSiteTitle(t("user.messages.title")),
 });
 </script>
 

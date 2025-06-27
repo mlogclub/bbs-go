@@ -29,18 +29,22 @@ export function useFormatDate(timestamp, fmt) {
 }
 
 export function usePrettyDate(timestamp) {
+  const { $i18n } = useNuxtApp();
+
   const minute = 1000 * 60;
   const hour = minute * 60;
   const day = hour * 24;
   const diffValue = new Date().getTime() - timestamp;
   if (diffValue / minute < 1) {
-    return "刚刚";
+    return $i18n.t("composables.justNow");
   } else if (diffValue / minute < 60) {
-    return `${Number.parseInt(diffValue / minute)}分钟前`;
+    return $i18n.t("composables.minutesAgo", {
+      n: Number.parseInt(diffValue / minute),
+    });
   } else if (diffValue / hour <= 24) {
-    return `${Number.parseInt(diffValue / hour)}小时前`;
+    return $i18n.t("composables.hoursAgo", { n: Number.parseInt(diffValue / hour) });
   } else if (diffValue / day <= 30) {
-    return `${Number.parseInt(diffValue / day)}天前`;
+    return $i18n.t("composables.daysAgo", { n: Number.parseInt(diffValue / day) });
   }
   return useFormatDate(timestamp, "yyyy-MM-dd HH:mm");
 }
@@ -61,9 +65,10 @@ export function useToSignIn(redirect) {
  * 弹出错误消息，然后执行登录
  */
 export function useMsgSignIn() {
+  const { $i18n } = useNuxtApp();
   useMsg({
     type: "error",
-    message: "请先登录",
+    message: $i18n.t("composables.pleaseSignIn"),
     onClose() {
       useToSignIn();
     },
@@ -71,10 +76,11 @@ export function useMsgSignIn() {
 }
 
 export function useCatchError(e) {
+  const { $i18n } = useNuxtApp();
   if (e.errorCode === 1) {
     useMsgSignIn();
   } else {
-    useMsgError(e.message || e);
+    useMsgError(e.message || $i18n.t("composables.unknownError"));
   }
 }
 

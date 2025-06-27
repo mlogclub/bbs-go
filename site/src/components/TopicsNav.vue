@@ -28,7 +28,7 @@ const envStore = useEnvStore();
 
 const { data: nodes } = await useMyFetch("/api/topic/node_navs");
 
-function nodeLogo(node) {
+const nodeLogo = (node) => {
   if (node.logo) {
     return node.logo;
   }
@@ -42,7 +42,7 @@ function nodeLogo(node) {
   return iconNode;
 }
 
-function nodeUrl(node) {
+const nodeUrl = (node) => {
   if (node.id > 0) {
     return `/topics/node/${node.id}`;
   } else if (node.id === 0) {

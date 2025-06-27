@@ -6,21 +6,31 @@
     <follow-widget :user="localUser" />
 
     <div v-if="isAdmin" class="widget">
-      <div class="widget-header">操作</div>
+      <div class="widget-header">
+        {{ t("component.userCenterSidebar.operations") }}
+      </div>
       <div class="widget-content">
         <ul class="operations">
           <li v-if="localUser.forbidden">
             <i class="iconfont icon-forbidden" />
-            <a @click="removeForbidden">&nbsp;取消禁言</a>
+            <a @click="removeForbidden"
+              >&nbsp;{{ t("component.userCenterSidebar.removeForbidden") }}</a
+            >
           </li>
           <template v-else>
             <li>
               <i class="iconfont icon-forbidden" />
-              <a @click="forbidden(7)">&nbsp;禁言7天</a>
+              <a @click="forbidden(7)"
+                >&nbsp;{{ t("component.userCenterSidebar.forbidden7Days") }}</a
+              >
             </li>
             <li>
               <i v-if="isSiteOwner" class="iconfont icon-forbidden" />
-              <a @click="forbidden(-1)">&nbsp;永久禁言</a>
+              <a @click="forbidden(-1)"
+                >&nbsp;{{
+                  t("component.userCenterSidebar.forbiddenForever")
+                }}</a
+              >
             </li>
           </template>
         </ul>
@@ -31,6 +41,7 @@
 
 <script setup>
 import { ElMessageBox } from "element-plus";
+const { t } = useI18n();
 const userStore = useUserStore();
 const props = defineProps({
   user: {
@@ -48,20 +59,23 @@ const isAdmin = computed(() => {
   return userIsOwner(userStore.user) || userIsAdmin(userStore.user);
 });
 
-function forbidden(days) {
-  const msg = days > 0 ? "是否禁言该用户？" : "是否永久禁言该用户？";
-  ElMessageBox.confirm(msg, "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+const forbidden = (days) => {
+  const msg =
+    days > 0
+      ? t("component.userCenterSidebar.confirmForbidden")
+      : t("component.userCenterSidebar.confirmForbiddenForever");
+  ElMessageBox.confirm(msg, t("component.userCenterSidebar.dialogTitle"), {
+    confirmButtonText: t("component.userCenterSidebar.confirmButtonText"),
+    cancelButtonText: t("component.userCenterSidebar.cancelButtonText"),
     type: "warning",
   })
     .then(() => {
       doForbidden(days);
     })
     .catch(() => {});
-}
+};
 
-async function doForbidden(days) {
+const doForbidden = async (days) => {
   try {
     await useHttpPost(
       "/api/user/forbidden",
@@ -71,13 +85,13 @@ async function doForbidden(days) {
       })
     );
     localUser.value.forbidden = true;
-    useMsgSuccess("禁言成功");
+    useMsgSuccess(t("component.userCenterSidebar.forbiddenSuccess"));
   } catch (e) {
-    useMsgError("禁言失败");
+    useMsgError(t("component.userCenterSidebar.forbiddenFailed"));
   }
-}
+};
 
-async function removeForbidden() {
+const removeForbidden = async () => {
   try {
     await useHttpPost(
       "/api/user/forbidden",
@@ -87,11 +101,11 @@ async function removeForbidden() {
       })
     );
     localUser.value.forbidden = false;
-    useMsgSuccess("取消禁言成功");
+    useMsgSuccess(t("component.userCenterSidebar.removeForbiddenSuccess"));
   } catch (e) {
-    useMsgError("取消禁言失败");
+    useMsgError(t("component.userCenterSidebar.removeForbiddenFailed"));
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

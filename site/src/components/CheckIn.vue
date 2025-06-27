@@ -1,6 +1,6 @@
 <template>
   <div class="widget">
-    <div class="widget-header">签到</div>
+    <div class="widget-header">{{ $t("component.checkIn.title") }}</div>
     <div class="widget-content checkin">
       <div class="checkedin">
         <div class="gold-icon-box">
@@ -47,7 +47,7 @@
                 />
               </svg>
             </span>
-            <span>今日已签到</span>
+            <span>{{ $t("component.checkIn.alreadyCheckedIn") }}</span>
           </a>
         </div>
         <div v-else class="checkedin-btn-box">
@@ -67,35 +67,40 @@
                 />
               </svg>
             </span>
-            <span>立即签到</span>
+            <span>{{ $t("component.checkIn.checkInNow") }}</span>
           </a>
         </div>
       </div>
       <div v-if="checkIn && checkIn.checkIn" class="checkedin-tips-box">
-        <span class="checkedin-tips-icon"
-          ><svg
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-            /></svg
-        ></span>
-        <span class="checkedin-tips-info"
+        <svg
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+          />
+        </svg>
+
+        <!-- <span class="checkedin-tips-info"
           >你已经连续签到&nbsp;<b class="checkedin-tips-day">{{
             checkIn.consecutiveDays
           }}</b
           >&nbsp;天啦 !</span
-        >
+        > -->
+        {{
+          $t("component.checkIn.consecutiveDays", {
+            days: checkIn.consecutiveDays,
+          })
+        }}
       </div>
 
       <div v-if="checkInRank && checkInRank.length" class="rank">
-        <div class="rank-title">今日排行</div>
+        <div class="rank-title">{{ $t("component.checkIn.todayRanking") }}</div>
         <ul>
           <li v-for="rank in checkInRank" :key="rank.id" class="rounded">
             <my-avatar :user="rank.user" :size="30" class="rank-user-avatar" />
@@ -114,6 +119,7 @@
 
 <script setup>
 const userStore = useUserStore();
+const { t } = useI18n();
 
 const isLogin = computed(() => {
   return userStore.user !== null;
@@ -133,7 +139,7 @@ const { data: checkInRank, refresh: refreshCheckInRank } = await useMyFetch(
 async function doCheckIn() {
   try {
     checkIn.value = await useHttpPost("/api/checkin/checkin");
-    useMsgSuccess("签到成功");
+    useMsgSuccess(t("component.checkIn.checkInSuccess"));
     refreshCheckIn();
     refreshCheckInRank();
   } catch (e) {
@@ -173,7 +179,7 @@ async function doCheckIn() {
     .checkedin-btn-box {
       display: flex;
       flex-direction: column;
-      width: 50%;
+      // width: 50%;
       .checkedin-btn {
         display: flex;
         outline: none;
@@ -204,33 +210,16 @@ async function doCheckIn() {
     }
   }
   .checkedin-tips-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
     color: var(--text-color3);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 5px 10px;
+    margin: 0.5rem 0;
     border-radius: 0.25rem;
     background: var(--bg-color2);
-    .checkedin-tips-icon {
-      margin-right: 0.5rem;
-      display: flex;
-      svg {
-        width: 1.25rem;
-        height: 1.25rem;
-      }
-    }
-    .checkedin-tips-info {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      display: flex;
-      .checkedin-tips-day {
-        color: #00a1d6; // TODO
-      }
+    font-size: 15px;
+
+    svg {
+      width: 14px;
+      height: 14px;
     }
   }
   .rank {

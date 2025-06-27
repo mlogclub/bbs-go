@@ -10,6 +10,7 @@ import (
 func Init() {
 	install.InitConfig()
 	install.InitLogger()
+	install.InitLocales()
 	if config.Instance.Installed {
 		install.InitDB()
 		install.InitOthers()

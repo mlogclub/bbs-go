@@ -4,11 +4,16 @@
   <footer class="footer">
     <div class="content container">
       <div>
-        <nuxt-link to="/about"> 关于 </nuxt-link>
-        <nuxt-link to="/links"> 友链 </nuxt-link>
+        <nuxt-link to="/about">
+          {{ $t("component.myFooter.about") }}
+        </nuxt-link>
+        &nbsp;
+        <nuxt-link to="/links">
+          {{ $t("component.myFooter.links") }}
+        </nuxt-link>
       </div>
       <div>
-        © 2022 Powered by
+        Powered by
         <a href="https://bbs-go.com" target="_blank" class="light">BBS-GO</a>
       </div>
     </div>

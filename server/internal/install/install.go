@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
 	"bbs-go/internal/services"
@@ -44,11 +45,12 @@ type DbConfigReq struct {
 
 // 执行安装
 type InstallReq struct {
-	SiteTitle       string      `json:"siteTitle"`
-	SiteDescription string      `json:"siteDescription"`
-	DbConfig        DbConfigReq `json:"dbConfig"`
-	Username        string      `json:"username"`
-	Password        string      `json:"password"`
+	SiteTitle       string          `json:"siteTitle"`
+	SiteDescription string          `json:"siteDescription"`
+	DbConfig        DbConfigReq     `json:"dbConfig"`
+	Username        string          `json:"username"`
+	Password        string          `json:"password"`
+	Language        config.Language `json:"language"`
 }
 
 func (r DbConfigReq) GetConnStr() string {
@@ -78,7 +80,7 @@ func TestDbConnection(req DbConfigReq) error {
 	}
 
 	if len(tables) > 0 {
-		return errors.New("请使用空数据库进行安装")
+		return errors.New("please use an empty database for installation")
 	}
 
 	return nil
@@ -103,14 +105,15 @@ func Install(req InstallReq) error {
 	if err := InitOthers(); err != nil {
 		return err
 	}
-	if err := WriteInstallSuccess(); err != nil {
+	if err := InitLocales(); err != nil {
 		return err
 	}
-	return nil
+	return WriteInstallSuccess()
 }
 
 func WriteConfig(req InstallReq) error {
 	cfg := config.Instance
+	cfg.Language = req.Language
 	cfg.DB.Url = req.DbConfig.GetConnStr()
 	return config.WriteConfig(cfg)
 }
@@ -180,14 +183,13 @@ func runMigrations(db *gorm.DB) error {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://migrations",
+		"file://migrations/"+string(config.Instance.Language),
 		"mysql",
 		driver,
 	)
 	if err != nil {
 		return err
 	}
-
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		return err
 	}
@@ -212,15 +214,19 @@ func InitData(req InstallReq) error {
 	// 初始化用户角色
 	role := services.RoleService.GetByCode(constants.RoleOwner)
 	if role == nil {
-		return errors.New("请先配置超级管理员")
+		return errors.New("please configure the super administrator first")
 	}
 	services.UserRoleService.UpdateUserRoles(user.Id, []int64{role.Id})
 
 	// 初始化系统配置
-	services.SysConfigService.Set(constants.SysConfigSiteTitle, req.SiteTitle, "站点标题", "站点标题")
-	services.SysConfigService.Set(constants.SysConfigSiteDescription, req.SiteDescription, "站点描述", "站点描述")
+	services.SysConfigService.Set(constants.SysConfigSiteTitle, req.SiteTitle)
+	services.SysConfigService.Set(constants.SysConfigSiteDescription, req.SiteDescription)
 
 	return nil
+}
+
+func InitLocales() error {
+	return locales.Init()
 }
 
 func InitOthers() error {

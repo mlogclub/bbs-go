@@ -3,7 +3,7 @@
     <div class="widget-header">
       <span>
         <i class="iconfont icon-favorite" />
-        <span>收藏列表</span>
+        <span>{{ $t("user.favorites.title") }}</span>
       </span>
     </div>
 
@@ -16,7 +16,9 @@
             class="favorite-item"
           >
             <div v-if="item.deleted" class="favorite-item">
-              <div class="favorite-summary">收藏内容失效</div>
+              <div class="favorite-summary">
+                {{ $t("user.favorites.contentExpired") }}
+              </div>
             </div>
             <div v-else>
               <div class="favorite-title">
@@ -49,8 +51,10 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+const { t } = useI18n();
+
 useHead({
-  title: useSiteTitle("收藏"),
+  title: useSiteTitle(t("user.favorites.title")),
 });
 </script>
 

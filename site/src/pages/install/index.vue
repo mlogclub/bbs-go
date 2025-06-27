@@ -1,29 +1,46 @@
 <template>
   <div class="install-container">
-    <h1 class="title is-3 has-text-centered mb-5">BBS-GO 安装引导</h1>
+    <h1 class="title is-3 has-text-centered mb-5">
+      {{ $t("pages.install.title") }}
+    </h1>
 
     <!-- 步骤1: 欢迎页面 -->
     <div v-if="currentStep === 'welcome'" class="step-item">
       <div class="step-title">
         <div class="step-number">1</div>
-        <h3 class="step-header">欢迎使用</h3>
+        <h3 class="step-header">{{ $t("pages.install.step.welcome") }}</h3>
       </div>
       <div class="content">
-        <p>
-          欢迎使用
-          BBS-GO，这是一个基于Go语言开发的社区系统。在开始安装前，请确保您已经准备好以下内容：
-        </p>
+        <p>{{ $t("pages.install.welcome.description") }}</p>
         <ol>
-          <li>MySQL数据库（5.7+），并且已创建好空数据库</li>
-          <li>已经规划好社区名称和描述</li>
-          <li>已准备好管理员账号和密码</li>
+          <li>{{ $t("pages.install.welcome.requirements.mysql") }}</li>
+          <li>{{ $t("pages.install.welcome.requirements.site") }}</li>
+          <li>{{ $t("pages.install.welcome.requirements.admin") }}</li>
         </ol>
-        <p>接下来，我们将引导您完成安装过程。</p>
+        <p>{{ $t("pages.install.welcome.guide") }}</p>
+        <!-- 语言选择合并到欢迎页面 -->
+        <div class="mt-5">
+          <p class="mb-4">{{ $t("pages.install.language.description") }}</p>
+          <div class="field">
+            <div class="control">
+              <label class="radio">
+                <input type="radio" v-model="selectedLanguage" value="en-US" />
+                {{ $t("pages.install.language.english") }}
+              </label>
+            </div>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" v-model="selectedLanguage" value="zh-CN" />
+                {{ $t("pages.install.language.chinese") }}
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="field is-grouped is-grouped-right">
         <div class="control">
-          <button class="button is-primary" @click="goToStep('database')">
-            下一步
+          <button class="button is-primary" @click="gotoStep('database')">
+            {{ $t("pages.install.buttons.next") }}
           </button>
         </div>
       </div>
@@ -32,85 +49,95 @@
     <!-- 步骤2: 数据库配置 -->
     <div v-if="currentStep === 'database'" class="step-item">
       <div class="step-title">
-        <div class="step-number">2</div>
-        <h3 class="step-header">数据库配置</h3>
+        <div class="step-number">3</div>
+        <h3 class="step-header">{{ $t("pages.install.step.database") }}</h3>
       </div>
       <div>
         <div class="field">
           <label class="label"
-            >数据库主机 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.database.host") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="db-host"
-              placeholder="数据库主机地址（必填）"
+              :placeholder="$t('pages.install.database.hostPlaceholder')"
               v-model="dbConfig.host"
               required
-              @blur="validateDbForm"
             />
           </div>
           <p class="help">
-            通常为localhost或127.0.0.1，如使用远程数据库请填写相应的主机地址
+            {{ $t("pages.install.database.hostHelp") }}
           </p>
         </div>
         <div class="field">
           <label class="label"
-            >数据库端口 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.database.port") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="db-port"
-              placeholder="数据库端口（必填）"
+              :placeholder="$t('pages.install.database.portPlaceholder')"
               v-model="dbConfig.port"
               required
-              @blur="validateDbForm"
             />
           </div>
         </div>
         <div class="field">
           <label class="label"
-            >数据库名称 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.database.name") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="db-name"
-              placeholder="请输入数据库名称（必填）"
+              :placeholder="$t('pages.install.database.namePlaceholder')"
               v-model="dbConfig.database"
               required
-              @blur="validateDbForm"
             />
           </div>
         </div>
         <div class="field">
           <label class="label"
-            >数据库用户名 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.database.username") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="db-user"
-              placeholder="请输入数据库用户名（必填）"
+              :placeholder="$t('pages.install.database.usernamePlaceholder')"
               v-model="dbConfig.username"
               required
-              @blur="validateDbForm"
             />
           </div>
         </div>
         <div class="field">
-          <label class="label">数据库密码</label>
+          <label class="label">{{
+            $t("pages.install.database.password")
+          }}</label>
           <div class="control">
             <input
               class="input"
               type="password"
               id="db-password"
-              placeholder="请输入数据库密码"
+              :placeholder="$t('pages.install.database.passwordPlaceholder')"
               v-model="dbConfig.password"
             />
           </div>
@@ -123,22 +150,35 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
+            <button class="button is-info" @click="gotoStep('welcome')">
+              {{ $t("pages.install.buttons.previous") }}
+            </button>
+          </div>
+          <div class="control">
             <button
               class="button is-info"
               @click="testDbConnection"
               :disabled="testingConnection || !isDbFormValid"
             >
-              {{ testingConnection ? "测试中" : "测试连接" }}
+              {{
+                testingConnection
+                  ? $t("pages.install.database.testing")
+                  : $t("pages.install.database.testConnection")
+              }}
               <span v-if="testingConnection" class="loader"></span>
             </button>
           </div>
           <div class="control is-pulled-right ml-auto">
             <button
               class="button is-primary"
-              @click="goToStep('site')"
+              @click="gotoStep('site')"
               :disabled="testingConnection || !isDbFormValid"
             >
-              {{ testingConnection ? "测试连接中" : "下一步" }}
+              {{
+                testingConnection
+                  ? $t("pages.install.database.testing")
+                  : $t("pages.install.buttons.next")
+              }}
               <span v-if="testingConnection" class="loader"></span>
             </button>
           </div>
@@ -146,23 +186,26 @@
       </div>
     </div>
 
-    <!-- 步骤3: 站点信息 -->
+    <!-- 步骤4: 站点信息 -->
     <div v-if="currentStep === 'site'" class="step-item">
       <div class="step-title">
-        <div class="step-number">3</div>
-        <h3 class="step-header">站点信息</h3>
+        <div class="step-number">4</div>
+        <h3 class="step-header">{{ $t("pages.install.step.site") }}</h3>
       </div>
       <div>
         <div class="field">
           <label class="label"
-            >站点名称 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.site.title") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="site-name"
-              placeholder="请输入站点名称（必填）"
+              :placeholder="$t('pages.install.site.titlePlaceholder')"
               v-model="siteInfo.title"
               required
               @blur="validateSiteName"
@@ -170,13 +213,15 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">站点描述</label>
+          <label class="label">{{
+            $t("pages.install.site.description")
+          }}</label>
           <div class="control">
             <textarea
               class="textarea"
               id="site-desc"
               rows="3"
-              placeholder="请输入站点描述"
+              :placeholder="$t('pages.install.site.descriptionPlaceholder')"
               v-model="siteInfo.description"
             ></textarea>
           </div>
@@ -186,40 +231,43 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-info" @click="goToStep('database')">
-              上一步
+            <button class="button is-info" @click="gotoStep('database')">
+              {{ $t("pages.install.buttons.previous") }}
             </button>
           </div>
           <div class="control is-pulled-right ml-auto">
             <button
               class="button is-primary"
-              @click="goToStep('admin')"
+              @click="gotoStep('admin')"
               :disabled="!siteInfo.title"
             >
-              下一步
+              {{ $t("pages.install.buttons.next") }}
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 步骤4: 管理员设置 -->
+    <!-- 步骤5: 管理员设置 -->
     <div v-if="currentStep === 'admin'" class="step-item">
       <div class="step-title">
-        <div class="step-number">4</div>
-        <h3 class="step-header">管理员设置</h3>
+        <div class="step-number">5</div>
+        <h3 class="step-header">{{ $t("pages.install.step.admin") }}</h3>
       </div>
       <div>
         <div class="field">
           <label class="label"
-            >管理员用户名 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.admin.username") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="text"
               id="admin-username"
-              placeholder="请输入管理员用户名（必填）"
+              :placeholder="$t('pages.install.admin.usernamePlaceholder')"
               v-model="adminInfo.username"
               required
               @blur="validateAdminForm"
@@ -228,14 +276,17 @@
         </div>
         <div class="field">
           <label class="label"
-            >管理员密码 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.admin.password") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="password"
               id="admin-password"
-              placeholder="请输入管理员密码（必填）"
+              :placeholder="$t('pages.install.admin.passwordPlaceholder')"
               v-model="adminInfo.password"
               required
               @blur="validateAdminForm"
@@ -244,14 +295,19 @@
         </div>
         <div class="field">
           <label class="label"
-            >确认密码 <span class="has-text-danger">*</span></label
+            >{{ $t("pages.install.admin.confirmPassword") }}
+            <span class="has-text-danger">{{
+              $t("pages.install.common.required")
+            }}</span></label
           >
           <div class="control">
             <input
               class="input"
               type="password"
               id="admin-password-confirm"
-              placeholder="请再次输入管理员密码（必填）"
+              :placeholder="
+                $t('pages.install.admin.confirmPasswordPlaceholder')
+              "
               v-model="adminInfo.passwordConfirm"
               required
               @blur="validateAdminForm"
@@ -263,8 +319,8 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-info" @click="goToStep('site')">
-              上一步
+            <button class="button is-info" @click="gotoStep('site')">
+              {{ $t("pages.install.buttons.previous") }}
             </button>
           </div>
           <div class="control is-pulled-right ml-auto">
@@ -278,18 +334,18 @@
                 adminInfo.password !== adminInfo.passwordConfirm
               "
             >
-              安装
+              {{ $t("pages.install.buttons.install") }}
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 步骤5: 安装中 -->
+    <!-- 步骤6: 安装中 -->
     <div v-if="currentStep === 'install'" class="step-item">
       <div class="step-title">
-        <div class="step-number">5</div>
-        <h3 class="step-header">安装中</h3>
+        <div class="step-number">6</div>
+        <h3 class="step-header">{{ $t("pages.install.step.install") }}</h3>
       </div>
       <progress
         class="progress"
@@ -305,17 +361,23 @@
       </div>
     </div>
 
-    <!-- 步骤6: 安装完成 -->
+    <!-- 步骤7: 安装完成 -->
     <div v-if="currentStep === 'complete'" class="step-item">
       <div class="step-title">
-        <div class="step-number">6</div>
-        <h3 class="step-header">安装完成</h3>
+        <div class="step-number">7</div>
+        <h3 class="step-header">{{ $t("pages.install.step.complete") }}</h3>
       </div>
-      <div class="notification is-success">恭喜您，BBS-GO 已成功安装！</div>
-      <p>现在您可以开始使用您的社区系统了。</p>
+      <div class="notification is-success">
+        {{ $t("pages.install.complete.congratulations") }}
+      </div>
+      <p>{{ $t("pages.install.complete.description") }}</p>
       <div class="has-text-centered mt-5">
-        <a href="/" class="button is-success mr-2">进入首页</a>
-        <a href="/admin" class="button is-primary">进入管理后台</a>
+        <a href="/" class="button is-success mr-2">{{
+          $t("pages.install.complete.enterSite")
+        }}</a>
+        <a href="/admin" class="button is-primary">{{
+          $t("pages.install.complete.enterAdmin")
+        }}</a>
       </div>
     </div>
   </div>
@@ -326,8 +388,18 @@ definePageMeta({
   layout: "empty",
 });
 
+const { t, setLocale } = useI18n();
+
 // 步骤控制
 const currentStep = ref("welcome");
+
+// 语言选择
+const selectedLanguage = ref("en-US");
+
+// 监听语言变化
+watch(selectedLanguage, async (newLang) => {
+  await setLocale(newLang);
+});
 
 // 数据库配置
 const dbConfig = ref({
@@ -354,7 +426,7 @@ const isDbFormValid = computed(() => {
 // 验证数据库表单并显示提示
 const validateDbForm = () => {
   if (!isDbFormValid.value) {
-    dbError.value = "请填写完整的数据库信息";
+    dbError.value = t("pages.install.database.validationError");
     dbSuccess.value = "";
     return false;
   }
@@ -386,7 +458,7 @@ const siteError = ref("");
 // 验证站点名称
 const validateSiteName = () => {
   if (!siteInfo.value.title) {
-    siteError.value = "请填写站点名称";
+    siteError.value = t("pages.install.site.validationError");
     return false;
   }
   siteError.value = "";
@@ -414,19 +486,19 @@ const adminError = ref("");
 // 验证管理员表单
 const validateAdminForm = () => {
   if (!adminInfo.value.username) {
-    adminError.value = "请填写管理员用户名";
+    adminError.value = t("pages.install.admin.usernameError");
     return false;
   }
   if (!adminInfo.value.password) {
-    adminError.value = "请填写管理员密码";
+    adminError.value = t("pages.install.admin.passwordError");
     return false;
   }
   if (!adminInfo.value.passwordConfirm) {
-    adminError.value = "请确认管理员密码";
+    adminError.value = t("pages.install.admin.confirmPasswordError");
     return false;
   }
   if (adminInfo.value.password !== adminInfo.value.passwordConfirm) {
-    adminError.value = "两次输入的密码不一致";
+    adminError.value = t("pages.install.admin.passwordMismatchError");
     return false;
   }
   adminError.value = "";
@@ -455,7 +527,7 @@ watch(
 // 安装状态
 const installProgress = ref(0);
 const installStatus = ref({
-  message: "准备安装...",
+  message: t("pages.install.install.preparing"),
   type: "is-info",
 });
 
@@ -467,18 +539,14 @@ if (status.value.installed) {
 }
 
 // 步骤导航
-const goToStep = async (step) => {
+const gotoStep = async (step) => {
   if (step === "site" && currentStep.value === "database") {
-    // 验证数据库配置
     if (!validateDbForm()) {
       return;
     }
-
-    // 测试数据库连接
     dbError.value = "";
     dbSuccess.value = "";
     testingConnection.value = true;
-
     try {
       await useHttpPost("/api/install/test_db_connection", {
         host: dbConfig.value.host,
@@ -487,43 +555,34 @@ const goToStep = async (step) => {
         username: dbConfig.value.username,
         password: dbConfig.value.password,
       });
-
-      // 连接成功才进入下一步
-      dbSuccess.value = "数据库连接成功";
+      dbSuccess.value = t("pages.install.database.connectSuccess");
       testingConnection.value = false;
       currentStep.value = step;
     } catch (error) {
       dbError.value = error.message
-        ? "数据库连接失败: " + error.message
-        : "数据库连接失败";
+        ? t("pages.install.database.connectFailed") + ": " + error.message
+        : t("pages.install.database.connectFailed");
       testingConnection.value = false;
-      return; // 连接失败不进入下一步
+      return;
     }
-
-    return; // 已处理步骤切换，不执行后续代码
+    return;
   }
-
   if (step === "admin" && currentStep.value === "site") {
-    // 验证站点信息
     if (!validateSiteName()) {
       return;
     }
     siteError.value = "";
   }
-
   currentStep.value = step;
 };
 
-// 测试数据库连接
 const testDbConnection = async () => {
   if (!validateDbForm()) {
     return;
   }
-
   dbError.value = "";
   dbSuccess.value = "";
   testingConnection.value = true;
-
   try {
     await useHttpPost("/api/install/test_db_connection", {
       host: dbConfig.value.host,
@@ -532,28 +591,21 @@ const testDbConnection = async () => {
       username: dbConfig.value.username,
       password: dbConfig.value.password,
     });
-
-    dbSuccess.value = "数据库连接成功";
+    dbSuccess.value = t("pages.install.database.connectSuccess");
   } catch (error) {
     dbError.value = error.message
-      ? "数据库连接失败: " + error.message
-      : "数据库连接失败";
+      ? t("pages.install.database.connectFailed") + ": " + error.message
+      : t("pages.install.database.connectFailed");
   } finally {
     testingConnection.value = false;
   }
 };
 
-// 执行安装
 const confirmInstall = () => {
-  // 验证管理员信息
   if (!validateAdminForm()) {
     return;
   }
-
-  // 切换到安装步骤
   currentStep.value = "install";
-
-  // 准备安装数据
   const installData = {
     siteTitle: siteInfo.value.title,
     siteDescription: siteInfo.value.description,
@@ -566,23 +618,18 @@ const confirmInstall = () => {
     },
     username: adminInfo.value.username,
     password: adminInfo.value.password,
+    language: selectedLanguage.value,
   };
-
-  // 初始化进度
   installProgress.value = 10;
   installStatus.value = {
-    message: "正在连接数据库...",
+    message: t("pages.install.install.connecting"),
     type: "is-info",
   };
-
-  // 进度条动画
   const progressInterval = setInterval(() => {
     if (installProgress.value < 90) {
       installProgress.value += 5;
     }
   }, 500);
-
-  // 执行安装请求
   fetch("/api/install/install", {
     method: "POST",
     headers: {
@@ -593,35 +640,31 @@ const confirmInstall = () => {
     .then((response) => response.json())
     .then((data) => {
       clearInterval(progressInterval);
-
       if (data.success) {
-        // 安装成功
         installProgress.value = 100;
         installStatus.value = {
-          message: "安装完成！",
+          message: t("pages.install.install.completed"),
           type: "is-info",
         };
-
-        // 显示完成页面
         setTimeout(() => {
           currentStep.value = "complete";
         }, 1000);
       } else {
-        // 安装失败
         installProgress.value = 100;
         installStatus.value = {
-          message: "安装失败: " + (data.message || "未知错误"),
+          message:
+            t("pages.install.install.failed") +
+            ": " +
+            (data.message || t("pages.install.install.unknown")),
           type: "is-danger",
         };
       }
     })
     .catch((error) => {
       clearInterval(progressInterval);
-
-      // 显示错误
       installProgress.value = 100;
       installStatus.value = {
-        message: "安装请求失败: " + error,
+        message: t("pages.install.install.requestFailed") + ": " + error,
         type: "is-danger",
       };
     });
@@ -688,5 +731,8 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+.radio {
+  padding: 8px 0;
 }
 </style>

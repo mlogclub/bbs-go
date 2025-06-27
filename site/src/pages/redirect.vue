@@ -11,7 +11,7 @@
           <img v-else src="~/assets/images/logo.png" style="max-width: 100px" />
         </div>
         <div style="margin: 20px 0">
-          <a :href="url" rel="nofollow">点击该链接继续跳转&nbsp;&gt;&gt;</a>
+          <a :href="url" rel="nofollow">{{ $t("pages.redirect.link") }}</a>
         </div>
       </div>
     </div>
@@ -19,6 +19,8 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
+
 const route = useRoute();
 const configStore = useConfigStore();
 const url = route.query.url || "";
@@ -27,7 +29,7 @@ const temp = url.toLowerCase();
 if (!temp.startsWith("http://") && !temp.startsWith("https://")) {
   throw createError({
     statusCode: 500,
-    message: "你访问的页面发生错误!",
+    message: t("pages.redirect.error"),
   });
 }
 </script>

@@ -2,13 +2,19 @@
   <div class="container">
     <div class="container-header">
       <div style="width: max-content">
-        <a-alert type="warning">设置角色对应权限</a-alert>
+        <a-alert type="warning">{{ $t('pages.permission.tips') }}</a-alert>
       </div>
 
-      <a-button type="primary" @click="saveRoleMenus">保存</a-button>
+      <a-button type="primary" @click="saveRoleMenus">{{
+        $t('pages.permission.save')
+      }}</a-button>
     </div>
     <div class="container-main">
-      <a-card title="角色列表" class="roles-panel" :body-style="cardBodyStyle">
+      <a-card
+        :title="$t('pages.permission.roleList')"
+        class="roles-panel"
+        :body-style="cardBodyStyle"
+      >
         <div class="role-item-list">
           <div
             v-for="role in roles"
@@ -22,7 +28,11 @@
           </div>
         </div>
       </a-card>
-      <a-card title="菜单权限" class="menus-panel" :body-style="cardBodyStyle">
+      <a-card
+        :title="$t('pages.permission.menuPermission')"
+        class="menus-panel"
+        :body-style="cardBodyStyle"
+      >
         <a-spin :loading="loading" dot style="width: 100%">
           <a-tree
             v-if="menus && menus.length"
@@ -39,6 +49,8 @@
 </template>
 
 <script setup>
+  const { t } = useI18n();
+
   const loading = ref(false);
   const roles = ref([]);
   const menus = ref([]);
@@ -81,7 +93,7 @@
           menuIds: checkedMenuIds.value ? checkedMenuIds.value.join(',') : '',
         })
       );
-      useNotificationSuccess('保存成功');
+      useNotificationSuccess(t('pages.permission.saveSuccess'));
     } catch (e) {
       useHandleError(e);
     }

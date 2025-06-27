@@ -1,12 +1,16 @@
 <template>
   <div>
     <button
-      class="button follow-btn"
-      :class="{ 'is-followed': followed }"
+      class="button follow-btn is-link"
+      :class="{ 'is-light': followed }"
       @click="follow"
     >
       <i class="iconfont icon-add" />
-      <span>{{ followed ? "已关注" : "关注" }}</span>
+      <span>{{
+        followed
+          ? $t("component.followBtn.followed")
+          : $t("component.followBtn.follow")
+      }}</span>
     </button>
   </div>
 </template>
@@ -40,7 +44,6 @@ async function follow() {
       );
       followed.value = false;
       emits("onFollowed", props.userId, false);
-      // useMsgSuccess("取消关注成功");
     } else {
       await useHttpPost(
         "/api/fans/follow",
@@ -50,7 +53,6 @@ async function follow() {
       );
       followed.value = true;
       emits("onFollowed", props.userId, true);
-      // useMsgSuccess("关注成功");
     }
   } catch (e) {
     useMsgError(e.message || e);
@@ -60,17 +62,8 @@ async function follow() {
 
 <style lang="scss" scoped>
 .follow-btn {
-  font-size: 12px;
   height: 25px;
-  background-color: #2469f6; // TODO
-  border-color: #2469f6;
-  color: var(--text-color5);
-
-  &:hover,
-  &.is-followed {
-    background-color: #7ba5f9; // TODO
-    border-color: #7ba5f9;
-  }
+  font-size: 12px;
   i {
     font-size: 12px;
     margin-right: 5px;

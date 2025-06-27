@@ -1,39 +1,41 @@
 <template>
   <a-form :model="config" auto-label-width>
-    <a-form-item label="发帖积分">
+    <a-form-item :label="$t('pages.settings.score.postTopicScore')">
       <a-input-number
         v-model="config.postTopicScore"
         :min="1"
         mode="button"
-        placeholder="发帖获得积分"
+        :placeholder="$t('pages.settings.score.placeholder.postTopicScore')"
       />
     </a-form-item>
-    <a-form-item label="跟帖积分">
+    <a-form-item :label="$t('pages.settings.score.postCommentScore')">
       <a-input-number
         v-model="config.postCommentScore"
         :min="1"
         mode="button"
-        placeholder="跟帖获得积分"
+        :placeholder="$t('pages.settings.score.placeholder.postCommentScore')"
       />
     </a-form-item>
-    <a-form-item label="签到积分">
+    <a-form-item :label="$t('pages.settings.score.checkInScore')">
       <a-input-number
         v-model="config.checkInScore"
         :min="1"
         mode="button"
-        placeholder="签到获得积分"
+        :placeholder="$t('pages.settings.score.placeholder.checkInScore')"
       />
     </a-form-item>
 
     <a-form-item>
-      <a-button type="primary" :loading="loading" @click="submit"
-        >提交</a-button
-      >
+      <a-button type="primary" :loading="loading" @click="submit">{{
+        $t('pages.settings.score.submit')
+      }}</a-button>
     </a-form-item>
   </a-form>
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
+
   const loading = ref(false);
   const config = reactive({
     postTopicScore: undefined,
@@ -56,7 +58,7 @@
         scoreConfig: config,
       });
       await loadConfig();
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.settings.score.message.submitSuccess'));
     } catch (e) {
       useHandleError(e);
     } finally {

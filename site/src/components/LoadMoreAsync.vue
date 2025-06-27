@@ -19,7 +19,9 @@
           <span v-if="loading" class="icon">
             <i class="iconfont icon-loading" />
           </span>
-          <span>{{ pageData.hasMore ? "查看更多" : "到底啦" }}</span>
+          <span>{{
+            pageData.hasMore ? $t("common.loadMore.loadMore") : $t("common.loadMore.noMore")
+          }}</span>
         </button>
       </div>
     </template>
@@ -33,12 +35,10 @@ defineExpose({
 });
 
 const props = defineProps({
-  // 请求URL
   url: {
     type: String,
     required: true,
   },
-  // 请求参数
   params: {
     type: Object,
     default() {
@@ -47,7 +47,6 @@ const props = defineProps({
   },
 });
 
-// 是否正在加载中
 const loading = ref(false);
 const pageData = reactive({
   cursor: "",

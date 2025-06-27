@@ -6,7 +6,6 @@
   ],
   "scripts": {
     "build": "nuxt build --dotenv .env.production",
-    "build:docker": "nuxt build --dotenv .env.docker",
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "NUXT_SSR=false nuxt generate --dotenv .env.production",
     "preview": "nuxt preview --dotenv .env.production",
@@ -28,12 +27,13 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "html-editor": "workspace:*",
     "@asika32764/vue-animate": "^3.0.2",
+    "@nuxtjs/i18n": "^9.5.5",
     "@pinia/nuxt": "0.10.1",
     "go-captcha-vue": "^2",
+    "html-editor": "workspace:*",
     "lodash.throttle": "^4.1.1",
-    "md-editor-v3": "5.3.2",
+    "md-editor-v3": "5.6.1",
     "nuxt": "^3.16.2",
     "nuxt-lazy-load": "3.0.4",
     "vue": "^3.5.13",

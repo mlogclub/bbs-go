@@ -14,14 +14,15 @@ type ConfigController struct {
 
 func (c *ConfigController) GetConfigs() *web.JsonResult {
 	cfg := config.Instance
+
+	var b *web.RspBuilder
 	if cfg.Installed {
 		sysConfig := services.SysConfigService.GetConfig()
-		return web.NewRspBuilder(sysConfig).
-			Put("installed", cfg.Installed).
-			JsonResult()
+		b = web.NewRspBuilder(sysConfig)
 	} else {
-		return web.JsonData(map[string]any{
-			"installed": cfg.Installed,
-		})
+		b = web.NewEmptyRspBuilder()
 	}
+	b.Put("installed", cfg.Installed)
+	b.Put("language", cfg.Language)
+	return b.JsonResult()
 }

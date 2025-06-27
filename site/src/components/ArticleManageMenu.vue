@@ -1,17 +1,27 @@
 <template>
   <ClientOnly>
     <el-dropdown v-if="hasPermission" trigger="click" @command="handleCommand">
-      <span class="el-dropdown-link">管理</span>
+      <span class="el-dropdown-link">{{
+        $t("component.articleManageMenu.manage")
+      }}</span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="edit">修改</el-dropdown-item>
-          <el-dropdown-item command="delete">删除</el-dropdown-item>
-          <el-dropdown-item v-if="isOwner || isAdmin" command="forbidden7Days"
-            >禁言7天</el-dropdown-item
+          <el-dropdown-item command="edit">{{
+            $t("component.articleManageMenu.edit")
+          }}</el-dropdown-item>
+          <el-dropdown-item command="delete">{{
+            $t("component.articleManageMenu.delete")
+          }}</el-dropdown-item>
+          <el-dropdown-item
+            v-if="isOwner || isAdmin"
+            command="forbidden7Days"
+            >{{
+              $t("component.articleManageMenu.forbidden7Days")
+            }}</el-dropdown-item
           >
-          <el-dropdown-item v-if="isOwner" command="forbiddenForever"
-            >永久禁言</el-dropdown-item
-          >
+          <el-dropdown-item v-if="isOwner" command="forbiddenForever">{{
+            $t("component.articleManageMenu.forbiddenForever")
+          }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -26,6 +36,7 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const isOwner = userIsOwner(userStore.user);
 const isAdmin = userIsAdmin(userStore.user);
@@ -58,24 +69,26 @@ async function forbidden(days) {
         days,
       })
     );
-    useMsgSuccess("禁言成功");
+    useMsgSuccess(t("component.articleManageMenu.forbiddenSuccess"));
   } catch (e) {
-    useMsgError("禁言失败");
+    useMsgError(t("component.articleManageMenu.forbiddenFailed"));
   }
 }
 function deleteArticle() {
-  useConfirm("是否确认删除该文章？").then(function () {
+  useConfirm(t("component.articleManageMenu.confirmDelete")).then(function () {
     useHttpPost(`/api/article/delete/${props.article.id}`)
       .then(() => {
         useMsg({
-          message: "删除成功",
+          message: t("component.articleManageMenu.deleteSuccess"),
           onClose() {
             useLinkTo("/articles");
           },
         });
       })
       .catch((e) => {
-        useMsgError("删除失败：" + (e.message || e));
+        useMsgError(
+          t("component.articleManageMenu.deleteFailed") + (e.message || e)
+        );
       });
   });
 }

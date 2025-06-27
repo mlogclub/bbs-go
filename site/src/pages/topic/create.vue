@@ -3,24 +3,27 @@
     <div class="container">
       <article v-if="isNeedEmailVerify" class="message is-warning">
         <div class="message-header">
-          <p>请先验证邮箱</p>
+          <p>{{ $t("pages.topic.create.needEmailTitle") }}</p>
         </div>
         <div class="message-body">
-          发表话题前，请先前往
-          <strong
-            ><nuxt-link
+          {{ $t("pages.topic.create.needEmailBody") }}
+          <strong>
+            <nuxt-link
               to="/user/profile/account"
               style="color: var(--text-link-color)"
-              >个人中心 &gt; 账号设置</nuxt-link
+              >{{ $t("pages.topic.create.goVerify") }}</nuxt-link
             ></strong
           >
-          页面设置邮箱，并完成邮箱认证。
         </div>
       </article>
       <div v-else class="publish-form">
         <div class="form-title">
           <div class="form-title-name">
-            {{ postForm.type === 0 ? "发帖" : "发动态" }}
+            {{
+              postForm.type === 0
+                ? $t("pages.topic.create.post")
+                : $t("pages.topic.create.tweet")
+            }}
           </div>
           <div
             v-if="postForm.type === 0"
@@ -57,7 +60,7 @@
               v-model="postForm.title"
               class="input topic-title"
               type="text"
-              placeholder="请输入帖子标题"
+              :placeholder="$t('pages.topic.create.titlePlaceholder')"
             />
           </div>
         </div>
@@ -67,7 +70,7 @@
             <markdown-editor
               v-if="postForm.contentType === 'markdown'"
               v-model="postForm.content"
-              placeholder="请输入你要发表的内容..."
+              :placeholder="$t('pages.topic.create.contentPlaceholder')"
             />
             <MEditor
               v-else
@@ -87,6 +90,7 @@
           <div class="control">
             <simple-editor
               ref="simpleEditorComponent"
+              :placeholder="$t('pages.topic.create.contentPlaceholder')"
               v-model:content="postForm.content"
               v-model:imageList="postForm.imageList"
             />
@@ -104,7 +108,11 @@
             :class="{ 'is-loading': publishing }"
             class="button is-primary btn-publish"
             @click="publish"
-            >{{ postForm.type === 1 ? "发表动态" : "发表帖子" }}</a
+            >{{
+              postForm.type === 1
+                ? $t("pages.topic.create.tweetBtn")
+                : $t("pages.topic.create.postBtn")
+            }}</a
           >
         </div>
       </div>
@@ -115,6 +123,8 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+
 definePageMeta({
   middleware: "auth",
 });
@@ -129,10 +139,10 @@ const nodeId =
   parseInt(route.query.nodeId) || configStore.config.defaultNodeId || 0;
 
 if (type === 1 && !configStore.config.modules.tweet) {
-  showError("😱 动态功能未开启");
+  showError("😱 Tweet module is not enabled");
 }
 if (type === 0 && !configStore.config.modules.topic) {
-  showError("😱 帖子功能未开启");
+  showError("😱 Topic module is not enabled");
 }
 
 const postForm = ref({
@@ -152,6 +162,8 @@ const postForm = ref({
 const publishing = ref(false);
 const simpleEditorComponent = ref(null);
 const captchaDialog = ref(null);
+
+const { t } = useI18n();
 
 const isNeedEmailVerify = computed(() => {
   return (
@@ -187,14 +199,16 @@ const init = () => {
   postForm.value.contentType = "contentType";
 
   useHead({
-    title: useSiteTitle(type === 0 ? "发帖子" : "发动态"),
+    title: useSiteTitle(
+      type === 0 ? t("pages.topic.create.post") : t("pages.topic.create.tweet")
+    ),
   });
 };
 
 init();
 
 const switchEditor = () => {
-  useConfirm("切换编辑器将会清空当前内容，是否继续？")
+  useConfirm(t("pages.topic.create.switchEditorConfirm"))
     .then(() => {
       postForm.value.content = "";
       if (postForm.value.contentType === "markdown") {
@@ -210,10 +224,6 @@ const publish = () => {
   if (publishing.value) {
     return;
   }
-
-  console.log(configStore.config);
-
-  console.log(topicCaptchaEnabled.value);
 
   if (topicCaptchaEnabled.value) {
     captchaDialog.value.show().then((captcha) => {
@@ -231,7 +241,7 @@ const publishSubmit = async (captcha) => {
 
   if (postForm.value.type === 1) {
     if (simpleEditorComponent.value.loading) {
-      useMsgWarning("图片上传中,请稍后重试...");
+      useMsgWarning(t("pages.topic.create.imageUploading"));
       return;
     }
   }

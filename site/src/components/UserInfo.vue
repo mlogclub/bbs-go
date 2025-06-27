@@ -14,19 +14,19 @@
     <div class="extra-info">
       <ul class="extra-data">
         <li>
-          <span>积分</span><br />
+          <span>{{ $t("component.userInfo.score") }}</span><br />
           <b>{{ user.score }}</b>
         </li>
         <li>
-          <span>话题</span><br />
+          <span>{{ $t("component.userInfo.topicCount") }}</span><br />
           <b>{{ user.topicCount }}</b>
         </li>
         <li>
-          <span>评论</span><br />
+          <span>{{ $t("component.userInfo.commentCount") }}</span><br />
           <b>{{ user.commentCount }}</b>
         </li>
         <li>
-          <span>注册排名</span><br />
+          <span>{{ $t("component.userInfo.registrationRank") }}</span><br />
           <b>{{ user.id }}</b>
         </li>
       </ul>
@@ -34,15 +34,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -51,13 +49,6 @@ export default {
   padding: 0;
   margin: 0 0 10px 0;
   border-radius: var(--border-radius);
-
-  .user-background {
-    text-align: center;
-    // background-image: url('https://file.mlog.club/images/2020/10/13/6e7933f5c9b2fe515210a17ea1762105.jpg!768_auto');
-    background-size: cover;
-    background-position: 50%;
-  }
 
   .base-info {
     padding: 10px;

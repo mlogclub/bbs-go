@@ -2,7 +2,7 @@
   <section v-if="topic" class="main">
     <div v-if="isPending" class="container main-container">
       <div class="notification is-warning" style="width: 100%; margin: 20px 0">
-        帖子正在审核中
+        {{ t('pages.topic.detail.pending') }}
       </div>
     </div>
     <div class="container main-container left-main size-360">
@@ -30,12 +30,12 @@
                 </div>
                 <div class="topic-meta">
                   <span class="meta-item">
-                    发布于
-                    <time>{{ usePrettyDate(topic.createTime) }}</time>
+                    {{ t('pages.topic.detail.publishedAt') }}
+                    <time>{{ usePrettyDate(topic.createTime, t) }}</time>
                   </span>
-                  <span v-if="topic.ipLocation" class="meta-item"
-                    >IP属地{{ topic.ipLocation }}</span
-                  >
+                  <span v-if="topic.ipLocation" class="meta-item">
+                    {{ t('pages.topic.detail.ipLocation') }}{{ topic.ipLocation }}
+                  </span>
                 </div>
               </div>
               <div class="topic-header-right">
@@ -79,14 +79,14 @@
                   <div class="widget-header">
                     <span>
                       <i class="iconfont icon-lock" />
-                      <span>&nbsp;隐藏内容</span>
+                      <span>&nbsp;{{ t('pages.topic.detail.hideContent') }}</span>
                     </span>
                   </div>
                   <div class="widget-content" v-html="hideContent.content" />
                 </div>
                 <div v-else class="hide-content-tip">
                   <i class="iconfont icon-lock" />
-                  <span>隐藏内容，请回复后查看</span>
+                  <span>{{ t('pages.topic.detail.hideContentTip') }}</span>
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@
               <div class="action disabled">
                 <i class="action-icon iconfont icon-view" />
                 <div class="action-text">
-                  <span>浏览</span>
+                  <span>{{ t('pages.topic.detail.view') }}</span>
                   <span v-if="topic.viewCount > 0" class="action-text">
                     ({{ topic.viewCount }})
                   </span>
@@ -139,7 +139,7 @@
                   :class="{ 'checked-icon': liked }"
                 />
                 <div class="action-text">
-                  <span>点赞</span>
+                  <span>{{ t('pages.topic.detail.like') }}</span>
                   <span v-if="topic.likeCount > 0">
                     ({{ topic.likeCount }})
                   </span>
@@ -155,7 +155,7 @@
                   }"
                 />
                 <div class="action-text">
-                  <span>收藏</span>
+                  <span>{{ t('pages.topic.detail.favorite') }}</span>
                 </div>
               </div>
             </div>
@@ -178,7 +178,10 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
 const route = useRoute();
+const { t } = useI18n();
 
 const { data: topic } = await useMyFetch(`/api/topic/${route.params.id}`);
 
@@ -230,7 +233,7 @@ async function like() {
       topic.value.likeCount =
         topic.value.likeCount > 0 ? topic.value.likeCount - 1 : 0;
 
-      useMsgSuccess("已取消点赞");
+      useMsgSuccess(t('pages.topic.detail.likeSuccess'));
       await refreshLikeUsers();
     } else {
       await useHttpPost(
@@ -243,7 +246,7 @@ async function like() {
       liked.value = true;
       topic.value.likeCount++;
 
-      useMsgSuccess("点赞成功");
+      useMsgSuccess(t('pages.topic.detail.likeSuccess'));
       await refreshLikeUsers();
     }
   } catch (e) {
@@ -262,7 +265,7 @@ async function addFavorite(topicId) {
         })
       );
       topic.value.favorited = false;
-      useMsgSuccess("已取消收藏");
+      useMsgSuccess(t('pages.topic.detail.favoriteSuccess'));
     } else {
       await useHttpPost(
         "/api/favorite/add",
@@ -272,7 +275,7 @@ async function addFavorite(topicId) {
         })
       );
       topic.value.favorited = true;
-      useMsgSuccess("收藏成功");
+      useMsgSuccess(t('pages.topic.detail.favoriteSuccess'));
     }
   } catch (e) {
     useCatchError(e);

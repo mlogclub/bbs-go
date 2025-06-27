@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/spam"
 	"math/rand"
@@ -23,26 +24,35 @@ import (
 )
 
 type TopicController struct {
-	Ctx iris.Context
+	Ctx           iris.Context
+	_BuiltInNodes []models.NodeResponse
+}
+
+func (c *TopicController) _GetBuiltInNodes() []models.NodeResponse {
+	if len(c._BuiltInNodes) == 0 {
+		c._BuiltInNodes = []models.NodeResponse{
+			{
+				Id:   0,
+				Name: locales.Get("topic.node.latest"),
+			},
+			{
+				Id:   -1,
+				Name: locales.Get("topic.node.recommend"),
+			},
+			{
+				Id:   -2,
+				Name: locales.Get("topic.node.follow"),
+			},
+		}
+	}
+	return c._BuiltInNodes
 }
 
 func (c *TopicController) GetNode_navs() *web.JsonResult {
-	nodes := []models.NodeResponse{
-		{
-			Id:   0,
-			Name: "最新",
-		},
-		{
-			Id:   -1,
-			Name: "推荐",
-		},
-		{
-			Id:   -2,
-			Name: "关注",
-		},
-	}
-	realNodes := render.BuildNodes(services.TopicNodeService.GetNodes())
-	nodes = append(nodes, realNodes...)
+	nodes := append(
+		c._GetBuiltInNodes(),
+		render.BuildNodes(services.TopicNodeService.GetNodes())...,
+	)
 	return web.JsonData(nodes)
 }
 
@@ -54,8 +64,18 @@ func (c *TopicController) GetNodes() *web.JsonResult {
 
 // 节点信息
 func (c *TopicController) GetNode() *web.JsonResult {
-	nodeId := params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+	nodeId, _ := params.GetInt64(c.Ctx, "nodeId")
+	if nodeId <= 0 {
+		for _, node := range c._GetBuiltInNodes() {
+			if node.Id == nodeId {
+				return web.JsonData(node)
+			}
+		}
+	}
 	node := services.TopicNodeService.Get(nodeId)
+	if node == nil {
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
+	}
 	return web.JsonData(render.BuildNode(node))
 }
 
@@ -87,15 +107,15 @@ func (c *TopicController) GetEditBy(topicId int64) *web.JsonResult {
 
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		return web.JsonErrorMsg("话题不存在或已被删除")
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
 	if topic.Type != constants.TopicTypeTopic {
-		return web.JsonErrorMsg("当前类型帖子不支持修改")
+		return web.JsonErrorMsg(locales.Get("topic.type_not_supported"))
 	}
 
 	// 非作者、且非管理员
 	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
 	tags := services.TopicService.GetTopicTags(topicId)
@@ -125,12 +145,12 @@ func (c *TopicController) PostEditBy(topicId int64) *web.JsonResult {
 
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		return web.JsonErrorMsg("话题不存在或已被删除")
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
 
 	// 非作者、且非管理员
 	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
 	var (
@@ -165,7 +185,7 @@ func (c *TopicController) PostDeleteBy(topicId int64) *web.JsonResult {
 
 	// 非作者、且非管理员
 	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
 	if err := services.TopicService.Delete(topicId, user.Id, c.Ctx.Request()); err != nil {
@@ -182,10 +202,10 @@ func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
 	err = services.TopicService.SetRecommend(topicId, recommend)
@@ -199,7 +219,7 @@ func (c *TopicController) PostRecommendBy(topicId int64) *web.JsonResult {
 func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status == constants.StatusDeleted {
-		return web.JsonErrorMsg("帖子不存在")
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
 
 	// 审核中文章控制展示
@@ -207,10 +227,10 @@ func (c *TopicController) GetBy(topicId int64) *web.JsonResult {
 	if topic.Status == constants.StatusReview {
 		if user != nil {
 			if topic.UserId != user.Id && !user.IsOwnerOrAdmin() {
-				return web.JsonErrorCode(403, "文章审核中")
+				return web.JsonErrorCode(403, locales.Get("topic.under_review"))
 			}
 		} else {
-			return web.JsonErrorCode(403, "文章审核中")
+			return web.JsonErrorCode(403, locales.Get("topic.under_review"))
 		}
 	}
 
@@ -258,7 +278,7 @@ func (c *TopicController) GetTopics() *web.JsonResult {
 		user   = services.UserTokenService.GetCurrent(c.Ctx)
 	)
 	if nodeId == constants.NodeIdFollow && user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 
 	var temp []models.Topic
@@ -295,7 +315,7 @@ func (c *TopicController) GetTagTopics() *web.JsonResult {
 func (c *TopicController) GetFavoriteBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
 	if err != nil {
@@ -334,10 +354,10 @@ func (c *TopicController) GetNewest() *web.JsonResult {
 func (c *TopicController) PostStickyBy(topicId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
 	var (

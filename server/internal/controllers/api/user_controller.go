@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/pkg/validate"
 	"strconv"
@@ -44,17 +45,17 @@ func (c *UserController) GetBy(userId int64) *web.JsonResult {
 	if user != nil && user.Status != constants.StatusDeleted {
 		return web.JsonData(render.BuildUserDetail(user))
 	}
-	return web.JsonErrorMsg("用户不存在")
+	return web.JsonErrorMsg(locales.Get("user.not_found"))
 }
 
 // 修改用户资料
 func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	if user.Id != userId {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("user.no_permission"))
 	}
 	var (
 		nickname    = strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
@@ -65,17 +66,17 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 	)
 
 	if len(nickname) == 0 {
-		return web.JsonErrorMsg("昵称不能为空")
+		return web.JsonErrorMsg(locales.Get("user.nickname_empty"))
 	}
 
 	if strs.IsNotBlank(gender) {
 		if gender != string(constants.GenderMale) && gender != string(constants.GenderFemale) {
-			return web.JsonErrorMsg("性别数据错误")
+			return web.JsonErrorMsg(locales.Get("user.gender_error"))
 		}
 	}
 
 	if len(homePage) > 0 && validate.IsURL(homePage) != nil {
-		return web.JsonErrorMsg("个人主页地址错误")
+		return web.JsonErrorMsg(locales.Get("user.homepage_error"))
 	}
 
 	columns := map[string]interface{}{
@@ -95,11 +96,11 @@ func (c *UserController) PostEditBy(userId int64) *web.JsonResult {
 func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	avatar := strings.TrimSpace(params.FormValue(c.Ctx, "avatar"))
 	if len(avatar) == 0 {
-		return web.JsonErrorMsg("头像不能为空")
+		return web.JsonErrorMsg(locales.Get("user.avatar_empty"))
 	}
 	err := services.UserService.UpdateAvatar(user.Id, avatar)
 	if err != nil {
@@ -111,11 +112,11 @@ func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 func (c *UserController) PostUpdateNickname() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	nickname := strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
 	if len(nickname) == 0 {
-		return web.JsonErrorMsg("Nickname cannot be empty")
+		return web.JsonErrorMsg(locales.Get("user.nickname_empty"))
 	}
 	err := services.UserService.UpdateNickname(user.Id, nickname)
 	if err != nil {
@@ -127,7 +128,7 @@ func (c *UserController) PostUpdateNickname() *web.JsonResult {
 func (c *UserController) PostUpdateDescription() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	description := strings.TrimSpace(params.FormValue(c.Ctx, "description"))
 	err := services.UserService.UpdateDescription(user.Id, description)
@@ -140,7 +141,7 @@ func (c *UserController) PostUpdateDescription() *web.JsonResult {
 func (c *UserController) PostUpdateGender() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	gender := strings.TrimSpace(params.FormValue(c.Ctx, "gender"))
 	err := services.UserService.UpdateGender(user.Id, gender)
@@ -153,7 +154,7 @@ func (c *UserController) PostUpdateGender() *web.JsonResult {
 func (c *UserController) PostUpdateBirthday() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	birthday := strings.TrimSpace(params.FormValue(c.Ctx, "birthday"))
 	err := services.UserService.UpdateBirthday(user.Id, birthday)
@@ -167,7 +168,7 @@ func (c *UserController) PostUpdateBirthday() *web.JsonResult {
 func (c *UserController) PostSet_username() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	username := strings.TrimSpace(params.FormValue(c.Ctx, "username"))
 	err := services.UserService.SetUsername(user.Id, username)
@@ -181,7 +182,7 @@ func (c *UserController) PostSet_username() *web.JsonResult {
 func (c *UserController) PostSet_email() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	email := strings.TrimSpace(params.FormValue(c.Ctx, "email"))
 	err := services.UserService.SetEmail(user.Id, email)
@@ -195,7 +196,7 @@ func (c *UserController) PostSet_email() *web.JsonResult {
 func (c *UserController) PostSet_password() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	password := params.FormValue(c.Ctx, "password")
 	rePassword := params.FormValue(c.Ctx, "rePassword")
@@ -210,7 +211,7 @@ func (c *UserController) PostSet_password() *web.JsonResult {
 func (c *UserController) PostUpdate_password() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	var (
 		oldPassword = params.FormValue(c.Ctx, "oldPassword")
@@ -227,11 +228,11 @@ func (c *UserController) PostUpdate_password() *web.JsonResult {
 func (c *UserController) PostSet_background_image() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	backgroundImage := params.FormValue(c.Ctx, "backgroundImage")
 	if strs.IsBlank(backgroundImage) {
-		return web.JsonErrorMsg("请上传图片")
+		return web.JsonErrorMsg(locales.Get("user.upload_image_required"))
 	}
 	if err := services.UserService.UpdateBackgroundImage(user.Id, backgroundImage); err != nil {
 		return web.JsonError(err)
@@ -246,7 +247,7 @@ func (c *UserController) GetFavorites() *web.JsonResult {
 
 	// 用户必须登录
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 
 	// 查询列表
@@ -285,7 +286,7 @@ func (c *UserController) GetMsg_recent() *web.JsonResult {
 func (c *UserController) GetMessages() *web.JsonResult {
 	user, err := services.UserTokenService.CheckLogin(c.Ctx)
 	if err != nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	var (
 		limit     = 20
@@ -355,10 +356,10 @@ func (c *UserController) GetScoreRank() *web.JsonResult {
 func (c *UserController) PostForbidden() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("user.no_permission"))
 	}
 	var (
 		userId = params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -366,10 +367,10 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		reason = params.FormValue(c.Ctx, "reason")
 	)
 	if userId < 0 {
-		return web.JsonErrorMsg("请传入：userId")
+		return web.JsonErrorMsg("param: userId required")
 	}
 	if days == -1 && !user.HasRole(constants.RoleOwner) {
-		return web.JsonErrorMsg("无永久禁言权限")
+		return web.JsonErrorMsg(locales.Get("user.no_permission"))
 	}
 	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())
@@ -385,7 +386,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 func (c *UserController) PostSend_verify_email() *web.JsonResult {
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	if err := services.UserService.SendEmailVerifyEmail(user.Id); err != nil {
 		return web.JsonError(err)

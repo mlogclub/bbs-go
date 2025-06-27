@@ -73,7 +73,7 @@ func (c *TopicController) PostDelete() *web.JsonResult {
 	}
 	user := services.UserTokenService.GetCurrent(c.Ctx)
 	if user == nil {
-		return web.JsonError(errs.NotLogin)
+		return web.JsonError(errs.NotLogin())
 	}
 	err = services.TopicService.Delete(id, user.Id, c.Ctx.Request())
 	if err != nil {

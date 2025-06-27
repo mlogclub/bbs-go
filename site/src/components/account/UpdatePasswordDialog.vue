@@ -1,5 +1,9 @@
 <template>
-  <BBSDialog v-model:visible="visible" title="设置密码" @ok="submit">
+  <BBSDialog
+    v-model:visible="visible"
+    :title="$t('component.updatePasswordDialog.title')"
+    @ok="submit"
+  >
     <div class="update-password-dialog">
       <div class="field">
         <div class="control has-icons-left">
@@ -7,7 +11,9 @@
             v-model="form.oldPassword"
             class="input"
             type="password"
-            placeholder="请输入当前密码"
+            :placeholder="
+              $t('component.updatePasswordDialog.oldPasswordPlaceholder')
+            "
             @keydown.enter="submit"
           />
           <span class="icon is-left">
@@ -21,7 +27,9 @@
             v-model="form.password"
             class="input"
             type="password"
-            placeholder="请输入新密码"
+            :placeholder="
+              $t('component.updatePasswordDialog.newPasswordPlaceholder')
+            "
             @keydown.enter="submit"
           />
           <span class="icon is-left">
@@ -35,7 +43,9 @@
             v-model="form.rePassword"
             class="input"
             type="password"
-            placeholder="请再次输入新密码"
+            :placeholder="
+              $t('component.updatePasswordDialog.rePasswordPlaceholder')
+            "
             @keydown.enter="submit"
           />
           <span class="icon is-left">
@@ -48,6 +58,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n();
 const visible = ref(false);
 const emits = defineEmits(["success"]);
 const form = ref({
@@ -68,7 +79,7 @@ const submit = async () => {
     await useHttpPost("/api/user/update_password", useJsonToForm(form.value));
     visible.value = false;
     emits("success");
-    useMsgSuccess("修改密码成功");
+    useMsgSuccess(t("component.updatePasswordDialog.success"));
   } catch (err) {
     useMsgError(err.message || err);
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="widget no-margin">
-    <div class="widget-header">积分记录</div>
+    <div class="widget-header">{{ $t("user.scores.title") }}</div>
     <div class="widget-content">
       <load-more-async v-slot="{ results }" url="/api/user/score_logs">
         <ul class="score-logs">
@@ -10,7 +10,9 @@
             :class="{ plus: scoreLog.type === 0 }"
           >
             <span class="score-type">{{
-              scoreLog.type === 0 ? "获得积分" : "减少积分"
+              scoreLog.type === 0
+                ? $t("user.scores.gainPoints")
+                : $t("user.scores.losePoints")
             }}</span>
             <span class="score-score">
               <i class="iconfont icon-score" />
@@ -31,6 +33,12 @@
 definePageMeta({
   middleware: ["auth"],
   layout: "ucenter",
+});
+
+const { t } = useI18n();
+
+useHead({
+  title: useSiteTitle(t("user.scores.title")),
 });
 </script>
 

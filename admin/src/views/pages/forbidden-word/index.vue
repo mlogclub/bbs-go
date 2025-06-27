@@ -5,21 +5,30 @@
         <a-form-item>
           <a-select
             v-model="filters.type"
-            placeholder="类型"
-            clearable
+            :placeholder="$t('pages.forbiddenWord.type')"
+            allow-clear
             @change="list"
           >
-            <a-option label="词组" value="word" />
-            <a-option label="正则表达式" value="regex" />
+            <a-option
+              :label="$t('pages.forbiddenWord.typeWord')"
+              value="word"
+            />
+            <a-option
+              :label="$t('pages.forbiddenWord.typeRegex')"
+              value="regex"
+            />
           </a-select>
         </a-form-item>
         <a-form-item>
-          <a-input v-model="filters.word" placeholder="违禁词"></a-input>
+          <a-input
+            v-model="filters.word"
+            :placeholder="$t('pages.forbiddenWord.word')"
+          ></a-input>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit" @click="list">
             <template #icon> <icon-search /> </template>
-            查询
+            {{ $t('pages.forbiddenWord.search') }}
           </a-button>
         </a-form-item>
       </a-form>
@@ -29,7 +38,7 @@
           <template #icon>
             <icon-plus />
           </template>
-          新增
+          {{ $t('pages.forbiddenWord.add') }}
         </a-button>
       </div>
     </div>
@@ -48,27 +57,45 @@
         @page-size-change="onPageSizeChange"
       >
         <template #columns>
-          <a-table-column title="编号" data-index="id" />
+          <a-table-column
+            :title="$t('pages.forbiddenWord.id')"
+            data-index="id"
+          />
 
-          <a-table-column title="类型" data-index="type" />
+          <a-table-column
+            :title="$t('pages.forbiddenWord.type')"
+            data-index="type"
+          />
 
-          <a-table-column title="违禁词" data-index="word" />
+          <a-table-column
+            :title="$t('pages.forbiddenWord.word')"
+            data-index="word"
+          />
 
-          <a-table-column title="备注" data-index="remark" />
+          <a-table-column
+            :title="$t('pages.forbiddenWord.remark')"
+            data-index="remark"
+          />
 
-          <a-table-column title="创建时间" data-index="createTime">
+          <a-table-column
+            :title="$t('pages.forbiddenWord.createTime')"
+            data-index="createTime"
+          >
             <template #cell="{ record }">
               {{ useFormatDate(record.createTime) }}
             </template>
           </a-table-column>
 
-          <a-table-column title="操作">
+          <a-table-column
+            :title="$t('pages.forbiddenWord.edit')"
+            data-index="edit"
+          >
             <template #cell="{ record }">
               <a-button
                 type="primary"
                 :size="appStore.table.size"
                 @click="showEdit(record.id)"
-                >编辑</a-button
+                >{{ $t('pages.forbiddenWord.edit') }}</a-button
               >
             </template>
           </a-table-column>

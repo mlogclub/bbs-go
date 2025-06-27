@@ -7,11 +7,11 @@
     @before-ok="handleBeforeOk"
   >
     <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item label="名称" field="name">
+      <a-form-item :label="$t('pages.api.name')" field="name">
         <a-input v-model="form.name" />
       </a-form-item>
 
-      <a-form-item label="Method" field="method">
+      <a-form-item :label="$t('pages.api.method')" field="method">
         <a-select v-model="form.method">
           <a-option value="GET" label="GET" />
           <a-option value="POST" label="POST" />
@@ -21,7 +21,7 @@
         </a-select>
       </a-form-item>
 
-      <a-form-item label="Path" field="path">
+      <a-form-item :label="$t('pages.api.path')" field="path">
         <a-input v-model="form.path" />
       </a-form-item>
     </a-form>
@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n();
   const emit = defineEmits(['ok']);
 
   const appStore = useAppStore();
@@ -48,16 +49,16 @@
   });
 
   const rules = {
-    name: [{ required: true, message: '请输入名称' }],
-    method: [{ required: true, message: '请输入Method' }],
-    path: [{ required: true, message: '请输入Path' }],
+    name: [{ required: true, message: t('pages.api.pleaseInputName') }],
+    method: [{ required: true, message: t('pages.api.pleaseInputMethod') }],
+    path: [{ required: true, message: t('pages.api.pleaseInputPath') }],
   };
 
   const show = () => {
     formRef.value.resetFields();
 
     config.isCreate = true;
-    config.title = '新增';
+    config.title = t('pages.api.new');
     config.visible = true;
   };
 
@@ -65,7 +66,7 @@
     formRef.value.resetFields();
 
     config.isCreate = false;
-    config.title = '编辑';
+    config.title = t('pages.api.editTitle');
 
     try {
       form.value = await axios.get(`/api/admin/api/${id}`);
@@ -90,7 +91,7 @@
         ? '/api/admin/api/create'
         : '/api/admin/api/update';
       await axios.postForm<any>(url, jsonToFormData(form.value));
-      useNotificationSuccess('提交成功');
+      useNotificationSuccess(t('pages.api.submitSuccess'));
       emit('ok');
       done(true);
     } catch (e: any) {

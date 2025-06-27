@@ -3,7 +3,7 @@
     <div class="container">
       <div class="publish-form" v-if="postForm">
         <div class="form-title">
-          <div class="form-title-name">修改帖子</div>
+          <div class="form-title-name">{{ t('pages.topic.edit.title') }}</div>
           <div class="form-title-switch" @click="switchEditor">
             <div v-if="postForm.contentType === 'markdown'" class="editor-type">
               <img src="~/assets/images/markdown.svg" />
@@ -35,7 +35,7 @@
               v-model="postForm.title"
               class="input topic-title"
               type="text"
-              placeholder="请输入帖子标题"
+              :placeholder="t('pages.topic.edit.titlePlaceholder')"
             />
           </div>
         </div>
@@ -45,7 +45,7 @@
             <markdown-editor
               v-if="postForm.contentType === 'markdown'"
               v-model="postForm.content"
-              placeholder="请输入你要发表的内容..."
+              :placeholder="t('pages.topic.edit.contentPlaceholder')"
             />
             <MEditor
               v-else
@@ -74,14 +74,14 @@
               :class="{ 'is-loading': publishing }"
               disabled
               class="button is-primary"
-              >提交更改</a
+              >{{ t('pages.topic.edit.submitBtn') }}</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
               class="button is-primary"
               @click="submitCreate"
-              >提交更改</a
+              >{{ t('pages.topic.edit.submitBtn') }}</a
             >
           </div>
         </div>
@@ -91,12 +91,15 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 definePageMeta({
   middleware: "auth",
 });
 
 useHead({
-  title: useSiteTitle("修改话题"),
+  title: useSiteTitle(t('pages.topic.edit.pageTitle')),
 });
 
 const route = useRoute();
@@ -113,7 +116,7 @@ const { data: postForm } = await useMyFetch(
 const publishing = ref(false);
 
 const switchEditor = () => {
-  useConfirm("切换编辑器将会清空当前内容，是否继续？")
+  useConfirm(t('pages.topic.edit.switchEditorConfirm'))
     .then(() => {
       postForm.value.content = "";
       if (postForm.value.contentType === "markdown") {
@@ -143,14 +146,14 @@ async function submitCreate() {
       })
     );
     useMsg({
-      message: "修改成功",
+      message: t('pages.topic.edit.success'),
       onClose() {
         useLinkTo(`/topic/${postForm.value.id}`);
       },
     });
   } catch (e) {
     publishing.value = false;
-    useMsgError("提交失败：" + (e.message || e));
+    useMsgError(t('pages.topic.edit.failed', { msg: e.message || e }));
   }
 }
 </script>

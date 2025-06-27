@@ -4,7 +4,7 @@
       <input
         v-model="form.username"
         type="text"
-        placeholder="请输入用户名或邮箱"
+        :placeholder="$t('user.signin.password.usernamePlaceholder')"
         @keyup.enter="signin"
       />
     </div>
@@ -13,24 +13,19 @@
       <input
         v-model="form.password"
         type="password"
-        placeholder="请输入密码"
+        :placeholder="$t('user.signin.password.passwordPlaceholder')"
         @keyup.enter="signin"
       />
     </div>
 
     <div class="login-btn">
-      <el-button type="primary" @click="clickLogin">登录</el-button>
+      <el-button type="primary" @click="clickLogin">{{
+        $t("user.signin.password.loginBtn")
+      }}</el-button>
     </div>
 
-    <!-- <div class="field">
-      <button class="button is-link" @click="signin">登录</button>
-      <a class="button is-text" @click="toSignup">
-        没有账号？点击这里去注册&gt;&gt;
-      </a>
-    </div> -->
-
     <div class="login-bottom">
-      <a @click="toSignup">没有账号？点击这里去注册&gt;&gt;</a>
+      <a @click="toSignup">{{ $t("user.signin.password.noAccount") }}</a>
     </div>
 
     <CaptchaDialog ref="captchaDialog" />
@@ -39,6 +34,8 @@
 
 <script setup>
 const route = useRoute();
+const { t } = useI18n();
+
 const form = reactive({
   username: "",
   password: "",
@@ -52,11 +49,11 @@ const captchaDialog = ref(null);
 
 const clickLogin = async () => {
   if (!form.username) {
-    useMsgError("请输入用户名或邮箱");
+    useMsgError(t("user.signin.password.usernameRequired"));
     return;
   }
   if (!form.password) {
-    useMsgError("请输入密码");
+    useMsgError(t("user.signin.password.passwordRequired"));
     return;
   }
 
