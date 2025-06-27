@@ -28,8 +28,8 @@
         <span class="attr-name"
           >{{ $t('pages.dashboard.officialSite') }}:&nbsp;</span
         >
-        <a class="attr-value" href="https://mlog.club" target="_blank"
-          >https://mlog.club</a
+        <a class="attr-value" href="https://bbs-go.com" target="_blank"
+          >https://bbs-go.com</a
         >
       </div>
       <div class="attr">

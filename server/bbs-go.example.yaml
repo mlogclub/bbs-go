@@ -35,10 +35,6 @@ Uploader:
     StylePreview:      # 预览图片样式名称
     StyleSmall:        # 小图样式名称
     StyleDetail:       # 详情图片样式名称
-  # 本地文件上传
-  Local:
-    Host: https://st.mlog.club/  # 上传文件域名
-    Path: /data/www/st.mlog.club # 上传目录
   TencentCos:
     Bucket:
     Region:
