@@ -32,10 +32,6 @@ logs/*.log
 web/*
 tmp/*
 logs/*
-admin
-site
-dist
-dist.zip
 
 internal/web*
 
