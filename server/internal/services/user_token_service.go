@@ -14,6 +14,7 @@ import (
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web/params"
 )
 
 var UserTokenService = newUserTokenService()
@@ -74,13 +75,13 @@ func (s *userTokenService) Signout(ctx iris.Context) error {
 }
 
 func (s *userTokenService) GetUserToken(ctx iris.Context) string {
+	if userToken, _ := params.Get(ctx, "userToken"); strs.IsNotBlank(userToken) {
+		return userToken
+	}
 	if userToken := ctx.GetCookie(constants.CookieTokenKey); strs.IsNotBlank(userToken) {
 		return userToken
 	}
-	if userToken := s.getUserTokenFromHeader(ctx); strs.IsNotBlank(userToken) {
-		return userToken
-	}
-	return ctx.FormValue("userToken")
+	return s.getUserTokenFromHeader(ctx)
 }
 
 func (s *userTokenService) getUserTokenFromHeader(ctx iris.Context) string {
