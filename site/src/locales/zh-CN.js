@@ -259,7 +259,7 @@ export default {
       score: "积分",
       topicCount: "话题",
       commentCount: "评论",
-      userId: "注册排名",
+      registrationRank: "注册排名",
     },
     myFooter: {
       about: "关于",
