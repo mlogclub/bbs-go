@@ -131,6 +131,7 @@ func (c *TopicController) GetEditBy(topicId int64) *web.JsonResult {
 		Put("nodeId", topic.NodeId).
 		Put("title", topic.Title).
 		Put("content", topic.Content).
+		Put("contentType", topic.ContentType).
 		Put("hideContent", topic.HideContent).
 		Put("tags", tagNames).
 		JsonResult()
