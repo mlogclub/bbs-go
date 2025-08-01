@@ -1,0 +1,1 @@
+import"./ScoreSettings.vue_vue_type_script_setup_true_lang.11b0d491.js";import{_ as s}from"./ScoreSettings.vue_vue_type_script_setup_true_lang.11b0d491.js";import"./index.91a3ffa1.js";import"./arco.d63f31ab.js";import"./chart.fcbefee0.js";import"./vue.576003d6.js";/* empty css              */export{s as default};
