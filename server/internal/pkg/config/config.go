@@ -72,6 +72,7 @@ type Config struct {
 	MeiliSearch    MeiliSearchConfig `yaml:"meilisearch"`    // MeiliSearch配置
 	BaiduSEO       BaiduSEOConfig    `yaml:"baiduSEO"`       // 百度SEO配置
 	SmSEO          SmSEOConfig       `yaml:"smSEO"`          // 神马搜索SEO配置
+	Redis          RedisConfig       `yaml:"redis"`          // Redis配置
 }
 
 type LoggerConfig struct {
@@ -116,6 +117,21 @@ type SmSEOConfig struct {
 	Token    string `yaml:"token"`
 }
 
+// Redis配置
+type RedisConfig struct {
+	Host         string `yaml:"host" default:"localhost"`          // 服务器IP地址
+	Port         int    `yaml:"port" default:"6379"`               // 服务器端口号
+	Password     string `yaml:"password"`                          // 密码
+	DB           int    `yaml:"db" default:"0"`                    // 数据库
+	PoolSize     int    `yaml:"pool_size" default:"100"`           // 连接池大小
+	MinIdleConns int    `yaml:"min_idle_conns" default:"10"`       // 最小空闲连接
+	MaxRetries   int    `yaml:"max_retries" default:"3"`           // 最大重试次数
+	DialTimeout  int    `yaml:"dial_timeout" default:"5"`          // 连接超时时间(秒)
+	ReadTimeout  int    `yaml:"read_timeout" default:"3"`          // 读取超时时间(秒)
+	WriteTimeout int    `yaml:"write_timeout" default:"3"`         // 写入超时时间(秒)
+	Enabled      bool   `yaml:"enabled" default:"true"`            // 是否启用Redis
+}
+
 func ReadConfig() (cfg *Config, exists bool, err error) {
 	exists = true
 	if e := v.ReadInConfig(); e != nil {
@@ -149,6 +165,18 @@ func ReadConfig() (cfg *Config, exists bool, err error) {
 				MaxOpenConns:           200,
 				ConnMaxIdleTimeSeconds: 300,
 				ConnMaxLifetimeSeconds: 3600,
+			},
+			Redis: RedisConfig{
+				Host:         "localhost",
+				Port:         6379,
+				DB:           0,
+				PoolSize:     100,
+				MinIdleConns: 10,
+				MaxRetries:   3,
+				DialTimeout:  5,
+				ReadTimeout:  3,
+				WriteTimeout: 3,
+				Enabled:      true,
 			},
 		}
 	}

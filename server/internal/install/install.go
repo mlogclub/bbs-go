@@ -8,11 +8,13 @@ import (
 	"sync"
 	"time"
 
+	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/redis"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
 	"bbs-go/internal/services"
@@ -232,6 +234,14 @@ func InitLocales() error {
 }
 
 func InitOthers() error {
+	// 初始化Redis
+	if err := redis.InitRedis(&config.Instance.Redis); err != nil {
+		slog.Warn("Redis initialization failed", "error", err)
+	}
+	
+	// 初始化缓存管理器
+	cache.Manager.Init()
+	
 	if config.IsProd() {
 		scheduler.Start()
 	}
