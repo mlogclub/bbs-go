@@ -1,15 +1,16 @@
 package eventhandler
 
 import (
+	"reflect"
+
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/repositories"
 	"bbs-go/internal/services"
-	"reflect"
 
-	"github.com/mlogclub/simple/sqls"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 func init() {

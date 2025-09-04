@@ -1,13 +1,15 @@
 package cache
 
 import (
-	"bbs-go/internal/models"
-	"bbs-go/internal/repositories"
 	"log/slog"
 	"time"
 
+	"bbs-go/internal/models"
+	"bbs-go/internal/repositories"
+
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple/sqls"
+
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 type forbiddenWordCache struct {

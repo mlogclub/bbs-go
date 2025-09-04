@@ -1,13 +1,15 @@
 package api
 
 import (
-	"bbs-go/internal/models"
-	"bbs-go/internal/spam"
 	"strconv"
 
+	"bbs-go/internal/models"
+	"bbs-go/internal/spam"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/services"

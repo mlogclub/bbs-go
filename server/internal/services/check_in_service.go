@@ -1,19 +1,20 @@
 package services
 
 import (
-	"bbs-go/internal/cache"
-	"bbs-go/internal/models"
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/repositories"
 	"errors"
 	"log/slog"
 	"strconv"
 	"sync"
 	"time"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/cache"
+	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/repositories"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var CheckInService = newCheckInService()

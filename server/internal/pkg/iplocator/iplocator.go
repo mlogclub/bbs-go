@@ -1,14 +1,16 @@
 package iplocator
 
 import (
-	"bbs-go/internal/pkg/config"
 	"log/slog"
 	"strings"
 	"sync"
 
+	"bbs-go/internal/pkg/config"
+
 	"github.com/lionsoul2014/ip2region/binding/golang/xdb"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 var (

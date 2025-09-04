@@ -1,13 +1,14 @@
 package uploader
 
 import (
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/bbsurls"
 	"bytes"
 	"log/slog"
 	"sync"
 
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/bbsurls"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )

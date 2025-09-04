@@ -1,19 +1,21 @@
 package render
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/bbsurls"
 	"strings"
 	"time"
+
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/bbsurls"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 	"github.com/microcosm-cc/bluemonday"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/common/urls"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/common/urls"
+	"bbs-go/internal/pkg/simple/web"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/services"

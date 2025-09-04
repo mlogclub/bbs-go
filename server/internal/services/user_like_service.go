@@ -1,14 +1,16 @@
 package services
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/event"
 	"errors"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/event"
+
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

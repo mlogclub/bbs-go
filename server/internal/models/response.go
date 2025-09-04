@@ -1,10 +1,11 @@
 package models
 
 import (
-	"bbs-go/internal/models/constants"
 	"time"
 
-	"github.com/mlogclub/simple/web"
+	"bbs-go/internal/models/constants"
+
+	"bbs-go/internal/pkg/simple/web"
 )
 
 // UserInfo 用户简单信息

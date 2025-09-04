@@ -7,7 +7,8 @@ import (
 	"bbs-go/internal/services"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/web"
 )
 
 var (

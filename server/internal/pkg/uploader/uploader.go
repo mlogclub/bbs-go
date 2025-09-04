@@ -1,15 +1,17 @@
 package uploader
 
 import (
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/config"
 	"mime"
 	"time"
 
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/config"
+
 	"github.com/go-resty/resty/v2"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/digests"
-	"github.com/mlogclub/simple/common/strs"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/digests"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 type Uploader interface {

@@ -1,11 +1,12 @@
 package render
 
 import (
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/services"
 	"strings"
 
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/services"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 func HandleOssImageStyleAvatar(url string) string {

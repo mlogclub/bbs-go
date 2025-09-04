@@ -1,11 +1,13 @@
 package markdown
 
 import (
-	"bbs-go/internal/pkg/html"
 	"sync"
 
+	"bbs-go/internal/pkg/html"
+
 	"github.com/88250/lute"
-	"github.com/mlogclub/simple/common/strs"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 var (

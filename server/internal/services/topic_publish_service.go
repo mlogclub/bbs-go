@@ -1,21 +1,23 @@
 package services
 
 import (
+	"errors"
+	"log/slog"
+	"strings"
+
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/repositories"
-	"errors"
-	"log/slog"
-	"strings"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 var TopicPublishService = new(topicPublishService)

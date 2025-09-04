@@ -1,19 +1,21 @@
 package server
 
 import (
-	"bbs-go/internal/controllers/admin"
-	"bbs-go/internal/controllers/api"
-	"bbs-go/internal/middleware"
-	"bbs-go/internal/pkg/config"
 	"log/slog"
 	"os"
 	"strings"
 
+	"bbs-go/internal/controllers/admin"
+	"bbs-go/internal/controllers/api"
+	"bbs-go/internal/middleware"
+	"bbs-go/internal/pkg/config"
+
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/mlogclub/simple/web"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/web"
 
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"

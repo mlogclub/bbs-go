@@ -3,7 +3,7 @@ package errs
 import (
 	"bbs-go/internal/pkg/locales"
 
-	"github.com/mlogclub/simple/web"
+	"bbs-go/internal/pkg/simple/web"
 )
 
 const (

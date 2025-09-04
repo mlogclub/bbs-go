@@ -6,9 +6,10 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 type UserClaims struct {

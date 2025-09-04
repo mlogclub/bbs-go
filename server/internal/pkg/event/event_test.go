@@ -1,13 +1,14 @@
 package event
 
 import (
-	"bbs-go/internal/models"
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/sqls"
+	"bbs-go/internal/models"
+
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 func TestEvent(t *testing.T) {

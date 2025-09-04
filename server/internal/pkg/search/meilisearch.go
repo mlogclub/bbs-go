@@ -1,21 +1,23 @@
 package search
 
 import (
-	"bbs-go/internal/models"
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/config"
-	"bbs-go/internal/repositories"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"time"
 
+	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/config"
+	"bbs-go/internal/repositories"
+
 	"github.com/meilisearch/meilisearch-go"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 const (
@@ -47,7 +49,7 @@ func InitMeiliSearch() {
 	}
 
 	serverURL := fmt.Sprintf("http://%s:%d", cfg.Host, cfg.Port)
-	
+
 	client := meilisearch.New(serverURL, meilisearch.WithAPIKey(cfg.APIKey))
 
 	meiliClient = &MeiliSearchClient{
@@ -69,13 +71,13 @@ func (m *MeiliSearchClient) setupIndex() error {
 	settings := &meilisearch.Settings{
 		SearchableAttributes: []string{
 			"title",
-			"content", 
+			"content",
 			"nickname",
 			"tags",
 		},
 		FilterableAttributes: []string{
 			"nodeId",
-			"userId", 
+			"userId",
 			"status",
 			"recommend",
 			"createTime",
@@ -107,7 +109,7 @@ func UpdateTopicIndexMeili(topic *models.Topic) {
 	}
 
 	index := meiliClient.client.Index(config.Instance.MeiliSearch.Index)
-	
+
 	// Convert to the correct format for MeiliSearch
 	docMap := map[string]interface{}{
 		"id":         doc.Id,
@@ -121,7 +123,7 @@ func UpdateTopicIndexMeili(topic *models.Topic) {
 		"status":     doc.Status,
 		"createTime": doc.CreateTime,
 	}
-	
+
 	_, err := index.AddDocuments([]map[string]interface{}{docMap}, nil)
 	if err != nil {
 		slog.Error("Failed to add document to MeiliSearch", slog.Any("error", err), slog.Any("id", topic.Id))
@@ -136,7 +138,7 @@ func DeleteTopicIndexMeili(id int64) error {
 	}
 
 	index := meiliClient.client.Index(config.Instance.MeiliSearch.Index)
-	
+
 	_, err := index.DeleteDocument(cast.ToString(id))
 	if err != nil {
 		return fmt.Errorf("failed to delete document from MeiliSearch: %w", err)
@@ -151,7 +153,7 @@ func SearchTopicMeili(keyword string, nodeId int64, timeRange, page, limit int) 
 	}
 
 	paging = &sqls.Paging{Page: page, Limit: limit}
-	
+
 	index := meiliClient.client.Index(config.Instance.MeiliSearch.Index)
 
 	var filters []string
@@ -176,15 +178,15 @@ func SearchTopicMeili(keyword string, nodeId int64, timeRange, page, limit int) 
 		case 4:
 			beginTime = dates.Timestamp(time.Now().AddDate(-1, 0, 0))
 		}
-		
+
 		if beginTime > 0 {
 			filters = append(filters, fmt.Sprintf("createTime >= %d", beginTime))
 		}
 	}
 
 	searchParams := &meilisearch.SearchRequest{
-		Limit:  int64(limit),
-		Offset: int64(paging.Offset()),
+		Limit:                 int64(limit),
+		Offset:                int64(paging.Offset()),
 		AttributesToHighlight: []string{"title", "content"},
 		HighlightPreTag:       "<em>",
 		HighlightPostTag:      "</em>",
@@ -207,7 +209,7 @@ func SearchTopicMeili(keyword string, nodeId int64, timeRange, page, limit int) 
 
 	for _, hit := range searchResult.Hits {
 		var doc TopicDocument
-		
+
 		// Helper function to unmarshal json.RawMessage to a specific type
 		unmarshallField := func(fieldName string, target interface{}) bool {
 			if rawData, exists := hit[fieldName]; exists {
@@ -217,37 +219,37 @@ func SearchTopicMeili(keyword string, nodeId int64, timeRange, page, limit int) 
 			}
 			return false
 		}
-		
+
 		var idFloat float64
 		if unmarshallField("id", &idFloat) {
 			doc.Id = int64(idFloat)
 		}
-		
+
 		var nodeIdFloat float64
 		if unmarshallField("nodeId", &nodeIdFloat) {
 			doc.NodeId = int64(nodeIdFloat)
 		}
-		
+
 		var userIdFloat float64
 		if unmarshallField("userId", &userIdFloat) {
 			doc.UserId = int64(userIdFloat)
 		}
-		
+
 		unmarshallField("nickname", &doc.Nickname)
 		unmarshallField("title", &doc.Title)
 		unmarshallField("content", &doc.Content)
 		unmarshallField("recommend", &doc.Recommend)
-		
+
 		var statusFloat float64
 		if unmarshallField("status", &statusFloat) {
 			doc.Status = int(statusFloat)
 		}
-		
+
 		var createTimeFloat float64
 		if unmarshallField("createTime", &createTimeFloat) {
 			doc.CreateTime = int64(createTimeFloat)
 		}
-		
+
 		unmarshallField("tags", &doc.Tags)
 
 		// Handle formatted/highlighted results
@@ -275,7 +277,7 @@ func ReindexAllTopicsMeili() error {
 	slog.Info("Starting MeiliSearch reindexing")
 
 	index := meiliClient.client.Index(config.Instance.MeiliSearch.Index)
-	
+
 	_, err := index.DeleteAllDocuments()
 	if err != nil {
 		slog.Error("Failed to clear MeiliSearch index", slog.Any("error", err))
@@ -293,7 +295,7 @@ func ReindexAllTopicsMeili() error {
 			Desc("id")
 		cnd.Paging.Page = (offset / batchSize) + 1
 		cnd.Paging.Limit = batchSize
-		
+
 		topics := repositories.TopicRepository.Find(sqls.DB(), cnd)
 
 		if len(topics) == 0 {
@@ -345,7 +347,7 @@ func indexBatchMeili(index meilisearch.IndexManager, docs []TopicDocument) error
 			"createTime": doc.CreateTime,
 		}
 	}
-	
+
 	_, err := index.AddDocuments(docMaps, nil)
 	return err
 }

@@ -1,14 +1,16 @@
 package api
 
 import (
+	"time"
+
 	"bbs-go/internal/cache"
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/services"
-	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/web"
 )
 
 type CheckinController struct {

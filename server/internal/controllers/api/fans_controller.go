@@ -1,16 +1,18 @@
 package api
 
 import (
+	"strconv"
+
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/services"
-	"strconv"
 
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 type FansController struct {

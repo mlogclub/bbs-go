@@ -1,21 +1,23 @@
 package api
 
 import (
+	"strconv"
+	"strings"
+
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/pkg/validate"
-	"strconv"
-	"strings"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/cache"
 	"bbs-go/internal/controllers/render"

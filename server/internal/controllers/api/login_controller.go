@@ -5,8 +5,9 @@ import (
 
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	captcha2 "bbs-go/internal/pkg/captcha"
 	"bbs-go/internal/pkg/errs"

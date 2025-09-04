@@ -1,16 +1,17 @@
 package services
 
 import (
+	"regexp"
+	"strings"
+
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
-	"regexp"
-	"strings"
 
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var ForbiddenWordService = newForbiddenWordService()

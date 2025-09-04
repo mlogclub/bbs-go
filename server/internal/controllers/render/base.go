@@ -1,11 +1,12 @@
 package render
 
 import (
-	"bbs-go/internal/models"
 	"log/slog"
 
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/models"
+
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 func BuildImageList(imageListStr string) (imageList []models.ImageInfo) {

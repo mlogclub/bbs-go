@@ -1,18 +1,20 @@
 package render
 
 import (
+	"strconv"
+	"strings"
+
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/locales"
-	"strconv"
-	"strings"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 func BuildUserInfoDefaultIfNull(id int64) *models.UserInfo {

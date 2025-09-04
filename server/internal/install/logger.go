@@ -1,7 +1,6 @@
 package install
 
 import (
-	"bbs-go/internal/pkg/config"
 	"fmt"
 	"io"
 	"log/slog"
@@ -9,8 +8,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/pkg/config"
+
 	"github.com/pkg/errors"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 
 	"gopkg.in/natefinch/lumberjack.v2"
 )

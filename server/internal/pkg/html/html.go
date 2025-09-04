@@ -7,7 +7,8 @@ import (
 	"bbs-go/internal/pkg/text"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mlogclub/simple/common/strs"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 func GetSummary(htmlStr string, summaryLen int) string {

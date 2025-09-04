@@ -1,13 +1,14 @@
 package models
 
 import (
-	"bbs-go/internal/models/constants"
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple/common/arrays"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/models/constants"
+
+	"bbs-go/internal/pkg/simple/common/arrays"
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 // IsForbidden 是否禁言

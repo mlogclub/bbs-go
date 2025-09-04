@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/common/urls"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/common/urls"
 
 	"github.com/go-resty/resty/v2"
 

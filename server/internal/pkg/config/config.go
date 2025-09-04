@@ -9,10 +9,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
+
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 const (
@@ -58,19 +59,19 @@ func init() {
 }
 
 type Config struct {
-	Language       Language       `yaml:"language"`       // 语言
-	BaseURL        string         `yaml:"baseURL"`        // baseURL
-	Port           int            `yaml:"port"`           // 端口
-	IpDataPath     string         `yaml:"ipDataPath"`     // IP数据文件
-	AllowedOrigins []string       `yaml:"allowedOrigins"` // 跨域白名单
-	Installed      bool           `yaml:"installed"`      // 是否已安装
-	Logger         LoggerConfig   `yaml:"logger"`         // 日志配置
-	DB             sqls.DbConfig  `yaml:"db"`             // 数据库配置
-	Smtp           SmtpConfig     `yaml:"smtp"`           // smtp
+	Language       Language          `yaml:"language"`       // 语言
+	BaseURL        string            `yaml:"baseURL"`        // baseURL
+	Port           int               `yaml:"port"`           // 端口
+	IpDataPath     string            `yaml:"ipDataPath"`     // IP数据文件
+	AllowedOrigins []string          `yaml:"allowedOrigins"` // 跨域白名单
+	Installed      bool              `yaml:"installed"`      // 是否已安装
+	Logger         LoggerConfig      `yaml:"logger"`         // 日志配置
+	DB             sqls.DbConfig     `yaml:"db"`             // 数据库配置
+	Smtp           SmtpConfig        `yaml:"smtp"`           // smtp
 	Search         SearchConfig      `yaml:"search"`         // 搜索配置
 	MeiliSearch    MeiliSearchConfig `yaml:"meilisearch"`    // MeiliSearch配置
-	BaiduSEO       BaiduSEOConfig `yaml:"baiduSEO"`       // 百度SEO配置
-	SmSEO          SmSEOConfig    `yaml:"smSEO"`          // 神马搜索SEO配置
+	BaiduSEO       BaiduSEOConfig    `yaml:"baiduSEO"`       // 百度SEO配置
+	SmSEO          SmSEOConfig       `yaml:"smSEO"`          // 神马搜索SEO配置
 }
 
 type LoggerConfig struct {
@@ -93,11 +94,11 @@ type SearchConfig struct {
 }
 
 type MeiliSearchConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	APIKey   string `yaml:"apiKey"`
-	Index    string `yaml:"index"`
-	Enabled  bool   `yaml:"enabled"`
+	Host    string `yaml:"host"`
+	Port    int    `yaml:"port"`
+	APIKey  string `yaml:"apiKey"`
+	Index   string `yaml:"index"`
+	Enabled bool   `yaml:"enabled"`
 }
 
 // 百度SEO配置

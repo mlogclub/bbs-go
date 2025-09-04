@@ -1,6 +1,13 @@
 package install
 
 import (
+	"errors"
+	"log"
+	"log/slog"
+	"os"
+	"sync"
+	"time"
+
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
@@ -9,19 +16,14 @@ import (
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/scheduler"
 	"bbs-go/internal/services"
-	"errors"
-	"log"
-	"log/slog"
-	"os"
-	"sync"
-	"time"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/passwd"
-	"github.com/mlogclub/simple/sqls"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/passwd"
+	"bbs-go/internal/pkg/simple/sqls"
 
 	"github.com/golang-migrate/migrate/v4"
 	m "github.com/golang-migrate/migrate/v4/database/mysql"

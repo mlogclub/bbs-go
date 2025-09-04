@@ -1,14 +1,15 @@
 package services
 
 import (
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/config"
-	"bbs-go/internal/pkg/uploader"
 	"fmt"
 	"sync"
 
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/common/urls"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/config"
+	"bbs-go/internal/pkg/uploader"
+
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/common/urls"
 )
 
 var UploadService = newUploadService()

@@ -1,13 +1,15 @@
 package api
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/locales"
 	"io"
 	"log/slog"
 
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/web"
 
 	"bbs-go/internal/services"
 )

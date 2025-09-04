@@ -1,18 +1,20 @@
 package api
 
 import (
+	"log/slog"
+
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
-	"log/slog"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 type SearchController struct {

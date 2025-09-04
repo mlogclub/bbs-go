@@ -1,15 +1,17 @@
 package admin
 
 import (
-	"bbs-go/internal/models/constants"
 	"strconv"
 	"strings"
 
+	"bbs-go/internal/models/constants"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"

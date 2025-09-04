@@ -1,16 +1,17 @@
 package render
 
 import (
+	"html"
+
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/pkg/text"
 	"bbs-go/internal/services"
-	"html"
 
-	"github.com/mlogclub/simple/common/arrays"
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/pkg/simple/common/arrays"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 func BuildTopic(topic *models.Topic, currentUser *models.User) *models.TopicResponse {

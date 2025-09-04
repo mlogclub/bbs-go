@@ -3,11 +3,12 @@ package captcha
 import (
 	"log"
 
-	"github.com/mlogclub/simple/common/strs"
 	"github.com/spf13/cast"
 	"github.com/wenlng/go-captcha-assets/resources/images"
 	"github.com/wenlng/go-captcha/v2/base/option"
 	"github.com/wenlng/go-captcha/v2/rotate"
+
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 var rotateCapt rotate.Captcha

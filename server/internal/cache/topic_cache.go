@@ -1,12 +1,14 @@
 package cache
 
 import (
-	"bbs-go/internal/models/constants"
 	"errors"
 	"time"
 
+	"bbs-go/internal/models/constants"
+
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple/sqls"
+
+	"bbs-go/internal/pkg/simple/sqls"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

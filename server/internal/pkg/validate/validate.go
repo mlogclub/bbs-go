@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 // IsUsername 验证用户名合法性，用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头。

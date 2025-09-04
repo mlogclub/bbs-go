@@ -16,10 +16,11 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/mitchellh/mapstructure"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 var index bleve.Index

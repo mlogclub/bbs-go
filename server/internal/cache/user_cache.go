@@ -8,8 +8,9 @@ import (
 	"bbs-go/internal/repositories"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 type userCache struct {

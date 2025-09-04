@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"github.com/goburrow/cache"
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
+
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/sqls"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

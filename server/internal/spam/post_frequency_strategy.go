@@ -1,13 +1,14 @@
 package spam
 
 import (
-	"bbs-go/internal/models"
-	"bbs-go/internal/repositories"
 	"errors"
 	"time"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
+	"bbs-go/internal/models"
+	"bbs-go/internal/repositories"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
 )
 
 // PostFrequencyStrategy 发表频率限制

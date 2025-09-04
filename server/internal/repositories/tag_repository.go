@@ -1,14 +1,16 @@
 package repositories
 
 import (
-	"bbs-go/internal/models/constants"
 	"errors"
 	"strings"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/models/constants"
+
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/models"
 )

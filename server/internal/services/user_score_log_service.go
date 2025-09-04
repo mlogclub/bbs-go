@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

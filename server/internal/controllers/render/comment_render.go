@@ -1,15 +1,16 @@
 package render
 
 import (
+	"html"
+	"strconv"
+
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/services"
-	"html"
-	"strconv"
 
-	"github.com/mlogclub/simple/common/arrays"
-	"github.com/mlogclub/simple/web"
+	"bbs-go/internal/pkg/simple/common/arrays"
+	"bbs-go/internal/pkg/simple/web"
 )
 
 func BuildComment(comment *models.Comment) *models.CommentResponse {

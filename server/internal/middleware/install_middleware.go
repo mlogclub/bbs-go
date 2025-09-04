@@ -1,11 +1,13 @@
 package middleware
 
 import (
-	"bbs-go/internal/pkg/config"
 	"strings"
 
+	"bbs-go/internal/pkg/config"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/web"
 )
 
 func Install(ctx iris.Context) {

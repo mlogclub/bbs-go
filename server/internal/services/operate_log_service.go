@@ -1,15 +1,16 @@
 package services
 
 import (
-	"bbs-go/internal/models"
-	"bbs-go/internal/pkg/common"
-	"bbs-go/internal/repositories"
 	"log/slog"
 	"net/http"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/models"
+	"bbs-go/internal/pkg/common"
+	"bbs-go/internal/repositories"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var OperateLogService = newOperateLogService()

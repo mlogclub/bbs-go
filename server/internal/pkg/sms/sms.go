@@ -1,12 +1,14 @@
 package sms
 
 import (
-	"bbs-go/internal/models/dto"
 	"log/slog"
 
-	dysmsapi "github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/common/strs"
+	"bbs-go/internal/models/dto"
+
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
+
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/common/strs"
 )
 
 func SendSms(cfg dto.AliyunSmsConfig, phone string, templateParam map[string]string) error {

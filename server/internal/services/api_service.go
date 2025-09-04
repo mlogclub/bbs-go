@@ -1,14 +1,15 @@
 package services
 
 import (
+	"log/slog"
+
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/repositories"
-	"log/slog"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var ApiService = newApiService()

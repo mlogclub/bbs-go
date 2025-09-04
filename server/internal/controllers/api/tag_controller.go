@@ -4,9 +4,10 @@ import (
 	"bbs-go/internal/models/constants"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/cache"
 	"bbs-go/internal/controllers/render"

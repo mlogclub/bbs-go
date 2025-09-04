@@ -3,9 +3,10 @@ package repositories
 import (
 	"bbs-go/internal/models"
 
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var CheckInRepository = newCheckInRepository()

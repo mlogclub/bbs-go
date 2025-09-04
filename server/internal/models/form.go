@@ -1,16 +1,18 @@
 package models
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/common"
 	"log/slog"
 	"strings"
 
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/common"
+
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/common/jsons"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/tidwall/gjson"
+
+	"bbs-go/internal/pkg/simple/common/jsons"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 type CreateTopicForm struct {

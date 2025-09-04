@@ -1,13 +1,15 @@
 package api
 
 import (
-	newCaptcha "bbs-go/internal/pkg/captcha"
 	"bytes"
 	"encoding/base64"
 
+	newCaptcha "bbs-go/internal/pkg/captcha"
+
 	"github.com/dchest/captcha"
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/web"
 )
 
 type CaptchaController struct {

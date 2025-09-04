@@ -5,7 +5,8 @@ import (
 	"runtime"
 
 	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+
+	"bbs-go/internal/pkg/simple/web"
 )
 
 type CommonController struct {

@@ -3,9 +3,10 @@ package repositories
 import (
 	"bbs-go/internal/models"
 
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web/params"
 )
 
 var MenuApiRepository = newMenuApiRepository()
@@ -62,12 +63,12 @@ func (r *menuApiRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []mo
 	return
 }
 
-func (r *menuApiRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.MenuApi) {
+func (r *menuApiRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.MenuApi) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *menuApiRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *menuApiRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +100,3 @@ func (r *menuApiRepository) UpdateColumn(db *gorm.DB, id int64, name string, val
 func (r *menuApiRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.MenuApi{}, "id = ?", id)
 }
-

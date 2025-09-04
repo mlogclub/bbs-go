@@ -1,13 +1,6 @@
 package services
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/bbsurls"
-	"bbs-go/internal/pkg/email"
-	"bbs-go/internal/pkg/errs"
-	"bbs-go/internal/pkg/locales"
-	"bbs-go/internal/pkg/validate"
 	"errors"
 	"log/slog"
 	"net/http"
@@ -15,13 +8,22 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/passwd"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/email"
+	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/validate"
+
 	"gorm.io/gorm"
+
+	"bbs-go/internal/pkg/simple/common/dates"
+	"bbs-go/internal/pkg/simple/common/passwd"
+	"bbs-go/internal/pkg/simple/common/strs"
+	"bbs-go/internal/pkg/simple/sqls"
+	"bbs-go/internal/pkg/simple/web"
+	"bbs-go/internal/pkg/simple/web/params"
 
 	"bbs-go/internal/cache"
 
