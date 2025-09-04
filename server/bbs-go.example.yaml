@@ -65,3 +65,11 @@ SmSEO:
 # search
 Search:
   IndexPath: # 索引路径
+
+# MeiliSearch configuration
+MeiliSearch:
+  Host: localhost         # MeiliSearch server host
+  Port: 7700             # MeiliSearch server port
+  APIKey: "123456"       # MeiliSearch master key
+  Index: topics          # Index name for topics
+  Enabled: true          # Enable MeiliSearch (set to false to use Bleve instead)

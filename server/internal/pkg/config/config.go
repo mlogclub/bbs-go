@@ -67,7 +67,8 @@ type Config struct {
 	Logger         LoggerConfig   `yaml:"logger"`         // 日志配置
 	DB             sqls.DbConfig  `yaml:"db"`             // 数据库配置
 	Smtp           SmtpConfig     `yaml:"smtp"`           // smtp
-	Search         SearchConfig   `yaml:"search"`         // 搜索配置
+	Search         SearchConfig      `yaml:"search"`         // 搜索配置
+	MeiliSearch    MeiliSearchConfig `yaml:"meilisearch"`    // MeiliSearch配置
 	BaiduSEO       BaiduSEOConfig `yaml:"baiduSEO"`       // 百度SEO配置
 	SmSEO          SmSEOConfig    `yaml:"smSEO"`          // 神马搜索SEO配置
 }
@@ -89,6 +90,14 @@ type SmtpConfig struct {
 
 type SearchConfig struct {
 	IndexPath string `yaml:"indexPath"`
+}
+
+type MeiliSearchConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	APIKey   string `yaml:"apiKey"`
+	Index    string `yaml:"index"`
+	Enabled  bool   `yaml:"enabled"`
 }
 
 // 百度SEO配置

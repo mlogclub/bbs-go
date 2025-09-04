@@ -1,16 +1,18 @@
 package search
 
 import (
+	"errors"
+	"html"
+	"log/slog"
+	"math"
+	"time"
+
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/config"
 	html2 "bbs-go/internal/pkg/html"
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/repositories"
-	"html"
-	"log/slog"
-	"math"
-	"time"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/mitchellh/mapstructure"
@@ -23,10 +25,15 @@ import (
 var index bleve.Index
 
 func Init() {
+	if config.Instance.MeiliSearch.Enabled {
+		InitMeiliSearch()
+		return
+	}
+
 	var err error
 	indexPath := config.Instance.Search.IndexPath
 	if index, err = bleve.Open(indexPath); err != nil {
-		if err == bleve.ErrorIndexPathDoesNotExist {
+		if errors.Is(err, bleve.ErrorIndexPathDoesNotExist) {
 			index = newIndex(indexPath)
 		} else {
 			slog.Error(err.Error())
@@ -85,6 +92,11 @@ func getTopicTags(topicId int64) []models.Tag {
 
 // IndexData 索引数据
 func UpdateTopicIndex(topic *models.Topic) {
+	if config.Instance.MeiliSearch.Enabled {
+		UpdateTopicIndexMeili(topic)
+		return
+	}
+
 	doc := NewTopicDoc(topic)
 	if doc == nil {
 		return
@@ -98,11 +110,18 @@ func UpdateTopicIndex(topic *models.Topic) {
 }
 
 func DeleteTopicIndex(id int64) error {
+	if config.Instance.MeiliSearch.Enabled {
+		return DeleteTopicIndexMeili(id)
+	}
 	return index.Delete(cast.ToString(id))
 }
 
 // 分页查询
 func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
+	if config.Instance.MeiliSearch.Enabled {
+		return SearchTopicMeili(keyword, nodeId, timeRange, page, limit)
+	}
+
 	paging = &sqls.Paging{Page: page, Limit: limit}
 
 	query := bleve.NewBooleanQuery()

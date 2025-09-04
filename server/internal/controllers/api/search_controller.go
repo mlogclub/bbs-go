@@ -4,8 +4,10 @@ import (
 	"bbs-go/internal/controllers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/services"
+	"log/slog"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
@@ -18,13 +20,21 @@ type SearchController struct {
 }
 
 func (c *SearchController) AnyReindex() *web.JsonResult {
-	go services.TopicService.ScanDesc(func(topics []models.Topic) {
-		for _, topic := range topics {
-			if topic.Status != constants.StatusDeleted {
-				search.UpdateTopicIndex(&topic)
+	if config.Instance.MeiliSearch.Enabled {
+		go func() {
+			if err := search.ReindexAllTopicsMeili(); err != nil {
+				slog.Error("Failed to reindex topics in MeiliSearch", slog.Any("error", err))
 			}
-		}
-	})
+		}()
+	} else {
+		go services.TopicService.ScanDesc(func(topics []models.Topic) {
+			for _, topic := range topics {
+				if topic.Status != constants.StatusDeleted {
+					search.UpdateTopicIndex(&topic)
+				}
+			}
+		})
+	}
 	return web.JsonSuccess()
 }
 
