@@ -22,7 +22,7 @@ type TencentCosUploader struct {
 	currentCfg dto.UploadConfig
 }
 
-func (u *TencentCosUploader) PutImage(cfg dto.UploadConfig, data []byte, contentType string) (string, error) {
+func (u *TencentCosUploader) PutImage(cfg *dto.UploadConfig, data []byte, contentType string) (string, error) {
 	if strs.IsBlank(contentType) {
 		contentType = "image/jpeg"
 	}
@@ -30,7 +30,7 @@ func (u *TencentCosUploader) PutImage(cfg dto.UploadConfig, data []byte, content
 	return u.PutObject(cfg, key, data, contentType)
 }
 
-func (u *TencentCosUploader) PutObject(cfg dto.UploadConfig, key string, data []byte, contentType string) (string, error) {
+func (u *TencentCosUploader) PutObject(cfg *dto.UploadConfig, key string, data []byte, contentType string) (string, error) {
 	if err := u.initClient(cfg); err != nil {
 		return "", nil
 	}
@@ -47,7 +47,7 @@ func (u *TencentCosUploader) PutObject(cfg dto.UploadConfig, key string, data []
 	return fmt.Sprintf("%s/%s", u.client.BaseURL.BucketURL, key), nil
 }
 
-func (u *TencentCosUploader) CopyImage(cfg dto.UploadConfig, originUrl string) (string, error) {
+func (u *TencentCosUploader) CopyImage(cfg *dto.UploadConfig, originUrl string) (string, error) {
 	data, contentType, err := download(originUrl)
 	if err != nil {
 		return "", err
@@ -55,7 +55,7 @@ func (u *TencentCosUploader) CopyImage(cfg dto.UploadConfig, originUrl string) (
 	return u.PutImage(cfg, data, contentType)
 }
 
-func (u *TencentCosUploader) initClient(cfg dto.UploadConfig) error {
+func (u *TencentCosUploader) initClient(cfg *dto.UploadConfig) error {
 	if !u.isCfgChange(cfg) {
 		return nil
 	}
@@ -63,22 +63,24 @@ func (u *TencentCosUploader) initClient(cfg dto.UploadConfig) error {
 	u.m.Lock()
 	defer u.m.Unlock()
 
-	bucketURL, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", cfg.TencentCos.Bucket, cfg.TencentCos.Region))
-	serviceURL, _ := url.Parse(fmt.Sprintf("https://cos.%s.myqcloud.com", cfg.TencentCos.Region))
-	baseURL := &cos.BaseURL{BucketURL: bucketURL, ServiceURL: serviceURL}
-	u.client = cos.NewClient(baseURL, &http.Client{
-		Transport: &cos.AuthorizationTransport{
-			SecretID:  cfg.TencentCos.SecretId,
-			SecretKey: cfg.TencentCos.SecretKey,
-		},
-	})
-	u.currentCfg = cfg
+	if cfg != nil {
+		bucketURL, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", cfg.TencentCos.Bucket, cfg.TencentCos.Region))
+		serviceURL, _ := url.Parse(fmt.Sprintf("https://cos.%s.myqcloud.com", cfg.TencentCos.Region))
+		baseURL := &cos.BaseURL{BucketURL: bucketURL, ServiceURL: serviceURL}
+		u.client = cos.NewClient(baseURL, &http.Client{
+			Transport: &cos.AuthorizationTransport{
+				SecretID:  cfg.TencentCos.SecretId,
+				SecretKey: cfg.TencentCos.SecretKey,
+			},
+		})
+		u.currentCfg = *cfg
+	}
 
 	return nil
 }
 
-func (u *TencentCosUploader) isCfgChange(cfg dto.UploadConfig) bool {
-	if u.client == nil {
+func (u *TencentCosUploader) isCfgChange(cfg *dto.UploadConfig) bool {
+	if cfg == nil || u.client == nil {
 		return true
 	}
 

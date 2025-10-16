@@ -31,7 +31,7 @@ type SysConfigResponse struct {
 	EnableHideContent          bool          `json:"enableHideContent"`
 	Modules                    ModulesConfig `json:"modules"`
 	EmailWhitelist             []string      `json:"emailWhitelist"` // 邮箱白名单
-	UploadConfig               UploadConfig  `json:"uploadConfig"`   // 上传配置
+	UploadConfig               *UploadConfig `json:"uploadConfig"`   // 上传配置
 }
 
 // ModulesConfig
