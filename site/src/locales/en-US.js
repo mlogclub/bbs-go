@@ -193,6 +193,12 @@ export default {
         cancelReply: "Cancel reply",
         loadMore: "Load more replies",
       },
+      SideActionBar: {
+        liked: "Liked!",
+        uliked: "Cancel Liked!",
+        favoriteSuccess: "favorite Success!",
+        ufavoriteSuccess:"Cancel favorite",
+      },
     },
     setEmailDialog: {
       title: "Set Email",
