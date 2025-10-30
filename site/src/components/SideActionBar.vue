@@ -34,6 +34,7 @@
 
 <script setup>
 import throttle from "lodash.throttle";
+const { t } = useI18n();
 const showTopAction = ref(false);
 const emits = defineEmits(["handleClick"]);
 
@@ -123,7 +124,7 @@ const handleLike = async () => {
     _liked.value = false;
     _likeCount.value = _likeCount.value > 0 ? _likeCount.value - 1 : 0;
 
-    useMsgSuccess("已取消点赞");
+    useMsgSuccess(t('component.comment.SideActionBar.uliked'));
   } else {
     try {
       await useHttpPost(
@@ -139,7 +140,7 @@ const handleLike = async () => {
     _liked.value = true;
     _likeCount.value++;
 
-    useMsgSuccess("点赞成功");
+    useMsgSuccess(t('component.comment.SideActionBar.liked'));
   }
 };
 
@@ -158,7 +159,7 @@ const handleFavorite = async () => {
     }
     _favorited.value = false;
 
-    useMsgSuccess("已取消收藏");
+    useMsgSuccess(t('component.comment.SideActionBar.ufavoriteSuccess'));
   } else {
     try {
       await useHttpPost(
@@ -173,7 +174,7 @@ const handleFavorite = async () => {
     }
     _favorited.value = true;
 
-    useMsgSuccess("收藏成功");
+    useMsgSuccess(t('component.comment.SideActionBar.favoriteSuccess'));
   }
 };
 </script>

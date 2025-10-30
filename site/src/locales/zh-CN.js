@@ -192,6 +192,12 @@ export default {
         cancelReply: "取消评论",
         loadMore: "查看更多回复",
       },
+      SideActionBar: {
+        liked: "已点在",
+        uliked: "已取消点赞",
+        favoriteSuccess: "收藏成功",
+        ufavoriteSuccess:"已取消收藏",
+      },
     },
     setEmailDialog: {
       title: "设置邮箱",
