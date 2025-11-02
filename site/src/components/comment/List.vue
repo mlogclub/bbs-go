@@ -23,7 +23,8 @@
                 usePrettyDate(comment.createTime)
               }}</time>
               <span v-if="comment.ipLocation" class="comment-ip-area"
-                >{{ t('component.comment.list.ipLocation') }}{{ comment.ipLocation }}</span
+                >{{ t("component.comment.list.ipLocation")
+                }}{{ comment.ipLocation }}</span
               >
             </div>
           </div>
@@ -44,10 +45,14 @@
               v-if="comment.imageList && comment.imageList.length"
               class="comment-image-list"
             >
-              <img
+              <el-image
                 v-for="(image, imageIndex) in comment.imageList"
                 :key="imageIndex"
                 :src="image.url"
+                :preview-src-list="comment.imageList.map((image) => image.url)"
+                :initial-index="imageIndex"
+                fit="cover"
+                style="width: 82px; height: 82px"
               />
             </div>
           </div>
@@ -58,7 +63,11 @@
               @click="like(comment)"
             >
               <i class="iconfont icon-like" />
-              <span>{{ comment.liked ? t('component.comment.list.liked') : t('component.comment.list.like') }}</span>
+              <span>{{
+                comment.liked
+                  ? t("component.comment.list.liked")
+                  : t("component.comment.list.like")
+              }}</span>
               <span v-if="comment.likeCount > 0">{{ comment.likeCount }}</span>
             </div>
             <div
@@ -67,7 +76,11 @@
               @click="switchShowReply(comment)"
             >
               <i class="iconfont icon-comment" />
-              <span>{{ reply.commentId === comment.id ? t('component.comment.list.cancelReply') : t('component.comment.list.reply') }}</span>
+              <span>{{
+                reply.commentId === comment.id
+                  ? t("component.comment.list.cancelReply")
+                  : t("component.comment.list.reply")
+              }}</span>
             </div>
           </div>
           <div v-if="reply.commentId === comment.id" class="comment-reply-form">
@@ -208,7 +221,7 @@ const submitReply = async (parent) => {
     );
     hideReply();
     appendReply(parent, ret);
-    useMsgSuccess(t('component.comment.list.publishSuccess'));
+    useMsgSuccess(t("component.comment.list.publishSuccess"));
   } catch (e) {
     useCatchError(e);
   }
@@ -283,24 +296,9 @@ defineExpose({
         }
         .comment-image-list {
           margin-top: 10px;
-
-          img {
-            width: 72px;
-            height: 72px;
-            line-height: 72px;
-            cursor: pointer;
-            &:not(:last-child) {
-              margin-right: 8px;
-            }
-
-            object-fit: cover;
-            transition: all 0.5s ease-out 0.1s;
-
-            &:hover {
-              transform: matrix(1.04, 0, 0, 1.04, 0, 0);
-              backface-visibility: hidden;
-            }
-          }
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
         }
       }
 
@@ -340,7 +338,6 @@ defineExpose({
 
       .comment-replies {
         margin-top: 10px;
-        // padding: 10px;
         background-color: var(--bg-color2);
       }
     }

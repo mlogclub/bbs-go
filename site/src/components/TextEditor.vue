@@ -81,6 +81,7 @@ const imageUploaderContainer = ref(null);
 const imageUploading = ref(false); // 图片上传中
 const dynamicHeight = ref(props.height);
 const dynamicFocusHeight = ref(props.focusHeight);
+const isUpdatingHeight = ref(false); // 防止递归更新的标志
 
 watch(
   () => props.content,
@@ -99,7 +100,9 @@ watch(
 watch(
   () => showImageUpload.value,
   (newVal, oldVal) => {
-    updateHeight();
+    if (!isUpdatingHeight.value) {
+      updateHeight();
+    }
   }
 );
 
@@ -180,7 +183,12 @@ const focus = () => {
 };
 const onFocus = () => {
   isFocus.value = true;
-  if (post.value.imageList && post.value.imageList.length) {
+  // 只有在图片列表存在且当前未显示上传区域时才展开
+  if (
+    post.value.imageList &&
+    post.value.imageList.length &&
+    !showImageUpload.value
+  ) {
     showImageUpload.value = true;
   }
 };
@@ -193,15 +201,32 @@ const reset = () => {
   showImageUpload.value = false;
 };
 const updateHeight = () => {
+  // 防止递归更新
+  if (isUpdatingHeight.value) {
+    return;
+  }
+  isUpdatingHeight.value = true;
+
   // 等dom变更完成后在计算高度，否则计算不准
   nextTick(() => {
-    const uploadHeight = imageUploaderContainer.value.offsetHeight;
-    if (showImageUpload.value) {
-      dynamicHeight.value = props.height + uploadHeight;
-      dynamicFocusHeight.value = props.focusHeight + uploadHeight;
-    } else {
-      dynamicHeight.value = props.height;
-      dynamicFocusHeight.value = props.focusHeight;
+    try {
+      if (!imageUploaderContainer.value) {
+        isUpdatingHeight.value = false;
+        return;
+      }
+      const uploadHeight = imageUploaderContainer.value.offsetHeight || 0;
+      if (showImageUpload.value) {
+        dynamicHeight.value = props.height + uploadHeight;
+        dynamicFocusHeight.value = props.focusHeight + uploadHeight;
+      } else {
+        dynamicHeight.value = props.height;
+        dynamicFocusHeight.value = props.focusHeight;
+      }
+    } finally {
+      // 使用 setTimeout 确保在下一个事件循环后重置标志
+      setTimeout(() => {
+        isUpdatingHeight.value = false;
+      }, 0);
     }
   });
 };

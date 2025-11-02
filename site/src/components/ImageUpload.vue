@@ -84,23 +84,55 @@ const fileList = ref(props.modelValue || []);
 const previewFiles = ref([]);
 const currentInput = ref(null);
 const loading = ref(false);
+const isSyncingModelValue = ref(false); // 防止递归更新的标志
 
 watch(
   () => props.modelValue,
-  (newModelValue) => {
-    // 更新 fileList
-    fileList.value = Array.isArray(newModelValue) ? [...newModelValue] : [];
+  (newModelValue, oldModelValue) => {
+    // 防止在同步过程中重复更新（关键保护）
+    if (isSyncingModelValue.value) {
+      return;
+    }
 
-    // 更新 previewFiles
-    previewFiles.value = fileList.value.map((item) => ({
-      name: item.name || "unknown", // 假设每个文件对象有 name 属性
-      url: item.url, // 假设每个文件对象有 url 属性
-      progress: 100, // 已上传完成
-      deleted: false,
-      size: item.size || 0, // 假设每个文件对象有 size 属性
-    }));
+    const newArray = Array.isArray(newModelValue) ? newModelValue : [];
+    const oldArray = Array.isArray(oldModelValue) ? oldModelValue : [];
+
+    // 如果数组引用相同或长度和内容都相同，跳过更新
+    if (newModelValue === oldModelValue) {
+      return;
+    }
+
+    // 更新 fileList
+    fileList.value = [...newArray];
+
+    // 更新 previewFiles，保留正在上传中的文件
+    const uploadingFiles = previewFiles.value.filter(
+      (item) => item.progress < 100
+    );
+    const existingUrls = new Set(
+      fileList.value
+        .map((item) => (item.url || item.id || "").toString())
+        .filter(Boolean)
+    );
+
+    // 移除已不在 fileList 中的文件（保留正在上传的）
+    const keepUploading = uploadingFiles.filter((item) => {
+      const itemUrl = (item.url || "").toString();
+      return !existingUrls.has(itemUrl);
+    });
+
+    previewFiles.value = [
+      ...keepUploading,
+      ...fileList.value.map((item) => ({
+        name: item.name || "unknown",
+        url: item.url,
+        progress: 100,
+        deleted: false,
+        size: item.size || 0,
+      })),
+    ];
   },
-  { immediate: true } // 立即执行一次，确保初始化时同步
+  { immediate: true, deep: false } // 使用深度比较会触发更多更新，改为 false
 );
 
 const onClick = () => {
@@ -151,18 +183,37 @@ const uploadFiles = (promiseList) => {
 
   Promise.all(promiseList).then(
     (resList) => {
-      // 请求响应后，更新到 100%
-      previewFiles.value.forEach((item) => {
-        item.progress = 100;
-      });
-      resList.forEach((item) => {
-        fileList.value.push(item);
-      });
-      if (currentInput.value) {
-        currentInput.value.value = "";
+      // 设置同步标志，防止 watch 触发
+      isSyncingModelValue.value = true;
+
+      try {
+        // 请求响应后，更新到 100%
+        previewFiles.value.forEach((item) => {
+          if (item.progress < 100) {
+            item.progress = 100;
+          }
+        });
+
+        // 更新 fileList
+        resList.forEach((item) => {
+          fileList.value.push(item);
+        });
+
+        if (currentInput.value) {
+          currentInput.value.value = "";
+        }
+        loading.value = false;
+
+        // 发送更新事件，使用新数组避免引用问题
+        emit("update:modelValue", [...fileList.value]);
+      } finally {
+        // 使用 nextTick 确保在下一次事件循环后重置标志
+        nextTick(() => {
+          setTimeout(() => {
+            isSyncingModelValue.value = false;
+          }, 0);
+        });
       }
-      loading.value = false;
-      emit("update:modelValue", fileList);
     },
     (e) => {
       useMsgError(e.message || e);
@@ -190,12 +241,21 @@ const removeItem = (index) => {
     }
   ).then(
     () => {
-      previewFiles.value[index].deleted = true; // 删除动画
-      fileList.value.splice(index, 1);
-      emit("update:modelValue", fileList.value); // 避免和回显冲突，先修改 fileList
-      setTimeout(() => {
-        previewFiles.value.splice(index, 1);
-      }, 900);
+      isSyncingModelValue.value = true;
+      try {
+        previewFiles.value[index].deleted = true; // 删除动画
+        fileList.value.splice(index, 1);
+        emit("update:modelValue", [...fileList.value]); // 使用新数组避免引用问题
+        setTimeout(() => {
+          previewFiles.value.splice(index, 1);
+        }, 900);
+      } finally {
+        nextTick(() => {
+          setTimeout(() => {
+            isSyncingModelValue.value = false;
+          }, 0);
+        });
+      }
     },
     () => console.log("取消删除")
   );
