@@ -4,7 +4,7 @@
       <div class="publish-form">
         <div class="form-title">
           <div class="form-title-name">
-            {{ $t("pages.article.edit.title") }}
+            {{ t("pages.article.edit.title") }}
           </div>
         </div>
 
@@ -14,7 +14,7 @@
               v-model="postForm.title"
               class="input article-title"
               type="text"
-              :placeholder="$t('pages.article.edit.titlePlaceholder')"
+              :placeholder="t('pages.article.edit.titlePlaceholder')"
             />
           </div>
         </div>
@@ -23,7 +23,7 @@
           <div class="control">
             <markdown-editor
               v-model="postForm.content"
-              :placeholder="$t('pages.article.edit.contentPlaceholder')"
+              :placeholder="t('pages.article.edit.contentPlaceholder')"
             />
           </div>
         </div>
@@ -41,14 +41,14 @@
               :class="{ 'is-loading': publishing }"
               disabled
               class="button is-primary"
-              >{{ $t("pages.article.edit.submitBtn") }}</a
+              >{{ t("pages.article.edit.submitBtn") }}</a
             >
             <a
               v-else
               :class="{ 'is-loading': publishing }"
               class="button is-primary"
               @click="submitCreate"
-              >{{ $t("pages.article.edit.submitBtn") }}</a
+              >{{ t("pages.article.edit.submitBtn") }}</a
             >
           </div>
         </div>
@@ -90,14 +90,14 @@ async function submitCreate() {
       })
     );
     useMsg({
-      message: $t("pages.article.edit.editSuccess"),
+      message: t("pages.article.edit.editSuccess"),
       onClose() {
         useLinkTo(`/article/${postForm.value.id}`);
       },
     });
   } catch (e) {
     publishing.value = false;
-    useMsgError($t("pages.article.edit.editFailed") + (e.message || e));
+    useMsgError(t("pages.article.edit.editFailed") + (e.message || e));
   }
 }
 </script>
