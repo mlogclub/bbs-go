@@ -1,27 +1,13 @@
 <template>
   <ClientOnly>
-    <el-dropdown v-if="hasPermission" trigger="click" @command="handleCommand">
-      <span class="el-dropdown-link">{{
-        $t("component.articleManageMenu.manage")
-      }}</span>
+    <el-dropdown v-if="showDropdown" trigger="click" @command="handleCommand">
+      <span class="el-dropdown-link">{{$t("component.articleManageMenu.manage")}}</span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="edit">{{
-            $t("component.articleManageMenu.edit")
-          }}</el-dropdown-item>
-          <el-dropdown-item command="delete">{{
-            $t("component.articleManageMenu.delete")
-          }}</el-dropdown-item>
-          <el-dropdown-item
-            v-if="isOwner || isAdmin"
-            command="forbidden7Days"
-            >{{
-              $t("component.articleManageMenu.forbidden7Days")
-            }}</el-dropdown-item
-          >
-          <el-dropdown-item v-if="isOwner" command="forbiddenForever">{{
-            $t("component.articleManageMenu.forbiddenForever")
-          }}</el-dropdown-item>
+          <el-dropdown-item v-if="canEdit" command="edit">{{$t("component.articleManageMenu.edit")}}</el-dropdown-item>
+          <el-dropdown-item v-if="canDelete" command="delete">{{$t("component.articleManageMenu.delete")}}</el-dropdown-item>
+          <el-dropdown-item v-if="canForbid" command="forbidden7Days">{{$t("component.articleManageMenu.forbidden7Days")}}</el-dropdown-item>
+          <el-dropdown-item v-if="canForbid" command="forbiddenForever">{{$t("component.articleManageMenu.forbiddenForever")}}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -38,14 +24,18 @@ const props = defineProps({
 
 const { t } = useI18n();
 const userStore = useUserStore();
-const isOwner = userIsOwner(userStore.user);
-const isAdmin = userIsAdmin(userStore.user);
+const isOwner = computed(() => userIsOwner(userStore.user));
+const isAdmin = computed(() => userIsAdmin(userStore.user));
 const isArticleOwner = computed(() => {
   return userStore.user && userStore.user.id === props.article.user.id;
 });
-const hasPermission = computed(() => {
-  return isArticleOwner || isOwner || isAdmin;
+const canEdit = computed(() => isArticleOwner.value || isOwner.value || isAdmin.value);
+const canDelete = computed(() => isArticleOwner.value || isOwner.value || isAdmin.value);
+const canForbid = computed(() => isOwner.value || isAdmin.value);
+const showDropdown = computed(() => {
+  return canEdit.value || canDelete.value || canForbid.value;
 });
+
 
 async function handleCommand(command) {
   if (command === "edit") {

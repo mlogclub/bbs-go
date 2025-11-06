@@ -501,6 +501,9 @@ export default {
         failed: "提交失败：{msg}",
       },
     },
+    articles: {
+      title: "文章列表",
+    },
     article: {
       create: {
         needEmailTitle: "请先验证邮箱",
