@@ -507,6 +507,9 @@ export default {
         failed: "Submit failed: {msg}",
       },
     },
+    articles: {
+      title: "Articles List",
+    },
     article: {
       detail: {
         pending: "This article is under review",
