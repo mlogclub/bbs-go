@@ -159,6 +159,7 @@ const postForm = ref({
   captchaCode: "",
   captchaProtocol: 2,
 });
+
 const publishing = ref(false);
 const simpleEditorComponent = ref(null);
 const captchaDialog = ref(null);
@@ -208,7 +209,10 @@ const init = () => {
 init();
 
 const switchEditor = () => {
-  useConfirm(t("pages.topic.create.switchEditorConfirm"))
+  useConfirm(t("pages.topic.create.switchEditorConfirm"), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  })
     .then(() => {
       postForm.value.content = "";
       if (postForm.value.contentType === "markdown") {

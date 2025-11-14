@@ -65,7 +65,10 @@ async function forbidden(days) {
   }
 }
 function deleteArticle() {
-  useConfirm(t("component.articleManageMenu.confirmDelete")).then(function () {
+  useConfirm(t("component.articleManageMenu.confirmDelete"), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  }).then(function () {
     useHttpPost(`/api/article/delete/${props.article.id}`)
       .then(() => {
         useMsg({

@@ -117,7 +117,10 @@ const forbidden = async (days) => {
 };
 
 const deleteTopic = () => {
-  useConfirm(t("component.topicManageMenu.confirmDelete")).then(function () {
+  useConfirm(t("component.topicManageMenu.confirmDelete"), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  }).then(function () {
     useHttpPost(`/api/topic/delete/${topic.value.id}`)
       .then(() => {
         useMsg({
@@ -141,7 +144,10 @@ const switchRecommend = () => {
   const action = topic.value.recommend 
     ? t("component.topicManageMenu.cancelRecommend") 
     : t("component.topicManageMenu.recommend");
-  useConfirm(t("component.topicManageMenu.confirmAction", { action })).then(function () {
+  useConfirm(t("component.topicManageMenu.confirmAction", { action }), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  }).then(function () {
     const recommend = !topic.value.recommend;
     useHttpPost(
       `/api/topic/recommend/${topic.value.id}`,
@@ -166,7 +172,10 @@ const switchSticky = () => {
   const action = topic.value.sticky 
     ? t("component.topicManageMenu.cancelSticky") 
     : t("component.topicManageMenu.sticky");
-  useConfirm(t("component.topicManageMenu.confirmAction", { action })).then(function () {
+  useConfirm(t("component.topicManageMenu.confirmAction", { action }), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  }).then(function () {
     const sticky = !topic.value.sticky;
     useHttpPost(
       `/api/topic/sticky/${topic.value.id}`,
