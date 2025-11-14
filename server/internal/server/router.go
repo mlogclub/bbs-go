@@ -76,6 +76,7 @@ func NewServer() {
 		m.Party("/fans").Handle(new(api.FansController))
 		m.Party("/user-report").Handle(new(api.UserReportController))
 		m.Party("/install").Handle(new(api.InstallController))
+		m.Party("/forget-password").Handle(new(api.ForgetPasswordController))
 	})
 
 	// admin

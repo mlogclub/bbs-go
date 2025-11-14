@@ -24,8 +24,10 @@
       }}</el-button>
     </div>
 
-    <div class="login-bottom">
-      <a @click="toSignup">{{ $t("user.signin.password.noAccount") }}</a>
+    <div class="login-bottom">
+      <a @click="toSignup">{{ $t("user.signin.password.noAccount") }}</a>
+      <span class="separator">|</span>
+      <nuxt-link to="/user/forget-password">{{ $t("user.signin.password.forgetPassword") }}</nuxt-link>
     </div>
 
     <CaptchaDialog ref="captchaDialog" />
