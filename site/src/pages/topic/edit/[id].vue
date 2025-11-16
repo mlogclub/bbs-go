@@ -116,7 +116,10 @@ const { data: postForm } = await useMyFetch(
 const publishing = ref(false);
 
 const switchEditor = () => {
-  useConfirm(t('pages.topic.edit.switchEditorConfirm'))
+  useConfirm(t('pages.topic.edit.switchEditorConfirm'), {
+    confirmButtonText: t("component.dialog.ok"),
+    cancelButtonText: t("component.dialog.cancel")
+  })
     .then(() => {
       postForm.value.content = "";
       if (postForm.value.contentType === "markdown") {

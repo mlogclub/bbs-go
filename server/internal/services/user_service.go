@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
@@ -24,13 +25,14 @@ import (
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
-
-	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
 )
 
 // 邮箱验证邮件有效期（小时）
 const emailVerifyExpireHour = 24
+
+// 密码重置邮件有效期（小时）
+const passwordResetExpireHour = 1
 
 var UserService = newUserService()
 
@@ -206,13 +208,24 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	// 验证密码
 	err := validate.IsValidPassword(password, rePassword)
 	if err != nil {
-		return nil, err
+		// 根据不同的验证错误返回对应的多语言化消息
+		if strings.Contains(err.Error(), "密码过于简单") {
+			return nil, errors.New(locales.Get("errors.password_simple"))
+		} else if strings.Contains(err.Error(), "密码长度不能超过128") {
+			return nil, errors.New(locales.Get("errors.password_length_invalid"))
+		} else if strings.Contains(err.Error(), "两次输入密码不匹配") {
+			return nil, errors.New(locales.Get("errors.password_not_match"))
+		} else if strings.Contains(err.Error(), "请输入密码") {
+			return nil, errors.New(locales.Get("errors.password_empty"))
+		}
+		// 默认返回密码无效的错误
+		return nil, errors.New(locales.Get("errors.password_empty"))
 	}
 
 	// 验证邮箱
 	if len(email) > 0 {
 		if err := validate.IsEmail(email); err != nil {
-			return nil, err
+			return nil, errors.New(locales.Get("errors.email_invalid"))
 		}
 		if s.GetByEmail(email) != nil {
 			return nil, errors.New("邮箱：" + email + " 已被占用")
@@ -353,7 +366,7 @@ func (s *userService) SetUsername(userId int64, username string) error {
 func (s *userService) SetEmail(userId int64, email string) error {
 	email = strings.TrimSpace(email)
 	if err := validate.IsEmail(email); err != nil {
-		return err
+		return errors.New(locales.Get("errors.email_invalid"))
 	}
 	user := s.Get(userId)
 	if user == nil {
@@ -366,16 +379,31 @@ func (s *userService) SetEmail(userId int64, email string) error {
 	if s.isEmailExists(email) {
 		return errors.New("邮箱：" + email + " 已被占用")
 	}
+
 	return s.Updates(userId, map[string]interface{}{
-		"email":          email,
+
+		"email": email,
+
 		"email_verified": false,
 	})
+
 }
 
 // SetPassword 设置密码
 func (s *userService) SetPassword(userId int64, password, rePassword string) error {
 	if err := validate.IsValidPassword(password, rePassword); err != nil {
-		return err
+		// 根据不同的验证错误返回对应的多语言化消息
+		if strings.Contains(err.Error(), "密码过于简单") {
+			return errors.New(locales.Get("errors.password_simple"))
+		} else if strings.Contains(err.Error(), "密码长度不能超过128") {
+			return errors.New(locales.Get("errors.password_length_invalid"))
+		} else if strings.Contains(err.Error(), "两次输入密码不匹配") {
+			return errors.New(locales.Get("errors.password_not_match"))
+		} else if strings.Contains(err.Error(), "请输入密码") {
+			return errors.New(locales.Get("errors.password_empty"))
+		}
+		// 默认返回密码无效的错误
+		return errors.New(locales.Get("errors.password_empty"))
 	}
 	user := s.Get(userId)
 	if len(user.Password) > 0 {
@@ -388,7 +416,18 @@ func (s *userService) SetPassword(userId int64, password, rePassword string) err
 // UpdatePassword 修改密码
 func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePassword string) error {
 	if err := validate.IsValidPassword(password, rePassword); err != nil {
-		return err
+		// 根据不同的验证错误返回对应的多语言化消息
+		if strings.Contains(err.Error(), "密码过于简单") {
+			return errors.New(locales.Get("errors.password_simple"))
+		} else if strings.Contains(err.Error(), "密码长度不能超过128") {
+			return errors.New(locales.Get("errors.password_length_invalid"))
+		} else if strings.Contains(err.Error(), "两次输入密码不匹配") {
+			return errors.New(locales.Get("errors.password_not_match"))
+		} else if strings.Contains(err.Error(), "请输入密码") {
+			return errors.New(locales.Get("errors.password_empty"))
+		}
+		// 默认返回密码无效的错误
+		return errors.New(locales.Get("errors.password_empty"))
 	}
 	user := s.Get(userId)
 
@@ -400,7 +439,8 @@ func (s *userService) UpdatePassword(userId int64, oldPassword, password, rePass
 		return errors.New("旧密码验证失败")
 	}
 
-	return s.UpdateColumn(userId, "password", passwd.EncodePassword(password))
+	password = passwd.EncodePassword(password)
+	return s.UpdateColumn(userId, "password", password)
 }
 
 // IncrTopicCount topic_count + 1
@@ -451,7 +491,7 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		return errors.New(locales.Get("user.email_verified"))
 	}
 	if err := validate.IsEmail(user.Email.String); err != nil {
-		return err
+		return errors.New(locales.Get("errors.email_invalid"))
 	}
 	// 如果设置了邮箱白名单
 	if emailWhitelist := SysConfigService.GetEmailWhitelist(); len(emailWhitelist) > 0 {
@@ -632,4 +672,109 @@ func (s *userService) addScore(userId int64, score int, sourceType, sourceId, de
 		cache.UserCache.Invalidate(userId)
 	}
 	return err
+}
+
+// SendPasswordResetEmail 发送密码重置邮件
+func (s *userService) SendPasswordResetEmail(emailStr string) error {
+	user := s.GetByEmail(emailStr)
+	if user == nil {
+		return errors.New(locales.Get("errors.email_not_registered"))
+	}
+
+	// 生成重置令牌
+	token := strs.UUID()
+	resetUrl := bbsurls.AbsUrl("/user/reset-password?token=" + token)
+
+	// 准备邮件内容
+	siteTitle := cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
+	subject := locales.Getf("user.password_reset_title", siteTitle)
+	title := locales.Getf("user.password_reset_title", siteTitle)
+	content := locales.Getf("user.password_reset_content", siteTitle, passwordResetExpireHour, resetUrl)
+	link := &dto.ActionLink{Title: locales.Get("user.password_reset_link"), Url: resetUrl}
+
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		// 保存重置令牌到数据库
+		emailCode := &models.EmailCode{
+			UserId:     user.Id,
+			Email:      emailStr,
+			Token:      token,
+			Title:      title,
+			Content:    content,
+			Used:       false,
+			CreateTime: dates.NowTimestamp(),
+		}
+		if err := repositories.EmailCodeRepository.Create(tx, emailCode); err != nil {
+			return err
+		}
+
+		// 发送邮件
+		if err := email.SendTemplateEmail(nil, emailStr, subject, title, content, "", link); err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
+
+// ResetPassword 重置密码
+func (s *userService) ResetPassword(token, password, rePassword string) error {
+	// 验证密码
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
+		// 根据不同的验证错误返回对应的多语言化消息
+		if strings.Contains(err.Error(), "密码过于简单") {
+			return errors.New(locales.Get("errors.password_simple"))
+		} else if strings.Contains(err.Error(), "密码长度不能超过128") {
+			return errors.New(locales.Get("errors.password_length_invalid"))
+		} else if strings.Contains(err.Error(), "两次输入密码不匹配") {
+			return errors.New(locales.Get("errors.password_not_match"))
+		} else if strings.Contains(err.Error(), "请输入密码") {
+			return errors.New(locales.Get("errors.password_empty"))
+		}
+		// 默认返回密码无效的错误
+		return errors.New(locales.Get("errors.password_empty"))
+	}
+
+	// 查找重置令牌
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
+	if emailCode == nil || emailCode.Used {
+		return errors.New(locales.Get("errors.reset_link_invalid"))
+	}
+
+	// 检查令牌是否过期
+	if dates.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(passwordResetExpireHour)).Before(time.Now()) {
+		return errors.New(locales.Get("errors.reset_link_expired"))
+	}
+
+	// 更新用户密码
+	encodedPassword := passwd.EncodePassword(password)
+	if err := s.UpdateColumn(emailCode.UserId, "password", encodedPassword); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetUserByPasswordResetToken 根据密码重置令牌获取用户
+func (s *userService) GetUserByPasswordResetToken(token string) (*models.User, error) {
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
+	if emailCode == nil || emailCode.Used {
+		return nil, errors.New(locales.Get("errors.reset_link_invalid"))
+	}
+
+	user := s.Get(emailCode.UserId)
+	if user == nil {
+		return nil, errors.New(locales.Get("errors.user_not_found"))
+	}
+
+	return user, nil
+}
+
+// MarkPasswordResetTokenUsed 标记密码重置令牌已使用
+func (s *userService) MarkPasswordResetTokenUsed(token string) error {
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
+	if emailCode == nil {
+		return errors.New(locales.Get("errors.reset_link_invalid"))
+	}
+
+	return repositories.EmailCodeRepository.UpdateColumn(sqls.DB(), emailCode.Id, "used", true)
 }
