@@ -1,0 +1,384 @@
+package api
+
+import (
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/req"
+	"bbs-go/internal/models/resp"
+	"bbs-go/internal/pkg/common"
+	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/idcodec"
+	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/markdown"
+	"bbs-go/internal/spam"
+	"strconv"
+	"strings"
+
+	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/sqls"
+	"github.com/mlogclub/simple/web"
+	"github.com/mlogclub/simple/web/params"
+
+	"bbs-go/internal/controllers/render"
+	"bbs-go/internal/models"
+	"bbs-go/internal/services"
+)
+
+type TopicController struct {
+	Ctx           iris.Context
+	_BuiltInNodes []resp.NodeResponse
+}
+
+func (c *TopicController) _GetBuiltInNodes() []resp.NodeResponse {
+	if len(c._BuiltInNodes) == 0 {
+		c._BuiltInNodes = []resp.NodeResponse{
+			{
+				Id:   0,
+				Name: locales.Get("topic.node.latest"),
+			},
+			{
+				Id:   -1,
+				Name: locales.Get("topic.node.recommend"),
+			},
+			{
+				Id:   -2,
+				Name: locales.Get("topic.node.follow"),
+			},
+		}
+	}
+	return c._BuiltInNodes
+}
+
+func (c *TopicController) GetNode_navs() *web.JsonResult {
+	nodes := append(
+		c._GetBuiltInNodes(),
+		render.BuildNodes(services.TopicNodeService.GetNodes())...,
+	)
+	return web.JsonData(nodes)
+}
+
+// 节点
+func (c *TopicController) GetNodes() *web.JsonResult {
+	nodes := render.BuildNodes(services.TopicNodeService.GetNodes())
+	return web.JsonData(nodes)
+}
+
+// 节点信息
+func (c *TopicController) GetNode() *web.JsonResult {
+	nodeId, _ := params.GetInt64(c.Ctx, "nodeId")
+	if nodeId <= 0 {
+		for _, node := range c._GetBuiltInNodes() {
+			if node.Id == nodeId {
+				return web.JsonData(node)
+			}
+		}
+	}
+	node := services.TopicNodeService.Get(nodeId)
+	if node == nil {
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
+	}
+	return web.JsonData(render.BuildNode(node))
+}
+
+// 发表帖子
+func (c *TopicController) PostCreate() *web.JsonResult {
+	user := common.GetCurrentUser(c.Ctx)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return web.JsonError(err)
+	}
+
+	var form req.CreateTopicForm
+	if err := c.Ctx.ReadJSON(&form); err != nil {
+		return web.JsonError(err)
+	}
+	form.Title = strings.TrimSpace(form.Title)
+	form.Content = strings.TrimSpace(form.Content)
+	form.HideContent = strings.TrimSpace(form.HideContent)
+	if form.Type == constants.TopicTypeTweet {
+		form.ContentType = constants.ContentTypeText
+	}
+	form.Ip = web.GetRequestIP(c.Ctx.Request())
+	form.UserAgent = web.GetUserAgent(c.Ctx.Request())
+
+	if err := spam.CheckTopic(user, form); err != nil {
+		return web.JsonError(err)
+	}
+
+	topic, err := services.TopicPublishService.Publish(user.Id, form)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonData(render.BuildSimpleTopic(topic))
+}
+
+// 编辑时获取详情
+func (c *TopicController) GetEditBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return web.JsonError(err)
+	}
+
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
+	}
+	if topic.Type != constants.TopicTypeTopic {
+		return web.JsonErrorMsg(locales.Get("topic.type_not_supported"))
+	}
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
+	}
+
+	tags := services.TopicService.GetTopicTags(topicId)
+	var tagNames []string
+	if len(tags) > 0 {
+		for _, tag := range tags {
+			tagNames = append(tagNames, tag.Name)
+		}
+	}
+
+	return web.NewEmptyRspBuilder().
+		Put("id", idcodec.Encode(topic.Id)).
+		Put("nodeId", topic.NodeId).
+		Put("title", topic.Title).
+		Put("content", topic.Content).
+		Put("contentType", topic.ContentType).
+		Put("hideContent", topic.HideContent).
+		Put("tags", tagNames).
+		JsonResult()
+}
+
+// 编辑帖子
+func (c *TopicController) PostEditBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return web.JsonError(err)
+	}
+
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
+	}
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
+	}
+
+	var form req.EditTopicForm
+	if err := c.Ctx.ReadJSON(&form); err != nil {
+		return web.JsonError(err)
+	}
+	form.Title = strings.TrimSpace(form.Title)
+	form.Content = strings.TrimSpace(form.Content)
+	form.HideContent = strings.TrimSpace(form.HideContent)
+
+	err := services.TopicService.Edit(user.Id, topicId, form)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonData(render.BuildSimpleTopic(topic))
+}
+
+// 删除帖子
+func (c *TopicController) PostDeleteBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if err := services.UserService.CheckPostStatus(user); err != nil {
+		return web.JsonError(err)
+	}
+
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return web.JsonSuccess()
+	}
+
+	// 非作者、且非管理员
+	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
+	}
+
+	if err := services.TopicService.Delete(topicId, user.Id, c.Ctx.Request()); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+// PostRecommendBy 设为推荐
+func (c *TopicController) PostRecommendBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	recommend, err := params.FormValueBool(c.Ctx, "recommend")
+	if err != nil {
+		return web.JsonError(err)
+	}
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
+	}
+
+	err = services.TopicService.SetRecommend(topicId, recommend)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+// 帖子详情
+func (c *TopicController) GetBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	topic := services.TopicService.Get(topicId)
+	if topic == nil || topic.Status == constants.StatusDeleted {
+		return web.JsonErrorMsg(locales.Get("common.not_found"))
+	}
+
+	// 审核中文章控制展示
+	user := common.GetCurrentUser(c.Ctx)
+	if topic.Status == constants.StatusReview {
+		if user != nil {
+			if topic.UserId != user.Id && !user.IsOwnerOrAdmin() {
+				return web.JsonErrorCode(403, locales.Get("topic.under_review"))
+			}
+		} else {
+			return web.JsonErrorCode(403, locales.Get("topic.under_review"))
+		}
+	}
+
+	services.TopicService.IncrViewCount(topicId) // 增加浏览量
+	return web.JsonData(render.BuildTopic(c.Ctx, topic))
+}
+
+// 点赞用户
+func (c *TopicController) GetRecentlikesBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	likes := services.UserLikeService.Recent(constants.EntityTopic, topicId, 5)
+	var users []resp.UserInfo
+	for _, like := range likes {
+		userInfo := render.BuildUserInfoDefaultIfNull(like.UserId)
+		if userInfo != nil {
+			users = append(users, *userInfo)
+		}
+	}
+	return web.JsonData(users)
+}
+
+// 最新帖子
+func (c *TopicController) GetRecent() *web.JsonResult {
+	topics := services.TopicService.Find(sqls.NewCnd().Where("status = ?", constants.StatusOk).Desc("id").Limit(10))
+	return web.JsonData(render.BuildSimpleTopics(c.Ctx, topics))
+}
+
+// 用户帖子列表
+func (c *TopicController) GetUser_topics() *web.JsonResult {
+	userId := common.GetID(c.Ctx, "userId")
+	if userId <= 0 {
+		return web.JsonErrorMsg("param: userId required")
+	}
+	cursor := params.FormValueInt64Default(c.Ctx, "cursor", 0)
+	topics, cursor, hasMore := services.TopicService.GetUserTopics(userId, cursor)
+	return web.JsonCursorData(render.BuildSimpleTopics(c.Ctx, topics), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+// 帖子列表
+func (c *TopicController) GetTopics() *web.JsonResult {
+	var (
+		cursor = params.FormValueInt64Default(c.Ctx, "cursor", 0)
+		nodeId = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		user   = common.GetCurrentUser(c.Ctx)
+	)
+	if nodeId == constants.NodeIdFollow && user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+
+	var temp []models.Topic
+	if cursor <= 0 {
+		stickyTopics := services.TopicService.GetStickyTopics(nodeId, 3)
+		temp = append(temp, stickyTopics...)
+	}
+	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor)
+	for _, topic := range topics {
+		topic.Sticky = false // 正常列表不要渲染置顶
+		temp = append(temp, topic)
+	}
+	list := common.Distinct(temp, func(t models.Topic) any {
+		return t.Id
+	})
+	return web.JsonCursorData(render.BuildSimpleTopics(c.Ctx, list), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+// 标签帖子列表
+func (c *TopicController) GetTagTopics() *web.JsonResult {
+	var (
+		cursor     = params.FormValueInt64Default(c.Ctx, "cursor", 0)
+		tagId, err = params.FormValueInt64(c.Ctx, "tagId")
+	)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	topics, cursor, hasMore := services.TopicService.GetTagTopics(tagId, cursor)
+	return web.JsonCursorData(render.BuildSimpleTopics(c.Ctx, topics), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+// 收藏
+func (c *TopicController) GetFavoriteBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	err := services.FavoriteService.AddTopicFavorite(user.Id, topicId)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+// 设置置顶
+func (c *TopicController) PostStickyBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
+	}
+
+	var (
+		sticky = params.FormValueBoolDefault(c.Ctx, "sticky", false) // 是否指定
+	)
+	if err := services.TopicService.SetSticky(topicId, sticky); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) GetHide_content() *web.JsonResult {
+	topicId := common.GetID(c.Ctx, "topicId")
+	var (
+		exists      = false // 是否有隐藏内容
+		show        = false // 是否显示隐藏内容
+		hideContent = ""    // 隐藏内容
+	)
+	topic := services.TopicService.Get(topicId)
+	if topic != nil && topic.Status == constants.StatusOk && strs.IsNotBlank(topic.HideContent) {
+		exists = true
+		if user := common.GetCurrentUser(c.Ctx); user != nil {
+			if user.Id == topic.UserId || services.CommentService.IsCommented(user.Id, constants.EntityTopic, topic.Id) {
+				show = true
+				hideContent = markdown.ToHTML(topic.HideContent)
+			}
+		}
+	}
+	return web.JsonData(map[string]interface{}{
+		"exists":  exists,
+		"show":    show,
+		"content": hideContent,
+	})
+}

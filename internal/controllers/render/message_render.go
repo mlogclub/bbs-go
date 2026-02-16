@@ -1,0 +1,80 @@
+package render
+
+import (
+	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/resp"
+	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/msg"
+
+	"github.com/tidwall/gjson"
+)
+
+func BuildMessage(msg *models.Message) *resp.MessageResponse {
+	if msg == nil {
+		return nil
+	}
+
+	from := BuildUserInfoDefaultIfNull(msg.FromId)
+	if msg.FromId <= 0 {
+		from.Nickname = locales.Get("message.system_nickname")
+	}
+	detailUrl := getMessageDetailUrl(msg)
+	resp := &resp.MessageResponse{
+		Id:           msg.Id,
+		From:         from,
+		UserId:       msg.UserId,
+		Title:        msg.Title,
+		Content:      msg.Content,
+		QuoteContent: msg.QuoteContent,
+		Type:         msg.Type,
+		DetailUrl:    detailUrl,
+		ExtraData:    msg.ExtraData,
+		Status:       msg.Status,
+		CreateTime:   msg.CreateTime,
+	}
+	return resp
+}
+
+// BuildMessages 渲染消息列表
+func BuildMessages(messages []models.Message) []resp.MessageResponse {
+	if len(messages) == 0 {
+		return nil
+	}
+	var responses []resp.MessageResponse
+	for _, message := range messages {
+		responses = append(responses, *BuildMessage(&message))
+	}
+	return responses
+}
+
+// getMessageDetailUrl 查看消息详情链接地址
+func getMessageDetailUrl(t *models.Message) string {
+	msgType := msg.Type(t.Type)
+	switch msgType {
+	case msg.TypeTopicComment, msg.TypeArticleComment:
+		entityType := gjson.Get(t.ExtraData, "entityType")
+		entityId := gjson.Get(t.ExtraData, "entityId")
+		if entityType.String() == constants.EntityArticle {
+			return bbsurls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
+	case msg.TypeCommentReply:
+		entityType := gjson.Get(t.ExtraData, "rootEntityType")
+		entityId := gjson.Get(t.ExtraData, "rootEntityId")
+
+		if entityType.String() == constants.EntityArticle {
+			return bbsurls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
+	case msg.TypeTopicLike, msg.TypeTopicFavorite, msg.TypeTopicRecommend:
+		topicId := gjson.Get(t.ExtraData, "topicId")
+		if topicId.Exists() && topicId.Int() > 0 {
+			return bbsurls.TopicUrl(topicId.Int())
+		}
+	}
+	return bbsurls.AbsUrl("/user/messages")
+}

@@ -1,0 +1,49 @@
+Port: 8082 # 端口
+BaseURL: / # 网站BaseURL
+IpDataPath: # IP数据文件，默认读取当前目录下ip2region.xdb文件，最新数据文件请从这里下载：https://github.com/lionsoul2014/ip2region/tree/master/data
+AllowedOrigins:
+  - "*"
+Installed: false # 是否已完成安装
+
+# ID 编解码秘钥（安装时自动生成）
+IdCodec:
+  Key: 0
+
+# 日志配置
+Logger:
+  Filename: /data/logs/bbs-go.log   # 日志文件的位置
+  MaxSize: 100                      # 文件最大尺寸（以MB为单位）
+  MaxAge: 10                        # 保留旧文件的最大天数
+  MaxBackups: 10                    # 保留的最大旧文件数量
+
+
+# 数据库连接
+DB:
+  Url: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
+  MaxIdleConns: 50
+  MaxOpenConns: 200
+
+# 邮件服务器配置，用于邮件通知
+Smtp:
+  Host:       # smtp服务地址，请设置成你自己的，例如：smtp.qq.com
+  Port:       # smtp服务端口，请设置成你自己额，例如：25
+  Username:   # 请配置成你自己的
+  Password:   # 请配置成你自己的
+  SSL: true
+
+# 百度SEO相关配置
+# 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
+BaiduSEO:
+  Site:
+  Token:
+
+# 神马搜索SEO相关
+# 文档：https://zhanzhang.sm.cn/open/mip
+SmSEO:
+  Site:
+  UserName:
+  Token:
+
+# search
+Search:
+  IndexPath: # 索引路径
