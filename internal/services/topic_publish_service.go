@@ -1,0 +1,173 @@
+package services
+
+import (
+	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/req"
+	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/search"
+	"bbs-go/internal/repositories"
+	"errors"
+	"log/slog"
+	"strings"
+
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/sqls"
+)
+
+var TopicPublishService = new(topicPublishService)
+
+type topicPublishService struct{}
+
+// Publish 发表
+func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*models.Topic, error) {
+	if err := s._CheckParams(form); err != nil {
+		return nil, err
+	}
+
+	now := dates.NowTimestamp()
+	topic := &models.Topic{
+		Type:            form.Type,
+		UserId:          userId,
+		NodeId:          form.NodeId,
+		Title:           form.Title,
+		ContentType:     form.ContentType,
+		Content:         form.Content,
+		HideContent:     form.HideContent,
+		Status:          constants.StatusOk,
+		UserAgent:       form.UserAgent,
+		Ip:              form.Ip,
+		IpLocation:      iplocator.IpLocation(form.Ip),
+		LastCommentTime: now,
+		CreateTime:      now,
+	}
+
+	if len(form.ImageList) > 0 {
+		imageListStr, err := jsons.ToStr(form.ImageList)
+		if err == nil {
+			topic.ImageList = imageListStr
+		} else {
+			slog.Error(err.Error(), slog.Any("err", err))
+		}
+	}
+
+	// 检查是否需要审核
+	if s._IsNeedReview(form) {
+		topic.Status = constants.StatusReview
+	}
+
+	if err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		var (
+			tagIds []int64
+			err    error
+		)
+		// 帖子
+		if err = repositories.TopicRepository.Create(ctx.Tx, topic); err != nil {
+			return err
+		}
+		// 投票
+		if form.Vote != nil {
+			vote, voteErr := VoteService.CreateWithOptionsTx(ctx, topic.Id, userId, form.Vote, now)
+			if voteErr != nil {
+				return voteErr
+			}
+			if vote != nil {
+				topic.VoteId = vote.Id
+				if err = repositories.TopicRepository.UpdateColumn(ctx.Tx, topic.Id, "vote_id", vote.Id); err != nil {
+					return err
+				}
+			}
+		}
+
+		// 标签
+		if tagIds, err = repositories.TagRepository.GetOrCreates(ctx.Tx, form.Tags); err != nil {
+			return err
+		}
+		if err = repositories.TopicTagRepository.AddTopicTags(ctx.Tx, topic.Id, tagIds); err != nil {
+			return err
+		}
+
+		// 用户计数
+		if err = UserService.IncrTopicCount(ctx, userId); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	// 添加索引
+	search.UpdateTopicIndexAsync(topic)
+	// 发送事件
+	event.Send(event.TopicCreateEvent{
+		UserId:     topic.UserId,
+		TopicId:    topic.Id,
+		CreateTime: topic.CreateTime,
+	})
+	return topic, nil
+}
+
+// IsNeedReview 是否需要审核
+func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
+	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
+		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
+		return true
+	}
+
+	if hits := ForbiddenWordService.Check(form.Content); len(hits) > 0 {
+		slog.Info("帖子内容命中违禁词", slog.String("hits", strings.Join(hits, ",")))
+		return true
+	}
+
+	return false
+}
+
+func (s topicPublishService) _CheckParams(form req.CreateTopicForm) (err error) {
+	modules := SysConfigService.GetModules()
+	if form.Type == constants.TopicTypeTweet {
+		if !modules.Tweet {
+			return errors.New("未开启动态功能")
+		}
+		if strs.IsBlank(form.Content) {
+			return errors.New("内容不能为空")
+		}
+		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
+		// 	return errors.New("内容或图片不能为空")
+		// }
+	} else {
+		if !modules.Topic {
+			return errors.New("未开启帖子功能")
+		}
+		if strs.IsBlank(form.Title) {
+			return errors.New("标题不能为空")
+		}
+
+		if strs.IsBlank(form.Content) {
+			return errors.New("内容不能为空")
+		}
+
+		if strs.RuneLen(form.Title) > 128 {
+			return errors.New("标题长度不能超过128")
+		}
+	}
+
+	if form.NodeId <= 0 {
+		form.NodeId = SysConfigService.GetDefaultNodeId()
+		if form.NodeId <= 0 {
+			return errors.New("请选择节点")
+		}
+	}
+	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
+	if node == nil || node.Status != constants.StatusOk {
+		return errors.New("节点不存在")
+	}
+	if err = VoteService.CheckCreateForm(form.Vote); err != nil {
+		return err
+	}
+
+	return nil
+}

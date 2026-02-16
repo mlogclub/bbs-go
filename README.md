@@ -2,8 +2,8 @@
 
 ## 项目地址
 
+- 官网：[https://bbs-go.com](https://bbs-go.com)
 - 演示站：[https://bbs.bbs-go.com](https://bbs.bbs-go.com)
-- 文档地址：[https://bbs-go.com](https://bbs-go.com)
 - 问题反馈: [https://bbs.bbs-go.com/topics/node/3](https://bbs.bbs-go.com/topics/node/3)
 - Github: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
 - Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
@@ -75,12 +75,11 @@
 
 [![bbs-go-admin](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-admin.yml/badge.svg)](https://github.com/mlogclub/bbs-go/actions/workflows/bbs-go-admin.yml)
 
-> 管理后台系统，基于`vue.js + element-ui`搭建。
+> 管理后台系统，基于`vue.js`搭建。
 
 技术栈
 
 - vue.js ([https://vuejs.org](https://vuejs.org)) 渐进式 JavaScript 框架
-- element-ui ([https://element.eleme.cn](https://element.eleme.cn)) 饿了么开源的基于 vue.js 的前端库
 
 ## 功能预览
 

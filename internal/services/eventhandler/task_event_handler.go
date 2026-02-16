@@ -1,0 +1,61 @@
+package eventhandler
+
+import (
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/services"
+	"reflect"
+)
+
+func init() {
+	event.RegHandler(reflect.TypeFor[event.TopicCreateEvent](), handleTaskTopicCreateEvent)
+	event.RegHandler(reflect.TypeFor[event.CommentCreateEvent](), handleTaskCommentCreateEvent)
+	event.RegHandler(reflect.TypeFor[event.FollowEvent](), handleTaskFollowEvent)
+	event.RegHandler(reflect.TypeFor[event.UserFavoriteEvent](), handleTaskFavoriteEvent)
+	event.RegHandler(reflect.TypeFor[event.UserLikeEvent](), handleTaskLikeEvent)
+	event.RegHandler(reflect.TypeFor[event.CheckInEvent](), handleTaskCheckInEvent)
+	event.RegHandler(reflect.TypeFor[event.UserLoginEvent](), handleTaskUserLoginEvent)
+	event.RegHandler(reflect.TypeFor[event.LevelUpEvent](), handleTaskLevelUpEvent)
+}
+
+func handleTaskTopicCreateEvent(i any) {
+	e := i.(event.TopicCreateEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeTopicCreate, e.CreateTime)
+}
+
+func handleTaskCommentCreateEvent(i any) {
+	e := i.(event.CommentCreateEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeCommentCreate, 0)
+}
+
+func handleTaskFollowEvent(i any) {
+	e := i.(event.FollowEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeFollowCreate, 0)
+}
+
+func handleTaskFavoriteEvent(i any) {
+	e := i.(event.UserFavoriteEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeFavoriteCreate, 0)
+}
+
+func handleTaskLikeEvent(i any) {
+	e := i.(event.UserLikeEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeLikeCreate, 0)
+}
+
+func handleTaskCheckInEvent(i any) {
+	e := i.(event.CheckInEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeCheckIn, 0)
+}
+
+func handleTaskUserLoginEvent(i any) {
+	e := i.(event.UserLoginEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeUserLogin, e.LoginTime)
+}
+
+func handleTaskLevelUpEvent(i any) {
+	e := i.(event.LevelUpEvent)
+	if e.OldLevel < 10 && e.NewLevel >= 10 {
+		services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeLevel10, e.UpdateTime)
+	}
+}

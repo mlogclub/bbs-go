@@ -1,0 +1,1 @@
+function n(e,t){if(!e||!e.roles||!e.roles.length)return!1;for(let r=0;r<e.roles.length;r++)if(e.roles[r]===t)return!0;return!1}function o(e){return n(e,"owner")}function l(e){return n(e,"admin")}export{l as a,o as u};
