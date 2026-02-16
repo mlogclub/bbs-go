@@ -135,13 +135,13 @@ func Install(req InstallReq) error {
 	if err := InitMigrations(); err != nil {
 		return err
 	}
-	if err := InitData(req); err != nil {
-		return err
-	}
 	if err := InitOthers(); err != nil {
 		return err
 	}
 	if err := InitLocales(); err != nil {
+		return err
+	}
+	if err := InitData(req); err != nil {
 		return err
 	}
 	return WriteInstallSuccess()
@@ -285,7 +285,30 @@ func InitData(req InstallReq) error {
 }
 
 func initWelcomeTopic(language config.Language, userId int64) error {
-	title, content := getWelcomeTopicContent(language)
+	var (
+		title   string
+		content string
+	)
+	if language == config.LanguageZhCN {
+		title = "欢迎来到 BBS-GO 社区"
+		content = `欢迎使用 **BBS-GO**！
+
+这是一个轻量、高性能、易扩展的社区系统。
+
+你可以发帖、评论、点赞，并通过任务系统获得积分与成长奖励。
+
+现在就开始发布你的第一篇帖子吧。`
+	} else {
+		title = "Welcome to the BBS-GO Community"
+		content = `Welcome to **BBS-GO**!
+
+A lightweight, high-performance, and extensible community platform.
+
+You can create topics, comment, like, and earn points through the task system.
+
+Start by publishing your first post.`
+	}
+
 	if services.TopicService.Take("user_id = ? and title = ?", userId, title) != nil {
 		return nil
 	}
@@ -307,26 +330,6 @@ func initWelcomeTopic(language config.Language, userId int64) error {
 		ContentType: constants.ContentTypeMarkdown,
 	})
 	return err
-}
-
-func getWelcomeTopicContent(language config.Language) (string, string) {
-	if language == config.LanguageZhCN {
-		return "欢迎来到 BBS-GO 社区", `欢迎使用 **BBS-GO**！
-
-这是一个轻量、高性能、易扩展的社区系统。
-
-你可以发帖、评论、点赞，并通过任务系统获得积分与成长奖励。
-
-现在就开始发布你的第一篇帖子吧。`
-	}
-
-	return "Welcome to the BBS-GO Community", `Welcome to **BBS-GO**!
-
-A lightweight, high-performance, and extensible community platform.
-
-You can create topics, comment, like, and earn points through the task system.
-
-Start by publishing your first post.`
 }
 
 func InitLocales() error {
