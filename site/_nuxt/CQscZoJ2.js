@@ -1,1 +1,0 @@
-import{aj as s,al as c}from"./Ck7AnVGd.js";function l(t,r){const e=typeof t=="string"&&!r?`${t}Context`:r,i=Symbol(e);return[n=>{const o=s(i,n);if(o||o===null)return o;throw new Error(`Injection \`${i.toString()}\` not found. Component must be used within ${Array.isArray(t)?`one of the following components: ${t.join(", ")}`:`\`${t}\``}`)},n=>(c(i,n),n)]}export{l as c};

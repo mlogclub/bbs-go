@@ -3,6 +3,8 @@ package eventhandler
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/services"
 	"reflect"
 )
@@ -16,6 +18,7 @@ func init() {
 	event.RegHandler(reflect.TypeFor[event.CheckInEvent](), handleTaskCheckInEvent)
 	event.RegHandler(reflect.TypeFor[event.UserLoginEvent](), handleTaskUserLoginEvent)
 	event.RegHandler(reflect.TypeFor[event.LevelUpEvent](), handleTaskLevelUpEvent)
+	event.RegHandler(reflect.TypeFor[event.BadgeGrantEvent](), handleBadgeGrantEvent)
 }
 
 func handleTaskTopicCreateEvent(i any) {
@@ -58,4 +61,29 @@ func handleTaskLevelUpEvent(i any) {
 	if e.OldLevel < 10 && e.NewLevel >= 10 {
 		services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeLevel10, e.UpdateTime)
 	}
+
+	services.MessageService.SendMsg(0, e.UserId, msg.TypeUserLevelUp,
+		locales.Get("message.user_level_up_msg_title"),
+		locales.Getf("message.user_level_up_msg_content", e.NewLevel),
+		"", &msg.UserLevelUpExtraData{
+			OldLevel: e.OldLevel,
+			NewLevel: e.NewLevel,
+		})
+}
+
+func handleBadgeGrantEvent(i any) {
+	e := i.(event.BadgeGrantEvent)
+	badgeTitle := ""
+	if badge := services.BadgeService.Get(e.BadgeId); badge != nil {
+		badgeTitle = badge.Title
+	}
+	if badgeTitle == "" {
+		badgeTitle = locales.Get("message.user_badge_default_name")
+	}
+	services.MessageService.SendMsg(0, e.UserId, msg.TypeUserBadgeGrant,
+		locales.Get("message.user_badge_grant_msg_title"),
+		locales.Getf("message.user_badge_grant_msg_content", badgeTitle),
+		"", &msg.UserBadgeGrantExtraData{
+			BadgeId: e.BadgeId,
+		})
 }

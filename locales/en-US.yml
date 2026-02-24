@@ -67,6 +67,11 @@ message:
   topic_delete_msg_title: "Your topic has been deleted"
   topic_favorite_msg_title: "Your topic has been favorited"
   topic_like_msg_title: "Your topic has been liked"
+  user_level_up_msg_title: "Level Up"
+  user_level_up_msg_content: "Congratulations! You have reached Lv.%d"
+  user_badge_grant_msg_title: "New Badge Unlocked"
+  user_badge_grant_msg_content: "Congratulations! You earned the badge: %s"
+  user_badge_default_name: "New Badge"
 
 email:
   new_message: "Notification"
@@ -77,6 +82,8 @@ email:
   topic_recommend: "Topic Recommended"
   topic_delete: "Topic Deleted"
   article_comment: "Article Comment"
+  user_level_up: "Level Up"
+  user_badge_grant: "New Badge Unlocked"
   view_details: "View Details"
 
 task:

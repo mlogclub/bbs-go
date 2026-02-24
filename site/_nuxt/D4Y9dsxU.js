@@ -1,1 +1,0 @@
-import{bb as t,C as a,aH as o,G as n,aT as u}from"./Ck7AnVGd.js";const c=t(e=>{if(a().user)return!0;{const{$i18n:r}=o();n({type:"error",message:r.t("composables.pleaseSignIn")})}const s=e.fullPath||e.path||"/";return u(`/user/signin?redirect=${encodeURIComponent(s)}`)});export{c as default};

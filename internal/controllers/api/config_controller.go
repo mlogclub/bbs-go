@@ -24,6 +24,7 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 		sysConfig := &dto.SysConfigOpenResponse{
 			SiteTitle:                  cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle),
 			SiteDescription:            cache.SysConfigCache.GetStr(constants.SysConfigSiteDescription),
+			BaseURL:                    services.SysConfigService.GetBaseURL(),
 			SiteKeywords:               cache.SysConfigCache.GetStrArr(constants.SysConfigSiteKeywords),
 			SiteLogo:                   cache.SysConfigCache.GetStr(constants.SysConfigSiteLogo),
 			SiteNavs:                   services.SysConfigService.GetSiteNavs(),

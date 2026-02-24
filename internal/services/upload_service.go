@@ -2,7 +2,6 @@ package services
 
 import (
 	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/uploader"
 	"fmt"
 	"sync"
@@ -48,7 +47,7 @@ func (s *uploadService) CopyImage(url string) (string, error) {
 		return "", err
 	}
 	u1 := urls.ParseUrl(url).GetURL()
-	u2 := urls.ParseUrl(config.Instance.BaseURL).GetURL()
+	u2 := urls.ParseUrl(SysConfigService.GetBaseURL()).GetURL()
 	// 本站host，不下载
 	if u1.Host == u2.Host {
 		return url, nil

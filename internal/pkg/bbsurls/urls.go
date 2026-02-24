@@ -1,12 +1,13 @@
 package bbsurls
 
 import (
+	"bbs-go/internal/cache"
+	"bbs-go/internal/models/constants"
 	"log/slog"
 	"net/url"
 	"strconv"
 	"strings"
 
-	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/idcodec"
 )
 
@@ -15,10 +16,13 @@ func IsInternalUrl(href string) bool {
 	if IsAnchor(href) {
 		return true
 	}
-	u, err := url.Parse(config.Instance.BaseURL)
+	u, err := url.Parse(getBaseURL())
 	if err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 		return false
+	}
+	if strings.TrimSpace(u.Host) == "" {
+		return strings.HasPrefix(href, "/")
 	}
 	return strings.Contains(href, u.Host)
 }
@@ -29,10 +33,22 @@ func IsAnchor(href string) bool {
 }
 
 func AbsUrl(path string) string {
-	if config.Instance.BaseURL == "/" {
+	baseURL := getBaseURL()
+	if baseURL == "/" {
 		return path
 	}
-	return config.Instance.BaseURL + path
+	return baseURL + path
+}
+
+func getBaseURL() string {
+	baseURL := strings.TrimSpace(cache.SysConfigCache.GetStr(constants.SysConfigBaseURL))
+	if baseURL == "" {
+		return "/"
+	}
+	for len(baseURL) > 1 && strings.HasSuffix(baseURL, "/") {
+		baseURL = strings.TrimSuffix(baseURL, "/")
+	}
+	return baseURL
 }
 
 // 用户主页
@@ -52,7 +68,7 @@ func TagArticlesUrl(tagId int64) string {
 
 // 话题详情
 func TopicUrl(topicId int64) string {
-	return AbsUrl("/topic/" + strconv.FormatInt(topicId, 10))
+	return AbsUrl("/topic/" + idcodec.Encode(topicId))
 }
 
 func UrlJoin(parts ...string) string {

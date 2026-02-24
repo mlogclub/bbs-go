@@ -75,6 +75,10 @@ func getMessageDetailUrl(t *models.Message) string {
 		if topicId.Exists() && topicId.Int() > 0 {
 			return bbsurls.TopicUrl(topicId.Int())
 		}
+	case msg.TypeUserLevelUp:
+		return bbsurls.AbsUrl("/tasks")
+	case msg.TypeUserBadgeGrant:
+		return bbsurls.UserUrl(t.UserId) + "/badges"
 	}
 	return bbsurls.AbsUrl("/user/messages")
 }

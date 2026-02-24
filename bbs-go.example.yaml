@@ -1,5 +1,4 @@
 Port: 8082 # 端口
-BaseURL: / # 网站BaseURL
 IpDataPath: # IP数据文件，默认读取当前目录下ip2region.xdb文件，最新数据文件请从这里下载：https://github.com/lionsoul2014/ip2region/tree/master/data
 AllowedOrigins:
   - "*"

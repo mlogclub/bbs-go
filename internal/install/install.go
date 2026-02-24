@@ -26,7 +26,10 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/sqlite"
+
+	// "gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	"github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -50,6 +53,7 @@ type DbConfigReq struct {
 type InstallReq struct {
 	SiteTitle       string          `json:"siteTitle"`
 	SiteDescription string          `json:"siteDescription"`
+	BaseURL         string          `json:"baseURL"`
 	DbConfig        DbConfigReq     `json:"dbConfig"`
 	Username        string          `json:"username"`
 	Password        string          `json:"password"`
@@ -273,8 +277,13 @@ func InitData(req InstallReq) error {
 	services.UserRoleService.UpdateUserRoles(user.Id, []int64{role.Id})
 
 	// 初始化系统配置
+	baseURL := req.BaseURL
+	if strs.IsBlank(baseURL) {
+		baseURL = "/"
+	}
 	services.SysConfigService.Set(constants.SysConfigSiteTitle, req.SiteTitle)
 	services.SysConfigService.Set(constants.SysConfigSiteDescription, req.SiteDescription)
+	services.SysConfigService.Set(constants.SysConfigBaseURL, baseURL)
 
 	// 初始化默认欢迎帖子（按安装语言）
 	if err := initWelcomeTopic(req.Language, user.Id); err != nil {

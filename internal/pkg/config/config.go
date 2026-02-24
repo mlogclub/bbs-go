@@ -67,7 +67,6 @@ func init() {
 
 type Config struct {
 	Language       Language       `yaml:"language"`       // 语言
-	BaseURL        string         `yaml:"baseURL"`        // baseURL
 	Port           int            `yaml:"port"`           // 端口
 	IpDataPath     string         `yaml:"ipDataPath"`     // IP数据文件
 	AllowedOrigins []string       `yaml:"allowedOrigins"` // 跨域白名单

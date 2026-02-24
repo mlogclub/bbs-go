@@ -10,7 +10,10 @@ import (
 	"time"
 
 	"github.com/mlogclub/simple/sqls"
-	"gorm.io/driver/sqlite"
+
+	// "gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	"github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"

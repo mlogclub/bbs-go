@@ -12,6 +12,7 @@ const (
 const (
 	SysConfigSiteTitle                  = "siteTitle"                  // 站点标题
 	SysConfigSiteDescription            = "siteDescription"            // 站点描述
+	SysConfigBaseURL                    = "baseURL"                    // 网站URL
 	SysConfigSiteKeywords               = "siteKeywords"               // 站点关键字
 	SysConfigSiteLogo                   = "siteLogo"                   // 站点Logo
 	SysConfigSiteNavs                   = "siteNavs"                   // 站点导航

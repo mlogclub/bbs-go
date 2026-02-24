@@ -67,6 +67,11 @@ message:
   topic_delete_msg_title: "你的话题被删除"
   topic_favorite_msg_title: "收藏了你的话题"
   topic_like_msg_title: "点赞了你的话题"
+  user_level_up_msg_title: "等级提升"
+  user_level_up_msg_content: "恭喜你升级到 Lv.%d"
+  user_badge_grant_msg_title: "获得新勋章"
+  user_badge_grant_msg_content: "恭喜你获得勋章：%s"
+  user_badge_default_name: "新勋章"
 
 email:
   new_message: "新消息提醒"
@@ -77,6 +82,8 @@ email:
   topic_recommend: "话题被设为推荐"
   topic_delete: "话题被删除"
   article_comment: "收到文章评论"
+  user_level_up: "等级提升"
+  user_badge_grant: "获得新勋章"
   view_details: "点击查看详情"
 
 task:

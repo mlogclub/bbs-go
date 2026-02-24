@@ -268,6 +268,7 @@ func seedForLanguage() seedData {
 			SysConfigs: []sysConfigSeed{
 				{Key: constants.SysConfigSiteTitle, Value: "BBS-GO Demo Site", Name: "Site Title", Description: "Site Title"},
 				{Key: constants.SysConfigSiteDescription, Value: "BBS-GO, an open source community system based on Go language", Name: "Site Description", Description: "Site Description"},
+				{Key: constants.SysConfigBaseURL, Value: "/", Name: "Site URL", Description: "Site URL"},
 				{Key: constants.SysConfigSiteKeywords, Value: []string{"bbs-go"}, Name: "Site Keywords", Description: "Site Keywords"},
 				{Key: constants.SysConfigSiteNavs, Value: []map[string]string{
 					{"title": "Topics", "url": "/topics"},
@@ -305,6 +306,7 @@ func seedForLanguage() seedData {
 		SysConfigs: []sysConfigSeed{
 			{Key: constants.SysConfigSiteTitle, Value: "bbs-go演示站", Name: "站点标题", Description: "站点标题"},
 			{Key: constants.SysConfigSiteDescription, Value: "bbs-go，基于Go语言的开源社区系统", Name: "站点描述", Description: "站点描述"},
+			{Key: constants.SysConfigBaseURL, Value: "/", Name: "网站URL", Description: "网站URL"},
 			{Key: constants.SysConfigSiteKeywords, Value: []string{"bbs-go"}, Name: "站点关键字", Description: "站点关键字"},
 			{Key: constants.SysConfigSiteNavs, Value: []map[string]string{
 				{"title": "话题", "url": "/topics"},

@@ -17,6 +17,8 @@ const (
 	TypeTopicRecommend Type = 4 // 话题被设为推荐
 	TypeTopicDelete    Type = 5 // 话题被删除
 	TypeArticleComment Type = 6 // 收到文章评论
+	TypeUserLevelUp    Type = 7 // 用户升级
+	TypeUserBadgeGrant Type = 8 // 用户获得勋章
 )
 
 type TopicLikeExtraData struct {
@@ -44,4 +46,13 @@ type CommentExtraData struct {
 	QuoteId        int64  `json:"quoteId"`        // 引用评论ID
 	RootEntityType string `json:"rootEntityType"` // 根评论的实体类型（例如：文章评论的二级评论，该类型还是文章）
 	RootEntityId   string `json:"rootEntityId"`   // 根评论的实体ID
+}
+
+type UserLevelUpExtraData struct {
+	OldLevel int `json:"oldLevel"`
+	NewLevel int `json:"newLevel"`
+}
+
+type UserBadgeGrantExtraData struct {
+	BadgeId int64 `json:"badgeId"`
 }

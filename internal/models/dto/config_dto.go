@@ -6,6 +6,7 @@ package dto
 type SysConfigAdminResponse struct {
 	SiteTitle                  string        `json:"siteTitle"`
 	SiteDescription            string        `json:"siteDescription"`
+	BaseURL                    string        `json:"baseURL"`
 	SiteKeywords               []string      `json:"siteKeywords"`
 	SiteLogo                   string        `json:"siteLogo"`
 	SiteNavs                   []ActionLink  `json:"siteNavs"`
@@ -34,6 +35,7 @@ type SysConfigAdminResponse struct {
 type SysConfigOpenResponse struct {
 	SiteTitle                  string          `json:"siteTitle"`
 	SiteDescription            string          `json:"siteDescription"`
+	BaseURL                    string          `json:"baseURL"`
 	SiteKeywords               []string        `json:"siteKeywords"`
 	SiteLogo                   string          `json:"siteLogo"`
 	SiteNavs                   []ActionLink    `json:"siteNavs"`

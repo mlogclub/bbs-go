@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models/dto"
 	"errors"
 	"log/slog"
+	"strings"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
@@ -229,4 +230,15 @@ func (s *sysConfigService) GetUploadConfig() dto.UploadConfig {
 		slog.Warn("上传配置错误", slog.Any("err", err))
 	}
 	return uploadConfig
+}
+
+func (s *sysConfigService) GetBaseURL() string {
+	baseURL := strings.TrimSpace(cache.SysConfigCache.GetStr(constants.SysConfigBaseURL))
+	if baseURL == "" {
+		return "/"
+	}
+	for len(baseURL) > 1 && strings.HasSuffix(baseURL, "/") {
+		baseURL = strings.TrimSuffix(baseURL, "/")
+	}
+	return baseURL
 }

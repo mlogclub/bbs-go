@@ -77,3 +77,10 @@ type LevelUpEvent struct {
 	NewLevel   int   `json:"newLevel"`
 	UpdateTime int64 `json:"updateTime"`
 }
+
+// BadgeGrantEvent 用户获得勋章
+type BadgeGrantEvent struct {
+	UserId     int64 `json:"userId"`
+	BadgeId    int64 `json:"badgeId"`
+	UpdateTime int64 `json:"updateTime"`
+}

@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/repositories"
 	"errors"
 	"fmt"
@@ -208,6 +209,15 @@ func (s *taskEngineService) grantReward(ctx *sqls.TxContext, logRow *models.User
 		if err := UserBadgeService.Give(ctx, logRow.UserId, logRow.BadgeId, sourceType, sourceId); err != nil {
 			return err
 		}
+		userId := logRow.UserId
+		badgeId := logRow.BadgeId
+		ctx.RegisterCallback(func() {
+			event.Send(event.BadgeGrantEvent{
+				UserId:     userId,
+				BadgeId:    badgeId,
+				UpdateTime: dates.NowTimestamp(),
+			})
+		})
 	}
 
 	return nil

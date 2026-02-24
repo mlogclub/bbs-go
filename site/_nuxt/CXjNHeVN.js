@@ -1,0 +1,1 @@
+import{bc as t,C as a,aI as o,G as n,aU as u}from"./B1RaE-U5.js";const p=t(e=>{if(a().user)return!0;{const{$i18n:r}=o();n({type:"error",message:r.t("composables.pleaseSignIn")})}const s=e.fullPath||e.path||"/";return u(`/user/signin?redirect=${encodeURIComponent(s)}`)});export{p as default};

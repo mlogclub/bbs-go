@@ -1,1 +1,0 @@
-import{c as a}from"./CDN07tui.js";import{X as o,o as r,c as l,v as n,e as c,a6 as i}from"./Ck7AnVGd.js";const d=o({__name:"AlertTitle",props:{class:{}},setup(t){const e=t;return(s,m)=>(r(),l("div",{"data-slot":"alert-title",class:n(c(a)("col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",e.class))},[i(s.$slots,"default")],2))}});export{d as _};

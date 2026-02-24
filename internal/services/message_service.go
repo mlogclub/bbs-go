@@ -153,6 +153,10 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 		emailTitle = siteTitle + " - " + locales.Get("email.topic_delete")
 	case msg.TypeArticleComment:
 		emailTitle = siteTitle + " - " + locales.Get("email.article_comment")
+	case msg.TypeUserLevelUp:
+		emailTitle = siteTitle + " - " + locales.Get("email.user_level_up")
+	case msg.TypeUserBadgeGrant:
+		emailTitle = siteTitle + " - " + locales.Get("email.user_badge_grant")
 	}
 
 	var from *models.User
