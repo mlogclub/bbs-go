@@ -6,7 +6,6 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
-	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/repositories"
@@ -163,11 +162,11 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 	if t.FromId > 0 {
 		from = cache.UserCache.Get(t.FromId)
 	}
-	err := email.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
+	err := EmailService.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
 		t.QuoteContent, &dto.ActionLink{
 			Title: locales.Get("email.view_details"),
 			Url:   bbsurls.AbsUrl("/user/messages"),
-		})
+		}, constants.EmailLogBizTypeMessageNotice)
 	if err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 		return

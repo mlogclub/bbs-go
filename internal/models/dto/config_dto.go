@@ -26,6 +26,7 @@ type SysConfigAdminResponse struct {
 	EmailWhitelist             []string      `json:"emailWhitelist"`             // 邮箱白名单
 	EmailNoticeIntervalSeconds int           `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
 	LoginConfig                LoginConfig   `json:"loginConfig"`                // 登录配置
+	SmtpConfig                 SmtpConfig    `json:"smtpConfig"`                 // SMTP配置
 	UploadConfig               UploadConfig  `json:"uploadConfig"`               // 上传配置
 }
 
@@ -131,6 +132,14 @@ type UploadConfig struct {
 	AliyunOss          AliyunOssUploadConfig  `json:"aliyunOss"`
 	TencentCos         TencentCosUploadConfig `json:"tencentCos"`
 	AwsS3              AwsS3UploadConfig      `json:"awsS3"`
+}
+
+type SmtpConfig struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	SSL      bool   `json:"ssl"`
 }
 
 type AliyunOssUploadConfig struct {

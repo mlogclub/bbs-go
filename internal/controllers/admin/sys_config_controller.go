@@ -54,6 +54,7 @@ func (c *SysConfigController) GetConfigs() *web.JsonResult {
 		EmailWhitelist:             services.SysConfigService.GetEmailWhitelist(),
 		EmailNoticeIntervalSeconds: services.SysConfigService.GetEmailNoticeIntervalSeconds(),
 		LoginConfig:                services.SysConfigService.GetLoginConfig(),
+		SmtpConfig:                 services.SysConfigService.GetSmtpConfig(),
 		UploadConfig:               services.SysConfigService.GetUploadConfig(),
 	}
 	return web.JsonData(resp)

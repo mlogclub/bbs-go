@@ -4,7 +4,6 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/bbsurls"
-	"bbs-go/internal/pkg/email"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/locales"
@@ -33,6 +32,9 @@ import (
 
 // 邮箱验证邮件有效期（小时）
 const emailVerifyExpireHour = 24
+
+// 密码重置邮件有效期（小时）
+const passwordResetExpireHour = 1
 
 var UserService = newUserService()
 
@@ -426,6 +428,95 @@ func (s *userService) ResetPassword(userId int64) (string, error) {
 	return newPassword, nil
 }
 
+func (s *userService) SendResetPasswordEmail(emailAddress string) error {
+	emailAddress = strings.TrimSpace(emailAddress)
+	if err := validate.IsEmail(emailAddress); err != nil {
+		return err
+	}
+
+	user := s.GetByEmail(emailAddress)
+	// 统一返回成功，避免通过接口枚举邮箱是否存在
+	if user == nil || user.Status != constants.StatusOk || len(user.Password) == 0 {
+		return nil
+	}
+
+	token := strs.UUID()
+	url := bbsurls.AbsUrl("/user/password/reset?token=" + token)
+	link := &dto.ActionLink{Title: locales.Get("user.password_reset_link"), Url: url}
+	siteTitle := cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
+	subject := locales.Getf("user.password_reset_title", siteTitle)
+	title := locales.Getf("user.password_reset_title", siteTitle)
+	content := locales.Getf("user.password_reset_content", siteTitle, passwordResetExpireHour, url)
+
+	if err := repositories.EmailCodeRepository.Create(sqls.DB(), &models.EmailCode{
+		UserId:     user.Id,
+		BizType:    constants.EmailCodeBizTypePasswordReset,
+		Email:      user.Email.String,
+		Code:       "",
+		Token:      token,
+		Title:      title,
+		Content:    content,
+		Used:       false,
+		CreateTime: dates.NowTimestamp(),
+	}); err != nil {
+		return err
+	}
+	return EmailService.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link, constants.EmailLogBizTypePasswordReset)
+}
+
+func (s *userService) ResetPasswordByToken(token, password, rePassword string) error {
+	if strs.IsBlank(token) {
+		return errors.New(locales.Get("user.password_reset_illegal"))
+	}
+	if err := validate.IsValidPassword(password, rePassword); err != nil {
+		return err
+	}
+
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().
+		Eq("token", token).
+		Eq("biz_type", constants.EmailCodeBizTypePasswordReset))
+	if emailCode == nil || emailCode.Used {
+		return errors.New(locales.Get("user.password_reset_illegal"))
+	}
+
+	if dates.FromTimestamp(emailCode.CreateTime).Add(time.Hour * time.Duration(passwordResetExpireHour)).Before(time.Now()) {
+		return errors.New(locales.Get("user.password_reset_expired"))
+	}
+
+	user := s.Get(emailCode.UserId)
+	if user == nil || user.Email.String != emailCode.Email || user.Status != constants.StatusOk {
+		return errors.New(locales.Get("user.password_reset_expired"))
+	}
+
+	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		activeTokens := repositories.UserTokenRepository.Find(ctx.Tx, sqls.NewCnd().
+			Eq("user_id", user.Id).
+			Eq("status", constants.StatusOk))
+
+		if err := repositories.UserRepository.UpdateColumn(ctx.Tx, user.Id, "password", passwd.EncodePassword(password)); err != nil {
+			return err
+		}
+
+		if err := repositories.EmailCodeRepository.UpdateColumn(ctx.Tx, emailCode.Id, "used", true); err != nil {
+			return err
+		}
+
+		if err := ctx.Tx.Model(&models.UserToken{}).
+			Where("user_id = ? AND status = ?", user.Id, constants.StatusOk).
+			Update("status", constants.StatusDeleted).Error; err != nil {
+			return err
+		}
+
+		ctx.RegisterCallback(func() {
+			cache.UserCache.Invalidate(user.Id)
+			for _, token := range activeTokens {
+				cache.UserTokenCache.Invalidate(token.Token)
+			}
+		})
+		return nil
+	})
+}
+
 // IncrTopicCount topic_count + 1
 func (s *userService) IncrTopicCount(ctx *sqls.TxContext, userId int64) error {
 	if err := repositories.UserRepository.UpdateColumn(ctx.Tx, userId, "topic_count", gorm.Expr("topic_count + 1")); err != nil {
@@ -451,19 +542,6 @@ func (s *userService) IncrCommentCount(userId int64) int {
 		cache.UserCache.Invalidate(userId)
 	}
 	return commentCount
-}
-
-// SyncUserCount 同步用户计数
-func (s *userService) SyncUserCount() {
-	s.Scan(func(users []models.User) {
-		for _, user := range users {
-			topicCount := repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
-			commentCount := repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
-			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "topic_count", topicCount)
-			_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "comment_count", commentCount)
-			cache.UserCache.Invalidate(user.Id)
-		}
-	})
 }
 
 // SendEmailVerifyEmail 发送邮箱验证邮件
@@ -510,29 +588,27 @@ func (s *userService) SendEmailVerifyEmail(userId int64) error {
 		title     = locales.Getf("user.email_verify_title", siteTitle)
 		content   = locales.Getf("user.email_verify_content", siteTitle, emailVerifyExpireHour, url)
 	)
-	return sqls.DB().Transaction(func(tx *gorm.DB) error {
-		if err := repositories.EmailCodeRepository.Create(tx, &models.EmailCode{
-			UserId:     userId,
-			Email:      user.Email.String,
-			Code:       "",
-			Token:      token,
-			Title:      title,
-			Content:    content,
-			Used:       false,
-			CreateTime: dates.NowTimestamp(),
-		}); err != nil {
-			return nil
-		}
-		if err := email.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link); err != nil {
-			return err
-		}
-		return nil
-	})
+	if err := repositories.EmailCodeRepository.Create(sqls.DB(), &models.EmailCode{
+		UserId:     userId,
+		BizType:    constants.EmailCodeBizTypeEmailVerify,
+		Email:      user.Email.String,
+		Code:       "",
+		Token:      token,
+		Title:      title,
+		Content:    content,
+		Used:       false,
+		CreateTime: dates.NowTimestamp(),
+	}); err != nil {
+		return err
+	}
+	return EmailService.SendTemplateEmail(nil, user.Email.String, subject, title, content, "", link, constants.EmailLogBizTypeEmailVerify)
 }
 
 // VerifyEmail 验证邮箱
 func (s *userService) VerifyEmail(token string) (string, error) {
-	emailCode := EmailCodeService.FindOne(sqls.NewCnd().Eq("token", token))
+	emailCode := EmailCodeService.FindOne(sqls.NewCnd().
+		Eq("token", token).
+		Eq("biz_type", constants.EmailCodeBizTypeEmailVerify))
 	if emailCode == nil || emailCode.Used {
 		return "", errors.New(locales.Get("user.email_verify_illegal"))
 	}

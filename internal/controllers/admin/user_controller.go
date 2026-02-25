@@ -1,10 +1,12 @@
 package admin
 
 import (
+	"bbs-go/internal/cache"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/idcodec"
+	"bbs-go/internal/repositories"
 	"strconv"
 
 	"bbs-go/internal/models"
@@ -24,7 +26,15 @@ type UserController struct {
 
 func (c *UserController) GetSynccount() *web.JsonResult {
 	go func() {
-		services.UserService.SyncUserCount()
+		services.UserService.Scan(func(users []models.User) {
+			for _, user := range users {
+				topicCount := repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+				commentCount := repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).Eq("status", constants.StatusOk))
+				_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "topic_count", topicCount)
+				_ = repositories.UserRepository.UpdateColumn(sqls.DB(), user.Id, "comment_count", commentCount)
+				cache.UserCache.Invalidate(user.Id)
+			}
+		})
 	}()
 	return web.JsonSuccess()
 }

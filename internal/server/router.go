@@ -98,6 +98,7 @@ func NewServer() {
 		m.Party("/api").Handle(new(admin.ApiController))
 		m.Party("/dict-type").Handle(new(admin.DictTypeController))
 		m.Party("/dict").Handle(new(admin.DictController))
+		m.Party("/email-log").Handle(new(admin.EmailLogController))
 
 		m.Party("/common").Handle(new(admin.CommonController))
 		m.Party("/user").Handle(new(admin.UserController))

@@ -283,6 +283,7 @@ func seedForLanguage() seedData {
 				{Key: constants.SysConfigSiteNotification, Value: ""},
 				{Key: constants.SysConfigRecommendTags, Value: ""},
 				{Key: constants.SysConfigModules, Value: map[string]bool{"tweet": true, "topic": true, "article": true}},
+				{Key: constants.SysConfigSmtpConfig, Value: dto.SmtpConfig{}},
 				{Key: constants.SysConfigUploadConfig, Value: dto.UploadConfig{
 					EnableUploadMethod: dto.Local,
 					AliyunOss:          dto.AliyunOssUploadConfig{},
@@ -321,6 +322,7 @@ func seedForLanguage() seedData {
 			{Key: constants.SysConfigSiteNotification, Value: ""},
 			{Key: constants.SysConfigRecommendTags, Value: ""},
 			{Key: constants.SysConfigModules, Value: map[string]bool{"tweet": true, "topic": true, "article": true}},
+			{Key: constants.SysConfigSmtpConfig, Value: dto.SmtpConfig{}},
 			{Key: constants.SysConfigUploadConfig, Value: dto.UploadConfig{
 				EnableUploadMethod: dto.Local,
 				AliyunOss: dto.AliyunOssUploadConfig{

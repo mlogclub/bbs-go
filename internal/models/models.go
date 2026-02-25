@@ -17,7 +17,7 @@ var Models = []interface{}{
 	&LevelConfig{},
 	&Vote{}, &VoteOption{}, &VoteRecord{},
 	&UserScoreLog{}, &UserExpLog{},
-	&OperateLog{}, &EmailCode{}, &SmsCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
+	&OperateLog{}, &EmailLog{}, &EmailCode{}, &SmsCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
 	&ForbiddenWord{},
 }
 
@@ -495,13 +495,26 @@ type OperateLog struct {
 type EmailCode struct {
 	Model
 	UserId     int64  `gorm:"not null;index:idx_email_code_user_id" json:"userId" form:"userId"` // 用户编号
-	Email      string `gorm:"not null;size:128" json:"email" form:"email"`                       // 邮箱
-	Code       string `gorm:"not null;size:8" json:"code" form:"code"`                           // 验证码
-	Token      string `gorm:"not null;size:32;unique" json:"token" form:"token"`                 // 验证码token
-	Title      string `gorm:"size:1024" json:"title" form:"title"`                               // 标题
-	Content    string `gorm:"type:text" json:"content" form:"content"`                           // 内容
-	Used       bool   `gorm:"not null" json:"used" form:"used"`                                  // 是否使用
-	CreateTime int64  `json:"createTime" form:"createTime"`                                      // 创建时间
+	BizType    string `gorm:"not null;default:'';size:32;index:idx_email_code_biz_type" json:"bizType" form:"bizType"`
+	Email      string `gorm:"not null;size:128" json:"email" form:"email"`       // 邮箱
+	Code       string `gorm:"not null;size:8" json:"code" form:"code"`           // 验证码
+	Token      string `gorm:"not null;size:32;unique" json:"token" form:"token"` // 验证码token
+	Title      string `gorm:"size:1024" json:"title" form:"title"`               // 标题
+	Content    string `gorm:"type:text" json:"content" form:"content"`           // 内容
+	Used       bool   `gorm:"not null" json:"used" form:"used"`                  // 是否使用
+	CreateTime int64  `json:"createTime" form:"createTime"`                      // 创建时间
+}
+
+// 邮件发送记录
+type EmailLog struct {
+	Model
+	ToEmail    string `gorm:"not null;size:128;index:idx_email_log_to_email" json:"toEmail" form:"toEmail"`
+	Subject    string `gorm:"size:1024" json:"subject" form:"subject"`
+	Content    string `gorm:"type:longtext" json:"content" form:"content"`
+	BizType    string `gorm:"not null;default:'';size:32;index:idx_email_log_biz_type" json:"bizType" form:"bizType"`
+	Status     int    `gorm:"not null;index:idx_email_log_status" json:"status" form:"status"`
+	ErrorMsg   string `gorm:"type:text" json:"errorMsg" form:"errorMsg"`
+	CreateTime int64  `gorm:"index:idx_email_log_create_time" json:"createTime" form:"createTime"`
 }
 
 // 短信验证码

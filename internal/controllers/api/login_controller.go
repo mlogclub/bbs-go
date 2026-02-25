@@ -95,6 +95,51 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 	return render.BuildLoginSuccess(c.Ctx, user, redirect)
 }
 
+// 请求找回密码邮件
+func (c *LoginController) PostSend_reset_password_email() *web.JsonResult {
+	if !services.SysConfigService.GetLoginConfig().PasswordLogin.Enabled {
+		return web.JsonErrorMsg(locales.Get("auth.password_login_disabled"))
+	}
+	var (
+		captchaId          = c.Ctx.PostValueTrim("captchaId")
+		captchaCode        = c.Ctx.PostValueTrim("captchaCode")
+		captchaProtocol, _ = params.GetInt(c.Ctx, "captchaProtocol")
+		email              = c.Ctx.PostValueTrim("email")
+	)
+
+	// 根据验证码协议版本校验验证码
+	if captchaProtocol == 2 {
+		if !captcha2.Verify(captchaId, captchaCode) {
+			return web.JsonError(errs.CaptchaError())
+		}
+	} else {
+		if !captcha.VerifyString(captchaId, captchaCode) {
+			return web.JsonError(errs.CaptchaError())
+		}
+	}
+
+	if err := services.UserService.SendResetPasswordEmail(email); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+// 重置密码
+func (c *LoginController) PostReset_password() *web.JsonResult {
+	if !services.SysConfigService.GetLoginConfig().PasswordLogin.Enabled {
+		return web.JsonErrorMsg(locales.Get("auth.password_login_disabled"))
+	}
+	var (
+		token      = c.Ctx.PostValueTrim("token")
+		password   = c.Ctx.PostValueTrim("password")
+		rePassword = c.Ctx.PostValueTrim("rePassword")
+	)
+	if err := services.UserService.ResetPasswordByToken(token, password, rePassword); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
 // 退出登录
 func (c *LoginController) GetSignout() *web.JsonResult {
 	err := services.UserTokenService.Signout(c.Ctx)

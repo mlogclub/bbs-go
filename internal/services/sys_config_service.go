@@ -232,6 +232,18 @@ func (s *sysConfigService) GetUploadConfig() dto.UploadConfig {
 	return uploadConfig
 }
 
+func (s *sysConfigService) GetSmtpConfig() dto.SmtpConfig {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigSmtpConfig)
+	var smtpConfig dto.SmtpConfig
+	if strings.TrimSpace(str) == "" {
+		return smtpConfig
+	}
+	if err := jsons.Parse(str, &smtpConfig); err != nil {
+		slog.Warn("smtp配置错误", slog.Any("err", err))
+	}
+	return smtpConfig
+}
+
 func (s *sysConfigService) GetBaseURL() string {
 	baseURL := strings.TrimSpace(cache.SysConfigCache.GetStr(constants.SysConfigBaseURL))
 	if baseURL == "" {

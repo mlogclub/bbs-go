@@ -103,4 +103,7 @@ func runMigration(version int64) error {
 func init() {
 	register(1, "init migration", migrate_init)
 	register(2, "init task data", migrate_init_task_data)
+	register(3, "add email_code biz_type", migrate_add_email_code_biz_type)
+	register(4, "add email log menu", migrate_add_email_log_menu)
+	register(5, "migrate smtp config to sys config", migrate_smtp_config_to_sys_config)
 }

@@ -8,6 +8,23 @@ const (
 	CookieTokenKey               = "bbsgo_token"
 )
 
+const (
+	EmailCodeBizTypeEmailVerify   = "emailVerify"
+	EmailCodeBizTypePasswordReset = "passwordReset"
+)
+
+const (
+	EmailLogBizTypeUnknown       = "unknown"
+	EmailLogBizTypeEmailVerify   = "emailVerify"
+	EmailLogBizTypePasswordReset = "passwordReset"
+	EmailLogBizTypeMessageNotice = "messageNotice"
+)
+
+const (
+	EmailLogStatusSuccess = 0
+	EmailLogStatusFailed  = 1
+)
+
 // 系统配置
 const (
 	SysConfigSiteTitle                  = "siteTitle"                  // 站点标题
@@ -32,6 +49,7 @@ const (
 	SysConfigEmailWhitelist             = "emailWhitelist"             // 邮箱白名单
 	SysConfigEmailNoticeIntervalSeconds = "emailNoticeIntervalSeconds" // 邮件通知间隔(秒)
 	SysConfigLoginConfig                = "loginConfig"                // 登录配置
+	SysConfigSmtpConfig                 = "smtpConfig"                 // SMTP配置
 	SysConfigUploadConfig               = "uploadConfig"               // 上传配置
 )
 
