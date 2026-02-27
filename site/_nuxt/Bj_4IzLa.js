@@ -1,0 +1,1 @@
+import{W as o,o as r,c as l,a7 as t,v as n,e as c,af as f}from"./IMHBmAvM.js";const i=o({__name:"DialogFooter",props:{class:{}},setup(e){const s=e;return(a,p)=>(r(),l("div",{"data-slot":"dialog-footer",class:n(c(f)("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",s.class))},[t(a.$slots,"default")],2))}});export{i as _};

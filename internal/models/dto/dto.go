@@ -2,9 +2,10 @@ package dto
 
 // 站点导航
 type ActionLink struct {
-	Title           string `json:"title"`
-	Url             string `json:"url"`
-	OpenInNewWindow bool   `json:"openInNewWindow"`
+	Title           string       `json:"title"`
+	Url             string       `json:"url"`
+	OpenInNewWindow bool         `json:"openInNewWindow"`
+	Children        []ActionLink `json:"children,omitempty"`
 }
 
 type ApiRoute struct {

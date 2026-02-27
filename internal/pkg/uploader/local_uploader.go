@@ -2,6 +2,7 @@ package uploader
 
 import (
 	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/respath"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,7 +21,7 @@ func (u *LocalUploader) PutImage(cfg dto.UploadConfig, data []byte, contentType 
 func (u *LocalUploader) PutObject(_ dto.UploadConfig, key string, data []byte, _ string) (string, error) {
 	cleanKey := strings.TrimPrefix(filepath.ToSlash(filepath.Clean(key)), "/")
 	relativePath := filepath.FromSlash(cleanKey)
-	fullPath := filepath.Join(".", "res", "uploads", relativePath)
+	fullPath := respath.UploadsPath(relativePath)
 
 	if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 		return "", err
@@ -29,7 +30,7 @@ func (u *LocalUploader) PutObject(_ dto.UploadConfig, key string, data []byte, _
 		return "", err
 	}
 
-	return "/res/uploads/" + cleanKey, nil
+	return respath.UploadsURLPrefix + cleanKey, nil
 }
 
 func (u *LocalUploader) CopyImage(cfg dto.UploadConfig, originUrl string) (string, error) {

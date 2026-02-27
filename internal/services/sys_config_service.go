@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
 	"errors"
+	"fmt"
 	"log/slog"
 	"strings"
 
@@ -22,6 +23,12 @@ import (
 )
 
 var SysConfigService = newSysConfigService()
+
+const (
+	maxScriptInjectionCount   = 20
+	maxScriptInjectionCodeLen = 20 * 1024
+	maxScriptInjectionNameLen = 200
+)
 
 func newSysConfigService() *sysConfigService {
 	return &sysConfigService{}
@@ -64,6 +71,18 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	if !ok {
 		return errors.New("配置数据格式错误")
 	}
+
+	if siteNavs := json.Get(constants.SysConfigSiteNavs); siteNavs.Exists() {
+		if err := validateSiteNavs(siteNavs.String()); err != nil {
+			return err
+		}
+	}
+	if scriptInjections := json.Get(constants.SysConfigScriptInjections); scriptInjections.Exists() {
+		if err := validateScriptInjections(scriptInjections.String()); err != nil {
+			return err
+		}
+	}
+
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		for k := range configs {
 			v := json.Get(k).String()
@@ -244,6 +263,20 @@ func (s *sysConfigService) GetSmtpConfig() dto.SmtpConfig {
 	return smtpConfig
 }
 
+func (s *sysConfigService) GetScriptInjections() []dto.ScriptInjection {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigScriptInjections)
+	if strings.TrimSpace(str) == "" {
+		return []dto.ScriptInjection{}
+	}
+
+	var injections []dto.ScriptInjection
+	if err := jsons.Parse(str, &injections); err != nil {
+		slog.Warn("脚本注入配置错误", slog.Any("err", err))
+		return []dto.ScriptInjection{}
+	}
+	return injections
+}
+
 func (s *sysConfigService) GetBaseURL() string {
 	baseURL := strings.TrimSpace(cache.SysConfigCache.GetStr(constants.SysConfigBaseURL))
 	if baseURL == "" {
@@ -253,4 +286,86 @@ func (s *sysConfigService) GetBaseURL() string {
 		baseURL = strings.TrimSuffix(baseURL, "/")
 	}
 	return baseURL
+}
+
+func validateSiteNavs(siteNavsJson string) error {
+	if strings.TrimSpace(siteNavsJson) == "" {
+		return nil
+	}
+	var navs []dto.ActionLink
+	if err := jsons.Parse(siteNavsJson, &navs); err != nil {
+		return errors.New("invalid site navigation data format")
+	}
+	return validateActionLinks(navs, 1)
+}
+
+func validateActionLinks(navs []dto.ActionLink, depth int) error {
+	if depth > 2 {
+		return errors.New("site navigation supports at most two levels")
+	}
+	for idx, nav := range navs {
+		if strings.TrimSpace(nav.Title) == "" {
+			return fmt.Errorf("navigation title is required at item %d", idx+1)
+		}
+		if depth == 1 {
+			if len(nav.Children) == 0 && strings.TrimSpace(nav.Url) == "" {
+				return fmt.Errorf("primary navigation URL is required at item %d", idx+1)
+			}
+			if len(nav.Children) > 0 {
+				if err := validateActionLinks(nav.Children, depth+1); err != nil {
+					return err
+				}
+			}
+			continue
+		}
+		if strings.TrimSpace(nav.Url) == "" {
+			return fmt.Errorf("secondary navigation URL is required at item %d", idx+1)
+		}
+		if len(nav.Children) > 0 {
+			return errors.New("site navigation supports at most two levels")
+		}
+	}
+	return nil
+}
+
+func validateScriptInjections(scriptInjectionsJSON string) error {
+	if strings.TrimSpace(scriptInjectionsJSON) == "" {
+		return nil
+	}
+
+	var injections []dto.ScriptInjection
+	if err := jsons.Parse(scriptInjectionsJSON, &injections); err != nil {
+		return errors.New("invalid script injections data format")
+	}
+
+	if len(injections) > maxScriptInjectionCount {
+		return fmt.Errorf("too many script injections, max %d", maxScriptInjectionCount)
+	}
+
+	for idx, injection := range injections {
+		scriptName := strings.TrimSpace(injection.ScriptName)
+		if scriptName == "" {
+			return fmt.Errorf("script injection name is required at item %d", idx+1)
+		}
+		if len([]rune(scriptName)) > maxScriptInjectionNameLen {
+			return fmt.Errorf("script injection name is too long at item %d", idx+1)
+		}
+		injectionType := strings.TrimSpace(injection.Type)
+		switch injectionType {
+		case "external":
+			if strings.TrimSpace(injection.Src) == "" {
+				return fmt.Errorf("script injection src is required at item %d", idx+1)
+			}
+		case "inline":
+			if strings.TrimSpace(injection.Code) == "" {
+				return fmt.Errorf("script injection code is required at item %d", idx+1)
+			}
+			if len(injection.Code) > maxScriptInjectionCodeLen {
+				return fmt.Errorf("script injection code is too long at item %d", idx+1)
+			}
+		default:
+			return fmt.Errorf("script injection type must be external or inline at item %d", idx+1)
+		}
+	}
+	return nil
 }

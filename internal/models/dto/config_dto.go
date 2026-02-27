@@ -4,57 +4,70 @@ package dto
 //
 //	Admin配置返回结构体
 type SysConfigAdminResponse struct {
-	SiteTitle                  string        `json:"siteTitle"`
-	SiteDescription            string        `json:"siteDescription"`
-	BaseURL                    string        `json:"baseURL"`
-	SiteKeywords               []string      `json:"siteKeywords"`
-	SiteLogo                   string        `json:"siteLogo"`
-	SiteNavs                   []ActionLink  `json:"siteNavs"`
-	SiteNotification           string        `json:"siteNotification"`
-	RecommendTags              []string      `json:"recommendTags"`
-	UrlRedirect                bool          `json:"urlRedirect"`
-	DefaultNodeId              int64         `json:"defaultNodeId"`
-	ArticlePending             bool          `json:"articlePending"`
-	TopicCaptcha               bool          `json:"topicCaptcha"`
-	UserObserveSeconds         int           `json:"userObserveSeconds"`
-	TokenExpireDays            int           `json:"tokenExpireDays"`
-	CreateTopicEmailVerified   bool          `json:"createTopicEmailVerified"`
-	CreateArticleEmailVerified bool          `json:"createArticleEmailVerified"`
-	CreateCommentEmailVerified bool          `json:"createCommentEmailVerified"`
-	EnableHideContent          bool          `json:"enableHideContent"`
-	Modules                    ModulesConfig `json:"modules"`
-	EmailWhitelist             []string      `json:"emailWhitelist"`             // 邮箱白名单
-	EmailNoticeIntervalSeconds int           `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
-	LoginConfig                LoginConfig   `json:"loginConfig"`                // 登录配置
-	SmtpConfig                 SmtpConfig    `json:"smtpConfig"`                 // SMTP配置
-	UploadConfig               UploadConfig  `json:"uploadConfig"`               // 上传配置
+	SiteTitle                  string            `json:"siteTitle"`
+	SiteDescription            string            `json:"siteDescription"`
+	BaseURL                    string            `json:"baseURL"`
+	SiteKeywords               []string          `json:"siteKeywords"`
+	SiteLogo                   string            `json:"siteLogo"`
+	SiteNavs                   []ActionLink      `json:"siteNavs"`
+	SiteNotification           string            `json:"siteNotification"`
+	RecommendTags              []string          `json:"recommendTags"`
+	UrlRedirect                bool              `json:"urlRedirect"`
+	DefaultNodeId              int64             `json:"defaultNodeId"`
+	ArticlePending             bool              `json:"articlePending"`
+	TopicCaptcha               bool              `json:"topicCaptcha"`
+	UserObserveSeconds         int               `json:"userObserveSeconds"`
+	TokenExpireDays            int               `json:"tokenExpireDays"`
+	CreateTopicEmailVerified   bool              `json:"createTopicEmailVerified"`
+	CreateArticleEmailVerified bool              `json:"createArticleEmailVerified"`
+	CreateCommentEmailVerified bool              `json:"createCommentEmailVerified"`
+	EnableHideContent          bool              `json:"enableHideContent"`
+	Modules                    ModulesConfig     `json:"modules"`
+	EmailWhitelist             []string          `json:"emailWhitelist"`             // 邮箱白名单
+	EmailNoticeIntervalSeconds int               `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	LoginConfig                LoginConfig       `json:"loginConfig"`                // 登录配置
+	SmtpConfig                 SmtpConfig        `json:"smtpConfig"`                 // SMTP配置
+	UploadConfig               UploadConfig      `json:"uploadConfig"`               // 上传配置
+	ScriptInjections           []ScriptInjection `json:"scriptInjections"`           // head脚本注入
 }
 
 // SysConfigOpenResponse
 //
 //	Open配置返回结构体
 type SysConfigOpenResponse struct {
-	SiteTitle                  string          `json:"siteTitle"`
-	SiteDescription            string          `json:"siteDescription"`
-	BaseURL                    string          `json:"baseURL"`
-	SiteKeywords               []string        `json:"siteKeywords"`
-	SiteLogo                   string          `json:"siteLogo"`
-	SiteNavs                   []ActionLink    `json:"siteNavs"`
-	SiteNotification           string          `json:"siteNotification"`
-	RecommendTags              []string        `json:"recommendTags"`
-	UrlRedirect                bool            `json:"urlRedirect"`
-	DefaultNodeId              int64           `json:"defaultNodeId"`
-	ArticlePending             bool            `json:"articlePending"`
-	TopicCaptcha               bool            `json:"topicCaptcha"`
-	UserObserveSeconds         int             `json:"userObserveSeconds"`
-	TokenExpireDays            int             `json:"tokenExpireDays"`
-	CreateTopicEmailVerified   bool            `json:"createTopicEmailVerified"`
-	CreateArticleEmailVerified bool            `json:"createArticleEmailVerified"`
-	CreateCommentEmailVerified bool            `json:"createCommentEmailVerified"`
-	EnableHideContent          bool            `json:"enableHideContent"`
-	Modules                    ModulesConfig   `json:"modules"`
-	EmailNoticeIntervalSeconds int             `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
-	LoginConfig                OpenLoginConfig `json:"loginConfig"`                // 登录配置
+	SiteTitle                  string            `json:"siteTitle"`
+	SiteDescription            string            `json:"siteDescription"`
+	BaseURL                    string            `json:"baseURL"`
+	SiteKeywords               []string          `json:"siteKeywords"`
+	SiteLogo                   string            `json:"siteLogo"`
+	SiteNavs                   []ActionLink      `json:"siteNavs"`
+	SiteNotification           string            `json:"siteNotification"`
+	RecommendTags              []string          `json:"recommendTags"`
+	UrlRedirect                bool              `json:"urlRedirect"`
+	DefaultNodeId              int64             `json:"defaultNodeId"`
+	ArticlePending             bool              `json:"articlePending"`
+	TopicCaptcha               bool              `json:"topicCaptcha"`
+	UserObserveSeconds         int               `json:"userObserveSeconds"`
+	TokenExpireDays            int               `json:"tokenExpireDays"`
+	CreateTopicEmailVerified   bool              `json:"createTopicEmailVerified"`
+	CreateArticleEmailVerified bool              `json:"createArticleEmailVerified"`
+	CreateCommentEmailVerified bool              `json:"createCommentEmailVerified"`
+	EnableHideContent          bool              `json:"enableHideContent"`
+	Modules                    ModulesConfig     `json:"modules"`
+	EmailNoticeIntervalSeconds int               `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	LoginConfig                OpenLoginConfig   `json:"loginConfig"`                // 登录配置
+	ScriptInjections           []ScriptInjection `json:"scriptInjections"`           // head脚本注入
+}
+
+type ScriptInjection struct {
+	Enabled     bool   `json:"enabled"`
+	ScriptName  string `json:"scriptName"` // 仅后台展示
+	Type        string `json:"type"`       // external | inline
+	Src         string `json:"src"`
+	Code        string `json:"code"`
+	Async       bool   `json:"async"`
+	Defer       bool   `json:"defer"`
+	Crossorigin string `json:"crossorigin"`
 }
 
 type OpenLoginConfig struct {

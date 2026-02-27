@@ -1,8 +1,12 @@
 Port: 8082 # 端口
-IpDataPath: # IP数据文件，默认读取当前目录下ip2region.xdb文件，最新数据文件请从这里下载：https://github.com/lionsoul2014/ip2region/tree/master/data
 AllowedOrigins:
   - "*"
 Installed: false # 是否已完成安装
+
+# 数据下载 https://github.com/lionsoul2014/ip2region/tree/master/data
+IPLocator:
+  IPv4DataPath: # IPv4 数据文件（建议使用 ip2region_v4.xdb）
+  IPv6DataPath: # IPv6 数据文件（建议使用 ip2region_v6.xdb）
 
 # ID 编解码秘钥（安装时自动生成）
 IdCodec:

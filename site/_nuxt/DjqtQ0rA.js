@@ -1,1 +1,0 @@
-import{k as n}from"./BqKV1jHe.js";function i(...t){const o=n(),e=[];return t&&t.length&&e.push(...t),o.config.siteTitle&&e.push(o.config.siteTitle),e.join(" - ")}function s(){return n().config.siteDescription}function c(){return n().config.siteKeywords}function f(t){return t?t.type===0?i(t.title):i(t.content):i()}export{f as a,s as b,c,i as u};

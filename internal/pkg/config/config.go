@@ -68,7 +68,7 @@ func init() {
 type Config struct {
 	Language       Language       `yaml:"language"`       // 语言
 	Port           int            `yaml:"port"`           // 端口
-	IpDataPath     string         `yaml:"ipDataPath"`     // IP数据文件
+	IPLocator      IPLocator      `yaml:"ipLocator"`      // IP定位配置
 	AllowedOrigins []string       `yaml:"allowedOrigins"` // 跨域白名单
 	Installed      bool           `yaml:"installed"`      // 是否已安装
 	IDCodec        IDCodecConfig  `yaml:"idCodec"`        // ID 编解码配置
@@ -78,6 +78,11 @@ type Config struct {
 	Search         SearchConfig   `yaml:"search"`         // 搜索配置
 	BaiduSEO       BaiduSEOConfig `yaml:"baiduSEO"`       // 百度SEO配置
 	SmSEO          SmSEOConfig    `yaml:"smSEO"`          // 神马搜索SEO配置
+}
+
+type IPLocator struct {
+	IPv4DataPath string `yaml:"ipv4DataPath"` // IPv4 数据文件路径
+	IPv6DataPath string `yaml:"ipv6DataPath"` // IPv6 数据文件路径
 }
 
 type IDCodecConfig struct {

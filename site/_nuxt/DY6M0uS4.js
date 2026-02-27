@@ -1,0 +1,1 @@
+import{bh as t,C as a,aP as o,G as n,aY as u}from"./IMHBmAvM.js";const c=t(e=>{if(a().user)return!0;{const{$i18n:r}=o();n({type:"error",message:r.t("composables.pleaseSignIn")})}const s=e.fullPath||e.path||"/";return u(`/user/signin?redirect=${encodeURIComponent(s)}`)});export{c as default};

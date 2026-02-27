@@ -56,6 +56,7 @@ func (c *SysConfigController) GetConfigs() *web.JsonResult {
 		LoginConfig:                services.SysConfigService.GetLoginConfig(),
 		SmtpConfig:                 services.SysConfigService.GetSmtpConfig(),
 		UploadConfig:               services.SysConfigService.GetUploadConfig(),
+		ScriptInjections:           services.SysConfigService.GetScriptInjections(),
 	}
 	return web.JsonData(resp)
 }

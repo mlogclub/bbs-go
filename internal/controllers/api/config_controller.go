@@ -48,6 +48,7 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 				SmsLogin:      dto.EnabledConfig{Enabled: loginConfig.SmsLogin.Enabled},
 				GoogleLogin:   dto.EnabledConfig{Enabled: loginConfig.GoogleLogin.Enabled},
 			},
+			ScriptInjections: services.SysConfigService.GetScriptInjections(),
 		}
 		b = web.NewRspBuilder(sysConfig)
 	} else {

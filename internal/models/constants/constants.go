@@ -51,6 +51,7 @@ const (
 	SysConfigLoginConfig                = "loginConfig"                // 登录配置
 	SysConfigSmtpConfig                 = "smtpConfig"                 // SMTP配置
 	SysConfigUploadConfig               = "uploadConfig"               // 上传配置
+	SysConfigScriptInjections           = "scriptInjections"           // head脚本注入配置
 )
 
 // EntityType

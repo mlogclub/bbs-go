@@ -1,1 +1,0 @@
-import{c as a}from"./CDN07tui.js";import{W as r,o as t,c as l,a6 as n,v as c,e as f}from"./BqKV1jHe.js";const d=r({__name:"DialogFooter",props:{class:{}},setup(e){const s=e;return(o,m)=>(t(),l("div",{"data-slot":"dialog-footer",class:c(f(a)("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",s.class))},[n(o.$slots,"default")],2))}});export{d as _};

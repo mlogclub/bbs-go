@@ -1,0 +1,1 @@
+import{W as t,o as l,c as n,v as o,e as r,af as c,a7 as i}from"./IMHBmAvM.js";const f=t({__name:"AlertTitle",props:{class:{}},setup(a){const e=a;return(s,m)=>(l(),n("div",{"data-slot":"alert-title",class:o(r(c)("col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",e.class))},[i(s.$slots,"default")],2))}});export{f as _};

@@ -1,6 +1,6 @@
 module bbs-go
 
-go 1.24.0
+go 1.26.0
 
 require (
 	github.com/88250/lute v1.7.6
@@ -24,7 +24,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20240502084239-34f27409ce72
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20240510055607-89e20ab7b6c6
+	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20260225151951-9d4b16540918
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mlogclub/codegen v1.0.1
