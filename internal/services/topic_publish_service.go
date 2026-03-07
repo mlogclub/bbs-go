@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/models/req"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/repositories"
 	"errors"
@@ -16,6 +17,7 @@ import (
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
+	"github.com/spf13/cast"
 )
 
 var TopicPublishService = new(topicPublishService)
@@ -24,13 +26,20 @@ type topicPublishService struct{}
 
 // Publish 发表
 func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*models.Topic, error) {
-	if err := s._CheckParams(form); err != nil {
+	if err := s.checkParams(userId, form); err != nil {
 		return nil, err
+	}
+
+	// QA 话题不处理隐藏内容和投票，前端即使传入也忽略。
+	if form.Type == constants.TopicTypeQA {
+		form.HideContent = ""
+		form.Vote = nil
 	}
 
 	now := dates.NowTimestamp()
 	topic := &models.Topic{
 		Type:            form.Type,
+		QaStatus:        constants.QaStatusUnsolved,
 		UserId:          userId,
 		NodeId:          form.NodeId,
 		Title:           form.Title,
@@ -43,6 +52,10 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 		IpLocation:      iplocator.IpLocation(form.Ip),
 		LastCommentTime: now,
 		CreateTime:      now,
+	}
+
+	if form.Type == constants.TopicTypeQA && form.BountyScore > 0 {
+		topic.BountyScore = form.BountyScore
 	}
 
 	if len(form.ImageList) > 0 {
@@ -95,6 +108,13 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 			return err
 		}
 
+		// 问答悬赏：扣减题主积分
+		if topic.Type == constants.TopicTypeQA && topic.BountyScore > 0 {
+			if err = UserService.DecrScoreTx(ctx, userId, topic.BountyScore, constants.SourceTypeQaBounty, cast.ToString(topic.Id), locales.Get("topic.bounty_deduct")); err != nil {
+				return err
+			}
+		}
+
 		return nil
 	}); err != nil {
 		return nil, err
@@ -106,6 +126,7 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 	event.Send(event.TopicCreateEvent{
 		UserId:     topic.UserId,
 		TopicId:    topic.Id,
+		TopicType:  int(topic.Type),
 		CreateTime: topic.CreateTime,
 	})
 	return topic, nil
@@ -126,7 +147,7 @@ func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
 	return false
 }
 
-func (s topicPublishService) _CheckParams(form req.CreateTopicForm) (err error) {
+func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm) (err error) {
 	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
 		if !modules.Tweet {
@@ -138,7 +159,7 @@ func (s topicPublishService) _CheckParams(form req.CreateTopicForm) (err error) 
 		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
 		// 	return errors.New("内容或图片不能为空")
 		// }
-	} else {
+	} else if constants.IsPostTopicType(form.Type) {
 		if !modules.Topic {
 			return errors.New("未开启帖子功能")
 		}
@@ -153,6 +174,8 @@ func (s topicPublishService) _CheckParams(form req.CreateTopicForm) (err error) 
 		if strs.RuneLen(form.Title) > 128 {
 			return errors.New("标题长度不能超过128")
 		}
+	} else {
+		return errors.New(locales.Get("topic.type_not_supported"))
 	}
 
 	if form.NodeId <= 0 {
@@ -161,9 +184,49 @@ func (s topicPublishService) _CheckParams(form req.CreateTopicForm) (err error) 
 			return errors.New("请选择节点")
 		}
 	}
+
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
 		return errors.New("节点不存在")
+	}
+	if !node.Type.Supports(form.Type) {
+		return errors.New(locales.Get("topic.node_type_mismatch"))
+	}
+	if form.Type == constants.TopicTypeQA {
+		form.Vote = nil
+		if !SysConfigService.IsEnableQaBounty() {
+			form.BountyScore = 0
+		} else {
+			if form.BountyScore < 0 {
+				return errors.New(locales.Get("topic.bounty_invalid"))
+			}
+			if SysConfigService.IsQaBountyRequired() {
+				minVal := SysConfigService.GetQaBountyMin()
+				if form.BountyScore < minVal {
+					return errors.New(locales.Get("topic.bounty_required"))
+				}
+			}
+			if form.BountyScore > 0 {
+				minVal := SysConfigService.GetQaBountyMin()
+				maxVal := SysConfigService.GetQaBountyMax()
+				if minVal > 0 && form.BountyScore < minVal {
+					if maxVal > 0 {
+						return errors.New(locales.Getf("topic.bounty_out_of_range_range", minVal, maxVal))
+					}
+					return errors.New(locales.Getf("topic.bounty_out_of_range_min", minVal))
+				}
+				if maxVal > 0 && form.BountyScore > maxVal {
+					if minVal > 0 {
+						return errors.New(locales.Getf("topic.bounty_out_of_range_range", minVal, maxVal))
+					}
+					return errors.New(locales.Getf("topic.bounty_out_of_range_max", maxVal))
+				}
+				user := repositories.UserRepository.Get(sqls.DB(), userId)
+				if user == nil || user.Score < form.BountyScore {
+					return errors.New(locales.Get("topic.insufficient_score"))
+				}
+			}
+		}
 	}
 	if err = VoteService.CheckCreateForm(form.Vote); err != nil {
 		return err

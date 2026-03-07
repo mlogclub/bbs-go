@@ -76,7 +76,7 @@ func (u *User) InObservationPeriod(observeSeconds int) bool {
 
 // GetTitle 获取帖子的标题
 func (t *Topic) GetTitle() string {
-	if t.Type == constants.TopicTypeTweet {
+	if constants.IsTweetTopicType(t.Type) {
 		if strs.IsNotBlank(t.Content) {
 			return t.Content
 		} else {

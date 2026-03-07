@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/msg"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -82,7 +83,6 @@ func (s *sysConfigService) SetAll(configStr string) error {
 			return err
 		}
 	}
-
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		for k := range configs {
 			v := json.Get(k).String()
@@ -163,6 +163,22 @@ func (s *sysConfigService) IsEnableHideContent() bool {
 	return cache.SysConfigCache.GetBool(constants.SysConfigEnableHideContent)
 }
 
+func (s *sysConfigService) IsEnableQaBounty() bool {
+	return cache.SysConfigCache.GetBool(constants.SysConfigEnableQaBounty)
+}
+
+func (s *sysConfigService) GetQaBountyMin() int {
+	return cache.SysConfigCache.GetInt(constants.SysConfigQaBountyMin)
+}
+
+func (s *sysConfigService) GetQaBountyMax() int {
+	return cache.SysConfigCache.GetInt(constants.SysConfigQaBountyMax)
+}
+
+func (s *sysConfigService) IsQaBountyRequired() bool {
+	return cache.SysConfigCache.GetBool(constants.SysConfigQaBountyRequired)
+}
+
 func (s *sysConfigService) IsArticlePending() bool {
 	return cache.SysConfigCache.GetBool(constants.SysConfigArticlePending)
 }
@@ -221,6 +237,83 @@ func (s *sysConfigService) GetEmailWhitelist() []string {
 // GetEmailNoticeIntervalSeconds 邮件通知间隔（秒），<=0 表示不限制
 func (s *sysConfigService) GetEmailNoticeIntervalSeconds() int {
 	return cache.SysConfigCache.GetInt(constants.SysConfigEmailNoticeIntervalSeconds)
+}
+
+// GetNotificationTypes 各消息类型的站内信/邮件开关，缺省为全部开启
+func (s *sysConfigService) GetNotificationTypes() map[string]dto.NoticeTypeConfig {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigNotificationTypes)
+	out := make(map[string]dto.NoticeTypeConfig)
+	if strs.IsNotBlank(str) {
+		_ = jsons.Parse(str, &out)
+	}
+	// 默认补全缺失类型：topicDelete 默认不发邮件（保持历史行为），其余全部开启
+	allKeys := []string{"topicComment", "commentReply", "topicLike", "topicFavorite", "topicRecommend", "topicDelete", "articleComment", "userLevelUp", "userBadgeGrant", "qaAnswerAccepted"}
+	for _, k := range allKeys {
+		if _, ok := out[k]; !ok {
+			if k == "topicDelete" {
+				out[k] = dto.NoticeTypeConfig{Site: true, Email: false}
+			} else {
+				out[k] = dto.NoticeTypeConfig{Site: true, Email: true}
+			}
+		}
+	}
+	return out
+}
+
+// msgTypeToKey msg.Type 与 notificationTypes 的 key 对应
+func msgTypeToKey(t msg.Type) string {
+	switch t {
+	case msg.TypeTopicComment:
+		return "topicComment"
+	case msg.TypeCommentReply:
+		return "commentReply"
+	case msg.TypeTopicLike:
+		return "topicLike"
+	case msg.TypeTopicFavorite:
+		return "topicFavorite"
+	case msg.TypeTopicRecommend:
+		return "topicRecommend"
+	case msg.TypeTopicDelete:
+		return "topicDelete"
+	case msg.TypeArticleComment:
+		return "articleComment"
+	case msg.TypeUserLevelUp:
+		return "userLevelUp"
+	case msg.TypeUserBadgeGrant:
+		return "userBadgeGrant"
+	case msg.TypeQaAnswerAccepted:
+		return "qaAnswerAccepted"
+	default:
+		return ""
+	}
+}
+
+// IsSiteNoticeEnabled 该消息类型是否发站内信
+func (s *sysConfigService) IsSiteNoticeEnabled(msgType msg.Type) bool {
+	key := msgTypeToKey(msgType)
+	if key == "" {
+		return true
+	}
+	types := s.GetNotificationTypes()
+	c, ok := types[key]
+	if !ok {
+		return true
+	}
+	return c.Site
+}
+
+// IsEmailNoticeEnabled 该消息类型是否发邮件（在已发站内信前提下）
+func (s *sysConfigService) IsEmailNoticeEnabled(msgType msg.Type) bool {
+	key := msgTypeToKey(msgType)
+	if key == "" {
+		return true
+	}
+	types := s.GetNotificationTypes()
+	c, ok := types[key]
+	if !ok {
+		return true
+	}
+	return c.Email
 }
 
 func (s *sysConfigService) IsUrlRedirect() bool {

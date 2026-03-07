@@ -16,8 +16,10 @@ import (
 	cachelib "github.com/goburrow/cache"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web/params"
+	"github.com/tidwall/gjson"
 )
 
 var MessageService = newMessageService()
@@ -89,10 +91,14 @@ func (s *messageService) MarkRead(userId int64) {
 		userId, msg.StatusUnread)
 }
 
-// SendMsg 发送消息
+// SendMsg 发送消息（站内信和/或邮件由通知配置分别控制）
 func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 	title, content, quoteContent string, extraData interface{}) {
-
+	siteOn := SysConfigService.IsSiteNoticeEnabled(msgType)
+	emailOn := SysConfigService.IsEmailNoticeEnabled(msgType)
+	if !siteOn && !emailOn {
+		return
+	}
 	t := &models.Message{
 		FromId:       from,
 		UserId:       to,
@@ -104,9 +110,13 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 		Status:       msg.StatusUnread,
 		CreateTime:   dates.NowTimestamp(),
 	}
-	if err := s.Create(t); err != nil {
-		slog.Error(err.Error(), slog.Any("err", err))
-	} else {
+	if siteOn {
+		if err := s.Create(t); err != nil {
+			slog.Error(err.Error(), slog.Any("err", err))
+			return
+		}
+	}
+	if emailOn {
 		s.SendEmailNotice(t)
 	}
 }
@@ -114,13 +124,11 @@ func (s *messageService) SendMsg(from, to int64, msgType msg.Type,
 // SendEmailNotice 发送邮件通知
 func (s *messageService) SendEmailNotice(t *models.Message) {
 	msgType := msg.Type(t.Type)
-
-	// 话题被删除不发送邮件提醒
-	if msgType == msg.TypeTopicDelete {
+	if !SysConfigService.IsEmailNoticeEnabled(msgType) {
 		return
 	}
 	user := cache.UserCache.Get(t.UserId)
-	if user == nil || len(user.Email.String) == 0 {
+	if user == nil || strs.IsBlank(user.Email.String) {
 		return
 	}
 	emailKey := strings.ToLower(user.Email.String)
@@ -156,6 +164,13 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 		emailTitle = siteTitle + " - " + locales.Get("email.user_level_up")
 	case msg.TypeUserBadgeGrant:
 		emailTitle = siteTitle + " - " + locales.Get("email.user_badge_grant")
+	case msg.TypeQaAnswerAccepted:
+		bountyScore := gjson.Get(t.ExtraData, "bountyScore").Int()
+		if bountyScore > 0 {
+			emailTitle = siteTitle + " - " + locales.Getf("email.qa_answer_accepted_with_bounty", int(bountyScore))
+		} else {
+			emailTitle = siteTitle + " - " + locales.Get("email.qa_answer_accepted")
+		}
 	}
 
 	var from *models.User

@@ -163,16 +163,54 @@ func (s *commentService) onComment(tx *gorm.DB, comment *models.Comment) error {
 // GetComments 列表
 func (s *commentService) GetComments(entityType string, entityId int64, cursor int64) (comments []models.Comment, nextCursor int64, hasMore bool) {
 	limit := 20
-	cnd := sqls.NewCnd().Eq("entity_type", entityType).Eq("entity_id", entityId).Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	var acceptedComment *models.Comment
+	var acceptedCommentId int64
+
+	if entityType == constants.EntityTopic {
+		if topic := TopicService.Get(entityId); topic != nil && topic.AcceptedCommentId > 0 {
+			acceptedCommentId = topic.AcceptedCommentId
+			if acceptedComment = repositories.CommentRepository.FindOne(sqls.DB(), sqls.NewCnd().
+				Eq("id", acceptedCommentId).
+				Eq("entity_type", entityType).
+				Eq("entity_id", entityId).
+				Eq("status", constants.StatusOk)); acceptedComment == nil {
+				acceptedCommentId = 0
+			}
+		}
+	}
+
+	// First page reserves one slot for accepted answer if present, so it can stay pinned on top.
+	normalLimit := limit
+	if cursor <= 0 && acceptedComment != nil {
+		normalLimit = limit - 1
+	}
+
+	cnd := sqls.NewCnd().
+		Eq("entity_type", entityType).
+		Eq("entity_id", entityId).
+		Eq("status", constants.StatusOk).
+		Desc("id").
+		Limit(normalLimit)
 	if cursor > 0 {
 		cnd.Lt("id", cursor)
 	}
-	comments = repositories.CommentRepository.Find(sqls.DB(), cnd)
-	if len(comments) > 0 {
-		nextCursor = comments[len(comments)-1].Id
-		hasMore = len(comments) >= limit
+	if acceptedCommentId > 0 {
+		cnd.Where("id <> ?", acceptedCommentId)
+	}
+
+	normalComments := repositories.CommentRepository.Find(sqls.DB(), cnd)
+
+	if cursor <= 0 && acceptedComment != nil {
+		comments = append(comments, *acceptedComment)
+	}
+	comments = append(comments, normalComments...)
+
+	if len(normalComments) > 0 {
+		nextCursor = normalComments[len(normalComments)-1].Id
+		hasMore = len(normalComments) >= normalLimit
 	} else {
 		nextCursor = cursor
+		hasMore = false
 	}
 	return
 }

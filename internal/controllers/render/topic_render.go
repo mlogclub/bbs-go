@@ -36,7 +36,7 @@ func BuildTopic(ctx iris.Context, topic *models.Topic) *resp.TopicResponse {
 }
 
 func BuildSimpleTopic(topic *models.Topic) *resp.TopicResponse {
-	buildContent := topic.Type == constants.TopicTypeTweet // 动态时渲染内容
+	buildContent := constants.IsTweetTopicType(topic.Type) // 动态时渲染内容
 	return _buildTopic(topic, buildContent)
 }
 
@@ -75,6 +75,10 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 
 	rsp.Id = idcodec.Encode(topic.Id)
 	rsp.Type = topic.Type
+	rsp.QaStatus = topic.QaStatus
+	rsp.AcceptedCommentId = topic.AcceptedCommentId
+	rsp.SolvedAt = topic.SolvedAt
+	rsp.BountyScore = topic.BountyScore
 	rsp.Title = topic.Title
 	rsp.User = BuildUserInfoDefaultIfNull(topic.UserId)
 	rsp.LastCommentTime = topic.LastCommentTime
@@ -91,7 +95,7 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 
 	// 构建内容
 	if buildContent {
-		if topic.Type == constants.TopicTypeTopic {
+		if !constants.IsTweetTopicType(topic.Type) {
 			contentHtml := topic.Content
 			if topic.ContentType == constants.ContentTypeMarkdown {
 				contentHtml = markdown.ToHTML(topic.Content)
@@ -101,7 +105,7 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 			rsp.Content = html.EscapeString(topic.Content)
 		}
 	} else {
-		if topic.Type == constants.TopicTypeTopic {
+		if !constants.IsTweetTopicType(topic.Type) {
 			contentHtml := topic.Content
 			if topic.ContentType == constants.ContentTypeMarkdown {
 				contentHtml = markdown.ToHTML(topic.Content)
@@ -112,7 +116,7 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 		}
 	}
 
-	if topic.Type == constants.TopicTypeTweet {
+	if constants.IsTweetTopicType(topic.Type) {
 		if strs.IsBlank(topic.Content) {
 			rsp.Content = "分享图片"
 		} else {

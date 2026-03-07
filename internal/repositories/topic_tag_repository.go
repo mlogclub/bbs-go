@@ -102,10 +102,3 @@ func (r *topicTagRepository) AddTopicTags(db *gorm.DB, topicId int64, tagIds []i
 	}
 	return nil
 }
-
-func (r *topicTagRepository) DeleteTopicTags(db *gorm.DB, topicId int64) {
-	if topicId <= 0 {
-		return
-	}
-	db.Where("topic_id = ?", topicId).Delete(models.TopicTag{})
-}

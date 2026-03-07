@@ -10,15 +10,16 @@ type Type int
 
 // 消息类型
 const (
-	TypeTopicComment   Type = 0 // 收到话题评论
-	TypeCommentReply   Type = 1 // 收到他人回复
-	TypeTopicLike      Type = 2 // 收到点赞
-	TypeTopicFavorite  Type = 3 // 话题被收藏
-	TypeTopicRecommend Type = 4 // 话题被设为推荐
-	TypeTopicDelete    Type = 5 // 话题被删除
-	TypeArticleComment Type = 6 // 收到文章评论
-	TypeUserLevelUp    Type = 7 // 用户升级
-	TypeUserBadgeGrant Type = 8 // 用户获得勋章
+	TypeTopicComment     Type = 0 // 收到话题评论
+	TypeCommentReply     Type = 1 // 收到他人回复
+	TypeTopicLike        Type = 2 // 收到点赞
+	TypeTopicFavorite    Type = 3 // 话题被收藏
+	TypeTopicRecommend   Type = 4 // 话题被设为推荐
+	TypeTopicDelete      Type = 5 // 话题被删除
+	TypeArticleComment   Type = 6 // 收到文章评论
+	TypeUserLevelUp      Type = 7 // 用户升级
+	TypeUserBadgeGrant   Type = 8 // 用户获得勋章
+	TypeQaAnswerAccepted Type = 9 // 回答被采纳为最佳答案
 )
 
 type TopicLikeExtraData struct {
@@ -55,4 +56,10 @@ type UserLevelUpExtraData struct {
 
 type UserBadgeGrantExtraData struct {
 	BadgeId int64 `json:"badgeId"`
+}
+
+// QaAnswerAcceptedExtraData 回答被采纳消息的扩展数据
+type QaAnswerAcceptedExtraData struct {
+	TopicId     int64 `json:"topicId"`
+	BountyScore int   `json:"bountyScore"`
 }

@@ -11,6 +11,7 @@ import (
 
 func init() {
 	event.RegHandler(reflect.TypeFor[event.TopicCreateEvent](), handleTaskTopicCreateEvent)
+	event.RegHandler(reflect.TypeFor[event.QaAnswerAcceptedEvent](), handleTaskQaAnswerAcceptedEvent)
 	event.RegHandler(reflect.TypeFor[event.CommentCreateEvent](), handleTaskCommentCreateEvent)
 	event.RegHandler(reflect.TypeFor[event.FollowEvent](), handleTaskFollowEvent)
 	event.RegHandler(reflect.TypeFor[event.UserFavoriteEvent](), handleTaskFavoriteEvent)
@@ -23,7 +24,16 @@ func init() {
 
 func handleTaskTopicCreateEvent(i any) {
 	e := i.(event.TopicCreateEvent)
+	if e.TopicType == int(constants.TopicTypeQA) {
+		services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeQaQuestion, e.CreateTime)
+		return
+	}
 	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeTopicCreate, e.CreateTime)
+}
+
+func handleTaskQaAnswerAcceptedEvent(i any) {
+	e := i.(event.QaAnswerAcceptedEvent)
+	services.TaskEngineService.HandleUserEvent(e.UserId, constants.TaskEventTypeQaAnswerAccept, e.CreateTime)
 }
 
 func handleTaskCommentCreateEvent(i any) {

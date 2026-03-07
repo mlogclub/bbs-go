@@ -59,10 +59,17 @@ func (s *topicTagService) UpdateColumn(id int64, name string, value interface{})
 	return repositories.TopicTagRepository.UpdateColumn(sqls.DB(), id, name, value)
 }
 
-func (s *topicTagService) DeleteByTopicId(topicId int64) {
-	sqls.DB().Model(models.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusDeleted)
+func (s *topicTagService) HardDeleteTopicTags(ctx *sqls.TxContext, topicId int64) error {
+	if topicId <= 0 {
+		return nil
+	}
+	return ctx.Tx.Where("topic_id = ?", topicId).Delete(models.TopicTag{}).Error
 }
 
-func (s *topicTagService) UndeleteByTopicId(topicId int64) {
-	sqls.DB().Model(models.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusOk)
+func (s *topicTagService) DeleteByTopicId(ctx *sqls.TxContext, topicId int64) error {
+	return ctx.Tx.Model(models.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusDeleted).Error
+}
+
+func (s *topicTagService) UndeleteByTopicId(ctx *sqls.TxContext, topicId int64) error {
+	return ctx.Tx.Model(models.TopicTag{}).Where("topic_id = ?", topicId).UpdateColumn("status", constants.StatusOk).Error
 }

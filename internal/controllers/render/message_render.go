@@ -75,6 +75,11 @@ func getMessageDetailUrl(t *models.Message) string {
 		if topicId.Exists() && topicId.Int() > 0 {
 			return bbsurls.TopicUrl(topicId.Int())
 		}
+	case msg.TypeQaAnswerAccepted:
+		topicId := gjson.Get(t.ExtraData, "topicId")
+		if topicId.Exists() && topicId.Int() > 0 {
+			return bbsurls.TopicUrl(topicId.Int())
+		}
 	case msg.TypeUserLevelUp:
 		return bbsurls.AbsUrl("/tasks")
 	case msg.TypeUserBadgeGrant:

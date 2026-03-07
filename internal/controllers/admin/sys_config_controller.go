@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web"
 	"github.com/mlogclub/simple/web/params"
 
@@ -50,13 +51,21 @@ func (c *SysConfigController) GetConfigs() *web.JsonResult {
 		CreateArticleEmailVerified: services.SysConfigService.IsCreateArticleEmailVerified(),
 		CreateCommentEmailVerified: services.SysConfigService.IsCreateCommentEmailVerified(),
 		EnableHideContent:          services.SysConfigService.IsEnableHideContent(),
+		EnableQaBounty:             services.SysConfigService.IsEnableQaBounty(),
+		QaBountyMin:                services.SysConfigService.GetQaBountyMin(),
+		QaBountyMax:                services.SysConfigService.GetQaBountyMax(),
+		QaBountyRequired:           services.SysConfigService.IsQaBountyRequired(),
 		Modules:                    services.SysConfigService.GetModules(),
 		EmailWhitelist:             services.SysConfigService.GetEmailWhitelist(),
 		EmailNoticeIntervalSeconds: services.SysConfigService.GetEmailNoticeIntervalSeconds(),
+		NotificationTypes:          services.SysConfigService.GetNotificationTypes(),
 		LoginConfig:                services.SysConfigService.GetLoginConfig(),
 		SmtpConfig:                 services.SysConfigService.GetSmtpConfig(),
 		UploadConfig:               services.SysConfigService.GetUploadConfig(),
 		ScriptInjections:           services.SysConfigService.GetScriptInjections(),
+	}
+	if strs.IsBlank(resp.SiteLogo) {
+		resp.SiteLogo = "/res/images/logo.png"
 	}
 	return web.JsonData(resp)
 }

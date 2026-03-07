@@ -54,6 +54,14 @@ func (c *TopicController) AnyList() *web.JsonResult {
 			Op:        params.Eq,
 		},
 		params.QueryFilter{
+			ParamName: "type",
+			Op:        params.Eq,
+		},
+		params.QueryFilter{
+			ParamName: "qaStatus",
+			Op:        params.Eq,
+		},
+		params.QueryFilter{
 			ParamName: "recommend",
 			Op:        params.Eq,
 		},
@@ -140,6 +148,59 @@ func (c *TopicController) PostAudit() *web.JsonResult {
 	}
 	err := services.TopicService.UpdateColumn(id, "status", constants.StatusOk)
 	if err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) PostAccept_answer() *web.JsonResult {
+	topicId := c.Ctx.PostValueInt64Default("id", 0)
+	commentId := c.Ctx.PostValueInt64Default("commentId", 0)
+	if topicId <= 0 || commentId <= 0 {
+		return web.JsonErrorMsg("id/commentId is required")
+	}
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if err := services.TopicService.AcceptAnswer(topicId, commentId, user.Id, true); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) PostUnaccept_answer() *web.JsonResult {
+	topicId := c.Ctx.PostValueInt64Default("id", 0)
+	if topicId <= 0 {
+		return web.JsonErrorMsg("id is required")
+	}
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if err := services.TopicService.UnacceptAnswer(topicId, user.Id, true); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) PostMark_solved() *web.JsonResult {
+	topicId := c.Ctx.PostValueInt64Default("id", 0)
+	if topicId <= 0 {
+		return web.JsonErrorMsg("id is required")
+	}
+	if err := services.TopicService.ForceSetQaStatus(topicId, constants.QaStatusSolved); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+func (c *TopicController) PostMark_unsolved() *web.JsonResult {
+	topicId := c.Ctx.PostValueInt64Default("id", 0)
+	if topicId <= 0 {
+		return web.JsonErrorMsg("id is required")
+	}
+	if err := services.TopicService.ForceSetQaStatus(topicId, constants.QaStatusUnsolved); err != nil {
 		return web.JsonError(err)
 	}
 	return web.JsonSuccess()

@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web"
 
 	"bbs-go/internal/cache"
@@ -40,6 +41,10 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 			CreateArticleEmailVerified: services.SysConfigService.IsCreateArticleEmailVerified(),
 			CreateCommentEmailVerified: services.SysConfigService.IsCreateCommentEmailVerified(),
 			EnableHideContent:          services.SysConfigService.IsEnableHideContent(),
+			EnableQaBounty:             services.SysConfigService.IsEnableQaBounty(),
+			QaBountyMin:                services.SysConfigService.GetQaBountyMin(),
+			QaBountyMax:                services.SysConfigService.GetQaBountyMax(),
+			QaBountyRequired:           services.SysConfigService.IsQaBountyRequired(),
 			Modules:                    services.SysConfigService.GetModules(),
 			EmailNoticeIntervalSeconds: services.SysConfigService.GetEmailNoticeIntervalSeconds(),
 			LoginConfig: dto.OpenLoginConfig{
@@ -49,6 +54,9 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 				GoogleLogin:   dto.EnabledConfig{Enabled: loginConfig.GoogleLogin.Enabled},
 			},
 			ScriptInjections: services.SysConfigService.GetScriptInjections(),
+		}
+		if strs.IsBlank(sysConfig.SiteLogo) {
+			sysConfig.SiteLogo = "/res/images/logo.png"
 		}
 		b = web.NewRspBuilder(sysConfig)
 	} else {

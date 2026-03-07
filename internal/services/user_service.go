@@ -671,6 +671,22 @@ func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, d
 	})
 }
 
+// AddScoreTx 在已有事务内增加分数（供发帖/采纳等场景复用同一事务）
+func (s *userService) AddScoreTx(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(ctx, userId, score, sourceType, sourceId, description)
+}
+
+// DecrScoreTx 在已有事务内减少分数（供发帖等场景复用同一事务）
+func (s *userService) DecrScoreTx(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
+	if score <= 0 {
+		return errors.New("分数必须为正数")
+	}
+	return s.addScore(ctx, userId, -score, sourceType, sourceId, description)
+}
+
 // addScore 加分数，也可以加负数
 func (s *userService) addScore(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
 	if score == 0 {

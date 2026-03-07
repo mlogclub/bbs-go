@@ -15,6 +15,7 @@ type UnFollowEvent struct {
 type TopicCreateEvent struct {
 	UserId     int64 `json:"userId"`
 	TopicId    int64 `json:"topicId"`
+	TopicType  int   `json:"topicType"`
 	CreateTime int64 `json:"createTime"`
 }
 
@@ -83,4 +84,11 @@ type BadgeGrantEvent struct {
 	UserId     int64 `json:"userId"`
 	BadgeId    int64 `json:"badgeId"`
 	UpdateTime int64 `json:"updateTime"`
+}
+
+type QaAnswerAcceptedEvent struct {
+	UserId     int64 `json:"userId"`
+	TopicId    int64 `json:"topicId"`
+	CommentId  int64 `json:"commentId"`
+	CreateTime int64 `json:"createTime"`
 }

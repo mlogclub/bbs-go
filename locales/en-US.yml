@@ -8,6 +8,18 @@ topic:
   under_review: "Content under review"
   no_permission: "No permission"
   type_not_supported: "Current topic type does not support modification"
+  node_type_mismatch: "Selected category does not support this topic type"
+  bounty_invalid: "Bounty score cannot be negative"
+  insufficient_score: "Insufficient score to set bounty"
+  bounty_deduct: "Q&A bounty"
+  bounty_reward: "Q&A accepted answer reward"
+  bounty_refund: "Q&A bounty refund"
+  qa_bounty_disabled: "Q&A bounty is not enabled"
+  bounty_required: "Bounty score is required for Q&A posts"
+  bounty_out_of_range: "Bounty score is out of allowed range"
+  bounty_out_of_range_range: "Bounty score must be between %d and %d"
+  bounty_out_of_range_min: "Bounty score cannot be less than %d"
+  bounty_out_of_range_max: "Bounty score cannot exceed %d"
 
 user:
   anonymous: "Anonymous %d"
@@ -77,6 +89,8 @@ message:
   user_badge_grant_msg_title: "New Badge Unlocked"
   user_badge_grant_msg_content: "Congratulations! You earned the badge: %s"
   user_badge_default_name: "New Badge"
+  qa_answer_accepted_msg_title: "Your answer was accepted as the best answer"
+  qa_answer_accepted_msg_title_with_bounty: "Your answer was accepted as the best answer, +%d points"
 
 email:
   new_message: "Notification"
@@ -89,6 +103,8 @@ email:
   article_comment: "Article Comment"
   user_level_up: "Level Up"
   user_badge_grant: "New Badge Unlocked"
+  qa_answer_accepted: "Your answer was accepted as the best answer"
+  qa_answer_accepted_with_bounty: "Your answer was accepted as the best answer, +%d points"
   view_details: "View Details"
 
 task:

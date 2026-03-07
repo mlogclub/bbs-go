@@ -8,6 +8,7 @@ import (
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
+
 	"gorm.io/gorm"
 )
 
@@ -66,6 +67,20 @@ func (s *topicNodeService) Delete(id int64) {
 
 func (s *topicNodeService) GetNodes() []models.TopicNode {
 	return repositories.TopicNodeRepository.Find(sqls.DB(), sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+}
+
+func (s *topicNodeService) GetNodesByType(nodeType constants.TopicNodeType) []models.TopicNode {
+	return repositories.TopicNodeRepository.Find(sqls.DB(), sqls.NewCnd().
+		Eq("status", constants.StatusOk).
+		Eq("type", nodeType).
+		Asc("sort_no").Desc("id"))
+}
+
+func (s *topicNodeService) GetNodesByTopicType(topicType constants.TopicType) []models.TopicNode {
+	if topicType == constants.TopicTypeQA {
+		return s.GetNodesByType(constants.TopicNodeTypeQA)
+	}
+	return s.GetNodesByType(constants.TopicNodeTypeNormal)
 }
 
 func (s *topicNodeService) GetNextSortNo() int {

@@ -136,11 +136,15 @@ func BuildUserDetail(user *models.User) *resp.UserDetail {
 	if user == nil {
 		return nil
 	}
+	backgroundImage := user.BackgroundImage
+	if strs.IsBlank(backgroundImage) {
+		backgroundImage = "/res/images/default_user_bg.jpg"
+	}
 	ret := &resp.UserDetail{
 		UserInfo:             *BuildUserInfo(user),
 		Username:             user.Username.String,
-		BackgroundImage:      user.BackgroundImage,
-		SmallBackgroundImage: HandleOssImageStyleSmall(user.BackgroundImage),
+		BackgroundImage:      backgroundImage,
+		SmallBackgroundImage: HandleOssImageStyleSmall(backgroundImage),
 		HomePage:             user.HomePage,
 		Status:               user.Status,
 	}

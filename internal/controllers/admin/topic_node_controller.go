@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"bbs-go/internal/models/constants"
 	"strconv"
+	"strings"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
@@ -30,20 +32,25 @@ func (c *TopicNodeController) AnyList() *web.JsonResult {
 			ParamName: "name",
 			Op:        params.Like,
 		},
+		params.QueryFilter{
+			ParamName: "type",
+			Op:        params.Eq,
+		},
 	).Asc("sort_no").Desc("id"))
 	return web.JsonData(list)
 }
 
 func (c *TopicNodeController) PostCreate() *web.JsonResult {
 	t := &models.TopicNode{}
-	err := params.ReadForm(c.Ctx, t)
-	if err != nil {
+	if err := params.ReadForm(c.Ctx, t); err != nil {
 		return web.JsonError(err)
 	}
 	t.SortNo = services.TopicNodeService.GetNextSortNo()
+	if t.Type == "" {
+		t.Type = constants.TopicNodeTypeNormal
+	}
 	t.CreateTime = dates.NowTimestamp()
-	err = services.TopicNodeService.Create(t)
-	if err != nil {
+	if err := services.TopicNodeService.Create(t); err != nil {
 		return web.JsonError(err)
 	}
 	return web.JsonData(t)
@@ -62,6 +69,12 @@ func (c *TopicNodeController) PostUpdate() *web.JsonResult {
 	err = params.ReadForm(c.Ctx, t)
 	if err != nil {
 		return web.JsonError(err)
+	}
+	if strings.TrimSpace(string(t.Type)) == "" {
+		return web.JsonErrorMsg("param: type required")
+	}
+	if strings.TrimSpace(t.Description) == "" {
+		return web.JsonErrorMsg("param: description required")
 	}
 
 	err = services.TopicNodeService.Update(t)

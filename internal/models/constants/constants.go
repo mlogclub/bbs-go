@@ -52,6 +52,11 @@ const (
 	SysConfigSmtpConfig                 = "smtpConfig"                 // SMTP配置
 	SysConfigUploadConfig               = "uploadConfig"               // 上传配置
 	SysConfigScriptInjections           = "scriptInjections"           // head脚本注入配置
+	SysConfigEnableQaBounty             = "enableQaBounty"             // 是否开启问答悬赏
+	SysConfigQaBountyMin                = "qaBountyMin"                // 问答悬赏积分下限
+	SysConfigQaBountyMax                = "qaBountyMax"                // 问答悬赏积分上限
+	SysConfigQaBountyRequired           = "qaBountyRequired"           // 问答帖是否必填悬赏
+	SysConfigNotificationTypes          = "notificationTypes"          // 通知类型配置（站内信+邮件开关）
 )
 
 // EntityType
@@ -64,11 +69,18 @@ const (
 	EntityTask    = "task"
 )
 
+const (
+	SourceTypeQaBounty       = "qa_bounty"        // SourceTypeQaBounty 积分来源：问答悬赏（UserScoreLog.SourceType）
+	SourceTypeQaBountyRefund = "qa_bounty_refund" // SourceTypeQaBountyRefund 积分来源：问答悬赏退回（帖子删除且未采纳答案时退给题主）
+)
+
 // TaskEventType 任务事件类型（TaskConfig.EventType）
 const (
 	TaskEventTypeUserLogin      = "user.login"
 	TaskEventTypeCheckIn        = "checkin"
 	TaskEventTypeTopicCreate    = "topic.create"
+	TaskEventTypeQaQuestion     = "qa.question.publish"
+	TaskEventTypeQaAnswerAccept = "qa.answer.accept"
 	TaskEventTypeCommentCreate  = "comment.create"
 	TaskEventTypeFollowCreate   = "follow.create"
 	TaskEventTypeFavoriteCreate = "favorite.create"
@@ -150,7 +162,43 @@ type TopicType int
 const (
 	TopicTypeTopic TopicType = 0 // 帖子
 	TopicTypeTweet TopicType = 1 // 动态
+	TopicTypeQA    TopicType = 2 // 问答
 )
+
+type TopicNodeType string
+
+const (
+	TopicNodeTypeNormal TopicNodeType = "normal"
+	TopicNodeTypeQA     TopicNodeType = "qa"
+)
+
+type QaStatus string
+
+const (
+	QaStatusUnsolved QaStatus = "unsolved"
+	QaStatusSolved   QaStatus = "solved"
+)
+
+func IsTweetTopicType(topicType TopicType) bool {
+	return topicType == TopicTypeTweet
+}
+
+func IsPostTopicType(topicType TopicType) bool {
+	return topicType == TopicTypeTopic || topicType == TopicTypeQA
+}
+
+func (t TopicNodeType) Supports(topicType TopicType) bool {
+	nodeType := t
+	if nodeType == "" {
+		nodeType = TopicNodeTypeNormal
+	}
+	switch nodeType {
+	case TopicNodeTypeQA:
+		return topicType == TopicTypeQA
+	default:
+		return topicType == TopicTypeTopic || topicType == TopicTypeTweet
+	}
+}
 
 type VoteType int
 

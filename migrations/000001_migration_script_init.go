@@ -263,7 +263,7 @@ func seedForLanguage() seedData {
 				{ID: 2, Type: 0, Name: "Admin", Code: constants.RoleAdmin, SortNo: 1, Remark: "Admin with management privileges", Status: constants.StatusOk},
 			},
 			TopicNodes: []topicNodeSeed{
-				{ID: 1, Name: "Default", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
+				{ID: 1, Name: "Default", Description: "", Logo: "/res/images/node_default.png", SortNo: 0, Status: constants.StatusOk},
 			},
 			SysConfigs: []sysConfigSeed{
 				{Key: constants.SysConfigSiteTitle, Value: "BBS-GO Demo Site", Name: "Site Title", Description: "Site Title"},
@@ -275,14 +275,14 @@ func seedForLanguage() seedData {
 					{"title": "Articles", "url": "/articles"},
 					{"title": "Tasks", "url": "/tasks"},
 				}, Name: "Site Navigation", Description: "Site Navigation"},
-				{Key: constants.SysConfigDefaultNodeId, Value: "1", Name: "Default Node", Description: "Default Node"},
+				{Key: constants.SysConfigDefaultNodeId, Value: "1", Name: "Default Category", Description: "Default Category"},
 				{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "User Login Validity Period (Days)", Description: "User Login Validity Period (Days)"},
 				{Key: constants.SysConfigUrlRedirect, Value: "false"},
 				{Key: constants.SysConfigEnableHideContent, Value: "false"},
-				{Key: constants.SysConfigSiteLogo, Value: ""},
+				{Key: constants.SysConfigSiteLogo, Value: "/res/images/logo.png"},
 				{Key: constants.SysConfigSiteNotification, Value: ""},
 				{Key: constants.SysConfigRecommendTags, Value: ""},
-				{Key: constants.SysConfigModules, Value: map[string]bool{"tweet": true, "topic": true, "article": true}},
+				{Key: constants.SysConfigModules, Value: map[string]bool{"tweet": true, "topic": true, "article": false}},
 				{Key: constants.SysConfigSmtpConfig, Value: dto.SmtpConfig{}},
 				{Key: constants.SysConfigUploadConfig, Value: dto.UploadConfig{
 					EnableUploadMethod: dto.Local,
@@ -302,7 +302,7 @@ func seedForLanguage() seedData {
 			{ID: 2, Type: 0, Name: "管理员", Code: constants.RoleAdmin, SortNo: 1, Remark: "管理员，拥有管理权限", Status: constants.StatusOk},
 		},
 		TopicNodes: []topicNodeSeed{
-			{ID: 1, Name: "默认节点", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
+			{ID: 1, Name: "默认节点", Description: "", Logo: "/res/images/node_default.png", SortNo: 0, Status: constants.StatusOk},
 		},
 		SysConfigs: []sysConfigSeed{
 			{Key: constants.SysConfigSiteTitle, Value: "bbs-go演示站", Name: "站点标题", Description: "站点标题"},
@@ -443,7 +443,7 @@ func defaultMenusEn() []menuSeed {
 		{ID: 23, ParentID: 0, Type: constants.MenuTypeMenu, Name: "Link", Title: "Friend Links", Icon: "icon-link", Path: "/link", Component: "link/index", SortNo: 8, Status: constants.StatusOk},
 		{ID: 24, ParentID: 0, Type: constants.MenuTypeMenu, Name: "", Title: "Topic", Icon: "icon-share-alt", Path: "", Component: "", SortNo: 3, Status: constants.StatusOk},
 		{ID: 25, ParentID: 24, Type: constants.MenuTypeMenu, Name: "Topic", Title: "Topic", Icon: "", Path: "/topic", Component: "topic/index", SortNo: 4, Status: constants.StatusOk},
-		{ID: 26, ParentID: 24, Type: constants.MenuTypeMenu, Name: "TopicNode", Title: "Node", Icon: "", Path: "/topic-node", Component: "topic-node/index", SortNo: 5, Status: constants.StatusOk},
+		{ID: 26, ParentID: 24, Type: constants.MenuTypeMenu, Name: "TopicNode", Title: "Category", Icon: "", Path: "/topic-node", Component: "topic-node/index", SortNo: 5, Status: constants.StatusOk},
 	}
 }
 

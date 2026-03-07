@@ -4,10 +4,12 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/search"
 	"errors"
 	"math"
 	"net/http"
+	"strconv"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
@@ -85,29 +87,47 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 	if topic == nil {
 		return nil
 	}
-	err := repositories.TopicRepository.UpdateColumn(sqls.DB(), topicId, "status", constants.StatusDeleted)
-	if err == nil {
-		// 添加索引
-		search.DeleteTopicIndex(topicId)
-		// 删掉标签文章
-		TopicTagService.DeleteByTopicId(topicId)
-		// 发送事件
-		event.Send(event.TopicDeleteEvent{
-			UserId:       topic.UserId,
-			TopicId:      topic.Id,
-			DeleteUserId: deleteUserId,
-		})
+	err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		// 问答帖未采纳答案即被删除时，将悬赏积分退还给发帖人
+		if topic.Type == constants.TopicTypeQA && topic.BountyScore > 0 && topic.AcceptedCommentId == 0 {
+			if err := UserService.AddScoreTx(ctx, topic.UserId, topic.BountyScore, constants.SourceTypeQaBountyRefund,
+				strconv.FormatInt(topic.Id, 10), locales.Get("topic.bounty_refund")); err != nil {
+				return err
+			}
+		}
+		if err := repositories.TopicRepository.UpdateColumn(ctx.Tx, topicId, "status", constants.StatusDeleted); err != nil {
+			return err
+		}
+		// 话题标签软删除
+		if err := TopicTagService.DeleteByTopicId(ctx, topicId); err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return err
 	}
-	return err
+	search.DeleteTopicIndex(topicId)
+	event.Send(event.TopicDeleteEvent{
+		UserId:       topic.UserId,
+		TopicId:      topic.Id,
+		DeleteUserId: deleteUserId,
+	})
+	return nil
 }
 
 // Undelete 取消删除
 func (s *topicService) Undelete(id int64) error {
-	err := repositories.TopicRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusOk)
+	err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		if err := repositories.TopicRepository.UpdateColumn(ctx.Tx, id, "status", constants.StatusOk); err != nil {
+			return err
+		}
+		if err := TopicTagService.UndeleteByTopicId(ctx, id); err != nil {
+			return err
+		}
+		return nil
+	})
 	if err == nil {
-		// 删掉标签文章
-		TopicTagService.UndeleteByTopicId(id)
-		// 添加索引
 		search.UpdateTopicIndex(s.Get(id))
 	}
 	return err
@@ -127,6 +147,19 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 	if node == nil || node.Status != constants.StatusOk {
 		return errors.New("节点不存在")
 	}
+	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
+	if topic == nil {
+		return errors.New(locales.Get("common.not_found"))
+	}
+	if !node.Type.Supports(topic.Type) {
+		return errors.New(locales.Get("topic.node_type_mismatch"))
+	}
+
+	hideContent := form.HideContent
+	if topic.Type == constants.TopicTypeQA {
+		// QA 话题忽略隐藏内容变更。
+		hideContent = topic.HideContent
+	}
 
 	err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		var (
@@ -137,7 +170,7 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 			"node_id":      form.NodeId,
 			"title":        form.Title,
 			"content":      form.Content,
-			"hide_content": form.HideContent,
+			"hide_content": hideContent,
 		}); err != nil {
 			return err
 		}
@@ -147,8 +180,14 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 			return err
 		}
 
-		repositories.TopicTagRepository.DeleteTopicTags(ctx.Tx, topicId)      // 先删掉所有的标签
-		repositories.TopicTagRepository.AddTopicTags(ctx.Tx, topicId, tagIds) // 然后重新添加标签
+		// 先删掉所有的标签
+		if err := TopicTagService.HardDeleteTopicTags(ctx, topicId); err != nil {
+			return err
+		}
+		// 然后重新添加标签
+		if err := repositories.TopicTagRepository.AddTopicTags(ctx.Tx, topicId, tagIds); err != nil {
+			return err
+		}
 		return nil
 	})
 
@@ -209,7 +248,7 @@ func (s *topicService) GetTopicTags(topicId int64) []models.Tag {
 }
 
 // GetTopics 帖子列表（最新、推荐、关注、节点）
-func (s *topicService) GetTopics(user *models.User, nodeId, cursor int64) (topics []models.Topic, nextCursor int64, hasMore bool) {
+func (s *topicService) GetTopics(user *models.User, nodeId, cursor int64, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	var limit int = 20
 	if nodeId == constants.NodeIdFollow {
 		if user != nil {
@@ -217,12 +256,12 @@ func (s *topicService) GetTopics(user *models.User, nodeId, cursor int64) (topic
 		}
 		return
 	} else {
-		return s._GetNodeTopics(nodeId, cursor, limit)
+		return s._GetNodeTopics(nodeId, cursor, limit, qaStatus, sort)
 	}
 }
 
 // _GetNodeTopics 帖子列表（最新、推荐、节点）
-func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int) (topics []models.Topic, nextCursor int64, hasMore bool) {
+func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	cnd := sqls.NewCnd()
 	if nodeId > 0 {
 		cnd.Eq("node_id", nodeId)
@@ -230,13 +269,28 @@ func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int) (topics [
 	if nodeId == constants.NodeIdRecommend {
 		cnd.Eq("recommend", true)
 	}
-	if cursor > 0 {
-		cnd.Lt("last_comment_time", cursor)
+	if qaStatus != "" {
+		cnd.Eq("type", constants.TopicTypeQA)
+		cnd.Eq("qa_status", qaStatus)
 	}
-	cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(limit)
+	if sort == "latestPublish" {
+		if cursor > 0 {
+			cnd.Lt("id", cursor)
+		}
+		cnd.Eq("status", constants.StatusOk).Desc("id").Limit(limit)
+	} else {
+		if cursor > 0 {
+			cnd.Lt("last_comment_time", cursor)
+		}
+		cnd.Eq("status", constants.StatusOk).Desc("last_comment_time").Limit(limit)
+	}
 	topics = repositories.TopicRepository.Find(sqls.DB(), cnd)
 	if len(topics) > 0 {
-		nextCursor = topics[len(topics)-1].LastCommentTime
+		if sort == "latestPublish" {
+			nextCursor = topics[len(topics)-1].Id
+		} else {
+			nextCursor = topics[len(topics)-1].LastCommentTime
+		}
 		hasMore = len(topics) >= limit
 	} else {
 		nextCursor = cursor
@@ -423,14 +477,16 @@ func (s *topicService) GetUserTopics(userId, cursor int64) (topics []models.Topi
 	return
 }
 
-func (s *topicService) GetStickyTopics(nodeId int64, limit int) []models.Topic {
+func (s *topicService) GetStickyTopics(nodeId int64, limit int, qaStatus string) []models.Topic {
+	cnd := sqls.NewCnd().Eq("sticky", true).Eq("status", constants.StatusOk).Desc("sticky_time").Limit(limit)
 	if nodeId > 0 {
-		return s.Find(sqls.NewCnd().Where("node_id = ? and sticky = true and status = ?",
-			nodeId, constants.StatusOk).Desc("sticky_time").Limit(limit))
-	} else {
-		return s.Find(sqls.NewCnd().Where("sticky = true and status = ?",
-			constants.StatusOk).Desc("sticky_time").Limit(limit))
+		cnd.Eq("node_id", nodeId)
 	}
+	if qaStatus != "" {
+		cnd.Eq("type", constants.TopicTypeQA)
+		cnd.Eq("qa_status", qaStatus)
+	}
+	return s.Find(cnd)
 }
 
 func (s *topicService) SetSticky(topicId int64, sticky bool) error {
@@ -451,4 +507,92 @@ func (s *topicService) SetSticky(topicId int64, sticky bool) error {
 			"sticky": false,
 		})
 	}
+}
+
+func (s *topicService) AcceptAnswer(topicId, commentId, userId int64, isAdmin bool) error {
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New(locales.Get("common.not_found"))
+	}
+	if topic.Type != constants.TopicTypeQA {
+		return errors.New(locales.Get("topic.type_not_supported"))
+	}
+	if topic.UserId != userId && !isAdmin {
+		return errors.New(locales.Get("topic.no_permission"))
+	}
+
+	comment := CommentService.Get(commentId)
+	if comment == nil || comment.Status != constants.StatusOk ||
+		comment.EntityType != constants.EntityTopic || comment.EntityId != topic.Id {
+		return errors.New(locales.Get("common.not_found"))
+	}
+
+	now := dates.NowTimestamp()
+	if err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		if err := repositories.TopicRepository.Updates(ctx.Tx, topic.Id, map[string]interface{}{
+			"accepted_comment_id": comment.Id,
+			"qa_status":           constants.QaStatusSolved,
+			"solved_at":           now,
+		}); err != nil {
+			return err
+		}
+		if topic.BountyScore > 0 && comment.UserId != topic.UserId {
+			if err := UserService.AddScoreTx(ctx, comment.UserId, topic.BountyScore, constants.SourceTypeQaBounty, strconv.FormatInt(topic.Id, 10), locales.Get("topic.bounty_reward")); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	search.UpdateTopicIndex(s.Get(topic.Id))
+
+	event.Send(event.QaAnswerAcceptedEvent{
+		UserId:     comment.UserId,
+		TopicId:    topic.Id,
+		CommentId:  comment.Id,
+		CreateTime: now,
+	})
+	return nil
+}
+
+func (s *topicService) UnacceptAnswer(topicId, userId int64, isAdmin bool) error {
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New(locales.Get("common.not_found"))
+	}
+	if topic.Type != constants.TopicTypeQA {
+		return errors.New(locales.Get("topic.type_not_supported"))
+	}
+	if topic.UserId != userId && !isAdmin {
+		return errors.New(locales.Get("topic.no_permission"))
+	}
+
+	return s.Updates(topic.Id, map[string]interface{}{
+		"accepted_comment_id": 0,
+		"qa_status":           constants.QaStatusUnsolved,
+		"solved_at":           0,
+	})
+}
+
+func (s *topicService) ForceSetQaStatus(topicId int64, qaStatus constants.QaStatus) error {
+	topic := s.Get(topicId)
+	if topic == nil || topic.Status != constants.StatusOk {
+		return errors.New(locales.Get("common.not_found"))
+	}
+	if topic.Type != constants.TopicTypeQA {
+		return errors.New(locales.Get("topic.type_not_supported"))
+	}
+
+	columns := map[string]interface{}{
+		"qa_status": qaStatus,
+	}
+	if qaStatus == constants.QaStatusSolved {
+		columns["solved_at"] = dates.NowTimestamp()
+	} else {
+		columns["solved_at"] = 0
+		columns["accepted_comment_id"] = 0
+	}
+	return s.Updates(topic.Id, columns)
 }

@@ -24,6 +24,7 @@ type CreateTopicForm struct {
 	Tags        []string              `json:"tags"`
 	ImageList   []ImageDTO            `json:"imageList"`
 	Vote        *CreateVoteForm       `json:"vote"`
+	BountyScore int                   `json:"bountyScore"` // 悬赏积分（仅问答帖有效，0 表示无悬赏）
 	UserAgent   string                `json:"userAgent"`
 	Ip          string                `json:"ip"`
 
@@ -98,6 +99,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 			HideContent:     strings.TrimSpace(params.FormValue(ctx, "hideContent")),
 			Tags:            params.FormValueStringArray(ctx, "tags"),
 			ImageList:       GetImageList(ctx, "imageList"),
+			BountyScore:     params.FormValueIntDefault(ctx, "bountyScore", 0),
 			CaptchaId:       params.FormValue(ctx, "captchaId"),
 			CaptchaCode:     params.FormValue(ctx, "captchaCode"),
 			CaptchaProtocol: params.FormValueIntDefault(ctx, "captchaProtocol", 0),

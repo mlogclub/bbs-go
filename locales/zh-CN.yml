@@ -8,6 +8,18 @@ topic:
   under_review: "内容审核中"
   no_permission: "无权限"
   type_not_supported: "当前类型帖子不支持修改"
+  node_type_mismatch: "所选节点不支持当前内容类型"
+  bounty_invalid: "悬赏积分不能为负数"
+  insufficient_score: "积分不足，无法设置悬赏"
+  bounty_deduct: "问答悬赏"
+  bounty_reward: "问答被采纳悬赏"
+  bounty_refund: "问答悬赏退回"
+  qa_bounty_disabled: "未开启问答悬赏功能"
+  bounty_required: "当前要求问答帖必须设置悬赏积分"
+  bounty_out_of_range: "悬赏积分超出允许范围"
+  bounty_out_of_range_range: "悬赏积分需在 %d ~ %d 之间"
+  bounty_out_of_range_min: "悬赏积分不能低于 %d"
+  bounty_out_of_range_max: "悬赏积分不能高于 %d"
 
 user:
   anonymous: "匿名用户%d"
@@ -77,6 +89,8 @@ message:
   user_badge_grant_msg_title: "获得新勋章"
   user_badge_grant_msg_content: "恭喜你获得勋章：%s"
   user_badge_default_name: "新勋章"
+  qa_answer_accepted_msg_title: "你的回答被采纳为最佳答案"
+  qa_answer_accepted_msg_title_with_bounty: "你的回答被采纳为最佳答案，获得 %d 积分"
 
 email:
   new_message: "新消息提醒"
@@ -89,6 +103,8 @@ email:
   article_comment: "收到文章评论"
   user_level_up: "等级提升"
   user_badge_grant: "获得新勋章"
+  qa_answer_accepted: "你的回答被采纳为最佳答案"
+  qa_answer_accepted_with_bounty: "你的回答被采纳为最佳答案，获得 %d 积分"
   view_details: "点击查看详情"
 
 task:

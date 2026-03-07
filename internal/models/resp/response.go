@@ -117,10 +117,11 @@ type ArticleResponse struct {
 }
 
 type NodeResponse struct {
-	Id          int64  `json:"id"`
-	Name        string `json:"name"`
-	Logo        string `json:"logo"`
-	Description string `json:"description"`
+	Id          int64                   `json:"id"`
+	Name        string                  `json:"name"`
+	Type        constants.TopicNodeType `json:"type"`
+	Logo        string                  `json:"logo"`
+	Description string                  `json:"description"`
 }
 
 type SearchTopicResponse struct {
@@ -135,29 +136,33 @@ type SearchTopicResponse struct {
 
 // 帖子列表返回实体
 type TopicResponse struct {
-	Id              string              `json:"id"`
-	Type            constants.TopicType `json:"type"`
-	User            *UserInfo           `json:"user"`
-	Node            *NodeResponse       `json:"node"`
-	Tags            *[]TagResponse      `json:"tags"`
-	Title           string              `json:"title"`
-	Summary         string              `json:"summary"`
-	Content         string              `json:"content"`
-	ImageList       []ImageInfo         `json:"imageList"`
-	LastCommentTime int64               `json:"lastCommentTime"`
-	ViewCount       int64               `json:"viewCount"`
-	CommentCount    int64               `json:"commentCount"`
-	LikeCount       int64               `json:"likeCount"`
-	Liked           bool                `json:"liked"`
-	CreateTime      int64               `json:"createTime"`
-	Recommend       bool                `json:"recommend"`
-	RecommendTime   int64               `json:"recommendTime"`
-	Sticky          bool                `json:"sticky"`
-	StickyTime      int64               `json:"stickyTime"`
-	Status          int                 `json:"status"`
-	Favorited       bool                `json:"favorited"`
-	IpLocation      string              `json:"ipLocation"`
-	Vote            *VoteResponse       `json:"vote"`
+	Id                string              `json:"id"`
+	Type              constants.TopicType `json:"type"`
+	QaStatus          constants.QaStatus  `json:"qaStatus"`
+	AcceptedCommentId int64               `json:"acceptedCommentId"`
+	SolvedAt          int64               `json:"solvedAt"`
+	BountyScore       int                 `json:"bountyScore"`
+	User              *UserInfo           `json:"user"`
+	Node              *NodeResponse       `json:"node"`
+	Tags              *[]TagResponse      `json:"tags"`
+	Title             string              `json:"title"`
+	Summary           string              `json:"summary"`
+	Content           string              `json:"content"`
+	ImageList         []ImageInfo         `json:"imageList"`
+	LastCommentTime   int64               `json:"lastCommentTime"`
+	ViewCount         int64               `json:"viewCount"`
+	CommentCount      int64               `json:"commentCount"`
+	LikeCount         int64               `json:"likeCount"`
+	Liked             bool                `json:"liked"`
+	CreateTime        int64               `json:"createTime"`
+	Recommend         bool                `json:"recommend"`
+	RecommendTime     int64               `json:"recommendTime"`
+	Sticky            bool                `json:"sticky"`
+	StickyTime        int64               `json:"stickyTime"`
+	Status            int                 `json:"status"`
+	Favorited         bool                `json:"favorited"`
+	IpLocation        string              `json:"ipLocation"`
+	Vote              *VoteResponse       `json:"vote"`
 }
 
 type VoteResponse struct {

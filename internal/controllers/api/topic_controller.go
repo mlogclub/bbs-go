@@ -35,14 +35,17 @@ func (c *TopicController) _GetBuiltInNodes() []resp.NodeResponse {
 			{
 				Id:   0,
 				Name: locales.Get("topic.node.latest"),
+				Logo: "/res/images/node_latest.png",
 			},
 			{
 				Id:   -1,
 				Name: locales.Get("topic.node.recommend"),
+				Logo: "/res/images/node_recommend.png",
 			},
 			{
 				Id:   -2,
 				Name: locales.Get("topic.node.follow"),
+				Logo: "/res/images/node_follow.png",
 			},
 		}
 	}
@@ -59,7 +62,14 @@ func (c *TopicController) GetNode_navs() *web.JsonResult {
 
 // 节点
 func (c *TopicController) GetNodes() *web.JsonResult {
-	nodes := render.BuildNodes(services.TopicNodeService.GetNodes())
+	topicType := constants.TopicType(params.FormValueIntDefault(c.Ctx, "type", -1))
+	var nodeList []models.TopicNode
+	if topicType >= 0 {
+		nodeList = services.TopicNodeService.GetNodesByTopicType(topicType)
+	} else {
+		nodeList = services.TopicNodeService.GetNodes()
+	}
+	nodes := render.BuildNodes(nodeList)
 	return web.JsonData(nodes)
 }
 
@@ -94,7 +104,7 @@ func (c *TopicController) PostCreate() *web.JsonResult {
 	form.Title = strings.TrimSpace(form.Title)
 	form.Content = strings.TrimSpace(form.Content)
 	form.HideContent = strings.TrimSpace(form.HideContent)
-	if form.Type == constants.TopicTypeTweet {
+	if constants.IsTweetTopicType(form.Type) {
 		form.ContentType = constants.ContentTypeText
 	}
 	form.Ip = web.GetRequestIP(c.Ctx.Request())
@@ -123,7 +133,7 @@ func (c *TopicController) GetEditBy(topicIdStr string) *web.JsonResult {
 	if topic == nil || topic.Status != constants.StatusOk {
 		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
-	if topic.Type != constants.TopicTypeTopic {
+	if constants.IsTweetTopicType(topic.Type) {
 		return web.JsonErrorMsg(locales.Get("topic.type_not_supported"))
 	}
 
@@ -288,9 +298,11 @@ func (c *TopicController) GetUser_topics() *web.JsonResult {
 // 帖子列表
 func (c *TopicController) GetTopics() *web.JsonResult {
 	var (
-		cursor = params.FormValueInt64Default(c.Ctx, "cursor", 0)
-		nodeId = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
-		user   = common.GetCurrentUser(c.Ctx)
+		cursor   = params.FormValueInt64Default(c.Ctx, "cursor", 0)
+		nodeId   = params.FormValueInt64Default(c.Ctx, "nodeId", 0)
+		qaStatus = strings.TrimSpace(params.FormValue(c.Ctx, "qaStatus"))
+		sort     = strings.TrimSpace(params.FormValue(c.Ctx, "sort"))
+		user     = common.GetCurrentUser(c.Ctx)
 	)
 	if nodeId == constants.NodeIdFollow && user == nil {
 		return web.JsonError(errs.NotLogin())
@@ -298,10 +310,10 @@ func (c *TopicController) GetTopics() *web.JsonResult {
 
 	var temp []models.Topic
 	if cursor <= 0 {
-		stickyTopics := services.TopicService.GetStickyTopics(nodeId, 3)
+		stickyTopics := services.TopicService.GetStickyTopics(nodeId, 3, qaStatus)
 		temp = append(temp, stickyTopics...)
 	}
-	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor)
+	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor, qaStatus, sort)
 	for _, topic := range topics {
 		topic.Sticky = false // 正常列表不要渲染置顶
 		temp = append(temp, topic)
@@ -310,6 +322,36 @@ func (c *TopicController) GetTopics() *web.JsonResult {
 		return t.Id
 	})
 	return web.JsonCursorData(render.BuildSimpleTopics(c.Ctx, list), strconv.FormatInt(cursor, 10), hasMore)
+}
+
+// 采纳答案
+func (c *TopicController) PostAccept_answerBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	commentId := params.FormValueInt64Default(c.Ctx, "commentId", 0)
+	if commentId <= 0 {
+		return web.JsonErrorMsg("commentId is required")
+	}
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if err := services.TopicService.AcceptAnswer(topicId, commentId, user.Id, user.IsOwnerOrAdmin()); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}
+
+// 取消采纳答案
+func (c *TopicController) PostUnaccept_answerBy(topicIdStr string) *web.JsonResult {
+	topicId := idcodec.Decode(topicIdStr)
+	user := common.GetCurrentUser(c.Ctx)
+	if user == nil {
+		return web.JsonError(errs.NotLogin())
+	}
+	if err := services.TopicService.UnacceptAnswer(topicId, user.Id, user.IsOwnerOrAdmin()); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
 }
 
 // 标签帖子列表

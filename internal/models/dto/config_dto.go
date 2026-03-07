@@ -22,9 +22,14 @@ type SysConfigAdminResponse struct {
 	CreateArticleEmailVerified bool              `json:"createArticleEmailVerified"`
 	CreateCommentEmailVerified bool              `json:"createCommentEmailVerified"`
 	EnableHideContent          bool              `json:"enableHideContent"`
+	EnableQaBounty             bool              `json:"enableQaBounty"`
+	QaBountyMin                int               `json:"qaBountyMin"`
+	QaBountyMax                int               `json:"qaBountyMax"`
+	QaBountyRequired           bool              `json:"qaBountyRequired"`
 	Modules                    ModulesConfig     `json:"modules"`
-	EmailWhitelist             []string          `json:"emailWhitelist"`             // 邮箱白名单
-	EmailNoticeIntervalSeconds int               `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	EmailWhitelist             []string            `json:"emailWhitelist"`             // 邮箱白名单
+	EmailNoticeIntervalSeconds int                 `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	NotificationTypes          map[string]NoticeTypeConfig `json:"notificationTypes"`  // 各消息类型站内信+邮件开关
 	LoginConfig                LoginConfig       `json:"loginConfig"`                // 登录配置
 	SmtpConfig                 SmtpConfig        `json:"smtpConfig"`                 // SMTP配置
 	UploadConfig               UploadConfig      `json:"uploadConfig"`               // 上传配置
@@ -53,6 +58,10 @@ type SysConfigOpenResponse struct {
 	CreateArticleEmailVerified bool              `json:"createArticleEmailVerified"`
 	CreateCommentEmailVerified bool              `json:"createCommentEmailVerified"`
 	EnableHideContent          bool              `json:"enableHideContent"`
+	EnableQaBounty             bool              `json:"enableQaBounty"`
+	QaBountyMin                int               `json:"qaBountyMin"`
+	QaBountyMax                int               `json:"qaBountyMax"`
+	QaBountyRequired           bool              `json:"qaBountyRequired"`
 	Modules                    ModulesConfig     `json:"modules"`
 	EmailNoticeIntervalSeconds int               `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
 	LoginConfig                OpenLoginConfig   `json:"loginConfig"`                // 登录配置
@@ -79,6 +88,12 @@ type OpenLoginConfig struct {
 
 type EnabledConfig struct {
 	Enabled bool `json:"enabled"`
+}
+
+// NoticeTypeConfig 某类消息的站内信/邮件开关
+type NoticeTypeConfig struct {
+	Site  bool `json:"site"`
+	Email bool `json:"email"`
 }
 
 // ModulesConfig
