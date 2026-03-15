@@ -26,7 +26,7 @@ func migrate_notification_types_defaults() error {
 			"topicFavorite":    {Site: true, Email: true},
 			"topicRecommend":   {Site: true, Email: true},
 			"topicDelete":      {Site: true, Email: false},
-			"articleComment":  {Site: true, Email: true},
+			"articleComment":   {Site: true, Email: true},
 			"userLevelUp":      {Site: true, Email: true},
 			"userBadgeGrant":   {Site: true, Email: true},
 			"qaAnswerAccepted": {Site: true, Email: true},

@@ -37,10 +37,11 @@ func Decode(s string) int64 {
 	if Instance == nil {
 		panic(ErrNotInitialized)
 	}
-	ret, err := Instance.Decode(s)
-	if err != nil {
-		panic(err)
-	}
+	// ret, err := Instance.Decode(s)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	ret, _ := Instance.Decode(s)
 	return ret
 }
 

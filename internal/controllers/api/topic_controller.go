@@ -55,7 +55,7 @@ func (c *TopicController) _GetBuiltInNodes() []resp.NodeResponse {
 func (c *TopicController) GetNode_navs() *web.JsonResult {
 	nodes := append(
 		c._GetBuiltInNodes(),
-		render.BuildNodes(services.TopicNodeService.GetNodes())...,
+		render.BuildNodes(services.TopicNodeService.GetTopLevelNodes())...,
 	)
 	return web.JsonData(nodes)
 }
@@ -69,7 +69,7 @@ func (c *TopicController) GetNodes() *web.JsonResult {
 	} else {
 		nodeList = services.TopicNodeService.GetNodes()
 	}
-	nodes := render.BuildNodes(nodeList)
+	nodes := render.BuildNodeTree(0, nodeList)
 	return web.JsonData(nodes)
 }
 
@@ -87,7 +87,7 @@ func (c *TopicController) GetNode() *web.JsonResult {
 	if node == nil {
 		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
-	return web.JsonData(render.BuildNode(node))
+	return web.JsonData(render.BuildNodeWithChildren(node))
 }
 
 // 发表帖子
@@ -150,14 +150,18 @@ func (c *TopicController) GetEditBy(topicIdStr string) *web.JsonResult {
 		}
 	}
 
+	attachments := render.BuildAttachmentResponses(services.AttachmentService.ListByTopicId(topicId), nil)
+
 	return web.NewEmptyRspBuilder().
 		Put("id", idcodec.Encode(topic.Id)).
+		Put("type", topic.Type).
 		Put("nodeId", topic.NodeId).
 		Put("title", topic.Title).
 		Put("content", topic.Content).
 		Put("contentType", topic.ContentType).
 		Put("hideContent", topic.HideContent).
 		Put("tags", tagNames).
+		Put("attachments", attachments).
 		JsonResult()
 }
 

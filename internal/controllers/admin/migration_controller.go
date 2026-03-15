@@ -70,4 +70,3 @@ func (c *MigrationController) PostDelete() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
-

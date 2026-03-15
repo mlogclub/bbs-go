@@ -8,6 +8,8 @@ type ActionLink struct {
 	Children        []ActionLink `json:"children,omitempty"`
 }
 
+type LocalizedText map[string]string
+
 type ApiRoute struct {
 	Method string `json:"method"`
 	Path   string `json:"path"`

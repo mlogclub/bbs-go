@@ -36,7 +36,11 @@ func (c *SearchController) GetTopic() *web.JsonResult {
 		timeRange = params.FormValueIntDefault(c.Ctx, "timeRange", 0)
 		limit     = 20
 	)
-	list, _, err := search.SearchTopic(keyword, nodeId, timeRange, cursor, limit)
+	var nodeIds []int64
+	if nodeId > 0 {
+		nodeIds = services.TopicNodeService.GetNodeIdsForList(nodeId)
+	}
+	list, _, err := search.SearchTopic(keyword, nodeId, nodeIds, timeRange, cursor, limit)
 	if err != nil {
 		return web.JsonError(err)
 	}

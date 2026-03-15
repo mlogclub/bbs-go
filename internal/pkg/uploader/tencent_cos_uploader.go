@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"sync"
 
-	"github.com/tencentyun/cos-go-sdk-v5"
-
 	"github.com/mlogclub/simple/common/strs"
+	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"bbs-go/internal/models/dto"
 )
@@ -22,37 +22,31 @@ type TencentCosUploader struct {
 	currentCfg dto.UploadConfig
 }
 
-func (u *TencentCosUploader) PutImage(cfg dto.UploadConfig, data []byte, contentType string) (string, error) {
-	if strs.IsBlank(contentType) {
-		contentType = "image/jpeg"
-	}
-	key := generateImageKey(data, contentType)
-	return u.PutObject(cfg, key, data, contentType)
-}
-
-func (u *TencentCosUploader) PutObject(cfg dto.UploadConfig, key string, data []byte, contentType string) (string, error) {
+func (u *TencentCosUploader) PutObject(cfg dto.UploadConfig, key string, body io.Reader, opts *PutOptions) (string, error) {
 	if err := u.initClient(cfg); err != nil {
 		return "", err
 	}
-
-	opt := &cos.ObjectPutOptions{
-		ObjectPutHeaderOptions: &cos.ObjectPutHeaderOptions{
-			ContentType: contentType,
-		},
+	headerOpts := &cos.ObjectPutHeaderOptions{}
+	if opts != nil {
+		headerOpts.ContentType = opts.ContentType
+		headerOpts.ContentDisposition = opts.ContentDisposition
 	}
-	if _, err := u.client.Object.Put(context.Background(), key, bytes.NewReader(data), opt); err != nil {
+	opt := &cos.ObjectPutOptions{ObjectPutHeaderOptions: headerOpts}
+	if _, err := u.client.Object.Put(context.Background(), key, body, opt); err != nil {
 		return "", err
 	}
-
 	return fmt.Sprintf("%s/%s", u.client.BaseURL.BucketURL, key), nil
 }
 
 func (u *TencentCosUploader) CopyImage(cfg dto.UploadConfig, originUrl string) (string, error) {
-	data, contentType, err := download(originUrl)
+	data, ct, err := download(originUrl)
 	if err != nil {
 		return "", err
 	}
-	return u.PutImage(cfg, data, contentType)
+	ct = NormalizeImageContentType(ct)
+	key := GenerateImageKey(data, ct)
+	opts := &PutOptions{ContentType: ct, ContentLength: int64(len(data))}
+	return u.PutObject(cfg, key, bytes.NewReader(data), opts)
 }
 
 func (u *TencentCosUploader) initClient(cfg dto.UploadConfig) error {

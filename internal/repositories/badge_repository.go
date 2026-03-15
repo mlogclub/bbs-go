@@ -62,12 +62,12 @@ func (r *badgeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []mode
 	return
 }
 
-func (r *badgeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.Badge) {
+func (r *badgeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.Badge) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *badgeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *badgeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *badgeRepository) UpdateColumn(db *gorm.DB, id int64, name string, value
 func (r *badgeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.Badge{}, "id = ?", id)
 }
-

@@ -64,4 +64,3 @@ func (s *userTaskEventService) UpdateColumn(id int64, name string, value interfa
 func (s *userTaskEventService) Delete(id int64) {
 	repositories.UserTaskEventRepository.Delete(sqls.DB(), id)
 }
-

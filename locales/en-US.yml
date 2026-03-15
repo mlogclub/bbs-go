@@ -5,6 +5,8 @@ topic:
     latest: Latest
     recommend: Recommended
     follow: Following
+    has_children: "This category has sub-categories, please delete them first"
+    child_type_must_match_parent: "Child category type must match parent category"
   under_review: "Content under review"
   no_permission: "No permission"
   type_not_supported: "Current topic type does not support modification"
@@ -27,7 +29,7 @@ user:
   blacklist: "Blacklisted User"
   not_found: "User not found"
   no_permission: "No permission"
-  nickname_empty: "Nickname cannot be empty"
+  nickname_length_invalid: "Nickname length must be between %d and %d characters"
   gender_error: "Invalid gender data"
   homepage_error: "Invalid homepage URL"
   avatar_empty: "Avatar cannot be empty"
@@ -77,6 +79,18 @@ install:
 
 upload:
   image_too_large: "Image cannot exceed %d M"
+
+attachment:
+  not_found: "Attachment not found or unavailable"
+  insufficient_score: "Insufficient score to download"
+  no_permission: "No permission for this attachment"
+  already_bound: "Attachment is already bound to another topic"
+  ext_not_allowed: "File type not allowed"
+  file_missing: "File not found"
+  download_deduct: "Attachment download"
+  disabled: "Attachment upload is disabled"
+  too_large: "Single attachment cannot exceed %d MB"
+  too_many: "Maximum %d attachments per topic"
 
 message:
   system_nickname: "System"

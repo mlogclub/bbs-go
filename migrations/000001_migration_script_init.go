@@ -263,7 +263,7 @@ func seedForLanguage() seedData {
 				{ID: 2, Type: 0, Name: "Admin", Code: constants.RoleAdmin, SortNo: 1, Remark: "Admin with management privileges", Status: constants.StatusOk},
 			},
 			TopicNodes: []topicNodeSeed{
-				{ID: 1, Name: "Default", Description: "", Logo: "/res/images/node_default.png", SortNo: 0, Status: constants.StatusOk},
+				{ID: 1, Name: "Default", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
 			},
 			SysConfigs: []sysConfigSeed{
 				{Key: constants.SysConfigSiteTitle, Value: "BBS-GO Demo Site", Name: "Site Title", Description: "Site Title"},
@@ -302,7 +302,7 @@ func seedForLanguage() seedData {
 			{ID: 2, Type: 0, Name: "管理员", Code: constants.RoleAdmin, SortNo: 1, Remark: "管理员，拥有管理权限", Status: constants.StatusOk},
 		},
 		TopicNodes: []topicNodeSeed{
-			{ID: 1, Name: "默认节点", Description: "", Logo: "/res/images/node_default.png", SortNo: 0, Status: constants.StatusOk},
+			{ID: 1, Name: "默认节点", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
 		},
 		SysConfigs: []sysConfigSeed{
 			{Key: constants.SysConfigSiteTitle, Value: "bbs-go演示站", Name: "站点标题", Description: "站点标题"},

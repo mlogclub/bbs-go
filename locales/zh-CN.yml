@@ -5,6 +5,8 @@ topic:
     latest: 最新
     recommend: 推荐
     follow: 关注
+    has_children: "该节点下存在子分类，请先删除子分类"
+    child_type_must_match_parent: "子节点类型必须与父节点一致"
   under_review: "内容审核中"
   no_permission: "无权限"
   type_not_supported: "当前类型帖子不支持修改"
@@ -27,7 +29,7 @@ user:
   blacklist: "黑名单用户"
   not_found: "用户不存在"
   no_permission: "无权限"
-  nickname_empty: "昵称不能为空"
+  nickname_length_invalid: "昵称长度需在 %d 到 %d 个字符之间"
   gender_error: "性别数据错误"
   homepage_error: "个人主页地址错误"
   avatar_empty: "头像不能为空"
@@ -77,6 +79,18 @@ install:
 
 upload:
   image_too_large: "图片不能超过 %d M"
+
+attachment:
+  not_found: "附件不存在或已下架"
+  insufficient_score: "积分不足，无法下载"
+  no_permission: "无权限操作该附件"
+  already_bound: "附件已绑定其他帖子"
+  ext_not_allowed: "不支持该文件类型"
+  file_missing: "文件不存在"
+  download_deduct: "附件下载"
+  disabled: "附件上传功能未开启"
+  too_large: "单个附件不能超过 %d MB"
+  too_many: "每篇帖子最多上传 %d 个附件"
 
 message:
   system_nickname: "系统通知"

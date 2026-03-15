@@ -4,36 +4,39 @@ package dto
 //
 //	Admin配置返回结构体
 type SysConfigAdminResponse struct {
-	SiteTitle                  string            `json:"siteTitle"`
-	SiteDescription            string            `json:"siteDescription"`
-	BaseURL                    string            `json:"baseURL"`
-	SiteKeywords               []string          `json:"siteKeywords"`
-	SiteLogo                   string            `json:"siteLogo"`
-	SiteNavs                   []ActionLink      `json:"siteNavs"`
-	SiteNotification           string            `json:"siteNotification"`
-	RecommendTags              []string          `json:"recommendTags"`
-	UrlRedirect                bool              `json:"urlRedirect"`
-	DefaultNodeId              int64             `json:"defaultNodeId"`
-	ArticlePending             bool              `json:"articlePending"`
-	TopicCaptcha               bool              `json:"topicCaptcha"`
-	UserObserveSeconds         int               `json:"userObserveSeconds"`
-	TokenExpireDays            int               `json:"tokenExpireDays"`
-	CreateTopicEmailVerified   bool              `json:"createTopicEmailVerified"`
-	CreateArticleEmailVerified bool              `json:"createArticleEmailVerified"`
-	CreateCommentEmailVerified bool              `json:"createCommentEmailVerified"`
-	EnableHideContent          bool              `json:"enableHideContent"`
-	EnableQaBounty             bool              `json:"enableQaBounty"`
-	QaBountyMin                int               `json:"qaBountyMin"`
-	QaBountyMax                int               `json:"qaBountyMax"`
-	QaBountyRequired           bool              `json:"qaBountyRequired"`
-	Modules                    ModulesConfig     `json:"modules"`
-	EmailWhitelist             []string            `json:"emailWhitelist"`             // 邮箱白名单
-	EmailNoticeIntervalSeconds int                 `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
-	NotificationTypes          map[string]NoticeTypeConfig `json:"notificationTypes"`  // 各消息类型站内信+邮件开关
-	LoginConfig                LoginConfig       `json:"loginConfig"`                // 登录配置
-	SmtpConfig                 SmtpConfig        `json:"smtpConfig"`                 // SMTP配置
-	UploadConfig               UploadConfig      `json:"uploadConfig"`               // 上传配置
-	ScriptInjections           []ScriptInjection `json:"scriptInjections"`           // head脚本注入
+	SiteTitle                  string                      `json:"siteTitle"`
+	SiteDescription            string                      `json:"siteDescription"`
+	BaseURL                    string                      `json:"baseURL"`
+	SiteKeywords               []string                    `json:"siteKeywords"`
+	SiteLogo                   string                      `json:"siteLogo"`
+	SiteNavs                   []ActionLink                `json:"siteNavs"`
+	SiteNotification           string                      `json:"siteNotification"`
+	AboutPageConfig            AboutPageConfig             `json:"aboutPageConfig"`
+	FooterLinks                []FooterLink                `json:"footerLinks"`
+	RecommendTags              []string                    `json:"recommendTags"`
+	UrlRedirect                bool                        `json:"urlRedirect"`
+	DefaultNodeId              int64                       `json:"defaultNodeId"`
+	ArticlePending             bool                        `json:"articlePending"`
+	TopicCaptcha               bool                        `json:"topicCaptcha"`
+	UserObserveSeconds         int                         `json:"userObserveSeconds"`
+	TokenExpireDays            int                         `json:"tokenExpireDays"`
+	CreateTopicEmailVerified   bool                        `json:"createTopicEmailVerified"`
+	CreateArticleEmailVerified bool                        `json:"createArticleEmailVerified"`
+	CreateCommentEmailVerified bool                        `json:"createCommentEmailVerified"`
+	EnableHideContent          bool                        `json:"enableHideContent"`
+	EnableQaBounty             bool                        `json:"enableQaBounty"`
+	QaBountyMin                int                         `json:"qaBountyMin"`
+	QaBountyMax                int                         `json:"qaBountyMax"`
+	QaBountyRequired           bool                        `json:"qaBountyRequired"`
+	Modules                    ModulesConfig               `json:"modules"`
+	EmailWhitelist             []string                    `json:"emailWhitelist"`             // 邮箱白名单
+	EmailNoticeIntervalSeconds int                         `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	NotificationTypes          map[string]NoticeTypeConfig `json:"notificationTypes"`          // 各消息类型站内信+邮件开关
+	LoginConfig                LoginConfig                 `json:"loginConfig"`                // 登录配置
+	SmtpConfig                 SmtpConfig                  `json:"smtpConfig"`                 // SMTP配置
+	UploadConfig               UploadConfig                `json:"uploadConfig"`               // 上传配置
+	AttachmentConfig           AttachmentConfig            `json:"attachmentConfig"`           // 附件配置
+	ScriptInjections           []ScriptInjection           `json:"scriptInjections"`           // head脚本注入
 }
 
 // SysConfigOpenResponse
@@ -47,6 +50,7 @@ type SysConfigOpenResponse struct {
 	SiteLogo                   string            `json:"siteLogo"`
 	SiteNavs                   []ActionLink      `json:"siteNavs"`
 	SiteNotification           string            `json:"siteNotification"`
+	FooterLinks                []FooterLink      `json:"footerLinks"`
 	RecommendTags              []string          `json:"recommendTags"`
 	UrlRedirect                bool              `json:"urlRedirect"`
 	DefaultNodeId              int64             `json:"defaultNodeId"`
@@ -64,6 +68,7 @@ type SysConfigOpenResponse struct {
 	QaBountyRequired           bool              `json:"qaBountyRequired"`
 	Modules                    ModulesConfig     `json:"modules"`
 	EmailNoticeIntervalSeconds int               `json:"emailNoticeIntervalSeconds"` // 邮件通知间隔(秒)
+	AttachmentConfig           AttachmentConfig  `json:"attachmentConfig"`           // 附件配置
 	LoginConfig                OpenLoginConfig   `json:"loginConfig"`                // 登录配置
 	ScriptInjections           []ScriptInjection `json:"scriptInjections"`           // head脚本注入
 }
@@ -79,11 +84,23 @@ type ScriptInjection struct {
 	Crossorigin string `json:"crossorigin"`
 }
 
+type AboutPageConfig struct {
+	Content LocalizedText `json:"content"`
+}
+
+type FooterLink struct {
+	Text            LocalizedText `json:"text"`
+	Url             string        `json:"url"`
+	OpenInNewWindow bool          `json:"openInNewWindow"`
+	Visible         bool          `json:"visible"`
+}
+
 type OpenLoginConfig struct {
 	PasswordLogin EnabledConfig `json:"passwordLogin"` // 密码登录
 	WeixinLogin   EnabledConfig `json:"weixinLogin"`   // 微信登录
 	SmsLogin      EnabledConfig `json:"smsLogin"`      // 短信登录
 	GoogleLogin   EnabledConfig `json:"googleLogin"`   // Google登录
+	GithubLogin   EnabledConfig `json:"githubLogin"`   // GitHub登录
 }
 
 type EnabledConfig struct {
@@ -132,6 +149,13 @@ type LoginConfig struct {
 		ClientId     string `json:"clientId"`
 		ClientSecret string `json:"clientSecret"`
 	} `json:"googleLogin"`
+
+	// GitHub登录
+	GithubLogin struct {
+		Enabled      bool   `json:"enabled"`
+		ClientId     string `json:"clientId"`
+		ClientSecret string `json:"clientSecret"`
+	} `json:"githubLogin"`
 }
 
 type AliyunSmsConfig struct {
@@ -143,7 +167,7 @@ type AliyunSmsConfig struct {
 
 // IsAllDisabled 是否禁用了所有登录方式
 func (c *LoginConfig) IsAllDisabled() bool {
-	return !c.PasswordLogin.Enabled && !c.WeixinLogin.Enabled && !c.SmsLogin.Enabled && !c.GoogleLogin.Enabled
+	return !c.PasswordLogin.Enabled && !c.WeixinLogin.Enabled && !c.SmsLogin.Enabled && !c.GoogleLogin.Enabled && !c.GithubLogin.Enabled
 }
 
 type UploadMethod string
@@ -195,4 +219,12 @@ type AwsS3UploadConfig struct {
 	Bucket          string `json:"bucket"`
 	AccessKeyId     string `json:"accessKeyId"`
 	AccessKeySecret string `json:"accessKeySecret"`
+}
+
+// AttachmentConfig 帖子附件配置（单 Key 存 JSON）
+type AttachmentConfig struct {
+	Enabled      bool     `json:"enabled"`      // 是否开启附件上传
+	AllowedTypes []string `json:"allowedTypes"` // 允许的扩展名，如 [".pdf",".doc"]，空表示使用默认
+	MaxSizeMB    int      `json:"maxSizeMB"`    // 单个附件大小限制(MB)，0 表示默认 10MB
+	MaxCount     int      `json:"maxCount"`     // 每篇帖子最多附件数，0 表示默认 5
 }

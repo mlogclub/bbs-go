@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	blevequery "github.com/blevesearch/bleve/v2/search/query"
 	"github.com/mitchellh/mapstructure"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
@@ -105,7 +106,7 @@ func DeleteTopicIndex(id int64) error {
 }
 
 // 分页查询
-func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
+func SearchTopic(keyword string, nodeId int64, nodeIds []int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
 
 	query := bleve.NewBooleanQuery()
@@ -121,11 +122,10 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 			boolFieldQuery.SetField("recommend")
 			query.AddMust(boolFieldQuery)
 		} else {
-			f := float64(nodeId)
-			b := true
-			nodeIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)
-			nodeIdQuery.SetField("nodeId")
-			query.AddMust(nodeIdQuery)
+			nodeQuery := buildNodeQuery(nodeId, nodeIds)
+			if nodeQuery != nil {
+				query.AddMust(nodeQuery)
+			}
 		}
 	}
 	if timeRange != 0 {
@@ -194,4 +194,26 @@ func SearchTopic(keyword string, nodeId int64, timeRange, page, limit int) (docs
 	}
 
 	return
+}
+
+func buildNodeQuery(nodeId int64, nodeIds []int64) blevequery.Query {
+	if len(nodeIds) == 0 {
+		return buildExactNodeQuery(nodeId)
+	}
+	if len(nodeIds) == 1 {
+		return buildExactNodeQuery(nodeIds[0])
+	}
+	queries := make([]blevequery.Query, 0, len(nodeIds))
+	for _, id := range nodeIds {
+		queries = append(queries, buildExactNodeQuery(id))
+	}
+	return bleve.NewDisjunctionQuery(queries...)
+}
+
+func buildExactNodeQuery(nodeId int64) blevequery.Query {
+	f := float64(nodeId)
+	b := true
+	nodeIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)
+	nodeIdQuery.SetField("nodeId")
+	return nodeIdQuery
 }

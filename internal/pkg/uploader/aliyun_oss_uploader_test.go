@@ -96,7 +96,7 @@ func TestAliyunOssUploader_InitBucket_ConfigValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uploader := &AliyunOssUploader{}
 			err := uploader.initBucket(tt.cfg)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("initBucket() expected error but got nil")
@@ -123,7 +123,7 @@ func TestAliyunOssUploader_InitBucket_ConfigValidation(t *testing.T) {
 
 func TestAliyunOssUploader_PutImage_ContentType(t *testing.T) {
 	uploader := &AliyunOssUploader{}
-	
+
 	tests := []struct {
 		name        string
 		contentType string

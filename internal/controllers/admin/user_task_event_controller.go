@@ -70,4 +70,3 @@ func (c *UserTaskEventController) PostDelete() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
-

@@ -70,4 +70,3 @@ func (c *VoteRecordController) PostDelete() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
-

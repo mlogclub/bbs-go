@@ -46,6 +46,8 @@ func NewServer() {
 		}
 	})
 
+	app.Use(middleware.AttachmentMiddleware)
+
 	// built-in resources (icons, etc.)
 	app.HandleDir("/res", "./res", iris.DirOptions{
 		ShowList: false,
@@ -78,6 +80,7 @@ func NewServer() {
 		m.Party("/checkin").Handle(new(api.CheckinController))
 		m.Party("/config").Handle(new(api.ConfigController))
 		m.Party("/upload").Handle(new(api.UploadController))
+		m.Party("/attachment").Handle(new(api.AttachmentController))
 		m.Party("/link").Handle(new(api.LinkController))
 		m.Party("/captcha").Handle(new(api.CaptchaController))
 		m.Party("/search").Handle(new(api.SearchController))

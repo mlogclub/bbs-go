@@ -62,12 +62,12 @@ func (r *userTaskEventRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (lis
 	return
 }
 
-func (r *userTaskEventRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.UserTaskEvent) {
+func (r *userTaskEventRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.UserTaskEvent) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *userTaskEventRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *userTaskEventRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *userTaskEventRepository) UpdateColumn(db *gorm.DB, id int64, name strin
 func (r *userTaskEventRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.UserTaskEvent{}, "id = ?", id)
 }
-

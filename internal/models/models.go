@@ -19,6 +19,7 @@ var Models = []interface{}{
 	&UserScoreLog{}, &UserExpLog{},
 	&OperateLog{}, &EmailLog{}, &EmailCode{}, &SmsCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
 	&ForbiddenWord{},
+	&Attachment{}, &AttachmentDownloadLog{},
 }
 
 type Model struct {
@@ -232,14 +233,15 @@ type Favorite struct {
 	CreateTime int64  `json:"createTime" form:"createTime"`                                                        // 创建时间
 }
 
-// TopicNode 话题节点
+// TopicNode 话题节点（支持一级 parent_id=0 / 二级 parent_id>0）
 type TopicNode struct {
 	Model
-	Name        string                  `gorm:"size:32;unique" json:"name" form:"name"`                                            // 名称
+	ParentId    int64                   `gorm:"not null;default:0;index:idx_topic_node_parent_id" json:"parentId" form:"parentId"` // 父节点ID，0=一级
+	Name        string                  `gorm:"size:32;unique" json:"name" form:"name"`                                            // 名称（一级全局唯一；二级同父下唯一，应用层校验）
 	Type        constants.TopicNodeType `gorm:"size:16;not null;default:normal;index:idx_topic_node_type" json:"type" form:"type"` // 节点类型：normal/qa
 	Description string                  `gorm:"size:1024" json:"description" form:"description"`                                   // 描述
 	Logo        string                  `gorm:"size:1024" json:"logo" form:"logo"`                                                 // 图标
-	SortNo      int                     `gorm:"type:int(11);index:idx_sort_no" json:"sortNo" form:"sortNo"`                        // 排序编号
+	SortNo      int                     `gorm:"type:int(11);index:idx_topic_node_sort_no" json:"sortNo" form:"sortNo"`             // 排序编号
 	Status      int                     `gorm:"type:int(11);not null" json:"status" form:"status"`                                 // 状态
 	CreateTime  int64                   `json:"createTime" form:"createTime"`                                                      // 创建时间
 }
@@ -582,4 +584,28 @@ type ForbiddenWord struct {
 	Word       string `gorm:"size:128" json:"word" form:"word"`      // 违禁词
 	Remark     string `gorm:"size:1024" json:"remark" form:"remark"` // 备注
 	CreateTime int64  `json:"createTime" form:"createTime"`          // 举报时间
+}
+
+// Attachment 帖子附件
+type Attachment struct {
+	Id            string `gorm:"primaryKey;size:64" json:"id" form:"id"`
+	TopicId       int64  `gorm:"not null;default:0;index:idx_attachment_topic_id" json:"topicId" form:"topicId"`          // 所属帖子 ID
+	UserId        int64  `gorm:"not null;index:idx_attachment_user_id" json:"userId" form:"userId"`                       // 上传者（发帖人）ID
+	FileName      string `gorm:"size:256" json:"fileName" form:"fileName"`                                                // 原始文件名
+	FileUrl       string `gorm:"size:1024" json:"fileUrl" form:"fileUrl"`                                                 // 访问地址（相对路径或完整 URL，上传返回）
+	FileSize      int64  `gorm:"not null;default:0" json:"fileSize" form:"fileSize"`                                      // 文件大小（字节）
+	FileType      string `gorm:"size:64" json:"fileType" form:"fileType"`                                                 // MIME 或扩展名
+	DownloadScore int    `gorm:"type:int(11);not null;default:0" json:"downloadScore" form:"downloadScore"`               // 下载所需积分，0 表示免费
+	DownloadCount int    `gorm:"type:int(11);not null;default:0" json:"downloadCount" form:"downloadCount"`               // 下载次数
+	Status        int    `gorm:"type:int(11);not null;index:idx_attachment_status" json:"status" form:"status"`           // 状态：正常/删除
+	CreateTime    int64  `gorm:"not null;default:0;index:idx_attachment_create_time" json:"createTime" form:"createTime"` // 创建时间（毫秒）
+	UpdateTime    int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"`                                  // 更新时间（毫秒）
+}
+
+// AttachmentDownloadLog 附件下载记录（用户已购买，同一附件再次下载不扣积分）
+type AttachmentDownloadLog struct {
+	Model
+	UserId       int64  `gorm:"not null;uniqueIndex:uk_attachment_download_log_ua" json:"userId" form:"userId"`                     // 下载用户 ID
+	AttachmentId string `gorm:"not null;size:64;uniqueIndex:uk_attachment_download_log_ua" json:"attachmentId" form:"attachmentId"` // 附件 ID（UUID）
+	CreateTime   int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"`                                             // 首次下载（支付）时间（毫秒）
 }

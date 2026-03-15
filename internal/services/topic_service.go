@@ -102,6 +102,10 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 		if err := TopicTagService.DeleteByTopicId(ctx, topicId); err != nil {
 			return err
 		}
+		// 附件软删除（同一事务内执行，避免 SQLite 卡住）
+		if err := AttachmentService.SoftDeleteByTopicId(ctx, topicId); err != nil {
+			return err
+		}
 		return nil
 	})
 	if err != nil {
@@ -151,6 +155,16 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 	if topic == nil {
 		return errors.New(locales.Get("common.not_found"))
 	}
+	// 编辑时附件数量校验（仅帖子类型）
+	if topic.Type == constants.TopicTypeTopic && form.AttachmentIds != nil {
+		attCfg := SysConfigService.GetAttachmentConfig()
+		if !attCfg.Enabled {
+			return errors.New(locales.Get("attachment.disabled"))
+		}
+		if len(form.AttachmentIds) > attCfg.MaxCount {
+			return errors.New(locales.Getf("attachment.too_many", attCfg.MaxCount))
+		}
+	}
 	if !node.Type.Supports(topic.Type) {
 		return errors.New(locales.Get("topic.node_type_mismatch"))
 	}
@@ -187,6 +201,13 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 		// 然后重新添加标签
 		if err := repositories.TopicTagRepository.AddTopicTags(ctx.Tx, topicId, tagIds); err != nil {
 			return err
+		}
+
+		// 附件全量替换（仅当请求中带 attachmentIds 时，同一事务内执行避免 SQLite 卡住）
+		if form.AttachmentIds != nil {
+			if err := AttachmentService.ReplaceTopicAttachments(ctx, topicId, userId, form.AttachmentIds); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
@@ -264,7 +285,12 @@ func (s *topicService) GetTopics(user *models.User, nodeId, cursor int64, qaStat
 func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	cnd := sqls.NewCnd()
 	if nodeId > 0 {
-		cnd.Eq("node_id", nodeId)
+		nodeIds := TopicNodeService.GetNodeIdsForList(nodeId)
+		if len(nodeIds) > 0 {
+			cnd.In("node_id", nodeIds)
+		} else {
+			cnd.Eq("node_id", nodeId)
+		}
 	}
 	if nodeId == constants.NodeIdRecommend {
 		cnd.Eq("recommend", true)
@@ -480,7 +506,12 @@ func (s *topicService) GetUserTopics(userId, cursor int64) (topics []models.Topi
 func (s *topicService) GetStickyTopics(nodeId int64, limit int, qaStatus string) []models.Topic {
 	cnd := sqls.NewCnd().Eq("sticky", true).Eq("status", constants.StatusOk).Desc("sticky_time").Limit(limit)
 	if nodeId > 0 {
-		cnd.Eq("node_id", nodeId)
+		nodeIds := TopicNodeService.GetNodeIdsForList(nodeId)
+		if len(nodeIds) > 0 {
+			cnd.In("node_id", nodeIds)
+		} else {
+			cnd.Eq("node_id", nodeId)
+		}
 	}
 	if qaStatus != "" {
 		cnd.Eq("type", constants.TopicTypeQA)

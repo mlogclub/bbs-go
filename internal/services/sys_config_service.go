@@ -78,6 +78,16 @@ func (s *sysConfigService) SetAll(configStr string) error {
 			return err
 		}
 	}
+	if aboutPageConfig := json.Get(constants.SysConfigAboutPageConfig); aboutPageConfig.Exists() {
+		if err := validateAboutPageConfig(aboutPageConfig.String()); err != nil {
+			return err
+		}
+	}
+	if footerLinks := json.Get(constants.SysConfigFooterLinks); footerLinks.Exists() {
+		if err := validateFooterLinks(footerLinks.String()); err != nil {
+			return err
+		}
+	}
 	if scriptInjections := json.Get(constants.SysConfigScriptInjections); scriptInjections.Exists() {
 		if err := validateScriptInjections(scriptInjections.String()); err != nil {
 			return err
@@ -224,6 +234,37 @@ func (s *sysConfigService) GetModules() dto.ModulesConfig {
 	return modulesConfig
 }
 
+func (s *sysConfigService) GetAboutPageConfig() dto.AboutPageConfig {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigAboutPageConfig)
+	cfg := dto.AboutPageConfig{
+		Content: dto.LocalizedText{},
+	}
+	if strings.TrimSpace(str) == "" {
+		return cfg
+	}
+	if err := jsons.Parse(str, &cfg); err != nil {
+		slog.Warn("关于页配置错误", slog.Any("err", err))
+		return dto.AboutPageConfig{Content: dto.LocalizedText{}}
+	}
+	if cfg.Content == nil {
+		cfg.Content = dto.LocalizedText{}
+	}
+	return cfg
+}
+
+func (s *sysConfigService) GetFooterLinks() []dto.FooterLink {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigFooterLinks)
+	cfg := []dto.FooterLink{}
+	if strings.TrimSpace(str) == "" {
+		return cfg
+	}
+	if err := jsons.Parse(str, &cfg); err != nil {
+		slog.Warn("底部链接配置错误", slog.Any("err", err))
+		return []dto.FooterLink{}
+	}
+	return cfg
+}
+
 // GetEmailWhitelist 邮箱白名单
 func (s *sysConfigService) GetEmailWhitelist() []string {
 	str := cache.SysConfigCache.GetStr(constants.SysConfigEmailWhitelist)
@@ -344,6 +385,26 @@ func (s *sysConfigService) GetUploadConfig() dto.UploadConfig {
 	return uploadConfig
 }
 
+// GetAttachmentConfig 附件配置（帖子附件）
+func (s *sysConfigService) GetAttachmentConfig() dto.AttachmentConfig {
+	str := cache.SysConfigCache.GetStr(constants.SysConfigAttachmentConfig)
+	var cfg dto.AttachmentConfig
+	if err := jsons.Parse(str, &cfg); err != nil {
+		slog.Warn("附件配置解析错误", slog.Any("err", err))
+	}
+	// 默认值
+	if cfg.MaxSizeMB <= 0 {
+		cfg.MaxSizeMB = 10
+	}
+	if cfg.MaxCount <= 0 {
+		cfg.MaxCount = 5
+	}
+	if len(cfg.AllowedTypes) == 0 {
+		cfg.AllowedTypes = []string{".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".md", ".csv", ".zip", ".rar", ".7z", ".tar", ".gz"}
+	}
+	return cfg
+}
+
 func (s *sysConfigService) GetSmtpConfig() dto.SmtpConfig {
 	str := cache.SysConfigCache.GetStr(constants.SysConfigSmtpConfig)
 	var smtpConfig dto.SmtpConfig
@@ -390,6 +451,44 @@ func validateSiteNavs(siteNavsJson string) error {
 		return errors.New("invalid site navigation data format")
 	}
 	return validateActionLinks(navs, 1)
+}
+
+func validateAboutPageConfig(aboutPageConfigJSON string) error {
+	if strings.TrimSpace(aboutPageConfigJSON) == "" {
+		return nil
+	}
+
+	var cfg dto.AboutPageConfig
+	if err := jsons.Parse(aboutPageConfigJSON, &cfg); err != nil {
+		return errors.New("invalid about page config data format")
+	}
+	return nil
+}
+
+func validateFooterLinks(footerLinksJSON string) error {
+	if strings.TrimSpace(footerLinksJSON) == "" {
+		return nil
+	}
+
+	var links []dto.FooterLink
+	if err := jsons.Parse(footerLinksJSON, &links); err != nil {
+		return errors.New("invalid footer links data format")
+	}
+	for idx, item := range links {
+		if !hasLocalizedText(item.Text) {
+			return fmt.Errorf("footer link text is required at item %d", idx+1)
+		}
+	}
+	return nil
+}
+
+func hasLocalizedText(text dto.LocalizedText) bool {
+	for _, value := range text {
+		if strings.TrimSpace(value) != "" {
+			return true
+		}
+	}
+	return false
 }
 
 func validateActionLinks(navs []dto.ActionLink, depth int) error {

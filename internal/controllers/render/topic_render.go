@@ -18,21 +18,61 @@ import (
 )
 
 func BuildTopic(ctx iris.Context, topic *models.Topic) *resp.TopicResponse {
-	resp := _buildTopic(topic, true)
-	if resp == nil {
+	rsp := _buildTopic(topic, true)
+	if rsp == nil {
 		return nil
 	}
 
 	if currentUser := common.GetCurrentUser(ctx); currentUser != nil {
-		resp.Liked = services.UserLikeService.Exists(currentUser.Id, constants.EntityTopic, topic.Id)
-		resp.Favorited = services.FavoriteService.IsFavorited(currentUser.Id, constants.EntityTopic, topic.Id)
+		rsp.Liked = services.UserLikeService.Exists(currentUser.Id, constants.EntityTopic, topic.Id)
+		rsp.Favorited = services.FavoriteService.IsFavorited(currentUser.Id, constants.EntityTopic, topic.Id)
 	}
 
 	if vote := services.VoteService.Get(topic.VoteId); vote != nil {
-		resp.Vote = BuildVote(ctx, vote)
+		rsp.Vote = BuildVote(ctx, vote)
 	}
 
-	return resp
+	// 附件仅在帖子详情接口返回。
+	list := services.AttachmentService.ListByTopicId(topic.Id)
+	if len(list) > 0 {
+		var currentUser *models.User
+		if u := common.GetCurrentUser(ctx); u != nil {
+			currentUser = u
+		}
+		rsp.Attachments = BuildAttachmentResponses(list, currentUser)
+	}
+
+	return rsp
+}
+
+// BuildAttachmentResponses 将附件列表转为 AttachmentResponse 列表；currentUser 为 nil 时 downloaded 均为 false（如编辑表单）
+func BuildAttachmentResponses(list []models.Attachment, currentUser *models.User) []resp.AttachmentResponse {
+	if len(list) == 0 {
+		return nil
+	}
+	atts := make([]resp.AttachmentResponse, 0, len(list))
+	downloadedMap := make(map[string]bool)
+	if currentUser != nil && len(list) > 0 {
+		attachmentIds := make([]string, 0, len(list))
+		for _, att := range list {
+			attachmentIds = append(attachmentIds, att.Id)
+		}
+		for _, attachmentId := range services.AttachmentService.FindDownloadedAttachmentIds(currentUser.Id, attachmentIds) {
+			downloadedMap[attachmentId] = true
+		}
+	}
+
+	for _, att := range list {
+		atts = append(atts, resp.AttachmentResponse{
+			Id:            att.Id,
+			FileName:      att.FileName,
+			FileSize:      att.FileSize,
+			DownloadScore: att.DownloadScore,
+			DownloadCount: att.DownloadCount,
+			Downloaded:    downloadedMap[att.Id],
+		})
+	}
+	return atts
 }
 
 func BuildSimpleTopic(topic *models.Topic) *resp.TopicResponse {

@@ -70,4 +70,3 @@ func (c *SmsCodeController) PostDelete() *web.JsonResult {
 	}
 	return web.JsonSuccess()
 }
-

@@ -79,7 +79,7 @@ func TestAwsS3Uploader_InitClient_ConfigValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uploader := &AwsS3Uploader{}
 			err := uploader.initClient(tt.cfg)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("initClient() expected error but got nil")
@@ -107,7 +107,7 @@ func TestAwsS3Uploader_InitClient_ConfigValidation(t *testing.T) {
 
 func TestAwsS3Uploader_PutObject_URLGeneration(t *testing.T) {
 	uploader := &AwsS3Uploader{}
-	
+
 	cfg := dto.UploadConfig{
 		AwsS3: dto.AwsS3UploadConfig{
 			Region:          "us-east-1",
@@ -116,15 +116,15 @@ func TestAwsS3Uploader_PutObject_URLGeneration(t *testing.T) {
 			AccessKeySecret: "test-secret-access-key",
 		},
 	}
-	
+
 	key := "images/2026/01/28/test123.jpg"
 	data := []byte("test image data")
 	contentType := "image/jpeg"
-	
+
 	// 由于需要真实的 AWS 凭证，这里只测试 URL 生成逻辑
 	// 实际 URL 格式应该是: https://{bucket}.s3.{region}.amazonaws.com/{key}
 	expectedURLPrefix := "https://test-bucket.s3.us-east-1.amazonaws.com/"
-	
+
 	// 注意：这个测试需要 mock S3 客户端才能完整运行
 	// 这里只是验证 URL 格式逻辑
 	_ = uploader
@@ -133,7 +133,7 @@ func TestAwsS3Uploader_PutObject_URLGeneration(t *testing.T) {
 	_ = data
 	_ = contentType
 	_ = expectedURLPrefix
-	
+
 	// 验证 URL 格式
 	expectedURL := expectedURLPrefix + key
 	if !strings.HasPrefix(expectedURL, "https://") {
@@ -149,7 +149,7 @@ func TestAwsS3Uploader_PutObject_URLGeneration(t *testing.T) {
 
 func TestAwsS3Uploader_PutImage_ContentType(t *testing.T) {
 	uploader := &AwsS3Uploader{}
-	
+
 	tests := []struct {
 		name        string
 		contentType string
@@ -184,7 +184,7 @@ func TestAwsS3Uploader_PutImage_ContentType(t *testing.T) {
 
 func TestAwsS3Uploader_IsCfgChange(t *testing.T) {
 	uploader := &AwsS3Uploader{}
-	
+
 	cfg1 := dto.UploadConfig{
 		AwsS3: dto.AwsS3UploadConfig{
 			Region:          "us-east-1",
@@ -193,7 +193,7 @@ func TestAwsS3Uploader_IsCfgChange(t *testing.T) {
 			AccessKeySecret: "test-secret",
 		},
 	}
-	
+
 	cfg2 := dto.UploadConfig{
 		AwsS3: dto.AwsS3UploadConfig{
 			Region:          "us-east-1",
@@ -202,7 +202,7 @@ func TestAwsS3Uploader_IsCfgChange(t *testing.T) {
 			AccessKeySecret: "test-secret",
 		},
 	}
-	
+
 	cfg3 := dto.UploadConfig{
 		AwsS3: dto.AwsS3UploadConfig{
 			Region:          "us-west-2", // 不同的 region
@@ -211,19 +211,19 @@ func TestAwsS3Uploader_IsCfgChange(t *testing.T) {
 			AccessKeySecret: "test-secret",
 		},
 	}
-	
+
 	// 初始状态，client 为 nil，应该返回 true
 	if !uploader.isCfgChange(cfg1) {
 		t.Errorf("isCfgChange() should return true when client is nil")
 	}
-	
+
 	// 相同配置，应该返回 false（但需要先初始化）
 	// 由于需要真实凭证才能初始化，这里只测试逻辑
-	
+
 	// 不同配置，应该返回 true
 	if !uploader.isCfgChange(cfg3) {
 		t.Errorf("isCfgChange() should return true when config changes")
 	}
-	
+
 	_ = cfg2
 }

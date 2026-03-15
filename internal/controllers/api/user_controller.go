@@ -12,6 +12,7 @@ import (
 	"bbs-go/internal/pkg/validate"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
@@ -53,7 +54,7 @@ func (c *UserController) GetBy(userIdStr string) *web.JsonResult {
 }
 
 // 修改用户资料
-func (c *UserController) PostEditBy(userIdStr string) *web.JsonResult {
+func (c *UserController) PostUpdateBy(userIdStr string) *web.JsonResult {
 	userId := idcodec.Decode(userIdStr)
 	user := common.GetCurrentUser(c.Ctx)
 	if user == nil {
@@ -70,8 +71,16 @@ func (c *UserController) PostEditBy(userIdStr string) *web.JsonResult {
 		err         error
 	)
 
-	if len(nickname) == 0 {
-		return web.JsonErrorMsg(locales.Get("user.nickname_empty"))
+	var (
+		minLength = constants.NicknameMinLengthEnUS
+		maxLength = constants.NicknameMaxLengthEnUS
+	)
+	if strings.EqualFold(string(config.Instance.Language), string(config.LanguageZhCN)) {
+		minLength = constants.NicknameMinLengthZhCN
+		maxLength = constants.NicknameMaxLengthZhCN
+	}
+	if nicknameLength := utf8.RuneCountInString(nickname); nicknameLength < minLength || nicknameLength > maxLength {
+		return web.JsonErrorMsg(locales.Getf("user.nickname_length_invalid", minLength, maxLength))
 	}
 
 	if strs.IsNotBlank(gender) {
@@ -84,13 +93,12 @@ func (c *UserController) PostEditBy(userIdStr string) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("user.homepage_error"))
 	}
 
-	columns := map[string]any{
+	err = services.UserService.Updates(user.Id, map[string]any{
 		"nickname":    nickname,
 		"home_page":   homePage,
 		"description": description,
 		"gender":      gender,
-	}
-	err = services.UserService.Updates(user.Id, columns)
+	})
 	if err != nil {
 		return web.JsonError(err)
 	}
@@ -98,7 +106,7 @@ func (c *UserController) PostEditBy(userIdStr string) *web.JsonResult {
 }
 
 // 修改头像
-func (c *UserController) PostUpdateAvatar() *web.JsonResult {
+func (c *UserController) PostUpdate_avatar() *web.JsonResult {
 	user := common.GetCurrentUser(c.Ctx)
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
@@ -110,61 +118,6 @@ func (c *UserController) PostUpdateAvatar() *web.JsonResult {
 	err := services.UserService.UpdateAvatar(user.Id, avatar)
 	if err != nil {
 		return web.JsonError(err)
-	}
-	return web.JsonSuccess()
-}
-
-func (c *UserController) PostUpdateNickname() *web.JsonResult {
-	user := common.GetCurrentUser(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin())
-	}
-	nickname := strings.TrimSpace(params.FormValue(c.Ctx, "nickname"))
-	if len(nickname) == 0 {
-		return web.JsonErrorMsg(locales.Get("user.nickname_empty"))
-	}
-	err := services.UserService.UpdateNickname(user.Id, nickname)
-	if err != nil {
-		return web.JsonErrorMsg(err.Error())
-	}
-	return web.JsonSuccess()
-}
-
-func (c *UserController) PostUpdateDescription() *web.JsonResult {
-	user := common.GetCurrentUser(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin())
-	}
-	description := strings.TrimSpace(params.FormValue(c.Ctx, "description"))
-	err := services.UserService.UpdateDescription(user.Id, description)
-	if err != nil {
-		return web.JsonErrorMsg(err.Error())
-	}
-	return web.JsonSuccess()
-}
-
-func (c *UserController) PostUpdateGender() *web.JsonResult {
-	user := common.GetCurrentUser(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin())
-	}
-	gender := strings.TrimSpace(params.FormValue(c.Ctx, "gender"))
-	err := services.UserService.UpdateGender(user.Id, gender)
-	if err != nil {
-		return web.JsonErrorMsg(err.Error())
-	}
-	return web.JsonSuccess()
-}
-
-func (c *UserController) PostUpdateBirthday() *web.JsonResult {
-	user := common.GetCurrentUser(c.Ctx)
-	if user == nil {
-		return web.JsonError(errs.NotLogin())
-	}
-	birthday := strings.TrimSpace(params.FormValue(c.Ctx, "birthday"))
-	err := services.UserService.UpdateBirthday(user.Id, birthday)
-	if err != nil {
-		return web.JsonErrorMsg(err.Error())
 	}
 	return web.JsonSuccess()
 }
@@ -439,6 +392,24 @@ func (c *UserController) GetGoogle_bind_info() *web.JsonResult {
 		return web.JsonError(err)
 	}
 	thirdUser := services.ThirdUserService.GetByUserId(user.Id, constants.ThirdTypeGoogle)
+	if thirdUser != nil {
+		return web.JsonData(map[string]any{
+			"bind":     true,
+			"nickname": thirdUser.Nickname,
+			"avatar":   thirdUser.Avatar,
+		})
+	}
+	return web.JsonData(map[string]any{
+		"bind": false,
+	})
+}
+
+func (c *UserController) GetGithub_bind_info() *web.JsonResult {
+	user, err := common.CheckLogin(c.Ctx)
+	if err != nil {
+		return web.JsonError(err)
+	}
+	thirdUser := services.ThirdUserService.GetByUserId(user.Id, constants.ThirdTypeGithub)
 	if thirdUser != nil {
 		return web.JsonData(map[string]any{
 			"bind":     true,

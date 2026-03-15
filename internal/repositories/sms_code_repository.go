@@ -62,12 +62,12 @@ func (r *smsCodeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []mo
 	return
 }
 
-func (r *smsCodeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.SmsCode) {
+func (r *smsCodeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.SmsCode) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *smsCodeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *smsCodeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *smsCodeRepository) UpdateColumn(db *gorm.DB, id int64, name string, val
 func (r *smsCodeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.SmsCode{}, "id = ?", id)
 }
-

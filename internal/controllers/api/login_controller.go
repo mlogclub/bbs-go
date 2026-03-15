@@ -17,6 +17,7 @@ import (
 	captcha2 "bbs-go/internal/pkg/captcha"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/github"
 	"bbs-go/internal/pkg/google"
 	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/services"
@@ -422,5 +423,94 @@ func (c *LoginController) PostGoogle_unbind() *web.JsonResult {
 
 	services.ThirdUserService.UnbindGoogle(user.Id)
 
+	return web.JsonSuccess()
+}
+
+func (c *LoginController) GetGithub_login_config() *web.JsonResult {
+	redirect, _ := params.Get(c.Ctx, "redirect")
+	bind, _ := params.GetBool(c.Ctx, "bind")
+	state := strs.UUID()
+
+	loginConfig := services.SysConfigService.GetLoginConfig()
+	if !loginConfig.GithubLogin.Enabled {
+		return web.JsonErrorMsg("GitHub登录未启用")
+	}
+
+	// 绑定流程默认跳转到账号设置页，登录流程则使用传入的 redirect
+	if bind && strs.IsBlank(redirect) {
+		redirect = "/user/profile/account"
+	}
+
+	cache.GithubLoginStateCache.Put(state, &cache.GithubLoginStateData{
+		Redirect: redirect,
+		Bind:     bind,
+	})
+
+	// GitHub OAuth 只支持配置一个 callback URL，这里统一使用登录回调路径
+	redirectURI := bbsurls.AbsUrl(github.AuthorizationCallbackURL)
+
+	oauth := github.NewGithubOAuth(loginConfig.GithubLogin.ClientId, loginConfig.GithubLogin.ClientSecret, redirectURI)
+	authURL := oauth.GetAuthURL(state)
+
+	return web.JsonData(iris.Map{
+		"clientId":    loginConfig.GithubLogin.ClientId,
+		"authUrl":     authURL,
+		"redirectUri": redirectURI,
+		"state":       state,
+		"redirect":    redirect,
+	})
+}
+
+func (c *LoginController) PostGithub_login_submit() *web.JsonResult {
+	code, _ := params.Get(c.Ctx, "code")
+	state, _ := params.Get(c.Ctx, "state")
+
+	if strs.IsBlank(state) {
+		return web.JsonErrorMsg("state参数缺失")
+	}
+
+	data := cache.GithubLoginStateCache.Get(state)
+	if data == nil {
+		return web.JsonErrorMsg("登录数据错误或已过期，请重新登录")
+	}
+
+	if !services.SysConfigService.GetLoginConfig().GithubLogin.Enabled {
+		return web.JsonErrorMsg("GitHub登录未启用")
+	}
+
+	// 根据 state 中的标记区分「登录」和「绑定」场景
+	if data.Bind {
+		// 绑定流程要求用户已登录
+		user, err := common.CheckLogin(c.Ctx)
+		if err != nil {
+			return web.JsonError(err)
+		}
+		if err := services.ThirdUserService.BindGithub(user.Id, code, state); err != nil {
+			return web.JsonError(err)
+		}
+		// 绑定成功后保持当前登录态不变，按 redirect 跳转（默认为账号设置页）
+		return render.BuildLoginSuccess(c.Ctx, user, data.Redirect)
+	} else {
+		// 普通登录流程：使用 GitHub 账号登录 / 注册
+		user, err := services.ThirdUserService.LoginGithub(code, state)
+		if err != nil {
+			return web.JsonError(err)
+		}
+
+		return render.BuildLoginSuccess(c.Ctx, user, data.Redirect)
+	}
+}
+
+func (c *LoginController) PostGithub_unbind() *web.JsonResult {
+	user, err := common.CheckLogin(c.Ctx)
+	if err != nil {
+		return web.JsonError(err)
+	}
+
+	if !services.SysConfigService.GetLoginConfig().GithubLogin.Enabled {
+		return web.JsonErrorMsg("GitHub登录未启用")
+	}
+
+	services.ThirdUserService.UnbindGithub(user.Id)
 	return web.JsonSuccess()
 }

@@ -62,12 +62,12 @@ func (r *voteOptionRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list [
 	return
 }
 
-func (r *voteOptionRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.VoteOption) {
+func (r *voteOptionRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.VoteOption) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *voteOptionRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *voteOptionRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *voteOptionRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (r *voteOptionRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.VoteOption{}, "id = ?", id)
 }
-

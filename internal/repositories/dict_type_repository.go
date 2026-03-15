@@ -62,12 +62,12 @@ func (r *dictTypeRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []m
 	return
 }
 
-func (r *dictTypeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.DictType) {
+func (r *dictTypeRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.DictType) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *dictTypeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *dictTypeRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *dictTypeRepository) UpdateColumn(db *gorm.DB, id int64, name string, va
 func (r *dictTypeRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.DictType{}, "id = ?", id)
 }
-

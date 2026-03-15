@@ -118,10 +118,26 @@ type ArticleResponse struct {
 
 type NodeResponse struct {
 	Id          int64                   `json:"id"`
+	ParentId    int64                   `json:"parentId"` // 父节点ID，0=一级
 	Name        string                  `json:"name"`
 	Type        constants.TopicNodeType `json:"type"`
 	Logo        string                  `json:"logo"`
 	Description string                  `json:"description"`
+	Children    []NodeResponse          `json:"children,omitempty"` // 子节点（发帖可选时用）
+}
+
+// TopicNodeTreeItem 后台节点树形列表项（含 sortNo/status/createTime，children 始终存在以兼容 Arco Table）
+type TopicNodeTreeItem struct {
+	Id          int64                   `json:"id"`
+	ParentId    int64                   `json:"parentId"`
+	Name        string                  `json:"name"`
+	Type        constants.TopicNodeType `json:"type"`
+	Logo        string                  `json:"logo"`
+	Description string                  `json:"description"`
+	SortNo      int                     `json:"sortNo"`
+	Status      int                     `json:"status"`
+	CreateTime  int64                   `json:"createTime"`
+	Children    []TopicNodeTreeItem     `json:"children"` // 子节点，叶子节点为 []，保证 Arco Table 树形展示
 }
 
 type SearchTopicResponse struct {
@@ -136,33 +152,44 @@ type SearchTopicResponse struct {
 
 // 帖子列表返回实体
 type TopicResponse struct {
-	Id                string              `json:"id"`
-	Type              constants.TopicType `json:"type"`
-	QaStatus          constants.QaStatus  `json:"qaStatus"`
-	AcceptedCommentId int64               `json:"acceptedCommentId"`
-	SolvedAt          int64               `json:"solvedAt"`
-	BountyScore       int                 `json:"bountyScore"`
-	User              *UserInfo           `json:"user"`
-	Node              *NodeResponse       `json:"node"`
-	Tags              *[]TagResponse      `json:"tags"`
-	Title             string              `json:"title"`
-	Summary           string              `json:"summary"`
-	Content           string              `json:"content"`
-	ImageList         []ImageInfo         `json:"imageList"`
-	LastCommentTime   int64               `json:"lastCommentTime"`
-	ViewCount         int64               `json:"viewCount"`
-	CommentCount      int64               `json:"commentCount"`
-	LikeCount         int64               `json:"likeCount"`
-	Liked             bool                `json:"liked"`
-	CreateTime        int64               `json:"createTime"`
-	Recommend         bool                `json:"recommend"`
-	RecommendTime     int64               `json:"recommendTime"`
-	Sticky            bool                `json:"sticky"`
-	StickyTime        int64               `json:"stickyTime"`
-	Status            int                 `json:"status"`
-	Favorited         bool                `json:"favorited"`
-	IpLocation        string              `json:"ipLocation"`
-	Vote              *VoteResponse       `json:"vote"`
+	Id                string               `json:"id"`
+	Type              constants.TopicType  `json:"type"`
+	QaStatus          constants.QaStatus   `json:"qaStatus"`
+	AcceptedCommentId int64                `json:"acceptedCommentId"`
+	SolvedAt          int64                `json:"solvedAt"`
+	BountyScore       int                  `json:"bountyScore"`
+	User              *UserInfo            `json:"user"`
+	Node              *NodeResponse        `json:"node"`
+	Tags              *[]TagResponse       `json:"tags"`
+	Title             string               `json:"title"`
+	Summary           string               `json:"summary"`
+	Content           string               `json:"content"`
+	ImageList         []ImageInfo          `json:"imageList"`
+	LastCommentTime   int64                `json:"lastCommentTime"`
+	ViewCount         int64                `json:"viewCount"`
+	CommentCount      int64                `json:"commentCount"`
+	LikeCount         int64                `json:"likeCount"`
+	Liked             bool                 `json:"liked"`
+	CreateTime        int64                `json:"createTime"`
+	Recommend         bool                 `json:"recommend"`
+	RecommendTime     int64                `json:"recommendTime"`
+	Sticky            bool                 `json:"sticky"`
+	StickyTime        int64                `json:"stickyTime"`
+	Status            int                  `json:"status"`
+	Favorited         bool                 `json:"favorited"`
+	IpLocation        string               `json:"ipLocation"`
+	Vote              *VoteResponse        `json:"vote"`
+	Attachments       []AttachmentResponse `json:"attachments,omitempty"`
+}
+
+// AttachmentResponse 附件返回（不包含直链）
+type AttachmentResponse struct {
+	Id            string `json:"id"`            // ID
+	FileName      string `json:"fileName"`      // 原始文件名
+	FileSize      int64  `json:"fileSize"`      // 文件大小（字节）
+	DownloadScore int    `json:"downloadScore"` // 下载所需积分
+	DownloadCount int    `json:"downloadCount"` // 下载次数
+	Downloaded    bool   `json:"downloaded"`    // 当前用户是否已购买（可免费下载）
 }
 
 type VoteResponse struct {

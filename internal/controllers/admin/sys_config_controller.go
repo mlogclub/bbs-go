@@ -40,6 +40,8 @@ func (c *SysConfigController) GetConfigs() *web.JsonResult {
 		SiteLogo:                   cache.SysConfigCache.GetStr(constants.SysConfigSiteLogo),
 		SiteNavs:                   services.SysConfigService.GetSiteNavs(),
 		SiteNotification:           cache.SysConfigCache.GetStr(constants.SysConfigSiteNotification),
+		AboutPageConfig:            services.SysConfigService.GetAboutPageConfig(),
+		FooterLinks:                services.SysConfigService.GetFooterLinks(),
 		RecommendTags:              cache.SysConfigCache.GetStrArr(constants.SysConfigRecommendTags),
 		UrlRedirect:                services.SysConfigService.IsUrlRedirect(),
 		DefaultNodeId:              services.SysConfigService.GetDefaultNodeId(),
@@ -62,6 +64,7 @@ func (c *SysConfigController) GetConfigs() *web.JsonResult {
 		LoginConfig:                services.SysConfigService.GetLoginConfig(),
 		SmtpConfig:                 services.SysConfigService.GetSmtpConfig(),
 		UploadConfig:               services.SysConfigService.GetUploadConfig(),
+		AttachmentConfig:           services.SysConfigService.GetAttachmentConfig(),
 		ScriptInjections:           services.SysConfigService.GetScriptInjections(),
 	}
 	if strs.IsBlank(resp.SiteLogo) {

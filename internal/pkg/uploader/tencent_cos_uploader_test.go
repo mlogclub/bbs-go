@@ -16,9 +16,9 @@ func TestTencentCosUploader_InitClient_ConfigValidation(t *testing.T) {
 			name: "valid config should not error",
 			cfg: dto.UploadConfig{
 				TencentCos: dto.TencentCosUploadConfig{
-					Bucket:   "test-bucket-1234567890",
-					Region:   "ap-beijing",
-					SecretId: "test-secret-id",
+					Bucket:    "test-bucket-1234567890",
+					Region:    "ap-beijing",
+					SecretId:  "test-secret-id",
 					SecretKey: "test-secret-key",
 				},
 			},
@@ -78,7 +78,7 @@ func TestTencentCosUploader_InitClient_ConfigValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uploader := &TencentCosUploader{}
 			err := uploader.initClient(tt.cfg)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("initClient() expected error but got nil")
@@ -105,7 +105,7 @@ func TestTencentCosUploader_InitClient_ConfigValidation(t *testing.T) {
 
 func TestTencentCosUploader_PutImage_ContentType(t *testing.T) {
 	uploader := &TencentCosUploader{}
-	
+
 	tests := []struct {
 		name        string
 		contentType string

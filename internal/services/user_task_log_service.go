@@ -64,4 +64,3 @@ func (s *userTaskLogService) UpdateColumn(id int64, name string, value interface
 func (s *userTaskLogService) Delete(id int64) {
 	repositories.UserTaskLogRepository.Delete(sqls.DB(), id)
 }
-

@@ -108,6 +108,19 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 			return err
 		}
 
+		// 附件绑定（同一事务内校验与更新，避免 SQLite 卡住）
+		if len(form.AttachmentIds) > 0 {
+			if err = AttachmentService.CheckAttachmentsExistAndOwned(ctx, userId, form.AttachmentIds, topic.Id); err != nil {
+				return err
+			}
+			for _, aid := range form.AttachmentIds {
+				if err = repositories.AttachmentRepository.UpdateColumn(ctx.Tx, aid, "topic_id", topic.Id); err != nil {
+					return err
+				}
+				repositories.AttachmentRepository.UpdateColumn(ctx.Tx, aid, "update_time", now)
+			}
+		}
+
 		// 问答悬赏：扣减题主积分
 		if topic.Type == constants.TopicTypeQA && topic.BountyScore > 0 {
 			if err = UserService.DecrScoreTx(ctx, userId, topic.BountyScore, constants.SourceTypeQaBounty, cast.ToString(topic.Id), locales.Get("topic.bounty_deduct")); err != nil {
@@ -182,6 +195,17 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 		form.NodeId = SysConfigService.GetDefaultNodeId()
 		if form.NodeId <= 0 {
 			return errors.New("请选择节点")
+		}
+	}
+
+	// 帖子附件校验
+	if form.Type == constants.TopicTypeTopic && len(form.AttachmentIds) > 0 {
+		attCfg := SysConfigService.GetAttachmentConfig()
+		if !attCfg.Enabled {
+			return errors.New(locales.Get("attachment.disabled"))
+		}
+		if len(form.AttachmentIds) > attCfg.MaxCount {
+			return errors.New(locales.Getf("attachment.too_many", attCfg.MaxCount))
 		}
 	}
 

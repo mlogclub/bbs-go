@@ -1,15 +1,16 @@
 package api
 
 import (
-	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/common"
-	"bbs-go/internal/pkg/locales"
+	"bytes"
 	"io"
 	"log/slog"
 
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/web"
 
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/common"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/services"
 )
 
@@ -34,14 +35,22 @@ func (c *UploadController) Post() *web.JsonResult {
 	}
 
 	contentType := header.Header.Get("Content-Type")
-	fileBytes, err := io.ReadAll(file)
-	if err != nil {
-		return web.JsonError(err)
-	}
-
 	slog.Info("上传文件：", slog.Any("filename", header.Filename), slog.Any("size", header.Size))
 
-	url, err := services.UploadService.PutImage(fileBytes, contentType)
+	var body io.Reader
+	var size int64
+	if header.Size > 0 {
+		body, size = file, header.Size
+	} else {
+		fileBytes, err := io.ReadAll(file)
+		if err != nil {
+			return web.JsonError(err)
+		}
+		body = bytes.NewReader(fileBytes)
+		size = int64(len(fileBytes))
+	}
+
+	url, err := services.UploadService.PutImageStream(body, size, contentType)
 	if err != nil {
 		return web.JsonError(err)
 	}

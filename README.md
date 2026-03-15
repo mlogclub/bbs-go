@@ -1,55 +1,55 @@
-[中文](README.md) | [English](README.en-US.md)
+[English](README.md) | [中文](README.zh-CN.md)
 
 
-> 感谢您的支持与鼓励！如果您喜欢这个开源项目，不妨给它点个⭐️⭐️⭐️，您的星星是我们前进的动力 🙏🙏🙏
+> Thanks for your support. If you like this open-source project, please give it a star. Your support keeps us moving forward.
 
-## 官网
+## Official Links
 
-- 官网：[https://bbs-go.com](https://bbs-go.com)
-- 交流社区：[https://bbs.bbs-go.com](https://bbs.bbs-go.com)
-- Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
-- Gitee：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
+- Website: [https://bbs-go.com](https://bbs-go.com)
+- Community: [https://bbs.bbs-go.com](https://bbs.bbs-go.com)
+- GitHub: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
+- Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
-## 演示
+## Demo
 
-- 前台: https://demo.bbs-go.com
-- 后台: https://demo.bbs-go.com/admin
-- 账号密码: admin/123456
+- Frontend: <https://bbs.bbs-go.com>
+- Admin: <https://bbs.bbs-go.com/admin>
+- Admin account: Send me an email to obtain it. <mlog1@qq.com>
 
-## 为什么选择 bbs-go
+## Why Choose bbs-go
 
-- **开箱可用**：注册登录、发帖评论、点赞收藏、关注消息等核心社区能力可直接使用。
-- **增长闭环**：内置任务、积分、等级、勋章，支持用户活跃和长期留存。
-- **运营友好**：提供内容治理、用户治理、权限治理与系统配置能力，方便持续运营。
-- **双语支持**：内置 `en-US` / `zh-CN`，适合面向不同语言用户的社区场景。
+- **Ready out of the box**: Core community capabilities including signup/login, posting, commenting, likes, favorites, follows, and notifications.
+- **Growth loop built-in**: Tasks, points, levels, and badges to improve user activity and retention.
+- **Operations friendly**: Content governance, user governance, permission governance, and system settings for long-term operations.
+- **Bilingual support**: Built-in `en-US` and `zh-CN` for multilingual community scenarios.
 
-## 功能地图
+## Feature Map
 
 ```mermaid
 graph LR
   A((bbs-go))
 
-  subgraph L1[社区能力]
+  subgraph L1[Community Capabilities]
     direction TB
-    U[用户侧]
-    U1[注册登录]
-    U2[个人主页]
-    U3[消息通知]
-    U4[关注粉丝]
-    U5[积分排行]
+    U[User Side]
+    U1[Signup and Login]
+    U2[Profile]
+    U3[Notifications]
+    U4[Follow and Fans]
+    U5[Points Ranking]
     U --> U1
     U --> U2
     U --> U3
     U --> U4
     U --> U5
 
-    C[内容侧]
-    C1[帖子动态]
-    C2[文章发布]
-    C3[评论回复]
-    C4[点赞收藏]
-    C5[标签节点]
-    C6[站内搜索]
+    C[Content Side]
+    C1[Topics and Feeds]
+    C2[Articles]
+    C3[Comments and Replies]
+    C4[Likes and Favorites]
+    C5[Tags and Nodes]
+    C6[Search]
     C --> C1
     C --> C2
     C --> C3
@@ -58,27 +58,27 @@ graph LR
     C --> C6
   end
 
-  subgraph R1[增长与运营]
+  subgraph R1[Growth and Operations]
     direction TB
-    G[增长侧]
-    G1[每日签到]
-    G2[任务体系]
-    G3[积分经验]
-    G4[等级成长]
-    G5[勋章激励]
+    G[Growth]
+    G1[Daily Check-in]
+    G2[Task System]
+    G3[Points and EXP]
+    G4[Level Progression]
+    G5[Badges]
     G --> G1
     G --> G2
     G --> G3
     G --> G4
     G --> G5
 
-    O[运营侧]
-    O1[用户管理]
-    O2[内容治理]
-    O3[举报违禁词]
-    O4[角色权限]
-    O5[系统配置]
-    O6[运营日志]
+    O[Operations]
+    O1[User Management]
+    O2[Content Governance]
+    O3[Reports and Forbidden Words]
+    O4[Roles and Permissions]
+    O5[System Settings]
+    O6[Operation Logs]
     O --> O1
     O --> O2
     O --> O3
@@ -93,70 +93,76 @@ graph LR
   A --> O
 ```
 
-## 核心功能
+## Core Features
 
-### 用户侧
+### User Side
 
-- 账号注册与登录（支持多种登录方式）
-- 用户资料维护与个人主页展示
-- 关注/粉丝关系管理
-- 站内消息与互动提醒
-- 积分记录与排行榜
+- Account registration and login (multiple login methods supported)
+- User profile management and personal homepage
+- Follow/fan relationship management
+- In-site notifications and interaction reminders
+- Point records and leaderboards
 
-### 内容侧
+### Content Side
 
-- 支持帖子、动态、文章发布与编辑
-- 评论、回复、点赞、收藏等完整互动链路
-- 标签与节点管理，便于内容组织和发现
-- 支持投票、隐藏内容等互动玩法
-- 站内搜索能力，提升内容检索效率
+- Publish and edit topics, feeds, and articles
+- Complete interaction loop with comments, replies, likes, and favorites
+- Tags and nodes for better content organization and discovery
+- Interactive features like voting and hidden content
+- In-site search for faster content retrieval
 
-### 增长侧
+### Growth Side
 
-- 每日签到，持续活跃激励
-- 任务体系（新手、每日、成就）
-- 积分与经验奖励机制
-- 等级成长配置
-- 勋章与荣誉体系
+- Daily check-in for ongoing activity incentives
+- Task system (new user, daily, achievement)
+- Points and EXP reward mechanisms
+- Level progression configuration
+- Badge and honor system
 
-### 运营侧
+### Operations Side
 
-- 用户、帖子、评论、文章等统一治理
-- 举报处理与违禁词管理
-- 角色、菜单、接口权限分配
-- 系统参数与站点配置管理
-- 运营日志与行为留痕
+- Unified governance for users, topics, comments, and articles
+- Report handling and forbidden-word management
+- Role, menu, and API permission management
+- System parameter and site configuration management
+- Operation logs and audit trails
 
-## 适用场景
+## Typical Use Cases
 
-- 技术交流社区
-- 兴趣爱好社群
-- 产品用户社区
-- 企业内部知识社区
-- 内容型会员社区
+- Developer and technical communities
+- Hobby and interest-based communities
+- Product user communities
+- Internal enterprise knowledge communities
+- Content membership communities
 
-## 联系我
+## Contact
 
-QQ群：
-![BBS-GO用户交流群](docs/images/qq.png)
+### Email
 
-微信：
-![微信](docs/images/wechat.png)
+<mlog1@qq.com>
 
-## 付费服务
+### QQ Group
 
-付费是为了项目能够更好的生存下去，请谅解。项目将一如既往的开源下去~
+![BBS-GO QQ Group](docs/images/qq.png)
 
-| 服务     | 价格   | 服务内容                                         |
-| -------- | ------ | ------------------------------------------------ |
-| 商用授权 | ￥1628 | 提供 bbs-go 商业使用授权                         |
-| 功能定制 | 面议   | 接受各种功能定制，只有你想不到的没有我们做不到的 |
+### WeChat
 
-## bbs-go 是什么
+![WeChat](docs/images/wechat.png)
 
-`bbs-go` 是一个开源社区系统，帮助你快速搭建可运营、可增长的内容社区。
+## Commercial Services
 
-一句话概括：**发得出来、聊得起来、管得住、长得快**。
+Paid services help sustain long-term development while the project remains open source.
+
+| Service | Price | Description |
+| ------- | ----- | ----------- |
+| Commercial License | CNY 1628 | Commercial usage license for bbs-go |
+| Feature Customization | Negotiable | Custom feature development based on your needs |
+
+## What Is bbs-go
+
+`bbs-go` is an open-source community system that helps you quickly build an operable and growth-oriented content community.
+
+In one sentence: **Publish easily, engage deeply, govern effectively, and grow continuously.**
 
 ## Contributors
 

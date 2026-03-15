@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bbs-go/internal/controllers/render"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/web"
@@ -30,6 +31,7 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 			SiteLogo:                   cache.SysConfigCache.GetStr(constants.SysConfigSiteLogo),
 			SiteNavs:                   services.SysConfigService.GetSiteNavs(),
 			SiteNotification:           cache.SysConfigCache.GetStr(constants.SysConfigSiteNotification),
+			FooterLinks:                services.SysConfigService.GetFooterLinks(),
 			RecommendTags:              cache.SysConfigCache.GetStrArr(constants.SysConfigRecommendTags),
 			UrlRedirect:                services.SysConfigService.IsUrlRedirect(),
 			DefaultNodeId:              services.SysConfigService.GetDefaultNodeId(),
@@ -47,11 +49,13 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 			QaBountyRequired:           services.SysConfigService.IsQaBountyRequired(),
 			Modules:                    services.SysConfigService.GetModules(),
 			EmailNoticeIntervalSeconds: services.SysConfigService.GetEmailNoticeIntervalSeconds(),
+			AttachmentConfig:           services.SysConfigService.GetAttachmentConfig(),
 			LoginConfig: dto.OpenLoginConfig{
 				PasswordLogin: loginConfig.PasswordLogin,
 				WeixinLogin:   dto.EnabledConfig{Enabled: loginConfig.WeixinLogin.Enabled},
 				SmsLogin:      dto.EnabledConfig{Enabled: loginConfig.SmsLogin.Enabled},
 				GoogleLogin:   dto.EnabledConfig{Enabled: loginConfig.GoogleLogin.Enabled},
+				GithubLogin:   dto.EnabledConfig{Enabled: loginConfig.GithubLogin.Enabled},
 			},
 			ScriptInjections: services.SysConfigService.GetScriptInjections(),
 		}
@@ -65,4 +69,8 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 	b.Put("installed", cfg.Installed)
 	b.Put("language", cfg.Language)
 	return b.JsonResult()
+}
+
+func (c *ConfigController) GetAbout() *web.JsonResult {
+	return web.JsonData(render.BuildAboutPage(services.SysConfigService.GetAboutPageConfig()))
 }

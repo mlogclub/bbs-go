@@ -63,8 +63,8 @@ func TestGenerateImageKey(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			key := generateImageKey(tt.data, tt.contentType)
-			
+			key := GenerateImageKey(tt.data, tt.contentType)
+
 			// 检查 key 是否包含期望的扩展名
 			if tt.wantExt != "" {
 				if len(key) < len(tt.wantExt) {
@@ -82,7 +82,7 @@ func TestGenerateImageKey(t *testing.T) {
 					t.Errorf("generateImageKey() key too short: %s", key)
 				}
 			}
-			
+
 			// 检查 key 格式是否正确
 			if len(key) == 0 {
 				t.Errorf("generateImageKey() returned empty key")
@@ -94,19 +94,19 @@ func TestGenerateImageKey(t *testing.T) {
 func TestGenerateImageKey_Format(t *testing.T) {
 	data := []byte("test image data")
 	contentType := "image/jpeg"
-	
-	key := generateImageKey(data, contentType)
-	
+
+	key := GenerateImageKey(data, contentType)
+
 	// 检查 key 格式: images/YYYY/MM/DD/md5.jpg 或 test/images/YYYY/MM/DD/md5.jpg
 	if len(key) < 30 {
 		t.Errorf("generateImageKey() key too short: %s", key)
 	}
-	
+
 	// 检查是否包含日期格式
 	if len(key) < 20 {
 		t.Errorf("generateImageKey() key format incorrect: %s", key)
 	}
-	
+
 	// 检查是否以 .jpg 结尾
 	if len(key) < 4 || key[len(key)-4:] != ".jpg" {
 		t.Errorf("generateImageKey() should end with .jpg, got: %s", key)
@@ -116,16 +116,16 @@ func TestGenerateImageKey_Format(t *testing.T) {
 func TestGenerateImageKey_SameDataSameKey(t *testing.T) {
 	data := []byte("same test data")
 	contentType := "image/png"
-	
-	key1 := generateImageKey(data, contentType)
-	key2 := generateImageKey(data, contentType)
-	
+
+	key1 := GenerateImageKey(data, contentType)
+	key2 := GenerateImageKey(data, contentType)
+
 	// 由于包含时间戳，key 应该不同，但 MD5 部分应该相同
 	// 简化测试：检查 key 长度和格式是否一致
 	if len(key1) != len(key2) {
 		t.Errorf("generateImageKey() keys should have same length: %d vs %d", len(key1), len(key2))
 	}
-	
+
 	// 检查扩展名是否相同
 	if len(key1) >= 4 && len(key2) >= 4 {
 		ext1 := key1[len(key1)-4:]
@@ -190,7 +190,7 @@ func TestGenerateImageKey_EdgeCases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			key := generateImageKey(tt.data, tt.contentType)
+			key := GenerateImageKey(tt.data, tt.contentType)
 			if tt.checkFunc != nil {
 				tt.checkFunc(t, key)
 			}
@@ -200,7 +200,7 @@ func TestGenerateImageKey_EdgeCases(t *testing.T) {
 
 func TestGenerateImageKey_ContentTypeVariations(t *testing.T) {
 	testData := []byte("test image data")
-	
+
 	tests := []struct {
 		contentType string
 		expectedExt string
@@ -225,8 +225,8 @@ func TestGenerateImageKey_ContentTypeVariations(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.contentType, func(t *testing.T) {
-			key := generateImageKey(testData, tt.contentType)
-			
+			key := GenerateImageKey(testData, tt.contentType)
+
 			if tt.expectedExt != "" {
 				if len(key) < len(tt.expectedExt) {
 					t.Errorf("key too short: %s", key)

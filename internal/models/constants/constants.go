@@ -8,6 +8,14 @@ const (
 	CookieTokenKey               = "bbsgo_token"
 )
 
+// 昵称长度限制
+const (
+	NicknameMinLengthZhCN = 2
+	NicknameMaxLengthZhCN = 12
+	NicknameMinLengthEnUS = 2
+	NicknameMaxLengthEnUS = 20
+)
+
 const (
 	EmailCodeBizTypeEmailVerify   = "emailVerify"
 	EmailCodeBizTypePasswordReset = "passwordReset"
@@ -34,6 +42,8 @@ const (
 	SysConfigSiteLogo                   = "siteLogo"                   // 站点Logo
 	SysConfigSiteNavs                   = "siteNavs"                   // 站点导航
 	SysConfigSiteNotification           = "siteNotification"           // 站点公告
+	SysConfigAboutPageConfig            = "aboutPageConfig"            // 关于页配置
+	SysConfigFooterLinks                = "footerLinks"                // 底部链接
 	SysConfigRecommendTags              = "recommendTags"              // 推荐标签
 	SysConfigUrlRedirect                = "urlRedirect"                // 是否开启链接跳转
 	SysConfigDefaultNodeId              = "defaultNodeId"              // 发帖默认节点
@@ -51,6 +61,7 @@ const (
 	SysConfigLoginConfig                = "loginConfig"                // 登录配置
 	SysConfigSmtpConfig                 = "smtpConfig"                 // SMTP配置
 	SysConfigUploadConfig               = "uploadConfig"               // 上传配置
+	SysConfigAttachmentConfig           = "attachmentConfig"           // 附件配置（帖子附件）
 	SysConfigScriptInjections           = "scriptInjections"           // head脚本注入配置
 	SysConfigEnableQaBounty             = "enableQaBounty"             // 是否开启问答悬赏
 	SysConfigQaBountyMin                = "qaBountyMin"                // 问答悬赏积分下限
@@ -61,17 +72,20 @@ const (
 
 // EntityType
 const (
-	EntityArticle = "article"
-	EntityTopic   = "topic"
-	EntityComment = "comment"
-	EntityUser    = "user"
-	EntityCheckIn = "checkIn"
-	EntityTask    = "task"
+	EntityArticle    = "article"
+	EntityTopic      = "topic"
+	EntityComment    = "comment"
+	EntityUser       = "user"
+	EntityCheckIn    = "checkIn"
+	EntityTask       = "task"
+	EntityAttachment = "attachment"
 )
 
 const (
-	SourceTypeQaBounty       = "qa_bounty"        // SourceTypeQaBounty 积分来源：问答悬赏（UserScoreLog.SourceType）
-	SourceTypeQaBountyRefund = "qa_bounty_refund" // SourceTypeQaBountyRefund 积分来源：问答悬赏退回（帖子删除且未采纳答案时退给题主）
+	SourceTypeQaBounty           = "qa_bounty"           // SourceTypeQaBounty 积分来源：问答悬赏（UserScoreLog.SourceType）
+	SourceTypeQaBountyRefund     = "qa_bounty_refund"    // SourceTypeQaBountyRefund 积分来源：问答悬赏退回（帖子删除且未采纳答案时退给题主）
+	SourceTypeAttachmentDownload = "attachment_download" // 附件下载扣积分
+	SourceTypeAttachmentIncome   = "attachment_income"   // 附件下载帖主收入（可选）
 )
 
 // TaskEventType 任务事件类型（TaskConfig.EventType）
@@ -212,6 +226,7 @@ type ThirdType string
 const (
 	ThirdTypeWeixin ThirdType = "weixin"
 	ThirdTypeGoogle ThirdType = "google"
+	ThirdTypeGithub ThirdType = "github"
 )
 
 const (

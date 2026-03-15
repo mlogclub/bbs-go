@@ -1,17 +1,17 @@
 package uploader
 
 import (
-	"fmt"
-
-	"bbs-go/internal/models/dto"
-	"bbs-go/internal/pkg/bbsurls"
 	"bytes"
+	"fmt"
+	"io"
 	"log/slog"
 	"sync"
 
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/mlogclub/simple/common/strs"
 
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/bbsurls"
 )
 
 type AliyunOssUploader struct {
@@ -19,34 +19,34 @@ type AliyunOssUploader struct {
 	bucket *oss.Bucket
 }
 
-func (u *AliyunOssUploader) PutImage(cfg dto.UploadConfig, data []byte, contentType string) (string, error) {
-	if strs.IsBlank(contentType) {
-		contentType = "image/jpeg"
-	}
-	key := generateImageKey(data, contentType)
-	return u.PutObject(cfg, key, data, contentType)
-}
-
-func (u *AliyunOssUploader) PutObject(cfg dto.UploadConfig, key string, data []byte, contentType string) (string, error) {
+func (u *AliyunOssUploader) PutObject(cfg dto.UploadConfig, key string, body io.Reader, opts *PutOptions) (string, error) {
 	if err := u.initBucket(cfg); err != nil {
 		return "", err
 	}
 	var options []oss.Option
-	if strs.IsNotBlank(contentType) {
-		options = append(options, oss.ContentType(contentType))
+	if opts != nil {
+		if opts.ContentType != "" {
+			options = append(options, oss.ContentType(opts.ContentType))
+		}
+		if opts.ContentDisposition != "" {
+			options = append(options, oss.ContentDisposition(opts.ContentDisposition))
+		}
 	}
-	if err := u.bucket.PutObject(key, bytes.NewReader(data), options...); err != nil {
+	if err := u.bucket.PutObject(key, body, options...); err != nil {
 		return "", err
 	}
 	return bbsurls.UrlJoin(cfg.AliyunOss.Host, key), nil
 }
 
 func (u *AliyunOssUploader) CopyImage(cfg dto.UploadConfig, originUrl string) (string, error) {
-	data, contentType, err := download(originUrl)
+	data, ct, err := download(originUrl)
 	if err != nil {
 		return "", err
 	}
-	return u.PutImage(cfg, data, contentType)
+	ct = NormalizeImageContentType(ct)
+	key := GenerateImageKey(data, ct)
+	opts := &PutOptions{ContentType: ct, ContentLength: int64(len(data))}
+	return u.PutObject(cfg, key, bytes.NewReader(data), opts)
 }
 
 func (u *AliyunOssUploader) initBucket(cfg dto.UploadConfig) error {

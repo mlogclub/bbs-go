@@ -15,18 +15,19 @@ import (
 )
 
 type CreateTopicForm struct {
-	Type        constants.TopicType   `json:"type"`
-	NodeId      int64                 `json:"nodeId"`
-	Title       string                `json:"title"`
-	Content     string                `json:"content"`
-	ContentType constants.ContentType `json:"contentType"`
-	HideContent string                `json:"hideContent"`
-	Tags        []string              `json:"tags"`
-	ImageList   []ImageDTO            `json:"imageList"`
-	Vote        *CreateVoteForm       `json:"vote"`
-	BountyScore int                   `json:"bountyScore"` // 悬赏积分（仅问答帖有效，0 表示无悬赏）
-	UserAgent   string                `json:"userAgent"`
-	Ip          string                `json:"ip"`
+	Type          constants.TopicType   `json:"type"`
+	NodeId        int64                 `json:"nodeId"`
+	Title         string                `json:"title"`
+	Content       string                `json:"content"`
+	ContentType   constants.ContentType `json:"contentType"`
+	HideContent   string                `json:"hideContent"`
+	Tags          []string              `json:"tags"`
+	ImageList     []ImageDTO            `json:"imageList"`
+	Vote          *CreateVoteForm       `json:"vote"`
+	BountyScore   int                   `json:"bountyScore"`   // 悬赏积分（仅问答帖有效，0 表示无悬赏）
+	AttachmentIds []string              `json:"attachmentIds"` // 附件 ID 列表（UUID），发帖时绑定到帖子
+	UserAgent     string                `json:"userAgent"`
+	Ip            string                `json:"ip"`
 
 	CaptchaId       string `json:"captchaId"`
 	CaptchaCode     string `json:"captchaCode"`
@@ -51,11 +52,12 @@ type VoteCastForm struct {
 }
 
 type EditTopicForm struct {
-	NodeId      int64    `json:"nodeId"`
-	Title       string   `json:"title"`
-	Content     string   `json:"content"`
-	HideContent string   `json:"hideContent"`
-	Tags        []string `json:"tags"`
+	NodeId        int64    `json:"nodeId"`
+	Title         string   `json:"title"`
+	Content       string   `json:"content"`
+	HideContent   string   `json:"hideContent"`
+	Tags          []string `json:"tags"`
+	AttachmentIds []string `json:"attachmentIds"` // 附件 ID 列表（UUID），全量替换
 }
 
 type CreateArticleForm struct {
@@ -100,6 +102,7 @@ func GetCreateTopicForm(ctx iris.Context) CreateTopicForm {
 			Tags:            params.FormValueStringArray(ctx, "tags"),
 			ImageList:       GetImageList(ctx, "imageList"),
 			BountyScore:     params.FormValueIntDefault(ctx, "bountyScore", 0),
+			AttachmentIds:   params.FormValueStringArray(ctx, "attachmentIds"),
 			CaptchaId:       params.FormValue(ctx, "captchaId"),
 			CaptchaCode:     params.FormValue(ctx, "captchaCode"),
 			CaptchaProtocol: params.FormValueIntDefault(ctx, "captchaProtocol", 0),

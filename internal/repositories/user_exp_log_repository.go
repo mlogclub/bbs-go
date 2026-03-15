@@ -62,12 +62,12 @@ func (r *userExpLogRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list [
 	return
 }
 
-func (r *userExpLogRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (list []models.UserExpLog) {
+func (r *userExpLogRepository) FindBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (list []models.UserExpLog) {
 	db.Raw(sqlStr, paramArr...).Scan(&list)
 	return
 }
 
-func (r *userExpLogRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr... interface{}) (count int64) {
+func (r *userExpLogRepository) CountBySql(db *gorm.DB, sqlStr string, paramArr ...interface{}) (count int64) {
 	db.Raw(sqlStr, paramArr...).Count(&count)
 	return
 }
@@ -99,4 +99,3 @@ func (r *userExpLogRepository) UpdateColumn(db *gorm.DB, id int64, name string, 
 func (r *userExpLogRepository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&models.UserExpLog{}, "id = ?", id)
 }
-

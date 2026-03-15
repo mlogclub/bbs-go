@@ -1,14 +1,16 @@
 package services
 
 import (
-	"context"
-	"database/sql"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/github"
 	"bbs-go/internal/pkg/google"
 	"bbs-go/internal/pkg/wx"
 	"bbs-go/internal/repositories"
+	"context"
+	"database/sql"
+	"fmt"
 	"log/slog"
 
 	"github.com/kataras/iris/v12/x/errors"
@@ -351,6 +353,167 @@ func (s *thirdUserService) LoginGoogleOneTap(credential string) (*models.User, e
 		return nil, err
 	}
 	return user, nil
+}
+
+func (s *thirdUserService) LoginGithub(code, state string) (*models.User, error) {
+	loginConfig := SysConfigService.GetLoginConfig()
+	if !loginConfig.GithubLogin.Enabled {
+		return nil, errors.New("GitHub登录未启用")
+	}
+
+	redirectURI := bbsurls.AbsUrl(github.AuthorizationCallbackURL)
+	oauth := github.NewGithubOAuth(loginConfig.GithubLogin.ClientId, loginConfig.GithubLogin.ClientSecret, redirectURI)
+
+	ctx := context.Background()
+	info, err := oauth.GetUserInfo(ctx, code)
+	if err != nil {
+		slog.Error("GitHub登录获取用户信息失败", slog.Any("err", err))
+		return nil, err
+	}
+
+	openId := fmt.Sprintf("%d", info.ID)
+	thirdUser := ThirdUserService.GetByOpenId(openId, constants.ThirdTypeGithub)
+	if thirdUser != nil && thirdUser.UserId > 0 {
+		return UserService.Get(thirdUser.UserId), nil
+	}
+
+	// 若 GitHub 返回了邮箱，尝试查找是否已有同邮箱用户，避免重复创建账号
+	var existingUser *models.User
+	if info.Email != "" {
+		existingUser = UserService.GetByEmail(info.Email)
+	}
+
+	avatar, _ := UploadService.CopyImage(info.AvatarURL)
+
+	nickname := info.Name
+	if nickname == "" {
+		nickname = info.Login
+		if nickname == "" {
+			nickname = "GitHub用户"
+		}
+	}
+
+	var user *models.User
+	if err := sqls.WithTransaction(func(txCtx *sqls.TxContext) error {
+		if existingUser != nil {
+			// 邮箱已存在：自动将当前 GitHub 账号绑定到该用户
+			user = existingUser
+
+			// 若原用户没有邮箱或未验证，而 GitHub 返回了邮箱，则更新邮箱信息
+			if info.Email != "" {
+				if !user.Email.Valid || user.Email.String == "" {
+					user.Email = sql.NullString{String: info.Email, Valid: true}
+				}
+				// GitHub 邮箱本身即为已验证邮箱，这里可以安全标记为已验证
+				user.EmailVerified = true
+			}
+			// // 同步头像和昵称（以 GitHub 为准）
+			// user.Avatar = avatar
+			// user.Nickname = nickname
+			user.UpdateTime = dates.NowTimestamp()
+
+			if err := repositories.UserRepository.Update(txCtx.Tx, user); err != nil {
+				return err
+			}
+		} else {
+			// 邮箱不存在：创建新用户
+			user = &models.User{
+				Type:       constants.UserTypeNormal,
+				Nickname:   nickname,
+				Avatar:     avatar,
+				Status:     constants.StatusOk,
+				CreateTime: dates.NowTimestamp(),
+				UpdateTime: dates.NowTimestamp(),
+			}
+			if info.Email != "" {
+				user.Email = sql.NullString{String: info.Email, Valid: true}
+				user.EmailVerified = true
+			}
+			if err := repositories.UserRepository.Create(txCtx.Tx, user); err != nil {
+				return err
+			}
+		}
+
+		// 处理第三方用户记录
+		if thirdUser == nil {
+			return repositories.ThirdUserRepository.Create(txCtx.Tx, &models.ThirdUser{
+				UserId:     user.Id,
+				OpenId:     openId,
+				ThirdType:  constants.ThirdTypeGithub,
+				Nickname:   nickname,
+				Avatar:     avatar,
+				ExtraData:  jsons.ToJsonStr(info),
+				CreateTime: dates.NowTimestamp(),
+				UpdateTime: dates.NowTimestamp(),
+			})
+		}
+
+		thirdUser.UserId = user.Id
+		thirdUser.Nickname = nickname
+		thirdUser.Avatar = avatar
+		thirdUser.ExtraData = jsons.ToJsonStr(info)
+		thirdUser.UpdateTime = dates.NowTimestamp()
+		return repositories.ThirdUserRepository.Update(txCtx.Tx, thirdUser)
+	}); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *thirdUserService) BindGithub(userId int64, code, state string) error {
+	if temp := s.GetByUserId(userId, constants.ThirdTypeGithub); temp != nil {
+		return errors.New("用户已绑定GitHub: " + temp.Nickname)
+	}
+
+	loginConfig := SysConfigService.GetLoginConfig()
+	if !loginConfig.GithubLogin.Enabled {
+		return errors.New("GitHub登录未启用")
+	}
+
+	// GitHub 只允许配置一个回调地址，这里必须与发起授权时使用的 redirectURI 保持完全一致
+	// 统一使用登录回调路径 CallbackPathLogin
+	redirectURI := bbsurls.AbsUrl(github.AuthorizationCallbackURL)
+	oauth := github.NewGithubOAuth(loginConfig.GithubLogin.ClientId, loginConfig.GithubLogin.ClientSecret, redirectURI)
+
+	ctx := context.Background()
+	info, err := oauth.GetUserInfo(ctx, code)
+	if err != nil {
+		slog.Error("GitHub绑定获取用户信息失败", slog.Any("err", err))
+		return err
+	}
+
+	openId := fmt.Sprintf("%d", info.ID)
+	if temp := s.GetByOpenId(openId, constants.ThirdTypeGithub); temp != nil && temp.UserId != userId {
+		return errors.New("GitHub账号已绑定到其他用户~")
+	}
+
+	nickname := info.Name
+	if nickname == "" {
+		nickname = info.Login
+		if nickname == "" {
+			nickname = "GitHub用户"
+		}
+	}
+
+	return s.Create(&models.ThirdUser{
+		UserId:     userId,
+		OpenId:     openId,
+		ThirdType:  constants.ThirdTypeGithub,
+		Nickname:   nickname,
+		Avatar:     info.AvatarURL,
+		ExtraData:  jsons.ToJsonStr(info),
+		CreateTime: dates.NowTimestamp(),
+		UpdateTime: dates.NowTimestamp(),
+	})
+}
+
+func (s *thirdUserService) UnbindGithub(userId int64) {
+	thirdUser := s.GetByUserId(userId, constants.ThirdTypeGithub)
+	if thirdUser == nil {
+		return
+	}
+	repositories.ThirdUserRepository.Delete(sqls.DB(), thirdUser.Id)
 }
 
 func (s *thirdUserService) BindGoogle(userId int64, code, state string) error {

@@ -3,8 +3,8 @@ package cache
 import (
 	"time"
 
-	"github.com/goburrow/cache"
 	"bbs-go/internal/pkg/google"
+	"github.com/goburrow/cache"
 )
 
 type googleLoginStateCache struct {
