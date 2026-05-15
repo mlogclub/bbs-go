@@ -142,7 +142,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+	if !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg("无权限")
 	}
 	var (

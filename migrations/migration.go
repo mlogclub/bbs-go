@@ -104,7 +104,6 @@ func init() {
 	register(1, "init migration", migrate_init)
 	register(2, "init task data", migrate_init_task_data)
 	register(3, "add email_code biz_type", migrate_add_email_code_biz_type)
-	register(4, "add email log menu", migrate_add_email_log_menu)
 	register(5, "migrate smtp config to sys config", migrate_smtp_config_to_sys_config)
 	register(6, "init topic qa fields", migrate_topic_qa_init)
 	register(7, "qa bounty config defaults", migrate_qa_bounty_config)
@@ -112,4 +111,6 @@ func init() {
 	register(9, "attachment config defaults", migrate_attachment_config)
 	register(10, "topic node parent_id for hierarchy", migrate_topic_node_parent_id)
 	register(11, "site content config defaults", migrate_site_content_config)
+	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
+	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)
 }

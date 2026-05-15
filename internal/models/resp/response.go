@@ -150,6 +150,12 @@ type SearchTopicResponse struct {
 	CreateTime int64          `json:"createTime"`
 }
 
+type TopicTocItem struct {
+	Id    string `json:"id"`
+	Title string `json:"title"`
+	Level int    `json:"level"`
+}
+
 // 帖子列表返回实体
 type TopicResponse struct {
 	Id                string               `json:"id"`
@@ -164,6 +170,7 @@ type TopicResponse struct {
 	Title             string               `json:"title"`
 	Summary           string               `json:"summary"`
 	Content           string               `json:"content"`
+	Toc               []TopicTocItem       `json:"toc,omitempty"`
 	ImageList         []ImageInfo          `json:"imageList"`
 	LastCommentTime   int64                `json:"lastCommentTime"`
 	ViewCount         int64                `json:"viewCount"`

@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
 	"errors"
@@ -77,6 +78,20 @@ func (s *commentService) UpdateColumn(id int64, name string, value interface{}) 
 
 func (s *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
+}
+
+func (s *commentService) DeleteByUser(user *models.User, id int64) error {
+	if user == nil {
+		return errs.NotLogin()
+	}
+	if !user.IsOwner() {
+		return errs.NoPermission()
+	}
+	comment := s.Get(id)
+	if comment == nil || comment.Status == constants.StatusDeleted {
+		return errors.New("comment not found")
+	}
+	return s.Delete(id)
 }
 
 // Publish 发表评论

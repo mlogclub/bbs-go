@@ -36,7 +36,7 @@ func (c *ArticleController) GetBy(articleId int64) *web.JsonResult {
 	// 审核中文章控制展示
 	if article.Status == constants.StatusReview {
 		if user != nil {
-			if article.UserId != user.Id && !user.IsOwnerOrAdmin() {
+			if article.UserId != user.Id && !user.IsOwner() {
 				return web.JsonErrorCode(403, locales.Get("article.under_review"))
 			}
 		} else {
@@ -80,8 +80,8 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
@@ -127,8 +127,8 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
@@ -153,8 +153,8 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非管理员
-	if article.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 

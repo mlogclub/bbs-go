@@ -9,9 +9,3 @@ type ActionLink struct {
 }
 
 type LocalizedText map[string]string
-
-type ApiRoute struct {
-	Method string `json:"method"`
-	Path   string `json:"path"`
-	Name   string `json:"name"`
-}

@@ -54,8 +54,13 @@ func NewServer() {
 		Compress: true,
 	})
 
-	// admin
-	app.HandleDir("/admin", "./admin")
+	// legacy admin path redirects to the new dashboard in the web app
+	app.Get("/admin", func(ctx iris.Context) {
+		ctx.Redirect("/dashboard", iris.StatusMovedPermanently)
+	})
+	app.Get("/admin/{p:path}", func(ctx iris.Context) {
+		ctx.Redirect("/dashboard", iris.StatusMovedPermanently)
+	})
 	// site
 	app.HandleDir("/", "./site", iris.DirOptions{
 		ShowList:  false,
@@ -97,8 +102,6 @@ func NewServer() {
 		m.Router.Use(middleware.AuthMiddleware)
 		m.Router.Use(middleware.AdminMiddleware)
 		m.Party("/role").Handle(new(admin.RoleController))
-		m.Party("/menu").Handle(new(admin.MenuController))
-		m.Party("/api").Handle(new(admin.ApiController))
 		m.Party("/dict-type").Handle(new(admin.DictTypeController))
 		m.Party("/dict").Handle(new(admin.DictController))
 		m.Party("/email-log").Handle(new(admin.EmailLogController))

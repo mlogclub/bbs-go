@@ -172,9 +172,24 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
 		// 	return errors.New("内容或图片不能为空")
 		// }
-	} else if constants.IsPostTopicType(form.Type) {
+	} else if form.Type == constants.TopicTypeTopic {
 		if !modules.Topic {
 			return errors.New("未开启帖子功能")
+		}
+		if strs.IsBlank(form.Title) {
+			return errors.New("标题不能为空")
+		}
+
+		if strs.IsBlank(form.Content) {
+			return errors.New("内容不能为空")
+		}
+
+		if strs.RuneLen(form.Title) > 128 {
+			return errors.New("标题长度不能超过128")
+		}
+	} else if form.Type == constants.TopicTypeQA {
+		if !modules.QA {
+			return errors.New("未开启提问功能")
 		}
 		if strs.IsBlank(form.Title) {
 			return errors.New("标题不能为空")

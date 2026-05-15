@@ -1,0 +1,1 @@
+function e(e,t=`/`){if(!e||!e.startsWith(`/`)||e.startsWith(`//`)||e.includes(`\\`))return t;try{let n=new URL(e,`http://local`);return n.origin!==`http://local`||!n.pathname.startsWith(`/`)?t:`${n.pathname}${n.search}${n.hash}`}catch{return t}}export{e as t};

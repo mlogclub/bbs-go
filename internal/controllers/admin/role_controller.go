@@ -105,6 +105,13 @@ func (c *RoleController) PostDelete() *web.JsonResult {
 		return web.JsonErrorMsg("delete ids is empty")
 	}
 	for _, id := range ids {
+		t := services.RoleService.Get(id)
+		if t == nil {
+			return web.JsonErrorMsg("entity not found")
+		}
+		if t.Type == constants.RoleTypeSystem {
+			return web.JsonErrorMsg("系统角色不允许删除")
+		}
 		services.RoleService.Updates(id, map[string]interface{}{
 			"status":      constants.StatusDeleted,
 			"update_time": dates.NowTimestamp(),
@@ -116,21 +123,6 @@ func (c *RoleController) PostDelete() *web.JsonResult {
 func (s *RoleController) GetRoles() *web.JsonResult {
 	roles := services.RoleService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 	return web.JsonData(roles)
-}
-
-func (c *RoleController) GetRole_menu_ids() *web.JsonResult {
-	roleId, _ := params.GetInt64(c.Ctx, "roleId")
-	menuIds := services.RoleMenuService.GetMenuIdsByRole(roleId)
-	return web.JsonData(menuIds)
-}
-
-func (c *RoleController) PostSave_role_menus() *web.JsonResult {
-	roleId, _ := params.GetInt64(c.Ctx, "roleId")
-	menuIds := params.GetInt64Arr(c.Ctx, "menuIds")
-	if err := services.RoleMenuService.SaveRoleMenus(roleId, menuIds); err != nil {
-		return web.JsonError(err)
-	}
-	return web.JsonSuccess()
 }
 
 func (c *RoleController) PostUpdate_sort() *web.JsonResult {

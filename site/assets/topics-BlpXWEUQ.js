@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-C1p6_exl.js";import{F as t}from"./chunk-5KNZJZUH-B7x5eTwm.js";import{n}from"./provider-BuZ6yQ3Y.js";import{r,t as i}from"./_index-jxgrHKGw.js";var a=e(),o=t(function(){let{t:e}=n();return(0,a.jsx)(i,{title:e(`pages.topics.title`)})});export{r as clientLoader,o as default};

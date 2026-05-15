@@ -119,6 +119,7 @@ type NoticeTypeConfig struct {
 type ModulesConfig struct {
 	Tweet   bool `json:"tweet"`
 	Topic   bool `json:"topic"`
+	QA      bool `json:"qa"`
 	Article bool `json:"article"`
 }
 

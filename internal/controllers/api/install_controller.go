@@ -17,7 +17,9 @@ type InstallController struct {
 func (c *InstallController) GetStatus() *web.JsonResult {
 	cfg := config.Instance
 	return web.JsonData(map[string]any{
-		"installed": cfg.Installed,
+		"installed":          cfg.Installed,
+		"dockerBuiltinMysql": install.IsDockerBuiltinMySQLInstall(),
+		"dbType":             cfg.DB.Type,
 	})
 }
 

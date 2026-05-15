@@ -137,8 +137,8 @@ func (c *TopicController) GetEditBy(topicIdStr string) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("topic.type_not_supported"))
 	}
 
-	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if topic.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
@@ -178,8 +178,8 @@ func (c *TopicController) PostEditBy(topicIdStr string) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("common.not_found"))
 	}
 
-	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if topic.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
@@ -211,8 +211,8 @@ func (c *TopicController) PostDeleteBy(topicIdStr string) *web.JsonResult {
 		return web.JsonSuccess()
 	}
 
-	// 非作者、且非管理员
-	if topic.UserId != user.Id && !user.HasAnyRole(constants.RoleAdmin, constants.RoleOwner) {
+	// 非作者、且非站长
+	if topic.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
@@ -233,7 +233,7 @@ func (c *TopicController) PostRecommendBy(topicIdStr string) *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+	if !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
@@ -256,7 +256,7 @@ func (c *TopicController) GetBy(topicIdStr string) *web.JsonResult {
 	user := common.GetCurrentUser(c.Ctx)
 	if topic.Status == constants.StatusReview {
 		if user != nil {
-			if topic.UserId != user.Id && !user.IsOwnerOrAdmin() {
+			if topic.UserId != user.Id && !user.IsOwner() {
 				return web.JsonErrorCode(403, locales.Get("topic.under_review"))
 			}
 		} else {
@@ -339,7 +339,7 @@ func (c *TopicController) PostAccept_answerBy(topicIdStr string) *web.JsonResult
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if err := services.TopicService.AcceptAnswer(topicId, commentId, user.Id, user.IsOwnerOrAdmin()); err != nil {
+	if err := services.TopicService.AcceptAnswer(topicId, commentId, user.Id, user.IsOwner()); err != nil {
 		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
@@ -352,7 +352,7 @@ func (c *TopicController) PostUnaccept_answerBy(topicIdStr string) *web.JsonResu
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if err := services.TopicService.UnacceptAnswer(topicId, user.Id, user.IsOwnerOrAdmin()); err != nil {
+	if err := services.TopicService.UnacceptAnswer(topicId, user.Id, user.IsOwner()); err != nil {
 		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
@@ -392,7 +392,7 @@ func (c *TopicController) PostStickyBy(topicIdStr string) *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasAnyRole(constants.RoleOwner, constants.RoleAdmin) {
+	if !user.HasRole(constants.RoleOwner) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 

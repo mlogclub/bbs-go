@@ -3,10 +3,13 @@ package render
 import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/models/resp"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/event"
+	"fmt"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/mlogclub/simple/common/dates"
 
@@ -32,10 +35,19 @@ func xssProtection(htmlContent string) string {
 
 // handleHtmlContent 处理html内容
 func handleHtmlContent(htmlContent string) string {
+	htmlContent, _ = handleHtmlContentWithToc(htmlContent, false)
+	return htmlContent
+}
+
+func handleTopicHtmlContent(htmlContent string) (string, []resp.TopicTocItem) {
+	return handleHtmlContentWithToc(htmlContent, true)
+}
+
+func handleHtmlContentWithToc(htmlContent string, buildToc bool) (string, []resp.TopicTocItem) {
 	htmlContent = xssProtection(htmlContent)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
 	if err != nil {
-		return htmlContent
+		return htmlContent, nil
 	}
 
 	doc.Find("a").Each(func(_ int, selection *goquery.Selection) {
@@ -82,10 +94,80 @@ func handleHtmlContent(htmlContent string) string {
 		selection.SetAttr("src", src)
 	})
 
-	if htmlStr, err := doc.Find("body").Html(); err == nil {
-		return htmlStr
+	var toc []resp.TopicTocItem
+	if buildToc {
+		toc = buildTopicToc(doc)
 	}
-	return htmlContent
+
+	if htmlStr, err := doc.Find("body").Html(); err == nil {
+		return htmlStr, toc
+	}
+	return htmlContent, toc
+}
+
+func buildTopicToc(doc *goquery.Document) []resp.TopicTocItem {
+	var toc []resp.TopicTocItem
+	usedIds := make(map[string]int)
+	doc.Find("h2,h3,h4").Each(func(_ int, selection *goquery.Selection) {
+		title := strings.TrimSpace(selection.Text())
+		if strs.IsBlank(title) {
+			return
+		}
+
+		level := headingLevel(selection)
+		id := uniqueHeadingId(slugHeading(title), usedIds)
+		selection.SetAttr("id", id)
+		toc = append(toc, resp.TopicTocItem{
+			Id:    id,
+			Title: title,
+			Level: level,
+		})
+	})
+	return toc
+}
+
+func headingLevel(selection *goquery.Selection) int {
+	switch goquery.NodeName(selection) {
+	case "h2":
+		return 2
+	case "h3":
+		return 3
+	case "h4":
+		return 4
+	default:
+		return 0
+	}
+}
+
+func slugHeading(title string) string {
+	var builder strings.Builder
+	lastDash := false
+	for _, r := range strings.ToLower(title) {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			builder.WriteRune(r)
+			lastDash = false
+			continue
+		}
+		if !lastDash {
+			builder.WriteRune('-')
+			lastDash = true
+		}
+	}
+
+	slug := strings.Trim(builder.String(), "-")
+	if strs.IsBlank(slug) {
+		return "section"
+	}
+	return "topic-heading-" + slug
+}
+
+func uniqueHeadingId(base string, usedIds map[string]int) string {
+	count := usedIds[base]
+	usedIds[base] = count + 1
+	if count == 0 {
+		return base
+	}
+	return fmt.Sprintf("%s-%d", base, count+1)
 }
 
 /*

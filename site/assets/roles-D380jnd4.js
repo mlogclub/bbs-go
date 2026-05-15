@@ -1,0 +1,1 @@
+function e(e,t){return!!e?.roles?.includes(t)}function t(t){return e(t,`owner`)}function n(e){return t(e)}export{n as t};

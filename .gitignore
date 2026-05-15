@@ -34,6 +34,7 @@ logs/*.log
 web/*
 tmp/*
 logs/*
+admin/*
 res/uploads/*
 data/*
 

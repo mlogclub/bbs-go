@@ -56,3 +56,11 @@ func (c *CommentController) PostCreate() *web.JsonResult {
 
 	return web.JsonData(render.BuildComment(comment))
 }
+
+func (c *CommentController) PostDeleteBy(id int64) *web.JsonResult {
+	user := common.GetCurrentUser(c.Ctx)
+	if err := services.CommentService.DeleteByUser(user, id); err != nil {
+		return web.JsonError(err)
+	}
+	return web.JsonSuccess()
+}

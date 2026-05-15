@@ -124,8 +124,6 @@ const (
 // 用户角色
 const (
 	RoleOwner = "owner" // 站长
-	RoleAdmin = "admin" // 管理员
-	RoleUser  = "user"  // 用户
 )
 
 // 操作类型
@@ -246,13 +244,6 @@ type Gender string
 const (
 	GenderMale   Gender = "Male"
 	GenderFemale Gender = "Female"
-)
-
-type MenuType string
-
-const (
-	MenuTypeMenu = "menu" // 菜单
-	MenuTypeFunc = "func" // 功能
 )
 
 // 模块

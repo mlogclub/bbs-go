@@ -66,18 +66,16 @@ func init() {
 }
 
 type Config struct {
-	Language       Language       `yaml:"language"`       // 语言
-	Port           int            `yaml:"port"`           // 端口
-	IPLocator      IPLocator      `yaml:"ipLocator"`      // IP定位配置
-	AllowedOrigins []string       `yaml:"allowedOrigins"` // 跨域白名单
-	Installed      bool           `yaml:"installed"`      // 是否已安装
-	IDCodec        IDCodecConfig  `yaml:"idCodec"`        // ID 编解码配置
-	Logger         LoggerConfig   `yaml:"logger"`         // 日志配置
-	DB             sqls.DbConfig  `yaml:"db"`             // 数据库配置
-	Smtp           SmtpConfig     `yaml:"smtp"`           // smtp
-	Search         SearchConfig   `yaml:"search"`         // 搜索配置
-	BaiduSEO       BaiduSEOConfig `yaml:"baiduSEO"`       // 百度SEO配置
-	SmSEO          SmSEOConfig    `yaml:"smSEO"`          // 神马搜索SEO配置
+	Language       Language      `yaml:"language"`       // 语言
+	Port           int           `yaml:"port"`           // 端口
+	IPLocator      IPLocator     `yaml:"ipLocator"`      // IP定位配置
+	AllowedOrigins []string      `yaml:"allowedOrigins"` // 跨域白名单
+	Installed      bool          `yaml:"installed"`      // 是否已安装
+	IDCodec        IDCodecConfig `yaml:"idCodec"`        // ID 编解码配置
+	Logger         LoggerConfig  `yaml:"logger"`         // 日志配置
+	DB             sqls.DbConfig `yaml:"db"`             // 数据库配置
+	Smtp           SmtpConfig    `yaml:"smtp"`           // smtp
+	Search         SearchConfig  `yaml:"search"`         // 搜索配置
 }
 
 type IPLocator struct {
@@ -106,21 +104,6 @@ type SmtpConfig struct {
 
 type SearchConfig struct {
 	IndexPath string `yaml:"indexPath"`
-}
-
-// 百度SEO配置
-// 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
-type BaiduSEOConfig struct {
-	Site  string `yaml:"site"`
-	Token string `yaml:"token"`
-}
-
-// 神马搜索SEO配置
-// 文档：https://zhanzhang.sm.cn/open/mip
-type SmSEOConfig struct {
-	Site     string `yaml:"site"`
-	UserName string `yaml:"userName"`
-	Token    string `yaml:"token"`
 }
 
 func ReadConfig() (cfg *Config, exists bool, err error) {

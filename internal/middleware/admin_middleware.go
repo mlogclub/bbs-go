@@ -24,7 +24,7 @@ var (
 		{Pattern: "/api/admin/topic-node/update", Roles: []string{constants.RoleOwner}},
 		{Pattern: "/api/admin/tag/create", Roles: []string{constants.RoleOwner}},
 		{Pattern: "/api/admin/tag/update", Roles: []string{constants.RoleOwner}},
-		{Pattern: "/api/admin/**", Roles: []string{constants.RoleOwner, constants.RoleAdmin}},
+		{Pattern: "/api/admin/**", Roles: []string{constants.RoleOwner}},
 	}
 	antPathMatcher = urls.NewAntPathMatcher()
 )

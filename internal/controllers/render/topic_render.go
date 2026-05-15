@@ -140,7 +140,7 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 			if topic.ContentType == constants.ContentTypeMarkdown {
 				contentHtml = markdown.ToHTML(topic.Content)
 			}
-			rsp.Content = handleHtmlContent(contentHtml)
+			rsp.Content, rsp.Toc = handleTopicHtmlContent(contentHtml)
 		} else {
 			rsp.Content = html.EscapeString(topic.Content)
 		}

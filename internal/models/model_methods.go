@@ -41,9 +41,9 @@ func (u *User) HasAnyRole(roles ...string) bool {
 	return slices.ContainsFunc(roles, u.HasRole)
 }
 
-// IsOwnerOrAdmin 是否是管理员
-func (u *User) IsOwnerOrAdmin() bool {
-	return u.HasAnyRole(constants.RoleOwner, constants.RoleAdmin)
+// IsOwner 是否是站长
+func (u *User) IsOwner() bool {
+	return u.HasRole(constants.RoleOwner)
 }
 
 // GetRoles 获取角色

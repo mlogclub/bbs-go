@@ -18,6 +18,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -37,6 +38,15 @@ import (
 
 var (
 	installMx sync.Mutex
+)
+
+const (
+	DockerBuiltinMySQLEnv         = "BBSGO_INSTALL_DOCKER_BUILTIN_MYSQL"
+	DockerBuiltinMySQLHostEnv     = "BBSGO_DOCKER_BUILTIN_MYSQL_HOST"
+	DockerBuiltinMySQLPortEnv     = "BBSGO_DOCKER_BUILTIN_MYSQL_PORT"
+	DockerBuiltinMySQLDatabaseEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_DATABASE"
+	DockerBuiltinMySQLUsernameEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_USERNAME"
+	DockerBuiltinMySQLPasswordEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_PASSWORD"
 )
 
 // 测试数据库连接
@@ -74,10 +84,19 @@ func (r DbConfigReq) GetConnStr() string {
 }
 
 func TestDbConnection(req DbConfigReq) error {
+	var dsn string
+	if IsDockerBuiltinMySQLInstall() {
+		req = DbConfigReq{
+			Type: config.DbTypeMySQL,
+		}
+		dsn = config.Instance.DB.Url
+	}
 	if req.Type == "" {
 		req.Type = config.DbTypeMySQL
 	}
-	dsn := req.GetConnStr()
+	if dsn == "" {
+		dsn = req.GetConnStr()
+	}
 
 	switch req.Type {
 	case config.DbTypeSQLite:
@@ -127,6 +146,11 @@ func Install(req InstallReq) error {
 	installMx.Lock()
 	defer installMx.Unlock()
 
+	if IsDockerBuiltinMySQLInstall() {
+		req.DbConfig = DbConfigReq{
+			Type: config.DbTypeMySQL,
+		}
+	}
 	if err := TestDbConnection(req.DbConfig); err != nil {
 		return err
 	}
@@ -155,21 +179,23 @@ func WriteConfig(req InstallReq) error {
 	cfg := config.Instance
 	cfg.Language = req.Language
 	cfg.IDCodec.Key = idcodec.GenerateRandomKey()
-	if req.DbConfig.Type == "" {
-		req.DbConfig.Type = config.DbTypeMySQL
+	if !IsDockerBuiltinMySQLInstall() {
+		if req.DbConfig.Type == "" {
+			req.DbConfig.Type = config.DbTypeMySQL
+		}
+		cfg.DB.Type = req.DbConfig.Type
+		cfg.DB.Url = req.DbConfig.GetConnStr()
 	}
-	cfg.DB.Type = req.DbConfig.Type
-	cfg.DB.Url = req.DbConfig.GetConnStr()
 	if strs.IsBlank(cfg.Search.IndexPath) {
 		cfg.Search.IndexPath = filepath.Join(config.GetConfigDir(), "data", "topic_index")
 	}
-	return config.WriteConfig(cfg)
+	return WriteRuntimeConfig(cfg)
 }
 
 func WriteInstallSuccess() error {
 	cfg := config.Instance
 	cfg.Installed = true
-	return config.WriteConfig(cfg)
+	return WriteRuntimeConfig(cfg)
 }
 
 func InitConfig() {
@@ -178,6 +204,7 @@ func InitConfig() {
 		panic(err)
 	}
 	config.Instance = cfg
+	ApplyDockerBuiltinMySQLConfig()
 }
 
 // ResolveSqlitePath 将配置的 sqlite 相对路径转换为绝对路径（相对 bbs-go.yaml 所在目录）
@@ -256,17 +283,20 @@ func InitData(req InstallReq) error {
 		avatar = render.RandomAvatar(time.Now().Unix())
 	}
 	// 初始化用户
-	user := &models.User{
-		Nickname:   req.Username,
-		Username:   sqls.SqlNullString(req.Username),
-		Password:   passwd.EncodePassword(req.Password),
-		Avatar:     avatar,
-		Status:     constants.StatusOk,
-		CreateTime: dates.NowTimestamp(),
-		UpdateTime: dates.NowTimestamp(),
-	}
-	if err := services.UserService.Create(user); err != nil {
-		return err
+	user := services.UserService.GetByUsername(req.Username)
+	if user == nil {
+		user = &models.User{
+			Nickname:   req.Username,
+			Username:   sqls.SqlNullString(req.Username),
+			Password:   passwd.EncodePassword(req.Password),
+			Avatar:     avatar,
+			Status:     constants.StatusOk,
+			CreateTime: dates.NowTimestamp(),
+			UpdateTime: dates.NowTimestamp(),
+		}
+		if err := services.UserService.Create(user); err != nil {
+			return err
+		}
 	}
 
 	// 初始化用户角色
@@ -353,4 +383,46 @@ func InitOthers() error {
 	iplocator.InitIpLocator()
 	search.Init()
 	return nil
+}
+
+func IsDockerBuiltinMySQLInstall() bool {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(DockerBuiltinMySQLEnv))) {
+	case "1", "true", "yes", "y", "on":
+		return true
+	default:
+		return false
+	}
+}
+
+func ApplyDockerBuiltinMySQLConfig() {
+	if !IsDockerBuiltinMySQLInstall() {
+		return
+	}
+	config.Instance.DB.Type = config.DbTypeMySQL
+	config.Instance.DB.Url = DbConfigReq{
+		Type:     config.DbTypeMySQL,
+		Host:     dockerBuiltinMySQLEnv(DockerBuiltinMySQLHostEnv, "mysql"),
+		Port:     dockerBuiltinMySQLEnv(DockerBuiltinMySQLPortEnv, "3306"),
+		Database: dockerBuiltinMySQLEnv(DockerBuiltinMySQLDatabaseEnv, "bbsgo"),
+		Username: dockerBuiltinMySQLEnv(DockerBuiltinMySQLUsernameEnv, "bbsgo"),
+		Password: dockerBuiltinMySQLEnv(DockerBuiltinMySQLPasswordEnv, "bbsgo_password"),
+	}.GetConnStr()
+}
+
+func WriteRuntimeConfig(cfg *config.Config) error {
+	if !IsDockerBuiltinMySQLInstall() {
+		return config.WriteConfig(cfg)
+	}
+	persisted := *cfg
+	persisted.DB.Type = config.DbTypeMySQL
+	persisted.DB.Url = ""
+	return config.WriteConfig(&persisted)
+}
+
+func dockerBuiltinMySQLEnv(key string, fallback string) string {
+	value := strings.TrimSpace(os.Getenv(key))
+	if value == "" {
+		return fallback
+	}
+	return value
 }

@@ -87,8 +87,8 @@ func (c *LoginController) PostSignin() *web.JsonResult {
 		return web.JsonError(err)
 	}
 
-	// 管理员可以突破密码登录的限制，因为后台只能密码登录
-	if !user.IsOwnerOrAdmin() {
+	// 站长可以突破密码登录的限制，因为后台只能密码登录
+	if !user.IsOwner() {
 		if !services.SysConfigService.GetLoginConfig().PasswordLogin.Enabled {
 			return web.JsonErrorMsg(locales.Get("auth.password_login_disabled"))
 		}
