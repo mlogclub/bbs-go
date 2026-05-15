@@ -13,7 +13,7 @@
 ## Demo
 
 - Frontend: <https://bbs.bbs-go.com>
-- Admin: <https://bbs.bbs-go.com/admin>
+- Admin: <https://bbs.bbs-go.com/dashboard>
 - Admin account: Send me an email to obtain it. <mlog1@qq.com>
 
 ## Why Choose bbs-go
