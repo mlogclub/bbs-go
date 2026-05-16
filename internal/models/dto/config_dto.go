@@ -99,12 +99,17 @@ type OpenLoginConfig struct {
 	PasswordLogin EnabledConfig `json:"passwordLogin"` // 密码登录
 	WeixinLogin   EnabledConfig `json:"weixinLogin"`   // 微信登录
 	SmsLogin      EnabledConfig `json:"smsLogin"`      // 短信登录
-	GoogleLogin   EnabledConfig `json:"googleLogin"`   // Google登录
+	GoogleLogin   OAuthConfig   `json:"googleLogin"`   // Google登录
 	GithubLogin   EnabledConfig `json:"githubLogin"`   // GitHub登录
 }
 
 type EnabledConfig struct {
 	Enabled bool `json:"enabled"`
+}
+
+type OAuthConfig struct {
+	Enabled  bool   `json:"enabled"`
+	ClientId string `json:"clientId,omitempty"`
 }
 
 // NoticeTypeConfig 某类消息的站内信/邮件开关

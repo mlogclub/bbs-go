@@ -1,145 +1,169 @@
 [English](README.md) | [中文](README.zh-CN.md)
 
+# bbs-go
 
-> Thanks for your support. If you like this open-source project, please give it a star. Your support keeps us moving forward.
+`bbs-go` is a lightweight community and Q&A platform for forums, knowledge bases, and discussions.
+
+It includes forums, Q&A topics, articles, comments, notifications, moderation, roles, an admin dashboard, and optional growth mechanics such as tasks, points, levels, and badges.
 
 ## Official Links
 
 - Website: [https://bbs-go.com](https://bbs-go.com)
 - Community: [https://bbs.bbs-go.com](https://bbs.bbs-go.com)
 - GitHub: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
+- Docker Hub: [https://hub.docker.com/r/mlogclub/bbs-go](https://hub.docker.com/r/mlogclub/bbs-go)
 - Gitee: [https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
 ## Demo
 
 - Frontend: <https://bbs.bbs-go.com>
-- Admin: <https://bbs.bbs-go.com/dashboard>
-- Admin account: Send me an email to obtain it. <mlog1@qq.com>
+- Admin dashboard: <https://bbs.bbs-go.com/dashboard>
+- Admin demo access: send an email to <mlog1@qq.com>
+
+## Quick Start with Docker Compose
+
+bbs-go provides an official Docker image and Docker Compose deployment with built-in MySQL support.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.yml -o docker-compose.yml
+docker compose up -d
+```
+
+Then open:
+
+- Site: <http://localhost:3000>
+- Admin dashboard: <http://localhost:3000/dashboard>
+- Install wizard: <http://localhost:3000/install>
+
+For production deployment options, environment variables, upgrades, and troubleshooting, see the Docker Hub page:
+
+<https://hub.docker.com/r/mlogclub/bbs-go>
 
 ## Why Choose bbs-go
 
-- **Ready out of the box**: Core community capabilities including signup/login, posting, commenting, likes, favorites, follows, and notifications.
-- **Growth loop built-in**: Tasks, points, levels, and badges to improve user activity and retention.
-- **Operations friendly**: Content governance, user governance, permission governance, and system settings for long-term operations.
-- **Bilingual support**: Built-in `en-US` and `zh-CN` for multilingual community scenarios.
+- **Launch faster**: Ship a forum, Q&A community, or knowledge base without building auth, posting, comments, notifications, moderation, and admin tools from scratch.
+- **Deploy in minutes**: Use the official Docker image and Docker Compose setup for a simple self-hosted deployment.
+- **Lightweight but complete**: Cover discussions, Q&A, articles, profiles, search, and admin workflows without a heavy enterprise stack.
+- **Community engagement included**: Tasks, points, EXP, levels, rankings, and badges help communities create repeat engagement loops when needed.
+- **Operations ready**: Manage users, content, reports, keyword filters, roles, permissions, site settings, and audit logs from the dashboard.
+- **International by default**: Built-in `en-US` and `zh-CN` support for multilingual community scenarios.
+
+## Typical Use Cases
+
+- **Forums**: public or private spaces for threaded community discussions.
+- **Q&A communities**: question-style topics, answers, comments, and solved/unsolved workflows.
+- **Knowledge bases**: articles, searchable discussions, tags, and organized knowledge sharing.
+- **Product and developer communities**: support conversations, announcements, feedback, and user engagement.
+- **Internal team communities**: searchable discussions, role-based access, and team knowledge sharing.
 
 ## Feature Map
 
 ```mermaid
-graph LR
-  A((bbs-go))
+flowchart TB
+  A["bbs-go<br/>Lightweight Community and Q&A Platform"]
 
-  subgraph L1[Community Capabilities]
-    direction TB
-    U[User Side]
-    U1[Signup and Login]
-    U2[Profile]
-    U3[Notifications]
-    U4[Follow and Fans]
-    U5[Points Ranking]
-    U --> U1
-    U --> U2
-    U --> U3
-    U --> U4
-    U --> U5
+  A --> B["Forums"]
+  A --> C["Q&A"]
+  A --> D["Knowledge Base"]
+  A --> E["Discussions"]
 
-    C[Content Side]
-    C1[Topics and Feeds]
-    C2[Articles]
-    C3[Comments and Replies]
-    C4[Likes and Favorites]
-    C5[Tags and Nodes]
-    C6[Search]
-    C --> C1
-    C --> C2
-    C --> C3
-    C --> C4
-    C --> C5
-    C --> C6
-  end
+  B --> B1["Topics"]
+  B --> B2["Nodes and Tags"]
+  B --> B3["Feeds"]
 
-  subgraph R1[Growth and Operations]
-    direction TB
-    G[Growth]
-    G1[Daily Check-in]
-    G2[Task System]
-    G3[Points and EXP]
-    G4[Level Progression]
-    G5[Badges]
-    G --> G1
-    G --> G2
-    G --> G3
-    G --> G4
-    G --> G5
+  C --> C1["Questions"]
+  C --> C2["Answers and Comments"]
+  C --> C3["Solved Status"]
 
-    O[Operations]
-    O1[User Management]
-    O2[Content Governance]
-    O3[Reports and Forbidden Words]
-    O4[Roles and Permissions]
-    O5[System Settings]
-    O6[Operation Logs]
-    O --> O1
-    O --> O2
-    O --> O3
-    O --> O4
-    O --> O5
-    O --> O6
-  end
+  D --> D1["Articles"]
+  D --> D2["Search"]
+  D --> D3["Organized Knowledge"]
 
-  A --> U
-  A --> C
-  A --> G
-  A --> O
+  E --> E1["Likes and Favorites"]
+  E --> E2["Followers"]
+  E --> E3["Notifications"]
+
+  A --> F["Admin and Moderation"]
+  A --> G["Engagement"]
+
+  F --> F1["Dashboard"]
+  F --> F2["Roles and Permissions"]
+  F --> F3["Reports and Audit Logs"]
+
+  G --> G1["Tasks"]
+  G --> G2["Points and Levels"]
+  G --> G3["Badges"]
 ```
 
 ## Core Features
 
-### User Side
+### Member Experience
 
-- Account registration and login (multiple login methods supported)
-- User profile management and personal homepage
-- Follow/fan relationship management
-- In-site notifications and interaction reminders
+- Account registration and login with multiple login methods
+- User profiles and personal homepages
+- Follow and follower relationships
+- In-app notifications and interaction reminders
 - Point records and leaderboards
 
-### Content Side
+### Content and Engagement
 
 - Publish and edit topics, feeds, and articles
-- Complete interaction loop with comments, replies, likes, and favorites
-- Tags and nodes for better content organization and discovery
-- Interactive features like voting and hidden content
-- In-site search for faster content retrieval
+- Comments, replies, likes, and favorites
+- Tags and nodes for content organization and discovery
+- Voting and hidden content
+- Built-in search
 
-### Growth Side
+### Growth Mechanics
 
-- Daily check-in for ongoing activity incentives
-- Task system (new user, daily, achievement)
+- Daily check-in incentives
+- Configurable task system for new-user, daily, and achievement rewards
 - Points and EXP reward mechanisms
 - Level progression configuration
 - Badge and honor system
 
-### Operations Side
+### Operations and Governance
 
-- Unified governance for users, topics, comments, and articles
-- Report handling and forbidden-word management
+- Unified management for users, topics, comments, and articles
+- Report handling and keyword filters
 - Role, menu, and API permission management
-- System parameter and site configuration management
+- Site configuration and system settings
 - Operation logs and audit trails
 
-## Typical Use Cases
+## Screenshots
 
-- Developer and technical communities
-- Hobby and interest-based communities
-- Product user communities
-- Internal enterprise knowledge communities
-- Content membership communities
+![bbs-go feature overview](docs/images/features.jpg)
 
-## Contact
+## Internationalization
 
-### Email
+bbs-go includes English and Simplified Chinese language support:
 
-<mlog1@qq.com>
+- `en-US`
+- `zh-CN`
+
+The admin dashboard and server-side messages are designed to support multilingual community operations.
+
+## License
+
+bbs-go is open source under the [GPLv3 License](../LICENSE).
+
+If you need a commercial license, proprietary redistribution rights, or custom development support, see the commercial support section below.
+
+## Commercial Support
+
+Paid services help sustain long-term development while the project remains open source.
+
+| Service | Price | Description |
+| ------- | ----- | ----------- |
+| Commercial License | Contact us | Commercial usage license for bbs-go |
+| Feature Customization | Custom quote | Custom feature development based on your needs |
+
+For business inquiries, contact <mlog1@qq.com>.
+
+## Community and Contact
+
+- Discord: <https://discord.gg/TnzcSqKZyn>
+- Email: <mlog1@qq.com>
+- GitHub Issues: <https://github.com/mlogclub/bbs-go/issues>
 
 ### QQ Group
 
@@ -148,21 +172,6 @@ graph LR
 ### WeChat
 
 ![WeChat](docs/images/wechat.png)
-
-## Commercial Services
-
-Paid services help sustain long-term development while the project remains open source.
-
-| Service | Price | Description |
-| ------- | ----- | ----------- |
-| Commercial License | CNY 1628 | Commercial usage license for bbs-go |
-| Feature Customization | Negotiable | Custom feature development based on your needs |
-
-## What Is bbs-go
-
-`bbs-go` is an open-source community system that helps you quickly build an operable and growth-oriented content community.
-
-In one sentence: **Publish easily, engage deeply, govern effectively, and grow continuously.**
 
 ## Contributors
 

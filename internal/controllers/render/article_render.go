@@ -33,9 +33,9 @@ func BuildArticle(article *models.Article, currentUser *models.User) *resp.Artic
 
 	if article.ContentType == constants.ContentTypeMarkdown {
 		content := markdown.ToHTML(article.Content)
-		rsp.Content = handleHtmlContent(content)
+		rsp.Content, rsp.Toc = handleTopicHtmlContent(content)
 	} else if article.ContentType == constants.ContentTypeHtml {
-		rsp.Content = handleHtmlContent(article.Content)
+		rsp.Content, rsp.Toc = handleTopicHtmlContent(article.Content)
 	}
 
 	rsp.Cover = BuildImage(article.Cover)

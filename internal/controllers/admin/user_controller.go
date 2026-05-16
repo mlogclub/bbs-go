@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/idcodec"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/repositories"
 	"strconv"
 
@@ -143,7 +144,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		return web.JsonError(errs.NotLogin())
 	}
 	if !user.HasRole(constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("errors.no_permission"))
 	}
 	var (
 		userId = params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -151,7 +152,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		reason = params.FormValue(c.Ctx, "reason")
 	)
 	if userId < 0 {
-		return web.JsonErrorMsg("请传入：userId")
+		return web.JsonErrorMsg(locales.Get("admin.user_id_required"))
 	}
 	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())

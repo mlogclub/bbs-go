@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"errors"
 	"fmt"
@@ -70,7 +71,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	json := gjson.Parse(configStr)
 	configs, ok := json.Value().(map[string]interface{})
 	if !ok {
-		return errors.New("配置数据格式错误")
+		return errors.New(locales.Get("settings.invalid_format"))
 	}
 
 	if siteNavs := json.Get(constants.SysConfigSiteNavs); siteNavs.Exists() {

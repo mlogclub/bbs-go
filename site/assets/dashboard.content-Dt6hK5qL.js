@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-f8yN0YV-.js";import{F as t}from"./chunk-5KNZJZUH-ZpYnLRz-.js";import{t as n}from"./dashboard-overview-CDs2DFg6.js";var r=e(),i=t(function(){return(0,r.jsx)(n,{})});export{i as default};

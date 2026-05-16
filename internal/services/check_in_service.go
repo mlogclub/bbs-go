@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/repositories"
 	"errors"
 	"sync"
@@ -84,7 +85,7 @@ func (s *checkInService) CheckIn(userId int64) error {
 	)
 
 	if checkIn != nil && checkIn.LatestDayName == dayName {
-		return errors.New("你已签到")
+		return errors.New(locales.Get("check_in.already_checked_in"))
 	}
 
 	if checkIn != nil && checkIn.LatestDayName == yesterdayName {

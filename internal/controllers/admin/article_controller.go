@@ -3,6 +3,7 @@ package admin
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/idcodec"
+	"bbs-go/internal/pkg/locales"
 	"strconv"
 
 	"bbs-go/internal/models"
@@ -101,13 +102,13 @@ func (c *ArticleController) PostUpdate() *web.JsonResult {
 
 	// 数据校验
 	if len(t.Title) == 0 {
-		return web.JsonErrorMsg("标题不能为空")
+		return web.JsonErrorMsg(locales.Get("article.title_required"))
 	}
 	if len(t.Content) == 0 {
-		return web.JsonErrorMsg("内容不能为空")
+		return web.JsonErrorMsg(locales.Get("article.content_required"))
 	}
 	if len(t.ContentType) == 0 {
-		return web.JsonErrorMsg("请选择内容格式")
+		return web.JsonErrorMsg(locales.Get("admin.content_type_required"))
 	}
 
 	t.UpdateTime = dates.NowTimestamp()

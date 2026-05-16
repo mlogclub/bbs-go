@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"log/slog"
 	"time"
@@ -27,7 +28,7 @@ func newSysConfigCache() *sysConfigCache {
 				if ret := repositories.SysConfigRepository.GetByKey(sqls.DB(), key.(string)); ret != nil {
 					value = ret
 				} else {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},

@@ -3,6 +3,7 @@ package admin
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/services"
 	"strconv"
 
@@ -20,7 +21,7 @@ type RoleController struct {
 func (c *RoleController) GetBy(id int64) *web.JsonResult {
 	t := services.RoleService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found") + ", id=" + strconv.FormatInt(id, 10))
 	}
 	return web.JsonData(t)
 }
@@ -57,7 +58,7 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 	}
 
 	if services.RoleService.GetByCode(t.Code) != nil {
-		return web.JsonErrorMsg("角色编码已存在")
+		return web.JsonErrorMsg(locales.Get("admin.role_code_exists"))
 	}
 
 	t.SortNo = services.RoleService.GetNextSortNo()
@@ -77,11 +78,11 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 	}
 	t := services.RoleService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
 	}
 
 	if t.Type == constants.RoleTypeSystem {
-		return web.JsonErrorMsg("系统角色不允许编辑")
+		return web.JsonErrorMsg(locales.Get("admin.system_role_edit_forbidden"))
 	}
 
 	if err := params.ReadForm(c.Ctx, t); err != nil {
@@ -89,7 +90,7 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 	}
 
 	if exists := services.RoleService.GetByCode(t.Code); exists != nil && exists.Id != t.Id {
-		return web.JsonErrorMsg("角色编码已存在")
+		return web.JsonErrorMsg(locales.Get("admin.role_code_exists"))
 	}
 
 	t.UpdateTime = dates.NowTimestamp()
@@ -102,15 +103,15 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 func (c *RoleController) PostDelete() *web.JsonResult {
 	ids := params.GetInt64Arr(c.Ctx, "ids")
 	if len(ids) == 0 {
-		return web.JsonErrorMsg("delete ids is empty")
+		return web.JsonErrorMsg(locales.Get("admin.delete_ids_required"))
 	}
 	for _, id := range ids {
 		t := services.RoleService.Get(id)
 		if t == nil {
-			return web.JsonErrorMsg("entity not found")
+			return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
 		}
 		if t.Type == constants.RoleTypeSystem {
-			return web.JsonErrorMsg("系统角色不允许删除")
+			return web.JsonErrorMsg(locales.Get("admin.system_role_delete_forbidden"))
 		}
 		services.RoleService.Updates(id, map[string]interface{}{
 			"status":      constants.StatusDeleted,

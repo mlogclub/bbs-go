@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-C1p6_exl.js";import{F as t}from"./chunk-5KNZJZUH-B7x5eTwm.js";import{t as n}from"./private-center-Bkc3LVP8.js";import{r}from"./auth-Ck7TAgRj.js";var i=e();async function a(e){return await r(e),null}var o=t(function(){return(0,i.jsx)(n,{kind:`scores`})});export{a as clientLoader,o as default};

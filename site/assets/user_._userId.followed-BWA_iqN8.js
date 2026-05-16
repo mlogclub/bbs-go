@@ -1,0 +1,1 @@
+import{F as e}from"./chunk-5KNZJZUH-ZpYnLRz-.js";import{i as t}from"./user-profile-client-page-NlKomAZ7.js";var n=e(t);export{n as default};

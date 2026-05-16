@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/models/resp"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"fmt"
 	"strings"
 	"time"
@@ -180,7 +181,7 @@ Parameter:
 */
 func BuildLoginSuccess(ctx iris.Context, user *models.User, redirect string) *web.JsonResult {
 	if user == nil || user.Status != constants.StatusOk {
-		return web.JsonErrorMsg("用户不存在或已被禁用")
+		return web.JsonErrorMsg(locales.Get("errors.user_not_found_or_disabled"))
 	}
 	token, err := services.UserTokenService.Generate(user.Id)
 	if err != nil {

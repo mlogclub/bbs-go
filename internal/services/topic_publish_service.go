@@ -164,43 +164,43 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
 		if !modules.Tweet {
-			return errors.New("未开启动态功能")
+			return errors.New(locales.Get("topic.updates_disabled"))
 		}
 		if strs.IsBlank(form.Content) {
-			return errors.New("内容不能为空")
+			return errors.New(locales.Get("topic.content_required"))
 		}
 		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
 		// 	return errors.New("内容或图片不能为空")
 		// }
 	} else if form.Type == constants.TopicTypeTopic {
 		if !modules.Topic {
-			return errors.New("未开启帖子功能")
+			return errors.New(locales.Get("topic.discussions_disabled"))
 		}
 		if strs.IsBlank(form.Title) {
-			return errors.New("标题不能为空")
+			return errors.New(locales.Get("topic.title_required"))
 		}
 
 		if strs.IsBlank(form.Content) {
-			return errors.New("内容不能为空")
+			return errors.New(locales.Get("topic.content_required"))
 		}
 
 		if strs.RuneLen(form.Title) > 128 {
-			return errors.New("标题长度不能超过128")
+			return errors.New(locales.Get("topic.title_too_long"))
 		}
 	} else if form.Type == constants.TopicTypeQA {
 		if !modules.QA {
-			return errors.New("未开启提问功能")
+			return errors.New(locales.Get("topic.qa_disabled"))
 		}
 		if strs.IsBlank(form.Title) {
-			return errors.New("标题不能为空")
+			return errors.New(locales.Get("topic.title_required"))
 		}
 
 		if strs.IsBlank(form.Content) {
-			return errors.New("内容不能为空")
+			return errors.New(locales.Get("topic.content_required"))
 		}
 
 		if strs.RuneLen(form.Title) > 128 {
-			return errors.New("标题长度不能超过128")
+			return errors.New(locales.Get("topic.title_too_long"))
 		}
 	} else {
 		return errors.New(locales.Get("topic.type_not_supported"))
@@ -209,7 +209,7 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 	if form.NodeId <= 0 {
 		form.NodeId = SysConfigService.GetDefaultNodeId()
 		if form.NodeId <= 0 {
-			return errors.New("请选择节点")
+			return errors.New(locales.Get("topic.node_required"))
 		}
 	}
 
@@ -226,7 +226,7 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return errors.New("节点不存在")
+		return errors.New(locales.Get("topic.node_not_found"))
 	}
 	if !node.Type.Supports(form.Type) {
 		return errors.New(locales.Get("topic.node_type_mismatch"))

@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"log/slog"
 	"strings"
@@ -98,13 +99,13 @@ func (s *commentService) DeleteByUser(user *models.User, id int64) error {
 func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*models.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
 	if strs.IsBlank(form.EntityType) {
-		return nil, errors.New("参数非法")
+		return nil, errors.New(locales.Get("comment.invalid_params"))
 	}
 	if form.EntityId <= 0 {
-		return nil, errors.New("参数非法")
+		return nil, errors.New(locales.Get("comment.invalid_params"))
 	}
 	if strs.IsBlank(form.Content) {
-		return nil, errors.New("请输入评论内容")
+		return nil, errors.New(locales.Get("comment.content_required"))
 	}
 
 	comment := &models.Comment{

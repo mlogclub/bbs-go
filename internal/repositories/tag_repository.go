@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"strings"
 
@@ -109,7 +110,7 @@ func (r *tagRepository) GetByName(db *gorm.DB, name string) *models.Tag {
 
 func (r *tagRepository) GetOrCreate(db *gorm.DB, name string) (*models.Tag, error) {
 	if len(name) == 0 {
-		return nil, errors.New("标签为空")
+		return nil, errors.New(locales.Get("admin.tag_empty"))
 	}
 	// IMPORTANT: use the provided transaction `db` to avoid opening a second
 	// connection when the caller is already inside a transaction (SQLite write

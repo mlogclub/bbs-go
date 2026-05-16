@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-f8yN0YV-.js";import{F as t}from"./chunk-5KNZJZUH-ZpYnLRz-.js";import{t as n}from"./private-center-DyjmoGzM.js";import{r}from"./auth-BcYucInN.js";var i=e();async function a(e){return await r(e),null}var o=t(function(){return(0,i.jsx)(n,{kind:`favorites`})});export{a as clientLoader,o as default};

@@ -2,6 +2,7 @@ package models
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"slices"
 	"strings"
 	"time"
@@ -80,7 +81,7 @@ func (t *Topic) GetTitle() string {
 		if strs.IsNotBlank(t.Content) {
 			return t.Content
 		} else {
-			return "分享图片"
+			return locales.Get("topic.shared_image")
 		}
 	} else {
 		return t.Title

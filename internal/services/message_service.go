@@ -141,46 +141,29 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 		}
 	}
 	var (
-		siteTitle  = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
-		emailTitle = siteTitle + " - " + locales.Get("email.new_message")
+		siteTitle        = cache.SysConfigCache.GetStr(constants.SysConfigSiteTitle)
+		noticeTitle      = s.buildEmailNoticeFallbackTitle(t)
+		emailSubject     string
+		emailContent     string
+		emailDetailURL   string
+		emailActionTitle = locales.Get("email.view_details")
 	)
 
-	switch msgType {
-	case msg.TypeTopicComment:
-		emailTitle = siteTitle + " - " + locales.Get("email.topic_comment")
-	case msg.TypeCommentReply:
-		emailTitle = siteTitle + " - " + locales.Get("email.comment_reply")
-	case msg.TypeTopicLike:
-		emailTitle = siteTitle + " - " + locales.Get("email.topic_like")
-	case msg.TypeTopicFavorite:
-		emailTitle = siteTitle + " - " + locales.Get("email.topic_favorite")
-	case msg.TypeTopicRecommend:
-		emailTitle = siteTitle + " - " + locales.Get("email.topic_recommend")
-	case msg.TypeTopicDelete:
-		emailTitle = siteTitle + " - " + locales.Get("email.topic_delete")
-	case msg.TypeArticleComment:
-		emailTitle = siteTitle + " - " + locales.Get("email.article_comment")
-	case msg.TypeUserLevelUp:
-		emailTitle = siteTitle + " - " + locales.Get("email.user_level_up")
-	case msg.TypeUserBadgeGrant:
-		emailTitle = siteTitle + " - " + locales.Get("email.user_badge_grant")
-	case msg.TypeQaAnswerAccepted:
-		bountyScore := gjson.Get(t.ExtraData, "bountyScore").Int()
-		if bountyScore > 0 {
-			emailTitle = siteTitle + " - " + locales.Getf("email.qa_answer_accepted_with_bounty", int(bountyScore))
-		} else {
-			emailTitle = siteTitle + " - " + locales.Get("email.qa_answer_accepted")
-		}
+	if title := strings.TrimSpace(t.Title); title != "" {
+		noticeTitle = title
 	}
+	emailSubject = s.buildEmailNoticeSubject(siteTitle, noticeTitle)
+	emailContent = s.buildEmailNoticeContent(t.Content, noticeTitle)
+	emailDetailURL = s.buildEmailNoticeDetailURL(t)
 
 	var from *models.User
 	if t.FromId > 0 {
 		from = cache.UserCache.Get(t.FromId)
 	}
-	err := EmailService.SendTemplateEmail(from, user.Email.String, emailTitle, emailTitle, t.Content,
+	err := EmailService.SendTemplateEmail(from, user.Email.String, emailSubject, noticeTitle, emailContent,
 		t.QuoteContent, &dto.ActionLink{
-			Title: locales.Get("email.view_details"),
-			Url:   bbsurls.AbsUrl("/user/messages"),
+			Title: emailActionTitle,
+			Url:   emailDetailURL,
 		}, constants.EmailLogBizTypeMessageNotice)
 	if err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
@@ -189,4 +172,87 @@ func (s *messageService) SendEmailNotice(t *models.Message) {
 	if intervalSeconds > 0 {
 		emailNoticeLimitCache.Put(emailKey, time.Now().Unix())
 	}
+}
+
+func (s *messageService) buildEmailNoticeFallbackTitle(t *models.Message) string {
+	msgType := msg.Type(t.Type)
+	switch msgType {
+	case msg.TypeTopicComment:
+		return locales.Get("email.topic_comment")
+	case msg.TypeCommentReply:
+		return locales.Get("email.comment_reply")
+	case msg.TypeTopicLike:
+		return locales.Get("email.topic_like")
+	case msg.TypeTopicFavorite:
+		return locales.Get("email.topic_favorite")
+	case msg.TypeTopicRecommend:
+		return locales.Get("email.topic_recommend")
+	case msg.TypeTopicDelete:
+		return locales.Get("email.topic_delete")
+	case msg.TypeArticleComment:
+		return locales.Get("email.article_comment")
+	case msg.TypeUserLevelUp:
+		return locales.Get("email.user_level_up")
+	case msg.TypeUserBadgeGrant:
+		return locales.Get("email.user_badge_grant")
+	case msg.TypeQaAnswerAccepted:
+		bountyScore := gjson.Get(t.ExtraData, "bountyScore").Int()
+		if bountyScore > 0 {
+			return locales.Getf("email.qa_answer_accepted_with_bounty", int(bountyScore))
+		}
+		return locales.Get("email.qa_answer_accepted")
+	}
+	return locales.Get("email.new_message")
+}
+
+func (s *messageService) buildEmailNoticeSubject(siteTitle, noticeTitle string) string {
+	siteTitle = strings.TrimSpace(siteTitle)
+	noticeTitle = strings.TrimSpace(noticeTitle)
+	if siteTitle == "" {
+		return noticeTitle
+	}
+	if noticeTitle == "" {
+		return siteTitle
+	}
+	return siteTitle + " - " + noticeTitle
+}
+
+func (s *messageService) buildEmailNoticeContent(content, noticeTitle string) string {
+	content = strings.TrimSpace(content)
+	if content != "" {
+		return content
+	}
+	return strings.TrimSpace(noticeTitle)
+}
+
+func (s *messageService) buildEmailNoticeDetailURL(t *models.Message) string {
+	msgType := msg.Type(t.Type)
+	switch msgType {
+	case msg.TypeTopicComment, msg.TypeArticleComment:
+		entityType := gjson.Get(t.ExtraData, "entityType")
+		entityId := gjson.Get(t.ExtraData, "entityId")
+		if entityType.String() == constants.EntityArticle {
+			return bbsurls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
+	case msg.TypeCommentReply:
+		entityType := gjson.Get(t.ExtraData, "rootEntityType")
+		entityId := gjson.Get(t.ExtraData, "rootEntityId")
+		if entityType.String() == constants.EntityArticle {
+			return bbsurls.ArticleUrl(entityId.Int())
+		} else if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
+	case msg.TypeTopicLike, msg.TypeTopicFavorite, msg.TypeTopicRecommend, msg.TypeQaAnswerAccepted:
+		topicId := gjson.Get(t.ExtraData, "topicId")
+		if topicId.Exists() && topicId.Int() > 0 {
+			return bbsurls.TopicUrl(topicId.Int())
+		}
+	case msg.TypeUserLevelUp:
+		return bbsurls.AbsUrl("/tasks")
+	case msg.TypeUserBadgeGrant:
+		return bbsurls.UserUrl(t.UserId) + "/badges"
+	}
+	return bbsurls.AbsUrl("/user/messages")
 }

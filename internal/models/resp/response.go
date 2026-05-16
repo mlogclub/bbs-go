@@ -113,7 +113,8 @@ type ArticleSimpleResponse struct {
 
 type ArticleResponse struct {
 	ArticleSimpleResponse
-	Content string `json:"content"`
+	Content string         `json:"content"`
+	Toc     []TopicTocItem `json:"toc,omitempty"`
 }
 
 type NodeResponse struct {

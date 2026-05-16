@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"time"
 
@@ -28,7 +29,7 @@ func newArticleTagCache() *articleTagCache {
 					}
 					value = tagIds
 				} else {
-					e = errors.New("文章没标签")
+					e = errors.New(locales.Get("article.no_tags"))
 				}
 				return
 			},
