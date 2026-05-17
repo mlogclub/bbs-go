@@ -3,7 +3,10 @@ package admin
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/permissions"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/services"
+	"sort"
 	"strconv"
 
 	"github.com/kataras/iris/v12"
@@ -20,9 +23,9 @@ type RoleController struct {
 func (c *RoleController) GetBy(id int64) *web.JsonResult {
 	t := services.RoleService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found") + ", id=" + strconv.FormatInt(id, 10))
 	}
-	return web.JsonData(t)
+	return web.JsonData(c.buildRoleItem(t, true))
 }
 
 func (c *RoleController) AnyList() *web.JsonResult {
@@ -45,8 +48,20 @@ func (c *RoleController) AnyList() *web.JsonResult {
 	return web.JsonData(list)
 }
 
-func (c *RoleController) GetAll_roles() *web.JsonResult {
-	list := services.RoleService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+func (c *RoleController) GetPermissions() *web.JsonResult {
+	list := services.PermissionService.Find(sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
+	for i := range list {
+		if definition, ok := permissions.FindByCode(list[i].Code); ok {
+			list[i].GroupName = definition.GroupName
+			list[i].SortNo = definition.SortNo
+		}
+	}
+	sort.SliceStable(list, func(i, j int) bool {
+		if list[i].SortNo == list[j].SortNo {
+			return list[i].Id > list[j].Id
+		}
+		return list[i].SortNo < list[j].SortNo
+	})
 	return web.JsonData(list)
 }
 
@@ -57,7 +72,7 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 	}
 
 	if services.RoleService.GetByCode(t.Code) != nil {
-		return web.JsonErrorMsg("角色编码已存在")
+		return web.JsonErrorMsg(locales.Get("admin.role_code_exists"))
 	}
 
 	t.SortNo = services.RoleService.GetNextSortNo()
@@ -67,7 +82,7 @@ func (c *RoleController) PostCreate() *web.JsonResult {
 	if err := services.RoleService.Create(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
-	return web.JsonData(t)
+	return web.JsonData(c.buildRoleItem(t, true))
 }
 
 func (c *RoleController) PostUpdate() *web.JsonResult {
@@ -77,11 +92,11 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 	}
 	t := services.RoleService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
 	}
 
 	if t.Type == constants.RoleTypeSystem {
-		return web.JsonErrorMsg("系统角色不允许编辑")
+		return web.JsonErrorMsg(locales.Get("admin.system_role_edit_forbidden"))
 	}
 
 	if err := params.ReadForm(c.Ctx, t); err != nil {
@@ -89,28 +104,50 @@ func (c *RoleController) PostUpdate() *web.JsonResult {
 	}
 
 	if exists := services.RoleService.GetByCode(t.Code); exists != nil && exists.Id != t.Id {
-		return web.JsonErrorMsg("角色编码已存在")
+		return web.JsonErrorMsg(locales.Get("admin.role_code_exists"))
 	}
 
 	t.UpdateTime = dates.NowTimestamp()
 	if err := services.RoleService.Update(t); err != nil {
 		return web.JsonErrorMsg(err.Error())
 	}
-	return web.JsonData(t)
+	return web.JsonData(c.buildRoleItem(t, true))
+}
+
+func (c *RoleController) PostUpdate_permissions() *web.JsonResult {
+	id, err := params.FormValueInt64(c.Ctx, "id")
+	if err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	t := services.RoleService.Get(id)
+	if t == nil {
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
+	}
+	if t.Type == constants.RoleTypeSystem || t.Code == constants.RoleOwner {
+		return web.JsonErrorMsg(locales.Get("admin.system_role_edit_forbidden"))
+	}
+	permissionIds := params.FormValueInt64Array(c.Ctx, "permissionIds")
+	if err := services.RolePermissionService.UpdateRolePermissions(t.Id, permissionIds); err != nil {
+		return web.JsonErrorMsg(err.Error())
+	}
+	return web.JsonData(c.buildRoleItem(t, true))
 }
 
 func (c *RoleController) PostDelete() *web.JsonResult {
 	ids := params.GetInt64Arr(c.Ctx, "ids")
 	if len(ids) == 0 {
-		return web.JsonErrorMsg("delete ids is empty")
+		return web.JsonErrorMsg(locales.Get("admin.delete_ids_required"))
 	}
 	for _, id := range ids {
 		t := services.RoleService.Get(id)
 		if t == nil {
-			return web.JsonErrorMsg("entity not found")
+			return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
 		}
 		if t.Type == constants.RoleTypeSystem {
-			return web.JsonErrorMsg("系统角色不允许删除")
+			return web.JsonErrorMsg(locales.Get("admin.system_role_delete_forbidden"))
+		}
+		if services.UserRoleService.IsRoleInUse(t.Id) {
+			return web.JsonErrorMsg(locales.Get("admin.role_in_use_delete_forbidden"))
 		}
 		services.RoleService.Updates(id, map[string]interface{}{
 			"status":      constants.StatusDeleted,
@@ -134,4 +171,13 @@ func (c *RoleController) PostUpdate_sort() *web.JsonResult {
 		return web.JsonError(err)
 	}
 	return web.JsonSuccess()
+}
+
+func (c *RoleController) buildRoleItem(role *models.Role, buildPermissions bool) map[string]interface{} {
+	b := web.NewRspBuilder(role)
+	if buildPermissions {
+		b.Put("permissionIds", services.RolePermissionService.GetRolePermissionIds(role.Id)).
+			Put("permissions", services.RolePermissionService.GetRolePermissionCodes(role.Id))
+	}
+	return b.Build()
 }

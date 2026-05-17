@@ -11,6 +11,16 @@ topic:
   no_permission: "无权限"
   type_not_supported: "当前类型帖子不支持修改"
   node_type_mismatch: "所选节点不支持当前内容类型"
+  title_required: "标题不能为空"
+  title_too_long: "标题长度不能超过128"
+  content_required: "内容不能为空"
+  node_required: "请选择节点"
+  node_not_found: "节点不存在"
+  topic_not_found: "话题不存在"
+  updates_disabled: "未开启动态功能"
+  discussions_disabled: "未开启帖子功能"
+  qa_disabled: "未开启提问功能"
+  shared_image: "分享图片"
   bounty_invalid: "悬赏积分不能为负数"
   insufficient_score: "积分不足，无法设置悬赏"
   bounty_deduct: "问答悬赏"
@@ -29,6 +39,8 @@ user:
   blacklist: "黑名单用户"
   not_found: "用户不存在"
   no_permission: "无权限"
+  forbidden_time_invalid: "禁言时间错误"
+  nickname_required: "昵称不能为空"
   nickname_length_invalid: "昵称长度需在 %d 到 %d 个字符之间"
   gender_error: "性别数据错误"
   homepage_error: "个人主页地址错误"
@@ -44,6 +56,17 @@ user:
   email_verify_link: "点击这里验证邮箱>>"
   email_verify_expired: "验证邮件已过期"
   email_verify_illegal: "非法请求"
+  username_required: "请输入用户名"
+  username_invalid: "用户名必须由5-12位(数字、字母、_、-)组成，且必须以字母开头"
+  username_email_required: "用户名/邮箱不能为空"
+  username_occupied: "用户名：%s 已被占用"
+  username_already_set: "你已设置了用户名，无法重复设置。"
+  password_required: "请输入密码"
+  password_invalid: "密码过于简单"
+  password_too_long: "密码长度不能超过128"
+  password_mismatch: "两次输入密码不匹配"
+  password_login_failed: "用户名或密码错误"
+  url_invalid: "URL格式错误"
   password_reset_title: "重置密码 - %s"
   password_reset_content: "你正在 %s 进行密码重置，请在%d小时内完成操作。重置链接：%s"
   password_reset_link: "点击这里重置密码>>"
@@ -59,8 +82,10 @@ errors:
   captcha_error: "验证码错误"
   forbidden: "已被禁言"
   user_disabled: "账号已禁用"
+  user_not_found_or_disabled: "用户不存在或已被禁用"
   email_not_verified: "请先验证邮箱"
   in_observation: "账号尚在观察期，观察期剩余 %d 秒，请稍后再试"
+  too_fast: "发表太快了，请休息一会儿"
 
 auth:
   password_login_disabled: "账号密码登录/注册已禁用"
@@ -68,11 +93,87 @@ auth:
   sms_login_disabled: "短信登录已禁用"
   login_data_error: "登录数据错误"
   weixin_login_disabled: "微信登录已禁用"
+  google_login_disabled: "Google登录未启用"
+  github_login_disabled: "GitHub登录未启用"
+  state_required: "state参数缺失"
+  bind_data_error: "绑定数据错误或已过期，请重新绑定"
+  invalid_bind_request: "无效的绑定请求"
+  credential_required: "credential参数缺失"
+  wechat_already_bound: "用户已绑定微信: %s"
+  wechat_bound_to_other: "微信已绑定到其他用户"
+  github_already_bound: "用户已绑定GitHub: %s"
+  github_bound_to_other: "GitHub账号已绑定到其他用户"
+  google_already_bound: "用户已绑定Google: %s"
+  google_bound_to_other: "Google账号已绑定到其他用户"
+  google_default_nickname: "Google用户"
+  github_default_nickname: "GitHub用户"
 
 article:
   not_found: "文章不存在"
+  no_tags: "文章没标签"
   under_review: "文章审核中"
   no_permission: "无权限"
+  disabled: "未开启文章功能"
+  title_required: "标题不能为空"
+  content_required: "内容不能为空"
+
+vote:
+  title_required: "投票标题不能为空"
+  title_too_long: "投票标题长度不能超过128"
+  option_min: "投票选项至少2个"
+  option_max: "投票选项最多20个"
+  option_required: "投票选项内容不能为空"
+  option_too_long: "投票选项内容长度不能超过256"
+  expired_at_future: "投票截止时间必须是未来时间"
+  multiple_num_required: "多选投票可选数量必须大于0"
+  multiple_num_too_large: "多选投票可选数量不能大于选项总数"
+  type_not_supported: "不支持的投票类型"
+  vote_id_required: "voteId不能为空"
+  select_option_required: "请选择投票选项"
+  option_invalid: "投票选项不合法"
+  not_found: "投票不存在"
+  expired: "投票已截止"
+  already_voted: "您已投票，不能重复提交"
+  option_not_found: "投票选项不存在"
+  single_only_one: "单选投票只能选择1项"
+  multiple_over_limit: "多选投票超过可选数量"
+
+comment:
+  invalid_params: "参数非法"
+  content_required: "请输入评论内容"
+
+favorite:
+  article_not_found: "收藏的文章不存在"
+  topic_not_found: "收藏的话题不存在"
+
+check_in:
+  already_checked_in: "你已签到"
+
+sms:
+  code_invalid: "验证码错误"
+
+settings:
+  invalid_format: "配置数据格式错误"
+
+admin:
+  user_id_required: "请传入：userId"
+  content_type_required: "请选择内容格式"
+  role_code_exists: "角色编码已存在"
+  system_role_edit_forbidden: "系统角色不允许编辑"
+  system_role_delete_forbidden: "系统角色不允许删除"
+  role_in_use_delete_forbidden: "已分配给用户的角色不允许删除"
+  delete_ids_required: "请选择要删除的记录"
+  entity_not_found: "数据不存在"
+  tag_name_exists: "标签「%s」已存在"
+  tag_name_required: "标签名称不能为空"
+  tag_empty: "标签为空"
+
+points:
+  must_be_positive: "分数必须为正数"
+  cannot_be_zero: "分数不能为0"
+
+xp:
+  cannot_be_zero: "经验不能为0"
 
 install:
   already_installed: "系统已安装，无需重复安装"
@@ -105,6 +206,9 @@ message:
   user_badge_default_name: "新勋章"
   qa_answer_accepted_msg_title: "你的回答被采纳为最佳答案"
   qa_answer_accepted_msg_title_with_bounty: "你的回答被采纳为最佳答案，获得 %d 积分"
+  comment_topic_reply_msg_title: "回复了你的话题"
+  comment_article_reply_msg_title: "回复了你的文章"
+  comment_reply_msg_title: "回复了你的评论"
 
 email:
   new_message: "新消息提醒"

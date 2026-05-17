@@ -6,6 +6,7 @@ import (
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/idcodec"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/repositories"
 	"strconv"
 
@@ -71,10 +72,6 @@ func (c *UserController) AnyList() *web.JsonResult {
 			ParamName: "username",
 			Op:        params.Eq,
 		},
-		params.QueryFilter{
-			ParamName: "type",
-			Op:        params.Eq,
-		},
 	).Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
@@ -99,7 +96,6 @@ func (c *UserController) PostCreate() *web.JsonResult {
 func (c *UserController) PostUpdate() *web.JsonResult {
 	var (
 		id, _       = params.GetInt64(c.Ctx, "id")
-		_type, _    = params.GetInt(c.Ctx, "type")
 		username    = params.FormValue(c.Ctx, "username")
 		email       = params.FormValue(c.Ctx, "email")
 		nickname    = params.FormValue(c.Ctx, "nickname")
@@ -116,7 +112,6 @@ func (c *UserController) PostUpdate() *web.JsonResult {
 		return web.JsonErrorMsg("entity not found")
 	}
 
-	user.Type = _type
 	user.Username = sqls.SqlNullString(username)
 	user.Email = sqls.SqlNullString(email)
 	user.Nickname = nickname
@@ -143,7 +138,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		return web.JsonError(errs.NotLogin())
 	}
 	if !user.HasRole(constants.RoleOwner) {
-		return web.JsonErrorMsg("无权限")
+		return web.JsonErrorMsg(locales.Get("errors.no_permission"))
 	}
 	var (
 		userId = params.FormValueInt64Default(c.Ctx, "userId", 0)
@@ -151,7 +146,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 		reason = params.FormValue(c.Ctx, "reason")
 	)
 	if userId < 0 {
-		return web.JsonErrorMsg("请传入：userId")
+		return web.JsonErrorMsg(locales.Get("admin.user_id_required"))
 	}
 	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())

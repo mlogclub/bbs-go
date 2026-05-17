@@ -26,4 +26,7 @@ clean:
 generator:
 	@go run cmd/generator/generator.go
 
-.PHONY: all build run test clean
+generate-permissions:
+	@go run ./cmd/generator/permissions
+
+.PHONY: all build run test clean generator generate-permissions

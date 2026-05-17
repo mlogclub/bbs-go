@@ -54,10 +54,13 @@ func (c *ConfigController) GetConfigs() *web.JsonResult {
 				PasswordLogin: loginConfig.PasswordLogin,
 				WeixinLogin:   dto.EnabledConfig{Enabled: loginConfig.WeixinLogin.Enabled},
 				SmsLogin:      dto.EnabledConfig{Enabled: loginConfig.SmsLogin.Enabled},
-				GoogleLogin:   dto.EnabledConfig{Enabled: loginConfig.GoogleLogin.Enabled},
+				GoogleLogin:   dto.OAuthConfig{Enabled: loginConfig.GoogleLogin.Enabled},
 				GithubLogin:   dto.EnabledConfig{Enabled: loginConfig.GithubLogin.Enabled},
 			},
 			ScriptInjections: services.SysConfigService.GetScriptInjections(),
+		}
+		if loginConfig.GoogleLogin.Enabled {
+			sysConfig.LoginConfig.GoogleLogin.ClientId = loginConfig.GoogleLogin.ClientId
 		}
 		if strs.IsBlank(sysConfig.SiteLogo) {
 			sysConfig.SiteLogo = "/res/images/logo.png"

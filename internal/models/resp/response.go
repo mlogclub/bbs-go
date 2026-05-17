@@ -10,7 +10,6 @@ import (
 // UserInfo 用户简单信息
 type UserInfo struct {
 	Id           string           `json:"id"`
-	Type         int              `json:"type"`
 	Nickname     string           `json:"nickname"`
 	Avatar       string           `json:"avatar"`
 	SmallAvatar  string           `json:"smallAvatar"`
@@ -85,6 +84,7 @@ type UserDetail struct {
 type UserProfile struct {
 	UserDetail
 	Roles         []string `json:"roles"`
+	Permissions   []string `json:"permissions"`
 	PasswordSet   bool     `json:"passwordSet"` // 密码已设置
 	Email         string   `json:"email"`
 	EmailVerified bool     `json:"emailVerified"`
@@ -113,7 +113,8 @@ type ArticleSimpleResponse struct {
 
 type ArticleResponse struct {
 	ArticleSimpleResponse
-	Content string `json:"content"`
+	Content string         `json:"content"`
+	Toc     []TopicTocItem `json:"toc,omitempty"`
 }
 
 type NodeResponse struct {

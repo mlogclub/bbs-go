@@ -110,7 +110,6 @@ func NewServer() {
 		m.Party("/user").Handle(new(admin.UserController))
 		m.Party("/tag").Handle(new(admin.TagController))
 		m.Party("/article").Handle(new(admin.ArticleController))
-		m.Party("/comment").Handle(new(admin.CommentController))
 		m.Party("/favorite").Handle(new(admin.FavoriteController))
 		m.Party("/article-tag").Handle(new(admin.ArticleTagController))
 		m.Party("/topic").Handle(new(admin.TopicController))

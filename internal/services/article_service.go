@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"math"
 	"strings"
@@ -140,7 +141,7 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 func (s *articleService) Publish(userId int64, form req.CreateArticleForm) (article *models.Article, err error) {
 	modules := SysConfigService.GetModules()
 	if !modules.Article {
-		return nil, errors.New("未开启文章功能")
+		return nil, errors.New(locales.Get("article.disabled"))
 	}
 
 	form.Title = strings.TrimSpace(form.Title)
@@ -148,10 +149,10 @@ func (s *articleService) Publish(userId int64, form req.CreateArticleForm) (arti
 	form.Content = strings.TrimSpace(form.Content)
 
 	if strs.IsBlank(form.Title) {
-		return nil, errors.New("标题不能为空")
+		return nil, errors.New(locales.Get("article.title_required"))
 	}
 	if strs.IsBlank(form.Content) {
-		return nil, errors.New("内容不能为空")
+		return nil, errors.New(locales.Get("article.content_required"))
 	}
 
 	// 获取后台配置 否是开启发表文章审核
@@ -197,10 +198,10 @@ func (s *articleService) Publish(userId int64, form req.CreateArticleForm) (arti
 // 修改文章
 func (s *articleService) Edit(articleId int64, tags []string, title, content string, cover *req.ImageDTO) error {
 	if len(title) == 0 {
-		return errors.New("请输入标题")
+		return errors.New(locales.Get("article.title_required"))
 	}
 	if len(content) == 0 {
-		return errors.New("请填写文章内容")
+		return errors.New(locales.Get("article.content_required"))
 	}
 
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {

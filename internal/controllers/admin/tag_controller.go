@@ -3,6 +3,7 @@ package admin
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/resp"
+	"bbs-go/internal/pkg/locales"
 	"strconv"
 	"strings"
 
@@ -24,7 +25,7 @@ type TagController struct {
 func (c *TagController) GetBy(id int64) *web.JsonResult {
 	t := services.TagService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found") + ", id=" + strconv.FormatInt(id, 10))
 	}
 	return web.JsonData(t)
 }
@@ -46,10 +47,10 @@ func (c *TagController) PostCreate() *web.JsonResult {
 	}
 
 	if len(t.Name) == 0 {
-		return web.JsonErrorMsg("name is required")
+		return web.JsonErrorMsg(locales.Get("admin.tag_name_required"))
 	}
 	if services.TagService.GetByName(t.Name) != nil {
-		return web.JsonErrorMsg("标签「" + t.Name + "」已存在")
+		return web.JsonErrorMsg(locales.Getf("admin.tag_name_exists", t.Name))
 	}
 
 	t.Status = constants.StatusOk
@@ -70,7 +71,7 @@ func (c *TagController) PostUpdate() *web.JsonResult {
 	}
 	t := services.TagService.Get(id)
 	if t == nil {
-		return web.JsonErrorMsg("entity not found")
+		return web.JsonErrorMsg(locales.Get("admin.entity_not_found"))
 	}
 
 	err = params.ReadForm(c.Ctx, t)
@@ -79,10 +80,10 @@ func (c *TagController) PostUpdate() *web.JsonResult {
 	}
 
 	if len(t.Name) == 0 {
-		return web.JsonErrorMsg("name is required")
+		return web.JsonErrorMsg(locales.Get("admin.tag_name_required"))
 	}
 	if tmp := services.TagService.GetByName(t.Name); tmp != nil && tmp.Id != id {
-		return web.JsonErrorMsg("标签「" + t.Name + "」已存在")
+		return web.JsonErrorMsg(locales.Getf("admin.tag_name_exists", t.Name))
 	}
 
 	t.UpdateTime = dates.NowTimestamp()

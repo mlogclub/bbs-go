@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-flrHKG8a.js";import{F as t}from"./chunk-5KNZJZUH-DyWHGAJx.js";import{t as n}from"./error-page-Cybn-rUc.js";var r=e(),i=t(function(){return(0,r.jsx)(n,{statusCode:404})});export{i as default};

@@ -3,6 +3,7 @@ package api
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/resp"
+	"bbs-go/internal/permissions"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/errs"
@@ -316,7 +317,7 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.HasPermission(user, permissions.PermissionUserForbidden.Code) {
 		return web.JsonErrorMsg(locales.Get("user.no_permission"))
 	}
 	var (

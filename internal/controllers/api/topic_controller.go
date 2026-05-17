@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
 	"bbs-go/internal/models/resp"
+	"bbs-go/internal/permissions"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/idcodec"
@@ -233,7 +234,7 @@ func (c *TopicController) PostRecommendBy(topicIdStr string) *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.HasPermission(user, permissions.PermissionTopicRecommend.Code) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 
@@ -392,7 +393,7 @@ func (c *TopicController) PostStickyBy(topicIdStr string) *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.HasPermission(user, permissions.PermissionTopicSticky.Code) {
 		return web.JsonErrorMsg(locales.Get("topic.no_permission"))
 	}
 

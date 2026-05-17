@@ -1,1 +1,0 @@
-import{F as e}from"./chunk-5KNZJZUH-B7x5eTwm.js";import{t}from"./user-profile-client-page-eMrUa8pX.js";var n=e(t);export{n as default};

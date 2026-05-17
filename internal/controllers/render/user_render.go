@@ -10,6 +10,7 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/idcodec"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/services"
 	"strconv"
 	"strings"
 
@@ -24,7 +25,6 @@ func BuildUserInfoDefaultIfNull(id int64) *resp.UserInfo {
 	if user == nil {
 		user = &models.User{}
 		user.Id = id
-		user.Type = constants.UserTypeNormal
 		user.Username = sqls.SqlNullString(strconv.FormatInt(id, 10))
 		user.Nickname = locales.Getf("user.anonymous", id)
 		user.CreateTime = dates.NowTimestamp()
@@ -38,7 +38,6 @@ func BuildUserInfo(user *models.User) *resp.UserInfo {
 	}
 	ret := &resp.UserInfo{
 		Id:           idcodec.Encode(user.Id),
-		Type:         user.Type,
 		Nickname:     user.Nickname,
 		Gender:       user.Gender,
 		Birthday:     user.Birthday,
@@ -169,6 +168,7 @@ func BuildUserProfile(user *models.User) *resp.UserProfile {
 	if strs.IsNotBlank(user.Roles) {
 		ret.Roles = strings.Split(user.Roles, ",")
 	}
+	ret.Permissions = services.PermissionService.GetUserPermissionCodes(user)
 	return ret
 }
 

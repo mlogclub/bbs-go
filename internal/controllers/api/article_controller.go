@@ -3,6 +3,7 @@ package api
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/permissions"
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
@@ -80,8 +81,7 @@ func (c *ArticleController) GetEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非站长
-	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.CanManageOwnedResource(user, article.UserId, permissions.PermissionArticleUpdate.Code) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
@@ -127,8 +127,7 @@ func (c *ArticleController) PostEditBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非站长
-	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.CanManageOwnedResource(user, article.UserId, permissions.PermissionArticleUpdate.Code) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 
@@ -153,8 +152,7 @@ func (c *ArticleController) PostDeleteBy(articleId int64) *web.JsonResult {
 		return web.JsonErrorMsg(locales.Get("article.not_found"))
 	}
 
-	// 非作者、且非站长
-	if article.UserId != user.Id && !user.HasRole(constants.RoleOwner) {
+	if !services.PermissionService.CanManageOwnedResource(user, article.UserId, permissions.PermissionArticleDelete.Code) {
 		return web.JsonErrorMsg(locales.Get("article.no_permission"))
 	}
 

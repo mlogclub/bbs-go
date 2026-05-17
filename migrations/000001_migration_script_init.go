@@ -174,7 +174,7 @@ func seedForLanguage() seedData {
 	if lang == config.LanguageEnUS {
 		return seedData{
 			Roles: []roleSeed{
-				{ID: 1, Type: 0, Name: "Owner", Code: constants.RoleOwner, SortNo: 0, Remark: "Owner with highest privileges", Status: constants.StatusOk},
+				{ID: 1, Type: constants.RoleTypeSystem, Name: "Owner", Code: constants.RoleOwner, SortNo: 0, Remark: "Owner with highest privileges", Status: constants.StatusOk},
 			},
 			TopicNodes: []topicNodeSeed{
 				{ID: 1, Name: "Default", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
@@ -210,7 +210,7 @@ func seedForLanguage() seedData {
 
 	return seedData{
 		Roles: []roleSeed{
-			{ID: 1, Type: 0, Name: "超级管理员", Code: constants.RoleOwner, SortNo: 0, Remark: "超级管理员，拥有最高权限", Status: constants.StatusOk},
+			{ID: 1, Type: constants.RoleTypeSystem, Name: "超级管理员", Code: constants.RoleOwner, SortNo: 0, Remark: "超级管理员拥有最高权限", Status: constants.StatusOk},
 		},
 		TopicNodes: []topicNodeSeed{
 			{ID: 1, Name: "默认节点", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},

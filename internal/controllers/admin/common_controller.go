@@ -1,12 +1,14 @@
 package admin
 
 import (
+	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/config"
-	"os"
-	"runtime"
+	"bbs-go/internal/repositories"
+	"time"
 
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 )
 
@@ -14,15 +16,69 @@ type CommonController struct {
 	Ctx iris.Context
 }
 
-func (c *CommonController) GetSystem_info() *web.JsonResult {
-	hostname, _ := os.Hostname()
+type dashboardRecentItem struct {
+	Id         int64  `json:"id"`
+	Title      string `json:"title,omitempty"`
+	Content    string `json:"content,omitempty"`
+	Nickname   string `json:"nickname,omitempty"`
+	CreateTime int64  `json:"createTime"`
+}
+
+func (c *CommonController) GetOverview() *web.JsonResult {
+	now := time.Now()
+	todayStart := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).UnixMilli()
+	db := sqls.DB()
+
+	metrics := map[string]int64{
+		"totalUsers":    repositories.UserRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusOk)),
+		"totalTopics":   repositories.TopicRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusOk)),
+		"totalArticles": repositories.ArticleRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusOk)),
+		"todayUsers":    repositories.UserRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusOk).Gte("create_time", todayStart)),
+		"todayTopics":   repositories.TopicRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusOk).Gte("create_time", todayStart)),
+	}
+
+	pending := map[string]int64{
+		"pendingTopics":   repositories.TopicRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusReview)),
+		"pendingArticles": repositories.ArticleRepository.Count(db, sqls.NewCnd().Eq("status", constants.StatusReview)),
+		"pendingReports":  repositories.UserReportRepository.Count(db, sqls.NewCnd().Eq("audit_status", 0)),
+		"failedEmails":    repositories.EmailLogRepository.Count(db, sqls.NewCnd().Eq("status", constants.EmailLogStatusFailed)),
+	}
+
+	recentTopics := repositories.TopicRepository.Find(db, sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(5))
+	recentUsers := repositories.UserRepository.Find(db, sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(5))
+
 	return web.NewEmptyRspBuilder().
-		Put("os", runtime.GOOS).
-		Put("arch", runtime.GOARCH).
-		Put("numCpu", runtime.NumCPU()).
-		Put("goVersion", runtime.Version()).
-		Put("hostname", hostname).
+		Put("metrics", metrics).
+		Put("pending", pending).
+		Put("recent", map[string]interface{}{
+			"topics": buildRecentTopicItems(recentTopics),
+			"users":  buildRecentUserItems(recentUsers),
+		}).
 		JsonResult()
+}
+
+func buildRecentTopicItems(topics []models.Topic) []dashboardRecentItem {
+	items := make([]dashboardRecentItem, 0, len(topics))
+	for _, topic := range topics {
+		items = append(items, dashboardRecentItem{
+			Id:         topic.Id,
+			Title:      topic.Title,
+			CreateTime: topic.CreateTime,
+		})
+	}
+	return items
+}
+
+func buildRecentUserItems(users []models.User) []dashboardRecentItem {
+	items := make([]dashboardRecentItem, 0, len(users))
+	for _, user := range users {
+		items = append(items, dashboardRecentItem{
+			Id:         user.Id,
+			Nickname:   user.Nickname,
+			CreateTime: user.CreateTime,
+		})
+	}
+	return items
 }
 
 type TaskEventTypeItem struct {

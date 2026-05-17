@@ -307,7 +307,7 @@ func (c *LoginController) GetGoogle_login_config() *web.JsonResult {
 
 	loginConfig := services.SysConfigService.GetLoginConfig()
 	if !loginConfig.GoogleLogin.Enabled {
-		return web.JsonErrorMsg("Google登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.google_login_disabled"))
 	}
 
 	cache.GoogleLoginStateCache.Put(state, &cache.GoogleLoginStateData{
@@ -337,16 +337,16 @@ func (c *LoginController) PostGoogle_login_submit() *web.JsonResult {
 	state, _ := params.Get(c.Ctx, "state")
 
 	if strs.IsBlank(state) {
-		return web.JsonErrorMsg("state参数缺失")
+		return web.JsonErrorMsg(locales.Get("auth.state_required"))
 	}
 
 	data := cache.GoogleLoginStateCache.Get(state)
 	if data == nil {
-		return web.JsonErrorMsg("登录数据错误或已过期，请重新登录")
+		return web.JsonErrorMsg(locales.Get("auth.login_data_error"))
 	}
 
 	if !services.SysConfigService.GetLoginConfig().GoogleLogin.Enabled {
-		return web.JsonErrorMsg("Google登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.google_login_disabled"))
 	}
 
 	user, err := services.ThirdUserService.LoginGoogle(code, state)
@@ -367,22 +367,22 @@ func (c *LoginController) PostGoogle_bind() *web.JsonResult {
 	state, _ := params.Get(c.Ctx, "state")
 
 	if strs.IsBlank(state) {
-		return web.JsonErrorMsg("state参数缺失")
+		return web.JsonErrorMsg(locales.Get("auth.state_required"))
 	}
 
 	// 验证 state 是否存在（防止 CSRF 攻击）
 	data := cache.GoogleLoginStateCache.Get(state)
 	if data == nil {
-		return web.JsonErrorMsg("绑定数据错误或已过期，请重新绑定")
+		return web.JsonErrorMsg(locales.Get("auth.bind_data_error"))
 	}
 
 	// 验证是否为绑定流程
 	if !data.Bind {
-		return web.JsonErrorMsg("无效的绑定请求")
+		return web.JsonErrorMsg(locales.Get("auth.invalid_bind_request"))
 	}
 
 	if !services.SysConfigService.GetLoginConfig().GoogleLogin.Enabled {
-		return web.JsonErrorMsg("Google登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.google_login_disabled"))
 	}
 
 	if err := services.ThirdUserService.BindGoogle(user.Id, code, state); err != nil {
@@ -395,12 +395,12 @@ func (c *LoginController) PostGoogle_bind() *web.JsonResult {
 func (c *LoginController) PostGoogle_one_tap() *web.JsonResult {
 	credential, _ := params.Get(c.Ctx, "credential")
 	if credential == "" {
-		return web.JsonErrorMsg("credential参数缺失")
+		return web.JsonErrorMsg(locales.Get("auth.credential_required"))
 	}
 
 	loginConfig := services.SysConfigService.GetLoginConfig()
 	if !loginConfig.GoogleLogin.Enabled {
-		return web.JsonErrorMsg("Google登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.google_login_disabled"))
 	}
 
 	user, err := services.ThirdUserService.LoginGoogleOneTap(credential)
@@ -418,7 +418,7 @@ func (c *LoginController) PostGoogle_unbind() *web.JsonResult {
 	}
 
 	if !services.SysConfigService.GetLoginConfig().GoogleLogin.Enabled {
-		return web.JsonErrorMsg("Google登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.google_login_disabled"))
 	}
 
 	services.ThirdUserService.UnbindGoogle(user.Id)
@@ -433,7 +433,7 @@ func (c *LoginController) GetGithub_login_config() *web.JsonResult {
 
 	loginConfig := services.SysConfigService.GetLoginConfig()
 	if !loginConfig.GithubLogin.Enabled {
-		return web.JsonErrorMsg("GitHub登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.github_login_disabled"))
 	}
 
 	// 绑定流程默认跳转到账号设置页，登录流程则使用传入的 redirect
@@ -466,16 +466,16 @@ func (c *LoginController) PostGithub_login_submit() *web.JsonResult {
 	state, _ := params.Get(c.Ctx, "state")
 
 	if strs.IsBlank(state) {
-		return web.JsonErrorMsg("state参数缺失")
+		return web.JsonErrorMsg(locales.Get("auth.state_required"))
 	}
 
 	data := cache.GithubLoginStateCache.Get(state)
 	if data == nil {
-		return web.JsonErrorMsg("登录数据错误或已过期，请重新登录")
+		return web.JsonErrorMsg(locales.Get("auth.login_data_error"))
 	}
 
 	if !services.SysConfigService.GetLoginConfig().GithubLogin.Enabled {
-		return web.JsonErrorMsg("GitHub登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.github_login_disabled"))
 	}
 
 	// 根据 state 中的标记区分「登录」和「绑定」场景
@@ -508,7 +508,7 @@ func (c *LoginController) PostGithub_unbind() *web.JsonResult {
 	}
 
 	if !services.SysConfigService.GetLoginConfig().GithubLogin.Enabled {
-		return web.JsonErrorMsg("GitHub登录未启用")
+		return web.JsonErrorMsg(locales.Get("auth.github_login_disabled"))
 	}
 
 	services.ThirdUserService.UnbindGithub(user.Id)

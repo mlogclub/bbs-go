@@ -49,6 +49,13 @@ func (s *userRoleService) Count(cnd *sqls.Cnd) int64 {
 	return repositories.UserRoleRepository.Count(sqls.DB(), cnd)
 }
 
+func (s *userRoleService) IsRoleInUse(roleId int64) bool {
+	if roleId <= 0 {
+		return false
+	}
+	return s.Count(sqls.NewCnd().Eq("role_id", roleId)) > 0
+}
+
 func (s *userRoleService) Delete(id int64) {
 	repositories.UserRoleRepository.Delete(sqls.DB(), id)
 }
@@ -87,6 +94,7 @@ func (s *userRoleService) UpdateUserRoles(userId int64, roleIds []int64) error {
 		return err
 	}
 	cache.UserCache.Invalidate(userId)
+	PermissionService.InvalidateUser(userId)
 	return nil
 }
 

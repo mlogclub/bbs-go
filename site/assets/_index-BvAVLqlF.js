@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./_index-JBz3wUS8.js";export{t as clientLoader,e as default};
