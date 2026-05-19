@@ -3,7 +3,6 @@ package api
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/resp"
-	"bbs-go/internal/permissions"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/errs"
@@ -317,19 +316,16 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !services.PermissionService.HasPermission(user, permissions.PermissionUserForbidden.Code) {
-		return web.JsonErrorMsg(locales.Get("user.no_permission"))
-	}
 	var (
 		userId = common.GetID(c.Ctx, "userId")
 		days   = params.FormValueIntDefault(c.Ctx, "days", 0)
 		reason = params.FormValue(c.Ctx, "reason")
 	)
+	if !services.PermissionService.CanForbiddenUser(user, days) {
+		return web.JsonErrorMsg(locales.Get("user.no_permission"))
+	}
 	if userId < 0 {
 		return web.JsonErrorMsg("param: userId required")
-	}
-	if days == -1 && !user.HasRole(constants.RoleOwner) {
-		return web.JsonErrorMsg(locales.Get("user.no_permission"))
 	}
 	if days == 0 {
 		services.UserService.RemoveForbidden(user.Id, userId, c.Ctx.Request())

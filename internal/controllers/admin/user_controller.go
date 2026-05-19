@@ -137,14 +137,14 @@ func (c *UserController) PostForbidden() *web.JsonResult {
 	if user == nil {
 		return web.JsonError(errs.NotLogin())
 	}
-	if !user.HasRole(constants.RoleOwner) {
-		return web.JsonErrorMsg(locales.Get("errors.no_permission"))
-	}
 	var (
 		userId = params.FormValueInt64Default(c.Ctx, "userId", 0)
 		days   = params.FormValueIntDefault(c.Ctx, "days", 0)
 		reason = params.FormValue(c.Ctx, "reason")
 	)
+	if !services.PermissionService.CanForbiddenUser(user, days) {
+		return web.JsonErrorMsg(locales.Get("errors.no_permission"))
+	}
 	if userId < 0 {
 		return web.JsonErrorMsg(locales.Get("admin.user_id_required"))
 	}

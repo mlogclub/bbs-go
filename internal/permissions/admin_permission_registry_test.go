@@ -28,6 +28,22 @@ func TestAdminPermissionRegistryAllowsRoleOptionsFromUserUpdate(t *testing.T) {
 	}
 }
 
+func TestAdminPermissionRegistryAllowsEitherUserForbiddenPermission(t *testing.T) {
+	codes, ok := GetAdminPermissionCodes("POST", "/api/admin/user/forbidden")
+	if !ok {
+		t.Fatalf("expected user forbidden permission to be registered")
+	}
+	expected := []string{PermissionUserForbidden.Code, PermissionUserForbiddenForever.Code}
+	if len(codes) != len(expected) {
+		t.Fatalf("expected %#v, got %#v", expected, codes)
+	}
+	for i, expectedCode := range expected {
+		if codes[i] != expectedCode {
+			t.Fatalf("expected %#v, got %#v", expected, codes)
+		}
+	}
+}
+
 func TestAdminPermissionRegistryRejectsUnknownAdminPath(t *testing.T) {
 	if code, ok := GetAdminPermissionCode("POST", "/api/admin/unknown/action"); ok {
 		t.Fatalf("expected unknown admin path to be rejected, got %s", code)

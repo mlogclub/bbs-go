@@ -9,7 +9,11 @@ func BuildTag(tag *models.Tag) *resp.TagResponse {
 	if tag == nil {
 		return nil
 	}
-	return &resp.TagResponse{Id: tag.Id, Name: tag.Name}
+	return &resp.TagResponse{
+		Id:          tag.Id,
+		Name:        tag.Name,
+		Description: tag.Description,
+	}
 }
 
 func BuildTags(tags []models.Tag) *[]resp.TagResponse {

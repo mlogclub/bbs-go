@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-flrHKG8a.js";import{I as t}from"./chunk-5KNZJZUH-DJqK5ZZ4.js";import{t as n}from"./error-page-Bd7Sxzq2.js";import{i as r}from"./seo-CcZrzzgJ.js";var i=e();function a({matches:e}){return r(e,`Not found`,`页面不存在`)}var o=t(function(){return(0,i.jsx)(n,{statusCode:404})});export{o as default,a as meta};

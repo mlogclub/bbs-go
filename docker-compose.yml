@@ -29,9 +29,11 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - app-data:/app/data
-      - app-logs:/app/logs
-      - app-uploads:/app/res/uploads
+      # bbs-go.yaml is stored in /app/data. Keep runtime files on the host
+      # so deleting/recreating the container does not reset the install config.
+      - ./docker-data/data:/app/data
+      - ./docker-data/logs:/app/logs
+      - ./docker-data/uploads:/app/res/uploads
     ports:
       - "3000:3000"
     environment:
@@ -49,6 +51,3 @@ services:
 
 volumes:
   mysql-data:
-  app-data:
-  app-logs:
-  app-uploads:

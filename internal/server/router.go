@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/controllers/api"
 	"bbs-go/internal/middleware"
 	"bbs-go/internal/pkg/config"
+	"bbs-go/internal/services"
 	"log/slog"
 	"os"
 	"strings"
@@ -60,6 +61,9 @@ func NewServer() {
 	})
 	app.Get("/admin/{p:path}", func(ctx iris.Context) {
 		ctx.Redirect("/dashboard", iris.StatusMovedPermanently)
+	})
+	app.Get("/sitemap.xml", func(ctx iris.Context) {
+		writeSitemapRedirect(ctx, services.SeoSitemapService.RedirectURL())
 	})
 	// site
 	app.HandleDir("/", "./site", iris.DirOptions{
@@ -156,4 +160,13 @@ func NewServer() {
 		slog.Error(err.Error(), slog.Any("err", err))
 		os.Exit(-1)
 	}
+}
+
+func writeSitemapRedirect(ctx iris.Context, redirectURL string) {
+	redirectURL = strings.TrimSpace(redirectURL)
+	if redirectURL == "" {
+		ctx.StatusCode(iris.StatusNotFound)
+		return
+	}
+	ctx.Redirect(redirectURL, iris.StatusFound)
 }

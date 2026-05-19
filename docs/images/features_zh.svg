@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">bbs-go 功能概览</title>
+  <desc id="desc">bbs-go 功能概览图，展示论坛、问答、知识库、讨论、治理和用户激励等核心能力。</desc>
+  <defs>
+    <linearGradient id="heroGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1677FF"/>
+      <stop offset="0.55" stop-color="#075FE5"/>
+      <stop offset="1" stop-color="#0A46C5"/>
+    </linearGradient>
+    <linearGradient id="panelGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8FBFF"/>
+    </linearGradient>
+    <linearGradient id="surfaceGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8FBFF"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <radialGradient id="blueGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#EAF4FF" stop-opacity="1"/>
+      <stop offset="0.58" stop-color="#F7FBFF" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#143E72" flood-opacity="0.12"/>
+    </filter>
+    <filter id="cardShadow" x="-16%" y="-18%" width="132%" height="145%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#143E72" flood-opacity="0.09"/>
+    </filter>
+    <filter id="chipShadow" x="-12%" y="-14%" width="124%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#143E72" flood-opacity="0.055"/>
+    </filter>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0V44" fill="none" stroke="#D8E6F7" stroke-width="1" opacity="0.34"/>
+    </pattern>
+    <style>
+      .font { font-family: Inter, "Segoe UI", Arial, sans-serif; letter-spacing: 0; }
+      .brand-name { fill: #0B6FF4; font-size: 36px; font-weight: 840; }
+      .eyebrow { fill: #2563EB; font-size: 18px; font-weight: 760; letter-spacing: 1.8px; }
+      .headline { fill: #0F172A; font-size: 62px; font-weight: 820; }
+      .subhead { fill: #475569; font-size: 26px; font-weight: 440; }
+      .module-title { fill: #111827; font-size: 22px; font-weight: 780; }
+      .module-copy { fill: #526173; font-size: 15px; font-weight: 470; }
+      .chip-text { fill: #172033; font-size: 12px; font-weight: 650; text-anchor: middle; }
+      .ui-title { fill: #0F172A; font-size: 21px; font-weight: 780; }
+      .ui-muted { fill: #64748B; font-size: 15px; font-weight: 470; }
+      .metric-value { fill: #0F172A; font-size: 24px; font-weight: 800; }
+      .metric-label { fill: #64748B; font-size: 13px; font-weight: 560; }
+      .footer-title { fill: #0F172A; font-size: 21px; font-weight: 780; }
+      .footer-copy { fill: #526173; font-size: 15px; font-weight: 450; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1080" fill="#F8FBFF"/>
+  <rect width="1600" height="1080" fill="url(#grid)" opacity="0.42"/>
+  <circle cx="800" cy="530" r="520" fill="url(#blueGlow)"/>
+  <circle cx="1370" cy="70" r="310" fill="#EEF6FF" opacity="0.72"/>
+  <circle cx="155" cy="1065" r="285" fill="#EEF6FF" opacity="0.74"/>
+
+  <g transform="translate(126 72)">
+    <text class="font brand-name" x="0" y="36">BBS-GO</text>
+    <text class="font headline" x="0" y="98">轻量级社区和问答平台</text>
+    <text class="font subhead" x="2" y="139">自托管的论坛、问答、知识库和讨论社区</text>
+  </g>
+
+  <g fill="none" stroke="#BBD5F7" stroke-width="2" stroke-linecap="round" opacity="0.82">
+    <path d="M470 360 C388 360 372 324 330 324"/>
+    <path d="M470 500 C392 500 372 512 330 512"/>
+    <path d="M470 640 C392 640 372 700 330 700"/>
+    <path d="M1130 360 C1212 360 1228 324 1270 324"/>
+    <path d="M1130 500 C1208 500 1228 512 1270 512"/>
+    <path d="M1130 640 C1208 640 1228 700 1270 700"/>
+  </g>
+
+  <g transform="translate(450 232)" filter="url(#softShadow)">
+    <rect x="0" y="0" width="700" height="560" rx="30" fill="url(#panelGradient)" stroke="#D8E6F7" stroke-width="2"/>
+    <rect x="0" y="0" width="700" height="72" rx="30" fill="#FFFFFF"/>
+    <path d="M0 72H700" stroke="#E3ECF8" stroke-width="2"/>
+    <circle cx="34" cy="36" r="7" fill="#FF6B6B"/>
+    <circle cx="58" cy="36" r="7" fill="#FDBA3B"/>
+    <circle cx="82" cy="36" r="7" fill="#25C06D"/>
+    <rect x="128" y="20" width="245" height="32" rx="16" fill="#F1F6FD"/>
+    <text class="font ui-muted" x="151" y="42">bbs-go.com</text>
+    <rect x="548" y="18" width="112" height="36" rx="18" fill="#EEF5FF"/>
+    <circle cx="572" cy="36" r="10" fill="#0B6FF4"/>
+    <text class="font" x="590" y="42" font-size="14" font-weight="720" fill="#0B6FF4">站长</text>
+
+    <g transform="translate(28 102)">
+      <rect width="146" height="412" rx="22" fill="#F4F8FE" stroke="#E5EEF9"/>
+      <rect x="20" y="24" width="106" height="36" rx="14" fill="#0B6FF4"/>
+      <text class="font" x="42" y="48" font-size="15" font-weight="760" fill="#FFFFFF">首页</text>
+      <g fill="#64748B" class="font" font-size="15" font-weight="620">
+        <text x="26" y="96">主题</text>
+        <text x="26" y="136">问题</text>
+        <text x="26" y="176">文章</text>
+        <text x="26" y="216">任务</text>
+        <text x="26" y="256">后台</text>
+      </g>
+      <g fill="#CBD8EA">
+        <rect x="20" y="298" width="106" height="10" rx="5"/>
+        <rect x="20" y="322" width="82" height="10" rx="5"/>
+        <rect x="20" y="346" width="96" height="10" rx="5"/>
+      </g>
+    </g>
+
+    <g transform="translate(202 102)">
+      <text class="font ui-title" x="0" y="18">社区中心</text>
+      <text class="font ui-muted" x="0" y="45">论坛、问答、文章与内容治理。</text>
+      <rect x="0" y="72" width="286" height="56" rx="18" fill="#EEF5FF"/>
+      <rect x="18" y="90" width="126" height="20" rx="10" fill="#0B6FF4"/>
+      <rect x="160" y="90" width="82" height="20" rx="10" fill="#9CC5FF"/>
+      <rect x="0" y="150" width="286" height="92" rx="22" fill="#FFFFFF" stroke="#E5EEF9"/>
+      <circle cx="34" cy="196" r="22" fill="#EAF3FF"/>
+      <path d="M24 191 h20 M24 199 h14" stroke="#0B6FF4" stroke-width="3" stroke-linecap="round"/>
+      <text class="font" x="70" y="185" font-size="17" font-weight="750" fill="#0F172A">结构化讨论</text>
+      <text class="font ui-muted" x="70" y="212">评论、举报与审核</text>
+      <rect x="0" y="262" width="286" height="92" rx="22" fill="#FFFFFF" stroke="#E5EEF9"/>
+      <circle cx="34" cy="308" r="22" fill="#EEF9F1"/>
+      <path d="M25 310 l8 8 l13 -17" stroke="#159A4F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text class="font" x="70" y="297" font-size="17" font-weight="750" fill="#0F172A">问答解决流程</text>
+      <text class="font ui-muted" x="70" y="324">回答、评论与解决状态</text>
+    </g>
+
+    <g transform="translate(520 102)">
+      <rect width="136" height="98" rx="22" fill="#FFFFFF" stroke="#E5EEF9"/>
+      <text class="font metric-value" x="22" y="42">论坛</text>
+      <text class="font metric-label" x="22" y="68">主题与动态</text>
+      <rect y="120" width="136" height="98" rx="22" fill="#FFFFFF" stroke="#E5EEF9"/>
+      <text class="font metric-value" x="22" y="162">问答</text>
+      <text class="font metric-label" x="22" y="188">已解决状态</text>
+      <rect y="240" width="136" height="98" rx="22" fill="#FFFFFF" stroke="#E5EEF9"/>
+      <text class="font metric-value" x="22" y="282">文章</text>
+      <text class="font metric-label" x="22" y="308">知识库</text>
+      <rect y="360" width="136" height="52" rx="18" fill="#0B6FF4"/>
+      <text class="font" x="35" y="393" font-size="16" font-weight="760" fill="#FFFFFF">管理</text>
+    </g>
+  </g>
+
+  <g transform="translate(74 254)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#EAF3FF"/>
+    <path d="M39 41 h24 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-10 l-12 10 v-10 h-2 a5,5 0 0 1 -5,-5 v-15 a5,5 0 0 1 5,-5 z" fill="#0B6FF4"/>
+    <text class="font module-title" x="98" y="47">论坛</text>
+    <text class="font module-copy" x="98" y="74">主题、节点、标签</text>
+    <text class="font module-copy" x="98" y="94">和动态</text>
+    <rect x="98" y="100" width="58" height="28" rx="14" fill="#EEF5FF"/><text class="font chip-text" x="127" y="119">主题</text>
+    <rect x="164" y="100" width="48" height="28" rx="14" fill="#EEF5FF"/><text class="font chip-text" x="188" y="119">标签</text>
+    <rect x="220" y="100" width="58" height="28" rx="14" fill="#EEF5FF"/><text class="font chip-text" x="249" y="119">动态</text>
+  </g>
+
+  <g transform="translate(74 442)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#EAF8F0"/>
+    <circle cx="51" cy="53" r="18" fill="none" stroke="#159A4F" stroke-width="3"/>
+    <path d="M45 49 c0,-5 4,-8 9,-8 c5,0 9,3 9,8 c0,4 -2,6 -6,8 c-3,2 -4,4 -4,7" stroke="#159A4F" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <text class="font module-title" x="98" y="47">问答</text>
+    <text class="font module-copy" x="98" y="74">问题、回答</text>
+    <text class="font module-copy" x="98" y="94">和评论</text>
+    <rect x="98" y="100" width="82" height="28" rx="14" fill="#EEF8F1"/><text class="font chip-text" x="139" y="119">问题</text>
+    <rect x="188" y="100" width="68" height="28" rx="14" fill="#EEF8F1"/><text class="font chip-text" x="222" y="119">已解决</text>
+  </g>
+
+  <g transform="translate(74 630)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#F2F0FF"/>
+    <path d="M36 42 c10,-6 20,-5 30,0 v28 c-10,-5 -20,-6 -30,0 z M51 39 v34" stroke="#6655C7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text class="font module-title" x="98" y="41">知识库</text>
+    <text class="font module-title" x="98" y="66">文章</text>
+    <text class="font module-copy" x="98" y="94">可搜索的知识沉淀</text>
+    <rect x="98" y="112" width="72" height="28" rx="14" fill="#F3F1FF"/><text class="font chip-text" x="134" y="131">文章</text>
+    <rect x="178" y="112" width="66" height="28" rx="14" fill="#F3F1FF"/><text class="font chip-text" x="211" y="131">搜索</text>
+  </g>
+
+  <g transform="translate(1240 254)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#FFF2E5"/>
+    <circle cx="46" cy="47" r="9" fill="#FF7A00"/>
+    <circle cx="60" cy="50" r="7" fill="#FF9A34"/>
+    <path d="M32 72 c3,-15 12,-22 24,-22 c12,0 21,7 24,22 z" fill="#FF7A00"/>
+    <text class="font module-title" x="98" y="47">讨论社区</text>
+    <text class="font module-copy" x="98" y="74">点赞收藏</text>
+    <text class="font module-copy" x="98" y="94">和关注粉丝</text>
+    <rect x="98" y="100" width="56" height="28" rx="14" fill="#FFF4E9"/><text class="font chip-text" x="126" y="119">点赞</text>
+    <rect x="162" y="100" width="86" height="28" rx="14" fill="#FFF4E9"/><text class="font chip-text" x="205" y="119">关注</text>
+  </g>
+
+  <g transform="translate(1240 442)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#EAF3FF"/>
+    <path d="M51 35 l20 8 v14 c0,14 -8,24 -20,31 c-12,-7 -20,-17 -20,-31 v-14 z" fill="#0B6FF4"/>
+    <path d="M43 56 l7 7 l14 -16" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text class="font module-title" x="98" y="41">管理与</text>
+    <text class="font module-title" x="98" y="66">治理</text>
+    <text class="font module-copy" x="98" y="94">角色、举报与审计</text>
+    <rect x="98" y="112" width="88" height="28" rx="14" fill="#EEF5FF"/><text class="font chip-text" x="142" y="131">后台</text>
+    <rect x="194" y="112" width="58" height="28" rx="14" fill="#EEF5FF"/><text class="font chip-text" x="223" y="131">审计</text>
+  </g>
+
+  <g transform="translate(1240 630)" filter="url(#cardShadow)">
+    <rect width="286" height="154" rx="24" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <rect x="22" y="24" width="58" height="58" rx="18" fill="#E7F8FA"/>
+    <path d="M40 36 h22 v16 c0,8 -5,15 -11,15 c-6,0 -11,-7 -11,-15 z" fill="#079BAB"/>
+    <path d="M40 42 h-9 c0,10 5,18 14,20 M62 42 h9 c0,10 -5,18 -14,20 M51 67 v9 M40 78 h22" stroke="#079BAB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text class="font module-title" x="98" y="47">用户激励</text>
+    <text class="font module-copy" x="98" y="74">任务、积分、等级</text>
+    <text class="font module-copy" x="98" y="94">和勋章</text>
+    <rect x="98" y="100" width="58" height="28" rx="14" fill="#ECFAFC"/><text class="font chip-text" x="127" y="119">任务</text>
+    <rect x="164" y="100" width="70" height="28" rx="14" fill="#ECFAFC"/><text class="font chip-text" x="199" y="119">勋章</text>
+  </g>
+
+  <g transform="translate(88 840)" filter="url(#cardShadow)">
+    <rect width="1424" height="190" rx="32" fill="#FFFFFF" stroke="#DCE9F8"/>
+    <text class="font" x="42" y="56" font-size="18" font-weight="760" fill="#2563EB" letter-spacing="1.8">平台特性</text>
+    <g transform="translate(42 86)">
+      <rect width="300" height="70" rx="22" fill="#F7FBFF"/>
+      <path d="M24 48 c15,-30 34,-42 48,-44 c-2,20 -11,38 -30,47 c-9,4 -19,4 -28,1" fill="#0B6FF4"/>
+      <path d="M27 53 c16,-16 28,-27 42,-43" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <text class="font footer-title" x="94" y="31">轻量完整</text>
+      <text class="font footer-copy" x="94" y="55">架构简单</text>
+    </g>
+    <g transform="translate(382 86)">
+      <rect width="300" height="70" rx="22" fill="#F7FBFF"/>
+      <path d="M38 44 l-18 12 l5 -24 c9 -25 29 -42 55 -49 c-7 26 -25 46 -50 55 z" transform="translate(0 12)" fill="none" stroke="#0B6FF4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="65" cy="38" r="5" fill="#0B6FF4"/>
+      <text class="font footer-title" x="94" y="31">性能友好</text>
+      <text class="font footer-copy" x="94" y="55">响应快速</text>
+    </g>
+    <g transform="translate(722 86)">
+      <rect width="300" height="70" rx="22" fill="#F7FBFF"/>
+      <path d="M30 23 h18 c-4 -11 4 -18 11 -18 c8 0 15 7 11 18 h18 v18 c11 -4 18 4 18 11 c0 8 -7 15 -18 11 v18 h-20 c4 11 -4 18 -11 18 c-8 0 -15 -7 -11 -18 h-20 v-18 c-11 4 -18 -4 -18 -11 c0 -8 7 -15 18 -11 z" transform="scale(.62) translate(20 10)" fill="none" stroke="#0B6FF4" stroke-width="5" stroke-linejoin="round"/>
+      <text class="font footer-title" x="94" y="31">易于扩展</text>
+      <text class="font footer-copy" x="94" y="55">模块化设计</text>
+    </g>
+    <g transform="translate(1062 86)">
+      <rect width="300" height="70" rx="22" fill="#F7FBFF"/>
+      <rect x="22" y="16" width="38" height="30" rx="5" fill="none" stroke="#0B6FF4" stroke-width="4"/>
+      <rect x="62" y="27" width="18" height="31" rx="5" fill="none" stroke="#0B6FF4" stroke-width="4"/>
+      <path d="M41 46 v8 M32 56 h20" stroke="#0B6FF4" stroke-width="4" stroke-linecap="round"/>
+      <text class="font footer-title" x="94" y="31">多端适配</text>
+      <text class="font footer-copy" x="94" y="55">响应式设计</text>
+    </g>
+  </g>
+</svg>

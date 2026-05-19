@@ -15,6 +15,7 @@ func migrate_front_moderation_permissions() error {
 	seeds := []permissions.PermissionDefinition{
 		permissions.PermissionTopicSticky,
 		permissions.PermissionCommentDelete,
+		permissions.PermissionUserForbiddenForever,
 	}
 
 	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {

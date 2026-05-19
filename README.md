@@ -2,7 +2,7 @@
 
 # bbs-go
 
-`bbs-go` is an open-source, self-hosted community platform for forums, Q&A, and reusable knowledge.
+A lightweight community and Q&A platform for forums, knowledge bases, and discussions.
 
 It combines discussions, Q&A workflows, articles, comments, notifications, moderation, roles, an admin dashboard, and optional engagement mechanics such as tasks, points, levels, and badges. Use it when chat is too noisy, static docs are not interactive enough, or heavyweight forum suites feel like too much for your team.
 
@@ -71,42 +71,7 @@ This comparison is based on public product positioning and common use cases. The
 
 ## Feature Map
 
-```mermaid
-flowchart TB
-  A["bbs-go<br/>Self-hosted Community, Q&A, and Knowledge Platform"]
-
-  A --> B["Forums"]
-  A --> C["Q&A"]
-  A --> D["Knowledge Articles"]
-  A --> E["Discussions"]
-
-  B --> B1["Topics"]
-  B --> B2["Nodes and Tags"]
-  B --> B3["Feeds"]
-
-  C --> C1["Questions"]
-  C --> C2["Answers and Comments"]
-  C --> C3["Solved Status"]
-
-  D --> D1["Articles"]
-  D --> D2["Search"]
-  D --> D3["Organized Knowledge"]
-
-  E --> E1["Likes and Favorites"]
-  E --> E2["Followers"]
-  E --> E3["Notifications"]
-
-  A --> F["Admin and Moderation"]
-  A --> G["Engagement"]
-
-  F --> F1["Dashboard"]
-  F --> F2["Roles and Permissions"]
-  F --> F3["Reports and Audit Logs"]
-
-  G --> G1["Tasks"]
-  G --> G2["Points and Levels"]
-  G --> G3["Badges"]
-```
+![bbs-go feature overview](docs/images/features_en.svg)
 
 ## Core Features
 
@@ -142,11 +107,11 @@ flowchart TB
 - Site configuration and system settings
 - Operation logs and audit trails
 
-## Screenshots
+<!-- ## Screenshots
 
 ![bbs-go feature overview](docs/images/features.jpg)
 
-More English screenshots and short product GIFs are planned for the overseas launch materials.
+More English screenshots and short product GIFs are planned for the overseas launch materials. -->
 
 ## Roadmap
 

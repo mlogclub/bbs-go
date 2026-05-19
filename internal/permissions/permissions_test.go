@@ -20,3 +20,9 @@ func TestTopicStickyPermissionIsRegistered(t *testing.T) {
 		t.Fatalf("expected dashboard.topic.sticky permission to be registered")
 	}
 }
+
+func TestUserForbiddenForeverPermissionIsRegistered(t *testing.T) {
+	if _, ok := FindByCode("dashboard.user.forbiddenForever"); !ok {
+		t.Fatalf("expected dashboard.user.forbiddenForever permission to be registered")
+	}
+}

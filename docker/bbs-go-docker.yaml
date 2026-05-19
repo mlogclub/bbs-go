@@ -1,0 +1,27 @@
+language: zh-CN
+port: 8082
+allowedOrigins:
+  - "*"
+installed: false
+
+ipLocator:
+  ipv4DataPath:
+  ipv6DataPath:
+
+idCodec:
+  key: 0
+
+logger:
+  filename: /app/logs/bbs-go.log
+  maxSize: 100
+  maxAge: 10
+  maxBackups: 10
+
+db:
+  type: mysql
+  url:
+  maxIdleConns: 50
+  maxOpenConns: 200
+
+search:
+  indexPath: /app/data/topic_index

@@ -93,7 +93,11 @@ func (s *tagService) GetTags() []resp.TagResponse {
 
 	var tags []resp.TagResponse
 	for _, tag := range list {
-		tags = append(tags, resp.TagResponse{Id: tag.Id, Name: tag.Name})
+		tags = append(tags, resp.TagResponse{
+			Id:          tag.Id,
+			Name:        tag.Name,
+			Description: tag.Description,
+		})
 	}
 	return tags
 }

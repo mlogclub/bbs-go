@@ -3,6 +3,7 @@ package services
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/permissions"
 	"bbs-go/internal/repositories"
 	"testing"
 
@@ -145,5 +146,39 @@ func TestPermissionService_CannotManageOtherResourceWithoutPermission(t *testing
 
 	if PermissionService.CanManageOwnedResource(user, 99, "dashboard.topic.delete") {
 		t.Fatalf("expected user without permission to be rejected")
+	}
+}
+
+func TestPermissionService_CanForbiddenUserUsesSeparatePermanentPermission(t *testing.T) {
+	setupPermissionServiceTestDB(t)
+	now := dates.NowTimestamp()
+	user := mustCreateUser(t, now)
+	role := mustCreateRole(t, "user-moderator", constants.StatusOk)
+	forbiddenPermission := mustCreatePermission(t, permissions.PermissionUserForbidden.Code, constants.StatusOk)
+	mustAssignRole(t, user, role)
+	mustGrantPermission(t, role, forbiddenPermission)
+
+	if !PermissionService.CanForbiddenUser(user, 7) {
+		t.Fatalf("expected ordinary forbidden permission to allow temporary ban")
+	}
+	if PermissionService.CanForbiddenUser(user, -1) {
+		t.Fatalf("expected ordinary forbidden permission to reject permanent ban")
+	}
+}
+
+func TestPermissionService_CanForbiddenUserAllowsPermanentPermission(t *testing.T) {
+	setupPermissionServiceTestDB(t)
+	now := dates.NowTimestamp()
+	user := mustCreateUser(t, now)
+	role := mustCreateRole(t, "permanent-user-moderator", constants.StatusOk)
+	forbiddenForeverPermission := mustCreatePermission(t, permissions.PermissionUserForbiddenForever.Code, constants.StatusOk)
+	mustAssignRole(t, user, role)
+	mustGrantPermission(t, role, forbiddenForeverPermission)
+
+	if !PermissionService.CanForbiddenUser(user, -1) {
+		t.Fatalf("expected permanent forbidden permission to allow permanent ban")
+	}
+	if PermissionService.CanForbiddenUser(user, 7) {
+		t.Fatalf("expected permanent forbidden permission alone to reject temporary ban")
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/permissions"
 	"bbs-go/internal/repositories"
 	"slices"
 
@@ -95,6 +96,13 @@ func (s *permissionService) CanManageOwnedResource(user *models.User, ownerId in
 		return true
 	}
 	return s.HasPermission(user, permissionCode)
+}
+
+func (s *permissionService) CanForbiddenUser(user *models.User, days int) bool {
+	if days == -1 {
+		return s.HasPermission(user, permissions.PermissionUserForbiddenForever.Code)
+	}
+	return s.HasPermission(user, permissions.PermissionUserForbidden.Code)
 }
 
 func (s *permissionService) InvalidateUser(userId int64) {

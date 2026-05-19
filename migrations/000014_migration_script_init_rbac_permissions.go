@@ -40,6 +40,7 @@ var rbacPermissionSeeds = []permissions.PermissionDefinition{
 	permissions.PermissionUserCreate,
 	permissions.PermissionUserUpdate,
 	permissions.PermissionUserForbidden,
+	permissions.PermissionUserForbiddenForever,
 	permissions.PermissionUserUpdatePassword,
 	permissions.PermissionUserResetPassword,
 	permissions.PermissionBadgeView,
