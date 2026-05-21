@@ -37,6 +37,7 @@ Environment : %s
 Port        : %d
 Language    : %s
 Installed   : %t
+Address     : http://127.0.0.1:%d
 
-`, env, cfg.Port, cfg.Language, cfg.Installed)
+`, env, cfg.Port, cfg.Language, cfg.Installed, cfg.Port)
 }
