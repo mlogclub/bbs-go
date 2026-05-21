@@ -12,6 +12,11 @@
 @import "./auth.css";
 @import "./pages.css";
 
+@source "../app";
+@source "../components";
+@source "../hooks";
+@source "../lib";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
