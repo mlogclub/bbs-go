@@ -1,0 +1,102 @@
+@layer components {
+  .links .link {
+    display: block;
+    padding-top: 5px;
+  }
+
+  .links .link:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .links .link-title {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .links .link-summary {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-top: 3px;
+    color: var(--muted-foreground);
+    font-size: 13px;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .page-glow {
+    background:
+      radial-gradient(
+        800px circle at 20% 20%,
+        rgba(59, 130, 246, 0.08),
+        transparent 45%
+      ),
+      radial-gradient(
+        700px circle at 80% 10%,
+        rgba(14, 165, 233, 0.08),
+        transparent 45%
+      ),
+      #f8fafc;
+    background-size: 200% 200%;
+    animation: gradientMove 18s ease-in-out infinite;
+  }
+
+  .card-animate {
+    animation: fadeSlideIn 420ms ease;
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .card-animate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 8%);
+  }
+
+  .pulse-glow {
+    animation: ringPulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ringPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgb(59 130 246 / 35%);
+    }
+    70% {
+      box-shadow: 0 0 0 12px rgb(59 130 246 / 0%);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(59 130 246 / 0%);
+    }
+  }
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+}

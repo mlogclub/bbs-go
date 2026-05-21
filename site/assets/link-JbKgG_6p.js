@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-flrHKG8a.js";import{r as t}from"./chunk-5KNZJZUH-DJqK5ZZ4.js";var n=e();function r({href:e,prefetch:r,...i}){return/^(https?:)?\/\//.test(e)||e.startsWith(`mailto:`)?(0,n.jsx)(`a`,{href:e,...i}):(0,n.jsx)(t,{to:e,...i})}function i({prefetch:e=!1,...t}){return(0,n.jsx)(r,{prefetch:e,...t})}export{i as t};

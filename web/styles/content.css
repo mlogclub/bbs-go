@@ -1,0 +1,111 @@
+@layer components {
+  .bbs-content {
+    min-width: 0;
+    overflow-wrap: break-word;
+    color: var(--foreground);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .bbs-content h1,
+  .bbs-content h2,
+  .bbs-content h3,
+  .bbs-content h4,
+  .bbs-content h5,
+  .bbs-content h6 {
+    margin: 1.5rem 0 0.75rem;
+    color: var(--foreground);
+    font-weight: 600;
+    line-height: 1.25;
+    scroll-margin-top: 5rem;
+  }
+
+  .bbs-content h1,
+  .bbs-content h2 {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+  }
+
+  .bbs-content p {
+    margin: 1rem 0;
+    line-height: 1.7;
+  }
+
+  .bbs-content a {
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  .bbs-content ul,
+  .bbs-content ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .bbs-content ul {
+    list-style: disc;
+  }
+
+  .bbs-content ol {
+    list-style: decimal;
+  }
+
+  .bbs-content li {
+    margin: 0.5rem 0;
+    line-height: 1.7;
+  }
+
+  .bbs-content img {
+    margin: 1rem 0;
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+
+  .bbs-content pre {
+    margin: 1rem 0;
+    overflow-x: auto;
+    border-radius: 6px;
+    background: var(--muted);
+    padding: 1rem;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .bbs-content code {
+    border-radius: 3px;
+    background: var(--muted);
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+  }
+
+  .bbs-content pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .bbs-content blockquote {
+    margin: 1rem 0;
+    border-left: 4px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    background: var(--muted);
+    padding: 0.25rem 1rem;
+    color: var(--muted-foreground);
+  }
+
+  .bbs-content table {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+  }
+
+  .bbs-content th,
+  .bbs-content td {
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+}
