@@ -1,3 +1,6 @@
+// Copyright (c) 2018-present mlogclub.
+// SPDX-License-Identifier: GPL-3.0-only
+
 package main
 
 import (
