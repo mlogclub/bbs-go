@@ -42,11 +42,11 @@ function handleInstallRequired() {
 }
 
 function serverOrigin() {
-  return (
-    process.env.BBSGO_SERVER_URL ||
-    process.env.SERVER_URL ||
-    "http://localhost:8082"
-  )
+  const origin = process.env.BBSGO_SERVER_URL || process.env.SERVER_URL
+  if (!origin) {
+    throw new Error("BBSGO_SERVER_URL is required. Set it in web/.env.")
+  }
+  return origin
 }
 
 function buildUrl(path: string, params?: Record<string, QueryValue>) {

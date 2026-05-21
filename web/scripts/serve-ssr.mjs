@@ -1,17 +1,25 @@
 import { createServer } from "node:http"
-import { createReadStream, statSync } from "node:fs"
+import { createReadStream, existsSync, statSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
 import { createRequestListener } from "@react-router/node"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
+const envPath = path.join(root, ".env")
+if (existsSync(envPath)) {
+  process.loadEnvFile(envPath)
+}
+
 const clientDir = path.join(root, "build/client")
 const serverBuildPath = path.join(root, "build/server/index.js")
 const port = Number(process.env.PORT || 3000)
 const serverURL =
   process.env.BBSGO_SERVER_URL ||
-  process.env.SERVER_URL ||
-  "http://localhost:8082"
+  process.env.SERVER_URL
+if (!serverURL) {
+  throw new Error("BBSGO_SERVER_URL is required. Set it in web/.env.")
+}
+
 const build = await import(pathToFileURL(serverBuildPath).href)
 const frameworkRequestListener = createRequestListener({
   build,

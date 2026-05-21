@@ -1,6 +1,6 @@
 import path from "node:path"
 import { reactRouter } from "@react-router/dev/vite"
-import { defineConfig, type Plugin } from "vite"
+import { defineConfig, loadEnv, type Plugin } from "vite"
 
 function stripSpaRouteLoaders(): Plugin {
   const appRoutesDir = `${path.sep}app${path.sep}routes${path.sep}`
@@ -30,23 +30,36 @@ function stripSpaRouteLoaders(): Plugin {
   }
 }
 
-export default defineConfig({
-  plugins: [stripSpaRouteLoaders(), reactRouter()],
-  optimizeDeps: {
-    include: ["md-editor-rt"],
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname),
-      "tailwindcss": path.resolve(__dirname, "node_modules/tailwindcss/index.css"),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, __dirname, "")
+  const serverURL = env.BBSGO_SERVER_URL
+
+  if (!serverURL) {
+    throw new Error("BBSGO_SERVER_URL is required. Set it in web/.env.")
+  }
+  process.env.BBSGO_SERVER_URL = serverURL
+
+  return {
+    plugins: [stripSpaRouteLoaders(), reactRouter()],
+    optimizeDeps: {
+      include: ["md-editor-rt"],
     },
-  },
-  server: {
-    port: 3000,
-    proxy: {
-      "/api": "http://localhost:8082",
-      "/res": "http://localhost:8082",
-      "/sitemap.xml": "http://localhost:8082",
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname),
+        "tailwindcss": path.resolve(
+          __dirname,
+          "node_modules/tailwindcss/index.css"
+        ),
+      },
     },
-  },
+    server: {
+      port: 3000,
+      proxy: {
+        "/api": serverURL,
+        "/res": serverURL,
+        "/sitemap.xml": serverURL,
+      },
+    },
+  }
 })
