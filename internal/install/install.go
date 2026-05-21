@@ -1,7 +1,7 @@
 package install
 
 import (
-	"bbs-go/internal/controllers/render"
+	"bbs-go/internal/handlers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	modelreq "bbs-go/internal/models/req"
@@ -51,24 +51,24 @@ const (
 
 // 测试数据库连接
 type DbConfigReq struct {
-	Type     string `json:"type"`               // mysql | sqlite
-	Host     string `json:"host,omitempty"`     // mysql
-	Port     string `json:"port,omitempty"`     // mysql
-	Database string `json:"database,omitempty"` // mysql
-	Username string `json:"username,omitempty"` // mysql
-	Password string `json:"password,omitempty"` // mysql
+	Type     string `json:"type" form:"type"`                   // mysql | sqlite
+	Host     string `json:"host,omitempty" form:"host"`         // mysql
+	Port     string `json:"port,omitempty" form:"port"`         // mysql
+	Database string `json:"database,omitempty" form:"database"` // mysql
+	Username string `json:"username,omitempty" form:"username"` // mysql
+	Password string `json:"password,omitempty" form:"password"` // mysql
 }
 
 // 执行安装
 type InstallReq struct {
-	SiteTitle       string          `json:"siteTitle"`
-	SiteDescription string          `json:"siteDescription"`
-	BaseURL         string          `json:"baseURL"`
-	DbConfig        DbConfigReq     `json:"dbConfig"`
-	Username        string          `json:"username"`
-	Password        string          `json:"password"`
-	Avatar          string          `json:"avatar"`
-	Language        config.Language `json:"language"`
+	SiteTitle       string          `json:"siteTitle" form:"siteTitle"`
+	SiteDescription string          `json:"siteDescription" form:"siteDescription"`
+	BaseURL         string          `json:"baseURL" form:"baseURL"`
+	DbConfig        DbConfigReq     `json:"dbConfig" form:"dbConfig"`
+	Username        string          `json:"username" form:"username"`
+	Password        string          `json:"password" form:"password"`
+	Avatar          string          `json:"avatar" form:"avatar"`
+	Language        config.Language `json:"language" form:"language"`
 }
 
 func (r DbConfigReq) GetConnStr() string {
@@ -235,7 +235,7 @@ func InitDB() error {
 		},
 		Logger: logger.New(log.New(os.Stdout, "", log.LstdFlags), logger.Config{
 			SlowThreshold:             200 * time.Millisecond,
-			LogLevel:                  logger.Info,
+			LogLevel:                  resolveGormLogLevel(conf.LogLevel),
 			IgnoreRecordNotFoundError: false,
 			Colorful:                  true,
 		}),
@@ -361,7 +361,7 @@ Start by publishing your first post.`
 		nodeId = nodes[0].Id
 	}
 
-	_, err := services.TopicPublishService.Publish(userId, modelreq.CreateTopicForm{
+	_, err := services.TopicPublishService.Publish(userId, modelreq.CreateTopicReq{
 		Type:        constants.TopicTypeTopic,
 		NodeId:      nodeId,
 		Title:       title,
@@ -383,6 +383,21 @@ func InitOthers() error {
 	iplocator.InitIpLocator()
 	search.Init()
 	return nil
+}
+
+func resolveGormLogLevel(level string) logger.LogLevel {
+	switch strings.ToLower(strings.TrimSpace(level)) {
+	case "silent":
+		return logger.Silent
+	case "error":
+		return logger.Error
+	case "warn":
+		return logger.Warn
+	case "info", "":
+		return logger.Info
+	default:
+		return logger.Info
+	}
 }
 
 func IsDockerBuiltinMySQLInstall() bool {

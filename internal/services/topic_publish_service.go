@@ -25,7 +25,7 @@ var TopicPublishService = new(topicPublishService)
 type topicPublishService struct{}
 
 // Publish 发表
-func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*models.Topic, error) {
+func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*models.Topic, error) {
 	if err := s.checkParams(userId, form); err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 }
 
 // IsNeedReview 是否需要审核
-func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
+func (s *topicPublishService) _IsNeedReview(form req.CreateTopicReq) bool {
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
 		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
@@ -160,7 +160,7 @@ func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
 	return false
 }
 
-func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm) (err error) {
+func (s topicPublishService) checkParams(userId int64, form req.CreateTopicReq) (err error) {
 	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
 		if !modules.Tweet {

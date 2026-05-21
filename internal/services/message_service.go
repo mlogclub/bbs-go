@@ -13,12 +13,13 @@ import (
 	"strings"
 	"time"
 
+	"bbs-go/internal/pkg/params"
+
 	cachelib "github.com/goburrow/cache"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/tidwall/gjson"
 )
 

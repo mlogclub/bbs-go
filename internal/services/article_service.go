@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/search"
 	"errors"
 	"math"
 	"strings"
@@ -11,11 +12,12 @@ import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/repositories"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
@@ -75,6 +77,7 @@ func (s *articleService) Delete(id int64) error {
 	err := repositories.ArticleRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
 	if err == nil {
 		ArticleTagService.DeleteByArticleId(id)
+		_ = search.DeleteArticleIndex(id)
 	}
 	return err
 }
@@ -138,7 +141,7 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 }
 
 // 发布文章
-func (s *articleService) Publish(userId int64, form req.CreateArticleForm) (article *models.Article, err error) {
+func (s *articleService) Publish(userId int64, form req.CreateArticleReq) (article *models.Article, err error) {
 	modules := SysConfigService.GetModules()
 	if !modules.Article {
 		return nil, errors.New(locales.Get("article.disabled"))
@@ -191,6 +194,9 @@ func (s *articleService) Publish(userId int64, form req.CreateArticleForm) (arti
 		repositories.ArticleTagRepository.AddArticleTags(tx, article.Id, tagIds)
 		return nil
 	})
+	if err == nil {
+		search.UpdateArticleIndex(article)
+	}
 
 	return
 }
@@ -224,6 +230,9 @@ func (s *articleService) Edit(articleId int64, tags []string, title, content str
 		return nil
 	})
 	cache.ArticleTagCache.Invalidate(articleId)
+	if err == nil {
+		search.UpdateArticleIndex(s.Get(articleId))
+	}
 	return err
 }
 
@@ -232,6 +241,7 @@ func (s *articleService) PutTags(articleId int64, tags []string) {
 	repositories.ArticleTagRepository.DeleteArticleTags(sqls.DB(), articleId)      // 先删掉所有的标签
 	repositories.ArticleTagRepository.AddArticleTags(sqls.DB(), articleId, tagIds) // 然后重新添加标签
 	cache.ArticleTagCache.Invalidate(articleId)
+	search.UpdateArticleIndex(s.Get(articleId))
 }
 
 // 倒序扫描
@@ -240,7 +250,6 @@ func (s *articleService) ScanDesc(callback func(articles []models.Article)) {
 	for {
 		logrus.Info("scan articles desc, cursor:" + cast.ToString(cursor))
 		list := repositories.ArticleRepository.Find(sqls.DB(), sqls.NewCnd().
-			Cols("id", "status", "user_id", "content_type", "create_time", "update_time").
 			Lt("id", cursor).Desc("id").Limit(1000))
 		if len(list) == 0 {
 			break

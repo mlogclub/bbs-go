@@ -6,9 +6,10 @@ import (
 	"bbs-go/internal/pkg/locales"
 	"errors"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

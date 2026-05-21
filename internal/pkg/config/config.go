@@ -10,7 +10,6 @@ import (
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 )
@@ -73,7 +72,7 @@ type Config struct {
 	Installed      bool          `yaml:"installed"`      // 是否已安装
 	IDCodec        IDCodecConfig `yaml:"idCodec"`        // ID 编解码配置
 	Logger         LoggerConfig  `yaml:"logger"`         // 日志配置
-	DB             sqls.DbConfig `yaml:"db"`             // 数据库配置
+	DB             DBConfig      `yaml:"db"`             // 数据库配置
 	Smtp           SmtpConfig    `yaml:"smtp"`           // smtp
 	Search         SearchConfig  `yaml:"search"`         // 搜索配置
 }
@@ -92,6 +91,16 @@ type LoggerConfig struct {
 	MaxSize    int    `yaml:"maxSize"`    // 文件最大尺寸（以MB为单位）
 	MaxAge     int    `yaml:"maxAge"`     // 保留旧文件的最大天数
 	MaxBackups int    `yaml:"maxBackups"` // 保留的最大旧文件数量
+}
+
+type DBConfig struct {
+	Type                   string `yaml:"type"` // mysql, sqlite
+	Url                    string `yaml:"url"`
+	MaxIdleConns           int    `yaml:"maxIdleConns"`
+	MaxOpenConns           int    `yaml:"maxOpenConns"`
+	ConnMaxIdleTimeSeconds int    `yaml:"connMaxIdleTimeSeconds"`
+	ConnMaxLifetimeSeconds int    `yaml:"connMaxLifetimeSeconds"`
+	LogLevel               string `yaml:"logLevel"` // silent, error, warn, info
 }
 
 type SmtpConfig struct {
@@ -139,7 +148,6 @@ func ReadConfig() (cfg *Config, exists bool, err error) {
 		}
 	}
 
-	slog.Info("Load config", slog.String("ENV", GetEnv()))
 	return cfg, exists, nil
 }
 
@@ -212,11 +220,12 @@ func getLogFilename() string {
 }
 
 const (
-	DbTypeMySQL  = "mysql"
-	DbTypeSQLite = "sqlite"
+	DbTypeMySQL       = "mysql"
+	DbTypeSQLite      = "sqlite"
+	DefaultDBLogLevel = "warn"
 )
 
-func SetDbDefaults(c *sqls.DbConfig) {
+func SetDbDefaults(c *DBConfig) {
 	if c.Type == "" {
 		c.Type = DbTypeMySQL
 	}
@@ -232,14 +241,18 @@ func SetDbDefaults(c *sqls.DbConfig) {
 	if c.ConnMaxLifetimeSeconds == 0 {
 		c.ConnMaxLifetimeSeconds = 3600
 	}
+	if strs.IsBlank(c.LogLevel) {
+		c.LogLevel = DefaultDBLogLevel
+	}
 }
 
-func defaultDbConfig() sqls.DbConfig {
-	return sqls.DbConfig{
+func defaultDbConfig() DBConfig {
+	return DBConfig{
 		Type:                   DbTypeMySQL,
 		MaxIdleConns:           50,
 		MaxOpenConns:           200,
 		ConnMaxIdleTimeSeconds: 300,
 		ConnMaxLifetimeSeconds: 3600,
+		LogLevel:               DefaultDBLogLevel,
 	}
 }

@@ -31,11 +31,14 @@ cscope.files
 tags
 
 logs/*.log
+web/*
 tmp/*
 logs/*
 admin/*
 res/uploads/*
 data/*
+
+internal/web*
 
 go.work
 go.work.sum

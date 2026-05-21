@@ -4,14 +4,14 @@ import (
 	"bbs-go/internal/permissions"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
+	"bbs-go/internal/pkg/ginx"
 	"bbs-go/internal/services"
 
-	"github.com/kataras/iris/v12"
-	"github.com/mlogclub/simple/web"
+	"github.com/gin-gonic/gin"
 )
 
 // AdminMiddleware 后台权限
-func AdminMiddleware(ctx iris.Context) {
+func AdminMiddleware(ctx *gin.Context) {
 	user := common.GetCurrentUser(ctx)
 	if user == nil {
 		notLogin(ctx)
@@ -22,7 +22,7 @@ func AdminMiddleware(ctx iris.Context) {
 		return
 	}
 
-	permissionCodes, ok := permissions.GetAdminPermissionCodes(ctx.Method(), ctx.Path())
+	permissionCodes, ok := permissions.GetAdminPermissionCodes(ctx.Request.Method, ctx.Request.URL.Path)
 	if !ok || !services.PermissionService.HasAnyPermission(user, permissionCodes...) {
 		noPermission(ctx)
 		return
@@ -32,13 +32,13 @@ func AdminMiddleware(ctx iris.Context) {
 }
 
 // notLogin 未登录返回
-func notLogin(ctx iris.Context) {
-	_ = ctx.JSON(web.JsonError(errs.NotLogin()))
-	ctx.StopExecution()
+func notLogin(ctx *gin.Context) {
+	ginx.WriteJSON(ctx, errs.NotLogin())
+	ctx.Abort()
 }
 
 // noPermission 无权限返回
-func noPermission(ctx iris.Context) {
-	_ = ctx.JSON(web.JsonError(errs.NoPermission()))
-	ctx.StopExecution()
+func noPermission(ctx *gin.Context) {
+	ginx.WriteJSON(ctx, errs.NoPermission())
+	ctx.Abort()
 }

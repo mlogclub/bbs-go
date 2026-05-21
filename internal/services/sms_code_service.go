@@ -8,10 +8,11 @@ import (
 	"errors"
 	"math/rand"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/spf13/cast"
 )
 

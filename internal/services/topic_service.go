@@ -11,10 +11,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 
 	"gorm.io/gorm"
 
@@ -138,7 +139,7 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 更新
-func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error {
+func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error {
 	if len(form.Title) == 0 {
 		return errors.New(locales.Get("topic.title_required"))
 	}

@@ -6,9 +6,10 @@ import (
 	"bbs-go/internal/repositories"
 	"strings"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 )
 

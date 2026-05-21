@@ -116,4 +116,6 @@ func init() {
 	register(14, "init rbac permissions", migrate_init_rbac_permissions)
 	register(15, "remove comment admin permissions", migrate_remove_comment_admin_permissions)
 	register(16, "front moderation permissions", migrate_front_moderation_permissions)
+	register(17, "search reindex permission", migrate_search_reindex_permission)
+	register(18, "forbidden word delete permission", migrate_forbidden_word_delete_permission)
 }

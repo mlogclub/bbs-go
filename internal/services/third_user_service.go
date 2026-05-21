@@ -7,18 +7,18 @@ import (
 	"bbs-go/internal/pkg/github"
 	"bbs-go/internal/pkg/google"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/params"
 	"bbs-go/internal/pkg/wx"
 	"bbs-go/internal/repositories"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 
-	"github.com/kataras/iris/v12/x/errors"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 )
 

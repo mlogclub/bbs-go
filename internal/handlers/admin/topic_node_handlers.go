@@ -1,0 +1,213 @@
+package admin
+
+import (
+	"bbs-go/internal/handlers/render"
+	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
+	"strconv"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+
+	"bbs-go/internal/pkg/ginx"
+	"bbs-go/internal/pkg/params"
+
+	"github.com/mlogclub/simple/common/dates"
+
+	"bbs-go/internal/models"
+	"bbs-go/internal/services"
+)
+
+// ensureAncestors 为过滤结果补充父节点，保证树形结构完整
+func ensureAncestors(list []models.TopicNode) []models.TopicNode {
+	idSet := make(map[int64]bool)
+	for _, n := range list {
+		idSet[n.Id] = true
+	}
+	for {
+		added := false
+		for _, n := range list {
+			if n.ParentId > 0 && !idSet[n.ParentId] {
+				parent := services.TopicNodeService.Get(n.ParentId)
+				if parent != nil {
+					list = append(list, *parent)
+					idSet[parent.Id] = true
+					added = true
+				}
+			}
+		}
+		if !added {
+			break
+		}
+	}
+	return list
+}
+
+// PostDelete 删除节点（一级有子节点时禁止）
+func TopicNodeDetail(ctx *gin.Context) {
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+
+	t := services.TopicNodeService.Get(id)
+	if t == nil {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("Not found, id="+strconv.FormatInt(id, 10)))
+		return
+	}
+	ginx.WriteJSON(ctx, t)
+
+}
+
+func TopicNodeList(ctx *gin.Context) {
+	list := services.TopicNodeService.Find(params.NewSqlCnd(ctx,
+		params.QueryFilter{
+			ParamName: "name",
+			Op:        params.Like,
+		},
+		params.QueryFilter{
+			ParamName: "type",
+			Op:        params.Eq,
+		},
+		params.QueryFilter{
+			ParamName: "parentId",
+			Op:        params.Eq,
+		},
+	).Asc("sort_no").Desc("id"))
+	// 确保父节点在列表中，以便正确构建树
+	list = ensureAncestors(list)
+	ginx.WriteJSON(ctx, render.BuildTopicNodeTree(0, list))
+
+}
+
+func TopicNodeCreate(ctx *gin.Context) {
+	t := &models.TopicNode{}
+	if err := ginx.Bind(ctx, t); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	t.SortNo = services.TopicNodeService.GetNextSortNo()
+	if t.ParentId < 0 {
+		t.ParentId = 0
+	}
+	// 子节点类型必须与父节点一致，直接取父节点的 type
+	if t.ParentId > 0 {
+		parent := services.TopicNodeService.Get(t.ParentId)
+		if parent == nil {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
+			return
+		}
+		t.Type = parent.Type
+	} else {
+		if t.Type == "" {
+			t.Type = constants.TopicNodeTypeNormal
+		}
+	}
+	t.CreateTime = dates.NowTimestamp()
+	if err := services.TopicNodeService.Create(t); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	ginx.WriteJSON(ctx, t)
+
+}
+
+func TopicNodeUpdate(ctx *gin.Context) {
+	id, err := params.FormValueInt64(ctx, "id")
+	if err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	t := services.TopicNodeService.Get(id)
+	if t == nil {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("entity not found"))
+		return
+	}
+
+	err = ginx.Bind(ctx, t)
+	if err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	if strings.TrimSpace(t.Description) == "" {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("param: description required"))
+		return
+	}
+	if t.ParentId < 0 {
+		t.ParentId = 0
+	}
+	// 禁止将父节点设为自己
+	if t.ParentId == id {
+		t.ParentId = 0
+	}
+
+	// 子节点类型必须与父节点一致，直接取父节点的 type，忽略表单传入
+	if t.ParentId > 0 {
+		parent := services.TopicNodeService.Get(t.ParentId)
+		if parent == nil {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
+			return
+		}
+		if t.Type != parent.Type {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("topic.node.child_type_must_match_parent")))
+			return
+		}
+		t.Type = parent.Type
+	} else {
+		// 一级节点：校验 type 必填，且编辑时联动更新所有子节点类型
+		if strings.TrimSpace(string(t.Type)) == "" {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("param: type required"))
+			return
+		}
+		if err := services.TopicNodeService.UpdateChildrenType(id, t.Type); err != nil {
+			ginx.WriteJSON(ctx, err)
+			return
+		}
+	}
+
+	err = services.TopicNodeService.Update(t)
+	if err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	ginx.WriteJSON(ctx, t)
+
+}
+
+func TopicNodeNodes(ctx *gin.Context) {
+
+	list := services.TopicNodeService.GetNodes()
+	ginx.WriteJSON(ctx, list)
+
+}
+
+func TopicNodeUpdateSort(ctx *gin.Context) {
+	var ids []int64
+	if err := ginx.BindJSON(ctx, &ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	if err := services.TopicNodeService.UpdateSort(ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	ginx.WriteJSON(ctx, nil)
+
+}
+
+func TopicNodeRemove(ctx *gin.Context) {
+	ids := params.GetInt64Arr(ctx, "ids")
+	if len(ids) == 0 {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("delete ids is empty"))
+		return
+	}
+	for _, id := range ids {
+		if err := services.TopicNodeService.DeleteWithCheck(id); err != nil {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage(err.Error()))
+			return
+		}
+	}
+	ginx.WriteJSON(ctx, nil)
+
+}

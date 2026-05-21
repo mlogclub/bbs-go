@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/pkg/str"
 	"bbs-go/internal/pkg/validate"
 	"errors"
@@ -16,12 +17,13 @@ import (
 	"strings"
 	"time"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/passwd"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
@@ -73,6 +75,7 @@ func (s *userService) Create(t *models.User) error {
 	err := repositories.UserRepository.Create(sqls.DB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
+		search.UpdateUserIndex(t)
 	}
 	return nil
 }
@@ -80,24 +83,34 @@ func (s *userService) Create(t *models.User) error {
 func (s *userService) Update(t *models.User) error {
 	err := repositories.UserRepository.Update(sqls.DB(), t)
 	cache.UserCache.Invalidate(t.Id)
+	if err == nil {
+		search.UpdateUserIndex(t)
+	}
 	return err
 }
 
 func (s *userService) Updates(id int64, columns map[string]interface{}) error {
 	err := repositories.UserRepository.Updates(sqls.DB(), id, columns)
 	cache.UserCache.Invalidate(id)
+	if err == nil {
+		search.UpdateUserIndex(s.Get(id))
+	}
 	return err
 }
 
 func (s *userService) UpdateColumn(id int64, name string, value interface{}) error {
 	err := repositories.UserRepository.UpdateColumn(sqls.DB(), id, name, value)
 	cache.UserCache.Invalidate(id)
+	if err == nil {
+		search.UpdateUserIndex(s.Get(id))
+	}
 	return err
 }
 
 func (s *userService) Delete(id int64) {
 	repositories.UserRepository.Delete(sqls.DB(), id)
 	cache.UserCache.Invalidate(id)
+	_ = search.DeleteUserIndex(id)
 }
 
 // Scan 扫描
@@ -249,6 +262,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	if err != nil {
 		return nil, err
 	}
+	search.UpdateUserIndex(user)
 	return user, nil
 }
 

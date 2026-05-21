@@ -10,10 +10,11 @@ import (
 	"strconv"
 	"strings"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -78,7 +79,7 @@ func (s *voteService) Delete(id int64) {
 	repositories.VoteRepository.Delete(sqls.DB(), id)
 }
 
-func (s *voteService) CheckCreateForm(form *req.CreateVoteForm) error {
+func (s *voteService) CheckCreateForm(form *req.VoteDTO) error {
 	if form == nil {
 		return nil
 	}
@@ -126,7 +127,7 @@ func (s *voteService) CheckCreateForm(form *req.CreateVoteForm) error {
 	return nil
 }
 
-func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId int64, form *req.CreateVoteForm, now int64) (*models.Vote, error) {
+func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId int64, form *req.VoteDTO, now int64) (*models.Vote, error) {
 	if form == nil {
 		return nil, nil
 	}
@@ -163,7 +164,7 @@ func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId i
 	return vote, nil
 }
 
-func (s *voteService) Cast(userId int64, form req.VoteCastForm) error {
+func (s *voteService) Cast(userId int64, form req.VoteCastReq) error {
 	if form.VoteId <= 0 {
 		return errors.New(locales.Get("vote.vote_id_required"))
 	}

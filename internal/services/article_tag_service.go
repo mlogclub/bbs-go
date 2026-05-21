@@ -3,8 +3,9 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"

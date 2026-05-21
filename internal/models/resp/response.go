@@ -152,6 +152,23 @@ type SearchTopicResponse struct {
 	CreateTime int64          `json:"createTime"`
 }
 
+type SearchArticleResponse struct {
+	Id         int64          `json:"id"`
+	User       *UserInfo      `json:"user"`
+	Tags       *[]TagResponse `json:"tags"`
+	Title      string         `json:"title"`
+	Summary    string         `json:"summary"`
+	CreateTime int64          `json:"createTime"`
+}
+
+type SearchUserResponse struct {
+	User        *UserInfo `json:"user"`
+	Nickname    string    `json:"nickname"`
+	Username    string    `json:"username"`
+	Description string    `json:"description"`
+	CreateTime  int64     `json:"createTime"`
+}
+
 type TopicTocItem struct {
 	Id    string `json:"id"`
 	Title string `json:"title"`

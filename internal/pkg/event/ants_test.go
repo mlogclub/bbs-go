@@ -2,9 +2,10 @@ package event
 
 import (
 	"fmt"
-	"github.com/panjf2000/ants/v2"
 	"sync"
 	"testing"
+
+	"github.com/panjf2000/ants/v2"
 )
 
 func TestType(t *testing.T) {

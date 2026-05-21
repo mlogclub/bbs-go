@@ -70,6 +70,7 @@ var (
 	PermissionForbiddenWordView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.view", GroupName: GroupContent, SortNo: 600, NameEn: "View Forbidden Words", NameZh: "查看敏感词"}
 	PermissionForbiddenWordCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.create", GroupName: GroupContent, SortNo: 610, NameEn: "Create Forbidden Words", NameZh: "创建敏感词"}
 	PermissionForbiddenWordUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.update", GroupName: GroupContent, SortNo: 620, NameEn: "Update Forbidden Words", NameZh: "编辑敏感词"}
+	PermissionForbiddenWordDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.delete", GroupName: GroupContent, SortNo: 630, NameEn: "Delete Forbidden Words", NameZh: "删除敏感词"}
 
 	PermissionUserView             = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.user.view", GroupName: GroupCommunity, SortNo: 700, NameEn: "View Users", NameZh: "查看用户"}
 	PermissionUserCreate           = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.user.create", GroupName: GroupCommunity, SortNo: 710, NameEn: "Create Users", NameZh: "创建用户"}
@@ -94,6 +95,7 @@ var (
 
 	PermissionSettingView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.view", GroupName: GroupSystem, SortNo: 1100, NameEn: "View Settings", NameZh: "查看设置"}
 	PermissionSettingUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.update", GroupName: GroupSystem, SortNo: 1110, NameEn: "Update Settings", NameZh: "编辑设置"}
+	PermissionSearchReindex = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.search.reindex", GroupName: GroupSystem, SortNo: 1120, NameEn: "Rebuild Search Index", NameZh: "重建搜索索引"}
 
 	PermissionRoleView             = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.role.view", GroupName: GroupSystem, SortNo: 1200, NameEn: "View Roles", NameZh: "查看角色"}
 	PermissionRoleCreate           = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.role.create", GroupName: GroupSystem, SortNo: 1210, NameEn: "Create Roles", NameZh: "创建角色"}
@@ -136,6 +138,7 @@ var Permissions = []PermissionDefinition{
 	PermissionForbiddenWordView,
 	PermissionForbiddenWordCreate,
 	PermissionForbiddenWordUpdate,
+	PermissionForbiddenWordDelete,
 	PermissionUserView,
 	PermissionUserCreate,
 	PermissionUserUpdate,
@@ -161,6 +164,7 @@ var Permissions = []PermissionDefinition{
 	PermissionRolePermissionUpdate,
 	PermissionSettingView,
 	PermissionSettingUpdate,
+	PermissionSearchReindex,
 	PermissionEmailLogView,
 	PermissionUserTaskLogView,
 	PermissionUserExpLogView,

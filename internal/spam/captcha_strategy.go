@@ -17,7 +17,7 @@ func (CaptchaStrategy) Name() string {
 	return "CaptchaStrategy"
 }
 
-func (CaptchaStrategy) CheckTopic(user *models.User, form req.CreateTopicForm) error {
+func (CaptchaStrategy) CheckTopic(user *models.User, form req.CreateTopicReq) error {
 	if services.SysConfigService.IsTopicCaptcha() {
 		if form.CaptchaProtocol == 2 {
 			if !captcha2.Verify(form.CaptchaId, form.CaptchaCode) {
@@ -32,10 +32,10 @@ func (CaptchaStrategy) CheckTopic(user *models.User, form req.CreateTopicForm) e
 	return nil
 }
 
-func (CaptchaStrategy) CheckArticle(user *models.User, form req.CreateArticleForm) error {
+func (CaptchaStrategy) CheckArticle(user *models.User, form req.CreateArticleReq) error {
 	return nil
 }
 
-func (CaptchaStrategy) CheckComment(user *models.User, form req.CreateCommentForm) error {
+func (CaptchaStrategy) CheckComment(user *models.User, form req.CreateCommentReq) error {
 	return nil
 }

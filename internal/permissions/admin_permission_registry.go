@@ -51,6 +51,7 @@ var (
 		{Method: "POST", Pattern: "/api/admin/forbidden-word/list", Permissions: []PermissionDefinition{PermissionForbiddenWordView}},
 		{Method: "POST", Pattern: "/api/admin/forbidden-word/create", Permissions: []PermissionDefinition{PermissionForbiddenWordCreate}},
 		{Method: "POST", Pattern: "/api/admin/forbidden-word/update", Permissions: []PermissionDefinition{PermissionForbiddenWordUpdate}},
+		{Method: "POST", Pattern: "/api/admin/forbidden-word/delete", Permissions: []PermissionDefinition{PermissionForbiddenWordDelete}},
 
 		{Method: "GET", Pattern: "/api/admin/user/*", Permissions: []PermissionDefinition{PermissionUserView}},
 		{Method: "GET", Pattern: "/api/admin/user/synccount", Permissions: []PermissionDefinition{PermissionUserUpdate}},
@@ -73,6 +74,8 @@ var (
 		{Method: "GET", Pattern: "/api/admin/sys-config/**", Permissions: []PermissionDefinition{PermissionSettingView}},
 		{Method: "POST", Pattern: "/api/admin/sys-config/list", Permissions: []PermissionDefinition{PermissionSettingView}},
 		{Method: "POST", Pattern: "/api/admin/sys-config/save", Permissions: []PermissionDefinition{PermissionSettingUpdate}},
+		{Method: "GET", Pattern: "/api/admin/search/reindex/status", Permissions: []PermissionDefinition{PermissionSearchReindex}},
+		{Method: "POST", Pattern: "/api/admin/search/reindex", Permissions: []PermissionDefinition{PermissionSearchReindex}},
 
 		{Method: "GET", Pattern: "/api/admin/badge/*", Permissions: []PermissionDefinition{PermissionBadgeView}},
 		{Method: "POST", Pattern: "/api/admin/badge/list", Permissions: []PermissionDefinition{PermissionBadgeView}},

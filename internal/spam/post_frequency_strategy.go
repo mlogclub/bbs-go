@@ -19,7 +19,7 @@ func (PostFrequencyStrategy) Name() string {
 	return "PostFrequencyStrategy"
 }
 
-func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopicForm) error {
+func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopicReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil
@@ -48,7 +48,7 @@ func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopic
 	return nil
 }
 
-func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateArticleForm) error {
+func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateArticleReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil
@@ -77,7 +77,7 @@ func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateAr
 	return nil
 }
 
-func (s PostFrequencyStrategy) CheckComment(user *models.User, form req.CreateCommentForm) error {
+func (s PostFrequencyStrategy) CheckComment(user *models.User, form req.CreateCommentReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil

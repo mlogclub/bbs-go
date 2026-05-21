@@ -12,11 +12,12 @@ import (
 	"log/slog"
 	"strings"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
@@ -97,12 +98,13 @@ func (s *commentService) DeleteByUser(user *models.User, id int64) error {
 }
 
 // Publish 发表评论
-func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*models.Comment, error) {
+func (s *commentService) Publish(userId int64, form req.CreateCommentReq) (*models.Comment, error) {
 	form.Content = strings.TrimSpace(form.Content)
+	entityId := form.DecodedEntityId()
 	if strs.IsBlank(form.EntityType) {
 		return nil, errors.New(locales.Get("comment.invalid_params"))
 	}
-	if form.EntityId <= 0 {
+	if entityId <= 0 {
 		return nil, errors.New(locales.Get("comment.invalid_params"))
 	}
 	if strs.IsBlank(form.Content) {
@@ -112,7 +114,7 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*mod
 	comment := &models.Comment{
 		UserId:      userId,
 		EntityType:  form.EntityType,
-		EntityId:    form.EntityId,
+		EntityId:    entityId,
 		Content:     form.Content,
 		ContentType: constants.ContentTypeText,
 		QuoteId:     form.QuoteId,
@@ -123,8 +125,9 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*mod
 		CreateTime:  dates.NowTimestamp(),
 	}
 
-	if len(form.ImageList) > 0 {
-		imageListStr, err := jsons.ToStr(form.ImageList)
+	imageList := form.ParsedImageList()
+	if len(imageList) > 0 {
+		imageListStr, err := jsons.ToStr(imageList)
 		if err == nil {
 			comment.ImageList = imageListStr
 		} else {
@@ -139,7 +142,7 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*mod
 
 		switch form.EntityType {
 		case constants.EntityTopic:
-			if err := TopicService.onComment(tx, form.EntityId, comment); err != nil {
+			if err := TopicService.onComment(tx, entityId, comment); err != nil {
 				return err
 			}
 		case constants.EntityComment: // 二级评论

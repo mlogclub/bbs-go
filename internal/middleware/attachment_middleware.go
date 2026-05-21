@@ -9,15 +9,15 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 	"github.com/mlogclub/simple/sqls"
 )
 
 // AttachmentMiddleware 对 /res/uploads/attachments/* 的请求设置 Content-Disposition: attachment，触发浏览器下载而非预览
 // 从 path 中解析附件 ID（存储 key 格式为 prefix/2006/01/02/uuid.ext，uuid 即附件 ID），查库后用附件的 FileName 作为下载文件名
-func AttachmentMiddleware(ctx iris.Context) {
-	path := ctx.Path()
-	if ctx.Method() != http.MethodGet && ctx.Method() != http.MethodHead {
+func AttachmentMiddleware(ctx *gin.Context) {
+	path := ctx.Request.URL.Path
+	if ctx.Request.Method != http.MethodGet && ctx.Request.Method != http.MethodHead {
 		ctx.Next()
 		return
 	}
@@ -44,7 +44,7 @@ func AttachmentMiddleware(ctx iris.Context) {
 			downloadName = filepath.Base(att.FileName)
 		}
 	}
-	ctx.ResponseWriter().Header().Set("Content-Disposition", `attachment; filename="`+url.QueryEscape(downloadName)+`"`)
+	ctx.Writer.Header().Set("Content-Disposition", `attachment; filename="`+url.QueryEscape(downloadName)+`"`)
 
 	ctx.Next()
 }

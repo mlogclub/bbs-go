@@ -22,6 +22,7 @@ db:
   url:
   maxIdleConns: 50
   maxOpenConns: 200
+  logLevel: warn # SQL log level: silent, error, warn, info
 
 search:
   indexPath: /app/data/topic_index
