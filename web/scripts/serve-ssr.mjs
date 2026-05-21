@@ -1,15 +1,12 @@
 import { createServer } from "node:http"
-import { createReadStream, existsSync, statSync } from "node:fs"
+import { createReadStream, statSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
 import { createRequestListener } from "@react-router/node"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const clientDir = resolveExistingPath("dist/client", "build/client")
-const serverBuildPath = resolveExistingPath(
-  "dist/server/index.js",
-  "build/server/index.js",
-)
+const clientDir = path.join(root, "build/client")
+const serverBuildPath = path.join(root, "build/server/index.js")
 const port = Number(process.env.PORT || 3000)
 const serverURL =
   process.env.BBSGO_SERVER_URL ||
@@ -20,16 +17,6 @@ const frameworkRequestListener = createRequestListener({
   build,
   mode: process.env.NODE_ENV || "production",
 })
-
-function resolveExistingPath(...relativePaths) {
-  for (const relativePath of relativePaths) {
-    const filePath = path.join(root, relativePath)
-    if (existsSync(filePath)) {
-      return filePath
-    }
-  }
-  return path.join(root, relativePaths[0])
-}
 
 function contentType(file) {
   if (file.endsWith(".js")) return "text/javascript"
