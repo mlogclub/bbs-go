@@ -53,6 +53,13 @@ func newRouter() *gin.Engine {
 	app.Use(cors.New(corsConfig))
 	app.Use(middleware.AttachmentMiddleware)
 
+	spa := dirHandler("./web/build/spa", dirOptions{
+		ShowList:  false,
+		SPA:       true,
+		IndexName: "index.html",
+	})
+	app.GET("/", spa)
+	app.HEAD("/", spa)
 	registerAPIRoutes(app.Group("/api", middleware.InstallMiddleware, middleware.AuthMiddleware))
 	registerAdminRoutes(app.Group("/api/admin", middleware.InstallMiddleware, middleware.AuthMiddleware, middleware.AdminMiddleware))
 
@@ -67,7 +74,7 @@ func newRouter() *gin.Engine {
 			ginx.WriteHttpStatusJSON(ctx, http.StatusNotFound, web.JsonErrorCode(http.StatusNotFound, "Not found"))
 			return
 		}
-		serveSPA(ctx, "./web/build/spa", "index.html")
+		spa(ctx)
 	})
 	app.GET("/sitemap.xml", func(ctx *gin.Context) {
 		redirectURL := services.SeoSitemapService.RedirectURL()
@@ -459,17 +466,44 @@ func (n noDirFS) Open(name string) (http.File, error) {
 	return file, nil
 }
 
-func serveSPA(ctx *gin.Context, root, index string) {
-	path := filepath.Clean(ctx.Request.URL.Path)
-	if path == "." || path == "/" {
-		path = "/" + index
-	}
+type dirOptions struct {
+	ShowList  bool
+	SPA       bool
+	IndexName string
+}
 
-	filePath := filepath.Join(root, strings.TrimPrefix(path, "/"))
-	if info, err := os.Stat(filePath); err == nil && !info.IsDir() {
-		ctx.File(filePath)
-		return
-	}
+func dirHandler(root string, options dirOptions) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		path := filepath.Clean(ctx.Request.URL.Path)
+		if path == "." || path == "/" {
+			path = "/" + options.IndexName
+		}
 
-	ctx.File(filepath.Join(root, index))
+		filePath := filepath.Join(root, strings.TrimPrefix(path, "/"))
+		if info, err := os.Stat(filePath); err == nil {
+			if info.IsDir() {
+				if options.IndexName != "" {
+					indexPath := filepath.Join(filePath, options.IndexName)
+					if indexInfo, err := os.Stat(indexPath); err == nil && !indexInfo.IsDir() {
+						ctx.File(indexPath)
+						return
+					}
+				}
+				if !options.ShowList {
+					ctx.AbortWithStatus(http.StatusNotFound)
+					return
+				}
+			} else {
+				ctx.File(filePath)
+				return
+			}
+		}
+
+		if options.SPA && options.IndexName != "" {
+			ctx.File(filepath.Join(root, options.IndexName))
+			return
+		}
+
+		ctx.AbortWithStatus(http.StatusNotFound)
+	}
 }

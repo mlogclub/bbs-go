@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestLegacyAdminRouteIsNotRedirectedToDashboard(t *testing.T) {
@@ -39,6 +41,7 @@ func TestRouterNoRouteSeparatesAPIStaticAndSPA(t *testing.T) {
 		{method: http.MethodGet, path: "/api/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodGet, path: "/api/admin/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodPost, path: "/res/not-exists.png", wantStatus: http.StatusNotFound},
+		{method: http.MethodGet, path: "/assets/not-exists.css", wantStatus: http.StatusNotFound},
 	}
 
 	for _, tt := range tests {
@@ -51,6 +54,50 @@ func TestRouterNoRouteSeparatesAPIStaticAndSPA(t *testing.T) {
 		}
 		if tt.contentType != "" && !strings.Contains(rec.Header().Get("Content-Type"), tt.contentType) {
 			t.Fatalf("%s %s Content-Type=%q want %q", tt.method, tt.path, rec.Header().Get("Content-Type"), tt.contentType)
+		}
+	}
+}
+
+func TestServeDirWithSPA(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "index.html"), []byte("<html>spa</html>"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "manifest"), []byte("manifest content"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		path       string
+		accept     string
+		wantStatus int
+		wantBody   string
+	}{
+		{path: "/assets/not-exists.css", accept: "text/css,*/*;q=0.1", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
+		{path: "/images/not-exists.png", accept: "image/avif,image/webp,image/png,image/*,*/*;q=0.8", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
+		{path: "/fonts/not-exists", accept: "*/*", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
+		{path: "/manifest", accept: "*/*", wantStatus: http.StatusOK, wantBody: "manifest content"},
+		{path: "/topic/123", accept: "text/html,application/xhtml+xml", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
+	}
+	handler := dirHandler(root, dirOptions{
+		ShowList:  false,
+		SPA:       true,
+		IndexName: "index.html",
+	})
+
+	for _, tt := range tests {
+		rec := httptest.NewRecorder()
+		ctx, _ := gin.CreateTestContext(rec)
+		ctx.Request = httptest.NewRequest(http.MethodGet, tt.path, nil)
+		ctx.Request.Header.Set("Accept", tt.accept)
+
+		handler(ctx)
+
+		if rec.Code != tt.wantStatus {
+			t.Fatalf("%s status=%d want %d; body=%q", tt.path, rec.Code, tt.wantStatus, rec.Body.String())
+		}
+		if tt.wantBody != "" && strings.TrimSpace(rec.Body.String()) != tt.wantBody {
+			t.Fatalf("%s body=%q want %q", tt.path, strings.TrimSpace(rec.Body.String()), tt.wantBody)
 		}
 	}
 }
