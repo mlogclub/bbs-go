@@ -93,9 +93,10 @@ var (
 	PermissionTaskUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.task.update", GroupName: GroupGrowth, SortNo: 1020, NameEn: "Update Tasks", NameZh: "编辑任务"}
 	PermissionTaskDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.task.delete", GroupName: GroupGrowth, SortNo: 1030, NameEn: "Delete Tasks", NameZh: "删除任务"}
 
-	PermissionSettingView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.view", GroupName: GroupSystem, SortNo: 1100, NameEn: "View Settings", NameZh: "查看设置"}
-	PermissionSettingUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.update", GroupName: GroupSystem, SortNo: 1110, NameEn: "Update Settings", NameZh: "编辑设置"}
-	PermissionSearchReindex = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.search.reindex", GroupName: GroupSystem, SortNo: 1120, NameEn: "Rebuild Search Index", NameZh: "重建搜索索引"}
+	PermissionSettingView     = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.view", GroupName: GroupSystem, SortNo: 1100, NameEn: "View Settings", NameZh: "查看设置"}
+	PermissionSettingUpdate   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.setting.update", GroupName: GroupSystem, SortNo: 1110, NameEn: "Update Settings", NameZh: "编辑设置"}
+	PermissionSearchReindex   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.search.reindex", GroupName: GroupSystem, SortNo: 1120, NameEn: "Rebuild Search Index", NameZh: "重建搜索索引"}
+	PermissionSitemapGenerate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.sitemap.generate", GroupName: GroupSystem, SortNo: 1130, NameEn: "Generate Sitemap", NameZh: "生成 Sitemap"}
 
 	PermissionRoleView             = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.role.view", GroupName: GroupSystem, SortNo: 1200, NameEn: "View Roles", NameZh: "查看角色"}
 	PermissionRoleCreate           = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.role.create", GroupName: GroupSystem, SortNo: 1210, NameEn: "Create Roles", NameZh: "创建角色"}
@@ -165,6 +166,7 @@ var Permissions = []PermissionDefinition{
 	PermissionSettingView,
 	PermissionSettingUpdate,
 	PermissionSearchReindex,
+	PermissionSitemapGenerate,
 	PermissionEmailLogView,
 	PermissionUserTaskLogView,
 	PermissionUserExpLogView,

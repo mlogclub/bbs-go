@@ -5,7 +5,9 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"testing"
+	"time"
 )
 
 func TestBuildSitemapXML_EscapesURLs(t *testing.T) {
@@ -180,4 +182,81 @@ func TestHasAbsoluteBaseURL(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSeoSitemapServiceStartGenerateTracksStatus(t *testing.T) {
+	service := &seoSitemapService{}
+	started := make(chan struct{})
+	release := make(chan struct{})
+	var calls int32
+
+	status, startedNew := service.startGenerateWith(func() error {
+		atomic.AddInt32(&calls, 1)
+		close(started)
+		<-release
+		return nil
+	})
+	if !startedNew {
+		t.Fatal("expected generation to start")
+	}
+	if !status.Running {
+		t.Fatal("expected initial status to be running")
+	}
+
+	<-started
+	running := service.Status()
+	if !running.Running {
+		t.Fatal("expected service status to be running")
+	}
+
+	_, startedAgain := service.startGenerateWith(func() error {
+		t.Fatal("second generator should not run while sitemap generation is active")
+		return nil
+	})
+	if startedAgain {
+		t.Fatal("expected second start to be rejected while running")
+	}
+
+	close(release)
+	waitForSitemapStatus(t, service, func(status SeoSitemapStatus) bool {
+		return !status.Running && status.FinishedAt > 0
+	})
+
+	finished := service.Status()
+	if finished.Error != "" {
+		t.Fatalf("expected no error, got %q", finished.Error)
+	}
+	if atomic.LoadInt32(&calls) != 1 {
+		t.Fatalf("calls=%d want 1", calls)
+	}
+}
+
+func TestSeoSitemapServiceStartGenerateTracksError(t *testing.T) {
+	service := &seoSitemapService{}
+	status, started := service.startGenerateWith(func() error {
+		return errors.New("baseURL must start with http:// or https://")
+	})
+	if !started || !status.Running {
+		t.Fatal("expected generation to start")
+	}
+
+	waitForSitemapStatus(t, service, func(status SeoSitemapStatus) bool {
+		return !status.Running && status.FinishedAt > 0
+	})
+
+	finished := service.Status()
+	if finished.Error != "baseURL must start with http:// or https://" {
+		t.Fatalf("error=%q", finished.Error)
+	}
+}
+
+func waitForSitemapStatus(t *testing.T, service *seoSitemapService, done func(SeoSitemapStatus) bool) {
+	t.Helper()
+	for i := 0; i < 100; i++ {
+		if done(service.Status()) {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	t.Fatal("timed out waiting for sitemap status")
 }

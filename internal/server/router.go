@@ -348,6 +348,10 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	searchGroup.GET("/reindex/status", adminHandlers.SearchReindexStatus)
 	searchGroup.POST("/reindex", adminHandlers.SearchReindex)
 
+	seoGroup := group.Group("/seo")
+	seoGroup.GET("/sitemap/status", adminHandlers.SeoSitemapStatus)
+	seoGroup.POST("/sitemap/generate", adminHandlers.SeoSitemapGenerate)
+
 	linkGroup := group.Group("/link")
 	linkGroup.POST("/list", adminHandlers.LinkList)
 	linkGroup.POST("/create", adminHandlers.LinkCreate)

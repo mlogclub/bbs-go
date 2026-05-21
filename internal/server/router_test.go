@@ -171,6 +171,8 @@ func TestGinRouterRegistersCompatibleAPIPaths(t *testing.T) {
 		http.MethodPost + " /api/topic/accept_answer/:id",
 		http.MethodGet + " /api/admin/search/reindex/status",
 		http.MethodPost + " /api/admin/search/reindex",
+		http.MethodGet + " /api/admin/seo/sitemap/status",
+		http.MethodPost + " /api/admin/seo/sitemap/generate",
 		http.MethodPost + " /api/admin/role/list",
 		http.MethodGet + " /api/admin/badge/list",
 		http.MethodPost + " /api/admin/badge/list",

@@ -76,6 +76,8 @@ var (
 		{Method: "POST", Pattern: "/api/admin/sys-config/save", Permissions: []PermissionDefinition{PermissionSettingUpdate}},
 		{Method: "GET", Pattern: "/api/admin/search/reindex/status", Permissions: []PermissionDefinition{PermissionSearchReindex}},
 		{Method: "POST", Pattern: "/api/admin/search/reindex", Permissions: []PermissionDefinition{PermissionSearchReindex}},
+		{Method: "GET", Pattern: "/api/admin/seo/sitemap/status", Permissions: []PermissionDefinition{PermissionSitemapGenerate}},
+		{Method: "POST", Pattern: "/api/admin/seo/sitemap/generate", Permissions: []PermissionDefinition{PermissionSitemapGenerate}},
 
 		{Method: "GET", Pattern: "/api/admin/badge/*", Permissions: []PermissionDefinition{PermissionBadgeView}},
 		{Method: "POST", Pattern: "/api/admin/badge/list", Permissions: []PermissionDefinition{PermissionBadgeView}},

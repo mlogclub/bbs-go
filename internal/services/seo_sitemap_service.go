@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"bbs-go/internal/models"
@@ -16,6 +17,7 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/uploader"
 
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 )
 
@@ -25,12 +27,94 @@ const (
 	sitemapIndexKey    = "seo/sitemap-index.xml"
 )
 
-type seoSitemapService struct{}
+type SeoSitemapStatus struct {
+	Running    bool   `json:"running"`
+	StartedAt  int64  `json:"startedAt"`
+	FinishedAt int64  `json:"finishedAt"`
+	Error      string `json:"error"`
+	SitemapURL string `json:"sitemapURL"`
+}
+
+type seoSitemapService struct {
+	mu     sync.Mutex
+	status SeoSitemapStatus
+}
 
 var SeoSitemapService = &seoSitemapService{}
 
 func (s *seoSitemapService) RedirectURL() string {
 	return strings.TrimSpace(UploadService.ObjectURL(sitemapIndexKey))
+}
+
+func (s *seoSitemapService) Status() SeoSitemapStatus {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	status := s.status
+	status.SitemapURL = s.currentSitemapURL()
+	return status
+}
+
+func (s *seoSitemapService) StartGenerate() (SeoSitemapStatus, bool) {
+	return s.startGenerateWith(s.GenerateAndUpload)
+}
+
+func (s *seoSitemapService) startGenerateWith(generate func() error) (SeoSitemapStatus, bool) {
+	s.mu.Lock()
+	if s.status.Running {
+		status := s.status
+		status.SitemapURL = s.currentSitemapURL()
+		s.mu.Unlock()
+		return status, false
+	}
+
+	s.status = SeoSitemapStatus{
+		Running:    true,
+		StartedAt:  dates.NowTimestamp(),
+		SitemapURL: s.currentSitemapURL(),
+	}
+	status := s.status
+	s.mu.Unlock()
+
+	go s.runGenerate(generate)
+	return status, true
+}
+
+func (s *seoSitemapService) runGenerate(generate func() error) {
+	defer func() {
+		if r := recover(); r != nil {
+			slog.Error("sitemap generation failed", slog.Any("err", r))
+			s.finishGenerate("sitemap generation failed")
+		}
+	}()
+
+	if generate == nil {
+		s.finishGenerate("sitemap generator is nil")
+		return
+	}
+	if err := generate(); err != nil {
+		s.finishGenerate(err.Error())
+		return
+	}
+	s.finishGenerate("")
+}
+
+func (s *seoSitemapService) finishGenerate(message string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.status.Running = false
+	s.status.FinishedAt = dates.NowTimestamp()
+	s.status.Error = message
+	s.status.SitemapURL = s.currentSitemapURL()
+}
+
+func (s *seoSitemapService) currentSitemapURL() (url string) {
+	defer func() {
+		if r := recover(); r != nil {
+			slog.Warn("sitemap URL unavailable", slog.Any("err", r))
+			url = ""
+		}
+	}()
+	return s.RedirectURL()
 }
 
 type sitemapURLItem struct {

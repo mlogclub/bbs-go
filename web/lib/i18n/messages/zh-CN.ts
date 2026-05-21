@@ -592,6 +592,28 @@ const zhCN = {
         confirmAction: "开始重建",
         started: "搜索索引重建已开始。",
       },
+      sitemap: {
+        title: "Sitemap",
+        description:
+          "当内容、节点、标签或站点地址调整后，可以手动重新生成 sitemap XML 文件和索引。",
+        content: "Sitemap 内容",
+        contentAll: "静态页面、话题节点、标签、帖子、文章",
+        status: "状态",
+        statusIdle: "未开始",
+        statusRunning: "生成中",
+        statusFinished: "已完成",
+        statusFailed: "失败",
+        operation: "操作",
+        generate: "生成 Sitemap",
+        generating: "生成中",
+        publicURL: "公开地址",
+        open: "打开 sitemap",
+        confirmTitle: "确认生成 Sitemap？",
+        confirmDescription:
+          "系统会在后台重新生成 sitemap 文件，上传成功后 /sitemap.xml 会指向新的 sitemap 索引。",
+        confirmAction: "开始生成",
+        started: "Sitemap 生成已开始。",
+      },
     },
     fields: {
       id: "ID",

@@ -608,6 +608,28 @@ const enUS = {
         confirmAction: "Start Rebuild",
         started: "Search index rebuild has started.",
       },
+      sitemap: {
+        title: "Sitemap",
+        description:
+          "Regenerate sitemap XML files and the sitemap index after content, category, tag, or site URL changes.",
+        content: "Sitemap Content",
+        contentAll: "Static pages, topic nodes, tags, topics, articles",
+        status: "Status",
+        statusIdle: "Not Started",
+        statusRunning: "Generating",
+        statusFinished: "Finished",
+        statusFailed: "Failed",
+        operation: "Operation",
+        generate: "Generate Sitemap",
+        generating: "Generating",
+        publicURL: "Public URL",
+        open: "Open sitemap",
+        confirmTitle: "Generate sitemap?",
+        confirmDescription:
+          "This will rebuild sitemap files in the background and update /sitemap.xml after upload succeeds.",
+        confirmAction: "Start Generation",
+        started: "Sitemap generation has started.",
+      },
     },
     fields: {
       id: "ID",

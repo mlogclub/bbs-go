@@ -117,10 +117,20 @@ type SearchReindexStatus = {
   error: string
 }
 
+type SitemapGenerateStatus = {
+  running: boolean
+  startedAt: number
+  finishedAt: number
+  error: string
+  sitemapURL: string
+}
+
 const SETTINGS_ENDPOINT = "/api/admin/sys-config/configs"
 const SAVE_ENDPOINT = "/api/admin/sys-config/save"
 const SEARCH_REINDEX_ENDPOINT = "/api/admin/search/reindex"
 const SEARCH_REINDEX_STATUS_ENDPOINT = "/api/admin/search/reindex/status"
+const SITEMAP_GENERATE_ENDPOINT = "/api/admin/seo/sitemap/generate"
+const SITEMAP_STATUS_ENDPOINT = "/api/admin/seo/sitemap/status"
 const NOTIFICATION_TYPE_KEYS = [
   "topicComment",
   "commentReply",
@@ -334,6 +344,9 @@ export default function DashboardSettingsRoute() {
   const [reindexing, setReindexing] = React.useState(false)
   const [searchStatus, setSearchStatus] =
     React.useState<SearchReindexStatus | null>(null)
+  const [generatingSitemap, setGeneratingSitemap] = React.useState(false)
+  const [sitemapStatus, setSitemapStatus] =
+    React.useState<SitemapGenerateStatus | null>(null)
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
   const [error, setError] = React.useState<string | null>(null)
@@ -342,6 +355,10 @@ export default function DashboardSettingsRoute() {
   const canReindex = userHasPermission(
     currentUser,
     PERMISSIONS.DASHBOARD_SEARCH_REINDEX
+  )
+  const canGenerateSitemap = userHasPermission(
+    currentUser,
+    PERMISSIONS.DASHBOARD_SITEMAP_GENERATE
   )
   const tabKeys = React.useMemo(
     () => [
@@ -355,8 +372,9 @@ export default function DashboardSettingsRoute() {
       "script",
       "page",
       ...(canReindex ? ["search"] : []),
+      ...(canGenerateSitemap ? ["sitemap"] : []),
     ],
-    [canReindex]
+    [canGenerateSitemap, canReindex]
   )
 
   const s = React.useCallback(
@@ -417,6 +435,30 @@ export default function DashboardSettingsRoute() {
     return () => window.clearInterval(timer)
   }, [canReindex, loadSearchStatus, searchStatus?.running])
 
+  const loadSitemapStatus = React.useCallback(async () => {
+    if (!canGenerateSitemap) return
+    try {
+      const status = await adminGet<SitemapGenerateStatus>(
+        SITEMAP_STATUS_ENDPOINT
+      )
+      setSitemapStatus(status)
+    } catch {
+      // Ignore polling failures; the generate action still reports explicit errors.
+    }
+  }, [canGenerateSitemap])
+
+  React.useEffect(() => {
+    void loadSitemapStatus()
+  }, [loadSitemapStatus])
+
+  React.useEffect(() => {
+    if (!canGenerateSitemap || !sitemapStatus?.running) return
+    const timer = window.setInterval(() => {
+      void loadSitemapStatus()
+    }, 1500)
+    return () => window.clearInterval(timer)
+  }, [canGenerateSitemap, loadSitemapStatus, sitemapStatus?.running])
+
   function update(path: string, value: SettingValue) {
     setSettings((current) => setPathValue(current, path, value))
   }
@@ -460,6 +502,25 @@ export default function DashboardSettingsRoute() {
       )
     } finally {
       setReindexing(false)
+    }
+  }
+
+  async function generateSitemap() {
+    if (!canGenerateSitemap || sitemapStatus?.running) return
+    setGeneratingSitemap(true)
+    try {
+      const status = await adminPostJson<SitemapGenerateStatus>(
+        SITEMAP_GENERATE_ENDPOINT,
+        {}
+      )
+      setSitemapStatus(status)
+      msgSuccess(s("sitemap.started"))
+    } catch (err) {
+      msgError(
+        err instanceof Error ? err.message : t("dashboard.errors.saveFailed")
+      )
+    } finally {
+      setGeneratingSitemap(false)
     }
   }
 
@@ -652,6 +713,24 @@ export default function DashboardSettingsRoute() {
               />
             </TabsContent>
           ) : null}
+
+          {canGenerateSitemap ? (
+            <TabsContent value="sitemap" className="mt-0">
+              <SitemapSettings
+                saving={generatingSitemap}
+                status={sitemapStatus}
+                s={s}
+                onGenerate={() =>
+                  setConfirmState({
+                    title: s("sitemap.confirmTitle"),
+                    description: s("sitemap.confirmDescription"),
+                    confirmText: s("sitemap.confirmAction"),
+                    onConfirm: () => void generateSitemap(),
+                  })
+                }
+              />
+            </TabsContent>
+          ) : null}
         </Tabs>
         <ConfirmDialog
           state={confirmState}
@@ -838,6 +917,99 @@ function SearchIndexSettings({
               />
               {running ? s("search.rebuilding") : s("search.rebuild")}
             </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function SitemapSettings({
+  saving,
+  status,
+  s,
+  onGenerate,
+}: {
+  saving: boolean
+  status: SitemapGenerateStatus | null
+  s: (key: string, params?: Record<string, string | number>) => string
+  onGenerate: () => void
+}) {
+  const running = Boolean(status?.running)
+  const badgeVariant: React.ComponentProps<typeof Badge>["variant"] =
+    status?.error ? "destructive" : running ? "secondary" : "outline"
+  const statusText = status?.error
+    ? s("sitemap.statusFailed")
+    : running
+      ? s("sitemap.statusRunning")
+      : status?.finishedAt
+        ? s("sitemap.statusFinished")
+        : s("sitemap.statusIdle")
+  const showStatus = running || Boolean(status?.finishedAt || status?.error)
+  const sitemapURL = status?.sitemapURL || "/sitemap.xml"
+
+  return (
+    <Card size="sm" className="bg-[var(--dashboard-panel)] shadow-xs">
+      <CardHeader className="border-b">
+        <CardTitle>{s("sitemap.title")}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-5 p-5">
+        <div className="grid gap-2 sm:grid-cols-[184px_minmax(0,520px)] sm:gap-4">
+          <div className="text-sm font-medium text-muted-foreground sm:text-right">
+            {s("sitemap.content")}
+          </div>
+          <div className="text-sm">
+            {s("sitemap.contentAll")}
+          </div>
+        </div>
+        {showStatus ? (
+          <div className="grid gap-2 sm:grid-cols-[184px_minmax(0,520px)] sm:gap-4">
+            <div className="text-sm font-medium text-muted-foreground sm:text-right">
+              {s("sitemap.status")}
+            </div>
+            <div className="grid gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant={badgeVariant}>{statusText}</Badge>
+                {status?.sitemapURL ? (
+                  <a
+                    className="text-sm text-primary underline-offset-4 hover:underline"
+                    href="/sitemap.xml"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {s("sitemap.open")}
+                  </a>
+                ) : null}
+              </div>
+              {status?.error ? (
+                <p className="text-sm text-destructive">{status.error}</p>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+        <div className="grid gap-2 sm:grid-cols-[184px_minmax(0,520px)] sm:gap-4">
+          <div className="text-sm font-medium text-muted-foreground sm:text-right">
+            {s("sitemap.operation")}
+          </div>
+          <div className="grid gap-3">
+            <p className="text-sm text-muted-foreground">
+              {s("sitemap.description")}
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button
+                className="w-fit"
+                disabled={saving || running}
+                onClick={onGenerate}
+              >
+                <RefreshCwIcon
+                  className={running ? "animate-spin" : undefined}
+                />
+                {running ? s("sitemap.generating") : s("sitemap.generate")}
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {s("sitemap.publicURL")}: {sitemapURL}
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
