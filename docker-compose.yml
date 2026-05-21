@@ -23,6 +23,9 @@ services:
       retries: 10
 
   bbs-go:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: mlogclub/bbs-go:${BBSGO_IMAGE_TAG:-latest}
     restart: unless-stopped
     depends_on:

@@ -1,0 +1,15 @@
+.git
+.vscode
+
+bbs-go
+bbs-go-*
+bbs-go.db
+bbs-go.yaml
+
+data
+docker-data
+logs
+res/uploads
+
+web/build
+web/node_modules
