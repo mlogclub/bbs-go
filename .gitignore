@@ -37,8 +37,6 @@ admin/*
 res/uploads/*
 data/*
 
-internal/web*
-
 go.work
 go.work.sum
 
