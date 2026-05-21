@@ -8,11 +8,10 @@ import (
 	"bbs-go/internal/pkg/ginx"
 	"bbs-go/internal/pkg/respath"
 	"bbs-go/internal/services"
+	webspa "bbs-go/web"
 	"log/slog"
 	"net/http"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -53,28 +52,23 @@ func newRouter() *gin.Engine {
 	app.Use(cors.New(corsConfig))
 	app.Use(middleware.AttachmentMiddleware)
 
-	spa := dirHandler("./web/build/spa", dirOptions{
-		ShowList:  false,
-		SPA:       true,
-		IndexName: "index.html",
-	})
-	app.GET("/", spa)
-	app.HEAD("/", spa)
 	registerAPIRoutes(app.Group("/api", middleware.InstallMiddleware, middleware.AuthMiddleware))
 	registerAdminRoutes(app.Group("/api/admin", middleware.InstallMiddleware, middleware.AuthMiddleware, middleware.AdminMiddleware))
 
-	app.StaticFS("/res", staticFiles(respath.ResDir()))
-	app.NoRoute(func(ctx *gin.Context) {
-		path := ctx.Request.URL.Path
-		if strings.HasPrefix(path, "/api/") {
+	app.StaticFS("/res", ginx.StaticFiles(respath.ResDir()))
+	ginx.HandleSPA(app, ginx.SPAOptions{
+		Root:         "./web/build/spa",
+		EmbeddedFS:   webspa.SPA,
+		EmbeddedRoot: "build/spa",
+		DirOptions: ginx.DirOptions{
+			ShowList:  false,
+			SPA:       true,
+			IndexName: "index.html",
+		},
+		NotFoundPrefixes: []string{"/api/", "/res/"},
+		NotFoundHandler: func(ctx *gin.Context) {
 			ginx.WriteHttpStatusJSON(ctx, http.StatusNotFound, web.JsonErrorCode(http.StatusNotFound, "Not found"))
-			return
-		}
-		if strings.HasPrefix(path, "/res/") {
-			ginx.WriteHttpStatusJSON(ctx, http.StatusNotFound, web.JsonErrorCode(http.StatusNotFound, "Not found"))
-			return
-		}
-		spa(ctx)
+		},
 	})
 	app.GET("/sitemap.xml", func(ctx *gin.Context) {
 		redirectURL := services.SeoSitemapService.RedirectURL()
@@ -435,75 +429,4 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	voteRecordGroup.POST("/delete", adminHandlers.VoteRecordRemove)
 	voteRecordGroup.GET("/:id", adminHandlers.VoteRecordDetail)
 
-}
-
-type noDirFS struct {
-	fs http.FileSystem
-}
-
-func staticFiles(root string) http.FileSystem {
-	return noDirFS{fs: http.Dir(root)}
-}
-
-func redirectDashboard(ctx *gin.Context) {
-	ctx.Redirect(http.StatusMovedPermanently, "/dashboard")
-}
-
-func (n noDirFS) Open(name string) (http.File, error) {
-	file, err := n.fs.Open(name)
-	if err != nil {
-		return nil, err
-	}
-	info, err := file.Stat()
-	if err != nil {
-		_ = file.Close()
-		return nil, err
-	}
-	if info.IsDir() {
-		_ = file.Close()
-		return nil, os.ErrNotExist
-	}
-	return file, nil
-}
-
-type dirOptions struct {
-	ShowList  bool
-	SPA       bool
-	IndexName string
-}
-
-func dirHandler(root string, options dirOptions) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		path := filepath.Clean(ctx.Request.URL.Path)
-		if path == "." || path == "/" {
-			path = "/" + options.IndexName
-		}
-
-		filePath := filepath.Join(root, strings.TrimPrefix(path, "/"))
-		if info, err := os.Stat(filePath); err == nil {
-			if info.IsDir() {
-				if options.IndexName != "" {
-					indexPath := filepath.Join(filePath, options.IndexName)
-					if indexInfo, err := os.Stat(indexPath); err == nil && !indexInfo.IsDir() {
-						ctx.File(indexPath)
-						return
-					}
-				}
-				if !options.ShowList {
-					ctx.AbortWithStatus(http.StatusNotFound)
-					return
-				}
-			} else {
-				ctx.File(filePath)
-				return
-			}
-		}
-
-		if options.SPA && options.IndexName != "" {
-			ctx.File(filepath.Join(root, options.IndexName))
-			return
-		}
-
-		ctx.AbortWithStatus(http.StatusNotFound)
-	}
 }

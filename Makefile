@@ -1,13 +1,17 @@
 # Build the application
 all: build
 
-build:
+build: build-spa
 	@echo "Building..."
 	@go build -v -o bbs-go main.go
 
-buildlinux:
+buildlinux: build-spa
 	@echo "Building..."
 	@GOOS=linux GOARCH=amd64 go build
+
+build-spa:
+	@echo "Building SPA..."
+	@cd web && pnpm build:spa
 
 # Run the application
 run:
@@ -29,4 +33,4 @@ generator:
 generate-permissions:
 	@go run ./cmd/generator/permissions
 
-.PHONY: all build run test clean generator generate-permissions
+.PHONY: all build buildlinux build-spa run test clean generator generate-permissions

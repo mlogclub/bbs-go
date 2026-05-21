@@ -31,7 +31,6 @@ cscope.files
 tags
 
 logs/*.log
-web/*
 tmp/*
 logs/*
 admin/*

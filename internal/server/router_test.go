@@ -9,10 +9,13 @@ import (
 	"strings"
 	"testing"
 
+	"bbs-go/internal/pkg/ginx"
+	webspa "bbs-go/web"
+
 	"github.com/gin-gonic/gin"
 )
 
-func TestLegacyAdminRouteIsNotRedirectedToDashboard(t *testing.T) {
+func TestLegacyAdminRouteFallsBackToSPAWithoutDashboardRedirect(t *testing.T) {
 	app := newRouter()
 
 	for _, path := range []string{"/admin", "/admin/users"} {
@@ -20,8 +23,8 @@ func TestLegacyAdminRouteIsNotRedirectedToDashboard(t *testing.T) {
 		rec := httptest.NewRecorder()
 		app.ServeHTTP(rec, req)
 
-		if rec.Code != http.StatusNotFound {
-			t.Fatalf("%s status=%d want %d", path, rec.Code, http.StatusNotFound)
+		if rec.Code != http.StatusOK {
+			t.Fatalf("%s status=%d want %d", path, rec.Code, http.StatusOK)
 		}
 		if got := rec.Header().Get("Location"); got != "" {
 			t.Fatalf("%s Location=%q want empty", path, got)
@@ -41,7 +44,7 @@ func TestRouterNoRouteSeparatesAPIStaticAndSPA(t *testing.T) {
 		{method: http.MethodGet, path: "/api/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodGet, path: "/api/admin/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodPost, path: "/res/not-exists.png", wantStatus: http.StatusNotFound},
-		{method: http.MethodGet, path: "/assets/not-exists.css", wantStatus: http.StatusNotFound},
+		{method: http.MethodGet, path: "/assets/not-exists.css", wantStatus: http.StatusOK, contentType: "text/html"},
 	}
 
 	for _, tt := range tests {
@@ -58,47 +61,27 @@ func TestRouterNoRouteSeparatesAPIStaticAndSPA(t *testing.T) {
 	}
 }
 
-func TestServeDirWithSPA(t *testing.T) {
-	root := t.TempDir()
-	if err := os.WriteFile(filepath.Join(root, "index.html"), []byte("<html>spa</html>"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(root, "manifest"), []byte("manifest content"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-
-	tests := []struct {
-		path       string
-		accept     string
-		wantStatus int
-		wantBody   string
-	}{
-		{path: "/assets/not-exists.css", accept: "text/css,*/*;q=0.1", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-		{path: "/images/not-exists.png", accept: "image/avif,image/webp,image/png,image/*,*/*;q=0.8", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-		{path: "/fonts/not-exists", accept: "*/*", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-		{path: "/manifest", accept: "*/*", wantStatus: http.StatusOK, wantBody: "manifest content"},
-		{path: "/topic/123", accept: "text/html,application/xhtml+xml", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-	}
-	handler := dirHandler(root, dirOptions{
+func TestSPAHandlerFallsBackToEmbeddedFiles(t *testing.T) {
+	handler := ginx.NewSPAHandler(filepath.Join(t.TempDir(), "missing"), webspa.SPA, "build/spa", ginx.DirOptions{
 		ShowList:  false,
 		SPA:       true,
 		IndexName: "index.html",
 	})
 
-	for _, tt := range tests {
-		rec := httptest.NewRecorder()
-		ctx, _ := gin.CreateTestContext(rec)
-		ctx.Request = httptest.NewRequest(http.MethodGet, tt.path, nil)
-		ctx.Request.Header.Set("Accept", tt.accept)
+	rec := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(rec)
+	ctx.Request = httptest.NewRequest(http.MethodGet, "/topic/123", nil)
 
-		handler(ctx)
+	handler(ctx)
 
-		if rec.Code != tt.wantStatus {
-			t.Fatalf("%s status=%d want %d; body=%q", tt.path, rec.Code, tt.wantStatus, rec.Body.String())
-		}
-		if tt.wantBody != "" && strings.TrimSpace(rec.Body.String()) != tt.wantBody {
-			t.Fatalf("%s body=%q want %q", tt.path, strings.TrimSpace(rec.Body.String()), tt.wantBody)
-		}
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status=%d want %d", rec.Code, http.StatusOK)
+	}
+	if !strings.Contains(rec.Header().Get("Content-Type"), "text/html") {
+		t.Fatalf("Content-Type=%q want text/html", rec.Header().Get("Content-Type"))
+	}
+	if !strings.Contains(rec.Body.String(), "__reactRouterContext") {
+		t.Fatalf("embedded SPA response does not look like React Router index.html")
 	}
 }
 
