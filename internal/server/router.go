@@ -67,7 +67,7 @@ func newRouter() *gin.Engine {
 			ginx.WriteHttpStatusJSON(ctx, http.StatusNotFound, web.JsonErrorCode(http.StatusNotFound, "Not found"))
 			return
 		}
-		serveSPA(ctx, "./site", "index.html")
+		serveSPA(ctx, "./web/build/spa", "index.html")
 	})
 	app.GET("/sitemap.xml", func(ctx *gin.Context) {
 		redirectURL := services.SeoSitemapService.RedirectURL()
