@@ -53,10 +53,18 @@ function resolveStaticFile(pathname) {
   }
 }
 
+function shouldProxyToServer(pathname) {
+  return (
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/res/") ||
+    pathname === "/sitemap.xml"
+  )
+}
+
 createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host}`)
 
-  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/res/")) {
+  if (shouldProxyToServer(url.pathname)) {
     try {
       const upstream = new URL(`${url.pathname}${url.search}`, serverURL)
       const response = await fetch(upstream, {

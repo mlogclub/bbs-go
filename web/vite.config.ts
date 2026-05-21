@@ -46,6 +46,7 @@ export default defineConfig({
     proxy: {
       "/api": "http://localhost:8082",
       "/res": "http://localhost:8082",
+      "/sitemap.xml": "http://localhost:8082",
     },
   },
 })
