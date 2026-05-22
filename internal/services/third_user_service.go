@@ -6,18 +6,19 @@ import (
 	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/github"
 	"bbs-go/internal/pkg/google"
+	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/params"
 	"bbs-go/internal/pkg/wx"
 	"bbs-go/internal/repositories"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 
-	"github.com/kataras/iris/v12/x/errors"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 )
 
@@ -110,7 +111,6 @@ func (s *thirdUserService) LoginWeixin(code, state string) (*models.User, error)
 	avatar, _ := UploadService.CopyImage(info.HeadImgURL)
 
 	user := &models.User{
-		Type:       constants.UserTypeNormal,
 		Nickname:   info.Nickname,
 		Avatar:     avatar,
 		Status:     constants.StatusOk,
@@ -150,7 +150,7 @@ func (s *thirdUserService) LoginWeixin(code, state string) (*models.User, error)
 
 func (s *thirdUserService) BindWeixin(userId int64, code, state string) error {
 	if temp := s.GetByUserId(userId, constants.ThirdTypeWeixin); temp != nil {
-		return errors.New("用户已绑定微信: " + temp.Nickname)
+		return errors.New(locales.Getf("auth.wechat_already_bound", temp.Nickname))
 	}
 
 	loginConfig := SysConfigService.GetLoginConfig()
@@ -168,7 +168,7 @@ func (s *thirdUserService) BindWeixin(userId int64, code, state string) error {
 	}
 
 	if temp := s.GetByOpenId(info.OpenID, constants.ThirdTypeWeixin); temp != nil && temp.Id != userId {
-		return errors.New("微信已绑定到其他用户~")
+		return errors.New(locales.Get("auth.wechat_bound_to_other"))
 	}
 
 	return s.Create(&models.ThirdUser{
@@ -193,7 +193,7 @@ func (s *thirdUserService) UnbindWeixin(userId int64) {
 func (s *thirdUserService) LoginGoogle(code, state string) (*models.User, error) {
 	loginConfig := SysConfigService.GetLoginConfig()
 	if !loginConfig.GoogleLogin.Enabled {
-		return nil, errors.New("Google登录未启用")
+		return nil, errors.New(locales.Get("auth.google_login_disabled"))
 	}
 
 	// 使用与授权时相同的 redirectURI（必须完全一致）
@@ -220,12 +220,11 @@ func (s *thirdUserService) LoginGoogle(code, state string) (*models.User, error)
 	if nickname == "" {
 		nickname = info.Email
 		if nickname == "" {
-			nickname = "Google用户"
+			nickname = locales.Get("auth.google_default_nickname")
 		}
 	}
 
 	user := &models.User{
-		Type:       constants.UserTypeNormal,
 		Nickname:   nickname,
 		Avatar:     avatar,
 		Status:     constants.StatusOk,
@@ -275,7 +274,7 @@ func (s *thirdUserService) LoginGoogle(code, state string) (*models.User, error)
 func (s *thirdUserService) LoginGoogleOneTap(credential string) (*models.User, error) {
 	loginConfig := SysConfigService.GetLoginConfig()
 	if !loginConfig.GoogleLogin.Enabled {
-		return nil, errors.New("Google登录未启用")
+		return nil, errors.New(locales.Get("auth.google_login_disabled"))
 	}
 
 	// 使用 Google API 验证 JWT
@@ -303,12 +302,11 @@ func (s *thirdUserService) LoginGoogleOneTap(credential string) (*models.User, e
 	if nickname == "" {
 		nickname = info.Email
 		if nickname == "" {
-			nickname = "Google用户"
+			nickname = locales.Get("auth.google_default_nickname")
 		}
 	}
 
 	user := &models.User{
-		Type:       constants.UserTypeNormal,
 		Nickname:   nickname,
 		Avatar:     avatar,
 		Status:     constants.StatusOk,
@@ -358,7 +356,7 @@ func (s *thirdUserService) LoginGoogleOneTap(credential string) (*models.User, e
 func (s *thirdUserService) LoginGithub(code, state string) (*models.User, error) {
 	loginConfig := SysConfigService.GetLoginConfig()
 	if !loginConfig.GithubLogin.Enabled {
-		return nil, errors.New("GitHub登录未启用")
+		return nil, errors.New(locales.Get("auth.github_login_disabled"))
 	}
 
 	redirectURI := bbsurls.AbsUrl(github.AuthorizationCallbackURL)
@@ -389,7 +387,7 @@ func (s *thirdUserService) LoginGithub(code, state string) (*models.User, error)
 	if nickname == "" {
 		nickname = info.Login
 		if nickname == "" {
-			nickname = "GitHub用户"
+			nickname = locales.Get("auth.github_default_nickname")
 		}
 	}
 
@@ -418,7 +416,6 @@ func (s *thirdUserService) LoginGithub(code, state string) (*models.User, error)
 		} else {
 			// 邮箱不存在：创建新用户
 			user = &models.User{
-				Type:       constants.UserTypeNormal,
 				Nickname:   nickname,
 				Avatar:     avatar,
 				Status:     constants.StatusOk,
@@ -463,12 +460,12 @@ func (s *thirdUserService) LoginGithub(code, state string) (*models.User, error)
 
 func (s *thirdUserService) BindGithub(userId int64, code, state string) error {
 	if temp := s.GetByUserId(userId, constants.ThirdTypeGithub); temp != nil {
-		return errors.New("用户已绑定GitHub: " + temp.Nickname)
+		return errors.New(locales.Getf("auth.github_already_bound", temp.Nickname))
 	}
 
 	loginConfig := SysConfigService.GetLoginConfig()
 	if !loginConfig.GithubLogin.Enabled {
-		return errors.New("GitHub登录未启用")
+		return errors.New(locales.Get("auth.github_login_disabled"))
 	}
 
 	// GitHub 只允许配置一个回调地址，这里必须与发起授权时使用的 redirectURI 保持完全一致
@@ -485,14 +482,14 @@ func (s *thirdUserService) BindGithub(userId int64, code, state string) error {
 
 	openId := fmt.Sprintf("%d", info.ID)
 	if temp := s.GetByOpenId(openId, constants.ThirdTypeGithub); temp != nil && temp.UserId != userId {
-		return errors.New("GitHub账号已绑定到其他用户~")
+		return errors.New(locales.Get("auth.github_bound_to_other"))
 	}
 
 	nickname := info.Name
 	if nickname == "" {
 		nickname = info.Login
 		if nickname == "" {
-			nickname = "GitHub用户"
+			nickname = locales.Get("auth.github_default_nickname")
 		}
 	}
 
@@ -518,12 +515,12 @@ func (s *thirdUserService) UnbindGithub(userId int64) {
 
 func (s *thirdUserService) BindGoogle(userId int64, code, state string) error {
 	if temp := s.GetByUserId(userId, constants.ThirdTypeGoogle); temp != nil {
-		return errors.New("用户已绑定Google: " + temp.Nickname)
+		return errors.New(locales.Getf("auth.google_already_bound", temp.Nickname))
 	}
 
 	loginConfig := SysConfigService.GetLoginConfig()
 	if !loginConfig.GoogleLogin.Enabled {
-		return errors.New("Google登录未启用")
+		return errors.New(locales.Get("auth.google_login_disabled"))
 	}
 
 	// 使用与授权时相同的 redirectURI（必须完全一致）
@@ -538,14 +535,14 @@ func (s *thirdUserService) BindGoogle(userId int64, code, state string) error {
 	}
 
 	if temp := s.GetByOpenId(info.ID, constants.ThirdTypeGoogle); temp != nil && temp.UserId != userId {
-		return errors.New("Google账号已绑定到其他用户~")
+		return errors.New(locales.Get("auth.google_bound_to_other"))
 	}
 
 	nickname := info.Name
 	if nickname == "" {
 		nickname = info.Email
 		if nickname == "" {
-			nickname = "Google用户"
+			nickname = locales.Get("auth.google_default_nickname")
 		}
 	}
 

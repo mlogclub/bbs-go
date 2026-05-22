@@ -11,10 +11,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 
 	"gorm.io/gorm"
 
@@ -138,18 +139,18 @@ func (s *topicService) Undelete(id int64) error {
 }
 
 // 更新
-func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error {
+func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error {
 	if len(form.Title) == 0 {
-		return errors.New("标题不能为空")
+		return errors.New(locales.Get("topic.title_required"))
 	}
 
 	if strs.RuneLen(form.Title) > 128 {
-		return errors.New("标题长度不能超过128")
+		return errors.New(locales.Get("topic.title_too_long"))
 	}
 
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return errors.New("节点不存在")
+		return errors.New(locales.Get("topic.node_not_found"))
 	}
 	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
 	if topic == nil {
@@ -227,7 +228,7 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicForm) error
 func (s *topicService) SetRecommend(topicId int64, recommend bool) error {
 	topic := s.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		return errors.New("帖子不存在")
+		return errors.New(locales.Get("topic.topic_not_found"))
 	}
 	if topic.Recommend == recommend { // 推荐状态没变更
 		return nil
@@ -523,7 +524,7 @@ func (s *topicService) GetStickyTopics(nodeId int64, limit int, qaStatus string)
 func (s *topicService) SetSticky(topicId int64, sticky bool) error {
 	topic := s.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		return errors.New("话题不存在")
+		return errors.New(locales.Get("topic.topic_not_found"))
 	}
 	if topic.Sticky == sticky {
 		return nil

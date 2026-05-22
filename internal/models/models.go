@@ -8,7 +8,7 @@ import (
 
 var Models = []interface{}{
 	&Migration{},
-	&UserRole{}, &Role{}, &Menu{}, &RoleMenu{}, &Api{}, &MenuApi{}, &DictType{}, &Dict{},
+	&UserRole{}, &Role{}, &Permission{}, &RolePermission{}, &DictType{}, &Dict{},
 
 	&User{}, &UserToken{}, &ThirdUser{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &TopicNode{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{},
@@ -49,29 +49,6 @@ type Role struct {
 	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"` // 更新时间
 }
 
-type Menu struct {
-	Model
-	ParentId   int64  `json:"parentId" form:"parentId"`                               // 上级菜单
-	Type       string `gorm:"size:32" json:"type" form:"type"`                        // 类型（menu/func）
-	Name       string `gorm:"size:64" json:"name" form:"name"`                        // 名称
-	Title      string `gorm:"size:64" json:"title" form:"title"`                      // 标题
-	Icon       string `gorm:"size:1024" json:"icon" form:"icon"`                      // ICON
-	Path       string `gorm:"size:1024" json:"path" form:"path"`                      // 路径
-	Component  string `gorm:"size:256" json:"component" form:"component"`             // 组件
-	SortNo     int    `gorm:"not null;default:0" json:"sortNo" form:"sortNo"`         // 排序
-	Status     int    `json:"status" form:"status"`                                   // 状态
-	CreateTime int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
-	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"` // 更新时间
-}
-
-// MenuApi 菜单和接口的权限关联
-type MenuApi struct {
-	Model
-	MenuId     int64 `gorm:"not null;default:0;uniqueIndex:idx_menu_api" json:"menuId" form:"menuId"` // 菜单ID
-	ApiId      int64 `gorm:"not null;default:0;uniqueIndex:idx_menu_api" json:"apiId" form:"apiId"`   // 接口ID
-	CreateTime int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"`                  // 创建时间
-}
-
 type UserRole struct {
 	Model
 	UserId     int64 `gorm:"uniqueIndex:idx_user_role" json:"userId" form:"userId"`
@@ -79,20 +56,24 @@ type UserRole struct {
 	CreateTime int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
 }
 
-type RoleMenu struct {
+type Permission struct {
 	Model
-	RoleId     int64 `gorm:"uniqueIndex:idx_role_menu" json:"roleId" form:"roleId"`
-	MenuId     int64 `gorm:"uniqueIndex:idx_role_menu" json:"menuId" form:"menuId"`
-	CreateTime int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
+	Type        string `gorm:"size:32;not null;index:idx_permission_type" json:"type" form:"type"`                 // 权限类型
+	Code        string `gorm:"size:128;not null;uniqueIndex:uk_permission_code" json:"code" form:"code"`           // 权限编码
+	Name        string `gorm:"size:64;not null" json:"name" form:"name"`                                           // 权限名称
+	GroupName   string `gorm:"size:64;not null;index:idx_permission_group_name" json:"groupName" form:"groupName"` // 权限分组
+	Description string `gorm:"size:256" json:"description" form:"description"`                                     // 描述
+	SortNo      int    `gorm:"not null;default:0" json:"sortNo" form:"sortNo"`                                     // 排序
+	Status      int    `gorm:"not null;default:0;index:idx_permission_status" json:"status" form:"status"`         // 状态
+	CreateTime  int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"`                             // 创建时间
+	UpdateTime  int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"`                             // 更新时间
 }
 
-type Api struct {
+type RolePermission struct {
 	Model
-	Name       string `gorm:"size:512;unique" json:"name" form:"name"`                // 名称
-	Method     string `gorm:"size:16" json:"method" form:"method"`                    // 方法
-	Path       string `gorm:"size:512;unique" json:"path" form:"path"`                // 路径
-	CreateTime int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
-	UpdateTime int64  `gorm:"not null;default:0" json:"updateTime" form:"updateTime"` // 更新时间
+	RoleId       int64 `gorm:"not null;uniqueIndex:uk_role_permission_role_permission;index:idx_role_permission_role_id" json:"roleId" form:"roleId"`
+	PermissionId int64 `gorm:"not null;uniqueIndex:uk_role_permission_role_permission;index:idx_role_permission_permission_id" json:"permissionId" form:"permissionId"`
+	CreateTime   int64 `gorm:"not null;default:0" json:"createTime" form:"createTime"` // 创建时间
 }
 
 type DictType struct {
@@ -120,7 +101,6 @@ type Dict struct {
 
 type User struct {
 	Model
-	Type             int              `gorm:"not null;default:0" json:"type" form:"type"`                              // 用户类型（0：用户、1：员工）
 	Phone            sql.NullString   `gorm:"size:16;unique;" json:"phone" form:"phone"`                               // 电话
 	Username         sql.NullString   `gorm:"size:32;unique;" json:"username" form:"username"`                         // 用户名
 	Email            sql.NullString   `gorm:"size:128;unique;" json:"email" form:"email"`                              // 邮箱

@@ -25,7 +25,7 @@ var TopicPublishService = new(topicPublishService)
 type topicPublishService struct{}
 
 // Publish 发表
-func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*models.Topic, error) {
+func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*models.Topic, error) {
 	if err := s.checkParams(userId, form); err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicForm) (*
 }
 
 // IsNeedReview 是否需要审核
-func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
+func (s *topicPublishService) _IsNeedReview(form req.CreateTopicReq) bool {
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
 		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
@@ -160,32 +160,47 @@ func (s *topicPublishService) _IsNeedReview(form req.CreateTopicForm) bool {
 	return false
 }
 
-func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm) (err error) {
+func (s topicPublishService) checkParams(userId int64, form req.CreateTopicReq) (err error) {
 	modules := SysConfigService.GetModules()
 	if form.Type == constants.TopicTypeTweet {
 		if !modules.Tweet {
-			return errors.New("未开启动态功能")
+			return errors.New(locales.Get("topic.updates_disabled"))
 		}
 		if strs.IsBlank(form.Content) {
-			return errors.New("内容不能为空")
+			return errors.New(locales.Get("topic.content_required"))
 		}
 		// if strs.IsBlank(form.Content) && len(form.ImageList) == 0 {
 		// 	return errors.New("内容或图片不能为空")
 		// }
-	} else if constants.IsPostTopicType(form.Type) {
+	} else if form.Type == constants.TopicTypeTopic {
 		if !modules.Topic {
-			return errors.New("未开启帖子功能")
+			return errors.New(locales.Get("topic.discussions_disabled"))
 		}
 		if strs.IsBlank(form.Title) {
-			return errors.New("标题不能为空")
+			return errors.New(locales.Get("topic.title_required"))
 		}
 
 		if strs.IsBlank(form.Content) {
-			return errors.New("内容不能为空")
+			return errors.New(locales.Get("topic.content_required"))
 		}
 
 		if strs.RuneLen(form.Title) > 128 {
-			return errors.New("标题长度不能超过128")
+			return errors.New(locales.Get("topic.title_too_long"))
+		}
+	} else if form.Type == constants.TopicTypeQA {
+		if !modules.QA {
+			return errors.New(locales.Get("topic.qa_disabled"))
+		}
+		if strs.IsBlank(form.Title) {
+			return errors.New(locales.Get("topic.title_required"))
+		}
+
+		if strs.IsBlank(form.Content) {
+			return errors.New(locales.Get("topic.content_required"))
+		}
+
+		if strs.RuneLen(form.Title) > 128 {
+			return errors.New(locales.Get("topic.title_too_long"))
 		}
 	} else {
 		return errors.New(locales.Get("topic.type_not_supported"))
@@ -194,7 +209,7 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 	if form.NodeId <= 0 {
 		form.NodeId = SysConfigService.GetDefaultNodeId()
 		if form.NodeId <= 0 {
-			return errors.New("请选择节点")
+			return errors.New(locales.Get("topic.node_required"))
 		}
 	}
 
@@ -211,7 +226,7 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicForm)
 
 	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
 	if node == nil || node.Status != constants.StatusOk {
-		return errors.New("节点不存在")
+		return errors.New(locales.Get("topic.node_not_found"))
 	}
 	if !node.Type.Supports(form.Type) {
 		return errors.New(locales.Get("topic.node_type_mismatch"))

@@ -3,11 +3,13 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"errors"
+
+	"bbs-go/internal/pkg/params"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 
 	"bbs-go/internal/models"
 	"bbs-go/internal/repositories"
@@ -80,7 +82,7 @@ func (s *favoriteService) GetBy(userId int64, entityType string, entityId int64)
 func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 	article := repositories.ArticleRepository.Get(sqls.DB(), articleId)
 	if article == nil || article.Status != constants.StatusOk {
-		return errors.New("收藏的文章不存在")
+		return errors.New(locales.Get("favorite.article_not_found"))
 	}
 	return s.addFavorite(userId, constants.EntityArticle, articleId)
 }
@@ -89,7 +91,7 @@ func (s *favoriteService) AddArticleFavorite(userId, articleId int64) error {
 func (s *favoriteService) AddTopicFavorite(userId, topicId int64) error {
 	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		return errors.New("收藏的话题不存在")
+		return errors.New(locales.Get("favorite.topic_not_found"))
 	}
 	return s.addFavorite(userId, constants.EntityTopic, topicId)
 }

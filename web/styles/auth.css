@@ -1,0 +1,179 @@
+@layer components {
+  .signin-card {
+    border-radius: var(--radius-md);
+    background: var(--background);
+    padding: 0.25rem 0.75rem;
+  }
+
+  .login-tabs-list {
+    margin-bottom: 1rem;
+  }
+
+  .login-tab-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .login-tab-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .login-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .login-title h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .login-title-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--foreground);
+    flex-shrink: 0;
+  }
+
+  .third-party-login {
+    margin-top: 1.5rem;
+  }
+
+  .third-party-hint {
+    text-align: center;
+    margin-bottom: 1rem;
+    position: relative;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  .third-party-hint::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+    z-index: 0;
+  }
+
+  .third-party-hint span {
+    position: relative;
+    padding: 0 1rem;
+    background: var(--card);
+    z-index: 1;
+  }
+
+  .third-party-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+  }
+
+  .weixin-qr-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: color-mix(in oklab, var(--muted) 30%, transparent);
+    border-radius: calc(var(--radius) - 2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+  }
+
+  .login_container {
+    height: 406px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .sms-login {
+    width: 100%;
+  }
+
+  .phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--input);
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--background);
+    overflow: hidden;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+    min-height: 2.25rem;
+    box-sizing: border-box;
+  }
+
+  .phone-input-wrapper:focus-within {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px oklch(from var(--ring) l c h / 0.5);
+  }
+
+  .phone-prefix {
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .phone-input {
+    flex: 1;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    background: transparent;
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    color: var(--foreground);
+  }
+
+  .phone-input::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  .code-input-wrapper {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .code-input {
+    flex: 1;
+  }
+
+  .send-code-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: 2.25rem !important;
+    min-height: 2.25rem !important;
+    max-height: 2.25rem !important;
+    padding: 0 1rem !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}

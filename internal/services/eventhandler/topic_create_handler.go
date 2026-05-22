@@ -3,9 +3,7 @@ package eventhandler
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
-	"bbs-go/internal/pkg/bbsurls"
 	"bbs-go/internal/pkg/event"
-	"bbs-go/internal/pkg/seo"
 	"bbs-go/internal/services"
 	"log/slog"
 	"reflect"
@@ -30,7 +28,4 @@ func handleTopicCreateEvent(i interface{}) {
 			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	})
-
-	// 百度链接推送
-	seo.Push(bbsurls.TopicUrl(e.TopicId))
 }

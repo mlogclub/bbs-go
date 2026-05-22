@@ -6,6 +6,13 @@ import (
 	"github.com/mlogclub/simple/web"
 )
 
+func JsonError(err *web.CodeError) *web.JsonResult {
+	if err == nil {
+		return web.JsonSuccess()
+	}
+	return web.JsonErrorCode(err.Code, err.Message)
+}
+
 const (
 	CodeNotLogin            = 1
 	CodeNoPermission        = 2

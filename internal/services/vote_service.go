@@ -4,15 +4,17 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/repositories"
 	"errors"
 	"strconv"
 	"strings"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -77,36 +79,36 @@ func (s *voteService) Delete(id int64) {
 	repositories.VoteRepository.Delete(sqls.DB(), id)
 }
 
-func (s *voteService) CheckCreateForm(form *req.CreateVoteForm) error {
+func (s *voteService) CheckCreateForm(form *req.VoteDTO) error {
 	if form == nil {
 		return nil
 	}
 	form.Title = strings.TrimSpace(form.Title)
 	if strs.IsBlank(form.Title) {
-		return errors.New("投票标题不能为空")
+		return errors.New(locales.Get("vote.title_required"))
 	}
 	if strs.RuneLen(form.Title) > 128 {
-		return errors.New("投票标题长度不能超过128")
+		return errors.New(locales.Get("vote.title_too_long"))
 	}
 	if len(form.Options) < 2 {
-		return errors.New("投票选项至少2个")
+		return errors.New(locales.Get("vote.option_min"))
 	}
 	if len(form.Options) > 20 {
-		return errors.New("投票选项最多20个")
+		return errors.New(locales.Get("vote.option_max"))
 	}
 
 	for i := range form.Options {
 		form.Options[i].Content = strings.TrimSpace(form.Options[i].Content)
 		if strs.IsBlank(form.Options[i].Content) {
-			return errors.New("投票选项内容不能为空")
+			return errors.New(locales.Get("vote.option_required"))
 		}
 		if strs.RuneLen(form.Options[i].Content) > 256 {
-			return errors.New("投票选项内容长度不能超过256")
+			return errors.New(locales.Get("vote.option_too_long"))
 		}
 	}
 
 	if form.ExpiredAt <= dates.NowTimestamp() {
-		return errors.New("投票截止时间必须是未来时间")
+		return errors.New(locales.Get("vote.expired_at_future"))
 	}
 
 	switch form.Type {
@@ -114,18 +116,18 @@ func (s *voteService) CheckCreateForm(form *req.CreateVoteForm) error {
 		form.VoteNum = 1
 	case constants.VoteTypeMultiple:
 		if form.VoteNum <= 0 {
-			return errors.New("多选投票可选数量必须大于0")
+			return errors.New(locales.Get("vote.multiple_num_required"))
 		}
 		if form.VoteNum > len(form.Options) {
-			return errors.New("多选投票可选数量不能大于选项总数")
+			return errors.New(locales.Get("vote.multiple_num_too_large"))
 		}
 	default:
-		return errors.New("不支持的投票类型")
+		return errors.New(locales.Get("vote.type_not_supported"))
 	}
 	return nil
 }
 
-func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId int64, form *req.CreateVoteForm, now int64) (*models.Vote, error) {
+func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId int64, form *req.VoteDTO, now int64) (*models.Vote, error) {
 	if form == nil {
 		return nil, nil
 	}
@@ -162,19 +164,19 @@ func (s *voteService) CreateWithOptionsTx(ctx *sqls.TxContext, topicId, userId i
 	return vote, nil
 }
 
-func (s *voteService) Cast(userId int64, form req.VoteCastForm) error {
+func (s *voteService) Cast(userId int64, form req.VoteCastReq) error {
 	if form.VoteId <= 0 {
-		return errors.New("voteId不能为空")
+		return errors.New(locales.Get("vote.vote_id_required"))
 	}
 	if len(form.OptionIds) == 0 {
-		return errors.New("请选择投票选项")
+		return errors.New(locales.Get("vote.select_option_required"))
 	}
 
 	selected := make([]int64, 0, len(form.OptionIds))
 	selectedSet := make(map[int64]bool, len(form.OptionIds))
 	for _, optionId := range form.OptionIds {
 		if optionId <= 0 {
-			return errors.New("投票选项不合法")
+			return errors.New(locales.Get("vote.option_invalid"))
 		}
 		if selectedSet[optionId] {
 			continue
@@ -183,29 +185,29 @@ func (s *voteService) Cast(userId int64, form req.VoteCastForm) error {
 		selected = append(selected, optionId)
 	}
 	if len(selected) == 0 {
-		return errors.New("请选择投票选项")
+		return errors.New(locales.Get("vote.select_option_required"))
 	}
 
 	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		tx := ctx.Tx
 		vote := &models.Vote{}
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(vote, "id = ?", form.VoteId).Error; err != nil {
-			return errors.New("投票不存在")
+			return errors.New(locales.Get("vote.not_found"))
 		}
 		if dates.NowTimestamp() > vote.ExpiredAt {
-			return errors.New("投票已截止")
+			return errors.New(locales.Get("vote.expired"))
 		}
 
 		exists := repositories.VoteRecordRepository.Take(tx, "user_id = ? AND vote_id = ?", userId, vote.Id)
 		if exists != nil {
-			return errors.New("您已投票，不能重复提交")
+			return errors.New(locales.Get("vote.already_voted"))
 		}
 
 		options := repositories.VoteOptionRepository.Find(tx,
 			sqls.NewCnd().Eq("vote_id", vote.Id).Asc("sort_no").Asc("id"),
 		)
 		if len(options) == 0 {
-			return errors.New("投票选项不存在")
+			return errors.New(locales.Get("vote.option_not_found"))
 		}
 
 		optionMap := make(map[int64]bool, len(options))
@@ -214,21 +216,21 @@ func (s *voteService) Cast(userId int64, form req.VoteCastForm) error {
 		}
 		for _, optionId := range selected {
 			if !optionMap[optionId] {
-				return errors.New("投票选项不合法")
+				return errors.New(locales.Get("vote.option_invalid"))
 			}
 		}
 
 		switch vote.Type {
 		case constants.VoteTypeSingle:
 			if len(selected) != 1 {
-				return errors.New("单选投票只能选择1项")
+				return errors.New(locales.Get("vote.single_only_one"))
 			}
 		case constants.VoteTypeMultiple:
 			if len(selected) > vote.VoteNum {
-				return errors.New("多选投票超过可选数量")
+				return errors.New(locales.Get("vote.multiple_over_limit"))
 			}
 		default:
-			return errors.New("不支持的投票类型")
+			return errors.New(locales.Get("vote.type_not_supported"))
 		}
 
 		now := dates.NowTimestamp()

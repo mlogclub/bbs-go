@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/event"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"bbs-go/internal/services"
 	"log/slog"
@@ -219,11 +220,11 @@ func (c *CommentMsg) msgType() msg.Type {
 // msgTitle 消息标题
 func (c *CommentMsg) msgTitle() string {
 	if c.EntityType == constants.EntityTopic {
-		return "回复了你的话题"
+		return locales.Get("message.comment_topic_reply_msg_title")
 	} else if c.EntityType == constants.EntityArticle {
-		return "回复了你的文章"
+		return locales.Get("message.comment_article_reply_msg_title")
 	} else if c.EntityType == constants.EntityComment {
-		return "回复了你的评论"
+		return locales.Get("message.comment_reply_msg_title")
 	}
 	return ""
 }

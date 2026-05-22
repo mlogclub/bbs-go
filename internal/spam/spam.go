@@ -14,7 +14,7 @@ func init() {
 	// strategies = append(strategies, &PostFrequencyStrategy{})
 }
 
-func CheckTopic(user *models.User, form req.CreateTopicForm) error {
+func CheckTopic(user *models.User, form req.CreateTopicReq) error {
 	if len(strategies) == 0 {
 		return nil
 	}
@@ -27,7 +27,7 @@ func CheckTopic(user *models.User, form req.CreateTopicForm) error {
 	return nil
 }
 
-func CheckArticle(user *models.User, form req.CreateArticleForm) error {
+func CheckArticle(user *models.User, form req.CreateArticleReq) error {
 	if len(strategies) == 0 {
 		return nil
 	}
@@ -40,7 +40,7 @@ func CheckArticle(user *models.User, form req.CreateArticleForm) error {
 	return nil
 }
 
-func CheckComment(user *models.User, form req.CreateCommentForm) error {
+func CheckComment(user *models.User, form req.CreateCommentReq) error {
 	if len(strategies) == 0 {
 		return nil
 	}

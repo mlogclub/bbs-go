@@ -1,8 +1,0 @@
-User-agent: *
-Disallow:
-
-User-agent: *
-Disallow: /.nuxt/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /tmp/

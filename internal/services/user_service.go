@@ -7,6 +7,7 @@ import (
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/pkg/search"
 	"bbs-go/internal/pkg/str"
 	"bbs-go/internal/pkg/validate"
 	"errors"
@@ -16,12 +17,13 @@ import (
 	"strings"
 	"time"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/passwd"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/cache"
@@ -73,6 +75,7 @@ func (s *userService) Create(t *models.User) error {
 	err := repositories.UserRepository.Create(sqls.DB(), t)
 	if err == nil {
 		cache.UserCache.Invalidate(t.Id)
+		search.UpdateUserIndex(t)
 	}
 	return nil
 }
@@ -80,24 +83,34 @@ func (s *userService) Create(t *models.User) error {
 func (s *userService) Update(t *models.User) error {
 	err := repositories.UserRepository.Update(sqls.DB(), t)
 	cache.UserCache.Invalidate(t.Id)
+	if err == nil {
+		search.UpdateUserIndex(t)
+	}
 	return err
 }
 
 func (s *userService) Updates(id int64, columns map[string]interface{}) error {
 	err := repositories.UserRepository.Updates(sqls.DB(), id, columns)
 	cache.UserCache.Invalidate(id)
+	if err == nil {
+		search.UpdateUserIndex(s.Get(id))
+	}
 	return err
 }
 
 func (s *userService) UpdateColumn(id int64, name string, value interface{}) error {
 	err := repositories.UserRepository.UpdateColumn(sqls.DB(), id, name, value)
 	cache.UserCache.Invalidate(id)
+	if err == nil {
+		search.UpdateUserIndex(s.Get(id))
+	}
 	return err
 }
 
 func (s *userService) Delete(id int64) {
 	repositories.UserRepository.Delete(sqls.DB(), id)
 	cache.UserCache.Invalidate(id)
+	_ = search.DeleteUserIndex(id)
 }
 
 // Scan 扫描
@@ -121,7 +134,7 @@ func (s *userService) Forbidden(operatorId, userId int64, days int, reason strin
 	} else if days > 0 {
 		forbiddenEndTime = dates.Timestamp(time.Now().Add(time.Hour * 24 * time.Duration(days)))
 	} else {
-		return errors.New("禁言时间错误")
+		return errors.New(locales.Get("user.forbidden_time_invalid"))
 	}
 	if repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "forbidden_end_time", forbiddenEndTime) == nil {
 		cache.UserCache.Invalidate(userId)
@@ -204,7 +217,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 
 	// 验证昵称
 	if len(nickname) == 0 {
-		return nil, errors.New("昵称不能为空")
+		return nil, errors.New(locales.Get("user.nickname_required"))
 	}
 
 	// 验证密码
@@ -219,10 +232,10 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 			return nil, err
 		}
 		if s.GetByEmail(email) != nil {
-			return nil, errors.New("邮箱：" + email + " 已被占用")
+			return nil, errors.New(locales.Getf("user.email_occupied", email))
 		}
 	} else {
-		return nil, errors.New("请输入邮箱")
+		return nil, errors.New(locales.Get("user.email_required"))
 	}
 
 	// 验证用户名
@@ -231,7 +244,7 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 			return nil, err
 		}
 		if s.isUsernameExists(username) {
-			return nil, errors.New("用户名：" + username + " 已被占用")
+			return nil, errors.New(locales.Getf("user.username_occupied", username))
 		}
 	}
 
@@ -249,16 +262,17 @@ func (s *userService) SignUp(username, email, nickname, password, rePassword str
 	if err != nil {
 		return nil, err
 	}
+	search.UpdateUserIndex(user)
 	return user, nil
 }
 
 // SignIn 登录
 func (s *userService) SignIn(username, password string) (*models.User, error) {
 	if strs.IsBlank(username) {
-		return nil, errors.New("用户名/邮箱不能为空")
+		return nil, errors.New(locales.Get("user.username_email_required"))
 	}
 	if strs.IsBlank(password) {
-		return nil, errors.New("密码不能为空")
+		return nil, errors.New(locales.Get("user.password_required"))
 	}
 	if err := validate.IsPassword(password); err != nil {
 		return nil, err
@@ -270,10 +284,10 @@ func (s *userService) SignIn(username, password string) (*models.User, error) {
 		user = s.GetByUsername(username)
 	}
 	if user == nil || user.Status != constants.StatusOk {
-		return nil, errors.New("用户名或密码错误")
+		return nil, errors.New(locales.Get("user.password_login_failed"))
 	}
 	if !passwd.ValidatePassword(user.Password, password) {
-		return nil, errors.New("用户名或密码错误")
+		return nil, errors.New(locales.Get("user.password_login_failed"))
 	}
 	return user, nil
 }
@@ -345,10 +359,10 @@ func (s *userService) SetUsername(userId int64, username string) error {
 
 	user := s.Get(userId)
 	if len(user.Username.String) > 0 {
-		return errors.New("你已设置了用户名，无法重复设置。")
+		return errors.New(locales.Get("user.username_already_set"))
 	}
 	if s.isUsernameExists(username) {
-		return errors.New("用户名：" + username + " 已被占用")
+		return errors.New(locales.Getf("user.username_occupied", username))
 	}
 	return s.UpdateColumn(userId, "username", username)
 }
@@ -361,14 +375,14 @@ func (s *userService) SetEmail(userId int64, email string) error {
 	}
 	user := s.Get(userId)
 	if user == nil {
-		return errors.New("用户不存在")
+		return errors.New(locales.Get("user.not_found"))
 	}
 	if user.Email.String == email {
 		// 用户邮箱没做变更
 		return nil
 	}
 	if s.isEmailExists(email) {
-		return errors.New("邮箱：" + email + " 已被占用")
+		return errors.New(locales.Getf("user.email_occupied", email))
 	}
 	return s.Updates(userId, map[string]interface{}{
 		"email":          email,
@@ -412,7 +426,7 @@ func (s *userService) ResetPassword(userId int64) (string, error) {
 	// 1. Find user
 	user := s.Get(userId)
 	if user == nil {
-		return "", errors.New("用户不存在")
+		return "", errors.New(locales.Get("user.not_found"))
 	}
 
 	// 2. Generate a new random password
@@ -654,7 +668,7 @@ func (s *userService) CheckPostStatus(user *models.User) error {
 // IncrScore 增加分数
 func (s *userService) IncrScore(userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
-		return errors.New("分数必须为正数")
+		return errors.New(locales.Get("points.must_be_positive"))
 	}
 	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		return s.addScore(ctx, userId, score, sourceType, sourceId, description)
@@ -664,7 +678,7 @@ func (s *userService) IncrScore(userId int64, score int, sourceType, sourceId, d
 // DecrScore 减少分数
 func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
-		return errors.New("分数必须为正数")
+		return errors.New(locales.Get("points.must_be_positive"))
 	}
 	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		return s.addScore(ctx, userId, -score, sourceType, sourceId, description)
@@ -674,7 +688,7 @@ func (s *userService) DecrScore(userId int64, score int, sourceType, sourceId, d
 // AddScoreTx 在已有事务内增加分数（供发帖/采纳等场景复用同一事务）
 func (s *userService) AddScoreTx(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
-		return errors.New("分数必须为正数")
+		return errors.New(locales.Get("points.must_be_positive"))
 	}
 	return s.addScore(ctx, userId, score, sourceType, sourceId, description)
 }
@@ -682,7 +696,7 @@ func (s *userService) AddScoreTx(ctx *sqls.TxContext, userId int64, score int, s
 // DecrScoreTx 在已有事务内减少分数（供发帖等场景复用同一事务）
 func (s *userService) DecrScoreTx(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
 	if score <= 0 {
-		return errors.New("分数必须为正数")
+		return errors.New(locales.Get("points.must_be_positive"))
 	}
 	return s.addScore(ctx, userId, -score, sourceType, sourceId, description)
 }
@@ -690,11 +704,11 @@ func (s *userService) DecrScoreTx(ctx *sqls.TxContext, userId int64, score int, 
 // addScore 加分数，也可以加负数
 func (s *userService) addScore(ctx *sqls.TxContext, userId int64, score int, sourceType, sourceId, description string) error {
 	if score == 0 {
-		return errors.New("分数不能为0")
+		return errors.New(locales.Get("points.cannot_be_zero"))
 	}
 	user := repositories.UserRepository.Get(ctx.Tx, userId)
 	if user == nil {
-		return errors.New("用户不存在")
+		return errors.New(locales.Get("user.not_found"))
 	}
 
 	if err := repositories.UserRepository.Updates(ctx.Tx, userId, map[string]interface{}{
@@ -729,11 +743,11 @@ func (s *userService) addScore(ctx *sqls.TxContext, userId int64, score int, sou
 // addExpTx 增加经验，也可以减去经验
 func (s *userService) addExpTx(ctx *sqls.TxContext, userId int64, exp int, sourceType, sourceId, description string) error {
 	if exp == 0 {
-		return errors.New("经验不能为0")
+		return errors.New(locales.Get("xp.cannot_be_zero"))
 	}
 	user := repositories.UserRepository.Get(ctx.Tx, userId)
 	if user == nil {
-		return errors.New("用户不存在")
+		return errors.New(locales.Get("user.not_found"))
 	}
 
 	if repositories.UserExpLogRepository.Take(ctx.Tx, "source_type = ? AND source_id = ?", sourceType, sourceId) != nil {

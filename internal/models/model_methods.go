@@ -2,6 +2,7 @@ package models
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"slices"
 	"strings"
 	"time"
@@ -41,9 +42,9 @@ func (u *User) HasAnyRole(roles ...string) bool {
 	return slices.ContainsFunc(roles, u.HasRole)
 }
 
-// IsOwnerOrAdmin 是否是管理员
-func (u *User) IsOwnerOrAdmin() bool {
-	return u.HasAnyRole(constants.RoleOwner, constants.RoleAdmin)
+// IsOwner 是否是站长
+func (u *User) IsOwner() bool {
+	return u.HasRole(constants.RoleOwner)
 }
 
 // GetRoles 获取角色
@@ -80,7 +81,7 @@ func (t *Topic) GetTitle() string {
 		if strs.IsNotBlank(t.Content) {
 			return t.Content
 		} else {
-			return "分享图片"
+			return locales.Get("topic.shared_image")
 		}
 	} else {
 		return t.Title

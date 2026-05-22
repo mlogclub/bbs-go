@@ -5,8 +5,9 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 )
 
@@ -52,15 +53,27 @@ func (s *roleService) Create(t *models.Role) error {
 }
 
 func (s *roleService) Update(t *models.Role) error {
-	return repositories.RoleRepository.Update(sqls.DB(), t)
+	err := repositories.RoleRepository.Update(sqls.DB(), t)
+	if err == nil {
+		PermissionService.ClearCache()
+	}
+	return err
 }
 
 func (s *roleService) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.RoleRepository.Updates(sqls.DB(), id, columns)
+	err := repositories.RoleRepository.Updates(sqls.DB(), id, columns)
+	if err == nil {
+		PermissionService.ClearCache()
+	}
+	return err
 }
 
 func (s *roleService) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.RoleRepository.UpdateColumn(sqls.DB(), id, name, value)
+	err := repositories.RoleRepository.UpdateColumn(sqls.DB(), id, name, value)
+	if err == nil {
+		PermissionService.ClearCache()
+	}
+	return err
 }
 
 func (s *roleService) Delete(id int64) {

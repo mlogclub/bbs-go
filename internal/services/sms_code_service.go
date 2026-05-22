@@ -2,15 +2,17 @@ package services
 
 import (
 	"bbs-go/internal/models"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/sms"
 	"bbs-go/internal/repositories"
 	"errors"
 	"math/rand"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/spf13/cast"
 )
 
@@ -101,10 +103,10 @@ func (s *smsCodeService) SendSms(phone string) (string, error) {
 func (s *smsCodeService) Verify(smsId, code string) (string, error) {
 	smsCode := s.FindOne(sqls.NewCnd().Where("sms_id = ? and status = 0", smsId))
 	if smsCode == nil {
-		return "", errors.New("验证码错误")
+		return "", errors.New(locales.Get("sms.code_invalid"))
 	}
 	if smsCode.Code != code {
-		return "", errors.New("验证码错误")
+		return "", errors.New(locales.Get("sms.code_invalid"))
 	}
 
 	s.UpdateColumn(smsCode.Id, "status", 1)

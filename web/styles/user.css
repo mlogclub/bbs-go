@@ -1,0 +1,334 @@
+@layer components {
+  .profile {
+    display: flex;
+    position: relative;
+    height: 220px;
+    margin-bottom: 10px;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    background-color: var(--muted);
+    background-position: 50%;
+    background-size: cover;
+  }
+
+  .profile .profile-avatar {
+    position: absolute;
+    top: 100px;
+    left: 10px;
+  }
+
+  .profile .change-bg {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.5;
+  }
+
+  .profile .change-bg:hover {
+    opacity: 1;
+  }
+
+  .profile .profile-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 150px;
+    padding: 10px 10px 10px 120px;
+    background-image: linear-gradient(
+      90deg,
+      #ffffffff,
+      rgba(255, 255, 255, 0.5),
+      #dce9f200
+    );
+  }
+
+  .profile .metas {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .profile .nickname-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .profile .nickname {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .profile .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 1px 8px;
+    border-radius: var(--radius);
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .profile .level-label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .profile .description {
+    max-width: 100%;
+    overflow: hidden;
+    color: color-mix(in oklch, var(--foreground) 30%, var(--muted-foreground));
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ul.extra-info {
+    display: flex;
+  }
+
+  ul.extra-info li {
+    width: 100%;
+    text-align: center;
+  }
+
+  ul.extra-info li span {
+    color: var(--muted-foreground);
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  ul.extra-info li a,
+  ul.extra-info li b {
+    color: var(--foreground);
+  }
+
+  .stable .str {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+
+  .stable .slabel {
+    width: 72px;
+    shrink: 0;
+    color: var(--muted-foreground);
+  }
+
+  .stable .svalue {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .user-follow-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-follow-item:not(:last-child) {
+    margin: 10px 0;
+  }
+
+  .user-follow-item-info {
+    width: 100%;
+    margin: auto 10px;
+    min-width: 0;
+  }
+
+  .user-follow-item-info .nickname {
+    font-size: 14px;
+  }
+
+  .user-follow-item-info .nickname a {
+    color: var(--foreground);
+  }
+
+  .user-follow-item-info .description {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--muted-foreground);
+    text-align: justify;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    font-size: 12px;
+  }
+
+  .favorite-list {
+    margin: 0 !important;
+  }
+
+  .favorite-item {
+    position: relative;
+    overflow: hidden;
+    padding: 8px 0;
+    line-height: 24px;
+  }
+
+  .favorite-item:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .favorite-title a {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    text-overflow: ellipsis;
+    font-size: 18px;
+    line-height: 30px;
+  }
+
+  .favorite-summary {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    padding-top: 6px;
+    color: var(--foreground);
+    text-align: justify;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    font-size: 14px;
+  }
+
+  .favorite-meta {
+    display: inline-block;
+    padding-top: 6px;
+    font-size: 13px;
+  }
+
+  .favorite-meta-item {
+    padding: 0 6px 0 0;
+    color: var(--muted-foreground);
+  }
+
+  .favorite-meta a {
+    color: var(--primary);
+  }
+
+  .settings .settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+
+  .settings .settings-item:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings .settings-item-title {
+    width: 100px;
+    color: var(--foreground);
+    font-size: 15px;
+  }
+
+  .settings .settings-item-input {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .settings .input-value {
+    flex: 1;
+    color: var(--muted-foreground);
+  }
+
+  .settings .action-box {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+  }
+
+  .settings .action-box button {
+    color: var(--primary);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .avatar-edit .avatar-view {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--muted);
+    background-position: center;
+    background-size: cover;
+  }
+
+  .avatar-edit .upload-view {
+    visibility: hidden;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .avatar-edit .avatar-view:hover .upload-view {
+    visibility: visible;
+  }
+
+  .avatar-edit .upload-view span {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .avatar-edit input[type="file"] {
+    display: none;
+  }
+
+  .wx_bind_container {
+    height: 206px;
+    text-align: center;
+  }
+
+  .wx_bind_container iframe {
+    height: 200px;
+  }
+
+  .animate-swing {
+    animation: swing 1s ease-in-out infinite;
+  }
+
+  @keyframes swing {
+    0% {
+      transform: rotate(0deg);
+      color: inherit;
+    }
+    20% {
+      transform: rotate(20deg);
+    }
+    40% {
+      transform: rotate(-15deg);
+    }
+    50% {
+      color: #ef4444;
+    }
+    60% {
+      transform: rotate(10deg);
+    }
+    80% {
+      transform: rotate(-5deg);
+    }
+    100% {
+      transform: rotate(0deg);
+      color: inherit;
+    }
+  }
+}

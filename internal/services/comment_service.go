@@ -3,17 +3,21 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/permissions"
+	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/iplocator"
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"log/slog"
 	"strings"
+
+	"bbs-go/internal/pkg/params"
 
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
@@ -79,23 +83,38 @@ func (s *commentService) Delete(id int64) error {
 	return repositories.CommentRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
 }
 
-// Publish 发表评论
-func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*models.Comment, error) {
-	form.Content = strings.TrimSpace(form.Content)
-	if strs.IsBlank(form.EntityType) {
-		return nil, errors.New("参数非法")
+func (s *commentService) DeleteByUser(user *models.User, id int64) error {
+	if user == nil {
+		return errs.NotLogin()
 	}
-	if form.EntityId <= 0 {
-		return nil, errors.New("参数非法")
+	comment := s.Get(id)
+	if comment == nil || comment.Status == constants.StatusDeleted {
+		return errors.New("comment not found")
+	}
+	if !PermissionService.CanManageOwnedResource(user, comment.UserId, permissions.PermissionCommentDelete.Code) {
+		return errs.NoPermission()
+	}
+	return s.Delete(id)
+}
+
+// Publish 发表评论
+func (s *commentService) Publish(userId int64, form req.CreateCommentReq) (*models.Comment, error) {
+	form.Content = strings.TrimSpace(form.Content)
+	entityId := form.DecodedEntityId()
+	if strs.IsBlank(form.EntityType) {
+		return nil, errors.New(locales.Get("comment.invalid_params"))
+	}
+	if entityId <= 0 {
+		return nil, errors.New(locales.Get("comment.invalid_params"))
 	}
 	if strs.IsBlank(form.Content) {
-		return nil, errors.New("请输入评论内容")
+		return nil, errors.New(locales.Get("comment.content_required"))
 	}
 
 	comment := &models.Comment{
 		UserId:      userId,
 		EntityType:  form.EntityType,
-		EntityId:    form.EntityId,
+		EntityId:    entityId,
 		Content:     form.Content,
 		ContentType: constants.ContentTypeText,
 		QuoteId:     form.QuoteId,
@@ -106,8 +125,9 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*mod
 		CreateTime:  dates.NowTimestamp(),
 	}
 
-	if len(form.ImageList) > 0 {
-		imageListStr, err := jsons.ToStr(form.ImageList)
+	imageList := form.ParsedImageList()
+	if len(imageList) > 0 {
+		imageListStr, err := jsons.ToStr(imageList)
 		if err == nil {
 			comment.ImageList = imageListStr
 		} else {
@@ -122,7 +142,7 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentForm) (*mod
 
 		switch form.EntityType {
 		case constants.EntityTopic:
-			if err := TopicService.onComment(tx, form.EntityId, comment); err != nil {
+			if err := TopicService.onComment(tx, entityId, comment); err != nil {
 				return err
 			}
 		case constants.EntityComment: // 二级评论

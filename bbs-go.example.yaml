@@ -24,21 +24,8 @@ DB:
   Url: username:password@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local
   MaxIdleConns: 50
   MaxOpenConns: 200
+  LogLevel: warn # SQL日志级别：silent、error、warn、info
 
 # search
 Search:
   IndexPath: # 索引路径
-
-# 百度SEO相关配置
-# 文档：https://ziyuan.baidu.com/college/courseinfo?id=267&page=2#h2_article_title14
-BaiduSEO:
-  Site:
-  Token:
-
-# 神马搜索SEO相关
-# 文档：https://zhanzhang.sm.cn/open/mip
-SmSEO:
-  Site:
-  UserName:
-  Token:
-

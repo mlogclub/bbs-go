@@ -10,6 +10,8 @@ import (
 	"github.com/mlogclub/simple/common/urls"
 
 	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/respath"
 	"bbs-go/internal/pkg/uploader"
 )
 
@@ -38,6 +40,24 @@ func (s *uploadService) putObject(key string, body io.Reader, opts *uploader.Put
 // PutObject 按 key 流式上传；opts 可设置 ContentType、ContentDisposition、ContentLength。
 func (s *uploadService) PutObject(key string, body io.Reader, opts *uploader.PutOptions) (string, error) {
 	return s.putObject(key, body, opts)
+}
+
+func (s *uploadService) ObjectURL(key string) string {
+	cfg := SysConfigService.GetUploadConfig()
+	if strs.IsBlank(string(cfg.EnableUploadMethod)) {
+		cfg.EnableUploadMethod = dto.Local
+	}
+
+	switch cfg.EnableUploadMethod {
+	case dto.AliyunOss:
+		return bbsurls.UrlJoin(cfg.AliyunOss.Host, key)
+	case dto.TencentCos:
+		return fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", cfg.TencentCos.Bucket, cfg.TencentCos.Region, key)
+	case dto.AwsS3:
+		return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", cfg.AwsS3.Bucket, cfg.AwsS3.Region, key)
+	default:
+		return respath.UploadsURLPrefix + key
+	}
 }
 
 // PutImage 上传图片（已有完整字节）；key 使用内容 MD5，供 CopyImage 等场景。

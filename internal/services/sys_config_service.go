@@ -3,17 +3,19 @@ package services
 import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/dto"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
 	"errors"
 	"fmt"
 	"log/slog"
 	"strings"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"github.com/tidwall/gjson"
 
 	"gorm.io/gorm"
@@ -70,7 +72,7 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	json := gjson.Parse(configStr)
 	configs, ok := json.Value().(map[string]interface{})
 	if !ok {
-		return errors.New("配置数据格式错误")
+		return errors.New(locales.Get("settings.invalid_format"))
 	}
 
 	if siteNavs := json.Get(constants.SysConfigSiteNavs); siteNavs.Exists() {
@@ -213,23 +215,33 @@ func (s *sysConfigService) GetSiteNavs() []dto.ActionLink {
 }
 
 func (s *sysConfigService) GetModules() dto.ModulesConfig {
-	str := cache.SysConfigCache.GetStr(constants.SysConfigModules)
+	return parseModulesConfig(cache.SysConfigCache.GetStr(constants.SysConfigModules))
+}
 
-	useDefault := true
-	var modulesConfig dto.ModulesConfig
-	if strs.IsNotBlank(str) {
-		if err := jsons.Parse(str, &modulesConfig); err != nil {
-			slog.Warn("启用模块配置错误", slog.Any("err", err))
-		} else {
-			useDefault = false
-		}
+func defaultModulesConfig() dto.ModulesConfig {
+	return dto.ModulesConfig{
+		Tweet:   true,
+		Topic:   true,
+		QA:      true,
+		Article: true,
 	}
-	if useDefault {
-		modulesConfig = dto.ModulesConfig{
-			Tweet:   true,
-			Topic:   true,
-			Article: true,
-		}
+}
+
+func parseModulesConfig(str string) dto.ModulesConfig {
+	modulesConfig := defaultModulesConfig()
+	if strs.IsBlank(str) {
+		return modulesConfig
+	}
+
+	if err := jsons.Parse(str, &modulesConfig); err != nil {
+		slog.Warn("启用模块配置错误", slog.Any("err", err))
+		return defaultModulesConfig()
+	}
+
+	// 兼容历史配置：以前只有 topic 开关，提问跟随帖子。
+	// 新配置存在 qa 字段时，提问可以独立于帖子开关控制。
+	if !gjson.Get(str, "qa").Exists() {
+		modulesConfig.QA = modulesConfig.Topic
 	}
 	return modulesConfig
 }

@@ -1,0 +1,52 @@
+package api
+
+import (
+	"bbs-go/internal/cache"
+	"bbs-go/internal/models"
+	"bbs-go/internal/models/resp"
+	"bbs-go/internal/pkg/common"
+
+	"github.com/gin-gonic/gin"
+
+	"bbs-go/internal/pkg/ginx"
+)
+
+// GetBadges 获取全部勋章列表
+func BadgeBadges(ctx *gin.Context) {
+	userId := common.GetID(ctx, "userId")
+
+	// 用户已获得的勋章（走缓存）
+	userBadges := map[int64]*models.UserBadge{}
+	if userId > 0 {
+		list := cache.UserBadgeCache.GetByUser(userId)
+		for i := range list {
+			ub := list[i]
+			userBadges[ub.BadgeId] = &ub
+		}
+	}
+
+	// 全部勋章
+	badges := cache.BadgeCache.GetAll()
+
+	var ret []resp.BadgeResponse
+	for i := range badges {
+		b := badges[i]
+		item := resp.BadgeResponse{
+			Id:          b.Id,
+			Name:        b.Name,
+			Title:       b.Title,
+			Description: b.Description,
+			Icon:        b.Icon,
+			SortNo:      b.SortNo,
+			Status:      b.Status,
+		}
+		if ub, ok := userBadges[b.Id]; ok {
+			item.Owned = true
+			item.Worn = ub.IsWorn
+			item.ObtainTime = ub.CreateTime
+		}
+		ret = append(ret, item)
+	}
+	ginx.WriteJSON(ctx, ret)
+
+}

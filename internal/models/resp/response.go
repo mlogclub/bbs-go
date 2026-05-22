@@ -10,7 +10,6 @@ import (
 // UserInfo 用户简单信息
 type UserInfo struct {
 	Id           string           `json:"id"`
-	Type         int              `json:"type"`
 	Nickname     string           `json:"nickname"`
 	Avatar       string           `json:"avatar"`
 	SmallAvatar  string           `json:"smallAvatar"`
@@ -85,14 +84,16 @@ type UserDetail struct {
 type UserProfile struct {
 	UserDetail
 	Roles         []string `json:"roles"`
+	Permissions   []string `json:"permissions"`
 	PasswordSet   bool     `json:"passwordSet"` // 密码已设置
 	Email         string   `json:"email"`
 	EmailVerified bool     `json:"emailVerified"`
 }
 
 type TagResponse struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type ArticleSimpleResponse struct {
@@ -113,7 +114,8 @@ type ArticleSimpleResponse struct {
 
 type ArticleResponse struct {
 	ArticleSimpleResponse
-	Content string `json:"content"`
+	Content string         `json:"content"`
+	Toc     []TopicTocItem `json:"toc,omitempty"`
 }
 
 type NodeResponse struct {
@@ -150,6 +152,29 @@ type SearchTopicResponse struct {
 	CreateTime int64          `json:"createTime"`
 }
 
+type SearchArticleResponse struct {
+	Id         int64          `json:"id"`
+	User       *UserInfo      `json:"user"`
+	Tags       *[]TagResponse `json:"tags"`
+	Title      string         `json:"title"`
+	Summary    string         `json:"summary"`
+	CreateTime int64          `json:"createTime"`
+}
+
+type SearchUserResponse struct {
+	User        *UserInfo `json:"user"`
+	Nickname    string    `json:"nickname"`
+	Username    string    `json:"username"`
+	Description string    `json:"description"`
+	CreateTime  int64     `json:"createTime"`
+}
+
+type TopicTocItem struct {
+	Id    string `json:"id"`
+	Title string `json:"title"`
+	Level int    `json:"level"`
+}
+
 // 帖子列表返回实体
 type TopicResponse struct {
 	Id                string               `json:"id"`
@@ -164,6 +189,7 @@ type TopicResponse struct {
 	Title             string               `json:"title"`
 	Summary           string               `json:"summary"`
 	Content           string               `json:"content"`
+	Toc               []TopicTocItem       `json:"toc,omitempty"`
 	ImageList         []ImageInfo          `json:"imageList"`
 	LastCommentTime   int64                `json:"lastCommentTime"`
 	ViewCount         int64                `json:"viewCount"`

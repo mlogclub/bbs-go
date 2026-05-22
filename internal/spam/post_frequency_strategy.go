@@ -3,6 +3,7 @@ package spam
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/repositories"
 	"errors"
 	"time"
@@ -18,7 +19,7 @@ func (PostFrequencyStrategy) Name() string {
 	return "PostFrequencyStrategy"
 }
 
-func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopicForm) error {
+func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopicReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil
@@ -31,23 +32,23 @@ func (PostFrequencyStrategy) CheckTopic(user *models.User, topic req.CreateTopic
 
 	if repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour*24)))) >= maxCountInOneDay {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour)))) >= maxCountInOneHour {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.TopicRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Minute*10)))) >= maxCountInTenMinutes {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	return nil
 }
 
-func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateArticleForm) error {
+func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateArticleReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil
@@ -60,23 +61,23 @@ func (s PostFrequencyStrategy) CheckArticle(user *models.User, form req.CreateAr
 
 	if repositories.ArticleRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour*24)))) >= maxCountInOneDay {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.ArticleRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour)))) >= maxCountInOneHour {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.ArticleRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Minute*10)))) >= maxCountInTenMinutes {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	return nil
 }
 
-func (s PostFrequencyStrategy) CheckComment(user *models.User, form req.CreateCommentForm) error {
+func (s PostFrequencyStrategy) CheckComment(user *models.User, form req.CreateCommentReq) error {
 	// 注册时间超过24小时
 	if user.CreateTime < dates.Timestamp(time.Now().Add(-time.Hour*24)) {
 		return nil
@@ -90,17 +91,17 @@ func (s PostFrequencyStrategy) CheckComment(user *models.User, form req.CreateCo
 
 	if repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour*24)))) >= maxCountInOneDay {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Hour)))) >= maxCountInOneHour {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 
 	if repositories.CommentRepository.Count(sqls.DB(), sqls.NewCnd().Eq("user_id", user.Id).
 		Gt("create_time", dates.Timestamp(time.Now().Add(-time.Minute*10)))) >= maxCountInTenMinutes {
-		return errors.New("发表太快了，请休息一会儿")
+		return errors.New(locales.Get("errors.too_fast"))
 	}
 	return nil
 }

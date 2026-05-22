@@ -4,9 +4,10 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 )
 

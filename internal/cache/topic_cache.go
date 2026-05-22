@@ -2,6 +2,7 @@ package cache
 
 import (
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"time"
 
@@ -29,7 +30,7 @@ func newTopicCache() *topicCache {
 				value = repositories.TopicRepository.Find(sqls.DB(),
 					sqls.NewCnd().Eq("status", constants.StatusOk).Desc("id").Limit(50))
 				if value == nil {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},

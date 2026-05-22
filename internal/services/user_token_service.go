@@ -11,11 +11,13 @@ import (
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/repositories"
 
-	"github.com/kataras/iris/v12"
+	"bbs-go/internal/pkg/ginx"
+	"bbs-go/internal/pkg/params"
+
+	"github.com/gin-gonic/gin"
 	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 )
 
 var UserTokenService = newUserTokenService()
@@ -27,7 +29,7 @@ func newUserTokenService() *userTokenService {
 type userTokenService struct {
 }
 
-func (s *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
+func (s *userTokenService) GetCurrentUserId(ctx *gin.Context) int64 {
 	user := s.GetCurrent(ctx)
 	if user != nil {
 		return user.Id
@@ -35,7 +37,7 @@ func (s *userTokenService) GetCurrentUserId(ctx iris.Context) int64 {
 	return 0
 }
 
-func (s *userTokenService) GetCurrent(ctx iris.Context) *models.User {
+func (s *userTokenService) GetCurrent(ctx *gin.Context) *models.User {
 	token := s.GetUserToken(ctx)
 	userToken := cache.UserTokenCache.Get(token)
 	// 没找到授权
@@ -58,16 +60,16 @@ func (s *userTokenService) GetCurrent(ctx iris.Context) *models.User {
 }
 
 // trySendUserLoginEvent 在登录态访问时发送 user.login 事件，供每日登录任务使用。每用户每天仅发一次（由布隆过滤器 TryMarkAndReturnIfNew 原子保证）。
-func trySendUserLoginEvent(ctx iris.Context, userId int64) {
+func trySendUserLoginEvent(ctx *gin.Context, userId int64) {
 	if ctx == nil || userId <= 0 {
 		return
 	}
 	// 确保本次请求只调用一次
 	ctxKeyDailyVisitSent := "daily_visit_sent"
-	if ctx.Values().Get(ctxKeyDailyVisitSent) != nil {
+	if _, exists := ctx.Get(ctxKeyDailyVisitSent); exists {
 		return
 	}
-	ctx.Values().Set(ctxKeyDailyVisitSent, true)
+	ctx.Set(ctxKeyDailyVisitSent, true)
 
 	// 如果今日已发送过，则不发送
 	if !cache.DailyVisitCache.TryMarkAndReturnIfNew(userId) {
@@ -80,7 +82,7 @@ func trySendUserLoginEvent(ctx iris.Context, userId int64) {
 	})
 }
 
-func (s *userTokenService) CheckLogin(ctx iris.Context) (*models.User, error) {
+func (s *userTokenService) CheckLogin(ctx *gin.Context) (*models.User, error) {
 	user := s.GetCurrent(ctx)
 	if user == nil {
 		return nil, errs.NotLogin()
@@ -88,7 +90,7 @@ func (s *userTokenService) CheckLogin(ctx iris.Context) (*models.User, error) {
 	return user, nil
 }
 
-func (s *userTokenService) Signout(ctx iris.Context) error {
+func (s *userTokenService) Signout(ctx *gin.Context) error {
 	token := s.GetUserToken(ctx)
 	userToken := repositories.UserTokenRepository.GetByToken(sqls.DB(), token)
 	if userToken == nil {
@@ -98,21 +100,21 @@ func (s *userTokenService) Signout(ctx iris.Context) error {
 	if err != nil {
 		return err
 	}
-	ctx.RemoveCookie(constants.CookieTokenKey)
+	ginx.RemoveCookie(ctx, constants.CookieTokenKey)
 	return nil
 }
 
-func (s *userTokenService) GetUserToken(ctx iris.Context) string {
+func (s *userTokenService) GetUserToken(ctx *gin.Context) string {
 	if userToken, _ := params.Get(ctx, "userToken"); strs.IsNotBlank(userToken) {
 		return userToken
 	}
-	if userToken := ctx.GetCookie(constants.CookieTokenKey); strs.IsNotBlank(userToken) {
+	if userToken := ginx.GetCookie(ctx, constants.CookieTokenKey); strs.IsNotBlank(userToken) {
 		return userToken
 	}
 	return s.getUserTokenFromHeader(ctx)
 }
 
-func (s *userTokenService) getUserTokenFromHeader(ctx iris.Context) string {
+func (s *userTokenService) getUserTokenFromHeader(ctx *gin.Context) string {
 	if authorization := ctx.GetHeader("Authorization"); strs.IsNotBlank(authorization) {
 		userToken, _ := strings.CutPrefix(authorization, "Bearer ")
 		return userToken

@@ -124,8 +124,6 @@ const (
 // 用户角色
 const (
 	RoleOwner = "owner" // 站长
-	RoleAdmin = "admin" // 管理员
-	RoleUser  = "user"  // 用户
 )
 
 // 操作类型
@@ -142,12 +140,6 @@ const (
 	StatusOk      = 0 // 正常
 	StatusDeleted = 1 // 删除
 	StatusReview  = 2 // 待审核
-)
-
-// 用户类型
-const (
-	UserTypeNormal   = 0 // 普通用户
-	UserTypeEmployee = 1 // 员工用户
 )
 
 // 角色类型
@@ -246,13 +238,6 @@ type Gender string
 const (
 	GenderMale   Gender = "Male"
 	GenderFemale Gender = "Female"
-)
-
-type MenuType string
-
-const (
-	MenuTypeMenu = "menu" // 菜单
-	MenuTypeFunc = "func" // 功能
 )
 
 // 模块

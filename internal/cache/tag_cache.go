@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"log/slog"
 	"time"
@@ -24,7 +25,7 @@ func newTagCache() *tagCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.TagRepository.Get(sqls.DB(), key2Int64(key))
 				if value == nil {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},

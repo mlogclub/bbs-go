@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"time"
 
@@ -26,7 +27,7 @@ func newUserCache() *userCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.UserRepository.Get(sqls.DB(), key2Int64(key))
 				if value == nil {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},
@@ -37,7 +38,7 @@ func newUserCache() *userCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.UserRepository.Find(sqls.DB(), sqls.NewCnd().Desc("score").Limit(10))
 				if value == nil {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},

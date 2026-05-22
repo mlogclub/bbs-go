@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bbs-go/internal/pkg/locales"
 	"errors"
 	"time"
 
@@ -23,7 +24,7 @@ func newUserTokenCache() *userTokenCache {
 			func(key cache.Key) (value cache.Value, e error) {
 				value = repositories.UserTokenRepository.GetByToken(sqls.DB(), key.(string))
 				if value == nil {
-					e = errors.New("数据不存在")
+					e = errors.New(locales.Get("common.not_found"))
 				}
 				return
 			},

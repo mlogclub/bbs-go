@@ -1,8 +1,9 @@
 package repositories
 
 import (
+	"bbs-go/internal/pkg/params"
+
 	"github.com/mlogclub/simple/sqls"
-	"github.com/mlogclub/simple/web/params"
 	"gorm.io/gorm"
 
 	"bbs-go/internal/models"
@@ -60,6 +61,10 @@ func (r *userRepository) FindPageByCnd(db *gorm.DB, cnd *sqls.Cnd) (list []model
 		Total: count,
 	}
 	return
+}
+
+func (r *userRepository) Count(db *gorm.DB, cnd *sqls.Cnd) int64 {
+	return cnd.Count(db, &models.User{})
 }
 
 func (r *userRepository) Create(db *gorm.DB, t *models.User) (err error) {
