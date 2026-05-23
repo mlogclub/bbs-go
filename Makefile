@@ -62,7 +62,7 @@ run-go: ensure-spa
 	@$(GO) run $(MAIN)
 
 .PHONY: dev
-dev: clean clean-web
+dev:
 	@$(GO) run -tags dev $(MAIN) & \
 	GO_PID=$$!; \
 	trap 'kill $$GO_PID 2>/dev/null || true' EXIT INT TERM; \
