@@ -3,11 +3,13 @@ package services
 import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
 	"bbs-go/internal/pkg/params"
 
 	"github.com/mlogclub/simple/sqls"
+	"gorm.io/gorm"
 )
 
 var BadgeService = newBadgeService()
@@ -65,6 +67,28 @@ func (s *badgeService) Update(t *models.Badge) error {
 
 func (s *badgeService) Updates(id int64, columns map[string]interface{}) error {
 	if err := repositories.BadgeRepository.Updates(sqls.DB(), id, columns); err != nil {
+		return err
+	}
+	cache.BadgeCache.Reload()
+	return nil
+}
+
+func (s *badgeService) GetNextSortNo() int {
+	if max := s.FindOne(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("sort_no")); max != nil {
+		return max.SortNo + 1
+	}
+	return 0
+}
+
+func (s *badgeService) UpdateSort(ids []int64) error {
+	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		for i, id := range ids {
+			if err := repositories.BadgeRepository.UpdateColumn(tx, id, "sort_no", i); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
 		return err
 	}
 	cache.BadgeCache.Reload()

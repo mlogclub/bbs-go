@@ -111,6 +111,9 @@ export function DashboardDataPage({
           }))
         }
         onMove={(index, direction) => void state.moveRecord(index, direction)}
+        onReorder={(fromIndex, toIndex) =>
+          void state.reorderRecord(fromIndex, toIndex)
+        }
         canMove={state.canMoveRecord}
         canSort={canUse(visibleConfig.sortPermission)}
         canUpdate={canUse(visibleConfig.updatePermission)}

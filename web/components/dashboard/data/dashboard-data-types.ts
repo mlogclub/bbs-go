@@ -84,6 +84,7 @@ export type DashboardDataPageConfig = {
   deleteMode?: "formId" | "formIds" | "jsonIds"
   sortEndpoint?: string
   sortPermission?: PermissionCode
+  dragSort?: boolean
   tree?: boolean
   treeIndentKey?: string
   canEdit?: (record: AdminRecord) => boolean

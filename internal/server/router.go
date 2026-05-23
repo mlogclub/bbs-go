@@ -377,6 +377,7 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	badgeGroup.POST("/create", adminHandlers.BadgeCreate)
 	badgeGroup.POST("/update", adminHandlers.BadgeUpdate)
 	badgeGroup.POST("/delete", adminHandlers.BadgeRemove)
+	badgeGroup.POST("/update_sort", adminHandlers.BadgeUpdateSort)
 	badgeGroup.GET("/:id", adminHandlers.BadgeDetail)
 
 	levelConfigGroup := group.Group("/level-config")

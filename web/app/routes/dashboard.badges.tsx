@@ -24,6 +24,9 @@ export default function DashboardBadgesRoute() {
     deleteEndpoint: "/api/admin/badge/delete",
     deletePermission: PERMISSIONS.DASHBOARD_BADGE_DELETE,
     deleteMode: "formIds",
+    sortEndpoint: "/api/admin/badge/update_sort",
+    sortPermission: PERMISSIONS.DASHBOARD_BADGE_UPDATE,
+    dragSort: true,
     filters: [
       { name: "name", label: dashboardData.label(t, "name") },
       { name: "title", label: dashboardData.label(t, "title") },
@@ -80,13 +83,6 @@ export default function DashboardBadgesRoute() {
         type: "textarea",
       },
       { name: "icon", label: dashboardData.label(t, "icon"), type: "image" },
-      {
-        name: "sortNo",
-        label: dashboardData.label(t, "sortNo"),
-        type: "number",
-        min: 0,
-        step: 1,
-      },
     ],
   }
 

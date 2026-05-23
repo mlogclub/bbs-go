@@ -61,6 +61,7 @@ func BadgeCreate(ctx *gin.Context) {
 	}
 
 	now := dates.NowTimestamp()
+	t.SortNo = services.BadgeService.GetNextSortNo()
 	t.CreateTime = now
 	t.UpdateTime = now
 	t.Status = constants.StatusOk
@@ -91,6 +92,20 @@ func BadgeUpdate(ctx *gin.Context) {
 		return
 	}
 	ginx.WriteJSON(ctx, t)
+
+}
+
+func BadgeUpdateSort(ctx *gin.Context) {
+	var ids []int64
+	if err := ginx.BindJSON(ctx, &ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	if err := services.BadgeService.UpdateSort(ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	ginx.WriteJSON(ctx, nil)
 
 }
 

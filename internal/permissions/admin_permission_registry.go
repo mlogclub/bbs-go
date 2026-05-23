@@ -85,6 +85,7 @@ var (
 		{Method: "POST", Pattern: "/api/admin/badge/create", Permissions: []PermissionDefinition{PermissionBadgeCreate}},
 		{Method: "POST", Pattern: "/api/admin/badge/update", Permissions: []PermissionDefinition{PermissionBadgeUpdate}},
 		{Method: "POST", Pattern: "/api/admin/badge/delete", Permissions: []PermissionDefinition{PermissionBadgeDelete}},
+		{Method: "POST", Pattern: "/api/admin/badge/update_sort", Permissions: []PermissionDefinition{PermissionBadgeUpdate}},
 
 		{Method: "GET", Pattern: "/api/admin/level-config/*", Permissions: []PermissionDefinition{PermissionLevelView}},
 		{Method: "POST", Pattern: "/api/admin/level-config/list", Permissions: []PermissionDefinition{PermissionLevelView}},

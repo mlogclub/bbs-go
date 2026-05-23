@@ -1,10 +1,13 @@
 "use client"
 
+import * as React from "react"
+
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   EditIcon,
   EyeIcon,
+  GripVerticalIcon,
   Trash2Icon,
 } from "lucide-react"
 
@@ -32,6 +35,7 @@ export function DashboardDataTable({
   onPageChange,
   onLimitChange,
   onMove,
+  onReorder,
   canMove,
   canSort,
   canUpdate,
@@ -61,6 +65,7 @@ export function DashboardDataTable({
   onPageChange: (page: number) => void
   onLimitChange: (limit: number) => void
   onMove: (index: number, direction: -1 | 1) => void
+  onReorder: (fromIndex: number, toIndex: number) => void
   canMove: (index: number, direction: -1 | 1) => boolean
   canSort: boolean
   canUpdate: boolean
@@ -73,6 +78,11 @@ export function DashboardDataTable({
   onEdit: (record: AdminRecord) => void
   onDelete: (record: AdminRecord) => void
 }) {
+  const [draggingIndex, setDraggingIndex] = React.useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null)
+  const canDragSort = Boolean(
+    config.dragSort && config.sortEndpoint && canSort && !config.tree
+  )
   const hasActions =
     Boolean(config.formFields?.length && config.updateEndpoint && canUpdate) ||
     Boolean(config.detailFields?.length) ||
@@ -120,7 +130,28 @@ export function DashboardDataTable({
               records.map((record, index) => (
                 <tr
                   key={String(record.id ?? index)}
-                  className="border-t transition-colors hover:bg-[var(--dashboard-accent-soft)]/45"
+                  onDragOver={(event) => {
+                    if (!canDragSort || draggingIndex === null) return
+                    event.preventDefault()
+                    event.dataTransfer.dropEffect = "move"
+                    if (dragOverIndex !== index) {
+                      setDragOverIndex(index)
+                    }
+                  }}
+                  onDrop={(event) => {
+                    if (!canDragSort || draggingIndex === null) return
+                    event.preventDefault()
+                    onReorder(draggingIndex, index)
+                    setDraggingIndex(null)
+                    setDragOverIndex(null)
+                  }}
+                  className={cn(
+                    "border-t transition-colors hover:bg-[var(--dashboard-accent-soft)]/45",
+                    draggingIndex === index && "opacity-50",
+                    dragOverIndex === index &&
+                      draggingIndex !== index &&
+                      "bg-[var(--dashboard-accent-soft)]/70 outline-2 -outline-offset-2 outline-primary/45"
+                  )}
                 >
                   {config.columns.map((column) => (
                     <td
@@ -146,7 +177,32 @@ export function DashboardDataTable({
                   {hasActions ? (
                     <td className="px-3 py-2">
                       <div className="flex justify-end gap-1.5">
-                        {config.sortEndpoint && canSort ? (
+                        {canDragSort ? (
+                          <Button
+                            type="button"
+                            size="icon-sm"
+                            variant="outline"
+                            draggable
+                            className="cursor-grab active:cursor-grabbing"
+                            onDragStart={(event) => {
+                              setDraggingIndex(index)
+                              setDragOverIndex(index)
+                              event.dataTransfer.effectAllowed = "move"
+                              event.dataTransfer.setData(
+                                "text/plain",
+                                String(index)
+                              )
+                            }}
+                            onDragEnd={() => {
+                              setDraggingIndex(null)
+                              setDragOverIndex(null)
+                            }}
+                          >
+                            <GripVerticalIcon />
+                            <span className="sr-only">{labels.moveUp}</span>
+                          </Button>
+                        ) : null}
+                        {config.sortEndpoint && canSort && !canDragSort ? (
                           <>
                             <Button
                               size="icon-sm"

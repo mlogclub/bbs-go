@@ -54,6 +54,16 @@ func TestAdminPermissionRegistryProtectsForbiddenWordDelete(t *testing.T) {
 	}
 }
 
+func TestAdminPermissionRegistryProtectsBadgeUpdateSort(t *testing.T) {
+	code, ok := GetAdminPermissionCode("POST", "/api/admin/badge/update_sort")
+	if !ok {
+		t.Fatalf("expected badge sort permission to be registered")
+	}
+	if code != PermissionBadgeUpdate.Code {
+		t.Fatalf("expected %s, got %s", PermissionBadgeUpdate.Code, code)
+	}
+}
+
 func TestAdminPermissionRegistryProtectsLinkDelete(t *testing.T) {
 	code, ok := GetAdminPermissionCode("POST", "/api/admin/link/delete")
 	if !ok {

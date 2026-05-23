@@ -388,6 +388,35 @@ export function useDashboardDataPage({
     }
   }
 
+  async function reorderRecord(fromIndex: number, toIndex: number) {
+    if (!config.sortEndpoint || config.tree) return
+    if (
+      fromIndex === toIndex ||
+      fromIndex < 0 ||
+      toIndex < 0 ||
+      fromIndex >= displayRecords.length ||
+      toIndex >= displayRecords.length
+    ) {
+      return
+    }
+
+    const nextRecords = [...displayRecords]
+    const [current] = nextRecords.splice(fromIndex, 1)
+    nextRecords.splice(toIndex, 0, current)
+    const ids = nextRecords
+      .map((record) => toDashboardDataPrimitive(record.id))
+      .filter((id) => id !== undefined && id !== null)
+
+    setError(null)
+    try {
+      await adminPostJson(config.sortEndpoint, ids)
+      msgSuccess(messages.saved)
+      await load()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : messages.saveFailed)
+    }
+  }
+
   function canMoveRecord(index: number, direction: -1 | 1) {
     if (!config.tree) {
       const targetIndex = index + direction
@@ -505,6 +534,7 @@ export function useDashboardDataPage({
     requestDelete,
     runAction,
     moveRecord,
+    reorderRecord,
     canMoveRecord,
   }
 }
