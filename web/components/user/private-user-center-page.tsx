@@ -4,6 +4,7 @@ import * as React from "react"
 import { Bell, Heart, Trophy } from "lucide-react"
 
 import { useRequiredUser } from "@/components/auth/require-user"
+import { useSetUnreadMessageCount } from "@/components/app/app-provider"
 import { LoadMore } from "@/components/common/load-more"
 import { WidgetCard } from "@/components/common/widget-card"
 import { UserCenterShell } from "@/components/user/user-center-shell"
@@ -79,6 +80,7 @@ export function PrivateUserCenterPage({
 }) {
   const { t } = useI18n()
   const user = useRequiredUser()
+  const setUnreadMessageCount = useSetUnreadMessageCount()
   const [data, setData] = React.useState(initialData)
   const [badges, setBadges] = React.useState(initialBadges)
   const [fans, setFans] = React.useState(initialFans)
@@ -107,6 +109,9 @@ export function PrivateUserCenterPage({
       if (!mounted) return
 
       setData(nextData)
+      if (kind === "messages") {
+        setUnreadMessageCount(0)
+      }
       setBadges(nextBadges)
       setFans(nextFans.results || [])
       setFollowed(nextFollowed.results || [])
@@ -115,7 +120,7 @@ export function PrivateUserCenterPage({
     return () => {
       mounted = false
     }
-  }, [kind, serverLoaded, user.id])
+  }, [kind, serverLoaded, setUnreadMessageCount, user.id])
 
   return (
     <UserCenterShell
