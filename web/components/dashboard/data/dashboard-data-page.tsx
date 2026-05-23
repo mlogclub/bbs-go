@@ -72,8 +72,8 @@ export function DashboardDataPage({
         loading={state.loading}
         canCreate={Boolean(
           visibleConfig.createEndpoint &&
-            visibleConfig.formFields?.length &&
-            canUse(visibleConfig.createPermission)
+          visibleConfig.formFields?.length &&
+          canUse(visibleConfig.createPermission)
         )}
         error={state.error}
         searchLabel={t("dashboard.actions.search")}
@@ -98,6 +98,8 @@ export function DashboardDataPage({
           noData: t("common.noData"),
           moveUp: t("dashboard.actions.moveUp"),
           moveDown: t("dashboard.actions.moveDown"),
+          expand: t("dashboard.actions.expand"),
+          collapse: t("dashboard.actions.collapse"),
           view: t("dashboard.actions.view"),
           edit: t("dashboard.actions.edit"),
           delete: t("dashboard.actions.delete"),
@@ -122,6 +124,8 @@ export function DashboardDataPage({
         onView={(record) => void state.openView(record)}
         onEdit={(record) => void state.openEdit(record)}
         onDelete={state.requestDelete}
+        isTreeRecordCollapsed={state.isTreeRecordCollapsed}
+        onToggleTreeRecord={state.toggleTreeRecord}
       />
 
       <DashboardDataFormDialog

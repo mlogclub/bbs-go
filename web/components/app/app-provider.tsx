@@ -18,6 +18,7 @@ type AppContextValue = ClientAppState & {
   isLogin: boolean
   setConfig: React.Dispatch<React.SetStateAction<SiteConfig | null>>
   setCurrentUser: React.Dispatch<React.SetStateAction<UserSummary | null>>
+  setUnreadMessageCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const AppContext = React.createContext<AppContextValue | null>(null)
@@ -83,6 +84,7 @@ export function AppProvider({
       isLogin: Boolean(currentUser),
       setConfig,
       setCurrentUser,
+      setUnreadMessageCount,
     }),
     [authChecked, config, currentUser, initialState.locale, unreadMessageCount]
   )
@@ -110,6 +112,10 @@ export function useCurrentUser() {
 
 export function useUnreadMessageCount() {
   return useAppState().unreadMessageCount
+}
+
+export function useSetUnreadMessageCount() {
+  return useAppState().setUnreadMessageCount
 }
 
 export function useIsLogin() {

@@ -46,6 +46,8 @@ import type {
 import { formatDateTime } from "@/lib/format"
 
 export const DASHBOARD_DATA_DEPTH_KEY = "__dashboardDepth"
+export const DASHBOARD_DATA_KEY = "__dashboardKey"
+export const DASHBOARD_DATA_HAS_CHILDREN_KEY = "__dashboardHasChildren"
 export const DASHBOARD_DATA_PARENT_KEY = "__dashboardParentKey"
 export const DASHBOARD_DATA_OPTION_DEPTH_KEY = "__dashboardOptionDepth"
 
@@ -158,18 +160,41 @@ export function flattenDashboardDataTree(
 ): AdminRecord[] {
   return records.flatMap((record, index) => {
     const recordKey = String(record.id ?? `${parentKey}-${index}`)
-    const current = {
-      ...record,
-      [DASHBOARD_DATA_DEPTH_KEY]: depth,
-      [DASHBOARD_DATA_PARENT_KEY]: parentKey,
-    }
     const children = Array.isArray(record.children)
       ? (record.children as AdminRecord[])
       : []
+    const current = {
+      ...record,
+      [DASHBOARD_DATA_DEPTH_KEY]: depth,
+      [DASHBOARD_DATA_KEY]: recordKey,
+      [DASHBOARD_DATA_HAS_CHILDREN_KEY]: children.length > 0,
+      [DASHBOARD_DATA_PARENT_KEY]: parentKey,
+    }
     return [
       current,
       ...flattenDashboardDataTree(children, depth + 1, recordKey),
     ]
+  })
+}
+
+export function filterVisibleDashboardDataTree(
+  records: AdminRecord[],
+  collapsedKeys: Set<string>
+): AdminRecord[] {
+  let hiddenBelowDepth: number | null = null
+
+  return records.filter((record) => {
+    const depth = Number(record[DASHBOARD_DATA_DEPTH_KEY] ?? 0)
+    if (hiddenBelowDepth !== null) {
+      if (depth > hiddenBelowDepth) return false
+      hiddenBelowDepth = null
+    }
+
+    const recordKey = String(record[DASHBOARD_DATA_KEY] ?? "")
+    if (recordKey && collapsedKeys.has(recordKey)) {
+      hiddenBelowDepth = depth
+    }
+    return true
   })
 }
 
@@ -197,4 +222,3 @@ export function imageCell(value: unknown, alt = "") {
     />
   )
 }
-

@@ -28,6 +28,7 @@ export default function DashboardCategoriesRoute() {
     sortEndpoint: "/api/admin/category/update_sort",
     sortPermission: PERMISSIONS.DASHBOARD_CATEGORY_SORT,
     tree: true,
+    treeDefaultCollapsed: true,
     treeIndentKey: "name",
     filters: [
       { name: "name", label: dashboardData.label(t, "name") },

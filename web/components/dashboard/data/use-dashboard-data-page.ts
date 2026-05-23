@@ -2,9 +2,7 @@
 
 import * as React from "react"
 
-import type {
-  ConfirmDialogState,
-} from "@/components/dashboard/confirm-dialog"
+import type { ConfirmDialogState } from "@/components/dashboard/confirm-dialog"
 import {
   adminDelete,
   adminGet,
@@ -24,8 +22,11 @@ import type {
 } from "./dashboard-data-types"
 import {
   DASHBOARD_DATA_DEPTH_KEY,
+  DASHBOARD_DATA_HAS_CHILDREN_KEY,
+  DASHBOARD_DATA_KEY,
   DASHBOARD_DATA_PARENT_KEY,
   dashboardDataRecordToFormValues,
+  filterVisibleDashboardDataTree,
   flattenDashboardDataTree,
   isValidDashboardDataHttpUrl,
   normalizeDashboardDataOptionRecords,
@@ -78,14 +79,70 @@ export function useDashboardDataPage({
   const [asyncOptions, setAsyncOptions] = React.useState<
     Record<string, DashboardDataOption[]>
   >({})
+  const [collapsedTreeKeys, setCollapsedTreeKeys] = React.useState<Set<string>>(
+    () => new Set()
+  )
+  const treeCollapseModeRef = React.useRef<string | null>(null)
+  const knownTreeKeysRef = React.useRef<Set<string>>(new Set())
 
   const page = Number(filters.page || 1)
   const limit = Number(filters.limit || initialLimit)
   const pageCount = Math.max(1, Math.ceil(total / limit))
-  const displayRecords = React.useMemo(
+  const treeRecords = React.useMemo(
     () => (config.tree ? flattenDashboardDataTree(records) : records),
     [config.tree, records]
   )
+  const displayRecords = React.useMemo(
+    () =>
+      config.tree
+        ? filterVisibleDashboardDataTree(treeRecords, collapsedTreeKeys)
+        : records,
+    [collapsedTreeKeys, config.tree, records, treeRecords]
+  )
+
+  React.useEffect(() => {
+    if (!config.tree) {
+      setCollapsedTreeKeys(new Set())
+      treeCollapseModeRef.current = null
+      knownTreeKeysRef.current = new Set()
+      return
+    }
+
+    const nextKeys = new Set(
+      treeRecords.map((record) => String(record[DASHBOARD_DATA_KEY]))
+    )
+    const nextParentKeys = new Set(
+      treeRecords
+        .filter((record) => record[DASHBOARD_DATA_HAS_CHILDREN_KEY])
+        .map((record) => String(record[DASHBOARD_DATA_KEY]))
+    )
+    const collapseMode = config.treeDefaultCollapsed ? "collapsed" : "expanded"
+
+    if (treeCollapseModeRef.current !== collapseMode) {
+      setCollapsedTreeKeys(
+        config.treeDefaultCollapsed ? nextParentKeys : new Set()
+      )
+      treeCollapseModeRef.current = collapseMode
+      knownTreeKeysRef.current = nextKeys
+      return
+    }
+
+    setCollapsedTreeKeys((current) => {
+      const nextCollapsedKeys = new Set(
+        Array.from(current).filter((key) => nextKeys.has(key))
+      )
+      if (config.treeDefaultCollapsed) {
+        nextParentKeys.forEach((key) => {
+          if (!knownTreeKeysRef.current.has(key)) {
+            nextCollapsedKeys.add(key)
+          }
+        })
+      }
+      return nextCollapsedKeys
+    })
+    knownTreeKeysRef.current = nextKeys
+  }, [config.tree, config.treeDefaultCollapsed, treeRecords])
+
   const visibleFormFields = React.useMemo(
     () =>
       (config.formFields || []).filter(
@@ -319,7 +376,10 @@ export function useDashboardDataPage({
     }
   }
 
-  async function runAction(action: DashboardDataRowAction, record: AdminRecord) {
+  async function runAction(
+    action: DashboardDataRowAction,
+    record: AdminRecord
+  ) {
     if (action.confirm) {
       setConfirmState({
         description: action.confirm,
@@ -423,7 +483,11 @@ export function useDashboardDataPage({
       return targetIndex >= 0 && targetIndex < displayRecords.length
     }
 
-    return findTreeMoveTargetIndex(index, direction) !== null
+    const treeIndex = findTreeRecordIndex(index)
+    return (
+      treeIndex !== null &&
+      findTreeMoveTargetIndex(treeIndex, direction) !== null
+    )
   }
 
   function moveFlatRecord(index: number, direction: -1 | 1) {
@@ -435,39 +499,42 @@ export function useDashboardDataPage({
   }
 
   function moveTreeRecord(index: number, direction: -1 | 1) {
-    const targetIndex = findTreeMoveTargetIndex(index, direction)
-    if (targetIndex === null) return displayRecords
+    const treeIndex = findTreeRecordIndex(index)
+    if (treeIndex === null) return treeRecords
 
-    const currentEnd = findTreeBlockEnd(index)
+    const targetIndex = findTreeMoveTargetIndex(treeIndex, direction)
+    if (targetIndex === null) return treeRecords
+
+    const currentEnd = findTreeBlockEnd(treeIndex)
     const targetEnd = findTreeBlockEnd(targetIndex)
-    const currentBlock = displayRecords.slice(index, currentEnd)
-    const targetBlock = displayRecords.slice(targetIndex, targetEnd)
+    const currentBlock = treeRecords.slice(treeIndex, currentEnd)
+    const targetBlock = treeRecords.slice(targetIndex, targetEnd)
 
     if (direction === -1) {
       return [
-        ...displayRecords.slice(0, targetIndex),
+        ...treeRecords.slice(0, targetIndex),
         ...currentBlock,
         ...targetBlock,
-        ...displayRecords.slice(currentEnd),
+        ...treeRecords.slice(currentEnd),
       ]
     }
 
     return [
-      ...displayRecords.slice(0, index),
+      ...treeRecords.slice(0, treeIndex),
       ...targetBlock,
       ...currentBlock,
-      ...displayRecords.slice(targetEnd),
+      ...treeRecords.slice(targetEnd),
     ]
   }
 
   function findTreeMoveTargetIndex(index: number, direction: -1 | 1) {
-    const record = displayRecords[index]
+    const record = treeRecords[index]
     if (!record) return null
 
     const depth = Number(record[DASHBOARD_DATA_DEPTH_KEY] ?? 0)
     if (direction === -1) {
       for (let targetIndex = index - 1; targetIndex >= 0; targetIndex -= 1) {
-        const target = displayRecords[targetIndex]
+        const target = treeRecords[targetIndex]
         const targetDepth = Number(target?.[DASHBOARD_DATA_DEPTH_KEY] ?? 0)
         if (targetDepth > depth) continue
         if (targetDepth < depth) return null
@@ -480,25 +547,59 @@ export function useDashboardDataPage({
     }
 
     const targetIndex = findTreeBlockEnd(index)
-    const target = displayRecords[targetIndex]
+    const target = treeRecords[targetIndex]
     return target?.[DASHBOARD_DATA_DEPTH_KEY] ===
       record[DASHBOARD_DATA_DEPTH_KEY] &&
-      target?.[DASHBOARD_DATA_PARENT_KEY] ===
-        record[DASHBOARD_DATA_PARENT_KEY]
+      target?.[DASHBOARD_DATA_PARENT_KEY] === record[DASHBOARD_DATA_PARENT_KEY]
       ? targetIndex
       : null
   }
 
   function findTreeBlockEnd(index: number) {
-    const depth = Number(displayRecords[index]?.[DASHBOARD_DATA_DEPTH_KEY] ?? 0)
+    const depth = Number(treeRecords[index]?.[DASHBOARD_DATA_DEPTH_KEY] ?? 0)
     let end = index + 1
     while (
-      end < displayRecords.length &&
-      Number(displayRecords[end]?.[DASHBOARD_DATA_DEPTH_KEY] ?? 0) > depth
+      end < treeRecords.length &&
+      Number(treeRecords[end]?.[DASHBOARD_DATA_DEPTH_KEY] ?? 0) > depth
     ) {
       end += 1
     }
     return end
+  }
+
+  function findTreeRecordIndex(displayIndex: number) {
+    const recordKey = displayRecords[displayIndex]?.[DASHBOARD_DATA_KEY]
+    if (recordKey === undefined || recordKey === null) return null
+    const treeIndex = treeRecords.findIndex(
+      (record) => record[DASHBOARD_DATA_KEY] === recordKey
+    )
+    return treeIndex >= 0 ? treeIndex : null
+  }
+
+  function isTreeRecordCollapsed(record: AdminRecord) {
+    const recordKey = record[DASHBOARD_DATA_KEY]
+    return (
+      recordKey !== undefined &&
+      recordKey !== null &&
+      collapsedTreeKeys.has(String(recordKey))
+    )
+  }
+
+  function toggleTreeRecord(record: AdminRecord) {
+    if (!record[DASHBOARD_DATA_HAS_CHILDREN_KEY]) return
+    const recordKey = record[DASHBOARD_DATA_KEY]
+    if (recordKey === undefined || recordKey === null) return
+
+    setCollapsedTreeKeys((current) => {
+      const next = new Set(current)
+      const key = String(recordKey)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
+      return next
+    })
   }
 
   return {
@@ -536,5 +637,7 @@ export function useDashboardDataPage({
     moveRecord,
     reorderRecord,
     canMoveRecord,
+    isTreeRecordCollapsed,
+    toggleTreeRecord,
   }
 }

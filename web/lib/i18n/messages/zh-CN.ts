@@ -127,6 +127,8 @@ const zhCN = {
       markUnsolved: "未解决",
       moveUp: "上移",
       moveDown: "下移",
+      expand: "展开",
+      collapse: "折叠",
       assignPermissions: "分配权限",
     },
     messages: {
@@ -1260,7 +1262,8 @@ const zhCN = {
         imageUploading: "图片上传中,请稍后重试...",
         attachmentUploading: "附件上传中，请稍后再提交",
         noQaCategoryTitle: "暂无可用问答分类",
-        noQaCategoryDescription: "请在后台配置支持问答的分类，或选择其他类型发帖。",
+        noQaCategoryDescription:
+          "请在后台配置支持问答的分类，或选择其他类型发帖。",
         noQaCategorySubmit: "当前没有可用的问答分类或未选择分类，无法发布。",
         tweetFeatureDisabled: "动态模块未开启",
         topicFeatureDisabled: "帖子模块未开启",

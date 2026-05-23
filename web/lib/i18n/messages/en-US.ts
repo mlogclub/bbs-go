@@ -127,6 +127,8 @@ const enUS = {
       markUnsolved: "Unsolved",
       moveUp: "Move up",
       moveDown: "Move down",
+      expand: "Expand",
+      collapse: "Collapse",
       assignPermissions: "Permissions",
     },
     messages: {

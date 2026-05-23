@@ -5,6 +5,8 @@ import * as React from "react"
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
   EditIcon,
   EyeIcon,
   GripVerticalIcon,
@@ -19,6 +21,7 @@ import { DashboardPagination } from "@/components/dashboard/pagination-controls"
 import type { DashboardDataPageConfig } from "./dashboard-data-types"
 import {
   DASHBOARD_DATA_DEPTH_KEY,
+  DASHBOARD_DATA_HAS_CHILDREN_KEY,
   getDashboardDataValue,
   textValue,
 } from "./dashboard-data-utils"
@@ -44,6 +47,8 @@ export function DashboardDataTable({
   onView,
   onEdit,
   onDelete,
+  isTreeRecordCollapsed,
+  onToggleTreeRecord,
 }: {
   config: DashboardDataPageConfig
   records: AdminRecord[]
@@ -58,6 +63,8 @@ export function DashboardDataTable({
     noData: string
     moveUp: string
     moveDown: string
+    expand: string
+    collapse: string
     view: string
     edit: string
     delete: string
@@ -77,6 +84,8 @@ export function DashboardDataTable({
   onView: (record: AdminRecord) => void
   onEdit: (record: AdminRecord) => void
   onDelete: (record: AdminRecord) => void
+  isTreeRecordCollapsed?: (record: AdminRecord) => boolean
+  onToggleTreeRecord?: (record: AdminRecord) => void
 }) {
   const [draggingIndex, setDraggingIndex] = React.useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null)
@@ -153,27 +162,64 @@ export function DashboardDataTable({
                       "bg-[var(--dashboard-accent-soft)]/70 outline-2 -outline-offset-2 outline-primary/45"
                   )}
                 >
-                  {config.columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className={cn(
-                        "h-11 px-3 align-middle",
-                        column.className,
-                        config.treeIndentKey === column.key && "font-medium"
-                      )}
-                      style={
-                        config.treeIndentKey === column.key
-                          ? {
-                              paddingLeft: `${12 + Number(record[DASHBOARD_DATA_DEPTH_KEY] || 0) * 20}px`,
-                            }
-                          : undefined
-                      }
-                    >
-                      {column.render
-                        ? column.render(record)
-                        : textValue(getDashboardDataValue(record, column.key))}
-                    </td>
-                  ))}
+                  {config.columns.map((column) => {
+                    const isTreeIndentColumn =
+                      config.treeIndentKey === column.key
+                    const content = column.render
+                      ? column.render(record)
+                      : textValue(getDashboardDataValue(record, column.key))
+                    const depth = Number(record[DASHBOARD_DATA_DEPTH_KEY] || 0)
+                    const hasChildren = Boolean(
+                      record[DASHBOARD_DATA_HAS_CHILDREN_KEY]
+                    )
+                    const collapsed = Boolean(isTreeRecordCollapsed?.(record))
+
+                    return (
+                      <td
+                        key={column.key}
+                        className={cn(
+                          "h-11 px-3 align-middle",
+                          column.className,
+                          isTreeIndentColumn && "font-medium"
+                        )}
+                        style={
+                          isTreeIndentColumn
+                            ? {
+                                paddingLeft: `${12 + depth * 20}px`,
+                              }
+                            : undefined
+                        }
+                      >
+                        {isTreeIndentColumn ? (
+                          <div className="flex min-w-0 items-center gap-1.5">
+                            {hasChildren ? (
+                              <Button
+                                type="button"
+                                size="icon-sm"
+                                variant="ghost"
+                                className="size-6 shrink-0"
+                                onClick={() => onToggleTreeRecord?.(record)}
+                              >
+                                {collapsed ? (
+                                  <ChevronRightIcon />
+                                ) : (
+                                  <ChevronDownIcon />
+                                )}
+                                <span className="sr-only">
+                                  {collapsed ? labels.expand : labels.collapse}
+                                </span>
+                              </Button>
+                            ) : (
+                              <span className="size-6 shrink-0" />
+                            )}
+                            <span className="min-w-0 truncate">{content}</span>
+                          </div>
+                        ) : (
+                          content
+                        )}
+                      </td>
+                    )
+                  })}
                   {hasActions ? (
                     <td className="px-3 py-2">
                       <div className="flex justify-end gap-1.5">

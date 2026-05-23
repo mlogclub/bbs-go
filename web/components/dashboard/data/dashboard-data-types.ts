@@ -86,6 +86,7 @@ export type DashboardDataPageConfig = {
   sortPermission?: PermissionCode
   dragSort?: boolean
   tree?: boolean
+  treeDefaultCollapsed?: boolean
   treeIndentKey?: string
   canEdit?: (record: AdminRecord) => boolean
   canDelete?: (record: AdminRecord) => boolean
