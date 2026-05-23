@@ -63,6 +63,7 @@ func BadgeCreate(ctx *gin.Context) {
 	now := dates.NowTimestamp()
 	t.CreateTime = now
 	t.UpdateTime = now
+	t.Status = constants.StatusOk
 	if err := services.BadgeService.Create(t); err != nil {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage(err.Error()))
 		return

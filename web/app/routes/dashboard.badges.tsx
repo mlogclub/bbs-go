@@ -62,9 +62,18 @@ export default function DashboardBadgesRoute() {
       },
     ],
     formFields: [
-      { name: "id", label: dashboardData.label(t, "id"), type: "number" },
-      { name: "name", label: dashboardData.label(t, "name"), required: true },
-      { name: "title", label: dashboardData.label(t, "title"), required: true },
+      {
+        name: "name",
+        label: dashboardData.label(t, "name"),
+        required: true,
+        colSpan: 2,
+      },
+      {
+        name: "title",
+        label: dashboardData.label(t, "title"),
+        required: true,
+        colSpan: 2,
+      },
       {
         name: "description",
         label: dashboardData.label(t, "description"),
@@ -77,13 +86,6 @@ export default function DashboardBadgesRoute() {
         type: "number",
         min: 0,
         step: 1,
-      },
-      {
-        name: "status",
-        label: dashboardData.label(t, "status"),
-        type: "select",
-        required: true,
-        options: dashboardData.normalDeletedOptions(t),
       },
     ],
   }
