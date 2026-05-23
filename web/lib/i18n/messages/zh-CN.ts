@@ -644,6 +644,7 @@ const zhCN = {
       commentCount: "评论",
       cover: "封面",
       node: "分类",
+      category: "分类",
       name: "名称",
       parentId: "父级分类",
       logo: "图标",

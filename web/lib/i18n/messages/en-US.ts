@@ -660,6 +660,7 @@ const enUS = {
       commentCount: "Comments",
       cover: "Cover",
       node: "Category",
+      category: "Category",
       name: "Name",
       parentId: "Parent Category",
       logo: "Logo",
