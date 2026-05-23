@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -38,6 +39,32 @@ func TestLinkCreateDefaultsStatusToOk(t *testing.T) {
 	}
 }
 
+func TestLinkCreateAssignsNextSortNo(t *testing.T) {
+	db := setupAdminLinkTestDB(t)
+	mustCreateLink(t, db, &models.Link{
+		Model:      models.Model{Id: 1},
+		Title:      "Existing",
+		Url:        "https://existing.example.com",
+		SortNo:     4,
+		Status:     constants.StatusOk,
+		CreateTime: time.Now().UnixMilli(),
+	})
+
+	link := postLinkCreate(t, "title=Example&url=https%3A%2F%2Fexample.com")
+
+	if link.SortNo != 5 {
+		t.Fatalf("expected response sortNo 5, got %d", link.SortNo)
+	}
+
+	var saved models.Link
+	if err := db.First(&saved, "id = ?", link.Id).Error; err != nil {
+		t.Fatalf("load saved link: %v", err)
+	}
+	if saved.SortNo != 5 {
+		t.Fatalf("expected saved sortNo 5, got %d", saved.SortNo)
+	}
+}
+
 func TestLinkRemoveDeletesLink(t *testing.T) {
 	db := setupAdminLinkTestDB(t)
 	mustCreateLink(t, db, &models.Link{
@@ -56,6 +83,52 @@ func TestLinkRemoveDeletesLink(t *testing.T) {
 	}
 	if count != 0 {
 		t.Fatalf("expected link to be deleted, count=%d", count)
+	}
+}
+
+func TestLinkUpdateSortUpdatesSortNoBySubmittedOrder(t *testing.T) {
+	db := setupAdminLinkTestDB(t)
+	mustCreateLink(t, db, &models.Link{
+		Model:      models.Model{Id: 1},
+		Title:      "First",
+		Url:        "https://first.example.com",
+		SortNo:     0,
+		Status:     constants.StatusOk,
+		CreateTime: time.Now().UnixMilli(),
+	})
+	mustCreateLink(t, db, &models.Link{
+		Model:      models.Model{Id: 2},
+		Title:      "Second",
+		Url:        "https://second.example.com",
+		SortNo:     1,
+		Status:     constants.StatusOk,
+		CreateTime: time.Now().UnixMilli(),
+	})
+	mustCreateLink(t, db, &models.Link{
+		Model:      models.Model{Id: 3},
+		Title:      "Third",
+		Url:        "https://third.example.com",
+		SortNo:     2,
+		Status:     constants.StatusOk,
+		CreateTime: time.Now().UnixMilli(),
+	})
+
+	postLinkUpdateSort(t, []int64{3, 1, 2})
+
+	got := map[int64]int{}
+	var links []models.Link
+	if err := db.Find(&links).Error; err != nil {
+		t.Fatalf("load links: %v", err)
+	}
+	for _, link := range links {
+		got[link.Id] = link.SortNo
+	}
+
+	expected := map[int64]int{3: 0, 1: 1, 2: 2}
+	for id, sortNo := range expected {
+		if got[id] != sortNo {
+			t.Fatalf("expected link %d sortNo %d, got %d", id, sortNo, got[id])
+		}
 	}
 }
 
@@ -121,6 +194,38 @@ func postLinkRemove(t *testing.T, body string) {
 	t.Helper()
 
 	recorder := runAdminLinkHandler(t, http.MethodPost, "/api/admin/link/delete", body, LinkRemove)
+
+	var result struct {
+		Success bool `json:"success"`
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &result); err != nil {
+		t.Fatalf("decode response %q: %v", recorder.Body.String(), err)
+	}
+	if !result.Success {
+		t.Fatalf("expected success response, got %s", recorder.Body.String())
+	}
+}
+
+func postLinkUpdateSort(t *testing.T, ids []int64) {
+	t.Helper()
+
+	payload, err := json.Marshal(ids)
+	if err != nil {
+		t.Fatalf("marshal ids: %v", err)
+	}
+
+	gin.SetMode(gin.TestMode)
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	req := httptest.NewRequest(http.MethodPost, "/api/admin/link/update_sort", bytes.NewReader(payload))
+	req.Header.Set("Content-Type", "application/json")
+	ctx.Request = req
+
+	LinkUpdateSort(ctx)
+
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", recorder.Code)
+	}
 
 	var result struct {
 		Success bool `json:"success"`

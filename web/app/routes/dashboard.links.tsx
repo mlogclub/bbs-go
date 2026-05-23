@@ -24,6 +24,9 @@ export default function DashboardLinksRoute() {
     deleteEndpoint: "/api/admin/link/delete",
     deletePermission: PERMISSIONS.DASHBOARD_LINK_DELETE,
     deleteMode: "formIds",
+    sortEndpoint: "/api/admin/link/update_sort",
+    sortPermission: PERMISSIONS.DASHBOARD_LINK_UPDATE,
+    dragSort: true,
     filters: [
       { name: "title", label: dashboardData.label(t, "title") },
       { name: "url", label: dashboardData.label(t, "url") },
@@ -36,6 +39,7 @@ export default function DashboardLinksRoute() {
     ],
     columns: [
       { key: "id", label: dashboardData.label(t, "id") },
+      { key: "sortNo", label: dashboardData.label(t, "sortNo") },
       { key: "title", label: dashboardData.label(t, "title") },
       {
         key: "url",

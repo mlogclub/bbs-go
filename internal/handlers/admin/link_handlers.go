@@ -46,7 +46,7 @@ func LinkList(ctx *gin.Context) {
 			ParamName: "url",
 			Op:        params.Like,
 		},
-	))
+	).Asc("sort_no").Desc("id"))
 	ginx.WriteJSON(ctx, &web.PageResult{Results: list, Page: paging})
 
 }
@@ -59,6 +59,7 @@ func LinkCreate(ctx *gin.Context) {
 		return
 	}
 	t.CreateTime = dates.NowTimestamp()
+	t.SortNo = services.LinkService.GetNextSortNo()
 	t.Status = constants.StatusOk
 
 	err = services.LinkService.Create(t)
@@ -78,6 +79,20 @@ func LinkRemove(ctx *gin.Context) {
 	}
 	for _, id := range ids {
 		services.LinkService.Delete(id)
+	}
+	ginx.WriteJSON(ctx, nil)
+
+}
+
+func LinkUpdateSort(ctx *gin.Context) {
+	var ids []int64
+	if err := ginx.BindJSON(ctx, &ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	if err := services.LinkService.UpdateSort(ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
 	}
 	ginx.WriteJSON(ctx, nil)
 

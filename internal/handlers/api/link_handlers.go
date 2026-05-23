@@ -28,7 +28,7 @@ func linkBuildLink(link models.Link) map[string]any {
 
 func LinkList(ctx *gin.Context) {
 	links := services.LinkService.Find(sqls.NewCnd().
-		Eq("status", constants.StatusOk).Asc("id"))
+		Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 
 	var itemList []map[string]any
 	for _, v := range links {
@@ -40,7 +40,7 @@ func LinkList(ctx *gin.Context) {
 
 func LinkTopLinks(ctx *gin.Context) {
 	links := services.LinkService.Find(sqls.NewCnd().
-		Eq("status", constants.StatusOk).Limit(10).Asc("id"))
+		Eq("status", constants.StatusOk).Limit(10).Asc("sort_no").Desc("id"))
 
 	var itemList []map[string]any
 	for _, v := range links {

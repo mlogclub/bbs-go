@@ -357,6 +357,7 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	linkGroup.POST("/create", adminHandlers.LinkCreate)
 	linkGroup.POST("/update", adminHandlers.LinkUpdate)
 	linkGroup.POST("/delete", adminHandlers.LinkRemove)
+	linkGroup.POST("/update_sort", adminHandlers.LinkUpdateSort)
 	linkGroup.GET("/:id", adminHandlers.LinkDetail)
 
 	userScoreLogGroup := group.Group("/user-score-log")
