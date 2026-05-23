@@ -96,6 +96,7 @@ export default function DashboardRolesRoute() {
     deleteMode: "formIds",
     sortEndpoint: "/api/admin/role/update_sort",
     sortPermission: PERMISSIONS.DASHBOARD_ROLE_SORT,
+    dragSort: true,
     canEdit: canManageRole,
     canDelete: canManageRole,
     renderRowActions: (record) =>
