@@ -19,16 +19,21 @@ function displayName(user: UserSummary) {
 
 function WidgetCard({
   title,
+  actions,
   children,
 }: {
   title?: string
+  actions?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <section className="rounded-md bg-background px-3 py-1">
-      {title ? (
+      {title || actions ? (
         <div className="flex items-center justify-between border-b py-2 text-base font-medium">
           <span>{title}</span>
+          {actions ? (
+            <div className="shrink-0 text-sm font-normal">{actions}</div>
+          ) : null}
         </div>
       ) : null}
       <div className="py-2 break-all">{children}</div>
@@ -113,15 +118,17 @@ function FriendLinks({
   }
 
   return (
-    <WidgetCard title={title}>
-      <div className="mb-1 flex justify-end text-sm">
+    <WidgetCard
+      title={title}
+      actions={
         <Link
           href="/links"
           className="text-muted-foreground hover:text-primary"
         >
           {more}
         </Link>
-      </div>
+      }
+    >
       <ul className="links">
         {links.map((link) => (
           <li key={link.id} className="link">
