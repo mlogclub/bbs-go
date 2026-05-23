@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"bbs-go/internal/models/constants"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -58,6 +59,7 @@ func LinkCreate(ctx *gin.Context) {
 		return
 	}
 	t.CreateTime = dates.NowTimestamp()
+	t.Status = constants.StatusOk
 
 	err = services.LinkService.Create(t)
 	if err != nil {
@@ -65,6 +67,19 @@ func LinkCreate(ctx *gin.Context) {
 		return
 	}
 	ginx.WriteJSON(ctx, t)
+
+}
+
+func LinkRemove(ctx *gin.Context) {
+	ids := params.GetInt64Arr(ctx, "ids")
+	if len(ids) == 0 {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("delete ids is empty"))
+		return
+	}
+	for _, id := range ids {
+		services.LinkService.Delete(id)
+	}
+	ginx.WriteJSON(ctx, nil)
 
 }
 

@@ -174,6 +174,7 @@ func TestGinRouterRegistersCompatibleAPIPaths(t *testing.T) {
 		http.MethodGet + " /api/admin/seo/sitemap/status",
 		http.MethodPost + " /api/admin/seo/sitemap/generate",
 		http.MethodPost + " /api/admin/role/list",
+		http.MethodPost + " /api/admin/link/delete",
 		http.MethodGet + " /api/admin/badge/list",
 		http.MethodPost + " /api/admin/badge/list",
 		http.MethodPost + " /api/admin/role/update_sort",

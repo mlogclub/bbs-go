@@ -46,6 +46,7 @@ var (
 		{Method: "POST", Pattern: "/api/admin/link/list", Permissions: []PermissionDefinition{PermissionLinkView}},
 		{Method: "POST", Pattern: "/api/admin/link/create", Permissions: []PermissionDefinition{PermissionLinkCreate}},
 		{Method: "POST", Pattern: "/api/admin/link/update", Permissions: []PermissionDefinition{PermissionLinkUpdate}},
+		{Method: "POST", Pattern: "/api/admin/link/delete", Permissions: []PermissionDefinition{PermissionLinkDelete}},
 
 		{Method: "GET", Pattern: "/api/admin/forbidden-word/*", Permissions: []PermissionDefinition{PermissionForbiddenWordView}},
 		{Method: "POST", Pattern: "/api/admin/forbidden-word/list", Permissions: []PermissionDefinition{PermissionForbiddenWordView}},

@@ -33,6 +33,7 @@ var rbacPermissionSeeds = []permissions.PermissionDefinition{
 	permissions.PermissionLinkView,
 	permissions.PermissionLinkCreate,
 	permissions.PermissionLinkUpdate,
+	permissions.PermissionLinkDelete,
 	permissions.PermissionForbiddenWordView,
 	permissions.PermissionForbiddenWordCreate,
 	permissions.PermissionForbiddenWordUpdate,

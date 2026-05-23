@@ -54,6 +54,16 @@ func TestAdminPermissionRegistryProtectsForbiddenWordDelete(t *testing.T) {
 	}
 }
 
+func TestAdminPermissionRegistryProtectsLinkDelete(t *testing.T) {
+	code, ok := GetAdminPermissionCode("POST", "/api/admin/link/delete")
+	if !ok {
+		t.Fatalf("expected link delete permission to be registered")
+	}
+	if code != PermissionLinkDelete.Code {
+		t.Fatalf("expected %s, got %s", PermissionLinkDelete.Code, code)
+	}
+}
+
 func TestAdminPermissionRegistryRejectsUnknownAdminPath(t *testing.T) {
 	if code, ok := GetAdminPermissionCode("POST", "/api/admin/unknown/action"); ok {
 		t.Fatalf("expected unknown admin path to be rejected, got %s", code)

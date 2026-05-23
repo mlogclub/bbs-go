@@ -118,4 +118,5 @@ func init() {
 	register(16, "front moderation permissions", migrate_front_moderation_permissions)
 	register(17, "search reindex permission", migrate_search_reindex_permission)
 	register(18, "forbidden word delete permission", migrate_forbidden_word_delete_permission)
+	register(19, "link delete permission", migrate_link_delete_permission)
 }

@@ -66,6 +66,7 @@ var (
 	PermissionLinkView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.view", GroupName: GroupContent, SortNo: 500, NameEn: "View Links", NameZh: "查看链接"}
 	PermissionLinkCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.create", GroupName: GroupContent, SortNo: 510, NameEn: "Create Links", NameZh: "创建链接"}
 	PermissionLinkUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.update", GroupName: GroupContent, SortNo: 520, NameEn: "Update Links", NameZh: "编辑链接"}
+	PermissionLinkDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.delete", GroupName: GroupContent, SortNo: 530, NameEn: "Delete Links", NameZh: "删除链接"}
 
 	PermissionForbiddenWordView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.view", GroupName: GroupContent, SortNo: 600, NameEn: "View Forbidden Words", NameZh: "查看敏感词"}
 	PermissionForbiddenWordCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.forbiddenWord.create", GroupName: GroupContent, SortNo: 610, NameEn: "Create Forbidden Words", NameZh: "创建敏感词"}
@@ -136,6 +137,7 @@ var Permissions = []PermissionDefinition{
 	PermissionLinkView,
 	PermissionLinkCreate,
 	PermissionLinkUpdate,
+	PermissionLinkDelete,
 	PermissionForbiddenWordView,
 	PermissionForbiddenWordCreate,
 	PermissionForbiddenWordUpdate,

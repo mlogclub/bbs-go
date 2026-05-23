@@ -21,6 +21,9 @@ export default function DashboardLinksRoute() {
     createPermission: PERMISSIONS.DASHBOARD_LINK_CREATE,
     updateEndpoint: "/api/admin/link/update",
     updatePermission: PERMISSIONS.DASHBOARD_LINK_UPDATE,
+    deleteEndpoint: "/api/admin/link/delete",
+    deletePermission: PERMISSIONS.DASHBOARD_LINK_DELETE,
+    deleteMode: "formIds",
     filters: [
       { name: "title", label: dashboardData.label(t, "title") },
       { name: "url", label: dashboardData.label(t, "url") },
@@ -57,24 +60,23 @@ export default function DashboardLinksRoute() {
     ],
     formFields: [
       { name: "id", label: dashboardData.label(t, "id"), type: "number" },
-      { name: "title", label: dashboardData.label(t, "title"), required: true },
+      {
+        name: "title",
+        label: dashboardData.label(t, "title"),
+        required: true,
+        colSpan: 2,
+      },
       {
         name: "url",
         label: dashboardData.label(t, "url"),
         type: "url",
         required: true,
+        colSpan: 2,
       },
       {
         name: "summary",
         label: dashboardData.label(t, "summary"),
         type: "textarea",
-      },
-      {
-        name: "status",
-        label: dashboardData.label(t, "status"),
-        type: "select",
-        required: true,
-        options: dashboardData.normalDeletedOptions(t),
       },
     ],
   }
