@@ -22,6 +22,7 @@ help:
 	@echo "  make release        Build release binaries for linux, macOS, and Windows"
 	@echo "  make run            Build SPA, then run the Go server"
 	@echo "  make run-go         Run the Go server, building SPA first only when missing"
+	@echo "  make dev            Clean outputs, then run Go and web dev servers"
 	@echo "  make test           Run Go tests"
 	@echo "  make check          Run Go tests and web checks"
 	@echo "  make clean          Remove Go binaries"
@@ -59,6 +60,13 @@ run: web-build-spa
 .PHONY: run-go
 run-go: ensure-spa
 	@$(GO) run $(MAIN)
+
+.PHONY: dev
+dev: clean clean-web
+	@$(GO) run -tags dev $(MAIN) & \
+	GO_PID=$$!; \
+	trap 'kill $$GO_PID 2>/dev/null || true' EXIT INT TERM; \
+	$(MAKE) web-dev
 
 .PHONY: test
 test: ensure-spa
