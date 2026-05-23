@@ -2643,8 +2643,8 @@ function TagsInput({
   }
 
   return (
-    <div className="grid gap-2">
-      <div className="flex flex-wrap gap-2 rounded-md border bg-background p-2">
+    <div className="grid w-full gap-2">
+      <div className="flex min-h-9 w-full flex-wrap gap-2 rounded-md border bg-background p-2">
         {value.map((item) => (
           <span
             key={item}
@@ -2671,6 +2671,9 @@ function TagsInput({
             if (event.key === "Enter") {
               event.preventDefault()
               addDraft()
+            } else if (event.key === "Backspace" && !draft && value.length) {
+              event.preventDefault()
+              onChange(value.slice(0, -1))
             }
           }}
           onBlur={addDraft}
