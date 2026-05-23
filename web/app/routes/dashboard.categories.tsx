@@ -24,7 +24,7 @@ export default function DashboardCategoriesRoute() {
     updatePermission: PERMISSIONS.DASHBOARD_CATEGORY_UPDATE,
     deleteEndpoint: "/api/admin/category/delete",
     deletePermission: PERMISSIONS.DASHBOARD_CATEGORY_DELETE,
-    deleteMode: "jsonIds",
+    deleteMode: "formIds",
     sortEndpoint: "/api/admin/category/update_sort",
     sortPermission: PERMISSIONS.DASHBOARD_CATEGORY_SORT,
     tree: true,
