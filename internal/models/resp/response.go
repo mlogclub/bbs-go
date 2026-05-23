@@ -118,38 +118,38 @@ type ArticleResponse struct {
 	Toc     []TopicTocItem `json:"toc,omitempty"`
 }
 
-type NodeResponse struct {
-	Id          int64                   `json:"id"`
-	ParentId    int64                   `json:"parentId"` // 父节点ID，0=一级
-	Name        string                  `json:"name"`
-	Type        constants.TopicNodeType `json:"type"`
-	Logo        string                  `json:"logo"`
-	Description string                  `json:"description"`
-	Children    []NodeResponse          `json:"children,omitempty"` // 子节点（发帖可选时用）
+type CategoryResponse struct {
+	Id          int64                  `json:"id"`
+	ParentId    int64                  `json:"parentId"` // 父节点ID，0=一级
+	Name        string                 `json:"name"`
+	Type        constants.CategoryType `json:"type"`
+	Logo        string                 `json:"logo"`
+	Description string                 `json:"description"`
+	Children    []CategoryResponse     `json:"children,omitempty"` // 子节点（发帖可选时用）
 }
 
-// TopicNodeTreeItem 后台节点树形列表项（含 sortNo/status/createTime，children 始终存在以兼容 Arco Table）
-type TopicNodeTreeItem struct {
-	Id          int64                   `json:"id"`
-	ParentId    int64                   `json:"parentId"`
-	Name        string                  `json:"name"`
-	Type        constants.TopicNodeType `json:"type"`
-	Logo        string                  `json:"logo"`
-	Description string                  `json:"description"`
-	SortNo      int                     `json:"sortNo"`
-	Status      int                     `json:"status"`
-	CreateTime  int64                   `json:"createTime"`
-	Children    []TopicNodeTreeItem     `json:"children"` // 子节点，叶子节点为 []，保证 Arco Table 树形展示
+// CategoryTreeItem 后台节点树形列表项（含 sortNo/status/createTime，children 始终存在以兼容 Arco Table）
+type CategoryTreeItem struct {
+	Id          int64                  `json:"id"`
+	ParentId    int64                  `json:"parentId"`
+	Name        string                 `json:"name"`
+	Type        constants.CategoryType `json:"type"`
+	Logo        string                 `json:"logo"`
+	Description string                 `json:"description"`
+	SortNo      int                    `json:"sortNo"`
+	Status      int                    `json:"status"`
+	CreateTime  int64                  `json:"createTime"`
+	Children    []CategoryTreeItem     `json:"children"` // 子节点，叶子节点为 []，保证 Arco Table 树形展示
 }
 
 type SearchTopicResponse struct {
-	Id         int64          `json:"id"`
-	User       *UserInfo      `json:"user"`
-	Node       *NodeResponse  `json:"node"`
-	Tags       *[]TagResponse `json:"tags"`
-	Title      string         `json:"title"`
-	Summary    string         `json:"summary"`
-	CreateTime int64          `json:"createTime"`
+	Id         int64             `json:"id"`
+	User       *UserInfo         `json:"user"`
+	Category   *CategoryResponse `json:"category"`
+	Tags       *[]TagResponse    `json:"tags"`
+	Title      string            `json:"title"`
+	Summary    string            `json:"summary"`
+	CreateTime int64             `json:"createTime"`
 }
 
 type SearchArticleResponse struct {
@@ -184,7 +184,7 @@ type TopicResponse struct {
 	SolvedAt          int64                `json:"solvedAt"`
 	BountyScore       int                  `json:"bountyScore"`
 	User              *UserInfo            `json:"user"`
-	Node              *NodeResponse        `json:"node"`
+	Category          *CategoryResponse    `json:"category"`
 	Tags              *[]TagResponse       `json:"tags"`
 	Title             string               `json:"title"`
 	Summary           string               `json:"summary"`

@@ -46,7 +46,7 @@ const (
 	SysConfigFooterLinks                = "footerLinks"                // 底部链接
 	SysConfigRecommendTags              = "recommendTags"              // 推荐标签
 	SysConfigUrlRedirect                = "urlRedirect"                // 是否开启链接跳转
-	SysConfigDefaultNodeId              = "defaultNodeId"              // 发帖默认节点
+	SysConfigDefaultCategoryId          = "defaultCategoryId"          // 发帖默认节点
 	SysConfigArticlePending             = "articlePending"             // 是否开启文章审核
 	SysConfigTopicCaptcha               = "topicCaptcha"               // 是否开启发帖验证码
 	SysConfigUserObserveSeconds         = "userObserveSeconds"         // 新用户观察期
@@ -171,11 +171,11 @@ const (
 	TopicTypeQA    TopicType = 2 // 问答
 )
 
-type TopicNodeType string
+type CategoryType string
 
 const (
-	TopicNodeTypeNormal TopicNodeType = "normal"
-	TopicNodeTypeQA     TopicNodeType = "qa"
+	CategoryTypeNormal CategoryType = "normal"
+	CategoryTypeQA     CategoryType = "qa"
 )
 
 type QaStatus string
@@ -193,13 +193,13 @@ func IsPostTopicType(topicType TopicType) bool {
 	return topicType == TopicTypeTopic || topicType == TopicTypeQA
 }
 
-func (t TopicNodeType) Supports(topicType TopicType) bool {
+func (t CategoryType) Supports(topicType TopicType) bool {
 	nodeType := t
 	if nodeType == "" {
-		nodeType = TopicNodeTypeNormal
+		nodeType = CategoryTypeNormal
 	}
 	switch nodeType {
-	case TopicNodeTypeQA:
+	case CategoryTypeQA:
 		return topicType == TopicTypeQA
 	default:
 		return topicType == TopicTypeTopic || topicType == TopicTypeTweet
@@ -228,9 +228,9 @@ const (
 )
 
 const (
-	NodeIdNewest    int64 = 0
-	NodeIdRecommend int64 = -1
-	NodeIdFollow    int64 = -2
+	CategoryIdNewest    int64 = 0
+	CategoryIdRecommend int64 = -1
+	CategoryIdFollow    int64 = -2
 )
 
 type Gender string

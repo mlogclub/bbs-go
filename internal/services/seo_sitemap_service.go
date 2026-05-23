@@ -230,7 +230,7 @@ func (s *seoSitemapService) buildStaticSitemapFiles() ([]generatedSitemapFile, e
 		{Loc: bbsurls.AbsUrl("/links")},
 	}
 
-	var nodes []models.TopicNode
+	var nodes []models.Category
 	if err := sqls.NewCnd().
 		Eq("status", constants.StatusOk).
 		Asc("id").
@@ -240,7 +240,7 @@ func (s *seoSitemapService) buildStaticSitemapFiles() ([]generatedSitemapFile, e
 	}
 	for _, node := range nodes {
 		items = append(items, sitemapURLItem{
-			Loc:     bbsurls.AbsUrl("/topics/node/" + strconv.FormatInt(node.Id, 10)),
+			Loc:     bbsurls.AbsUrl("/topics/category/" + strconv.FormatInt(node.Id, 10)),
 			LastMod: seoSitemapLastMod(node.CreateTime),
 		})
 	}

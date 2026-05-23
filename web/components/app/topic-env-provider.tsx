@@ -3,20 +3,20 @@
 import * as React from "react"
 
 export type TopicEnvState = {
-  currentNodeId: number
-  currentRootNodeId: number
-  currentChildNodeId: number
+  currentCategoryId: number
+  currentRootCategoryId: number
+  currentChildCategoryId: number
 }
 
 type TopicEnvContextValue = TopicEnvState & {
-  setCurrentNodeId: (nodeId: number) => void
+  setCurrentCategoryId: (categoryId: number) => void
   setNodeContext: (state: Partial<TopicEnvState>) => void
 }
 
 const defaultTopicEnv: TopicEnvState = {
-  currentNodeId: 0,
-  currentRootNodeId: 0,
-  currentChildNodeId: 0,
+  currentCategoryId: 0,
+  currentRootCategoryId: 0,
+  currentChildCategoryId: 0,
 }
 
 const TopicEnvContext = React.createContext<TopicEnvContextValue | null>(null)
@@ -36,7 +36,7 @@ export function TopicEnvProvider({
   const value = React.useMemo<TopicEnvContextValue>(
     () => ({
       ...state,
-      setCurrentNodeId: (currentNodeId) => setState((previous) => ({ ...previous, currentNodeId })),
+      setCurrentCategoryId: (currentCategoryId) => setState((previous) => ({ ...previous, currentCategoryId })),
       setNodeContext: (nextState) => setState((previous) => ({ ...previous, ...nextState })),
     }),
     [state],

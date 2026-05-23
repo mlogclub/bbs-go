@@ -257,7 +257,7 @@
     line-height: 12px;
   }
 
-  .nodes-divider {
+  .categories-divider {
     height: 1px;
     margin: 8px 24px;
     background: var(--border);

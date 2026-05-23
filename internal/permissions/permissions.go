@@ -57,11 +57,11 @@ var (
 
 	PermissionCommentDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.comment.delete", GroupName: GroupContent, SortNo: 310, NameEn: "Delete Comments", NameZh: "删除评论"}
 
-	PermissionNodeView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.node.view", GroupName: GroupContent, SortNo: 400, NameEn: "View Nodes", NameZh: "查看节点"}
-	PermissionNodeCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.node.create", GroupName: GroupContent, SortNo: 410, NameEn: "Create Nodes", NameZh: "创建节点"}
-	PermissionNodeUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.node.update", GroupName: GroupContent, SortNo: 420, NameEn: "Update Nodes", NameZh: "编辑节点"}
-	PermissionNodeDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.node.delete", GroupName: GroupContent, SortNo: 430, NameEn: "Delete Nodes", NameZh: "删除节点"}
-	PermissionNodeSort   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.node.sort", GroupName: GroupContent, SortNo: 440, NameEn: "Sort Nodes", NameZh: "排序节点"}
+	PermissionCategoryView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.category.view", GroupName: GroupContent, SortNo: 400, NameEn: "View Categories", NameZh: "查看分类"}
+	PermissionCategoryCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.category.create", GroupName: GroupContent, SortNo: 410, NameEn: "Create Categories", NameZh: "创建分类"}
+	PermissionCategoryUpdate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.category.update", GroupName: GroupContent, SortNo: 420, NameEn: "Update Categories", NameZh: "编辑分类"}
+	PermissionCategoryDelete = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.category.delete", GroupName: GroupContent, SortNo: 430, NameEn: "Delete Categories", NameZh: "删除分类"}
+	PermissionCategorySort   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.category.sort", GroupName: GroupContent, SortNo: 440, NameEn: "Sort Categories", NameZh: "排序分类"}
 
 	PermissionLinkView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.view", GroupName: GroupContent, SortNo: 500, NameEn: "View Links", NameZh: "查看链接"}
 	PermissionLinkCreate = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.link.create", GroupName: GroupContent, SortNo: 510, NameEn: "Create Links", NameZh: "创建链接"}
@@ -128,11 +128,11 @@ var Permissions = []PermissionDefinition{
 	PermissionArticleDelete,
 	PermissionArticleTags,
 	PermissionCommentDelete,
-	PermissionNodeView,
-	PermissionNodeCreate,
-	PermissionNodeUpdate,
-	PermissionNodeDelete,
-	PermissionNodeSort,
+	PermissionCategoryView,
+	PermissionCategoryCreate,
+	PermissionCategoryUpdate,
+	PermissionCategoryDelete,
+	PermissionCategorySort,
 	PermissionLinkView,
 	PermissionLinkCreate,
 	PermissionLinkUpdate,

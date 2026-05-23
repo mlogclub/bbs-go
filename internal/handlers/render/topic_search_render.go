@@ -23,9 +23,9 @@ func BuildSearchTopic(doc search.TopicDocument) resp.SearchTopicResponse {
 		User:       BuildUserInfoDefaultIfNull(doc.UserId),
 	}
 
-	if doc.NodeId > 0 {
-		node := services.TopicNodeService.Get(doc.NodeId)
-		rsp.Node = BuildNode(node)
+	if doc.CategoryId > 0 {
+		category := services.CategoryService.Get(doc.CategoryId)
+		rsp.Category = BuildCategory(category)
 	}
 
 	tags := services.TopicService.GetTopicTags(doc.Id)

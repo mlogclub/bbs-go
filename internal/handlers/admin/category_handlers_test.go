@@ -21,8 +21,8 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func TestFilterTopicNodeListByNodeIDIncludesSelectedNodeWithAncestors(t *testing.T) {
-	nodes := []models.TopicNode{
+func TestFilterCategoryListByNodeIDIncludesSelectedNodeWithAncestors(t *testing.T) {
+	nodes := []models.Category{
 		{Model: models.Model{Id: 1}, Name: "root", ParentId: 0},
 		{Model: models.Model{Id: 2}, Name: "child", ParentId: 1},
 		{Model: models.Model{Id: 3}, Name: "sibling", ParentId: 1},
@@ -30,8 +30,8 @@ func TestFilterTopicNodeListByNodeIDIncludesSelectedNodeWithAncestors(t *testing
 		{Model: models.Model{Id: 5}, Name: "other-root", ParentId: 0},
 	}
 
-	got := filterTopicNodeListByNodeID(nodes, 2)
-	gotIDs := topicNodeIDs(got)
+	got := filterCategoryListByNodeID(nodes, 2)
+	gotIDs := categoryIDs(got)
 	wantIDs := []int64{1, 2, 4}
 
 	if len(gotIDs) != len(wantIDs) {
@@ -44,7 +44,7 @@ func TestFilterTopicNodeListByNodeIDIncludesSelectedNodeWithAncestors(t *testing
 	}
 }
 
-func topicNodeIDs(nodes []models.TopicNode) []int64 {
+func categoryIDs(nodes []models.Category) []int64 {
 	ids := make([]int64, 0, len(nodes))
 	for _, node := range nodes {
 		ids = append(ids, node.Id)
@@ -52,26 +52,26 @@ func topicNodeIDs(nodes []models.TopicNode) []int64 {
 	return ids
 }
 
-func TestTopicNodeListFiltersByStatus(t *testing.T) {
-	db := setupAdminTopicNodeTestDB(t)
-	mustCreateTopicNode(t, db, &models.TopicNode{
+func TestCategoryListFiltersByStatus(t *testing.T) {
+	db := setupAdminCategoryTestDB(t)
+	mustCreateCategory(t, db, &models.Category{
 		Model:  models.Model{Id: 1},
 		Name:   "active-root",
 		Status: constants.StatusOk,
 	})
-	mustCreateTopicNode(t, db, &models.TopicNode{
+	mustCreateCategory(t, db, &models.Category{
 		Model:    models.Model{Id: 2},
 		Name:     "active-child",
 		ParentId: 1,
 		Status:   constants.StatusOk,
 	})
-	mustCreateTopicNode(t, db, &models.TopicNode{
+	mustCreateCategory(t, db, &models.Category{
 		Model:  models.Model{Id: 3},
 		Name:   "deleted-root",
 		Status: constants.StatusDeleted,
 	})
 
-	data := postTopicNodeList(t, "status=1")
+	data := postCategoryList(t, "status=1")
 	if len(data) != 1 {
 		t.Fatalf("expected one deleted root node, got %#v", data)
 	}
@@ -80,10 +80,10 @@ func TestTopicNodeListFiltersByStatus(t *testing.T) {
 	}
 }
 
-func setupAdminTopicNodeTestDB(t *testing.T) *gorm.DB {
+func setupAdminCategoryTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
-	dsn := fmt.Sprintf("file:admin_topic_node_test_%d?mode=memory&cache=shared&_fk=1", time.Now().UnixNano())
+	dsn := fmt.Sprintf("file:admin_category_test_%d?mode=memory&cache=shared&_fk=1", time.Now().UnixNano())
 	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "t_",
@@ -106,39 +106,39 @@ func setupAdminTopicNodeTestDB(t *testing.T) *gorm.DB {
 	})
 
 	sqls.SetDB(db)
-	if err := db.AutoMigrate(&models.TopicNode{}); err != nil {
-		t.Fatalf("auto migrate topic nodes: %v", err)
+	if err := db.AutoMigrate(&models.Category{}); err != nil {
+		t.Fatalf("auto migrate categories: %v", err)
 	}
 	return db
 }
 
-func mustCreateTopicNode(t *testing.T, db *gorm.DB, node *models.TopicNode) {
+func mustCreateCategory(t *testing.T, db *gorm.DB, node *models.Category) {
 	t.Helper()
 
 	if err := db.Create(node).Error; err != nil {
-		t.Fatalf("create topic node: %v", err)
+		t.Fatalf("create category: %v", err)
 	}
 }
 
-func postTopicNodeList(t *testing.T, body string) []resp.TopicNodeTreeItem {
+func postCategoryList(t *testing.T, body string) []resp.CategoryTreeItem {
 	t.Helper()
 
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
-	req := httptest.NewRequest(http.MethodPost, "/api/admin/topic-node/list", strings.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, "/api/admin/category/list", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	ctx.Request = req
 
-	TopicNodeList(ctx)
+	CategoryList(ctx)
 
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
 	}
 
 	var result struct {
-		Success bool                     `json:"success"`
-		Data    []resp.TopicNodeTreeItem `json:"data"`
+		Success bool                    `json:"success"`
+		Data    []resp.CategoryTreeItem `json:"data"`
 	}
 	if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil {
 		t.Fatalf("decode response %q: %v", w.Body.String(), err)

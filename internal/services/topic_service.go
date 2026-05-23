@@ -148,9 +148,9 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error 
 		return errors.New(locales.Get("topic.title_too_long"))
 	}
 
-	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
+	node := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
 	if node == nil || node.Status != constants.StatusOk {
-		return errors.New(locales.Get("topic.node_not_found"))
+		return errors.New(locales.Get("topic.category_not_found"))
 	}
 	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
 	if topic == nil {
@@ -167,7 +167,7 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error 
 		}
 	}
 	if !node.Type.Supports(topic.Type) {
-		return errors.New(locales.Get("topic.node_type_mismatch"))
+		return errors.New(locales.Get("topic.category_type_mismatch"))
 	}
 
 	hideContent := form.HideContent
@@ -182,7 +182,7 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error 
 			err    error
 		)
 		if err = repositories.TopicRepository.Updates(ctx.Tx, topicId, map[string]interface{}{
-			"node_id":      form.NodeId,
+			"category_id":  form.CategoryId,
 			"title":        form.Title,
 			"content":      form.Content,
 			"hide_content": hideContent,
@@ -270,30 +270,30 @@ func (s *topicService) GetTopicTags(topicId int64) []models.Tag {
 }
 
 // GetTopics 帖子列表（最新、推荐、关注、节点）
-func (s *topicService) GetTopics(user *models.User, nodeId, cursor int64, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
+func (s *topicService) GetTopics(user *models.User, categoryId, cursor int64, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	var limit int = 20
-	if nodeId == constants.NodeIdFollow {
+	if categoryId == constants.CategoryIdFollow {
 		if user != nil {
 			return s._GetFollowTopics(user.Id, cursor)
 		}
 		return
 	} else {
-		return s._GetNodeTopics(nodeId, cursor, limit, qaStatus, sort)
+		return s._GetNodeTopics(categoryId, cursor, limit, qaStatus, sort)
 	}
 }
 
 // _GetNodeTopics 帖子列表（最新、推荐、节点）
-func (s *topicService) _GetNodeTopics(nodeId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
+func (s *topicService) _GetNodeTopics(categoryId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	cnd := sqls.NewCnd()
-	if nodeId > 0 {
-		nodeIds := TopicNodeService.GetNodeIdsForList(nodeId)
-		if len(nodeIds) > 0 {
-			cnd.In("node_id", nodeIds)
+	if categoryId > 0 {
+		categoryIds := CategoryService.GetCategoryIdsForList(categoryId)
+		if len(categoryIds) > 0 {
+			cnd.In("category_id", categoryIds)
 		} else {
-			cnd.Eq("node_id", nodeId)
+			cnd.Eq("category_id", categoryId)
 		}
 	}
-	if nodeId == constants.NodeIdRecommend {
+	if categoryId == constants.CategoryIdRecommend {
 		cnd.Eq("recommend", true)
 	}
 	if qaStatus != "" {
@@ -504,14 +504,14 @@ func (s *topicService) GetUserTopics(userId, cursor int64) (topics []models.Topi
 	return
 }
 
-func (s *topicService) GetStickyTopics(nodeId int64, limit int, qaStatus string) []models.Topic {
+func (s *topicService) GetStickyTopics(categoryId int64, limit int, qaStatus string) []models.Topic {
 	cnd := sqls.NewCnd().Eq("sticky", true).Eq("status", constants.StatusOk).Desc("sticky_time").Limit(limit)
-	if nodeId > 0 {
-		nodeIds := TopicNodeService.GetNodeIdsForList(nodeId)
-		if len(nodeIds) > 0 {
-			cnd.In("node_id", nodeIds)
+	if categoryId > 0 {
+		categoryIds := CategoryService.GetCategoryIdsForList(categoryId)
+		if len(categoryIds) > 0 {
+			cnd.In("category_id", categoryIds)
 		} else {
-			cnd.Eq("node_id", nodeId)
+			cnd.Eq("category_id", categoryId)
 		}
 	}
 	if qaStatus != "" {

@@ -28,22 +28,22 @@ import (
 	"bbs-go/internal/services"
 )
 
-func topicGetBuiltInNodes() []resp.NodeResponse {
-	return []resp.NodeResponse{
+func topicGetBuiltInNodes() []resp.CategoryResponse {
+	return []resp.CategoryResponse{
 		{
 			Id:   0,
-			Name: locales.Get("topic.node.latest"),
-			Logo: "/res/images/node_latest.png",
+			Name: locales.Get("topic.category.latest"),
+			Logo: "/res/images/category_latest.png",
 		},
 		{
 			Id:   -1,
-			Name: locales.Get("topic.node.recommend"),
-			Logo: "/res/images/node_recommend.png",
+			Name: locales.Get("topic.category.recommend"),
+			Logo: "/res/images/category_recommend.png",
 		},
 		{
 			Id:   -2,
-			Name: locales.Get("topic.node.follow"),
-			Logo: "/res/images/node_follow.png",
+			Name: locales.Get("topic.category.follow"),
+			Logo: "/res/images/category_follow.png",
 		},
 	}
 }
@@ -65,45 +65,45 @@ func topicGetBuiltInNodes() []resp.NodeResponse {
 // 标签帖子列表
 // 收藏
 // 设置置顶
-func TopicNodeNavs(ctx *gin.Context) {
+func CategoryNavs(ctx *gin.Context) {
 
-	nodes := append(
+	categories := append(
 		topicGetBuiltInNodes(),
-		render.BuildNodes(services.TopicNodeService.GetTopLevelNodes())...,
+		render.BuildCategoryResponses(services.CategoryService.GetTopLevelCategories())...,
 	)
-	ginx.WriteJSON(ctx, nodes)
+	ginx.WriteJSON(ctx, categories)
 
 }
 
-func TopicNodes(ctx *gin.Context) {
+func Categories(ctx *gin.Context) {
 	topicType := constants.TopicType(params.FormValueIntDefault(ctx, "type", -1))
-	var nodeList []models.TopicNode
+	var categoryList []models.Category
 	if topicType >= 0 {
-		nodeList = services.TopicNodeService.GetNodesByTopicType(topicType)
+		categoryList = services.CategoryService.GetCategoriesByTopicType(topicType)
 	} else {
-		nodeList = services.TopicNodeService.GetNodes()
+		categoryList = services.CategoryService.GetCategories()
 	}
-	nodes := render.BuildNodeTree(0, nodeList)
-	ginx.WriteJSON(ctx, nodes)
+	categories := render.BuildCategoryResponseTree(0, categoryList)
+	ginx.WriteJSON(ctx, categories)
 
 }
 
-func TopicNode(ctx *gin.Context) {
-	nodeId, _ := params.GetInt64(ctx, "nodeId")
-	if nodeId <= 0 {
+func Category(ctx *gin.Context) {
+	categoryId, _ := params.GetInt64(ctx, "categoryId")
+	if categoryId <= 0 {
 		for _, node := range topicGetBuiltInNodes() {
-			if node.Id == nodeId {
+			if node.Id == categoryId {
 				ginx.WriteJSON(ctx, node)
 				return
 			}
 		}
 	}
-	node := services.TopicNodeService.Get(nodeId)
+	node := services.CategoryService.Get(categoryId)
 	if node == nil {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
 		return
 	}
-	ginx.WriteJSON(ctx, render.BuildNodeWithChildren(node))
+	ginx.WriteJSON(ctx, render.BuildCategoryWithChildren(node))
 
 }
 
@@ -181,7 +181,7 @@ func TopicEditForm(ctx *gin.Context) {
 	ginx.WriteJSON(ctx, map[string]any{
 		"id":          idcodec.Encode(topic.Id),
 		"type":        topic.Type,
-		"nodeId":      topic.NodeId,
+		"categoryId":  topic.CategoryId,
 		"title":       topic.Title,
 		"content":     topic.Content,
 		"contentType": topic.ContentType,
@@ -355,23 +355,23 @@ func TopicUserTopics(ctx *gin.Context) {
 
 func TopicTopics(ctx *gin.Context) {
 	var (
-		cursor   = params.FormValueInt64Default(ctx, "cursor", 0)
-		nodeId   = params.FormValueInt64Default(ctx, "nodeId", 0)
-		qaStatus = strings.TrimSpace(params.FormValue(ctx, "qaStatus"))
-		sort     = strings.TrimSpace(params.FormValue(ctx, "sort"))
-		user     = common.GetCurrentUser(ctx)
+		cursor     = params.FormValueInt64Default(ctx, "cursor", 0)
+		categoryId = params.FormValueInt64Default(ctx, "categoryId", 0)
+		qaStatus   = strings.TrimSpace(params.FormValue(ctx, "qaStatus"))
+		sort       = strings.TrimSpace(params.FormValue(ctx, "sort"))
+		user       = common.GetCurrentUser(ctx)
 	)
-	if nodeId == constants.NodeIdFollow && user == nil {
+	if categoryId == constants.CategoryIdFollow && user == nil {
 		ginx.WriteJSON(ctx, errs.NotLogin())
 		return
 	}
 
 	var temp []models.Topic
 	if cursor <= 0 {
-		stickyTopics := services.TopicService.GetStickyTopics(nodeId, 3, qaStatus)
+		stickyTopics := services.TopicService.GetStickyTopics(categoryId, 3, qaStatus)
 		temp = append(temp, stickyTopics...)
 	}
-	topics, cursor, hasMore := services.TopicService.GetTopics(user, nodeId, cursor, qaStatus, sort)
+	topics, cursor, hasMore := services.TopicService.GetTopics(user, categoryId, cursor, qaStatus, sort)
 	for _, topic := range topics {
 		topic.Sticky = false // 正常列表不要渲染置顶
 		temp = append(temp, topic)

@@ -338,7 +338,7 @@ export default function DashboardSettingsRoute() {
   const { t } = useI18n()
   const currentUser = useCurrentUser()
   const [settings, setSettings] = React.useState<SettingsState>({})
-  const [nodes, setNodes] = React.useState<AdminRecord[]>([])
+  const [categories, setNodes] = React.useState<AdminRecord[]>([])
   const [loading, setLoading] = React.useState(true)
   const [savingSection, setSavingSection] = React.useState<string | null>(null)
   const [reindexing, setReindexing] = React.useState(false)
@@ -390,7 +390,7 @@ export default function DashboardSettingsRoute() {
       try {
         const [config, nodeList] = await Promise.all([
           adminGet<AdminRecord>(SETTINGS_ENDPOINT),
-          adminGet<AdminRecord[]>("/api/admin/topic-node/nodes").catch(
+          adminGet<AdminRecord[]>("/api/admin/category/options").catch(
             () => []
           ),
         ])
@@ -580,7 +580,7 @@ export default function DashboardSettingsRoute() {
           <TabsContent value="content" className="mt-0">
             <ContentSettings
               settings={settings}
-              nodes={nodes}
+              categories={categories}
               saving={savingSection === "content"}
               s={s}
               update={update}
@@ -588,7 +588,7 @@ export default function DashboardSettingsRoute() {
               onSave={() =>
                 void saveSection("content", {
                   recommendTags: settings.recommendTags,
-                  defaultNodeId: settings.defaultNodeId,
+                  defaultCategoryId: settings.defaultCategoryId,
                   urlRedirect: settings.urlRedirect,
                   enableHideContent: settings.enableHideContent,
                   enableQaBounty: settings.enableQaBounty,
@@ -1019,14 +1019,14 @@ function SitemapSettings({
 
 function ContentSettings({
   settings,
-  nodes,
+  categories,
   saving,
   s,
   update,
   onError,
   onSave,
 }: SettingsProps & {
-  nodes: AdminRecord[]
+  categories: AdminRecord[]
   onError: (message: string | null) => void
 }) {
   const modules = getObject(settings.modules)
@@ -1071,16 +1071,16 @@ function ContentSettings({
           ))}
         </div>
       </Field>
-      <Field label={s("content.defaultNodeId")}>
+      <Field label={s("content.defaultCategoryId")}>
         <DashboardSelect
-          value={settings.defaultNodeId as string | number | null | undefined}
-          options={nodes.map((node) => ({
-            label: String(node.name ?? node.title ?? node.id),
-            value: Number(node.id),
+          value={settings.defaultCategoryId as string | number | null | undefined}
+          options={categories.map((category) => ({
+            label: String(category.name ?? category.title ?? category.id),
+            value: Number(category.id),
           }))}
-          placeholder={s("content.placeholder.defaultNodeId")}
+          placeholder={s("content.placeholder.defaultCategoryId")}
           onValueChange={(value) =>
-            update("defaultNodeId", value === undefined ? undefined : Number(value))
+            update("defaultCategoryId", value === undefined ? undefined : Number(value))
           }
         />
       </Field>

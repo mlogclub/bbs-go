@@ -66,7 +66,7 @@ function dashboardBreadcrumbs(
           title: t("dashboard.nav.articles"),
           url: "/dashboard/articles",
         },
-        nodes: { title: t("dashboard.nav.nodes"), url: "/dashboard/nodes" },
+        categories: { title: t("dashboard.nav.categories"), url: "/dashboard/categories" },
         links: { title: t("dashboard.nav.links"), url: "/dashboard/links" },
         "forbidden-words": {
           title: t("dashboard.nav.forbiddenWords"),

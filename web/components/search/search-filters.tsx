@@ -18,18 +18,18 @@ type NodeOption = {
 }
 
 export function SearchFilters({
-  nodes,
+  categories,
   showNode = true,
   showTime = true,
 }: {
-  nodes: NodeOption[]
+  categories: NodeOption[]
   showNode?: boolean
   showTime?: boolean
 }) {
   return (
     <React.Suspense fallback={<div className="h-9 w-[268px]" />}>
       <SearchFiltersContent
-        nodes={nodes}
+        categories={categories}
         showNode={showNode}
         showTime={showTime}
       />
@@ -38,18 +38,18 @@ export function SearchFilters({
 }
 
 function SearchFiltersContent({
-  nodes,
+  categories,
   showNode,
   showTime,
 }: {
-  nodes: NodeOption[]
+  categories: NodeOption[]
   showNode: boolean
   showTime: boolean
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useI18n()
-  const nodeId = searchParams.get("nodeId") || "0"
+  const categoryId = searchParams.get("categoryId") || "0"
   const timeRange = searchParams.get("timeRange") || "0"
 
   function setQuery(key: string, value: string) {
@@ -67,20 +67,20 @@ function SearchFiltersContent({
     <div className="flex flex-wrap items-center gap-2">
       {showNode ? (
         <Select
-          value={nodeId}
-          onValueChange={(value) => setQuery("nodeId", value)}
+          value={categoryId}
+          onValueChange={(value) => setQuery("categoryId", value)}
         >
           <SelectTrigger
             className="h-9 w-full rounded-lg bg-background text-xs sm:w-[168px]"
-            aria-label={t("component.search.allNodes")}
+            aria-label={t("component.search.allCategories")}
           >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="0">{t("component.search.allNodes")}</SelectItem>
-            {nodes.map((node) => (
-              <SelectItem key={node.id} value={String(node.id)}>
-                {node.label}
+            <SelectItem value="0">{t("component.search.allCategories")}</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={String(category.id)}>
+                {category.label}
               </SelectItem>
             ))}
           </SelectContent>

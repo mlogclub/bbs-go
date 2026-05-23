@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/common/empty-state"
 import { TopicEditForm } from "@/components/topic/topic-edit-form"
 import { apiFetch } from "@/lib/api/client"
 import type { TopicEditData } from "@/lib/api/topics"
-import type { TopicNode } from "@/lib/api/types"
+import type { Category } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { noindexRouteMeta } from "@/lib/seo"
 import { useDocumentTitle } from "@/lib/use-document-title"
@@ -37,11 +37,11 @@ export default function TopicEditRoute() {
   const { id = "" } = useParams()
   const { config } = useAppState()
   const { data, loading, error } = useClientData(`topic-edit:${id}`, async () => {
-    const [topic, nodes] = await Promise.all([
+    const [topic, categories] = await Promise.all([
       apiFetch<TopicEditData>(`/api/topic/edit/${id}`),
-      apiFetch<TopicNode[]>("/api/topic/nodes").catch(() => []),
+      apiFetch<Category[]>("/api/topic/categories").catch(() => []),
     ])
-    return { topic, nodes }
+    return { topic, categories }
   })
 
   if (loading) {
@@ -56,7 +56,7 @@ export default function TopicEditRoute() {
   return (
     <main className="main">
       <div className="container">
-        <TopicEditForm topic={data.topic} config={config} nodes={data.nodes} />
+        <TopicEditForm topic={data.topic} config={config} categories={data.categories} />
       </div>
     </main>
   )

@@ -216,10 +216,10 @@ export function DashboardOverview() {
       permission: PERMISSIONS.DASHBOARD_USER_VIEW,
     },
     {
-      key: "nodes",
-      href: "/dashboard/nodes",
+      key: "categories",
+      href: "/dashboard/categories",
       icon: TagsIcon,
-      permission: PERMISSIONS.DASHBOARD_NODE_VIEW,
+      permission: PERMISSIONS.DASHBOARD_CATEGORY_VIEW,
     },
     {
       key: "settings",

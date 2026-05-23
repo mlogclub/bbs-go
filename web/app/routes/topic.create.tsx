@@ -3,7 +3,7 @@ import { Navigate, useLocation, useSearchParams } from "react-router"
 import { useAppState, useAuthChecked } from "@/components/app/app-provider"
 import { TopicCreateForm } from "@/components/topic/topic-create-form"
 import { apiFetch } from "@/lib/api/client"
-import type { TopicNode } from "@/lib/api/types"
+import type { Category } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { noindexRouteMeta } from "@/lib/seo"
 import { useDocumentTitle } from "@/lib/use-document-title"
@@ -35,15 +35,15 @@ export default function TopicCreateRoute() {
   const [searchParams] = useSearchParams()
   const { config, currentUser } = useAppState()
   const authChecked = useAuthChecked()
-  const { data: nodes } = useClientData<TopicNode[]>("topic:nodes", () =>
-    apiFetch<TopicNode[]>("/api/topic/nodes").catch(() => [])
+  const { data: categories } = useClientData<Category[]>("topic:categories", () =>
+    apiFetch<Category[]>("/api/topic/categories").catch(() => [])
   )
   const contentType =
     searchParams.get("contentType") === "markdown" ||
     searchParams.get("contentType") === "text"
       ? searchParams.get("contentType")!
       : "html"
-  const nodeId = Number(searchParams.get("nodeId") || 0)
+  const categoryId = Number(searchParams.get("categoryId") || 0)
   const type = Number(searchParams.get("type") || 0)
   const title =
     type === 1
@@ -71,12 +71,12 @@ export default function TopicCreateRoute() {
     <main className="main">
       <div className="container">
         <TopicCreateForm
-          key={`${type}:${contentType}:${nodeId}`}
+          key={`${type}:${contentType}:${categoryId}`}
           contentType={contentType as "html" | "markdown" | "text"}
           currentUser={currentUser}
           config={config}
-          nodeId={nodeId}
-          nodes={nodes || []}
+          categoryId={categoryId}
+          categories={categories || []}
           type={type}
         />
       </div>

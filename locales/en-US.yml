@@ -1,7 +1,7 @@
 common:
   not_found: "Not found"
 topic:
-  node:
+  category:
     latest: "Latest posts"
     recommend: Featured
     follow: Following
@@ -10,12 +10,12 @@ topic:
   under_review: "Content under review"
   no_permission: "You don't have permission to do that"
   type_not_supported: "Current topic type does not support modification"
-  node_type_mismatch: "Selected category does not support this topic type"
+  category_type_mismatch: "Selected category does not support this topic type"
   title_required: "Title is required"
   title_too_long: "Title cannot exceed 128 characters"
   content_required: "Content is required"
-  node_required: "Please select a category"
-  node_not_found: "Category not found"
+  category_required: "Please select a category"
+  category_not_found: "Category not found"
   topic_not_found: "Topic not found"
   updates_disabled: "Updates are not enabled"
   discussions_disabled: "Discussions are not enabled"

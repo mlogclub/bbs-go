@@ -5,14 +5,14 @@ import type {
   Tag,
   Topic,
   TopicHideContent,
-  TopicNode,
+  Category,
   UserSummary,
 } from "./types"
 
 type TopicParams = Record<string, string | number | boolean | undefined>
 type SearchTopicParams = {
   keyword: string
-  nodeId?: number
+  categoryId?: number
   timeRange?: number
   cursor?: string
 }
@@ -21,11 +21,11 @@ export function getTopics(params: TopicParams = {}) {
   return apiFetch<PageData<Topic>>("/api/topic/topics", { params })
 }
 
-export function getNodeTopics(
-  nodeId: string | number,
+export function getCategoryTopics(
+  categoryId: string | number,
   params: TopicParams = {}
 ) {
-  return getTopics({ ...params, nodeId })
+  return getTopics({ ...params, categoryId })
 }
 
 export function getTagTopics(tagId: string | number, cursor?: string) {
@@ -42,7 +42,7 @@ export type TopicEditData = Pick<
   Topic,
   "id" | "type" | "title" | "content" | "attachments"
 > & {
-  nodeId: number
+  categoryId: number
   contentType?: "html" | "markdown" | string
   hideContent?: string
   tags?: string[] | null
@@ -62,16 +62,16 @@ export function getTopicHideContent(id: string) {
   })
 }
 
-export function getTopicNode(nodeId: string | number) {
-  return apiFetch<TopicNode>("/api/topic/node", { params: { nodeId } })
+export function getCategory(categoryId: string | number) {
+  return apiFetch<Category>("/api/topic/category", { params: { categoryId } })
 }
 
-export function getTopicNodes() {
-  return apiFetch<TopicNode[]>("/api/topic/nodes")
+export function getCategories() {
+  return apiFetch<Category[]>("/api/topic/categories")
 }
 
-export function getTopicNodeNavs() {
-  return apiFetch<TopicNode[]>("/api/topic/node_navs")
+export function getCategoryNavs() {
+  return apiFetch<Category[]>("/api/topic/category_navs")
 }
 
 export function getTag(id: string | number) {

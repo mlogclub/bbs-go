@@ -16,7 +16,7 @@ import {
 } from "@/components/common/confirm-dialog"
 import { PreviewableImage } from "@/components/common/image-preview"
 import { ContentEditor } from "@/components/editor/content-editor"
-import { TopicNodeQuickSelector } from "@/components/topic/topic-node-selector"
+import { CategoryQuickSelector } from "@/components/topic/category-selector"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -32,21 +32,21 @@ import type {
   SiteConfig,
   Topic,
   TopicAttachment,
-  TopicNode,
+  Category,
   UserSummary,
 } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { formatDate } from "@/lib/format"
 import {
-  getFirstTopicNodeId,
-  hasTopicNode,
-  filterTopicNodeTree,
-} from "@/lib/topic-nodes"
+  getFirstCategoryId,
+  hasCategory,
+  filterCategoryTree,
+} from "@/lib/categories"
 import { useToastActions } from "@/lib/toast"
 
 type TopicCreateFormState = {
   type: number
-  nodeId: number
+  categoryId: number
   title: string
   tags: string[]
   contentType: "html" | "markdown" | "text"
@@ -82,22 +82,22 @@ function publishLabelForType(type: number, t: ReturnType<typeof useI18n>["t"]) {
 }
 
 function nodeTypeMatches(topicType: number) {
-  return (node: TopicNode) =>
+  return (node: Category) =>
     topicType === 2 ? node.type === "qa" : node.type !== "qa"
 }
 
 function createInitialForm({
   type,
-  nodeId,
+  categoryId,
   contentType,
 }: {
   type: number
-  nodeId: number
+  categoryId: number
   contentType: TopicCreateFormState["contentType"]
 }): TopicCreateFormState {
   return {
     type,
-    nodeId,
+    categoryId,
     title: "",
     tags: [],
     contentType,
@@ -697,15 +697,15 @@ export function TopicCreateForm({
   contentType,
   currentUser,
   config,
-  nodeId,
-  nodes,
+  categoryId,
+  categories,
   type,
 }: {
   contentType: TopicCreateFormState["contentType"]
   currentUser: UserSummary
   config: SiteConfig | null
-  nodeId: number
-  nodes: TopicNode[]
+  categoryId: number
+  categories: Category[]
   type: number
 }) {
   const router = useRouter()
@@ -729,19 +729,19 @@ export function TopicCreateForm({
   const [form, setForm] = React.useState<TopicCreateFormState>(() =>
     createInitialForm({
       type,
-      nodeId: nodeId || config?.defaultNodeId || 0,
+      categoryId: categoryId || config?.defaultCategoryId || 0,
       contentType,
     })
   )
 
   const availableNodes = React.useMemo(
-    () => filterTopicNodeTree(nodes, nodeTypeMatches(form.type)),
-    [form.type, nodes]
+    () => filterCategoryTree(categories, nodeTypeMatches(form.type)),
+    [form.type, categories]
   )
-  const effectiveNodeId = hasTopicNode(availableNodes, form.nodeId)
-    ? form.nodeId
-    : getFirstTopicNodeId(availableNodes)
-  const noQaNodesAvailable = form.type === 2 && availableNodes.length === 0
+  const effectiveCategoryId = hasCategory(availableNodes, form.categoryId)
+    ? form.categoryId
+    : getFirstCategoryId(availableNodes)
+  const noQaCategoriesAvailable = form.type === 2 && availableNodes.length === 0
   const isNeedEmailVerify = Boolean(
     config?.createTopicEmailVerified && !currentUser.emailVerified
   )
@@ -793,8 +793,8 @@ export function TopicCreateForm({
       return
     }
     lastSubmitAtRef.current = now
-    if (form.type === 2 && !hasTopicNode(availableNodes, effectiveNodeId)) {
-      msgWarning(t("pages.topic.create.noQaNodeSubmit"))
+    if (form.type === 2 && !hasCategory(availableNodes, effectiveCategoryId)) {
+      msgWarning(t("pages.topic.create.noQaCategorySubmit"))
       return
     }
     if (form.type === 1 && simpleEditorUploading) {
@@ -815,7 +815,7 @@ export function TopicCreateForm({
         method: "POST",
         body: {
           ...form,
-          nodeId: effectiveNodeId,
+          categoryId: effectiveCategoryId,
           bountyScore: Number(form.bountyScore) || 0,
           attachmentIds:
             form.type === 0 ? attachmentList.map((item) => item.id) : [],
@@ -896,13 +896,13 @@ export function TopicCreateForm({
     )
   }
 
-  if (noQaNodesAvailable) {
+  if (noQaCategoriesAvailable) {
     return (
       <Alert>
         <AlertCircle className="h-4 w-4 shrink-0" />
-        <AlertTitle>{t("pages.topic.create.noQaNodeTitle")}</AlertTitle>
+        <AlertTitle>{t("pages.topic.create.noQaCategoryTitle")}</AlertTitle>
         <AlertDescription>
-          {t("pages.topic.create.noQaNodeDescription")}
+          {t("pages.topic.create.noQaCategoryDescription")}
         </AlertDescription>
       </Alert>
     )
@@ -942,10 +942,10 @@ export function TopicCreateForm({
         </div>
 
         <div className="field">
-          <TopicNodeQuickSelector
-            value={effectiveNodeId}
-            nodes={availableNodes}
-            onChange={(nodeId) => updateForm({ nodeId })}
+          <CategoryQuickSelector
+            value={effectiveCategoryId}
+            categories={availableNodes}
+            onChange={(categoryId) => updateForm({ categoryId })}
           />
         </div>
 

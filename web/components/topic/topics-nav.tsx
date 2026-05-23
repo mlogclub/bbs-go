@@ -1,20 +1,20 @@
 import { TopicsNavContent } from "@/components/topic/topics-nav-content"
-import { getTopicNodeNavs } from "@/lib/api/topics"
+import { getCategoryNavs } from "@/lib/api/topics"
 
 export async function TopicsNav({
-  currentNodeId,
-  currentRootNodeId,
+  currentCategoryId,
+  currentRootCategoryId,
 }: {
-  currentNodeId?: number
-  currentRootNodeId?: number
+  currentCategoryId?: number
+  currentRootCategoryId?: number
 }) {
-  const nodes = await getTopicNodeNavs().catch(() => [])
+  const nodes = await getCategoryNavs().catch(() => [])
 
   return (
     <TopicsNavContent
-      initialNodes={nodes}
-      currentNodeId={currentNodeId}
-      currentRootNodeId={currentRootNodeId}
+      initialCategories={nodes}
+      currentCategoryId={currentCategoryId}
+      currentRootCategoryId={currentRootCategoryId}
     />
   )
 }

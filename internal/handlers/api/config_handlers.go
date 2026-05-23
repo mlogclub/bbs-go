@@ -33,7 +33,7 @@ func ConfigConfigs(ctx *gin.Context) {
 			FooterLinks:                services.SysConfigService.GetFooterLinks(),
 			RecommendTags:              cache.SysConfigCache.GetStrArr(constants.SysConfigRecommendTags),
 			UrlRedirect:                services.SysConfigService.IsUrlRedirect(),
-			DefaultNodeId:              services.SysConfigService.GetDefaultNodeId(),
+			DefaultCategoryId:          services.SysConfigService.GetDefaultCategoryId(),
 			ArticlePending:             services.SysConfigService.IsArticlePending(),
 			TopicCaptcha:               services.SysConfigService.IsTopicCaptcha(),
 			UserObserveSeconds:         cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds),

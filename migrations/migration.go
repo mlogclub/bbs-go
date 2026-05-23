@@ -109,7 +109,7 @@ func init() {
 	register(7, "qa bounty config defaults", migrate_qa_bounty_config)
 	register(8, "notification types defaults", migrate_notification_types_defaults)
 	register(9, "attachment config defaults", migrate_attachment_config)
-	register(10, "topic node parent_id for hierarchy", migrate_topic_node_parent_id)
+	register(10, "category parent_id for hierarchy", migrate_category_parent_id)
 	register(11, "site content config defaults", migrate_site_content_config)
 	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
 	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)

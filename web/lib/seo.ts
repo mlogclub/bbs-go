@@ -6,7 +6,7 @@ import type {
   SiteConfig,
   Tag,
   Topic,
-  TopicNode,
+  Category,
   UserSummary,
 } from "@/lib/api/types"
 
@@ -290,9 +290,9 @@ export function topicMeta(
   })
 }
 
-export function topicNodeMeta(
+export function categoryMeta(
   config: SiteConfig | null | undefined,
-  node: TopicNode | null | undefined,
+  node: Category | null | undefined,
   canonicalPath?: string
 ) {
   return pageMeta(config, node?.name, {

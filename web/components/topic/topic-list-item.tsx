@@ -149,21 +149,21 @@ export function TopicListItem({
 
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
-          {topic.node ? (
+          {topic.category ? (
             <Link
-              href={`/topics/node/${topic.node.id}`}
+              href={`/topics/category/${topic.category.id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex max-w-full items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground"
             >
-              {topic.node.logo ? (
+              {topic.category.logo ? (
                 <img
-                  src={topic.node.logo}
+                  src={topic.category.logo}
                   alt=""
                   className="h-4 w-4 rounded-full object-cover"
                 />
               ) : null}
-              <span className="truncate">{topic.node.name}</span>
+              <span className="truncate">{topic.category.name}</span>
             </Link>
           ) : null}
         </div>

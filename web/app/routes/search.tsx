@@ -19,7 +19,7 @@ import type {
   SearchArticle,
   SearchUser,
   Topic,
-  TopicNode,
+  Category,
 } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { localizedTitle, noindexMeta, rootDataFromMatches } from "@/lib/seo"
@@ -41,14 +41,14 @@ type MetaLocation = {
 const searchTypes: SearchType[] = ["topic", "article", "user"]
 
 function flattenSearchNodes(
-  nodes: TopicNode[] = [],
+  categories: Category[] = [],
   prefix = ""
 ): SearchNodeOption[] {
-  return nodes.flatMap((node) => {
-    const label = prefix ? `${prefix} / ${node.name}` : node.name || String(node.id)
+  return categories.flatMap((category) => {
+    const label = prefix ? `${prefix} / ${category.name}` : category.name || String(category.id)
     return [
-      { id: Number(node.id), label },
-      ...flattenSearchNodes(node.children || [], label),
+      { id: Number(category.id), label },
+      ...flattenSearchNodes(category.children || [], label),
     ]
   })
 }
@@ -83,12 +83,12 @@ export default function SearchRoute() {
   useDocumentTitle(t("pages.search.title"))
 
   const keyword = searchParams.get("q") || searchParams.get("keyword") || ""
-  const nodeId = Number(searchParams.get("nodeId") || 0)
+  const categoryId = Number(searchParams.get("categoryId") || 0)
   const timeRange = Number(searchParams.get("timeRange") || 0)
   const type = normalizeSearchType(searchParams.get("type"))
   const [searchKeyword, setSearchKeyword] = React.useState(keyword)
-  const { data: nodes } = useClientData<TopicNode[]>("search:nodes", () =>
-    apiFetch<TopicNode[]>("/api/topic/nodes").catch(() => [])
+  const { data: categories } = useClientData<Category[]>("search:categories", () =>
+    apiFetch<Category[]>("/api/topic/categories").catch(() => [])
   )
 
   React.useEffect(() => {
@@ -115,11 +115,11 @@ export default function SearchRoute() {
     } else {
       nextParams.set("type", nextType)
       if (nextType === "user") {
-        nextParams.delete("nodeId")
+        nextParams.delete("categoryId")
         nextParams.delete("timeRange")
       }
       if (nextType === "article") {
-        nextParams.delete("nodeId")
+        nextParams.delete("categoryId")
       }
     }
     setSearchParams(nextParams)
@@ -184,7 +184,7 @@ export default function SearchRoute() {
             </Tabs>
             {type === "topic" || type === "article" ? (
               <SearchFilters
-                nodes={flattenSearchNodes(nodes || [])}
+                categories={flattenSearchNodes(categories || [])}
                 showNode={type === "topic"}
                 showTime
               />
@@ -197,11 +197,11 @@ export default function SearchRoute() {
             initialCursor=""
             initialHasMore
             initialLoad
-            resetKey={`search-topic:${keyword}:${nodeId}:${timeRange}`}
+            resetKey={`search-topic:${keyword}:${categoryId}:${timeRange}`}
             labels={labels}
             loadPage={({ cursor }) =>
               apiFetch<PageData<Topic>>("/api/search/topic", {
-                params: { keyword, nodeId, timeRange, cursor },
+                params: { keyword, categoryId, timeRange, cursor },
               })
             }
             renderItems={(items) => <SearchTopicList results={items} />}

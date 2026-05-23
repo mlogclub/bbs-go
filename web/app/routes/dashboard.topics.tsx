@@ -65,7 +65,7 @@ type TopicRecord = AdminRecord & {
     username?: string
     avatar?: string
   }
-  node?: {
+  category?: {
     name?: string
   }
   tags?: Array<{
@@ -594,7 +594,7 @@ function TopicFeedItem({
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-          {topic.node?.name ? <span>{topic.node.name}</span> : null}
+          {topic.category?.name ? <span>{topic.category.name}</span> : null}
           {topic.tags?.map((tag) =>
             tag.name ? <span key={tag.id || tag.name}>#{tag.name}</span> : null
           )}

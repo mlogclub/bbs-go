@@ -44,7 +44,7 @@ func NewTopicDoc(topic *models.Topic) *TopicDocument {
 	doc := &TopicDocument{
 		Type:       EntityTypeTopic,
 		Id:         topic.Id,
-		NodeId:     topic.NodeId,
+		CategoryId: topic.CategoryId,
 		UserId:     topic.UserId,
 		Title:      html.EscapeString(topic.Title),
 		Status:     topic.Status,
@@ -212,7 +212,7 @@ func DeleteUserIndex(id int64) error {
 }
 
 // 分页查询
-func SearchTopic(keyword string, nodeId int64, nodeIds []int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
+func SearchTopic(keyword string, categoryId int64, categoryIds []int64, timeRange, page, limit int) (docs []TopicDocument, paging *sqls.Paging, err error) {
 	paging = &sqls.Paging{Page: page, Limit: limit}
 
 	query := bleve.NewBooleanQuery()
@@ -223,13 +223,13 @@ func SearchTopic(keyword string, nodeId int64, nodeIds []int64, timeRange, page,
 		query.AddMust(keywordQuery(keyword, []string{"title", "content", "tags", "nickname"}))
 	}
 
-	if nodeId != 0 {
-		if nodeId == -1 { // 推荐
+	if categoryId != 0 {
+		if categoryId == -1 { // 推荐
 			boolFieldQuery := bleve.NewBoolFieldQuery(true)
 			boolFieldQuery.SetField("recommend")
 			query.AddMust(boolFieldQuery)
 		} else {
-			nodeQuery := buildNodeQuery(nodeId, nodeIds)
+			nodeQuery := buildNodeQuery(categoryId, categoryIds)
 			if nodeQuery != nil {
 				query.AddMust(nodeQuery)
 			}
@@ -394,26 +394,26 @@ func SearchAll(keyword string, limit int) (AllResult, error) {
 	return AllResult{Topics: topics, Articles: articles, Users: users}, nil
 }
 
-func buildNodeQuery(nodeId int64, nodeIds []int64) blevequery.Query {
-	if len(nodeIds) == 0 {
-		return buildExactNodeQuery(nodeId)
+func buildNodeQuery(categoryId int64, categoryIds []int64) blevequery.Query {
+	if len(categoryIds) == 0 {
+		return buildExactNodeQuery(categoryId)
 	}
-	if len(nodeIds) == 1 {
-		return buildExactNodeQuery(nodeIds[0])
+	if len(categoryIds) == 1 {
+		return buildExactNodeQuery(categoryIds[0])
 	}
-	queries := make([]blevequery.Query, 0, len(nodeIds))
-	for _, id := range nodeIds {
+	queries := make([]blevequery.Query, 0, len(categoryIds))
+	for _, id := range categoryIds {
 		queries = append(queries, buildExactNodeQuery(id))
 	}
 	return bleve.NewDisjunctionQuery(queries...)
 }
 
-func buildExactNodeQuery(nodeId int64) blevequery.Query {
-	f := float64(nodeId)
+func buildExactNodeQuery(categoryId int64) blevequery.Query {
+	f := float64(categoryId)
 	b := true
-	nodeIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)
-	nodeIdQuery.SetField("nodeId")
-	return nodeIdQuery
+	categoryIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)
+	categoryIdQuery.SetField("categoryId")
+	return categoryIdQuery
 }
 
 func typeQuery(entityType string) blevequery.Query {

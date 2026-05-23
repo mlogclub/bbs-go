@@ -34,8 +34,8 @@ const dedicatedRoutes = {
   "dashboard.user-reports.tsx": {
     expectedDefaultExport: "DashboardUserReportsRoute",
   },
-  "dashboard.nodes.tsx": {
-    expectedDefaultExport: "DashboardNodesRoute",
+  "dashboard.categories.tsx": {
+    expectedDefaultExport: "DashboardCategoriesRoute",
   },
   "dashboard.links.tsx": {
     expectedDefaultExport: "DashboardLinksRoute",
@@ -131,18 +131,18 @@ for (const sourcePath of [
   )
 }
 
-const nodesRoute = readFileSync(resolve(routesDir, "dashboard.nodes.tsx"), "utf8")
+const categoriesRoute = readFileSync(resolve(routesDir, "dashboard.categories.tsx"), "utf8")
 
 assert.equal(
-  /name:\s*"parentId"[\s\S]*?type:\s*"tree-select"/.test(nodesRoute),
+  /name:\s*"parentId"[\s\S]*?type:\s*"tree-select"/.test(categoriesRoute),
   false,
-  "dashboard.nodes.tsx parent node form field should use DashboardSelect via type select"
+  "dashboard.categories.tsx parent category form field should use DashboardSelect via type select"
 )
 
 assert.match(
-  nodesRoute,
-  /name:\s*"nodeId"[\s\S]*?label:\s*dashboardData\.label\(t,\s*"node"\)[\s\S]*?optionsEndpoint:\s*"\/api\/admin\/topic-node\/nodes"/,
-  "dashboard.nodes.tsx should filter by selected node id instead of parent id"
+  categoriesRoute,
+  /name:\s*"categoryId"[\s\S]*?label:\s*dashboardData\.label\(t,\s*"category"\)[\s\S]*?optionsEndpoint:\s*"\/api\/admin\/category\/options"/,
+  "dashboard.categories.tsx should filter by selected category id instead of parent id"
 )
 
 console.log("dashboard route structure tests passed")

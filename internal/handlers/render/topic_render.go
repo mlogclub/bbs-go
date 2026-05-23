@@ -165,9 +165,9 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 		rsp.ImageList = BuildImageList(topic.ImageList)
 	}
 
-	if topic.NodeId > 0 {
-		node := services.TopicNodeService.Get(topic.NodeId)
-		rsp.Node = BuildNode(node)
+	if topic.CategoryId > 0 {
+		category := services.CategoryService.Get(topic.CategoryId)
+		rsp.Category = BuildCategory(category)
 	}
 
 	tags := services.TopicService.GetTopicTags(topic.Id)

@@ -19,7 +19,7 @@ import (
 )
 
 // ensureAncestors 为过滤结果补充父节点，保证树形结构完整
-func ensureAncestors(list []models.TopicNode) []models.TopicNode {
+func ensureAncestors(list []models.Category) []models.Category {
 	idSet := make(map[int64]bool)
 	for _, n := range list {
 		idSet[n.Id] = true
@@ -28,7 +28,7 @@ func ensureAncestors(list []models.TopicNode) []models.TopicNode {
 		added := false
 		for _, n := range list {
 			if n.ParentId > 0 && !idSet[n.ParentId] {
-				parent := services.TopicNodeService.Get(n.ParentId)
+				parent := services.CategoryService.Get(n.ParentId)
 				if parent != nil {
 					list = append(list, *parent)
 					idSet[parent.Id] = true
@@ -43,13 +43,13 @@ func ensureAncestors(list []models.TopicNode) []models.TopicNode {
 	return list
 }
 
-func filterTopicNodeListByNodeID(list []models.TopicNode, nodeID int64) []models.TopicNode {
+func filterCategoryListByNodeID(list []models.Category, nodeID int64) []models.Category {
 	if nodeID <= 0 {
 		return list
 	}
 
 	childrenByParentID := make(map[int64][]int64)
-	byID := make(map[int64]models.TopicNode)
+	byID := make(map[int64]models.Category)
 	for _, node := range list {
 		byID[node.Id] = node
 		childrenByParentID[node.ParentId] = append(childrenByParentID[node.ParentId], node.Id)
@@ -80,7 +80,7 @@ func filterTopicNodeListByNodeID(list []models.TopicNode, nodeID int64) []models
 	}
 	collectDescendants(nodeID)
 
-	filtered := make([]models.TopicNode, 0, len(keep))
+	filtered := make([]models.Category, 0, len(keep))
 	for _, node := range list {
 		if keep[node.Id] {
 			filtered = append(filtered, node)
@@ -90,14 +90,14 @@ func filterTopicNodeListByNodeID(list []models.TopicNode, nodeID int64) []models
 }
 
 // PostDelete 删除节点（一级有子节点时禁止）
-func TopicNodeDetail(ctx *gin.Context) {
+func CategoryDetail(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
 
-	t := services.TopicNodeService.Get(id)
+	t := services.CategoryService.Get(id)
 	if t == nil {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage("Not found, id="+strconv.FormatInt(id, 10)))
 		return
@@ -106,13 +106,13 @@ func TopicNodeDetail(ctx *gin.Context) {
 
 }
 
-func TopicNodeList(ctx *gin.Context) {
-	nodeID, _ := params.GetInt64(ctx, "nodeId")
+func CategoryList(ctx *gin.Context) {
+	nodeID, _ := params.GetInt64(ctx, "categoryId")
 	if nodeID <= 0 {
 		nodeID, _ = params.GetInt64(ctx, "parentId")
 	}
 
-	list := services.TopicNodeService.Find(params.NewSqlCnd(ctx,
+	list := services.CategoryService.Find(params.NewSqlCnd(ctx,
 		params.QueryFilter{
 			ParamName: "name",
 			Op:        params.Like,
@@ -126,26 +126,26 @@ func TopicNodeList(ctx *gin.Context) {
 			Op:        params.Eq,
 		},
 	).Asc("sort_no").Desc("id"))
-	list = filterTopicNodeListByNodeID(list, nodeID)
+	list = filterCategoryListByNodeID(list, nodeID)
 	// 确保父节点在列表中，以便正确构建树
 	list = ensureAncestors(list)
-	ginx.WriteJSON(ctx, render.BuildTopicNodeTree(0, list))
+	ginx.WriteJSON(ctx, render.BuildCategoryTree(0, list))
 
 }
 
-func TopicNodeCreate(ctx *gin.Context) {
-	t := &models.TopicNode{}
+func CategoryCreate(ctx *gin.Context) {
+	t := &models.Category{}
 	if err := ginx.Bind(ctx, t); err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
-	t.SortNo = services.TopicNodeService.GetNextSortNo()
+	t.SortNo = services.CategoryService.GetNextSortNo()
 	if t.ParentId < 0 {
 		t.ParentId = 0
 	}
 	// 子节点类型必须与父节点一致，直接取父节点的 type
 	if t.ParentId > 0 {
-		parent := services.TopicNodeService.Get(t.ParentId)
+		parent := services.CategoryService.Get(t.ParentId)
 		if parent == nil {
 			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
 			return
@@ -153,11 +153,11 @@ func TopicNodeCreate(ctx *gin.Context) {
 		t.Type = parent.Type
 	} else {
 		if t.Type == "" {
-			t.Type = constants.TopicNodeTypeNormal
+			t.Type = constants.CategoryTypeNormal
 		}
 	}
 	t.CreateTime = dates.NowTimestamp()
-	if err := services.TopicNodeService.Create(t); err != nil {
+	if err := services.CategoryService.Create(t); err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
@@ -165,13 +165,13 @@ func TopicNodeCreate(ctx *gin.Context) {
 
 }
 
-func TopicNodeUpdate(ctx *gin.Context) {
+func CategoryUpdate(ctx *gin.Context) {
 	id, err := params.FormValueInt64(ctx, "id")
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
-	t := services.TopicNodeService.Get(id)
+	t := services.CategoryService.Get(id)
 	if t == nil {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage("entity not found"))
 		return
@@ -196,13 +196,13 @@ func TopicNodeUpdate(ctx *gin.Context) {
 
 	// 子节点类型必须与父节点一致，直接取父节点的 type，忽略表单传入
 	if t.ParentId > 0 {
-		parent := services.TopicNodeService.Get(t.ParentId)
+		parent := services.CategoryService.Get(t.ParentId)
 		if parent == nil {
 			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
 			return
 		}
 		if t.Type != parent.Type {
-			ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("topic.node.child_type_must_match_parent")))
+			ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("topic.category.child_type_must_match_parent")))
 			return
 		}
 		t.Type = parent.Type
@@ -212,13 +212,13 @@ func TopicNodeUpdate(ctx *gin.Context) {
 			ginx.WriteJSON(ctx, ginx.ErrorMessage("param: type required"))
 			return
 		}
-		if err := services.TopicNodeService.UpdateChildrenType(id, t.Type); err != nil {
+		if err := services.CategoryService.UpdateChildrenType(id, t.Type); err != nil {
 			ginx.WriteJSON(ctx, err)
 			return
 		}
 	}
 
-	err = services.TopicNodeService.Update(t)
+	err = services.CategoryService.Update(t)
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
@@ -227,20 +227,20 @@ func TopicNodeUpdate(ctx *gin.Context) {
 
 }
 
-func TopicNodeNodes(ctx *gin.Context) {
+func CategoryOptions(ctx *gin.Context) {
 
-	list := services.TopicNodeService.GetNodes()
+	list := services.CategoryService.GetCategories()
 	ginx.WriteJSON(ctx, list)
 
 }
 
-func TopicNodeUpdateSort(ctx *gin.Context) {
+func CategoryUpdateSort(ctx *gin.Context) {
 	var ids []int64
 	if err := ginx.BindJSON(ctx, &ids); err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
-	if err := services.TopicNodeService.UpdateSort(ids); err != nil {
+	if err := services.CategoryService.UpdateSort(ids); err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
 	}
@@ -248,14 +248,14 @@ func TopicNodeUpdateSort(ctx *gin.Context) {
 
 }
 
-func TopicNodeRemove(ctx *gin.Context) {
+func CategoryRemove(ctx *gin.Context) {
 	ids := params.GetInt64Arr(ctx, "ids")
 	if len(ids) == 0 {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage("delete ids is empty"))
 		return
 	}
 	for _, id := range ids {
-		if err := services.TopicNodeService.DeleteWithCheck(id); err != nil {
+		if err := services.CategoryService.DeleteWithCheck(id); err != nil {
 			ginx.WriteJSON(ctx, ginx.ErrorMessage(err.Error()))
 			return
 		}

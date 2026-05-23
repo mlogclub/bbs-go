@@ -11,7 +11,7 @@ export type NodeTopicFilterItem = {
   label: string
 }
 
-function buildFilterPath(nodeId: number, filterType: NodeTopicFilterType, value: string) {
+function buildFilterPath(categoryId: number, filterType: NodeTopicFilterType, value: string) {
   const params = new URLSearchParams()
 
   if (filterType === "qa" && value) {
@@ -21,17 +21,17 @@ function buildFilterPath(nodeId: number, filterType: NodeTopicFilterType, value:
   }
 
   const query = params.toString()
-  return `/topics/node/${nodeId}${query ? `?${query}` : ""}`
+  return `/topics/category/${categoryId}${query ? `?${query}` : ""}`
 }
 
 export function NodeTopicFilters({
-  nodeId,
+  categoryId,
   filterType,
   filters,
   currentValue,
   currentLabel,
 }: {
-  nodeId: number
+  categoryId: number
   filterType: NodeTopicFilterType
   filters: NodeTopicFilterItem[]
   currentValue: string
@@ -53,7 +53,7 @@ export function NodeTopicFilters({
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground",
             )}
-            onClick={() => router.replace(buildFilterPath(nodeId, filterType, item.value))}
+            onClick={() => router.replace(buildFilterPath(categoryId, filterType, item.value))}
           >
             {item.label}
           </button>

@@ -15,7 +15,7 @@ type SysConfigAdminResponse struct {
 	FooterLinks                []FooterLink                `json:"footerLinks"`
 	RecommendTags              []string                    `json:"recommendTags"`
 	UrlRedirect                bool                        `json:"urlRedirect"`
-	DefaultNodeId              int64                       `json:"defaultNodeId"`
+	DefaultCategoryId          int64                       `json:"defaultCategoryId"`
 	ArticlePending             bool                        `json:"articlePending"`
 	TopicCaptcha               bool                        `json:"topicCaptcha"`
 	UserObserveSeconds         int                         `json:"userObserveSeconds"`
@@ -53,7 +53,7 @@ type SysConfigOpenResponse struct {
 	FooterLinks                []FooterLink      `json:"footerLinks"`
 	RecommendTags              []string          `json:"recommendTags"`
 	UrlRedirect                bool              `json:"urlRedirect"`
-	DefaultNodeId              int64             `json:"defaultNodeId"`
+	DefaultCategoryId          int64             `json:"defaultCategoryId"`
 	ArticlePending             bool              `json:"articlePending"`
 	TopicCaptcha               bool              `json:"topicCaptcha"`
 	UserObserveSeconds         int               `json:"userObserveSeconds"`

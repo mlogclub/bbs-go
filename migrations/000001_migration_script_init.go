@@ -25,7 +25,7 @@ type roleSeed struct {
 	Status int
 }
 
-type topicNodeSeed struct {
+type categorySeed struct {
 	ID          int64
 	Name        string
 	Description string
@@ -43,7 +43,7 @@ type sysConfigSeed struct {
 
 type seedData struct {
 	Roles      []roleSeed
-	TopicNodes []topicNodeSeed
+	Categories []categorySeed
 	SysConfigs []sysConfigSeed
 }
 
@@ -83,22 +83,22 @@ func migrate_init() error {
 			}
 		}
 
-		topicNodeIDMap := make(map[int64]int64)
-		for _, n := range seed.TopicNodes {
-			existing := repositories.TopicNodeRepository.Take(tx, "name = ?", n.Name)
+		categoryIDMap := make(map[int64]int64)
+		for _, n := range seed.Categories {
+			existing := repositories.CategoryRepository.Take(tx, "name = ?", n.Name)
 			if existing != nil {
 				existing.Description = n.Description
 				existing.Logo = n.Logo
 				existing.SortNo = n.SortNo
 				existing.Status = n.Status
-				if err := repositories.TopicNodeRepository.Update(tx, existing); err != nil {
+				if err := repositories.CategoryRepository.Update(tx, existing); err != nil {
 					return err
 				}
-				topicNodeIDMap[n.ID] = existing.Id
+				categoryIDMap[n.ID] = existing.Id
 				continue
 			}
 
-			node := &models.TopicNode{
+			node := &models.Category{
 				Model:       models.Model{Id: n.ID},
 				Name:        n.Name,
 				Description: n.Description,
@@ -107,10 +107,10 @@ func migrate_init() error {
 				Status:      n.Status,
 				CreateTime:  now,
 			}
-			if err := repositories.TopicNodeRepository.Create(tx, node); err != nil {
+			if err := repositories.CategoryRepository.Create(tx, node); err != nil {
 				return err
 			}
-			topicNodeIDMap[n.ID] = node.Id
+			categoryIDMap[n.ID] = node.Id
 		}
 
 		for _, c := range seed.SysConfigs {
@@ -139,9 +139,9 @@ func migrate_init() error {
 			}
 		}
 
-		// ensure defaultNodeId sys config points to created node id
-		if nodeID := topicNodeIDMap[1]; nodeID > 0 {
-			if cfg := repositories.SysConfigRepository.GetByKey(tx, constants.SysConfigDefaultNodeId); cfg != nil {
+		// ensure defaultCategoryId sys config points to created node id
+		if nodeID := categoryIDMap[1]; nodeID > 0 {
+			if cfg := repositories.SysConfigRepository.GetByKey(tx, constants.SysConfigDefaultCategoryId); cfg != nil {
 				cfg.Value = strconv.FormatInt(nodeID, 10)
 				cfg.UpdateTime = now
 				if err := repositories.SysConfigRepository.Update(tx, cfg); err != nil {
@@ -176,7 +176,7 @@ func seedForLanguage() seedData {
 			Roles: []roleSeed{
 				{ID: 1, Type: constants.RoleTypeSystem, Name: "Owner", Code: constants.RoleOwner, SortNo: 0, Remark: "Owner with highest privileges", Status: constants.StatusOk},
 			},
-			TopicNodes: []topicNodeSeed{
+			Categories: []categorySeed{
 				{ID: 1, Name: "Default", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
 			},
 			SysConfigs: []sysConfigSeed{
@@ -189,7 +189,7 @@ func seedForLanguage() seedData {
 					{"title": "Articles", "url": "/articles"},
 					{"title": "Tasks", "url": "/tasks"},
 				}, Name: "Site Navigation", Description: "Site Navigation"},
-				{Key: constants.SysConfigDefaultNodeId, Value: "1", Name: "Default Category", Description: "Default Category"},
+				{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: "Default Category", Description: "Default Category"},
 				{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "User Login Validity Period (Days)", Description: "User Login Validity Period (Days)"},
 				{Key: constants.SysConfigUrlRedirect, Value: "false"},
 				{Key: constants.SysConfigEnableHideContent, Value: "false"},
@@ -212,7 +212,7 @@ func seedForLanguage() seedData {
 		Roles: []roleSeed{
 			{ID: 1, Type: constants.RoleTypeSystem, Name: "超级管理员", Code: constants.RoleOwner, SortNo: 0, Remark: "超级管理员拥有最高权限", Status: constants.StatusOk},
 		},
-		TopicNodes: []topicNodeSeed{
+		Categories: []categorySeed{
 			{ID: 1, Name: "默认节点", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
 		},
 		SysConfigs: []sysConfigSeed{
@@ -225,7 +225,7 @@ func seedForLanguage() seedData {
 				{"title": "文章", "url": "/articles"},
 				{"title": "任务", "url": "/tasks"},
 			}, Name: "站点导航", Description: "站点导航"},
-			{Key: constants.SysConfigDefaultNodeId, Value: "1", Name: "默认节点", Description: "默认节点"},
+			{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: "默认节点", Description: "默认节点"},
 			{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "用户登录有效期(天)", Description: "用户登录有效期(天)"},
 			{Key: constants.SysConfigUrlRedirect, Value: "false"},
 			{Key: constants.SysConfigEnableHideContent, Value: "false"},

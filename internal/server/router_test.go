@@ -165,7 +165,7 @@ func TestGinRouterRegistersCompatibleAPIPaths(t *testing.T) {
 	}
 
 	for _, want := range []string{
-		http.MethodGet + " /api/topic/node_navs",
+		http.MethodGet + " /api/topic/category_navs",
 		http.MethodGet + " /api/user/score/rank",
 		http.MethodGet + " /api/login/wx_login_config",
 		http.MethodPost + " /api/topic/accept_answer/:id",

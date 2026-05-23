@@ -7,46 +7,46 @@ import { Check, ChevronRight, ChevronsUpDown, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { TopicNode } from "@/lib/api/types"
+import type { Category } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
-import { flattenTopicNodes } from "@/lib/topic-nodes"
+import { flattenCategories } from "@/lib/categories"
 import { cn } from "@/lib/utils"
 
-type NodeOption = TopicNode & {
+type CategoryOption = Category & {
   level: number
   parentName: string
   parentId: number
 }
 
-function buildNodeOptions(nodes: TopicNode[], level = 1, parent: TopicNode | null = null): NodeOption[] {
-  if (!Array.isArray(nodes) || nodes.length === 0) {
+function buildCategoryOptions(categories: Category[], level = 1, parent: Category | null = null): CategoryOption[] {
+  if (!Array.isArray(categories) || categories.length === 0) {
     return []
   }
 
-  return nodes.flatMap((node) => {
+  return categories.flatMap((category) => {
     const current = {
-      ...node,
+      ...category,
       level,
       parentName: parent?.name || "",
       parentId: parent?.id ? Number(parent.id) : 0,
     }
-    return [current, ...buildNodeOptions(node.children || [], level + 1, node)]
+    return [current, ...buildCategoryOptions(category.children || [], level + 1, category)]
   })
 }
 
-function formatNodeLabel(node?: NodeOption | null) {
-  if (!node) {
+function formatCategoryLabel(category?: CategoryOption | null) {
+  if (!category) {
     return ""
   }
-  if (node.level === 2 && node.parentName) {
-    return `${node.parentName} / ${node.name}`
+  if (category.level === 2 && category.parentName) {
+    return `${category.parentName} / ${category.name}`
   }
-  return node.name
+  return category.name
 }
 
-export function TopicNodeSelector({
+export function CategorySelector({
   value,
-  nodes,
+  categories,
   triggerFullWidth = true,
   triggerSize = "default",
   triggerLabel,
@@ -54,7 +54,7 @@ export function TopicNodeSelector({
   onChange,
 }: {
   value: number
-  nodes: TopicNode[]
+  categories: Category[]
   triggerFullWidth?: boolean
   triggerSize?: "default" | "sm"
   triggerLabel?: string
@@ -65,9 +65,9 @@ export function TopicNodeSelector({
   const [open, setOpen] = React.useState(false)
   const [keyword, setKeyword] = React.useState("")
   const listRef = React.useRef<HTMLDivElement>(null)
-  const storageKey = "bbsgo-recent-topic-node-ids"
+  const storageKey = "bbsgo-recent-category-ids"
   const maxRecentCount = 5
-  const [recentNodeIds, setRecentNodeIds] = React.useState<number[]>(() => {
+  const [recentCategoryIds, setRecentCategoryIds] = React.useState<number[]>(() => {
     if (typeof window === "undefined") {
       return []
     }
@@ -83,30 +83,30 @@ export function TopicNodeSelector({
     }
   })
 
-  const nodeList = React.useMemo(() => buildNodeOptions(Array.isArray(nodes) ? nodes : []), [nodes])
-  const selectedNode = nodeList.find((node) => Number(node.id) === Number(value))
-  const triggerText = triggerLabel || formatNodeLabel(selectedNode) || t("pages.topic.nodeSelector.choose")
+  const categoryList = React.useMemo(() => buildCategoryOptions(Array.isArray(categories) ? categories : []), [categories])
+  const selectedCategory = categoryList.find((category) => Number(category.id) === Number(value))
+  const triggerText = triggerLabel || formatCategoryLabel(selectedCategory) || t("pages.topic.categorySelector.choose")
   const triggerClass = triggerFullWidth ? "h-10 w-full justify-between px-3" : "h-6 justify-between px-3"
 
   const filteredNodes = React.useMemo(() => {
     const query = keyword.trim().toLowerCase()
     if (!query) {
-      return nodeList
+      return categoryList
     }
-    return nodeList.filter((node) => {
-      const name = String(node.name || "").toLowerCase()
-      const parentName = String(node.parentName || "").toLowerCase()
+    return categoryList.filter((category) => {
+      const name = String(category.name || "").toLowerCase()
+      const parentName = String(category.parentName || "").toLowerCase()
       return name.includes(query) || parentName.includes(query)
     })
-  }, [keyword, nodeList])
+  }, [keyword, categoryList])
 
   const recentNodes = React.useMemo(() => {
-    if (!recentNodeIds.length) {
+    if (!recentCategoryIds.length) {
       return []
     }
-    const nodeMap = new Map(nodeList.map((node) => [Number(node.id), node]))
-    return recentNodeIds.map((id) => nodeMap.get(Number(id))).filter(Boolean) as NodeOption[]
-  }, [nodeList, recentNodeIds])
+    const categoryMap = new Map(categoryList.map((category) => [Number(category.id), category]))
+    return recentCategoryIds.map((id) => categoryMap.get(Number(id))).filter(Boolean) as CategoryOption[]
+  }, [categoryList, recentCategoryIds])
 
   React.useEffect(() => {
     if (!open) {
@@ -119,16 +119,16 @@ export function TopicNodeSelector({
   }, [open])
 
   function pushRecentNode(id: number) {
-    const nextIds = recentNodeIds.filter((item) => Number(item) !== Number(id))
+    const nextIds = recentCategoryIds.filter((item) => Number(item) !== Number(id))
     nextIds.unshift(Number(id))
     const limitedIds = nextIds.slice(0, maxRecentCount)
-    setRecentNodeIds(limitedIds)
+    setRecentCategoryIds(limitedIds)
     window.localStorage.setItem(storageKey, JSON.stringify(limitedIds))
   }
 
-  function selectNode(node: NodeOption) {
-    onChange(Number(node.id))
-    pushRecentNode(Number(node.id))
+  function selectCategory(category: CategoryOption) {
+    onChange(Number(category.id))
+    pushRecentNode(Number(category.id))
     setOpen(false)
   }
 
@@ -152,16 +152,16 @@ export function TopicNodeSelector({
           <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-w-lg">
             <div className="flex flex-col space-y-1.5 text-center sm:text-left">
               <DialogPrimitive.Title className="text-lg leading-none font-semibold tracking-tight">
-                {t("pages.topic.nodeSelector.title")}
+                {t("pages.topic.categorySelector.title")}
               </DialogPrimitive.Title>
             </div>
 
             <div className="space-y-3">
-              <Input value={keyword} placeholder={t("pages.topic.nodeSelector.searchPlaceholder")} onChange={(event) => setKeyword(event.currentTarget.value)} />
+              <Input value={keyword} placeholder={t("pages.topic.categorySelector.searchPlaceholder")} onChange={(event) => setKeyword(event.currentTarget.value)} />
 
               {recentNodes.length ? (
                 <div className="space-y-2">
-                  <div className="text-xs text-muted-foreground">{t("pages.topic.nodeSelector.recent")}</div>
+                  <div className="text-xs text-muted-foreground">{t("pages.topic.categorySelector.recent")}</div>
                   <div className="flex flex-wrap gap-1.5">
                     {recentNodes.map((node) => (
                       <Button
@@ -170,9 +170,9 @@ export function TopicNodeSelector({
                         size="xs"
                         variant={Number(value) === Number(node.id) ? "default" : "secondary"}
                         className="h-6 px-2 text-xs"
-                        onClick={() => selectNode(node)}
+                        onClick={() => selectCategory(node)}
                       >
-                        {formatNodeLabel(node)}
+                        {formatCategoryLabel(node)}
                       </Button>
                     ))}
                   </div>
@@ -193,7 +193,7 @@ export function TopicNodeSelector({
                         node.level === 1 && "font-medium text-foreground",
                         node.level === 2 && "pl-7 text-muted-foreground"
                       )}
-                      onClick={() => selectNode(node)}
+                      onClick={() => selectCategory(node)}
                     >
                       <span className="flex min-w-0 flex-1 items-center">
                         <span className="flex min-w-0 items-center gap-2">
@@ -208,7 +208,7 @@ export function TopicNodeSelector({
                   ))}
                   {!filteredNodes.length ? (
                     <div className="px-2 py-6 text-center text-sm text-muted-foreground">
-                      {t("pages.topic.nodeSelector.empty")}
+                      {t("pages.topic.categorySelector.empty")}
                     </div>
                   ) : null}
                 </div>
@@ -226,13 +226,13 @@ export function TopicNodeSelector({
   )
 }
 
-export function TopicNodeQuickSelector({
+export function CategoryQuickSelector({
   value,
-  nodes,
+  categories,
   onChange,
 }: {
   value: number
-  nodes: TopicNode[]
+  categories: Category[]
   onChange: (value: number) => void
 }) {
   const { t } = useI18n()
@@ -246,9 +246,9 @@ export function TopicNodeQuickSelector({
     return () => query.removeEventListener("change", sync)
   }, [])
 
-  const nodeList = React.useMemo(() => flattenTopicNodes(nodes), [nodes])
+  const nodeList = React.useMemo(() => flattenCategories(categories), [categories])
   const level1NodesRaw = nodeList.filter((node) => !Number(node.parentId))
-  const level2ByParent = new Map<number, TopicNode[]>()
+  const level2ByParent = new Map<number, Category[]>()
   nodeList.forEach((node) => {
     const parentId = Number(node.parentId)
     if (parentId > 0) {
@@ -274,7 +274,7 @@ export function TopicNodeQuickSelector({
     return first
   }, [level1NodesRaw, selectedLevel1Id, visibleLimit])
 
-  function selectLevel1(node: TopicNode) {
+  function selectLevel1(node: Category) {
     const children = level2ByParent.get(Number(node.id)) || []
     if (children.length) {
       const inFamily = Number(value) === Number(node.id) || children.some((child) => Number(child.id) === Number(value))
@@ -298,24 +298,24 @@ export function TopicNodeQuickSelector({
           </button>
         ))}
         {level1NodesRaw.length > visibleLimit ? (
-          <TopicNodeSelector
+          <CategorySelector
             value={value}
-            nodes={nodes}
+            categories={categories}
             triggerFullWidth={false}
             triggerSize="sm"
-            triggerLabel={t("pages.topic.nodeSelector.more")}
+            triggerLabel={t("pages.topic.categorySelector.more")}
             triggerIcon="right"
             onChange={onChange}
           />
         ) : null}
       </div>
       {subRowNodes.length ? (
-        <div className="topic-subnodes">
-          <div className="topic-subnodes-body">
-            <div className="topic-subnodes-header">
-              <span className="topic-subnodes-label">{t("pages.topic.nodeSelector.subnodes")}</span>
+        <div className="topic-subcategories">
+          <div className="topic-subcategories-body">
+            <div className="topic-subcategories-header">
+              <span className="topic-subcategories-label">{t("pages.topic.categorySelector.subcategories")}</span>
             </div>
-            <div className="topic-subnodes-list">
+            <div className="topic-subcategories-list">
               {subRowNodes.map((node) => (
                 <button
                   key={node.id}

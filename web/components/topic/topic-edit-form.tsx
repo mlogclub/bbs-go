@@ -6,28 +6,28 @@ import { Trash2 } from "lucide-react"
 
 import { TagInput } from "@/components/common/tag-input"
 import { ContentEditor } from "@/components/editor/content-editor"
-import { TopicNodeQuickSelector } from "@/components/topic/topic-node-selector"
+import { CategoryQuickSelector } from "@/components/topic/category-selector"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { apiFetch } from "@/lib/api/client"
 import type {
   SiteConfig,
   TopicAttachment,
-  TopicNode,
+  Category,
 } from "@/lib/api/types"
 import type { TopicEditData } from "@/lib/api/topics"
 import { useI18n } from "@/lib/i18n/provider"
 import {
-  filterTopicNodeTree,
-  getFirstTopicNodeId,
-  hasTopicNode,
-} from "@/lib/topic-nodes"
+  filterCategoryTree,
+  getFirstCategoryId,
+  hasCategory,
+} from "@/lib/categories"
 import { msg, useToastActions } from "@/lib/toast"
 
 type TopicEditFormState = {
   id: string
   type: number
-  nodeId: number
+  categoryId: number
   title: string
   content: string
   contentType: "html" | "markdown"
@@ -36,7 +36,7 @@ type TopicEditFormState = {
 }
 
 function nodeTypeMatches(topicType: number) {
-  return (node: TopicNode) =>
+  return (node: Category) =>
     topicType === 2 ? node.type === "qa" : node.type !== "qa"
 }
 
@@ -44,7 +44,7 @@ function normalizeEditData(topic: TopicEditData): TopicEditFormState {
   return {
     id: topic.id,
     type: Number(topic.type) || 0,
-    nodeId: Number(topic.nodeId) || 0,
+    categoryId: Number(topic.categoryId) || 0,
     title: topic.title || "",
     content: topic.content || "",
     contentType: topic.contentType === "markdown" ? "markdown" : "html",
@@ -207,11 +207,11 @@ function TopicAttachmentField({
 export function TopicEditForm({
   topic,
   config,
-  nodes,
+  categories,
 }: {
   topic: TopicEditData
   config: SiteConfig | null
-  nodes: TopicNode[]
+  categories: Category[]
 }) {
   const router = useRouter()
   const { t } = useI18n()
@@ -226,12 +226,12 @@ export function TopicEditForm({
     normalizeEditData(topic)
   )
   const availableNodes = React.useMemo(
-    () => filterTopicNodeTree(nodes, nodeTypeMatches(form.type)),
-    [form.type, nodes]
+    () => filterCategoryTree(categories, nodeTypeMatches(form.type)),
+    [form.type, categories]
   )
-  const effectiveNodeId = hasTopicNode(availableNodes, form.nodeId)
-    ? form.nodeId
-    : getFirstTopicNodeId(availableNodes)
+  const effectiveCategoryId = hasCategory(availableNodes, form.categoryId)
+    ? form.categoryId
+    : getFirstCategoryId(availableNodes)
 
   function updateForm(next: Partial<TopicEditFormState>) {
     setForm((current) => ({ ...current, ...next }))
@@ -254,7 +254,7 @@ export function TopicEditForm({
       await apiFetch<null>(`/api/topic/edit/${form.id}`, {
         method: "POST",
         body: {
-          nodeId: effectiveNodeId,
+          categoryId: effectiveCategoryId,
           title: form.title,
           content: form.content,
           hideContent: form.hideContent,
@@ -282,10 +282,10 @@ export function TopicEditForm({
       </div>
 
       <div className="field">
-        <TopicNodeQuickSelector
-          value={effectiveNodeId}
-          nodes={availableNodes}
-          onChange={(nodeId) => updateForm({ nodeId })}
+        <CategoryQuickSelector
+          value={effectiveCategoryId}
+          categories={availableNodes}
+          onChange={(categoryId) => updateForm({ categoryId })}
         />
       </div>
 

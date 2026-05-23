@@ -102,10 +102,10 @@ export function booleanOptionsFor(t: TFunction) {
   ]
 }
 
-export function nodeTypeOptionsFor(t: TFunction) {
+export function categoryTypeOptionsFor(t: TFunction) {
   return [
-    { label: t("dashboard.nodeTypes.normal"), value: "normal" },
-    { label: t("dashboard.nodeTypes.qa"), value: "qa" },
+    { label: t("dashboard.categoryTypes.normal"), value: "normal" },
+    { label: t("dashboard.categoryTypes.qa"), value: "qa" },
   ]
 }
 

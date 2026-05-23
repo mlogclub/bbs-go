@@ -15,12 +15,12 @@ export function TopicTags({
   return (
     <div className="mb-4 flex flex-col gap-2 px-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
-        {topic.node ? (
+        {topic.category ? (
           <Link
-            href={`/topics/node/${topic.node.id}`}
+            href={`/topics/category/${topic.category.id}`}
             className="mr-2.5 inline-flex items-center justify-center rounded-[12.5px] border border-border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-background hover:text-primary"
           >
-            {topic.node.name}
+            {topic.category.name}
           </Link>
         ) : null}
         {tags.map((tag) => (

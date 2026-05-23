@@ -20,7 +20,7 @@ func TestSearchTopicScopesResultsToTopics(t *testing.T) {
 	mustIndex(t, searchDocID(EntityTypeTopic, 1), &TopicDocument{
 		Type:       EntityTypeTopic,
 		Id:         1,
-		NodeId:     10,
+		CategoryId: 10,
 		UserId:     100,
 		Nickname:   "Ada",
 		Title:      "Golang search topic",

@@ -12,40 +12,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import type { TopicNode } from "@/lib/api/types"
+import type { Category } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { cn } from "@/lib/utils"
 
-function nodeSelected(
-  rootNodeId: number,
-  children: TopicNode[],
-  currentNodeId: number
+function categorySelected(
+  rootCategoryId: number,
+  children: Category[],
+  currentCategoryId: number
 ) {
-  if (currentNodeId === rootNodeId) {
-    return rootNodeId
+  if (currentCategoryId === rootCategoryId) {
+    return rootCategoryId
   }
 
-  return children.some((item) => Number(item.id) === currentNodeId)
-    ? currentNodeId
-    : rootNodeId
+  return children.some((item) => Number(item.id) === currentCategoryId)
+    ? currentCategoryId
+    : rootCategoryId
 }
 
-function SubNodeLink({
+function SubCategoryLink({
   id,
-  selectedNodeId,
+  selectedCategoryId,
   children,
 }: {
   id: number
-  selectedNodeId: number
+  selectedCategoryId: number
   children: React.ReactNode
 }) {
   return (
     <Link
-      href={`/topics/node/${id}`}
+      href={`/topics/category/${id}`}
       data-node-id={id}
       className={cn(
         "inline-flex shrink-0 items-center rounded-md px-3 py-1 font-medium whitespace-nowrap transition-colors",
-        selectedNodeId === id
+        selectedCategoryId === id
           ? "bg-primary text-primary-foreground shadow-sm"
           : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
       )}
@@ -55,21 +55,21 @@ function SubNodeLink({
   )
 }
 
-export function TopicSubNodeNav({
-  rootNodeId,
-  nodes,
-  currentNodeId,
+export function TopicSubCategoryNav({
+  rootCategoryId,
+  categories,
+  currentCategoryId,
 }: {
-  rootNodeId: number
-  nodes?: TopicNode[]
-  currentNodeId: number
+  rootCategoryId: number
+  categories?: Category[]
+  currentCategoryId: number
 }) {
   const { t } = useI18n()
   const [open, setOpen] = React.useState(false)
   const rootRef = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<HTMLDivElement>(null)
-  const navChildren = Array.isArray(nodes) ? nodes : []
-  const selectedNodeId = nodeSelected(rootNodeId, navChildren, currentNodeId)
+  const navChildren = Array.isArray(categories) ? categories : []
+  const selectedCategoryId = categorySelected(rootCategoryId, navChildren, currentCategoryId)
 
   const getScrollViewport = React.useCallback(() => {
     return (
@@ -83,7 +83,7 @@ export function TopicSubNodeNav({
     (behavior: ScrollBehavior = "smooth") => {
       window.requestAnimationFrame(() => {
         const activeNode = listRef.current?.querySelector<HTMLElement>(
-          `[data-node-id="${selectedNodeId}"]`
+          `[data-node-id="${selectedCategoryId}"]`
         )
         activeNode?.scrollIntoView({
           behavior,
@@ -92,7 +92,7 @@ export function TopicSubNodeNav({
         })
       })
     },
-    [selectedNodeId]
+    [selectedCategoryId]
   )
 
   React.useEffect(() => {
@@ -101,7 +101,7 @@ export function TopicSubNodeNav({
 
   React.useEffect(() => {
     scrollSelectedIntoView()
-  }, [selectedNodeId, scrollSelectedIntoView])
+  }, [selectedCategoryId, scrollSelectedIntoView])
 
   React.useEffect(() => {
     const viewport = getScrollViewport()
@@ -154,7 +154,7 @@ export function TopicSubNodeNav({
         behavior: "smooth",
       })
     })
-  }, [open, selectedNodeId])
+  }, [open, selectedCategoryId])
 
   if (!navChildren.length) {
     return null
@@ -169,17 +169,17 @@ export function TopicSubNodeNav({
               ref={listRef}
               className="flex w-max flex-nowrap items-center gap-1 pr-1 pb-2"
             >
-              <SubNodeLink id={rootNodeId} selectedNodeId={selectedNodeId}>
-                {t("pages.topics.allNodes")}
-              </SubNodeLink>
+              <SubCategoryLink id={rootCategoryId} selectedCategoryId={selectedCategoryId}>
+                {t("pages.topics.allCategories")}
+              </SubCategoryLink>
               {navChildren.map((child) => (
-                <SubNodeLink
+                <SubCategoryLink
                   key={child.id}
                   id={child.id}
-                  selectedNodeId={selectedNodeId}
+                  selectedCategoryId={selectedCategoryId}
                 >
                   {child.name}
-                </SubNodeLink>
+                </SubCategoryLink>
               ))}
             </div>
             <ScrollBar orientation="horizontal" />
@@ -191,8 +191,8 @@ export function TopicSubNodeNav({
               <button
                 type="button"
                 className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                aria-label={t("pages.topics.moreSubNodes")}
-                title={t("pages.topics.moreSubNodes")}
+                aria-label={t("pages.topics.moreSubCategories")}
+                title={t("pages.topics.moreSubCategories")}
               >
                 {open ? (
                   <ChevronUp className="h-4 w-4" />
@@ -200,7 +200,7 @@ export function TopicSubNodeNav({
                   <ChevronDown className="h-4 w-4" />
                 )}
                 <span className="sr-only">
-                  {t("pages.topics.moreSubNodes")}
+                  {t("pages.topics.moreSubCategories")}
                 </span>
               </button>
             </DropdownMenuTrigger>
@@ -210,14 +210,14 @@ export function TopicSubNodeNav({
             >
               <DropdownMenuItem
                 asChild
-                data-selected-node={selectedNodeId === rootNodeId}
+                data-selected-node={selectedCategoryId === rootCategoryId}
                 className={cn(
-                  selectedNodeId === rootNodeId &&
+                  selectedCategoryId === rootCategoryId &&
                     "bg-accent text-accent-foreground"
                 )}
               >
-                <Link href={`/topics/node/${rootNodeId}`}>
-                  {t("pages.topics.allNodes")}
+                <Link href={`/topics/category/${rootCategoryId}`}>
+                  {t("pages.topics.allCategories")}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -225,13 +225,13 @@ export function TopicSubNodeNav({
                 <DropdownMenuItem
                   key={`menu-${child.id}`}
                   asChild
-                  data-selected-node={selectedNodeId === child.id}
+                  data-selected-node={selectedCategoryId === child.id}
                   className={cn(
-                    selectedNodeId === child.id &&
+                    selectedCategoryId === child.id &&
                       "bg-accent text-accent-foreground"
                   )}
                 >
-                  <Link href={`/topics/node/${child.id}`} className="truncate">
+                  <Link href={`/topics/category/${child.id}`} className="truncate">
                     {child.name}
                   </Link>
                 </DropdownMenuItem>

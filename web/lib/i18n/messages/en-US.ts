@@ -76,7 +76,7 @@ const enUS = {
       content: "Content",
       topics: "Topics",
       articles: "Articles",
-      nodes: "Categories",
+      categories: "Categories",
       links: "Links",
       forbiddenWords: "Moderation Rules",
       community: "Community",
@@ -99,7 +99,7 @@ const enUS = {
     shortcuts: {
       title: "Management",
       home: "Site Home",
-      nodes: "Categories",
+      categories: "Categories",
       links: "Links",
       badges: "Badges",
       permissions: "Permissions",
@@ -183,7 +183,7 @@ const enUS = {
       once: "One-time",
       daily: "Daily",
     },
-    nodeTypes: {
+    categoryTypes: {
       normal: "Topic",
       qa: "Q&A",
     },
@@ -261,7 +261,7 @@ const enUS = {
       moduleTweet: "Updates",
       moduleTopic: "Topic module",
       moduleArticle: "Article module",
-      defaultNodeId: "Default category ID",
+      defaultCategoryId: "Default category ID",
       recommendTags: "Featured tags",
       urlRedirect: "URL redirect",
       enableHideContent: "Reply-to-view content",
@@ -351,7 +351,7 @@ const enUS = {
         topic: "Topic",
         qa: "Q&A",
         article: "Article",
-        defaultNodeId: "Default Category",
+        defaultCategoryId: "Default Category",
         recommendTags: "Featured tags",
         urlRedirect: "External Link Redirect Page",
         urlRedirectTooltip:
@@ -378,7 +378,7 @@ const enUS = {
         attachmentMaxCount: "Max Attachments per Topic",
         attachmentMaxCountTooltip: "Maximum number of attachments per topic",
         placeholder: {
-          defaultNodeId: "Default category for posting",
+          defaultCategoryId: "Default category for posting",
           recommendTags: "Featured tags",
           attachmentAllowedTypes: "e.g. .pdf .doc, select multiple or add new",
         },
@@ -613,7 +613,7 @@ const enUS = {
         description:
           "Regenerate sitemap XML files and the sitemap index after content, category, tag, or site URL changes.",
         content: "Sitemap Content",
-        contentAll: "Static pages, topic nodes, tags, topics, articles",
+        contentAll: "Static pages, categories, tags, topics, articles",
         status: "Status",
         statusIdle: "Not Started",
         statusRunning: "Generating",
@@ -717,7 +717,7 @@ const enUS = {
         title: "Articles",
         description: "Review articles and perform audit or delete actions.",
       },
-      nodes: {
+      categories: {
         title: "Topic Categories",
         description: "Manage topic and Q&A categories.",
       },
@@ -815,7 +815,7 @@ const enUS = {
         description: "Common destinations available to this account.",
         topics: "Content management",
         users: "User management",
-        nodes: "Category management",
+        categories: "Category management",
         settings: "settings",
         tasks: "Task config",
         levels: "Level config",
@@ -849,7 +849,7 @@ const enUS = {
       searchBtn: "Search",
     },
     search: {
-      allNodes: "All categories",
+      allCategories: "All categories",
       timeRange: {
         all: "Any time",
         day: "Today",
@@ -1203,15 +1203,15 @@ const enUS = {
       filterLatestPublish: "Newest",
       filterLatestReply: "Recently active",
       subCategories: "Subcategories",
-      allNodes: "All",
-      moreSubNodes: "More subcategories",
+      allCategories: "All",
+      moreSubCategories: "More subcategories",
     },
     topic: {
-      nodeSelector: {
+      categorySelector: {
         title: "Select category",
         choose: "Select a category",
         more: "More",
-        subnodes: "Subcategories",
+        subcategories: "Subcategories",
         searchPlaceholder: "Search categories",
         recent: "Recently used",
         empty: "No matching categories",
@@ -1283,10 +1283,10 @@ const enUS = {
         imageUploading: "Image uploading, please try again later...",
         attachmentUploading:
           "Attachment uploading, please wait before submitting",
-        noQaNodeTitle: "No Q&A category available",
-        noQaNodeDescription:
+        noQaCategoryTitle: "No Q&A category available",
+        noQaCategoryDescription:
           "Please ask an admin to add a Q&A category, or choose another topic type.",
-        noQaNodeSubmit:
+        noQaCategorySubmit:
           "No Q&A category available or none selected. Cannot publish.",
         tweetFeatureDisabled: "Updates are not enabled",
         topicFeatureDisabled: "Discussions are not enabled",
@@ -1397,7 +1397,7 @@ const enUS = {
         user: "Users",
       },
       node: "Category",
-      allNodes: "All categories",
+      allCategories: "All categories",
       timeRange: "Time range",
       timeRangeAll: "All",
       timeRangeDay: "1 day",

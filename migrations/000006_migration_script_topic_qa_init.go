@@ -21,9 +21,9 @@ func migrate_topic_qa_init() error {
 			return err
 		}
 
-		if err := tx.Model(&models.TopicNode{}).
+		if err := tx.Model(&models.Category{}).
 			Where("type = '' OR type IS NULL").
-			Update("type", constants.TopicNodeTypeNormal).Error; err != nil {
+			Update("type", constants.CategoryTypeNormal).Error; err != nil {
 			return err
 		}
 

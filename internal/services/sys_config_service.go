@@ -199,8 +199,8 @@ func (s *sysConfigService) IsTopicCaptcha() bool {
 	return cache.SysConfigCache.GetBool(constants.SysConfigTopicCaptcha)
 }
 
-func (s *sysConfigService) GetDefaultNodeId() int64 {
-	return cache.SysConfigCache.GetInt64(constants.SysConfigDefaultNodeId)
+func (s *sysConfigService) GetDefaultCategoryId() int64 {
+	return cache.SysConfigCache.GetInt64(constants.SysConfigDefaultCategoryId)
 }
 
 func (s *sysConfigService) GetSiteNavs() []dto.ActionLink {

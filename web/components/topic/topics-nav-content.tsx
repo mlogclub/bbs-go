@@ -5,57 +5,57 @@ import * as React from "react"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { apiFetch } from "@/lib/api/client"
-import type { TopicNode } from "@/lib/api/types"
+import type { Category } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
-function isBuiltInNode(node: TopicNode) {
+function isBuiltInNode(node: Category) {
   return node.id <= 0
 }
 
-function nodeHref(node: TopicNode) {
+function nodeHref(node: Category) {
   if (node.id > 0) {
-    return `/topics/node/${node.id}`
+    return `/topics/category/${node.id}`
   }
   if (node.id === 0) {
-    return "/topics/node/newest"
+    return "/topics/category/newest"
   }
   if (node.id === -1) {
-    return "/topics/node/recommend"
+    return "/topics/category/recommend"
   }
-  return "/topics/node/feed"
+  return "/topics/category/feed"
 }
 
 function isActiveNode(
-  node: TopicNode,
-  currentNodeId?: number,
-  currentRootNodeId?: number
+  node: Category,
+  currentCategoryId?: number,
+  currentRootCategoryId?: number
 ) {
   if (isBuiltInNode(node)) {
-    return currentNodeId === node.id
+    return currentCategoryId === node.id
   }
-  return currentRootNodeId === node.id
+  return currentRootCategoryId === node.id
 }
 
 export function TopicsNavContent({
-  initialNodes,
-  currentNodeId,
-  currentRootNodeId,
+  initialCategories,
+  currentCategoryId,
+  currentRootCategoryId,
 }: {
-  initialNodes: TopicNode[]
-  currentNodeId?: number
-  currentRootNodeId?: number
+  initialCategories: Category[]
+  currentCategoryId?: number
+  currentRootCategoryId?: number
 }) {
-  const [nodes, setNodes] = React.useState(initialNodes)
+  const [categories, setCategories] = React.useState(initialCategories)
 
   React.useEffect(() => {
-    if (initialNodes.length > 0) return
+    if (initialCategories.length > 0) return
 
     let mounted = true
     const timer = window.setTimeout(() => {
-      void apiFetch<TopicNode[]>("/api/topic/node_navs")
+      void apiFetch<Category[]>("/api/topic/category_navs")
         .then((data) => {
           if (mounted) {
-            setNodes(data)
+            setCategories(data)
           }
         })
         .catch(() => undefined)
@@ -65,15 +65,15 @@ export function TopicsNavContent({
       mounted = false
       window.clearTimeout(timer)
     }
-  }, [initialNodes.length])
+  }, [initialCategories.length])
 
   return (
     <div className="topics-nav">
       <nav className="dock-nav">
         <ScrollArea className="topics-scroll-area">
           <ul>
-            {nodes.map((node, index) => {
-              const previousNode = nodes[index - 1]
+            {categories.map((node, index) => {
+              const previousNode = categories[index - 1]
               const showDivider =
                 index > 0 &&
                 previousNode &&
@@ -81,8 +81,8 @@ export function TopicsNavContent({
                 !isBuiltInNode(node)
               const active = isActiveNode(
                 node,
-                currentNodeId,
-                currentRootNodeId
+                currentCategoryId,
+                currentRootCategoryId
               )
 
               return (

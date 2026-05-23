@@ -352,18 +352,18 @@ Start by publishing your first post.`
 		return nil
 	}
 
-	nodeId := services.SysConfigService.GetDefaultNodeId()
-	if nodeId <= 0 {
-		nodes := services.TopicNodeService.GetNodes()
+	categoryId := services.SysConfigService.GetDefaultCategoryId()
+	if categoryId <= 0 {
+		nodes := services.CategoryService.GetCategories()
 		if len(nodes) == 0 {
-			return errors.New("no topic node found for welcome topic initialization")
+			return errors.New("no category found for welcome topic initialization")
 		}
-		nodeId = nodes[0].Id
+		categoryId = nodes[0].Id
 	}
 
 	_, err := services.TopicPublishService.Publish(userId, modelreq.CreateTopicReq{
 		Type:        constants.TopicTypeTopic,
-		NodeId:      nodeId,
+		CategoryId:  categoryId,
 		Title:       title,
 		Content:     content,
 		ContentType: constants.ContentTypeMarkdown,

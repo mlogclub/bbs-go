@@ -57,14 +57,14 @@ export interface ImageInfo {
   size?: number
 }
 
-export interface TopicNode {
+export interface Category {
   id: number
   name: string
   type?: "normal" | "qa" | string
   description?: string
   logo?: string
   parentId?: number
-  children?: TopicNode[]
+  children?: Category[]
 }
 
 export interface Tag {
@@ -124,7 +124,7 @@ export interface Topic {
   createTime?: number
   updateTime?: number
   user: UserSummary
-  node?: TopicNode
+  category?: Category
   tags?: Tag[]
   sticky?: boolean
   recommend?: boolean
@@ -186,7 +186,7 @@ export interface SiteConfig {
   siteNavs?: SiteNav[]
   siteNotification?: string
   recommendTags?: string[]
-  defaultNodeId?: number
+  defaultCategoryId?: number
   topicCaptcha?: boolean
   createTopicEmailVerified?: boolean
   enableHideContent?: boolean

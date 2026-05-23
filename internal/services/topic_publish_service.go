@@ -41,7 +41,7 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*m
 		Type:            form.Type,
 		QaStatus:        constants.QaStatusUnsolved,
 		UserId:          userId,
-		NodeId:          form.NodeId,
+		CategoryId:      form.CategoryId,
 		Title:           form.Title,
 		ContentType:     form.ContentType,
 		Content:         form.Content,
@@ -206,10 +206,10 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicReq) 
 		return errors.New(locales.Get("topic.type_not_supported"))
 	}
 
-	if form.NodeId <= 0 {
-		form.NodeId = SysConfigService.GetDefaultNodeId()
-		if form.NodeId <= 0 {
-			return errors.New(locales.Get("topic.node_required"))
+	if form.CategoryId <= 0 {
+		form.CategoryId = SysConfigService.GetDefaultCategoryId()
+		if form.CategoryId <= 0 {
+			return errors.New(locales.Get("topic.category_required"))
 		}
 	}
 
@@ -224,12 +224,12 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicReq) 
 		}
 	}
 
-	node := repositories.TopicNodeRepository.Get(sqls.DB(), form.NodeId)
+	node := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
 	if node == nil || node.Status != constants.StatusOk {
-		return errors.New(locales.Get("topic.node_not_found"))
+		return errors.New(locales.Get("topic.category_not_found"))
 	}
 	if !node.Type.Supports(form.Type) {
-		return errors.New(locales.Get("topic.node_type_mismatch"))
+		return errors.New(locales.Get("topic.category_type_mismatch"))
 	}
 	if form.Type == constants.TopicTypeQA {
 		form.Vote = nil

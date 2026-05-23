@@ -10,15 +10,15 @@ import { MainShell } from "@/components/layout/main-shell"
 import { PageLoading } from "@/components/common/page-state"
 import { TopicListItem } from "@/components/topic/topic-list-item"
 import { TopicsNavContent } from "@/components/topic/topics-nav-content"
-import { TopicSubNodeNav } from "@/components/topic/topic-sub-node-nav"
+import { TopicSubCategoryNav } from "@/components/topic/topic-sub-category-nav"
 import { apiFetch } from "@/lib/api/client"
-import type { PageData, Tag, Topic, TopicNode } from "@/lib/api/types"
+import type { PageData, Tag, Topic, Category } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { useRouteData, useRouteSegment } from "@/lib/spa-route"
 import { useDocumentTitle } from "@/lib/use-document-title"
 import { cn } from "@/lib/utils"
 
-function resolveNodeId(id: string) {
+function resolveCategoryId(id: string) {
   if (id === "newest") return 0
   if (id === "recommend") return -1
   if (id === "feed") return -2
@@ -31,7 +31,7 @@ const sortOptions = ["latestPublish", "latestReply"]
 
 type TopicListInitialData = {
   topics?: PageData<Topic>
-  nodes?: TopicNode[]
+  categories?: Category[]
 }
 
 export function TopicTagClientPage({
@@ -56,7 +56,7 @@ export function TopicTagClientPage({
   return (
     <MainShell aside={<HomeAside />}>
       <div className="topics-wrapper">
-        <TopicsNavContent initialNodes={initialData?.nodes || []} />
+        <TopicsNavContent initialCategories={initialData?.categories || []} />
         <div className="topics-main">
           <div className="rounded-lg bg-background">
             {loading ? <PageLoading /> : null}
@@ -95,44 +95,44 @@ export function NodeTopicClientPage({
   initialData?: TopicListInitialData
 }) {
   const id = useRouteSegment(2)
-  const nodeId = resolveNodeId(id)
+  const categoryId = resolveCategoryId(id)
   const [searchParams, setSearchParams] = useSearchParams()
   const { t } = useI18n()
   const load = React.useCallback(
     () =>
-      apiFetch<TopicNode>("/api/topic/node", { params: { nodeId } }).catch(
-        (): TopicNode => ({ id: nodeId, name: "", children: [] })
+      apiFetch<Category>("/api/topic/category", { params: { categoryId } }).catch(
+        (): Category => ({ id: categoryId, name: "", children: [] })
       ),
-    [nodeId]
+    [categoryId]
   )
-  const { data: node } = useRouteData(`topic-node:${id}`, load)
+  const { data: node } = useRouteData(`category:${id}`, load)
   const currentNode =
-    nodeId > 0 && String(node?.id) === String(nodeId) ? node : undefined
-  const rootNodeId = currentNode?.parentId || currentNode?.id || nodeId
+    categoryId > 0 && String(node?.id) === String(categoryId) ? node : undefined
+  const rootCategoryId = currentNode?.parentId || currentNode?.id || categoryId
   const loadRootNode = React.useCallback(() => {
-    if (nodeId <= 0) return Promise.resolve<TopicNode | null>(null)
+    if (categoryId <= 0) return Promise.resolve<Category | null>(null)
     if (!currentNode?.parentId) return Promise.resolve(currentNode || null)
-    return apiFetch<TopicNode>("/api/topic/node", {
-      params: { nodeId: currentNode.parentId },
+    return apiFetch<Category>("/api/topic/category", {
+      params: { categoryId: currentNode.parentId },
     }).catch(() => null)
-  }, [currentNode, nodeId])
-  const { data: rootNode } = useRouteData<TopicNode | null>(
-    nodeId > 0 ? `topic-root-node:${rootNodeId}` : "",
+  }, [currentNode, categoryId])
+  const { data: rootNode } = useRouteData<Category | null>(
+    categoryId > 0 ? `topic-root-node:${rootCategoryId}` : "",
     loadRootNode,
     null
   )
   const currentRootNode =
-    nodeId > 0 && String(rootNode?.id) === String(rootNodeId)
+    categoryId > 0 && String(rootNode?.id) === String(rootCategoryId)
       ? rootNode
-      : currentNode?.id === rootNodeId
+      : currentNode?.id === rootCategoryId
         ? currentNode
         : undefined
   const subNodes =
-    nodeId > 0 && currentRootNode?.children?.length
+    categoryId > 0 && currentRootNode?.children?.length
       ? currentRootNode.children
       : []
-  const isQaNode = nodeId > 0 && currentNode?.type === "qa"
-  const isNormalNode = nodeId > 0 && currentNode && currentNode.type !== "qa"
+  const isQaNode = categoryId > 0 && currentNode?.type === "qa"
+  const isNormalNode = categoryId > 0 && currentNode && currentNode.type !== "qa"
   const qaStatusValue = searchParams.get("qaStatus") || ""
   const qaStatus = qaStatusOptions.includes(qaStatusValue) ? qaStatusValue : ""
   const sortValue = searchParams.get("sort") || ""
@@ -184,9 +184,9 @@ export function NodeTopicClientPage({
     <MainShell aside={<HomeAside />}>
       <div className="topics-wrapper">
         <TopicsNavContent
-          initialNodes={initialData?.nodes || []}
-          currentNodeId={nodeId}
-          currentRootNodeId={rootNodeId}
+          initialCategories={initialData?.categories || []}
+          currentCategoryId={categoryId}
+          currentRootCategoryId={rootCategoryId}
         />
         <div className="topics-main">
           {currentNode?.name ? (
@@ -213,10 +213,10 @@ export function NodeTopicClientPage({
             </div>
           ) : null}
           <div className="rounded-lg bg-background">
-            <TopicSubNodeNav
-              rootNodeId={rootNodeId}
-              nodes={subNodes}
-              currentNodeId={nodeId}
+            <TopicSubCategoryNav
+              rootCategoryId={rootCategoryId}
+              categories={subNodes}
+              currentCategoryId={categoryId}
             />
             {currentFilters.length > 0 ? (
               <div className="flex justify-between px-4 py-3">
@@ -251,12 +251,12 @@ export function NodeTopicClientPage({
               initialCursor={initialData?.topics?.cursor || "0"}
               initialHasMore={initialData?.topics?.hasMore || false}
               initialLoad={!initialData?.topics}
-              resetKey={`topic-node:${nodeId}:${currentNode?.type || ""}:${currentFilterValue}`}
+              resetKey={`category:${categoryId}:${currentNode?.type || ""}:${currentFilterValue}`}
               labels={labels}
               loadPage={({ cursor }) =>
                 apiFetch<PageData<Topic>>("/api/topic/topics", {
                   params: {
-                    nodeId,
+                    categoryId,
                     cursor,
                     ...(isQaNode && qaStatus ? { qaStatus } : {}),
                     ...(isNormalNode ? { sort: normalSort } : {}),

@@ -32,14 +32,14 @@ export function meta({
 }
 
 export function TopicListRoute({ title }: { title?: string }) {
-  const { topics, nodes } = useLoaderData() as TopicListRouteData
+  const { topics, categories } = useLoaderData() as TopicListRouteData
   const { t } = useI18n()
   useDocumentTitle(title)
 
   return (
     <MainShell aside={<HomeAside />}>
       <div className="topics-wrapper">
-        <TopicsNavContent initialNodes={nodes} />
+        <TopicsNavContent initialCategories={categories} />
         <div className="topics-main">
           <div className="rounded-lg bg-background">
             <LoadMore<Topic>

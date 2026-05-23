@@ -1,21 +1,21 @@
 import { redirect } from "react-router"
 
 import { apiFetch } from "@/lib/api/client"
-import type { Article, PageData, Tag, Topic, TopicNode } from "@/lib/api/types"
+import type { Article, PageData, Tag, Topic, Category } from "@/lib/api/types"
 
 import { getCurrentUser } from "./auth"
 
 export type TopicListRouteData = {
   topics: PageData<Topic>
-  nodes: TopicNode[]
-  node?: TopicNode | null
+  categories: Category[]
+  category?: Category | null
   tag?: Tag | null
 }
 
 const qaStatusOptions = ["", "unsolved", "solved"]
 const sortOptions = ["latestPublish", "latestReply"]
 
-export function resolveTopicNodeId(id?: string) {
+export function resolveCategoryId(id?: string) {
   if (id === "newest") return 0
   if (id === "recommend") return -1
   if (id === "feed") return -2
@@ -34,14 +34,14 @@ function getTopicFilters(request: Request) {
   }
 }
 
-async function loadTopicNode(
+async function loadCategory(
   request: Request | undefined,
-  nodeId: number
-): Promise<TopicNode | null> {
-  if (nodeId <= 0) return null
-  return apiFetch<TopicNode>("/api/topic/node", {
+  categoryId: number
+): Promise<Category | null> {
+  if (categoryId <= 0) return null
+  return apiFetch<Category>("/api/topic/category", {
     request,
-    params: { nodeId },
+    params: { categoryId },
   }).catch(() => null)
 }
 
@@ -53,28 +53,28 @@ async function loadTag(
   return apiFetch<Tag>(`/api/tag/${tagId}`, { request }).catch(() => null)
 }
 
-async function getTopicNodeFilters({
+async function getCategoryFilters({
   request,
-  nodeId,
+  categoryId,
 }: {
   request?: Request
-  nodeId: number
+  categoryId: number
 }) {
-  if (!request || nodeId <= 0) return {}
+  if (!request || categoryId <= 0) return {}
 
   const filters = getTopicFilters(request)
-  const node = await loadTopicNode(request, nodeId)
-  if (node?.type === "qa") {
+  const category = await loadCategory(request, categoryId)
+  if (category?.type === "qa") {
     return { qaStatus: filters.qaStatus }
   }
-  if (node) {
+  if (category) {
     return { sort: filters.sort || "latestPublish" }
   }
   return {}
 }
 
-export async function loadTopicNodes(request?: Request) {
-  return apiFetch<TopicNode[]>("/api/topic/node_navs", { request }).catch(
+export async function loadCategories(request?: Request) {
+  return apiFetch<Category[]>("/api/topic/category_navs", { request }).catch(
     () => []
   )
 }
@@ -82,7 +82,7 @@ export async function loadTopicNodes(request?: Request) {
 export async function loadTopics(params: {
   request?: Request
   cursor?: string
-  nodeId?: string | number
+  categoryId?: string | number
   tagId?: string | number
   qaStatus?: string
   sort?: string
@@ -93,7 +93,7 @@ export async function loadTopics(params: {
     request: params.request,
     params: {
       cursor: params.cursor || "",
-      nodeId: params.nodeId,
+      categoryId: params.categoryId,
       tagId: params.tagId,
       qaStatus: params.qaStatus,
       sort: params.sort,
@@ -104,14 +104,14 @@ export async function loadTopics(params: {
 export async function loadTopicListRouteData(
   request?: Request
 ): Promise<TopicListRouteData> {
-  const [topics, nodes] = await Promise.all([
+  const [topics, categories] = await Promise.all([
     loadTopics({ request }),
-    loadTopicNodes(request),
+    loadCategories(request),
   ])
-  return { topics, nodes }
+  return { topics, categories }
 }
 
-export async function loadTopicNodeRouteData({
+export async function loadCategoryRouteData({
   request,
   id,
 }: {
@@ -121,18 +121,18 @@ export async function loadTopicNodeRouteData({
   if (id === "feed") {
     const user = await getCurrentUser(request)
     if (!user) {
-      throw redirect("/user/signin?redirect=/topics/node/feed")
+      throw redirect("/user/signin?redirect=/topics/category/feed")
     }
   }
 
-  const nodeId = resolveTopicNodeId(id)
-  const filters = await getTopicNodeFilters({ request, nodeId })
-  const [topics, nodes, node] = await Promise.all([
-    loadTopics({ request, nodeId, ...filters }),
-    loadTopicNodes(request),
-    loadTopicNode(request, nodeId),
+  const categoryId = resolveCategoryId(id)
+  const filters = await getCategoryFilters({ request, categoryId })
+  const [topics, categories, category] = await Promise.all([
+    loadTopics({ request, categoryId, ...filters }),
+    loadCategories(request),
+    loadCategory(request, categoryId),
   ])
-  return { topics, nodes, node }
+  return { topics, categories, category }
 }
 
 export async function loadTopicTagRouteData({
@@ -142,12 +142,12 @@ export async function loadTopicTagRouteData({
   request?: Request
   id?: string
 }): Promise<TopicListRouteData> {
-  const [topics, nodes, tag] = await Promise.all([
+  const [topics, categories, tag] = await Promise.all([
     loadTopics({ request, tagId: id }),
-    loadTopicNodes(request),
+    loadCategories(request),
     loadTag(request, id),
   ])
-  return { topics, nodes, tag }
+  return { topics, categories, tag }
 }
 
 export async function loader({
@@ -162,8 +162,8 @@ export async function loader({
   if (pathname === "/" || pathname === "/topics") {
     return loadTopicListRouteData(request)
   }
-  if (pathname.startsWith("/topics/node/")) {
-    return loadTopicNodeRouteData({ request, id: params?.id })
+  if (pathname.startsWith("/topics/category/")) {
+    return loadCategoryRouteData({ request, id: params?.id })
   }
   if (pathname.startsWith("/topics/tag/")) {
     return loadTopicTagRouteData({ request, id: params?.id })

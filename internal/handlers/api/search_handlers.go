@@ -15,17 +15,17 @@ import (
 
 func SearchTopic(ctx *gin.Context) {
 	var (
-		cursor    = params.FormValueIntDefault(ctx, "cursor", 1)
-		keyword   = params.FormValue(ctx, "keyword")
-		nodeId    = params.FormValueInt64Default(ctx, "nodeId", 0)
-		timeRange = params.FormValueIntDefault(ctx, "timeRange", 0)
-		limit     = 20
+		cursor     = params.FormValueIntDefault(ctx, "cursor", 1)
+		keyword    = params.FormValue(ctx, "keyword")
+		categoryId = params.FormValueInt64Default(ctx, "categoryId", 0)
+		timeRange  = params.FormValueIntDefault(ctx, "timeRange", 0)
+		limit      = 20
 	)
-	var nodeIds []int64
-	if nodeId > 0 {
-		nodeIds = services.TopicNodeService.GetNodeIdsForList(nodeId)
+	var categoryIds []int64
+	if categoryId > 0 {
+		categoryIds = services.CategoryService.GetCategoryIdsForList(categoryId)
 	}
-	list, _, err := search.SearchTopic(keyword, nodeId, nodeIds, timeRange, cursor, limit)
+	list, _, err := search.SearchTopic(keyword, categoryId, categoryIds, timeRange, cursor, limit)
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return

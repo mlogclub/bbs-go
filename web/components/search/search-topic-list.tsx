@@ -66,14 +66,14 @@ export function SearchTopicList({ results }: { results: Topic[] }) {
                 </Link>
               ) : null}
               <span>{formatDate(item.createTime)}</span>
-              {item.node ? (
+              {item.category ? (
                 <Link
-                  href={`/topics/node/${item.node.id}`}
+                  href={`/topics/category/${item.category.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full border border-border/80 bg-background px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 >
-                  {item.node.name}
+                  {item.category.name}
                 </Link>
               ) : null}
             </div>
