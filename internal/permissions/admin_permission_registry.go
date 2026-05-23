@@ -97,6 +97,7 @@ var (
 		{Method: "POST", Pattern: "/api/admin/task-config/create", Permissions: []PermissionDefinition{PermissionTaskCreate}},
 		{Method: "POST", Pattern: "/api/admin/task-config/update", Permissions: []PermissionDefinition{PermissionTaskUpdate}},
 		{Method: "POST", Pattern: "/api/admin/task-config/delete", Permissions: []PermissionDefinition{PermissionTaskDelete}},
+		{Method: "POST", Pattern: "/api/admin/task-config/update_sort", Permissions: []PermissionDefinition{PermissionTaskUpdate}},
 
 		{Method: "GET", Pattern: "/api/admin/email-log/*", Permissions: []PermissionDefinition{PermissionEmailLogView}},
 		{Method: "POST", Pattern: "/api/admin/email-log/list", Permissions: []PermissionDefinition{PermissionEmailLogView}},

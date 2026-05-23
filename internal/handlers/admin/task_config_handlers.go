@@ -76,6 +76,8 @@ func TaskConfigCreate(ctx *gin.Context) {
 	}
 
 	now := dates.NowTimestamp()
+	t.SortNo = services.TaskConfigService.GetNextSortNo()
+	t.Status = constants.StatusOk
 	t.CreateTime = now
 	t.UpdateTime = now
 	if err := services.TaskConfigService.Create(t); err != nil {
@@ -105,6 +107,20 @@ func TaskConfigUpdate(ctx *gin.Context) {
 		return
 	}
 	ginx.WriteJSON(ctx, t)
+
+}
+
+func TaskConfigUpdateSort(ctx *gin.Context) {
+	var ids []int64
+	if err := ginx.BindJSON(ctx, &ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	if err := services.TaskConfigService.UpdateSort(ids); err != nil {
+		ginx.WriteJSON(ctx, err)
+		return
+	}
+	ginx.WriteJSON(ctx, nil)
 
 }
 

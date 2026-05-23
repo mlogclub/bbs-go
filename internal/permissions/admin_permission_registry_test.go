@@ -64,6 +64,16 @@ func TestAdminPermissionRegistryProtectsBadgeUpdateSort(t *testing.T) {
 	}
 }
 
+func TestAdminPermissionRegistryProtectsTaskConfigUpdateSort(t *testing.T) {
+	code, ok := GetAdminPermissionCode("POST", "/api/admin/task-config/update_sort")
+	if !ok {
+		t.Fatalf("expected task config sort permission to be registered")
+	}
+	if code != PermissionTaskUpdate.Code {
+		t.Fatalf("expected %s, got %s", PermissionTaskUpdate.Code, code)
+	}
+}
+
 func TestAdminPermissionRegistryProtectsLinkDelete(t *testing.T) {
 	code, ok := GetAdminPermissionCode("POST", "/api/admin/link/delete")
 	if !ok {

@@ -24,6 +24,9 @@ export default function DashboardTasksRoute() {
     deleteEndpoint: "/api/admin/task-config/delete",
     deletePermission: PERMISSIONS.DASHBOARD_TASK_DELETE,
     deleteMode: "formIds",
+    sortEndpoint: "/api/admin/task-config/update_sort",
+    sortPermission: PERMISSIONS.DASHBOARD_TASK_UPDATE,
+    dragSort: true,
     filters: [
       { name: "title", label: dashboardData.label(t, "title") },
       {
@@ -81,7 +84,6 @@ export default function DashboardTasksRoute() {
       },
     ],
     formFields: [
-      { name: "id", label: dashboardData.label(t, "id"), type: "number" },
       {
         name: "groupName",
         label: dashboardData.label(t, "groupName"),
@@ -151,20 +153,6 @@ export default function DashboardTasksRoute() {
       },
       { name: "btnName", label: dashboardData.label(t, "btnName") },
       { name: "actionUrl", label: dashboardData.label(t, "actionUrl") },
-      {
-        name: "sortNo",
-        label: dashboardData.label(t, "sortNo"),
-        type: "number",
-        min: 0,
-        step: 1,
-      },
-      {
-        name: "status",
-        label: dashboardData.label(t, "status"),
-        type: "select",
-        required: true,
-        options: dashboardData.normalDeletedOptions(t),
-      },
     ],
   }
 

@@ -3,11 +3,13 @@ package services
 import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
+	"bbs-go/internal/models/constants"
 	"bbs-go/internal/repositories"
 
 	"bbs-go/internal/pkg/params"
 
 	"github.com/mlogclub/simple/sqls"
+	"gorm.io/gorm"
 )
 
 var TaskConfigService = newTaskConfigService()
@@ -66,6 +68,28 @@ func (s *taskConfigService) Update(t *models.TaskConfig) error {
 
 func (s *taskConfigService) Updates(id int64, columns map[string]interface{}) error {
 	if err := repositories.TaskConfigRepository.Updates(sqls.DB(), id, columns); err != nil {
+		return err
+	}
+	cache.TaskConfigCacheService.Reload()
+	return nil
+}
+
+func (s *taskConfigService) GetNextSortNo() int {
+	if max := s.FindOne(sqls.NewCnd().Eq("status", constants.StatusOk).Desc("sort_no")); max != nil {
+		return max.SortNo + 1
+	}
+	return 0
+}
+
+func (s *taskConfigService) UpdateSort(ids []int64) error {
+	if err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		for i, id := range ids {
+			if err := repositories.TaskConfigRepository.UpdateColumn(tx, id, "sort_no", i); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
 		return err
 	}
 	cache.TaskConfigCacheService.Reload()
