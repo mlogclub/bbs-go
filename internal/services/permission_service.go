@@ -5,10 +5,14 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/permissions"
+	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/repositories"
+	"fmt"
 	"slices"
 
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
+	"gorm.io/gorm"
 )
 
 var PermissionService = newPermissionService()
@@ -30,6 +34,84 @@ func (s *permissionService) GetByCode(code string) *models.Permission {
 
 func (s *permissionService) Find(cnd *sqls.Cnd) []models.Permission {
 	return repositories.PermissionRepository.Find(sqls.DB(), cnd)
+}
+
+func (s *permissionService) SyncDefinitions() error {
+	return sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		return s.syncDefinitions(ctx.Tx)
+	})
+}
+
+func (s *permissionService) syncDefinitions(db *gorm.DB) error {
+	now := dates.NowTimestamp()
+	lang := config.DefaultLanguage
+	if config.Instance != nil {
+		lang = config.Instance.Language
+	}
+	if !lang.IsValid() {
+		lang = config.DefaultLanguage
+	}
+
+	seen := make(map[string]struct{}, len(permissions.Permissions))
+	synced := make([]models.Permission, 0, len(permissions.Permissions))
+	for _, seed := range permissions.Permissions {
+		if !seed.IsValid() {
+			return fmt.Errorf("invalid permission definition: %+v", seed)
+		}
+		if _, ok := seen[seed.Code]; ok {
+			return fmt.Errorf("duplicate permission definition: %s", seed.Code)
+		}
+		seen[seed.Code] = struct{}{}
+
+		name := seed.NameZh
+		if lang == config.LanguageEnUS {
+			name = seed.NameEn
+		}
+
+		permission := repositories.PermissionRepository.Take(db, "code = ?", seed.Code)
+		if permission == nil {
+			permission = &models.Permission{
+				Type:       seed.Type,
+				Code:       seed.Code,
+				CreateTime: now,
+			}
+		}
+		permission.Name = name
+		permission.GroupName = seed.GroupName
+		permission.Description = seed.Description
+		permission.SortNo = seed.SortNo
+		permission.Status = constants.StatusOk
+		permission.UpdateTime = now
+
+		if permission.Id > 0 {
+			if err := repositories.PermissionRepository.Update(db, permission); err != nil {
+				return err
+			}
+		} else if err := repositories.PermissionRepository.Create(db, permission); err != nil {
+			return err
+		}
+		synced = append(synced, *permission)
+	}
+
+	owner := repositories.RoleRepository.Take(db, "code = ?", constants.RoleOwner)
+	if owner != nil {
+		for _, permission := range synced {
+			existing := repositories.RolePermissionRepository.Take(db, "role_id = ? and permission_id = ?", owner.Id, permission.Id)
+			if existing != nil {
+				continue
+			}
+			if err := repositories.RolePermissionRepository.Create(db, &models.RolePermission{
+				RoleId:       owner.Id,
+				PermissionId: permission.Id,
+				CreateTime:   now,
+			}); err != nil {
+				return err
+			}
+		}
+	}
+
+	s.ClearCache()
+	return nil
 }
 
 func (s *permissionService) GetUserPermissionCodes(user *models.User) []string {

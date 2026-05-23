@@ -117,6 +117,56 @@ func TestPermissionService_HasPermissionAllowsOwner(t *testing.T) {
 	}
 }
 
+func TestPermissionService_SyncDefinitionsUpsertsPermissionsAndGrantsOwnerOnly(t *testing.T) {
+	setupPermissionServiceTestDB(t)
+	owner := mustCreateRole(t, constants.RoleOwner, constants.StatusOk)
+	custom := mustCreateRole(t, "custom-admin", constants.StatusOk)
+	outdated := mustCreatePermission(t, permissions.PermissionLinkDelete.Code, constants.StatusDeleted)
+	outdated.Name = "Old name"
+	outdated.GroupName = "old"
+	outdated.SortNo = 1
+	if err := repositories.PermissionRepository.Update(sqls.DB(), outdated); err != nil {
+		t.Fatalf("update outdated permission: %v", err)
+	}
+
+	if err := PermissionService.SyncDefinitions(); err != nil {
+		t.Fatalf("sync definitions: %v", err)
+	}
+
+	linkDelete := PermissionService.GetByCode(permissions.PermissionLinkDelete.Code)
+	if linkDelete == nil {
+		t.Fatalf("expected %s to exist", permissions.PermissionLinkDelete.Code)
+	}
+	if linkDelete.Status != constants.StatusOk ||
+		linkDelete.GroupName != permissions.PermissionLinkDelete.GroupName ||
+		linkDelete.SortNo != permissions.PermissionLinkDelete.SortNo ||
+		linkDelete.Name != permissions.PermissionLinkDelete.NameEn {
+		t.Fatalf("permission was not synced from definition: %+v", linkDelete)
+	}
+	if sitemap := PermissionService.GetByCode(permissions.PermissionSitemapGenerate.Code); sitemap == nil {
+		t.Fatalf("expected %s to be created", permissions.PermissionSitemapGenerate.Code)
+	}
+
+	ownerGrant := repositories.RolePermissionRepository.Take(
+		sqls.DB(),
+		"role_id = ? and permission_id = ?",
+		owner.Id,
+		linkDelete.Id,
+	)
+	if ownerGrant == nil {
+		t.Fatalf("expected owner role to receive %s", permissions.PermissionLinkDelete.Code)
+	}
+	customGrant := repositories.RolePermissionRepository.Take(
+		sqls.DB(),
+		"role_id = ? and permission_id = ?",
+		custom.Id,
+		linkDelete.Id,
+	)
+	if customGrant != nil {
+		t.Fatalf("expected custom role not to receive new permission automatically")
+	}
+}
+
 func TestPermissionService_CanManageOwnResourceWithoutPermission(t *testing.T) {
 	setupPermissionServiceTestDB(t)
 	user := &models.User{Model: models.Model{Id: 42}}

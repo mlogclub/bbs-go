@@ -274,6 +274,12 @@ func InitMigrations() error {
 		slog.Error("migrate failed", slog.Any("error", err))
 		return err
 	}
+
+	// sysc permissions
+	if err := services.PermissionService.SyncDefinitions(); err != nil {
+		slog.Error("sync permissions failed", slog.Any("error", err))
+		return err
+	}
 	return nil
 }
 

@@ -113,10 +113,5 @@ func init() {
 	register(11, "site content config defaults", migrate_site_content_config)
 	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
 	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)
-	register(14, "init rbac permissions", migrate_init_rbac_permissions)
 	register(15, "remove comment admin permissions", migrate_remove_comment_admin_permissions)
-	register(16, "front moderation permissions", migrate_front_moderation_permissions)
-	register(17, "search reindex permission", migrate_search_reindex_permission)
-	register(18, "forbidden word delete permission", migrate_forbidden_word_delete_permission)
-	register(19, "link delete permission", migrate_link_delete_permission)
 }
