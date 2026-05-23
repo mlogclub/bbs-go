@@ -35,7 +35,7 @@ type TopicEditFormState = {
   tags: string[]
 }
 
-function nodeTypeMatches(topicType: number) {
+function categoryTypeMatches(topicType: number) {
   return (node: Category) =>
     topicType === 2 ? node.type === "qa" : node.type !== "qa"
 }
@@ -226,7 +226,7 @@ export function TopicEditForm({
     normalizeEditData(topic)
   )
   const availableNodes = React.useMemo(
-    () => filterCategoryTree(categories, nodeTypeMatches(form.type)),
+    () => filterCategoryTree(categories, categoryTypeMatches(form.type)),
     [form.type, categories]
   )
   const effectiveCategoryId = hasCategory(availableNodes, form.categoryId)

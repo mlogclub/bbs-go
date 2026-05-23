@@ -229,21 +229,22 @@ func SearchTopic(keyword string, categoryId int64, categoryIds []int64, timeRang
 			boolFieldQuery.SetField("recommend")
 			query.AddMust(boolFieldQuery)
 		} else {
-			nodeQuery := buildNodeQuery(categoryId, categoryIds)
-			if nodeQuery != nil {
-				query.AddMust(nodeQuery)
+			categoryQuery := buildCategoryQuery(categoryId, categoryIds)
+			if categoryQuery != nil {
+				query.AddMust(categoryQuery)
 			}
 		}
 	}
 	if timeRange != 0 {
 		var beginTime int64
-		if timeRange == 1 { // 一天内
+		switch timeRange {
+		case 1: // 一天内
 			beginTime = dates.Timestamp(time.Now().Add(-24 * time.Hour))
-		} else if timeRange == 2 { // 一周内
+		case 2: // 一周内
 			beginTime = dates.Timestamp(time.Now().Add(-7 * 24 * time.Hour))
-		} else if timeRange == 3 { // 一月内
+		case 3: // 一月内
 			beginTime = dates.Timestamp(time.Now().AddDate(0, -1, 0))
-		} else if timeRange == 4 { // 一年内
+		case 4: // 一年内
 			beginTime = dates.Timestamp(time.Now().AddDate(-1, 0, 0))
 		}
 
@@ -394,21 +395,21 @@ func SearchAll(keyword string, limit int) (AllResult, error) {
 	return AllResult{Topics: topics, Articles: articles, Users: users}, nil
 }
 
-func buildNodeQuery(categoryId int64, categoryIds []int64) blevequery.Query {
+func buildCategoryQuery(categoryId int64, categoryIds []int64) blevequery.Query {
 	if len(categoryIds) == 0 {
-		return buildExactNodeQuery(categoryId)
+		return buildExactCategoryQuery(categoryId)
 	}
 	if len(categoryIds) == 1 {
-		return buildExactNodeQuery(categoryIds[0])
+		return buildExactCategoryQuery(categoryIds[0])
 	}
 	queries := make([]blevequery.Query, 0, len(categoryIds))
 	for _, id := range categoryIds {
-		queries = append(queries, buildExactNodeQuery(id))
+		queries = append(queries, buildExactCategoryQuery(id))
 	}
 	return bleve.NewDisjunctionQuery(queries...)
 }
 
-func buildExactNodeQuery(categoryId int64) blevequery.Query {
+func buildExactCategoryQuery(categoryId int64) blevequery.Query {
 	f := float64(categoryId)
 	b := true
 	categoryIdQuery := bleve.NewNumericRangeInclusiveQuery(&f, &f, &b, &b)

@@ -81,7 +81,7 @@ function publishLabelForType(type: number, t: ReturnType<typeof useI18n>["t"]) {
   return t("pages.topic.create.postBtn")
 }
 
-function nodeTypeMatches(topicType: number) {
+function categoryTypeMatches(topicType: number) {
   return (node: Category) =>
     topicType === 2 ? node.type === "qa" : node.type !== "qa"
 }
@@ -735,7 +735,7 @@ export function TopicCreateForm({
   )
 
   const availableNodes = React.useMemo(
-    () => filterCategoryTree(categories, nodeTypeMatches(form.type)),
+    () => filterCategoryTree(categories, categoryTypeMatches(form.type)),
     [form.type, categories]
   )
   const effectiveCategoryId = hasCategory(availableNodes, form.categoryId)

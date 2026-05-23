@@ -194,11 +194,11 @@ func IsPostTopicType(topicType TopicType) bool {
 }
 
 func (t CategoryType) Supports(topicType TopicType) bool {
-	nodeType := t
-	if nodeType == "" {
-		nodeType = CategoryTypeNormal
+	categoryType := t
+	if categoryType == "" {
+		categoryType = CategoryTypeNormal
 	}
-	switch nodeType {
+	switch categoryType {
 	case CategoryTypeQA:
 		return topicType == TopicTypeQA
 	default:

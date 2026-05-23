@@ -21,8 +21,8 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func TestFilterCategoryListByNodeIDIncludesSelectedNodeWithAncestors(t *testing.T) {
-	nodes := []models.Category{
+func TestFilterCategoryListByCategoryIDIncludesSelectedCategoryWithAncestors(t *testing.T) {
+	categories := []models.Category{
 		{Model: models.Model{Id: 1}, Name: "root", ParentId: 0},
 		{Model: models.Model{Id: 2}, Name: "child", ParentId: 1},
 		{Model: models.Model{Id: 3}, Name: "sibling", ParentId: 1},
@@ -30,7 +30,7 @@ func TestFilterCategoryListByNodeIDIncludesSelectedNodeWithAncestors(t *testing.
 		{Model: models.Model{Id: 5}, Name: "other-root", ParentId: 0},
 	}
 
-	got := filterCategoryListByNodeID(nodes, 2)
+	got := filterCategoryListByCategoryID(categories, 2)
 	gotIDs := categoryIDs(got)
 	wantIDs := []int64{1, 2, 4}
 
@@ -44,10 +44,10 @@ func TestFilterCategoryListByNodeIDIncludesSelectedNodeWithAncestors(t *testing.
 	}
 }
 
-func categoryIDs(nodes []models.Category) []int64 {
-	ids := make([]int64, 0, len(nodes))
-	for _, node := range nodes {
-		ids = append(ids, node.Id)
+func categoryIDs(categories []models.Category) []int64 {
+	ids := make([]int64, 0, len(categories))
+	for _, category := range categories {
+		ids = append(ids, category.Id)
 	}
 	return ids
 }
@@ -73,10 +73,10 @@ func TestCategoryListFiltersByStatus(t *testing.T) {
 
 	data := postCategoryList(t, "status=1")
 	if len(data) != 1 {
-		t.Fatalf("expected one deleted root node, got %#v", data)
+		t.Fatalf("expected one deleted root category, got %#v", data)
 	}
 	if data[0].Id != 3 {
-		t.Fatalf("expected deleted node id 3, got %#v", data)
+		t.Fatalf("expected deleted category id 3, got %#v", data)
 	}
 }
 
@@ -112,10 +112,10 @@ func setupAdminCategoryTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
-func mustCreateCategory(t *testing.T, db *gorm.DB, node *models.Category) {
+func mustCreateCategory(t *testing.T, db *gorm.DB, category *models.Category) {
 	t.Helper()
 
-	if err := db.Create(node).Error; err != nil {
+	if err := db.Create(category).Error; err != nil {
 		t.Fatalf("create category: %v", err)
 	}
 }

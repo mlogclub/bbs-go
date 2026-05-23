@@ -148,8 +148,8 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error 
 		return errors.New(locales.Get("topic.title_too_long"))
 	}
 
-	node := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
-	if node == nil || node.Status != constants.StatusOk {
+	category := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
+	if category == nil || category.Status != constants.StatusOk {
 		return errors.New(locales.Get("topic.category_not_found"))
 	}
 	topic := repositories.TopicRepository.Get(sqls.DB(), topicId)
@@ -166,7 +166,7 @@ func (s *topicService) Edit(userId, topicId int64, form req.EditTopicReq) error 
 			return errors.New(locales.Getf("attachment.too_many", attCfg.MaxCount))
 		}
 	}
-	if !node.Type.Supports(topic.Type) {
+	if !category.Type.Supports(topic.Type) {
 		return errors.New(locales.Get("topic.category_type_mismatch"))
 	}
 
@@ -278,12 +278,12 @@ func (s *topicService) GetTopics(user *models.User, categoryId, cursor int64, qa
 		}
 		return
 	} else {
-		return s._GetNodeTopics(categoryId, cursor, limit, qaStatus, sort)
+		return s._GetCategoryTopics(categoryId, cursor, limit, qaStatus, sort)
 	}
 }
 
-// _GetNodeTopics 帖子列表（最新、推荐、节点）
-func (s *topicService) _GetNodeTopics(categoryId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
+// _GetCategoryTopics 帖子列表（最新、推荐、节点）
+func (s *topicService) _GetCategoryTopics(categoryId, cursor int64, limit int, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
 	cnd := sqls.NewCnd()
 	if categoryId > 0 {
 		categoryIds := CategoryService.GetCategoryIdsForList(categoryId)

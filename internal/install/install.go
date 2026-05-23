@@ -354,11 +354,11 @@ Start by publishing your first post.`
 
 	categoryId := services.SysConfigService.GetDefaultCategoryId()
 	if categoryId <= 0 {
-		nodes := services.CategoryService.GetCategories()
-		if len(nodes) == 0 {
+		categories := services.CategoryService.GetCategories()
+		if len(categories) == 0 {
 			return errors.New("no category found for welcome topic initialization")
 		}
-		categoryId = nodes[0].Id
+		categoryId = categories[0].Id
 	}
 
 	_, err := services.TopicPublishService.Publish(userId, modelreq.CreateTopicReq{

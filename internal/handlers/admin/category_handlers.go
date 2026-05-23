@@ -43,29 +43,29 @@ func ensureAncestors(list []models.Category) []models.Category {
 	return list
 }
 
-func filterCategoryListByNodeID(list []models.Category, nodeID int64) []models.Category {
-	if nodeID <= 0 {
+func filterCategoryListByCategoryID(list []models.Category, categoryID int64) []models.Category {
+	if categoryID <= 0 {
 		return list
 	}
 
 	childrenByParentID := make(map[int64][]int64)
 	byID := make(map[int64]models.Category)
-	for _, node := range list {
-		byID[node.Id] = node
-		childrenByParentID[node.ParentId] = append(childrenByParentID[node.ParentId], node.Id)
+	for _, category := range list {
+		byID[category.Id] = category
+		childrenByParentID[category.ParentId] = append(childrenByParentID[category.ParentId], category.Id)
 	}
-	if _, ok := byID[nodeID]; !ok {
+	if _, ok := byID[categoryID]; !ok {
 		return nil
 	}
 
 	keep := make(map[int64]bool)
-	for id := nodeID; id > 0; {
-		node, ok := byID[id]
+	for id := categoryID; id > 0; {
+		category, ok := byID[id]
 		if !ok {
 			break
 		}
 		keep[id] = true
-		id = node.ParentId
+		id = category.ParentId
 	}
 
 	var collectDescendants func(id int64)
@@ -78,12 +78,12 @@ func filterCategoryListByNodeID(list []models.Category, nodeID int64) []models.C
 			collectDescendants(childID)
 		}
 	}
-	collectDescendants(nodeID)
+	collectDescendants(categoryID)
 
 	filtered := make([]models.Category, 0, len(keep))
-	for _, node := range list {
-		if keep[node.Id] {
-			filtered = append(filtered, node)
+	for _, category := range list {
+		if keep[category.Id] {
+			filtered = append(filtered, category)
 		}
 	}
 	return filtered
@@ -107,9 +107,9 @@ func CategoryDetail(ctx *gin.Context) {
 }
 
 func CategoryList(ctx *gin.Context) {
-	nodeID, _ := params.GetInt64(ctx, "categoryId")
-	if nodeID <= 0 {
-		nodeID, _ = params.GetInt64(ctx, "parentId")
+	categoryID, _ := params.GetInt64(ctx, "categoryId")
+	if categoryID <= 0 {
+		categoryID, _ = params.GetInt64(ctx, "parentId")
 	}
 
 	list := services.CategoryService.Find(params.NewSqlCnd(ctx,
@@ -126,7 +126,7 @@ func CategoryList(ctx *gin.Context) {
 			Op:        params.Eq,
 		},
 	).Asc("sort_no").Desc("id"))
-	list = filterCategoryListByNodeID(list, nodeID)
+	list = filterCategoryListByCategoryID(list, categoryID)
 	// 确保父节点在列表中，以便正确构建树
 	list = ensureAncestors(list)
 	ginx.WriteJSON(ctx, render.BuildCategoryTree(0, list))
@@ -147,7 +147,7 @@ func CategoryCreate(ctx *gin.Context) {
 	if t.ParentId > 0 {
 		parent := services.CategoryService.Get(t.ParentId)
 		if parent == nil {
-			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent category not found"))
 			return
 		}
 		t.Type = parent.Type
@@ -198,7 +198,7 @@ func CategoryUpdate(ctx *gin.Context) {
 	if t.ParentId > 0 {
 		parent := services.CategoryService.Get(t.ParentId)
 		if parent == nil {
-			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent node not found"))
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("parent category not found"))
 			return
 		}
 		if t.Type != parent.Type {

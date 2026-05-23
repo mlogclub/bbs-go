@@ -67,11 +67,11 @@ func (s *categoryService) UpdateColumn(id int64, name string, value interface{})
 
 // DeleteWithCheck 删除节点，若为一级且有子节点则返回错误
 func (s *categoryService) DeleteWithCheck(id int64) error {
-	node := s.Get(id)
-	if node == nil {
+	category := s.Get(id)
+	if category == nil {
 		return nil
 	}
-	if node.ParentId == 0 {
+	if category.ParentId == 0 {
 		children := s.GetChildren(id)
 		if len(children) > 0 {
 			return errors.New(locales.Get("topic.category.has_children"))
@@ -100,11 +100,11 @@ func (s *categoryService) GetChildren(parentId int64) []models.Category {
 
 // GetCategoryIdsForList 用于帖子列表筛选：一级返回 [自身+子节点id]，二级返回 [自身]
 func (s *categoryService) GetCategoryIdsForList(categoryId int64) []int64 {
-	node := s.Get(categoryId)
-	if node == nil {
+	category := s.Get(categoryId)
+	if category == nil {
 		return nil
 	}
-	if node.ParentId == 0 {
+	if category.ParentId == 0 {
 		ids := []int64{categoryId}
 		for _, c := range s.GetChildren(categoryId) {
 			ids = append(ids, c.Id)
@@ -118,10 +118,10 @@ func (s *categoryService) GetCategories() []models.Category {
 	return repositories.CategoryRepository.Find(sqls.DB(), sqls.NewCnd().Eq("status", constants.StatusOk).Asc("sort_no").Desc("id"))
 }
 
-func (s *categoryService) GetCategoriesByType(nodeType constants.CategoryType) []models.Category {
+func (s *categoryService) GetCategoriesByType(categoryType constants.CategoryType) []models.Category {
 	return repositories.CategoryRepository.Find(sqls.DB(), sqls.NewCnd().
 		Eq("status", constants.StatusOk).
-		Eq("type", nodeType).
+		Eq("type", categoryType).
 		Asc("sort_no").Desc("id"))
 }
 
@@ -151,14 +151,14 @@ func (s *categoryService) UpdateSort(ids []int64) error {
 }
 
 // UpdateChildrenType 将父节点下所有子节点的 type 更新为指定值（父节点编辑类型时联动）
-func (s *categoryService) UpdateChildrenType(parentId int64, nodeType constants.CategoryType) error {
+func (s *categoryService) UpdateChildrenType(parentId int64, categoryType constants.CategoryType) error {
 	children := s.GetChildren(parentId)
 	if len(children) == 0 {
 		return nil
 	}
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {
 		for _, c := range children {
-			if err := repositories.CategoryRepository.UpdateColumn(tx, c.Id, "type", nodeType); err != nil {
+			if err := repositories.CategoryRepository.UpdateColumn(tx, c.Id, "type", categoryType); err != nil {
 				return err
 			}
 		}

@@ -98,7 +98,7 @@ func migrate_init() error {
 				continue
 			}
 
-			node := &models.Category{
+			category := &models.Category{
 				Model:       models.Model{Id: n.ID},
 				Name:        n.Name,
 				Description: n.Description,
@@ -107,10 +107,10 @@ func migrate_init() error {
 				Status:      n.Status,
 				CreateTime:  now,
 			}
-			if err := repositories.CategoryRepository.Create(tx, node); err != nil {
+			if err := repositories.CategoryRepository.Create(tx, category); err != nil {
 				return err
 			}
-			categoryIDMap[n.ID] = node.Id
+			categoryIDMap[n.ID] = category.Id
 		}
 
 		for _, c := range seed.SysConfigs {
@@ -139,10 +139,10 @@ func migrate_init() error {
 			}
 		}
 
-		// ensure defaultCategoryId sys config points to created node id
-		if nodeID := categoryIDMap[1]; nodeID > 0 {
+		// ensure defaultCategoryId sys config points to created category id
+		if categoryID := categoryIDMap[1]; categoryID > 0 {
 			if cfg := repositories.SysConfigRepository.GetByKey(tx, constants.SysConfigDefaultCategoryId); cfg != nil {
-				cfg.Value = strconv.FormatInt(nodeID, 10)
+				cfg.Value = strconv.FormatInt(categoryID, 10)
 				cfg.UpdateTime = now
 				if err := repositories.SysConfigRepository.Update(tx, cfg); err != nil {
 					return err

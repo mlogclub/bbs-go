@@ -224,11 +224,11 @@ func (s topicPublishService) checkParams(userId int64, form req.CreateTopicReq) 
 		}
 	}
 
-	node := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
-	if node == nil || node.Status != constants.StatusOk {
+	category := repositories.CategoryRepository.Get(sqls.DB(), form.CategoryId)
+	if category == nil || category.Status != constants.StatusOk {
 		return errors.New(locales.Get("topic.category_not_found"))
 	}
-	if !node.Type.Supports(form.Type) {
+	if !category.Type.Supports(form.Type) {
 		return errors.New(locales.Get("topic.category_type_mismatch"))
 	}
 	if form.Type == constants.TopicTypeQA {

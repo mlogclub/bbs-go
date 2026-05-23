@@ -28,7 +28,7 @@ import (
 	"bbs-go/internal/services"
 )
 
-func topicGetBuiltInNodes() []resp.CategoryResponse {
+func topicGetBuiltInCategories() []resp.CategoryResponse {
 	return []resp.CategoryResponse{
 		{
 			Id:   0,
@@ -68,7 +68,7 @@ func topicGetBuiltInNodes() []resp.CategoryResponse {
 func CategoryNavs(ctx *gin.Context) {
 
 	categories := append(
-		topicGetBuiltInNodes(),
+		topicGetBuiltInCategories(),
 		render.BuildCategoryResponses(services.CategoryService.GetTopLevelCategories())...,
 	)
 	ginx.WriteJSON(ctx, categories)
@@ -91,19 +91,19 @@ func Categories(ctx *gin.Context) {
 func Category(ctx *gin.Context) {
 	categoryId, _ := params.GetInt64(ctx, "categoryId")
 	if categoryId <= 0 {
-		for _, node := range topicGetBuiltInNodes() {
-			if node.Id == categoryId {
-				ginx.WriteJSON(ctx, node)
+		for _, category := range topicGetBuiltInCategories() {
+			if category.Id == categoryId {
+				ginx.WriteJSON(ctx, category)
 				return
 			}
 		}
 	}
-	node := services.CategoryService.Get(categoryId)
-	if node == nil {
+	category := services.CategoryService.Get(categoryId)
+	if category == nil {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
 		return
 	}
-	ginx.WriteJSON(ctx, render.BuildCategoryWithChildren(node))
+	ginx.WriteJSON(ctx, render.BuildCategoryWithChildren(category))
 
 }
 
