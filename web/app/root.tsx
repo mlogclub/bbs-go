@@ -24,6 +24,10 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { apiFetch } from "@/lib/api/client"
 import type { SiteConfig, UserSummary } from "@/lib/api/types"
 import { I18nProvider } from "@/lib/i18n/provider"
+import {
+  getRenderableScriptInjections,
+  getScriptInjectionElementId,
+} from "@/lib/script-injections"
 import { siteMeta } from "@/lib/seo"
 
 import type { Route } from "./+types/root"
@@ -79,6 +83,9 @@ export function meta({ data }: Route.MetaArgs) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const rootData = useRouteLoaderData<typeof loader>("root")
+  const scriptInjections = getRenderableScriptInjections(
+    rootData?.config?.scriptInjections
+  )
 
   return (
     <html lang={rootData?.locale || "en-US"}>
@@ -87,6 +94,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        {scriptInjections.map((script) =>
+          script.type === "external" ? (
+            <script
+              key={script.key}
+              id={getScriptInjectionElementId(script.key)}
+              data-bbsgo-script-injection="true"
+              src={script.src}
+              async={script.async}
+              defer={script.defer}
+              crossOrigin={script.crossOrigin}
+            />
+          ) : (
+            <script
+              key={script.key}
+              id={getScriptInjectionElementId(script.key)}
+              data-bbsgo-script-injection="true"
+              dangerouslySetInnerHTML={{ __html: script.code }}
+            />
+          )
+        )}
       </head>
       <body>
         {children}
@@ -110,6 +137,50 @@ function GoogleOneTapGate() {
       <GoogleOneTap />
     </React.Suspense>
   )
+}
+
+function RuntimeScriptInjections() {
+  const config = useAppConfig()
+  const scriptInjections = React.useMemo(
+    () => getRenderableScriptInjections(config?.scriptInjections),
+    [config?.scriptInjections]
+  )
+
+  React.useEffect(() => {
+    const expectedIds = new Set(
+      scriptInjections.map((script) => getScriptInjectionElementId(script.key))
+    )
+
+    document
+      .querySelectorAll<HTMLScriptElement>(
+        "script[data-bbsgo-script-injection]"
+      )
+      .forEach((element) => {
+        if (!expectedIds.has(element.id)) element.remove()
+      })
+
+    for (const script of scriptInjections) {
+      const id = getScriptInjectionElementId(script.key)
+      if (document.getElementById(id)) continue
+
+      const element = document.createElement("script")
+      element.id = id
+      element.dataset.bbsgoScriptInjection = "true"
+
+      if (script.type === "external") {
+        element.src = script.src
+        element.async = script.async
+        element.defer = script.defer
+        if (script.crossOrigin) element.crossOrigin = script.crossOrigin
+      } else {
+        element.text = script.code
+      }
+
+      document.head.appendChild(element)
+    }
+  }, [scriptInjections])
+
+  return null
 }
 
 export default function Root() {
@@ -145,6 +216,7 @@ export default function Root() {
       <AppProvider initialState={appState}>
         <ThemeProvider>
           <TooltipProvider>
+            <RuntimeScriptInjections />
             <GoogleOneTapGate />
             <LayoutChrome>
               <Outlet />
