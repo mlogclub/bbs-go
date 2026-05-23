@@ -38,8 +38,8 @@ export default function DashboardNodesRoute() {
         options: dashboardData.nodeTypeOptionsFor(t),
       },
       {
-        name: "parentId",
-        label: dashboardData.label(t, "parentId"),
+        name: "nodeId",
+        label: dashboardData.label(t, "node"),
         type: "select",
         optionsEndpoint: "/api/admin/topic-node/nodes",
         optionLabel: dashboardData.treeOptionLabel,

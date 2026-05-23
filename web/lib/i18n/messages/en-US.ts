@@ -657,6 +657,7 @@ const enUS = {
       viewCount: "Views",
       commentCount: "Comments",
       cover: "Cover",
+      node: "Category",
       name: "Name",
       parentId: "Parent Category",
       logo: "Logo",

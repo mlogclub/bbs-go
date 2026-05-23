@@ -43,6 +43,52 @@ func ensureAncestors(list []models.TopicNode) []models.TopicNode {
 	return list
 }
 
+func filterTopicNodeListByNodeID(list []models.TopicNode, nodeID int64) []models.TopicNode {
+	if nodeID <= 0 {
+		return list
+	}
+
+	childrenByParentID := make(map[int64][]int64)
+	byID := make(map[int64]models.TopicNode)
+	for _, node := range list {
+		byID[node.Id] = node
+		childrenByParentID[node.ParentId] = append(childrenByParentID[node.ParentId], node.Id)
+	}
+	if _, ok := byID[nodeID]; !ok {
+		return nil
+	}
+
+	keep := make(map[int64]bool)
+	for id := nodeID; id > 0; {
+		node, ok := byID[id]
+		if !ok {
+			break
+		}
+		keep[id] = true
+		id = node.ParentId
+	}
+
+	var collectDescendants func(id int64)
+	collectDescendants = func(id int64) {
+		for _, childID := range childrenByParentID[id] {
+			if keep[childID] {
+				continue
+			}
+			keep[childID] = true
+			collectDescendants(childID)
+		}
+	}
+	collectDescendants(nodeID)
+
+	filtered := make([]models.TopicNode, 0, len(keep))
+	for _, node := range list {
+		if keep[node.Id] {
+			filtered = append(filtered, node)
+		}
+	}
+	return filtered
+}
+
 // PostDelete 删除节点（一级有子节点时禁止）
 func TopicNodeDetail(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -61,6 +107,11 @@ func TopicNodeDetail(ctx *gin.Context) {
 }
 
 func TopicNodeList(ctx *gin.Context) {
+	nodeID, _ := params.GetInt64(ctx, "nodeId")
+	if nodeID <= 0 {
+		nodeID, _ = params.GetInt64(ctx, "parentId")
+	}
+
 	list := services.TopicNodeService.Find(params.NewSqlCnd(ctx,
 		params.QueryFilter{
 			ParamName: "name",
@@ -71,10 +122,11 @@ func TopicNodeList(ctx *gin.Context) {
 			Op:        params.Eq,
 		},
 		params.QueryFilter{
-			ParamName: "parentId",
+			ParamName: "status",
 			Op:        params.Eq,
 		},
 	).Asc("sort_no").Desc("id"))
+	list = filterTopicNodeListByNodeID(list, nodeID)
 	// 确保父节点在列表中，以便正确构建树
 	list = ensureAncestors(list)
 	ginx.WriteJSON(ctx, render.BuildTopicNodeTree(0, list))

@@ -139,4 +139,10 @@ assert.equal(
   "dashboard.nodes.tsx parent node form field should use DashboardSelect via type select"
 )
 
+assert.match(
+  nodesRoute,
+  /name:\s*"nodeId"[\s\S]*?label:\s*dashboardData\.label\(t,\s*"node"\)[\s\S]*?optionsEndpoint:\s*"\/api\/admin\/topic-node\/nodes"/,
+  "dashboard.nodes.tsx should filter by selected node id instead of parent id"
+)
+
 console.log("dashboard route structure tests passed")
