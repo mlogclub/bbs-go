@@ -1299,7 +1299,7 @@ function NavSettings({
             {navs.length ? (
               navs.map((item, index) => (
                 <button
-                  key={`${item.title}-${index}`}
+                  key={`parent-${index}`}
                   type="button"
                   draggable
                   onClick={() => setSelectedIndex(index)}
@@ -1493,7 +1493,7 @@ function ChildrenTable({
         <tbody>
           {items.map((item, index) => (
             <tr
-              key={`${item.title}-${index}`}
+              key={`child-${index}`}
               draggable
               onDragStart={(event) => {
                 setDraggingIndex(index)
