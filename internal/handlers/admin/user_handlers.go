@@ -18,6 +18,7 @@ import (
 	"bbs-go/internal/pkg/ginx"
 	"bbs-go/internal/pkg/params"
 
+	"github.com/mlogclub/simple/common/dates"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/mlogclub/simple/web"
 	"github.com/spf13/cast"
@@ -75,7 +76,7 @@ func UserDetail(ctx *gin.Context) {
 }
 
 func UserList(ctx *gin.Context) {
-	list, paging := services.UserService.FindPageByCnd(params.NewPagedSqlCnd(ctx,
+	cnd := params.NewPagedSqlCnd(ctx,
 		params.QueryFilter{
 			ParamName: "id",
 			Op:        params.Eq,
@@ -98,7 +99,16 @@ func UserList(ctx *gin.Context) {
 			ParamName: "username",
 			Op:        params.Eq,
 		},
-	).Desc("id"))
+	)
+	if forbiddenValue := params.QueryValue(ctx, "forbidden"); forbiddenValue != "" {
+		now := dates.NowTimestamp()
+		if cast.ToBool(forbiddenValue) {
+			cnd.Where("(forbidden_end_time = ? OR forbidden_end_time > ?)", -1, now)
+		} else {
+			cnd.Where("(forbidden_end_time >= ? AND forbidden_end_time <= ?)", 0, now)
+		}
+	}
+	list, paging := services.UserService.FindPageByCnd(cnd.Desc("id"))
 	var itemList []map[string]interface{}
 	for _, user := range list {
 		itemList = append(itemList, userBuildUserItem(&user, false))

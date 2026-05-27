@@ -22,6 +22,15 @@ export default function DashboardUsersRoute() {
       { name: "id", label: dashboardData.label(t, "id") },
       { name: "username", label: dashboardData.label(t, "username") },
       { name: "nickname", label: dashboardData.label(t, "nickname") },
+      {
+        name: "forbidden",
+        label: dashboardData.label(t, "forbidden"),
+        type: "select",
+        options: [
+          { label: t("dashboard.boolean.yes"), value: "true" },
+          { label: t("dashboard.boolean.no"), value: "false" },
+        ],
+      },
     ],
     columns: [
       {
