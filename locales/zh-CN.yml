@@ -36,6 +36,7 @@ topic:
 user:
   anonymous: "匿名用户%d"
   default_description: "这家伙很懒，什么都没留下"
+  forbidden_nickname: "禁言用户"
   blacklist: "黑名单用户"
   not_found: "用户不存在"
   no_permission: "无权限"

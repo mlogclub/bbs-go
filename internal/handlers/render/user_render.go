@@ -77,8 +77,18 @@ func BuildUserInfo(user *models.User) *resp.UserInfo {
 		ret.Forbidden = true
 	} else {
 		ret.ExpProgress = buildExpProgress(user)
+		if ret.Forbidden {
+			redactForbiddenUserInfo(ret)
+		}
 	}
 	return ret
+}
+
+func redactForbiddenUserInfo(userInfo *resp.UserInfo) {
+	userInfo.Nickname = locales.Get("user.forbidden_nickname")
+	userInfo.Avatar = ""
+	userInfo.SmallAvatar = ""
+	userInfo.Description = ""
 }
 
 // buildExpProgress 根据用户当前经验与等级配置，计算当前等级内经验进度（用于进度条与文案展示）
@@ -150,6 +160,8 @@ func BuildUserDetail(user *models.User) *resp.UserDetail {
 	if user.Status == constants.StatusDeleted {
 		ret.Username = "blacklist"
 		ret.HomePage = ""
+	} else if ret.Forbidden {
+		ret.Username = ""
 	}
 	return ret
 }
@@ -165,6 +177,12 @@ func BuildUserProfile(user *models.User) *resp.UserProfile {
 		PasswordSet:   len(user.Password) > 0,
 	}
 
+	ret.Username = user.Username.String
+	ret.Nickname = user.Nickname
+	ret.Avatar = user.Avatar
+	if strs.IsNotBlank(user.Avatar) {
+		ret.SmallAvatar = HandleOssImageStyleAvatar(user.Avatar)
+	}
 	ret.Description = user.Description
 
 	if strs.IsNotBlank(user.Roles) {

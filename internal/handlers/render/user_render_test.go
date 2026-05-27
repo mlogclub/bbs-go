@@ -73,3 +73,67 @@ func TestBuildUserDetailUsesDefaultDescriptionForDisplay(t *testing.T) {
 		t.Fatal("expected display description fallback")
 	}
 }
+
+func TestBuildUserInfoRedactsForbiddenUserProfileFields(t *testing.T) {
+	user := &models.User{
+		Nickname:         "muted-user",
+		Avatar:           "https://example.com/avatar.png",
+		Description:      "private bio",
+		ForbiddenEndTime: -1,
+	}
+
+	info := BuildUserInfo(user)
+
+	if info == nil {
+		t.Fatal("expected user info")
+	}
+	if !info.Forbidden {
+		t.Fatal("expected forbidden flag")
+	}
+	if info.Nickname != "user.forbidden_nickname" {
+		t.Fatalf("expected forbidden default nickname, got %q", info.Nickname)
+	}
+	if info.Avatar != "" {
+		t.Fatalf("expected empty avatar, got %q", info.Avatar)
+	}
+	if info.SmallAvatar != "" {
+		t.Fatalf("expected empty small avatar, got %q", info.SmallAvatar)
+	}
+	if info.Description != "" {
+		t.Fatalf("expected empty description, got %q", info.Description)
+	}
+}
+
+func TestBuildUserProfileKeepsForbiddenUserProfileFields(t *testing.T) {
+	user := &models.User{
+		Username:         sqls.SqlNullString("muted-username"),
+		Nickname:         "muted-user",
+		Avatar:           "https://example.com/avatar.png",
+		Description:      "private bio",
+		ForbiddenEndTime: -1,
+	}
+
+	profile := BuildUserProfile(user)
+
+	if profile == nil {
+		t.Fatal("expected user profile")
+	}
+	if !profile.Forbidden {
+		t.Fatal("expected forbidden flag")
+	}
+	if profile.Nickname != "muted-user" {
+		t.Fatalf("expected raw nickname, got %q", profile.Nickname)
+	}
+	if profile.Avatar != "https://example.com/avatar.png" {
+		t.Fatalf("expected raw avatar, got %q", profile.Avatar)
+	}
+	if profile.SmallAvatar != "https://example.com/avatar.png" {
+		t.Fatalf("expected raw small avatar, got %q", profile.SmallAvatar)
+	}
+	if profile.Description != "private bio" {
+		t.Fatalf("expected raw description, got %q", profile.Description)
+	}
+	if profile.Username != "muted-username" {
+		t.Fatalf("expected raw username, got %q", profile.Username)
+	}
+}
