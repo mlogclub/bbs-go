@@ -30,9 +30,17 @@ func UserReportDetail(ctx *gin.Context) {
 }
 
 func UserReportList(ctx *gin.Context) {
-	list, paging := services.UserReportService.FindPageByParams(params.NewQueryParams(ctx).PageByReq().Desc("id"))
+	list, paging := services.UserReportService.FindPageByCnd(params.NewPagedSqlCnd(ctx,
+		params.QueryFilter{
+			ParamName: "dataType",
+			Op:        params.Eq,
+		},
+		params.QueryFilter{
+			ParamName: "dataId",
+			Op:        params.Eq,
+		},
+	).Desc("id"))
 	ginx.WriteJSON(ctx, &web.PageResult{Results: list, Page: paging})
-
 }
 
 func UserReportCreate(ctx *gin.Context) {

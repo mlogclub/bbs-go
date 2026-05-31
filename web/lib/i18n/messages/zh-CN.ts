@@ -157,6 +157,17 @@ const zhCN = {
       yes: "是",
       no: "否",
     },
+    reportDataTypes: {
+      topic: "帖子",
+      article: "文章",
+      comment: "评论",
+      user: "用户",
+    },
+    reportAuditStatus: {
+      pending: "待处理",
+      processed: "已处理",
+      unknown: "未知状态 {status}",
+    },
     gender: {
       male: "男",
       female: "女",

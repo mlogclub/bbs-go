@@ -157,6 +157,17 @@ const enUS = {
       yes: "Yes",
       no: "No",
     },
+    reportDataTypes: {
+      topic: "Topic",
+      article: "Article",
+      comment: "Comment",
+      user: "User",
+    },
+    reportAuditStatus: {
+      pending: "Pending",
+      processed: "Processed",
+      unknown: "Unknown status {status}",
+    },
     gender: {
       male: "Male",
       female: "Female",

@@ -102,6 +102,31 @@ export function booleanOptionsFor(t: TFunction) {
   ]
 }
 
+export function reportDataTypeOptionsFor(t: TFunction) {
+  return [
+    { label: t("dashboard.reportDataTypes.topic"), value: "topic" },
+    { label: t("dashboard.reportDataTypes.article"), value: "article" },
+    { label: t("dashboard.reportDataTypes.comment"), value: "comment" },
+    { label: t("dashboard.reportDataTypes.user"), value: "user" },
+  ]
+}
+
+export function reportDataTypeCell(t: TFunction, value: unknown) {
+  const key = String(value || "")
+  if (key === "topic") return t("dashboard.reportDataTypes.topic")
+  if (key === "article") return t("dashboard.reportDataTypes.article")
+  if (key === "comment") return t("dashboard.reportDataTypes.comment")
+  if (key === "user") return t("dashboard.reportDataTypes.user")
+  return key || "-"
+}
+
+export function reportAuditStatusCell(t: TFunction, value: unknown) {
+  const status = Number(value || 0)
+  if (status === 0) return t("dashboard.reportAuditStatus.pending")
+  if (status === 1) return t("dashboard.reportAuditStatus.processed")
+  return t("dashboard.reportAuditStatus.unknown", { status })
+}
+
 export function categoryTypeOptionsFor(t: TFunction) {
   return [
     { label: t("dashboard.categoryTypes.normal"), value: "normal" },
