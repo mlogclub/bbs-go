@@ -173,11 +173,17 @@ const enUS = {
     },
     reportActions: {
       process: "Process",
-      ignore: "Ignore",
+      markProcessed: "Mark Processed",
+      markIgnored: "Mark Ignored",
+      openTarget: "Open Target",
     },
     reportConfirm: {
       process: "Mark this report as processed?",
       ignore: "Ignore this report?",
+    },
+    reportProcess: {
+      title: "Process Report",
+      targetUnavailable: "The reported target does not exist or was deleted.",
     },
     gender: {
       male: "Male",

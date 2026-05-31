@@ -100,6 +100,7 @@ export type DashboardDataPageConfig = {
   rowActions?: DashboardDataRowAction[]
   pageSize?: number
   listResult?: "page" | "array"
+  refreshKey?: string | number
   formContainer?: "dialog" | "drawer"
   transformSubmitValues?: (
     values: Record<string, AdminFormValue>

@@ -179,7 +179,13 @@ export function useDashboardDataPage({
     } finally {
       setLoading(false)
     }
-  }, [config.listEndpoint, config.listResult, filters, messages.loadFailed])
+  }, [
+    config.listEndpoint,
+    config.listResult,
+    config.refreshKey,
+    filters,
+    messages.loadFailed,
+  ])
 
   React.useEffect(() => {
     void load()

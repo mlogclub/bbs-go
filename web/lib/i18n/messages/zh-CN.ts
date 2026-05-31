@@ -173,11 +173,17 @@ const zhCN = {
     },
     reportActions: {
       process: "处理",
-      ignore: "忽略",
+      markProcessed: "标记为已处理",
+      markIgnored: "标记为忽略",
+      openTarget: "进入内容详情",
     },
     reportConfirm: {
       process: "确认将该举报标记为已处理？",
       ignore: "确认忽略该举报？",
+    },
+    reportProcess: {
+      title: "处理举报",
+      targetUnavailable: "被举报内容不存在或已被删除。",
     },
     gender: {
       male: "男",

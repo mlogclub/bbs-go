@@ -49,31 +49,73 @@ assert.match(
 assert.match(
   routeSource,
   /DASHBOARD_USER_REPORT_AUDIT/,
-  "user reports dashboard actions should require the user report audit permission"
+  "user reports dashboard process action should require the user report audit permission"
 )
 
 assert.match(
   routeSource,
   /\/api\/admin\/user-report\/audit/,
-  "user reports dashboard should post audit actions to the audit endpoint"
+  "user reports dashboard modal should post audit actions to the audit endpoint"
 )
 
 assert.match(
   routeSource,
-  /auditStatus:\s*1/,
-  "user reports dashboard should provide a processed action"
+  /onSubmitStatus\(1\)/,
+  "user reports dashboard modal should provide a processed action"
 )
 
 assert.match(
   routeSource,
-  /auditStatus:\s*2/,
-  "user reports dashboard should provide an ignore action"
+  /onSubmitStatus\(2\)/,
+  "user reports dashboard modal should provide an ignore action"
 )
 
-assert.match(
+assert.doesNotMatch(
   routeSource,
   /detailFields:\s*\[/,
-  "user reports dashboard should define detail fields"
+  "user reports dashboard should not use the generic details button"
+)
+
+assert.doesNotMatch(
+  routeSource,
+  /rowActions:\s*\[/,
+  "user reports dashboard should not show separate processed and ignore row buttons"
+)
+
+assert.match(
+  routeSource,
+  /renderRowActions:/,
+  "user reports dashboard should use one custom process row button"
+)
+
+assert.match(
+  routeSource,
+  /ReportProcessDialog/,
+  "user reports dashboard should render a dedicated report process dialog"
+)
+
+assert.match(
+  routeSource,
+  /record\.target/,
+  "user reports dashboard dialog should display reported target content from detail data"
+)
+
+assert.match(
+  routeSource,
+  /HtmlImagePreview/,
+  "user reports dashboard dialog should render html target content with HtmlImagePreview"
+)
+
+assert.match(
+  routeSource,
+  /contentType\s*===\s*"html"/,
+  "user reports dashboard dialog should branch on html content type"
+)
+
+assert.match(
+  routeSource,
+  /dataType\s*!==\s*"comment"/,
+  "user reports dashboard should hide target detail navigation for comments"
 )
 
 for (const source of [zhMessages, enMessages]) {
@@ -96,6 +138,16 @@ for (const source of [zhMessages, enMessages]) {
     source,
     /reportActions:\s*{/,
     "dashboard translations should include report action labels"
+  )
+  assert.match(
+    source,
+    /openTarget:/,
+    "dashboard translations should include an open target label"
+  )
+  assert.match(
+    source,
+    /targetUnavailable:/,
+    "dashboard translations should include an unavailable target message"
   )
 }
 
