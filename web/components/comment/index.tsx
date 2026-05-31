@@ -5,6 +5,7 @@ import Link from "@/components/common/link"
 import { usePathname } from "@/lib/router/navigation"
 import {
   ChevronRight,
+  Flag,
   LogIn,
   MessageCircle,
   ThumbsUp,
@@ -22,6 +23,7 @@ import {
   PreviewableImage,
 } from "@/components/common/image-preview"
 import { LoadMoreButton } from "@/components/common/load-more"
+import { UserReportDialog } from "@/components/common/user-report-dialog"
 import {
   TextEditor,
   type TextEditorRef,
@@ -54,7 +56,9 @@ function commentContent(comment: Comment, size: "normal" | "small" = "normal") {
 
   const className = cn(
     "content mb-0 whitespace-pre-wrap text-foreground",
-    size === "normal" ? "mt-2.5 text-[15px] leading-7" : "mt-1.5 text-sm leading-6"
+    size === "normal"
+      ? "mt-2.5 text-[15px] leading-7"
+      : "mt-1.5 text-sm leading-6"
   )
 
   if (comment.contentType === "text") {
@@ -238,6 +242,7 @@ function CommentSubList({
     content: "",
     imageList: [],
   })
+  const [reportComment, setReportComment] = React.useState<Comment | null>(null)
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
 
@@ -364,6 +369,14 @@ function CommentSubList({
     })
   }
 
+  function showReport(comment: Comment) {
+    if (!currentUser) {
+      msgSignIn()
+      return
+    }
+    setReportComment(comment)
+  }
+
   return (
     <>
       <div className="mt-2.5 text-sm">
@@ -477,6 +490,16 @@ function CommentSubList({
                     <span>{t("component.comment.subList.delete")}</span>
                   </button>
                 ) : null}
+                {currentUser?.id !== comment.user.id ? (
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 text-xs text-muted-foreground select-none hover:text-destructive"
+                    onClick={() => showReport(comment)}
+                  >
+                    <Flag className="h-3 w-3" />
+                    <span>{t("component.comment.subList.report")}</span>
+                  </button>
+                ) : null}
               </div>
               {replyQuoteId === comment.id ? (
                 <div className="mt-2.5">
@@ -510,6 +533,14 @@ function CommentSubList({
           if (!open) setConfirmState(null)
         }}
       />
+      <UserReportDialog
+        open={Boolean(reportComment)}
+        dataId={reportComment?.id || 0}
+        dataType="comment"
+        onOpenChange={(open) => {
+          if (!open) setReportComment(null)
+        }}
+      />
     </>
   )
 }
@@ -540,6 +571,7 @@ function CommentItem({
     content: "",
     imageList: [],
   })
+  const [reportOpen, setReportOpen] = React.useState(false)
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
   const isAccepted = acceptedCommentId === comment.id
@@ -654,6 +686,14 @@ function CommentItem({
     })
   }
 
+  function showReport() {
+    if (!currentUser) {
+      msgSignIn()
+      return
+    }
+    setReportOpen(true)
+  }
+
   return (
     <>
       <div
@@ -761,6 +801,16 @@ function CommentItem({
                 <span>{t("component.comment.list.delete")}</span>
               </button>
             ) : null}
+            {currentUser?.id !== comment.user.id ? (
+              <button
+                type="button"
+                className="flex items-center gap-1 text-[13px] text-muted-foreground select-none hover:text-destructive"
+                onClick={showReport}
+              >
+                <Flag className="h-3.5 w-3.5" />
+                <span>{t("component.comment.list.report")}</span>
+              </button>
+            ) : null}
           </div>
           {replyCommentId === comment.id ? (
             <div className="mt-2.5">
@@ -786,6 +836,12 @@ function CommentItem({
         onOpenChange={(open) => {
           if (!open) setConfirmState(null)
         }}
+      />
+      <UserReportDialog
+        open={reportOpen}
+        dataId={comment.id}
+        dataType="comment"
+        onOpenChange={setReportOpen}
       />
     </>
   )

@@ -7,6 +7,10 @@ const topicMenu = readFileSync(
   resolve(webRoot, "components/topic/topic-manage-menu.tsx"),
   "utf8"
 )
+const reportDialog = readFileSync(
+  resolve(webRoot, "components/common/user-report-dialog.tsx"),
+  "utf8"
+)
 const zhMessages = readFileSync(
   resolve(webRoot, "lib/i18n/messages/zh-CN.ts"),
   "utf8"
@@ -17,14 +21,14 @@ const enMessages = readFileSync(
 )
 
 assert.match(
-  topicMenu,
+  reportDialog,
   /\/api\/user-report\/submit/,
-  "topic menu should submit reports to the user report endpoint"
+  "shared report dialog should submit reports to the user report endpoint"
 )
 
 assert.match(
   topicMenu,
-  /dataType:\s*"topic"/,
+  /dataType="topic"/,
   "topic report submission should identify reports as topic data"
 )
 
@@ -42,13 +46,13 @@ for (const source of [zhMessages, enMessages]) {
   )
   assert.match(
     source,
-    /reportSuccess:\s*"/,
-    "topic menu translations should include report success feedback"
+    /userReport:\s*{/,
+    "translations should include shared report dialog copy"
   )
   assert.match(
     source,
-    /reportReason/,
-    "topic menu translations should include report reasons"
+    /reason:\s*{/,
+    "shared report dialog translations should include report reasons"
   )
 }
 

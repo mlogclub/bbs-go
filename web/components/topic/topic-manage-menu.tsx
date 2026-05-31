@@ -4,19 +4,11 @@ import * as React from "react"
 import { useRouter } from "@/lib/router/navigation"
 import { MoreVertical } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
 import {
   ConfirmDialog,
   type ConfirmDialogState,
 } from "@/components/common/confirm-dialog"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { UserReportDialog } from "@/components/common/user-report-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Textarea } from "@/components/ui/textarea"
 import { apiFetch, toFormData } from "@/lib/api/client"
 import type { Topic, UserSummary } from "@/lib/api/types"
 import { PERMISSIONS } from "@/lib/auth/permissions.generated"
@@ -35,16 +26,6 @@ import { msg, useToastActions } from "@/lib/toast"
 function actionText(text: string, action: string) {
   return text.replace("{action}", action)
 }
-
-const reportReasonKeys = [
-  "spam",
-  "illegal",
-  "harassment",
-  "pornographic",
-  "other",
-] as const
-
-type ReportReasonKey = (typeof reportReasonKeys)[number]
 
 export function TopicManageMenu({
   topic,
@@ -61,10 +42,6 @@ export function TopicManageMenu({
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
   const [reportOpen, setReportOpen] = React.useState(false)
-  const [reportReason, setReportReason] =
-    React.useState<ReportReasonKey>("spam")
-  const [reportDetail, setReportDetail] = React.useState("")
-  const [reporting, setReporting] = React.useState(false)
   const isTopicOwner = Boolean(currentUser && currentUser.id === topic.user.id)
   const canReport = Boolean(currentUser && !isTopicOwner)
   const canEdit = isTopicOwner && topic.type === 0
@@ -208,37 +185,6 @@ export function TopicManageMenu({
     })
   }
 
-  async function submitReport(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (reporting) return
-
-    const reasonLabel = t(
-      `component.topicManageMenu.reportReason.${reportReason}`
-    )
-    const detail = reportDetail.trim()
-    const reason = detail ? `${reasonLabel}: ${detail}` : reasonLabel
-
-    try {
-      setReporting(true)
-      await apiFetch<null>("/api/user-report/submit", {
-        method: "POST",
-        body: toFormData({
-          dataId: topic.id,
-          dataType: "topic",
-          reason,
-        }),
-      })
-      setReportOpen(false)
-      setReportReason("spam")
-      setReportDetail("")
-      msg({ message: t("component.topicManageMenu.reportSuccess") })
-    } catch (error) {
-      catchError(error)
-    } finally {
-      setReporting(false)
-    }
-  }
-
   return (
     <>
       <DropdownMenu modal={false}>
@@ -313,54 +259,12 @@ export function TopicManageMenu({
           ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
-        <DialogContent>
-          <form className="grid gap-5" onSubmit={submitReport}>
-            <DialogHeader>
-              <DialogTitle>{t("component.topicManageMenu.report")}</DialogTitle>
-              <DialogDescription>
-                {t("component.topicManageMenu.reportDescription")}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-2">
-              {reportReasonKeys.map((reason) => (
-                <button
-                  key={reason}
-                  type="button"
-                  className={`flex min-h-9 items-center rounded-md border px-3 text-left text-sm transition-colors ${
-                    reportReason === reason
-                      ? "border-primary bg-primary/10 text-foreground"
-                      : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                  onClick={() => setReportReason(reason)}
-                >
-                  {t(`component.topicManageMenu.reportReason.${reason}`)}
-                </button>
-              ))}
-            </div>
-            <Textarea
-              value={reportDetail}
-              onChange={(event) => setReportDetail(event.target.value)}
-              maxLength={500}
-              placeholder={t("component.topicManageMenu.reportPlaceholder")}
-            />
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setReportOpen(false)}
-              >
-                {t("common.cancel")}
-              </Button>
-              <Button type="submit" disabled={reporting}>
-                {reporting
-                  ? t("component.topicManageMenu.reporting")
-                  : t("component.topicManageMenu.reportSubmit")}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <UserReportDialog
+        open={reportOpen}
+        dataId={topic.id}
+        dataType="topic"
+        onOpenChange={setReportOpen}
+      />
       <ConfirmDialog
         state={confirmState}
         onOpenChange={(open) => {
