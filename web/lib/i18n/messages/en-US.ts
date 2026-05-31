@@ -955,6 +955,20 @@ const enUS = {
       confirmAction: "Are you sure you want to {action} this topic?",
       actionSuccess: "{action} successful",
       actionFailed: "{action} failed: ",
+      report: "Report",
+      reportDescription:
+        "Choose a reason for the report. Add details if needed.",
+      reportPlaceholder: "Additional details (optional)",
+      reportSubmit: "Submit report",
+      reporting: "Submitting...",
+      reportSuccess: "Report submitted",
+      reportReason: {
+        spam: "Spam or ads",
+        illegal: "Illegal content",
+        harassment: "Harassment",
+        pornographic: "Adult or explicit content",
+        other: "Other",
+      },
     },
     editorMode: {
       label: "Editor",

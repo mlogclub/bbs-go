@@ -20,7 +20,7 @@ func UserReportSubmit(ctx *gin.Context) {
 		return
 	}
 	report := &models.UserReport{
-		DataId:     req.DataId,
+		DataId:     req.DecodedDataId(),
 		DataType:   req.DataType,
 		Reason:     req.Reason,
 		CreateTime: dates.NowTimestamp(),

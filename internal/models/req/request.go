@@ -268,9 +268,13 @@ func (r LikedIdsReq) ParsedEntityIds() []int64 {
 }
 
 type UserReportReq struct {
-	DataId   int64  `json:"dataId" form:"dataId"`
+	DataId   string `json:"dataId" form:"dataId"`
 	DataType string `json:"dataType" form:"dataType"`
 	Reason   string `json:"reason" form:"reason"`
+}
+
+func (r UserReportReq) DecodedDataId() int64 {
+	return idcodec.Decode(r.DataId)
 }
 
 type PatchDownloadScoreReq struct {
