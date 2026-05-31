@@ -407,6 +407,7 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	userReportGroup.POST("/list", adminHandlers.UserReportList)
 	userReportGroup.POST("/create", adminHandlers.UserReportCreate)
 	userReportGroup.POST("/update", adminHandlers.UserReportUpdate)
+	userReportGroup.POST("/audit", adminHandlers.UserReportAudit)
 	userReportGroup.GET("/:id", adminHandlers.UserReportDetail)
 
 	forbiddenWordGroup := group.Group("/forbidden-word")

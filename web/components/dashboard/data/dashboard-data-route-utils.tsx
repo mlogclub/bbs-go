@@ -111,6 +111,14 @@ export function reportDataTypeOptionsFor(t: TFunction) {
   ]
 }
 
+export function reportAuditStatusOptionsFor(t: TFunction) {
+  return [
+    { label: t("dashboard.reportAuditStatus.pending"), value: 0 },
+    { label: t("dashboard.reportAuditStatus.processed"), value: 1 },
+    { label: t("dashboard.reportAuditStatus.ignored"), value: 2 },
+  ]
+}
+
 export function reportDataTypeCell(t: TFunction, value: unknown) {
   const key = String(value || "")
   if (key === "topic") return t("dashboard.reportDataTypes.topic")
@@ -124,7 +132,40 @@ export function reportAuditStatusCell(t: TFunction, value: unknown) {
   const status = Number(value || 0)
   if (status === 0) return t("dashboard.reportAuditStatus.pending")
   if (status === 1) return t("dashboard.reportAuditStatus.processed")
+  if (status === 2) return t("dashboard.reportAuditStatus.ignored")
   return t("dashboard.reportAuditStatus.unknown", { status })
+}
+
+export function reportTargetUrl(record: Record<string, unknown>) {
+  const dataType = String(record.dataType || "")
+  const dataId = record.dataId
+  if (dataId === undefined || dataId === null || dataId === "") return undefined
+
+  if (dataType === "topic") return `/topic/${String(dataId)}`
+  if (dataType === "article") return `/article/${String(dataId)}`
+  if (dataType === "user") return `/user/${String(dataId)}`
+  return undefined
+}
+
+export function reportTargetCell(
+  t: TFunction,
+  record: Record<string, unknown>
+) {
+  const dataId = record.dataId
+  const idText =
+    dataId === undefined || dataId === null || dataId === ""
+      ? "-"
+      : String(dataId)
+  const typeText = reportDataTypeCell(t, record.dataType)
+  const text = `${typeText} #${idText}`
+  const href = reportTargetUrl(record)
+  if (!href || idText === "-") return text
+
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className="hover:underline">
+      {text}
+    </a>
+  )
 }
 
 export function categoryTypeOptionsFor(t: TFunction) {

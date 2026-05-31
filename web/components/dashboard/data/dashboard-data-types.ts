@@ -59,6 +59,7 @@ export type DashboardDataRowAction = {
   permission?: PermissionCode
   method?: "POST" | "DELETE"
   payload?: (record: AdminRecord) => Record<string, AdminFormValue>
+  visible?: (record: AdminRecord) => boolean
   confirm?: string
   successMessage?: string
 }

@@ -94,6 +94,16 @@ func TestAdminPermissionRegistryProtectsLinkUpdateSort(t *testing.T) {
 	}
 }
 
+func TestAdminPermissionRegistryProtectsUserReportAudit(t *testing.T) {
+	code, ok := GetAdminPermissionCode("POST", "/api/admin/user-report/audit")
+	if !ok {
+		t.Fatalf("expected user report audit permission to be registered")
+	}
+	if code != PermissionUserReportAudit.Code {
+		t.Fatalf("expected %s, got %s", PermissionUserReportAudit.Code, code)
+	}
+}
+
 func TestAdminPermissionRegistryRejectsUnknownAdminPath(t *testing.T) {
 	if code, ok := GetAdminPermissionCode("POST", "/api/admin/unknown/action"); ok {
 		t.Fatalf("expected unknown admin path to be rejected, got %s", code)

@@ -110,6 +110,7 @@ var (
 		{Method: "POST", Pattern: "/api/admin/user-badge/list", Permissions: []PermissionDefinition{PermissionUserBadgeView}},
 		{Method: "GET", Pattern: "/api/admin/user-report/*", Permissions: []PermissionDefinition{PermissionUserReportView}},
 		{Method: "POST", Pattern: "/api/admin/user-report/list", Permissions: []PermissionDefinition{PermissionUserReportView}},
+		{Method: "POST", Pattern: "/api/admin/user-report/audit", Permissions: []PermissionDefinition{PermissionUserReportAudit}},
 		{Method: "GET", Pattern: "/api/admin/operate-log/*", Permissions: []PermissionDefinition{PermissionOperateLogView}},
 		{Method: "POST", Pattern: "/api/admin/operate-log/list", Permissions: []PermissionDefinition{PermissionOperateLogView}},
 	}

@@ -270,16 +270,18 @@ export function DashboardDataTable({
                             </Button>
                           </>
                         ) : null}
-                        {config.rowActions?.map((action) => (
-                          <Button
-                            key={action.label}
-                            size="sm"
-                            variant="outline"
-                            onClick={() => onRunAction(action, record)}
-                          >
-                            {action.label}
-                          </Button>
-                        ))}
+                        {config.rowActions
+                          ?.filter((action) => action.visible?.(record) ?? true)
+                          .map((action) => (
+                            <Button
+                              key={action.label}
+                              size="sm"
+                              variant="outline"
+                              onClick={() => onRunAction(action, record)}
+                            >
+                              {action.label}
+                            </Button>
+                          ))}
                         {config.renderRowActions?.(record)}
                         {config.detailFields?.length ? (
                           <Button

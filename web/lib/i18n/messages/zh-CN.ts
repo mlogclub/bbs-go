@@ -142,6 +142,8 @@ const zhCN = {
       markedSolved: "已标记为已解决",
       markedUnsolved: "已标记为未解决",
       resetPassword: "新密码：{password}",
+      reportProcessed: "举报已处理",
+      reportIgnored: "举报已忽略",
     },
     confirm: {
       title: "确认操作",
@@ -166,7 +168,16 @@ const zhCN = {
     reportAuditStatus: {
       pending: "待处理",
       processed: "已处理",
+      ignored: "已忽略",
       unknown: "未知状态 {status}",
+    },
+    reportActions: {
+      process: "处理",
+      ignore: "忽略",
+    },
+    reportConfirm: {
+      process: "确认将该举报标记为已处理？",
+      ignore: "确认忽略该举报？",
     },
     gender: {
       male: "男",
@@ -700,7 +711,10 @@ const zhCN = {
       entityType: "内容类型",
       entityId: "内容ID",
       auditStatus: "审核状态",
+      auditTime: "审核时间",
+      auditUserId: "审核人ID",
       reason: "原因",
+      reportTarget: "举报对象",
     },
     pages: {
       users: {

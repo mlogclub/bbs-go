@@ -24,6 +24,12 @@ assert.match(
 
 assert.match(
   routeSource,
+  /name:\s*"auditStatus"[\s\S]*?type:\s*"select"/,
+  "user reports dashboard should provide an auditStatus select filter"
+)
+
+assert.match(
+  routeSource,
   /name:\s*"dataId"/,
   "user reports dashboard should provide a dataId filter"
 )
@@ -40,6 +46,36 @@ assert.match(
   "user reports dashboard should render auditStatus with a localized label"
 )
 
+assert.match(
+  routeSource,
+  /DASHBOARD_USER_REPORT_AUDIT/,
+  "user reports dashboard actions should require the user report audit permission"
+)
+
+assert.match(
+  routeSource,
+  /\/api\/admin\/user-report\/audit/,
+  "user reports dashboard should post audit actions to the audit endpoint"
+)
+
+assert.match(
+  routeSource,
+  /auditStatus:\s*1/,
+  "user reports dashboard should provide a processed action"
+)
+
+assert.match(
+  routeSource,
+  /auditStatus:\s*2/,
+  "user reports dashboard should provide an ignore action"
+)
+
+assert.match(
+  routeSource,
+  /detailFields:\s*\[/,
+  "user reports dashboard should define detail fields"
+)
+
 for (const source of [zhMessages, enMessages]) {
   assert.match(
     source,
@@ -50,6 +86,16 @@ for (const source of [zhMessages, enMessages]) {
     source,
     /reportAuditStatus:\s*{/,
     "dashboard translations should include report audit status labels"
+  )
+  assert.match(
+    source,
+    /ignored:/,
+    "dashboard translations should include ignored report audit status labels"
+  )
+  assert.match(
+    source,
+    /reportActions:\s*{/,
+    "dashboard translations should include report action labels"
   )
 }
 

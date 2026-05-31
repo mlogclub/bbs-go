@@ -24,6 +24,12 @@ export default function DashboardUserReportsRoute() {
         type: "select",
         options: dashboardData.reportDataTypeOptionsFor(t),
       },
+      {
+        name: "auditStatus",
+        label: dashboardData.label(t, "auditStatus"),
+        type: "select",
+        options: dashboardData.reportAuditStatusOptionsFor(t),
+      },
     ],
     columns: [
       { key: "id", label: dashboardData.label(t, "id") },
@@ -34,6 +40,11 @@ export default function DashboardUserReportsRoute() {
           dashboardData.reportDataTypeCell(t, record.dataType),
       },
       { key: "dataId", label: dashboardData.label(t, "dataId") },
+      {
+        key: "target",
+        label: dashboardData.label(t, "reportTarget"),
+        render: (record) => dashboardData.reportTargetCell(t, record),
+      },
       { key: "userId", label: dashboardData.label(t, "userId") },
       {
         key: "reason",
@@ -50,6 +61,60 @@ export default function DashboardUserReportsRoute() {
         key: "createTime",
         label: dashboardData.label(t, "createTime"),
         render: (record) => dashboardData.dateCell(record.createTime),
+      },
+    ],
+    detailFields: [
+      { key: "id", label: dashboardData.label(t, "id") },
+      {
+        key: "dataType",
+        label: dashboardData.label(t, "dataType"),
+        render: (record) =>
+          dashboardData.reportDataTypeCell(t, record.dataType),
+      },
+      { key: "dataId", label: dashboardData.label(t, "dataId") },
+      {
+        key: "target",
+        label: dashboardData.label(t, "reportTarget"),
+        render: (record) => dashboardData.reportTargetCell(t, record),
+      },
+      { key: "userId", label: dashboardData.label(t, "userId") },
+      { key: "reason", label: dashboardData.label(t, "reason") },
+      {
+        key: "auditStatus",
+        label: dashboardData.label(t, "auditStatus"),
+        render: (record) =>
+          dashboardData.reportAuditStatusCell(t, record.auditStatus),
+      },
+      { key: "auditUserId", label: dashboardData.label(t, "auditUserId") },
+      {
+        key: "auditTime",
+        label: dashboardData.label(t, "auditTime"),
+        render: (record) => dashboardData.dateCell(record.auditTime),
+      },
+      {
+        key: "createTime",
+        label: dashboardData.label(t, "createTime"),
+        render: (record) => dashboardData.dateCell(record.createTime),
+      },
+    ],
+    rowActions: [
+      {
+        label: t("dashboard.reportActions.process"),
+        endpoint: "/api/admin/user-report/audit",
+        permission: PERMISSIONS.DASHBOARD_USER_REPORT_AUDIT,
+        payload: (record) => ({ id: record.id as number, auditStatus: 1 }),
+        visible: (record) => Number(record.auditStatus || 0) === 0,
+        confirm: t("dashboard.reportConfirm.process"),
+        successMessage: t("dashboard.messages.reportProcessed"),
+      },
+      {
+        label: t("dashboard.reportActions.ignore"),
+        endpoint: "/api/admin/user-report/audit",
+        permission: PERMISSIONS.DASHBOARD_USER_REPORT_AUDIT,
+        payload: (record) => ({ id: record.id as number, auditStatus: 2 }),
+        visible: (record) => Number(record.auditStatus || 0) === 0,
+        confirm: t("dashboard.reportConfirm.ignore"),
+        successMessage: t("dashboard.messages.reportIgnored"),
       },
     ],
   }

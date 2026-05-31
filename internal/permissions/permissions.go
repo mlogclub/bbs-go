@@ -110,6 +110,7 @@ var (
 	PermissionUserExpLogView  = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.userExpLog.view", GroupName: GroupCommunity, SortNo: 770, NameEn: "View XP Logs", NameZh: "查看经验日志"}
 	PermissionUserTaskLogView = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.userTaskLog.view", GroupName: GroupCommunity, SortNo: 780, NameEn: "View Task Logs", NameZh: "查看任务日志"}
 	PermissionUserReportView  = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.userReport.view", GroupName: GroupCommunity, SortNo: 790, NameEn: "View User Reports", NameZh: "查看用户举报"}
+	PermissionUserReportAudit = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.userReport.audit", GroupName: GroupCommunity, SortNo: 795, NameEn: "Audit User Reports", NameZh: "处理用户举报"}
 
 	PermissionEmailLogView   = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.emailLog.view", GroupName: GroupSystem, SortNo: 1300, NameEn: "View Email Logs", NameZh: "查看邮件日志"}
 	PermissionOperateLogView = PermissionDefinition{Type: TypeDashboard, Code: "dashboard.operateLog.view", GroupName: GroupSystem, SortNo: 1310, NameEn: "View Operation Logs", NameZh: "查看操作日志"}
@@ -174,6 +175,7 @@ var Permissions = []PermissionDefinition{
 	PermissionUserExpLogView,
 	PermissionUserBadgeView,
 	PermissionUserReportView,
+	PermissionUserReportAudit,
 	PermissionOperateLogView,
 }
 

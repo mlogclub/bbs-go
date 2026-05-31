@@ -142,6 +142,8 @@ const enUS = {
       markedSolved: "Marked as solved",
       markedUnsolved: "Marked as unsolved",
       resetPassword: "New password: {password}",
+      reportProcessed: "Report marked as processed",
+      reportIgnored: "Report ignored",
     },
     confirm: {
       title: "Confirm action",
@@ -166,7 +168,16 @@ const enUS = {
     reportAuditStatus: {
       pending: "Pending",
       processed: "Processed",
+      ignored: "Ignored",
       unknown: "Unknown status {status}",
+    },
+    reportActions: {
+      process: "Process",
+      ignore: "Ignore",
+    },
+    reportConfirm: {
+      process: "Mark this report as processed?",
+      ignore: "Ignore this report?",
     },
     gender: {
       male: "Male",
@@ -716,7 +727,10 @@ const enUS = {
       entityType: "Entity Type",
       entityId: "Entity ID",
       auditStatus: "Audit Status",
+      auditTime: "Audit Time",
+      auditUserId: "Auditor ID",
       reason: "Reason",
+      reportTarget: "Reported Target",
     },
     pages: {
       users: {
