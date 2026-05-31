@@ -24,6 +24,18 @@ assert.match(
 
 assert.match(
   routeSource,
+  /name:\s*"dataId"/,
+  "user reports dashboard should provide a dataId filter"
+)
+
+assert.doesNotMatch(
+  routeSource,
+  /filters:\s*\[[\s\S]*?name:\s*"id"/,
+  "user reports dashboard should not filter by report id"
+)
+
+assert.match(
+  routeSource,
   /reportAuditStatusCell\(t,\s*record\.auditStatus\)/,
   "user reports dashboard should render auditStatus with a localized label"
 )

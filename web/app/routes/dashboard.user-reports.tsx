@@ -17,7 +17,7 @@ export default function DashboardUserReportsRoute() {
     viewPermission: PERMISSIONS.DASHBOARD_USER_REPORT_VIEW,
     detailEndpoint: (id) => `/api/admin/user-report/${id}`,
     filters: [
-      { name: "id", label: dashboardData.label(t, "id") },
+      { name: "dataId", label: dashboardData.label(t, "dataId") },
       {
         name: "dataType",
         label: dashboardData.label(t, "dataType"),
