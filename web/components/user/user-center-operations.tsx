@@ -1,12 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { Ban, CircleCheck, ShieldAlert } from "lucide-react"
+import { Ban, CircleCheck, Flag, ShieldAlert } from "lucide-react"
 
 import {
   ConfirmDialog,
   type ConfirmDialogState,
 } from "@/components/common/confirm-dialog"
+import { UserReportDialog } from "@/components/common/user-report-dialog"
 import { WidgetCard } from "@/components/common/widget-card"
 import { apiFetch, toFormData } from "@/lib/api/client"
 import type { UserSummary } from "@/lib/api/types"
@@ -25,8 +26,10 @@ export function UserCenterOperations({
   const { t } = useI18n()
   const { catchError } = useToastActions()
   const [forbidden, setForbidden] = React.useState(Boolean(user.forbidden))
+  const [reportOpen, setReportOpen] = React.useState(false)
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
+  const canReport = Boolean(currentUser && currentUser.id !== user.id)
   const canForbidden = userHasPermission(
     currentUser,
     PERMISSIONS.DASHBOARD_USER_FORBIDDEN
@@ -36,7 +39,7 @@ export function UserCenterOperations({
     PERMISSIONS.DASHBOARD_USER_FORBIDDEN_FOREVER
   )
 
-  if (!canForbidden && !canForbiddenForever) {
+  if (!canForbidden && !canForbiddenForever && !canReport) {
     return null
   }
 
@@ -126,8 +129,26 @@ export function UserCenterOperations({
               ) : null}
             </>
           )}
+          {canReport ? (
+            <li className="flex items-center gap-2">
+              <Flag className="shrink-0" size={14} aria-hidden="true" />
+              <button
+                type="button"
+                className="text-primary"
+                onClick={() => setReportOpen(true)}
+              >
+                {t("component.userCenterSidebar.report")}
+              </button>
+            </li>
+          ) : null}
         </ul>
       </WidgetCard>
+      <UserReportDialog
+        open={reportOpen}
+        dataId={user.id}
+        dataType="user"
+        onOpenChange={setReportOpen}
+      />
       <ConfirmDialog
         state={confirmState}
         onOpenChange={(open) => {

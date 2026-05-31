@@ -945,6 +945,7 @@ const zhCN = {
       confirmDelete: "是否确认删除该文章？",
       deleteSuccess: "删除成功",
       deleteFailed: "删除失败：",
+      report: "举报",
     },
     topicManageMenu: {
       edit: "修改",
@@ -1078,6 +1079,7 @@ const zhCN = {
       forbiddenFailed: "禁言失败",
       removeForbiddenSuccess: "取消禁言成功",
       removeForbiddenFailed: "取消禁言失败",
+      report: "举报",
     },
     userBadges: {
       title: "勋章",

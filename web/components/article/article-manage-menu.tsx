@@ -8,6 +8,7 @@ import {
   ConfirmDialog,
   type ConfirmDialogState,
 } from "@/components/common/confirm-dialog"
+import { UserReportDialog } from "@/components/common/user-report-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,9 +35,11 @@ export function ArticleManageMenu({
   const { catchError } = useToastActions()
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
+  const [reportOpen, setReportOpen] = React.useState(false)
   const isArticleOwner = Boolean(
     currentUser && currentUser.id === article.user.id
   )
+  const canReport = Boolean(currentUser && !isArticleOwner)
   const canEdit =
     isArticleOwner ||
     userHasPermission(currentUser, PERMISSIONS.DASHBOARD_ARTICLE_UPDATE)
@@ -52,7 +55,13 @@ export function ArticleManageMenu({
     PERMISSIONS.DASHBOARD_USER_FORBIDDEN_FOREVER
   )
 
-  if (!canEdit && !canDelete && !canForbidden && !canForbiddenForever) {
+  if (
+    !canEdit &&
+    !canDelete &&
+    !canForbidden &&
+    !canForbiddenForever &&
+    !canReport
+  ) {
     return null
   }
 
@@ -134,8 +143,23 @@ export function ArticleManageMenu({
               {t("component.articleManageMenu.forbiddenForever")}
             </DropdownMenuItem>
           ) : null}
+          {canReport &&
+          (canEdit || canDelete || canForbidden || canForbiddenForever) ? (
+            <DropdownMenuSeparator />
+          ) : null}
+          {canReport ? (
+            <DropdownMenuItem onSelect={() => setReportOpen(true)}>
+              {t("component.articleManageMenu.report")}
+            </DropdownMenuItem>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
+      <UserReportDialog
+        open={reportOpen}
+        dataId={article.id}
+        dataType="article"
+        onOpenChange={setReportOpen}
+      />
       <ConfirmDialog
         state={confirmState}
         onOpenChange={(open) => {

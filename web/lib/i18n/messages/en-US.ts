@@ -963,6 +963,7 @@ const enUS = {
       confirmDelete: "Are you sure you want to delete this article?",
       deleteSuccess: "Article deleted successfully",
       deleteFailed: "Failed to delete article: ",
+      report: "Report",
     },
     topicManageMenu: {
       edit: "Edit",
@@ -1098,6 +1099,7 @@ const enUS = {
       forbiddenFailed: "Failed to ban user",
       removeForbiddenSuccess: "Ban removed successfully",
       removeForbiddenFailed: "Failed to remove ban",
+      report: "Report",
     },
     userBadges: {
       title: "Badges",
