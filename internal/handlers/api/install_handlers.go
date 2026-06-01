@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/install"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/locales"
+	"bbs-go/internal/services/heatpoints"
 
 	"github.com/gin-gonic/gin"
 
@@ -60,6 +61,12 @@ func InstallInstall(ctx *gin.Context) {
 	// 初始化数据库
 	if err := install.Install(req); err != nil {
 		ginx.WriteJSON(ctx, err)
+		return
+	}
+
+	// 执行创世空投
+	if err := heatpoints.Airdrop.Execute(); err != nil {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("创世空投失败：" + err.Error()))
 		return
 	}
 

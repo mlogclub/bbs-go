@@ -17,7 +17,7 @@ import {
   type TopicListRouteData,
 } from "../route-helpers/loaders"
 
-export { loader } from "../route-helpers/loaders"
+
 
 export async function clientLoader() {
   return loadTopicListRouteData()

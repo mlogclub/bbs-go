@@ -1,8 +1,9 @@
 "use client"
 
-import { Eye, Heart, MessageCircle, Star } from "lucide-react"
+import { Eye, Heart, MessageCircle, Star, Flame } from "lucide-react"
 
 import { useTopicActions } from "@/components/topic/topic-action-context"
+import { StakeButton } from "@/components/topic/stake-button"
 import type { Topic } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
@@ -71,24 +72,7 @@ export function TopicDetailActions({
           <span>{countLabel(commentCount)}</span>
         </div>
       </button>
-      <button
-        type="button"
-        className="group flex flex-1 items-center justify-center text-sm text-muted-foreground hover:text-primary"
-        onClick={() => void toggleFavorite("detail")}
-      >
-        <Star
-          className={cn(
-            "size-[18px] stroke-2 transition-all duration-200 group-hover:text-primary",
-            favorited
-              ? "text-destructive group-hover:text-destructive"
-              : "text-muted-foreground"
-          )}
-          fill={favorited ? "currentColor" : "none"}
-        />
-        <div className="ml-[5px] text-foreground">
-          <span>{labels.favorite}</span>
-        </div>
-      </button>
+      <StakeButton topicId={topic.id} currentFlameLevel={topic.flameLevel || 0} />
     </div>
   )
 }

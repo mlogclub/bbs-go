@@ -8,7 +8,7 @@ import {
   type ArticleListRouteData,
 } from "../route-helpers/loaders"
 
-export { loader } from "../route-helpers/loaders"
+
 
 type RouteArgs = {
   request: Request

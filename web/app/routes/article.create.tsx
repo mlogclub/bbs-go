@@ -6,7 +6,7 @@ import { useDocumentTitle } from "@/lib/use-document-title"
 
 import { requireUser, requireUserClient } from "../route-helpers/auth"
 
-export async function loader(args: { request: Request }) {
+async function _loader(args: { request: Request }) {
   await requireUser(args)
   return null
 }

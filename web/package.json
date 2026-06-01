@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "react-router dev --host 0.0.0.0",
     "build": "pnpm build:ssr",
-    "build:spa": "BBSGO_WEB_SPA=true react-router build && node scripts/prepare-spa-build.mjs",
+    "build:spa": "set BBSGO_WEB_SPA=true && react-router build && node scripts/prepare-spa-build.mjs",
     "build:ssr": "react-router build",
     "start": "node scripts/serve-ssr.mjs",
     "lint": "eslint",

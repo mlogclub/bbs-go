@@ -11,7 +11,7 @@ import { useDocumentTitle } from "@/lib/use-document-title"
 import { requireUser, requireUserClient } from "../route-helpers/auth"
 import { useClientData } from "../route-helpers/client-hooks"
 
-export async function loader(args: { request: Request }) {
+async function _loader(args: { request: Request }) {
   await requireUser(args)
   return null
 }

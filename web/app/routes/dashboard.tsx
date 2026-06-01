@@ -140,7 +140,7 @@ function dashboardBreadcrumbs(
   return [{ title: t("dashboard.nav.workspace"), url: "/dashboard" }]
 }
 
-export async function loader(args: { request: Request }) {
+async function _loader(args: { request: Request }) {
   await requireDashboardAdmin(args)
   return null
 }

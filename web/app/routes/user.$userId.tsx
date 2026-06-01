@@ -13,7 +13,7 @@ type RouteArgs = {
   params: { userId?: string }
 }
 
-export async function loader({ request, params }: RouteArgs) {
+async function _loader({ request, params }: RouteArgs) {
   return loadUserProfileRouteData({ request, userId: params.userId || "" })
 }
 

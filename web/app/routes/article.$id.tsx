@@ -10,7 +10,7 @@ type RouteArgs = {
   params: { id?: string }
 }
 
-export async function loader({ request, params }: RouteArgs) {
+async function _loader({ request, params }: RouteArgs) {
   return loadArticleDetail({ request, id: params.id || "" })
 }
 

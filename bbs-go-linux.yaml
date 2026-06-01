@@ -1,0 +1,16 @@
+Port: 8082
+AllowedOrigins:
+  - "*"
+Installed: false
+IdCodec:
+  Key: 2292418331321735382
+DB:
+  Type: sqlite
+  Url: /data/bbs-go/bbs-go.db
+Logger:
+  Filename: /data/bbs-go/bbs-go.log
+  MaxSize: 100
+  MaxAge: 10
+  MaxBackups: 10
+Search:
+  IndexPath: /data/bbs-go/index

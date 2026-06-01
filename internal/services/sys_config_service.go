@@ -116,6 +116,45 @@ func (s *sysConfigService) Set(key, value string) error {
 	})
 }
 
+// SetPending 为 heat.* 参数写入待生效值。
+// 当前 Value 保持不变（API 读取仍使用缓存中的旧值），
+// PendingValue 将在下次每日结算时由 SettlementService.promotePendingParams 提升为正式值。
+func (s *sysConfigService) SetPending(key, value string) error {
+	if !strings.HasPrefix(key, "heat.") {
+		return errors.New("SetPending only supports heat.* keys")
+	}
+	return sqls.DB().Model(&models.SysConfig{}).
+		Where("key = ?", key).
+		Update("pending_value", value).Error
+}
+
+// PromotePendingParams 将所有有 pending_value 的 heat.* 配置提升为正式值，
+// 并清空 pending_value，同时失效缓存使新值在下次 API 读取时生效。
+func (s *sysConfigService) PromotePendingParams() error {
+	var pending []models.SysConfig
+	sqls.DB().Where("key LIKE ? AND pending_value != ''", "heat.%").Find(&pending)
+
+	if len(pending) == 0 {
+		return nil
+	}
+
+	return sqls.DB().Transaction(func(tx *gorm.DB) error {
+		for _, cfg := range pending {
+			if err := tx.Model(&models.SysConfig{}).Where("key = ?", cfg.Key).
+				Updates(map[string]interface{}{
+					"value":         cfg.PendingValue,
+					"pending_value": "",
+					"update_time":   dates.NowTimestamp(),
+				}).Error; err != nil {
+				return err
+			}
+			cache.SysConfigCache.Invalidate(cfg.Key)
+			slog.Info("热度点参数已提升生效", "key", cfg.Key, "new_value", cfg.PendingValue)
+		}
+		return nil
+	})
+}
+
 func (s *sysConfigService) setSingle(db *gorm.DB, key, value, name, description string) error {
 	if len(key) == 0 {
 		return errors.New("sys config key is null")

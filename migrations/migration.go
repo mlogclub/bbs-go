@@ -3,6 +3,7 @@ package migrations
 import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/services"
+	"bbs-go/internal/services/heatpoints"
 	"errors"
 	"log/slog"
 	"sync"
@@ -114,4 +115,6 @@ func init() {
 	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
 	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)
 	register(15, "remove comment admin permissions", migrate_remove_comment_admin_permissions)
+	register(16, "heat points system initialization", migrate_heat_points_system)
+	register(17, "partition topic_stakes table", heatpoints.MigrateCreatePartitionTable)
 }

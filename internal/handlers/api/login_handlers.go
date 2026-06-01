@@ -5,7 +5,9 @@ import (
 	"bbs-go/internal/handlers/render"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/req"
+	"bbs-go/internal/services/heatpoints"
 	"database/sql"
+	"log/slog"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -70,6 +72,10 @@ func LoginSignup(ctx *gin.Context) {
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return
+	}
+	// 新用户空投热度点
+	if err := heatpoints.Airdrop.AirdropSingleUser(user.Id); err != nil {
+		slog.Warn("新用户空投失败", "userId", user.Id, "error", err)
 	}
 	ginx.WriteJSON(ctx, render.BuildLoginSuccess(ctx, user, req.Redirect))
 

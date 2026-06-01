@@ -77,6 +77,20 @@ export async function loader({
   return loadRootData(request)
 }
 
+export async function clientLoader({
+  request,
+  context,
+}: Route.ClientLoaderArgs): Promise<RootLoaderData> {
+  const getRootData = context.get(rootDataContext)
+  if (getRootData) return getRootData()
+
+  try {
+    return await loadRootData(request)
+  } catch {
+    return { config: null, currentUser: null, locale: "en-US", unreadMessageCount: 0 }
+  }
+}
+
 export function meta({ data }: Route.MetaArgs) {
   return siteMeta(data?.config)
 }

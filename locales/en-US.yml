@@ -36,7 +36,6 @@ topic:
 user:
   anonymous: "Anonymous %d"
   default_description: "No bio yet"
-  forbidden_nickname: "Muted User"
   blacklist: "Blacklisted User"
   not_found: "User not found"
   no_permission: "You don't have permission to do that"

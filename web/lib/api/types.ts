@@ -385,3 +385,28 @@ export interface BindInfo {
   bind?: boolean
   nickname?: string
 }
+
+// Heat Points Staking Types
+export interface HeatPointsQuota {
+  heatPoints: number
+  stakedPoints: number
+  pendingInterest: number
+  remainingQuota: number
+  totalQuota: number
+  quotaUsed: number
+  singleLimit?: number
+}
+
+export interface StakeRecord {
+  id: number
+  topicId: number
+  topicTitle?: string
+  stakedPoints: number
+  flameLevel: number
+  status: number // 0: staking, 1: locked, 2: redeemed
+  settleStatus: number // 0: unsettled, 1: settled, 2: redeemed
+  unsettledInterest?: number
+  createTime: number
+  settleTime?: number
+  redeemedAt?: number
+}

@@ -8,7 +8,7 @@ import { useDocumentTitle } from "@/lib/use-document-title"
 
 const emptyAbout: Record<string, string> = {}
 
-export async function loader({ request }: { request: Request }) {
+async function _loader({ request }: { request: Request }) {
   return apiFetch<Record<string, string>>("/api/config/about", {
     request,
   }).catch(() => emptyAbout)

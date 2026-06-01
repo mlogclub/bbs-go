@@ -12,7 +12,7 @@ function normalizeLinks(data: FriendLink[] | null | undefined) {
   return Array.isArray(data) ? data : []
 }
 
-export async function loader({ request }: { request: Request }) {
+async function _loader({ request }: { request: Request }) {
   return apiFetch<FriendLink[] | null>("/api/link/list", { request })
     .then(normalizeLinks)
     .catch(() => [])

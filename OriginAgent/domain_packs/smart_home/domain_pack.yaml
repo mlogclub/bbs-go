@@ -1,0 +1,49 @@
+id: smart_home
+name: Smart Home
+version: 0.1.0
+enabled: true
+description: Smart home control, device state awareness, and automation planning.
+
+capabilities:
+  - inspect_device_state
+  - control_authorized_lighting
+  - plan_device_automations
+  - coordinate_real_world_device_safety
+
+skills:
+  - lighting-control
+  - safety-confirmation
+  - automation-design
+
+tools:
+  - id: originagent_device_lighting_set_power
+    module: tools.device
+    class: LightingSetPowerTool
+    permissions:
+      - device:lighting
+    audit: security
+  - id: originagent_device_lighting_set_brightness
+    module: tools.device
+    class: LightingSetBrightnessTool
+    permissions:
+      - device:lighting
+    audit: security
+  - id: originagent_device_lighting_set_color_temperature
+    module: tools.device
+    class: LightingSetColorTemperatureTool
+    permissions:
+      - device:lighting
+    audit: security
+
+runtime:
+  module: runtime.contribution
+  factory: build_runtime_contribution
+
+activation:
+  # Metadata only in P3. OriginAgent does not auto-activate domain packs from
+  # triggers yet; activation is still controlled by agents.defaults.domainPacks.
+  triggers:
+    - smart_home
+    - device
+    - lighting
+    - automation

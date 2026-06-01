@@ -206,6 +206,7 @@ type TopicResponse struct {
 	IpLocation        string               `json:"ipLocation"`
 	Vote              *VoteResponse        `json:"vote"`
 	Attachments       []AttachmentResponse `json:"attachments,omitempty"`
+	FlameLevel        int                  `json:"flameLevel"`
 }
 
 // AttachmentResponse 附件返回（不包含直链）

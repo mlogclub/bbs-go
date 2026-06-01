@@ -4,7 +4,7 @@ import { localizedTitle, rootDataFromMatches, sitePageMeta } from "@/lib/seo"
 import { TopicListRoute } from "./_index"
 
 export { clientLoader } from "./_index"
-export { loader } from "../route-helpers/loaders"
+
 
 export function meta({
   location,

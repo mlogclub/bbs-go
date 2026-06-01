@@ -3,7 +3,7 @@ import { noindexRouteMeta } from "@/lib/seo"
 import { requireUser, requireUserClient } from "../route-helpers/auth"
 import { PrivateCenter } from "../route-helpers/private-center"
 
-export async function loader(args: { request: Request }) {
+async function _loader(args: { request: Request }) {
   await requireUser(args)
   return null
 }

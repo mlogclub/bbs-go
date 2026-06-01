@@ -1,0 +1,85 @@
+"""Sandbox backends for shell command execution.
+
+To add a new backend, implement a function with the signature:
+    _wrap_<name>(command: str, workspace: str, cwd: str) -> str
+and register it in _BACKENDS below.
+"""
+
+import shlex
+from pathlib import Path
+
+from OriginAgent.config.paths import get_media_dir
+from OriginAgent.security.paths import ProtectedPathPolicy
+
+
+def build_bwrap_argv(command: str, workspace: str, cwd: str) -> list[str]:
+    """Build a bubblewrap argv with network off and runtime-state masking."""
+
+    ws = Path(workspace).resolve()
+    media = get_media_dir().resolve()
+    policy = ProtectedPathPolicy(ws)
+
+    try:
+        sandbox_cwd = str(ws / Path(cwd).resolve().relative_to(ws))
+    except ValueError:
+        sandbox_cwd = str(ws)
+
+    required = ["/usr"]
+    optional = [
+        "/bin",
+        "/lib",
+        "/lib64",
+        "/etc/alternatives",
+        "/etc/ssl/certs",
+        "/etc/ld.so.cache",
+    ]
+
+    args = ["bwrap", "--new-session", "--die-with-parent", "--unshare-net"]
+    for p in required:
+        args += ["--ro-bind", p, p]
+    for p in optional:
+        args += ["--ro-bind-try", p, p]
+    args += [
+        "--proc",
+        "/proc",
+        "--dev",
+        "/dev",
+        "--tmpfs",
+        "/tmp",
+        "--tmpfs",
+        str(ws.parent),
+        "--dir",
+        str(ws),
+        "--bind",
+        str(ws),
+        str(ws),
+        "--ro-bind-try",
+        str(media),
+        str(media),
+    ]
+    for root in (*policy._protected_write_paths, *policy._protected_read_paths):
+        if root == ws or not str(root).startswith(str(ws)):
+            continue
+        args += ["--tmpfs", str(root)]
+    args += ["--chdir", sandbox_cwd, "--", "sh", "-c", command]
+    return args
+
+
+def _bwrap(command: str, workspace: str, cwd: str) -> str:
+    """Wrap command in a bubblewrap sandbox (requires bwrap in container).
+
+    Only the workspace is bind-mounted read-write; its parent dir (which holds
+    config.json) is hidden behind a fresh tmpfs.  The media directory is
+    bind-mounted read-only so exec commands can read uploaded attachments.
+    """
+    return shlex.join(build_bwrap_argv(command, workspace, cwd))
+
+
+_BACKENDS = {"bwrap": _bwrap}
+
+
+def wrap_command(sandbox: str, command: str, workspace: str, cwd: str) -> str:
+    """Wrap *command* using the named sandbox backend."""
+    if backend := _BACKENDS.get(sandbox):
+        return backend(command, workspace, cwd)
+    raise ValueError(f"Unknown sandbox backend {sandbox!r}. Available: {list(_BACKENDS)}")

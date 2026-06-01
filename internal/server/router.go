@@ -190,6 +190,14 @@ func registerAPIRoutes(group *gin.RouterGroup) {
 	checkinGroup.GET("/checkin", apiHandlers.CheckinStatus)
 	checkinGroup.GET("/rank", apiHandlers.CheckinRank)
 
+	// 热度点质押路由
+	stakeGroup := group.Group("/stake")
+	stakeGroup.POST("/create", apiHandlers.StakeCreate)
+	stakeGroup.POST("/redeem/:id", apiHandlers.StakeRedeem)
+	stakeGroup.GET("/records", apiHandlers.StakeRecords)
+	stakeGroup.GET("/quota", apiHandlers.StakeQuota)
+	stakeGroup.GET("/heat/:id", apiHandlers.StakeHeat)
+
 	configGroup := group.Group("/config")
 	configGroup.GET("/configs", apiHandlers.ConfigConfigs)
 	configGroup.GET("/about", apiHandlers.ConfigAbout)
@@ -436,5 +444,13 @@ func registerAdminRoutes(group *gin.RouterGroup) {
 	voteRecordGroup.POST("/update", adminHandlers.VoteRecordUpdate)
 	voteRecordGroup.POST("/delete", adminHandlers.VoteRecordRemove)
 	voteRecordGroup.GET("/:id", adminHandlers.VoteRecordDetail)
+
+	// 热度点管理接口（Owner 专用）
+	heatAdminGroup := group.Group("/heat")
+	heatAdminGroup.POST("/force-redeem", apiHandlers.AdminHeatForceRedeem)
+	heatAdminGroup.POST("/freeze-flame", apiHandlers.AdminHeatFreezeFlame)
+	heatAdminGroup.GET("/frozen-topics", apiHandlers.AdminHeatFrozenTopics)
+	heatAdminGroup.GET("/circulation", apiHandlers.AdminHeatCirculationStatus)
+	heatAdminGroup.POST("/trigger-settlement", apiHandlers.AdminHeatTriggerSettlement)
 
 }

@@ -10,6 +10,7 @@ import (
 	"bbs-go/internal/pkg/markdown"
 	"bbs-go/internal/pkg/text"
 	"bbs-go/internal/services"
+	"bbs-go/internal/services/heatpoints"
 	"html"
 
 	"github.com/gin-gonic/gin"
@@ -172,6 +173,10 @@ func _buildTopic(topic *models.Topic, buildContent bool) *resp.TopicResponse {
 
 	tags := services.TopicService.GetTopicTags(topic.Id)
 	rsp.Tags = BuildTags(tags)
+
+	// 计算火焰等级
+	activeCirculation := heatpoints.HeatSnapshot.GetActiveCirculation()
+	rsp.FlameLevel = heatpoints.Stake.CalculateFlameLevel(topic.Id, activeCirculation)
 
 	return rsp
 }

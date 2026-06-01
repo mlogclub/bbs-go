@@ -13,7 +13,7 @@ import { useDocumentTitle } from "@/lib/use-document-title"
 
 import { loadArticles } from "../route-helpers/loaders"
 
-export { loader } from "../route-helpers/loaders"
+
 
 export async function clientLoader() {
   return loadArticles({})

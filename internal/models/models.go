@@ -20,6 +20,10 @@ var Models = []interface{}{
 	&OperateLog{}, &EmailLog{}, &EmailCode{}, &SmsCode{}, &CheckIn{}, &UserFollow{}, &UserFeed{}, &UserReport{},
 	&ForbiddenWord{},
 	&Attachment{}, &AttachmentDownloadLog{},
+
+	&TopicStake{}, &UserHeatLog{}, &UserHeatStats{}, &HeatPublicPool{},
+	&SystemMintLog{}, &TopicInteractionSnapshot{}, &HeatCirculationSnapshot{},
+	&DailyFlameOffset{}, &SettlementTaskLog{}, &ColdStorageLog{},
 }
 
 type Model struct {
@@ -123,6 +127,7 @@ type User struct {
 	FansCount        int              `gorm:"type:int(11);not null" json:"fansCount" form:"fansCount"`                 // 粉丝数量
 	Roles            string           `gorm:"type:text" json:"roles" form:"roles"`                                     // 角色
 	ForbiddenEndTime int64            `gorm:"not null;default:0" json:"forbiddenEndTime" form:"forbiddenEndTime"`      // 禁言结束时间
+	HeatPoints       int              `gorm:"type:int(11);not null;default:0" json:"heatPoints" form:"heatPoints"`     // 热度点
 	CreateTime       int64            `json:"createTime" form:"createTime"`                                            // 创建时间
 	UpdateTime       int64            `json:"updateTime" form:"updateTime"`                                            // 更新时间
 }
@@ -254,9 +259,11 @@ type Topic struct {
 	LastCommentUserId int64                 `json:"lastCommentUserId" form:"lastCommentUserId"`                                                                                                    // 最后回复用户
 	UserAgent         string                `gorm:"size:1024" json:"userAgent" form:"userAgent"`                                                                                                   // UserAgent
 	Ip                string                `gorm:"size:128" json:"ip" form:"ip"`                                                                                                                  // IP
-	IpLocation        string                `gorm:"size:64" json:"ipLocation" form:"ipLocation"`                                                                                                   // IP属地
+	IpLocation        string                `gorm:"size:64" json:"ipLocation" form:"ipLocation"`                                                                                                   // IP 属地
 	CreateTime        int64                 `gorm:"index:idx_topic_create_time" json:"createTime" form:"createTime"`                                                                               // 创建时间
 	ExtraData         string                `gorm:"type:text" json:"extraData" form:"extraData"`                                                                                                   // 扩展数据
+	EverViral         bool                  `gorm:"not null;default:false" json:"everViral" form:"everViral"`                                                                                      // 曾经达到过热门（不可逆）
+	FlameLockedLevel  int                   `gorm:"default:0" json:"flameLockedLevel" form:"flameLockedLevel"`                                                                                     // 0=算法控制，>0=管理员锁定火焰等级
 }
 
 // Vote 投票
@@ -329,12 +336,13 @@ type Message struct {
 // 系统配置
 type SysConfig struct {
 	Model
-	Key         string `gorm:"not null;size:128;unique" json:"key" form:"key"`  // 配置key
-	Value       string `gorm:"type:text" json:"value" form:"value"`             // 配置值
-	Name        string `gorm:"not null;size:128" json:"name" form:"name"`       // 配置名称
-	Description string `gorm:"size:1024" json:"description" form:"description"` // 配置描述
-	CreateTime  int64  `gorm:"not null" json:"createTime" form:"createTime"`    // 创建时间
-	UpdateTime  int64  `gorm:"not null" json:"updateTime" form:"updateTime"`    // 更新时间
+	Key          string `gorm:"not null;size:128;unique" json:"key" form:"key"`              // 配置key
+	Value        string `gorm:"type:text" json:"value" form:"value"`                         // 当前生效的配置值
+	PendingValue string `gorm:"type:text" json:"pendingValue" form:"pendingValue"`           // 待生效值（下次结算时覆盖 Value，然后清空）
+	Name         string `gorm:"not null;size:128" json:"name" form:"name"`                   // 配置名称
+	Description  string `gorm:"size:1024" json:"description" form:"description"`             // 配置描述
+	CreateTime   int64  `gorm:"not null" json:"createTime" form:"createTime"`                // 创建时间
+	UpdateTime   int64  `gorm:"not null" json:"updateTime" form:"updateTime"`                // 更新时间
 }
 
 // 友链
@@ -589,4 +597,130 @@ type AttachmentDownloadLog struct {
 	UserId       int64  `gorm:"not null;uniqueIndex:uk_attachment_download_log_ua" json:"userId" form:"userId"`                     // 下载用户 ID
 	AttachmentId string `gorm:"not null;size:64;uniqueIndex:uk_attachment_download_log_ua" json:"attachmentId" form:"attachmentId"` // 附件 ID（UUID）
 	CreateTime   int64  `gorm:"not null;default:0" json:"createTime" form:"createTime"`                                             // 首次下载（支付）时间（毫秒）
+}
+
+// TopicStake 帖子质押记录（分区表）
+// 分区策略：按 update_time/100000000 范围分区（每半年一个分区）
+// 注意：update_time 必须在主键中以满足分区要求
+type TopicStake struct {
+	Model
+	TopicId        int64  `gorm:"not null;index:idx_stake_topic" json:"topicId" form:"topicId"`
+	UserId         int64  `gorm:"not null;index:idx_stake_user" json:"userId" form:"userId"`
+	HeatPoints     int    `gorm:"not null" json:"heatPoints" form:"heatPoints"`         // 当前押注的热度点（含滚入利息）
+	OriginalPoints int    `gorm:"not null" json:"originalPoints" form:"originalPoints"` // 最初押注的热度点
+	StakeDay       string `gorm:"size:8;not null;index" json:"stakeDay" form:"stakeDay"` // 首次质押日 yyyyMMdd
+	Status         int    `gorm:"not null;index" json:"status" form:"status"`           // 质押中/已赎回/已结算失败
+	LastSettleDay  string `gorm:"size:8" json:"lastSettleDay" form:"lastSettleDay"`     // 上次结算日
+	CreateTime     int64  `json:"createTime" form:"createTime"`
+	UpdateTime     int64  `gorm:"not null" json:"updateTime" form:"updateTime"` // 分区字段（必须在主键中）
+}
+
+// UserHeatLog 用户热度点流水
+type UserHeatLog struct {
+	Model
+	UserId     int64  `gorm:"not null;index" json:"userId" form:"userId"`
+	ChangeType string `gorm:"size:32;not null" json:"changeType" form:"changeType"` // DailyCheckIn / StakeOut / SettleProfit / SettleLoss / Redeem / Decay
+	Amount     int    `gorm:"not null" json:"amount" form:"amount"`                 // 变动量（正或负）
+	Balance    int    `gorm:"not null" json:"balance" form:"balance"`               // 变动后余额
+	RefId      string `gorm:"size:64" json:"refId" form:"refId"`                    // 关联 ID
+	Remark     string `gorm:"size:256" json:"remark" form:"remark"`
+	CreateTime int64  `json:"createTime" form:"createTime"`
+}
+
+// UserHeatStats 用户热度点统计（利用率计算基础）
+type UserHeatStats struct {
+	UserId             int64 `gorm:"primaryKey" json:"userId" form:"userId"`
+	TotalPoints        int   `gorm:"not null" json:"totalPoints" form:"totalPoints"`             // 持有总量（余额 + 活跃质押）
+	StakedInWindow     int   `gorm:"not null" json:"stakedInWindow" form:"stakedInWindow"`       // 近 7 天累计质押量
+	LastStakeTime      int64 `gorm:"default:0" json:"lastStakeTime" form:"lastStakeTime"`
+	DecayedAccumulated int   `gorm:"default:0" json:"decayedAccumulated" form:"decayedAccumulated"`
+	CooldownPoints     int   `gorm:"not null;default:0" json:"cooldownPoints" form:"cooldownPoints"` // 冷却中的热度点数
+	CooldownUntil      int64 `gorm:"default:0" json:"cooldownUntil" form:"cooldownUntil"`           // 冷却期到期时间（毫秒时间戳）
+	UpdateTime         int64 `json:"updateTime" form:"updateTime"`
+}
+
+// HeatPublicPool 公共奖池记录
+type HeatPublicPool struct {
+	Model
+	Source       string `gorm:"size:64;not null" json:"source" form:"source"` // DecayInflow / StakeLoss
+	Amount       int    `gorm:"not null" json:"amount" form:"amount"`
+	RefId        string `gorm:"size:64" json:"refId" form:"refId"`
+	BalanceAfter int    `gorm:"not null" json:"balanceAfter" form:"balanceAfter"` // 变动后奖池余额
+	Remark       string `gorm:"size:256" json:"remark" form:"remark"`
+	CreateTime   int64  `json:"createTime" form:"createTime"`
+}
+
+// SystemMintLog 系统铸币日志（仅创世和补贴期使用）
+type SystemMintLog struct {
+	Model
+	MintType    string `gorm:"size:32;not null" json:"mintType" form:"mintType"` // GenesisAirdrop / SubsidyMint
+	Amount      int    `gorm:"not null" json:"amount" form:"amount"`
+	RecipientId int64  `gorm:"default:0" json:"recipientId" form:"recipientId"` // 0 表示进入公共奖池
+	Remark      string `gorm:"size:256" json:"remark" form:"remark"`
+	CreateTime  int64  `json:"createTime" form:"createTime"`
+}
+
+// TopicInteractionSnapshot 每日互动快照
+type TopicInteractionSnapshot struct {
+	Model
+	TopicId          int64  `gorm:"not null;uniqueIndex:uk_snapshot_topic_date" json:"topicId" form:"topicId"`
+	SnapshotDate     string `gorm:"size:8;not null;uniqueIndex:uk_snapshot_topic_date" json:"snapshotDate" form:"snapshotDate"`
+	UniqueLikers     int    `gorm:"not null;default:0" json:"uniqueLikers" form:"uniqueLikers"`
+	UniqueCommenters int    `gorm:"not null;default:0" json:"uniqueCommenters" form:"uniqueCommenters"`
+	ValidComments    int    `gorm:"not null;default:0" json:"validComments" form:"validComments"`
+	TotalLikes       int    `gorm:"not null;default:0" json:"totalLikes" form:"totalLikes"`
+	TotalComments    int    `gorm:"not null;default:0" json:"totalComments" form:"totalComments"`
+	StakeTotal       int    `gorm:"not null;default:0" json:"stakeTotal" form:"stakeTotal"` // 快照时的质押总量
+	CreateTime       int64  `json:"createTime" form:"createTime"`
+}
+
+// HeatCirculationSnapshot 活跃流通快照
+type HeatCirculationSnapshot struct {
+	SnapshotDate      string `gorm:"primaryKey;size:8" json:"snapshotDate" form:"snapshotDate"`
+	TotalSupply       int    `gorm:"not null" json:"totalSupply" form:"totalSupply"`
+	ActiveCirculation int    `gorm:"not null" json:"activeCirculation" form:"activeCirculation"`
+	StakedTotal       int    `gorm:"not null" json:"stakedTotal" form:"stakedTotal"`
+	ActiveUserCount   int    `gorm:"not null" json:"activeUserCount" form:"activeUserCount"`
+	DailyDecayTruncated int  `gorm:"not null;default:0" json:"dailyDecayTruncated" form:"dailyDecayTruncated"` // 当日截断的衰减量
+	CreateTime        int64  `json:"createTime" form:"createTime"`
+}
+
+// DailyFlameOffset 每日火焰等级偏移量
+type DailyFlameOffset struct {
+	Date           string  `gorm:"primaryKey;size:8" json:"date" form:"date"`
+	Phase12Offset  float64 `gorm:"not null" json:"phase12Offset" form:"phase12Offset"`
+	Phase23Offset  float64 `gorm:"not null" json:"phase23Offset" form:"phase23Offset"`
+	Flame2Offset   float64 `gorm:"not null" json:"flame2Offset" form:"flame2Offset"`
+	Flame3Offset   float64 `gorm:"not null" json:"flame3Offset" form:"flame3Offset"`
+	Flame4Offset   float64 `gorm:"not null" json:"flame4Offset" form:"flame4Offset"`
+	Flame5Offset   float64 `gorm:"not null" json:"flame5Offset" form:"flame5Offset"`
+	CreateTime     int64   `json:"createTime" form:"createTime"`
+}
+
+// SettlementTaskLog 结算任务日志
+type SettlementTaskLog struct {
+	Model
+	TaskDate       string `gorm:"size:8;not null;uniqueIndex:uk_task_date_type" json:"taskDate" form:"taskDate"`
+	TaskType       string `gorm:"size:32;not null;uniqueIndex:uk_task_date_type" json:"taskType" form:"taskType"`
+	Status         int    `gorm:"not null;default:0" json:"status" form:"status"` // 0=执行中，1=已完成，2=失败
+	StartedAt      int64  `gorm:"not null" json:"startedAt" form:"startedAt"`
+	FinishedAt     int64  `gorm:"default:0" json:"finishedAt" form:"finishedAt"`
+	BatchCount     int    `gorm:"default:0" json:"batchCount" form:"batchCount"`
+	TotalProcessed int    `gorm:"default:0" json:"totalProcessed" form:"totalProcessed"`
+	ErrorMsg       string `gorm:"type:text" json:"errorMsg" form:"errorMsg"`
+}
+
+// ColdStorageLog 冷存储归档执行日志
+type ColdStorageLog struct {
+	Model
+	TableName    string `gorm:"size:64;not null" json:"tableName"`
+	ArchiveTable string `gorm:"size:64;not null" json:"archiveTable"`
+	TriggeredBy  string `gorm:"size:16;not null" json:"triggeredBy"`  // time / row_count / both
+	RowsBefore   int64  `gorm:"not null" json:"rowsBefore"`
+	RowsMigrated int64  `gorm:"not null" json:"rowsMigrated"`
+	RowsAfter    int64  `gorm:"not null" json:"rowsAfter"`
+	DurationMs   int64  `gorm:"not null" json:"durationMs"`
+	Status       int    `gorm:"not null;default:0" json:"status"`     // 0=成功，1=部分失败，2=失败
+	ErrorMsg     string `gorm:"type:text" json:"errorMsg"`
+	CreateTime   int64  `gorm:"not null" json:"createTime"`
 }

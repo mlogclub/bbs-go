@@ -6,6 +6,9 @@ import (
 	"bbs-go/internal/pkg/common"
 	"bbs-go/internal/pkg/errs"
 	"bbs-go/internal/services"
+	"fmt"
+	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -13,6 +16,23 @@ import (
 
 	"github.com/mlogclub/simple/common/strs"
 )
+
+// likeRateLimiter 点赞频率限制：同一用户对同一实体，2 秒内只能操作 1 次
+var likeRateRecords sync.Map // key: "userId:entityType:entityId" → lastActionTime (int64 ms)
+
+func checkLikeRate(userId int64, entityType string, entityId int64) bool {
+	key := fmt.Sprintf("%d:%s:%d", userId, entityType, entityId)
+	now := time.Now().UnixMilli()
+
+	if val, ok := likeRateRecords.Load(key); ok {
+		if now-val.(int64) < 2000 {
+			return false
+		}
+	}
+
+	likeRateRecords.Store(key, now)
+	return true
+}
 
 func LikeLike(ctx *gin.Context) {
 	var req req.EntityActionReq
@@ -27,6 +47,10 @@ func LikeLike(ctx *gin.Context) {
 	)
 	if user == nil {
 		ginx.WriteJSON(ctx, errs.NotLogin())
+		return
+	}
+	if !checkLikeRate(user.Id, req.EntityType, entityId) {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("操作过于频繁，请稍后再试"))
 		return
 	}
 	switch req.EntityType {
@@ -58,6 +82,10 @@ func LikeUnlike(ctx *gin.Context) {
 	)
 	if user == nil {
 		ginx.WriteJSON(ctx, errs.NotLogin())
+		return
+	}
+	if !checkLikeRate(user.Id, req.EntityType, entityId) {
+		ginx.WriteJSON(ctx, ginx.ErrorMessage("操作过于频繁，请稍后再试"))
 		return
 	}
 	switch req.EntityType {
