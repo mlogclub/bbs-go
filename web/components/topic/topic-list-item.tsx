@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleHelp, MessageCircle } from "lucide-react"
+import { CheckCircle2, CircleHelp, Flame, MessageCircle } from "lucide-react"
 import Link from "@/components/common/link"
 
 import { UserAvatar } from "@/components/common/avatar"
@@ -7,6 +7,7 @@ import { TopicVoteCard } from "@/components/topic/topic-vote-card"
 import type { Topic } from "@/lib/api/types"
 import { prettyDate } from "@/lib/format"
 import type { TFunction } from "@/lib/i18n"
+import { cn } from "@/lib/utils"
 
 function getTopicImageSizeClass(count: number) {
   if (count <= 1) {
@@ -32,8 +33,28 @@ export function TopicListItem({
   const topicHref = `/topic/${topic.id}`
   const imageSizeClass = getTopicImageSizeClass(topic.imageList?.length || 0)
 
+  /* Heat score: derive from likeCount + commentCount */
+  const heatScore = (topic.likeCount || 0) + (topic.commentCount || 0) * 2
+  const isHot = heatScore >= 20
+  const isNew = topic.createTime
+    ? Date.now() - new Date(topic.createTime).getTime() < 24 * 60 * 60 * 1000
+    : false
+
+  /* Visual accent: sticky → gold left border, hot → orange left border */
+  const accentBorder = topic.sticky
+    ? "border-l-amber-400"
+    : isHot
+      ? "border-l-orange-400"
+      : "border-l-transparent"
+
   return (
-    <li className="px-4 py-3">
+    <li
+      className={cn(
+        "px-4 py-3 border-l-2 transition-colors",
+        accentBorder,
+        isHot && "bg-gradient-to-r from-orange-50/40 to-transparent"
+      )}
+    >
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <UserAvatar user={topic.user} size={24} className="shrink-0" />
@@ -51,11 +72,18 @@ export function TopicListItem({
             </span>
           </div>
         </div>
-        {showSticky && topic.sticky ? (
-          <span className="inline-flex items-center rounded-sm bg-orange-100 px-1.5 py-0.5 text-[11px] text-orange-700">
-            {t("component.topicList.sticky")}
-          </span>
-        ) : null}
+        <div className="flex shrink-0 items-center gap-2">
+          {showSticky && topic.sticky ? (
+            <span className="inline-flex items-center rounded-sm bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-300">
+              {t("component.topicList.sticky")}
+            </span>
+          ) : null}
+          {isNew ? (
+            <span className="inline-flex items-center rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+              NEW
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <div className="mt-2 space-y-2">
@@ -168,6 +196,12 @@ export function TopicListItem({
           ) : null}
         </div>
         <div className="ml-auto flex items-center gap-4 text-xs text-muted-foreground">
+          {isHot ? (
+            <span className="inline-flex items-center gap-1 text-orange-600 font-medium">
+              <Flame className="h-3.5 w-3.5" />
+              <span>{heatScore}</span>
+            </span>
+          ) : null}
           <TopicLikeButton
             topicId={topic.id}
             initialLiked={topic.liked}

@@ -64,6 +64,52 @@ function commentContent(comment: Comment, size: "normal" | "small" = "normal") {
   return <HtmlImagePreview html={comment.content} className={className} />
 }
 
+function CollapsibleContent({
+  comment,
+  size = "normal",
+}: {
+  comment: Comment
+  size?: "normal" | "small"
+}) {
+  const [expanded, setExpanded] = React.useState(false)
+
+  if (!comment.content) return null
+
+  const needsCollapse = comment.content.length > 500
+  const isSmall = size === "small"
+
+  const className = cn(
+    "content mb-0 whitespace-pre-wrap text-foreground",
+    isSmall ? "mt-1.5 text-sm leading-6" : "mt-2.5 text-[15px] leading-7"
+  )
+
+  const body =
+    comment.contentType === "text" ? (
+      <div className={className}>
+        {needsCollapse && !expanded
+          ? comment.content.slice(0, 500) + "..."
+          : comment.content}
+      </div>
+    ) : (
+      <HtmlImagePreview html={comment.content} className={className} />
+    )
+
+  return (
+    <>
+      {body}
+      {needsCollapse ? (
+        <button
+          type="button"
+          className="mt-0.5 text-xs text-primary hover:text-primary/80"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "收起" : "展开全文"}
+        </button>
+      ) : null}
+    </>
+  )
+}
+
 function CommentImages({
   images,
   size = "normal",
@@ -366,11 +412,11 @@ function CommentSubList({
 
   return (
     <>
-      <div className="mt-2.5 text-sm">
+      <div className="mt-2.5 ml-1 border-l-2 border-muted bg-muted/20 pl-3 pt-1 pb-2 rounded-r-lg text-sm">
         {replies.results.map((comment) => (
-          <div key={comment.id} className="flex py-2">
+          <div key={comment.id} className="flex py-1.5">
             <div>
-              <UserAvatar user={comment.user} size={24} />
+              <UserAvatar user={comment.user} size={20} />
             </div>
             <div className="ml-1.5 min-w-0 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -408,20 +454,17 @@ function CommentSubList({
                 ) : null}
               </div>
               <div>
-                {commentContent(comment, "small")}
+                <CollapsibleContent comment={comment} size="small" />
                 <CommentImages images={comment.imageList} size="small" />
                 {comment.quote ? (
-                  <div className="relative my-1.5 box-border rounded border border-border bg-muted px-3 py-1 text-muted-foreground">
+                  <div className="relative my-1 box-border rounded border border-border bg-background px-2 py-1 text-muted-foreground">
                     <span
                       aria-hidden="true"
                       className="pointer-events-none absolute -top-2 right-0.5 text-3xl leading-none font-bold text-muted-foreground"
                     >
                       ”
                     </span>
-                    <HtmlImagePreview
-                      className="content my-1 text-muted-foreground"
-                      html={comment.quote.content || ""}
-                    />
+                    <CollapsibleContent comment={comment.quote} size="small" />
                     <CommentImages
                       images={comment.quote.imageList}
                       size="quote"
@@ -429,16 +472,16 @@ function CommentSubList({
                   </div>
                 ) : null}
               </div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2.5">
+              <div className="mt-1 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   className={cn(
-                    "flex items-center gap-1 text-xs text-muted-foreground select-none hover:text-primary",
+                    "flex items-center gap-1 text-[11px] text-muted-foreground select-none hover:text-primary",
                     comment.liked && "font-medium text-primary"
                   )}
                   onClick={() => void toggleLike(comment)}
                 >
-                  <ThumbsUp className="h-3 w-3" />
+                  <ThumbsUp className="h-2.5 w-2.5" />
                   <span>
                     {comment.liked
                       ? t("component.comment.subList.liked")
@@ -451,12 +494,12 @@ function CommentSubList({
                 <button
                   type="button"
                   className={cn(
-                    "flex items-center gap-1 text-xs text-muted-foreground select-none hover:text-primary",
+                    "flex items-center gap-1 text-[11px] text-muted-foreground select-none hover:text-primary",
                     replyQuoteId === comment.id && "font-medium text-primary"
                   )}
                   onClick={() => switchShowReply(comment)}
                 >
-                  <MessageCircle className="h-3 w-3" />
+                  <MessageCircle className="h-2.5 w-2.5" />
                   <span>
                     {replyQuoteId === comment.id
                       ? t("component.comment.subList.cancelReply")
@@ -470,16 +513,16 @@ function CommentSubList({
                 ) ? (
                   <button
                     type="button"
-                    className="flex items-center gap-1 text-xs text-muted-foreground select-none hover:text-destructive"
+                    className="flex items-center gap-1 text-[11px] text-muted-foreground select-none hover:text-destructive"
                     onClick={() => confirmDeleteReply(comment)}
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Trash2 className="h-2.5 w-2.5" />
                     <span>{t("component.comment.subList.delete")}</span>
                   </button>
                 ) : null}
               </div>
               {replyQuoteId === comment.id ? (
-                <div className="mt-2.5">
+                <div className="mt-2">
                   <InlineReplyEditor
                     value={replyValue}
                     onChange={setReplyValue}
@@ -491,7 +534,7 @@ function CommentSubList({
           </div>
         ))}
         {replies.hasMore === true ? (
-          <div className="my-2.5 ml-[30px]">
+          <div className="my-2 ml-[30px]">
             <button
               type="button"
               className="flex items-center text-[13px] text-foreground hover:text-primary"
@@ -665,7 +708,7 @@ function CommentItem({
         )}
       >
         <div>
-          <UserAvatar user={comment.user} size={30} />
+          <UserAvatar user={comment.user} size={36} />
         </div>
         <div className="ml-2.5 min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -699,7 +742,7 @@ function CommentItem({
             </div>
           </div>
           <div>
-            {commentContent(comment)}
+            <CollapsibleContent comment={comment} />
             <CommentImages images={comment.imageList} />
           </div>
           <div className="mt-2.5 flex flex-wrap items-center gap-2.5">

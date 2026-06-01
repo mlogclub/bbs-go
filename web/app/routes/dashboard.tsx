@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useI18n } from "@/lib/i18n/provider"
 import { useDocumentTitle } from "@/lib/use-document-title"
+import { resolveBreadcrumb } from "@/lib/dashboard/navigation"
 
 import {
   requireDashboardAdmin,
@@ -51,93 +52,7 @@ function dashboardBreadcrumbs(
   pathname: string,
   t: ReturnType<typeof useI18n>["t"]
 ): DashboardBreadcrumbItem[] {
-  const page = pathname.replace(/^\/dashboard\/?/, "").split("/")[0] || ""
-  const groups: Array<{
-    title: string
-    url?: string
-    items: Record<string, DashboardBreadcrumbItem>
-  }> = [
-    {
-      title: t("dashboard.nav.content"),
-      url: "/dashboard/topics",
-      items: {
-        topics: { title: t("dashboard.nav.topics"), url: "/dashboard/topics" },
-        articles: {
-          title: t("dashboard.nav.articles"),
-          url: "/dashboard/articles",
-        },
-        categories: { title: t("dashboard.nav.categories"), url: "/dashboard/categories" },
-        links: { title: t("dashboard.nav.links"), url: "/dashboard/links" },
-        "forbidden-words": {
-          title: t("dashboard.nav.forbiddenWords"),
-          url: "/dashboard/forbidden-words",
-        },
-      },
-    },
-    {
-      title: t("dashboard.nav.community"),
-      url: "/dashboard/users",
-      items: {
-        users: { title: t("dashboard.nav.userList"), url: "/dashboard/users" },
-        "user-badges": {
-          title: t("dashboard.nav.userBadges"),
-          url: "/dashboard/user-badges",
-        },
-        "user-exp-logs": {
-          title: t("dashboard.nav.userExpLogs"),
-          url: "/dashboard/user-exp-logs",
-        },
-        "user-task-logs": {
-          title: t("dashboard.nav.userTaskLogs"),
-          url: "/dashboard/user-task-logs",
-        },
-      },
-    },
-    {
-      title: t("dashboard.nav.growth"),
-      url: "/dashboard/badges",
-      items: {
-        badges: { title: t("dashboard.nav.badges"), url: "/dashboard/badges" },
-        levels: { title: t("dashboard.nav.levels"), url: "/dashboard/levels" },
-        tasks: { title: t("dashboard.nav.tasks"), url: "/dashboard/tasks" },
-      },
-    },
-    {
-      title: t("dashboard.nav.system"),
-      url: "/dashboard/settings",
-      items: {
-        settings: {
-          title: t("dashboard.nav.siteSettings"),
-          url: "/dashboard/settings",
-        },
-        roles: { title: t("dashboard.nav.roles"), url: "/dashboard/roles" },
-        "email-logs": {
-          title: t("dashboard.nav.emailLogs"),
-          url: "/dashboard/email-logs",
-        },
-      },
-    },
-  ]
-
-  if (!page) {
-    return [{ title: t("dashboard.nav.workspace"), url: "/dashboard" }]
-  }
-
-  if (page === "content") {
-    return [{ title: t("dashboard.nav.content"), url: "/dashboard/content" }]
-  }
-
-  for (const group of groups) {
-    const item = group.items[page]
-    if (item) {
-      return [
-        { title: group.title, url: group.url },
-        item,
-      ]
-    }
-  }
-
-  return [{ title: t("dashboard.nav.workspace"), url: "/dashboard" }]
+  return resolveBreadcrumb(pathname, (key) => t(key))
 }
 
 async function _loader(args: { request: Request }) {

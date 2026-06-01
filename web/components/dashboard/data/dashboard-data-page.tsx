@@ -126,6 +126,13 @@ export function DashboardDataPage({
         onDelete={state.requestDelete}
         isTreeRecordCollapsed={state.isTreeRecordCollapsed}
         onToggleTreeRecord={state.toggleTreeRecord}
+        batchDelete={
+          canUse(visibleConfig.deletePermission) && visibleConfig.deleteEndpoint
+            ? async (ids) => {
+                await state.batchDeleteRecords(ids)
+              }
+            : undefined
+        }
       />
 
       <DashboardDataFormDialog

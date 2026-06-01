@@ -16,6 +16,7 @@ import {
 import type { AdminRecord } from "@/lib/api/admin"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { DashboardPagination } from "@/components/dashboard/pagination-controls"
 
 import type { DashboardDataPageConfig } from "./dashboard-data-types"
@@ -49,6 +50,7 @@ export function DashboardDataTable({
   onDelete,
   isTreeRecordCollapsed,
   onToggleTreeRecord,
+  batchDelete,
 }: {
   config: DashboardDataPageConfig
   records: AdminRecord[]
@@ -86,13 +88,19 @@ export function DashboardDataTable({
   onDelete: (record: AdminRecord) => void
   isTreeRecordCollapsed?: (record: AdminRecord) => boolean
   onToggleTreeRecord?: (record: AdminRecord) => void
+  /** Optional batch delete handler. When provided, a checkbox column is shown. */
+  batchDelete?: (ids: string[]) => Promise<void>
 }) {
   const [draggingIndex, setDraggingIndex] = React.useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = React.useState<number | null>(null)
+  const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
+  const [batchDeleting, setBatchDeleting] = React.useState(false)
   const canDragSort = Boolean(
     config.dragSort && config.sortEndpoint && canSort && !config.tree
   )
+  const enableBatch = Boolean(batchDelete && config.deleteEndpoint)
   const hasActions =
+    enableBatch ||
     Boolean(config.formFields?.length && config.updateEndpoint && canUpdate) ||
     Boolean(config.detailFields?.length) ||
     Boolean(config.deleteEndpoint && canDelete) ||
@@ -101,12 +109,65 @@ export function DashboardDataTable({
     Boolean(config.renderRowActions)
   const colSpan = config.columns.length + (hasActions ? 1 : 0)
 
+  function toggleSelect(id: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((current) => {
+      if (current.size === records.length) return new Set()
+      return new Set(records.map((r) => String(r.id ?? "")))
+    })
+  }
+
+  async function handleBatchDelete() {
+    if (!batchDelete || selectedIds.size === 0) return
+    setBatchDeleting(true)
+    try {
+      await batchDelete(Array.from(selectedIds))
+      setSelectedIds(new Set())
+    } finally {
+      setBatchDeleting(false)
+    }
+  }
+
+  const allSelected = records.length > 0 && selectedIds.size === records.length
+
   return (
     <div className="overflow-hidden rounded-lg border bg-[var(--dashboard-panel)] shadow-xs">
+      {enableBatch && selectedIds.size > 0 ? (
+        <div className="flex items-center gap-2 border-b bg-[var(--dashboard-accent-soft)]/30 px-4 py-2 text-sm">
+          <span className="font-medium text-foreground">
+            已选 {selectedIds.size} 项
+          </span>
+          <Button
+            size="sm"
+            variant="destructive"
+            disabled={batchDeleting}
+            onClick={() => void handleBatchDelete()}
+          >
+            {batchDeleting ? "删除中..." : "批量删除"}
+          </Button>
+        </div>
+      ) : null}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[980px] text-sm">
           <thead className="bg-[var(--dashboard-panel-muted)] text-muted-foreground">
             <tr>
+              {enableBatch ? (
+                <th className="h-10 w-10 px-3 text-left">
+                  <Checkbox
+                    checked={allSelected}
+                    onCheckedChange={() => toggleSelectAll()}
+                    aria-label="全选"
+                  />
+                </th>
+              ) : null}
               {config.columns.map((column) => (
                 <th
                   key={column.key}
@@ -162,6 +223,17 @@ export function DashboardDataTable({
                       "bg-[var(--dashboard-accent-soft)]/70 outline-2 -outline-offset-2 outline-primary/45"
                   )}
                 >
+                  {enableBatch ? (
+                    <td className="h-11 w-10 px-3 align-middle">
+                      <Checkbox
+                        checked={selectedIds.has(String(record.id ?? ""))}
+                        onCheckedChange={() =>
+                          toggleSelect(String(record.id ?? ""))
+                        }
+                        aria-label="选择"
+                      />
+                    </td>
+                  ) : null}
                   {config.columns.map((column) => {
                     const isTreeIndentColumn =
                       config.treeIndentKey === column.key

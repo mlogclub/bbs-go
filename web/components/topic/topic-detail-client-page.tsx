@@ -133,14 +133,14 @@ export function TopicDetailClientPage({
 
   return (
     <MainShell
-      sideSize="360"
+      sideSize="260"
       aside={
         <>
           <UserInfo user={topic.user} t={t} />
           <TopicToc topic={topic} />
         </>
       }
-      containerClassName="side-size-360"
+      containerClassName="side-size-260"
       asideClassName="!h-auto self-stretch"
     >
       <div className="main-content no-padding no-bg space-y-4">

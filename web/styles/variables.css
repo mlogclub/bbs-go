@@ -3,6 +3,8 @@
   --topics-nav-color1: #f7f9ff;
   --topics-nav-color2: rgba(43, 89, 255, 0.06);
   --topics-nav-color3: #fff7f7;
+  --community-hot: oklch(0.7 0.16 45);
+  --community-new: oklch(0.62 0.14 155);
 }
 
 .dark {
@@ -10,4 +12,6 @@
   --topics-nav-color1: #0d1a29;
   --topics-nav-color2: #3a2c2c;
   --topics-nav-color3: #3a2c2c;
+  --community-hot: oklch(0.65 0.14 45);
+  --community-new: oklch(0.55 0.12 155);
 }

@@ -19,7 +19,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme inline {
+/* View Transitions for SPA route changes */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 150ms ease-out both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 250ms ease-out 100ms both vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}@theme inline {
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);

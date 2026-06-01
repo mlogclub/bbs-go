@@ -61,6 +61,12 @@ export type DashboardDataRowAction = {
   payload?: (record: AdminRecord) => Record<string, AdminFormValue>
   confirm?: string
   successMessage?: string
+  /** When true, the action shows an "Undo" toast instead of a regular success toast */
+  undoable?: boolean
+  /** Endpoint called on undo. Defaults to the same endpoint with ?undo=1 if omitted. */
+  undoEndpoint?: string
+  /** Timeout in ms before the undo window closes (default: 5000) */
+  undoTimeout?: number
 }
 
 export type DashboardDataDetailField = {

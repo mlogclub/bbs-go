@@ -13,7 +13,7 @@ import {
   type AdminRecord,
 } from "@/lib/api/admin"
 import { createAdminInitialFilters } from "@/lib/dashboard/default-filters"
-import { msgSuccess } from "@/lib/toast"
+import { msgSuccess, toast } from "@/lib/toast"
 
 import type {
   DashboardDataOption,
@@ -394,6 +394,24 @@ export function useDashboardDataPage({
     await performAction(action, record)
   }
 
+  async function performBatchDeleteRecords(ids: string[]) {
+    if (!config.deleteEndpoint) return
+    setError(null)
+    try {
+      if (config.deleteMode === "jsonIds") {
+        await adminPostJson(config.deleteEndpoint, { ids })
+      } else if (config.deleteMode === "formIds") {
+        await adminPostForm(config.deleteEndpoint, { ids })
+      } else {
+        await adminPostForm(config.deleteEndpoint, { ids })
+      }
+      msgSuccess(messages.deleted)
+      await load()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : messages.deleteFailed)
+    }
+  }
+
   async function performAction(
     action: DashboardDataRowAction,
     record: AdminRecord
@@ -414,6 +432,28 @@ export function useDashboardDataPage({
         typeof result.password === "string"
       ) {
         setPasswordResult(result.password)
+      } else if (action.undoable) {
+        toast.success(action.successMessage || messages.actionDone, {
+          action: {
+            label: "撤销",
+            onClick: () => {
+              void adminPostForm(action.undoEndpoint ?? action.endpoint, {
+                id: record.id as AdminFormValue,
+                undo: 1,
+              })
+                .then(() => {
+                  msgSuccess("已撤销")
+                  void load()
+                })
+                .catch((err) => {
+                  setError(
+                    err instanceof Error ? err.message : "撤销失败"
+                  )
+                })
+            },
+          },
+          duration: action.undoTimeout ?? 5000,
+        })
       } else {
         msgSuccess(action.successMessage || messages.actionDone)
       }
@@ -633,6 +673,7 @@ export function useDashboardDataPage({
     openCreate,
     submitForm,
     requestDelete,
+    batchDeleteRecords: performBatchDeleteRecords,
     runAction,
     moveRecord,
     reorderRecord,

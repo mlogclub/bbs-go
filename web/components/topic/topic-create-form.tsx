@@ -726,13 +726,41 @@ export function TopicCreateForm({
   const [voteDraft, setVoteDraft] = React.useState<TopicVoteForm>(defaultVote())
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
-  const [form, setForm] = React.useState<TopicCreateFormState>(() =>
-    createInitialForm({
+  const [form, setForm] = React.useState<TopicCreateFormState>(() => {
+    const saved = typeof window !== "undefined"
+      ? sessionStorage.getItem(`topic-draft:${type}`)
+      : null
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object" && "type" in parsed) {
+          return {
+            ...createInitialForm({
+              type,
+              categoryId: categoryId || config?.defaultCategoryId || 0,
+              contentType,
+            }),
+            ...parsed,
+          }
+        }
+      } catch {
+        /* ignore invalid draft */
+      }
+    }
+    return createInitialForm({
       type,
       categoryId: categoryId || config?.defaultCategoryId || 0,
       contentType,
     })
-  )
+  })
+
+  /* Auto-save draft to sessionStorage */
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      sessionStorage.setItem(`topic-draft:${form.type}`, JSON.stringify(form))
+    }, 500)
+    return () => window.clearTimeout(timer)
+  }, [form])
 
   const availableNodes = React.useMemo(
     () => filterCategoryTree(categories, categoryTypeMatches(form.type)),
@@ -833,6 +861,7 @@ export function TopicCreateForm({
           captchaProtocol: captcha?.captchaProtocol || 2,
         },
       })
+      sessionStorage.removeItem(`topic-draft:${form.type}`)
       router.push(`/topic/${data.id}`)
     } catch (error) {
       catchError(error)

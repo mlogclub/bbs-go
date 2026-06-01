@@ -112,6 +112,15 @@
     max-width: 360px;
   }
 
+  .main-container.left-main.side-size-260 .left-container {
+    width: calc(100% - 260px - 10px);
+  }
+
+  .main-container.left-main.side-size-260 .right-container {
+    min-width: 260px;
+    max-width: 260px;
+  }
+
   .main-container.right-main.side-size-360 .left-container {
     min-width: 360px;
     max-width: 360px;

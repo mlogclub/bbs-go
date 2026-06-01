@@ -68,47 +68,77 @@ export function TopicsNavContent({
   }, [initialCategories.length])
 
   return (
-    <div className="topics-nav">
-      <nav className="dock-nav">
-        <ScrollArea className="topics-scroll-area">
-          <ul>
-            {categories.map((node, index) => {
-              const previousNode = categories[index - 1]
-              const showDivider =
-                index > 0 &&
-                previousNode &&
-                isBuiltInNode(previousNode) &&
-                !isBuiltInNode(node)
-              const active = isActiveNode(
-                node,
-                currentCategoryId,
-                currentRootCategoryId
-              )
+    <>
+      {/* Desktop sidebar nav */}
+      <div className="topics-nav hidden md:block">
+        <nav className="dock-nav">
+          <ScrollArea className="topics-scroll-area">
+            <ul>
+              {categories.map((node, index) => {
+                const previousNode = categories[index - 1]
+                const showDivider =
+                  index > 0 &&
+                  previousNode &&
+                  isBuiltInNode(previousNode) &&
+                  !isBuiltInNode(node)
+                const active = isActiveNode(
+                  node,
+                  currentCategoryId,
+                  currentRootCategoryId
+                )
 
-              return (
-                <React.Fragment key={node.id}>
-                  {showDivider ? (
-                    <li className="nodes-divider" aria-hidden="true" />
-                  ) : null}
-                  <li className={cn(active && "active")} data-node-id={node.id}>
-                    <Link href={nodeHref(node)}>
-                      <i
-                        className="node-logo"
-                        style={
-                          node.logo
-                            ? { backgroundImage: `url(${node.logo})` }
-                            : undefined
-                        }
-                      />
-                      <div className="node-name">{node.name}</div>
-                    </Link>
-                  </li>
-                </React.Fragment>
-              )
-            })}
-          </ul>
-        </ScrollArea>
-      </nav>
-    </div>
+                return (
+                  <React.Fragment key={node.id}>
+                    {showDivider ? (
+                      <li className="nodes-divider" aria-hidden="true" />
+                    ) : null}
+                    <li className={cn(active && "active")} data-node-id={node.id}>
+                      <Link href={nodeHref(node)}>
+                        <i
+                          className="node-logo"
+                          style={
+                            node.logo
+                              ? { backgroundImage: `url(${node.logo})` }
+                              : undefined
+                          }
+                        />
+                        <div className="node-name">{node.name}</div>
+                      </Link>
+                    </li>
+                  </React.Fragment>
+                )
+              })}
+            </ul>
+          </ScrollArea>
+        </nav>
+      </div>
+
+      {/* Mobile horizontal pill nav */}
+      <div className="block md:hidden overflow-x-auto scrollbar-none -mx-4 px-4 mb-3">
+        <div className="flex gap-1.5 min-w-max pb-1">
+          {categories.map((node) => {
+            const active = isActiveNode(
+              node,
+              currentCategoryId,
+              currentRootCategoryId
+            )
+            return (
+              <Link
+                key={node.id}
+                href={nodeHref(node)}
+                className={cn(
+                  "shrink-0 rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
+                  active
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-accent text-muted-foreground hover:bg-accent/80 hover:text-foreground"
+                )}
+              >
+                {node.name}
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </>
   )
 }
