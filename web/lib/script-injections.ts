@@ -30,6 +30,31 @@ export function getRenderableScriptInjections(
     const key = `script-injection-${index}`
     if (normalized.type === "inline") {
       if (!normalized.code) return []
+      const scriptTags = parseScriptTagFragment(normalized.code)
+      if (scriptTags.length > 0) {
+        return scriptTags.flatMap(
+          (scriptTag, scriptIndex): RenderableScriptInjection[] => {
+            const scriptKey =
+              scriptTags.length === 1 ? key : `${key}-${scriptIndex}`
+            if (scriptTag.src) {
+              return [
+                {
+                  key: scriptKey,
+                  type: "external",
+                  src: scriptTag.src,
+                  async: scriptTag.async,
+                  defer: scriptTag.defer,
+                  crossOrigin: normalizeCrossOrigin(scriptTag.crossOrigin),
+                },
+              ]
+            }
+            if (scriptTag.code) {
+              return [{ key: scriptKey, type: "inline", code: scriptTag.code }]
+            }
+            return []
+          }
+        )
+      }
       return [{ key, type: "inline", code: normalized.code }]
     }
 
@@ -65,6 +90,45 @@ function normalizeScriptInjection(injection: ScriptInjectionConfig) {
 
 function trim(value: unknown) {
   return typeof value === "string" ? value.trim() : ""
+}
+
+function parseScriptTagFragment(code: string) {
+  const scriptPattern = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi
+  const scripts: ReturnType<typeof createParsedScriptTag>[] = []
+  let remainder = code.replace(/<!--[\s\S]*?-->/g, "")
+  let match: RegExpExecArray | null
+
+  while ((match = scriptPattern.exec(code))) {
+    scripts.push(createParsedScriptTag(match[1], match[2]))
+    remainder = remainder.replace(match[0], "")
+  }
+
+  return scripts.length > 0 && !remainder.trim() ? scripts : []
+}
+
+function createParsedScriptTag(attributesSource: string, code: string) {
+  const attributes = parseScriptAttributes(attributesSource)
+  return {
+    src: trim(attributes.src),
+    code: trim(code),
+    async: attributes.async !== undefined,
+    defer: attributes.defer !== undefined,
+    crossOrigin: trim(attributes.crossorigin),
+  }
+}
+
+function parseScriptAttributes(source: string) {
+  const attributes: Record<string, string | true> = {}
+  const attributePattern =
+    /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g
+  let match: RegExpExecArray | null
+
+  while ((match = attributePattern.exec(source))) {
+    attributes[match[1].toLowerCase()] =
+      match[2] ?? match[3] ?? match[4] ?? true
+  }
+
+  return attributes
 }
 
 function normalizeCrossOrigin(
