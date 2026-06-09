@@ -92,7 +92,6 @@ type ScriptInjection = {
   async: boolean
   defer: boolean
   crossorigin: string
-  collapsed?: boolean
 }
 
 type FooterLink = {
@@ -277,7 +276,6 @@ function normalizeScripts(items: unknown): ScriptInjection[] {
       async: Boolean(source.async),
       defer: Boolean(source.defer),
       crossorigin: getString(source.crossorigin),
-      collapsed: false,
     }
   })
 }
@@ -313,7 +311,6 @@ function createScript(): ScriptInjection {
     async: false,
     defer: false,
     crossorigin: "",
-    collapsed: false,
   }
 }
 
@@ -1983,6 +1980,7 @@ function ScriptSettings({
   onSave: (payload: Record<string, SettingValue>) => void
 }) {
   const scripts = normalizeScripts(settings.scriptInjections)
+  const [collapsedScripts, setCollapsedScripts] = React.useState<boolean[]>([])
   const [validationError, setValidationError] = React.useState<string | null>(
     null
   )
@@ -1995,6 +1993,21 @@ function ScriptSettings({
     )
   }
 
+  function toggleScriptCollapsed(index: number) {
+    setCollapsedScripts((current) => {
+      const next = [...current]
+      next[index] = !next[index]
+      return next
+    })
+  }
+
+  function removeScript(index: number) {
+    setCollapsedScripts((current) =>
+      current.filter((_, itemIndex) => itemIndex !== index)
+    )
+    onChange(scripts.filter((_, itemIndex) => itemIndex !== index))
+  }
+
   function submit() {
     if (scripts.some((item) => !item.scriptName.trim())) {
       const message = s("script.message.scriptNameRequired")
@@ -2002,12 +2015,11 @@ function ScriptSettings({
       onError(message)
       return
     }
-    const scriptInjections = scripts.map(({ collapsed, ...item }) => ({
+    const scriptInjections = scripts.map((item) => ({
       ...item,
       scriptName: item.scriptName.trim(),
     }))
     setValidationError(null)
-    onChange(scriptInjections)
     onSave({ scriptInjections })
   }
 
@@ -2017,133 +2029,132 @@ function ScriptSettings({
         <AlertDescription>{s("script.tip")}</AlertDescription>
       </Alert>
       {validationError ? <ValidationAlert message={validationError} /> : null}
-      {scripts.map((item, index) => (
-        <Card
-          key={`script-${index}`}
-          size="sm"
-          className={cn(
-            "gap-4 bg-[var(--dashboard-panel)] shadow-xs",
-            item.collapsed && "gap-0"
-          )}
-        >
-          <CardHeader
-            className={cn("border-b pb-4", item.collapsed && "border-b-0 pb-0")}
+      {scripts.map((item, index) => {
+        const collapsed = Boolean(collapsedScripts[index])
+        return (
+          <Card
+            key={`script-${index}`}
+            size="sm"
+            className={cn(
+              "gap-4 bg-[var(--dashboard-panel)] shadow-xs",
+              collapsed && "gap-0"
+            )}
           >
-            <CardTitle>
-              <Input
-                value={item.scriptName}
-                placeholder={s("script.placeholder.scriptName")}
-                onChange={(event) =>
-                  updateScript(index, { scriptName: event.target.value })
-                }
-              />
-            </CardTitle>
-            <CardAction className="flex items-center gap-2">
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() =>
-                  onChange(
-                    scripts.filter((_, itemIndex) => itemIndex !== index)
-                  )
-                }
-              >
-                <Trash2Icon />
-                {s("script.remove")}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() =>
-                  updateScript(index, { collapsed: !item.collapsed })
-                }
-              >
-                <ChevronDownIcon
-                  className={cn(
-                    "transition-transform",
-                    item.collapsed && "-rotate-90"
-                  )}
-                />
-              </Button>
-            </CardAction>
-          </CardHeader>
-          {item.collapsed ? null : (
-            <CardContent className="grid gap-5">
-              <Field label={s("script.enabled")}>
-                <SwitchControl
-                  checked={item.enabled}
-                  onChange={(checked) =>
-                    updateScript(index, { enabled: checked })
+            <CardHeader
+              className={cn("border-b pb-4", collapsed && "border-b-0 pb-0")}
+            >
+              <CardTitle>
+                <Input
+                  value={item.scriptName}
+                  placeholder={s("script.placeholder.scriptName")}
+                  onChange={(event) =>
+                    updateScript(index, { scriptName: event.target.value })
                   }
                 />
-              </Field>
-              <Field label={s("script.type")}>
-                <RadioGroup
-                  value={item.type}
-                  options={[
-                    ["external", s("script.external")],
-                    ["inline", s("script.inline")],
-                  ]}
-                  onChange={(value) =>
-                    updateScript(index, {
-                      type: value === "inline" ? "inline" : "external",
-                    })
-                  }
-                />
-              </Field>
-              {item.type === "external" ? (
-                <>
-                  <Field label={s("script.src")}>
-                    <Input
-                      value={item.src}
-                      placeholder={s("script.placeholder.src")}
-                      onChange={(event) =>
-                        updateScript(index, { src: event.target.value })
-                      }
-                    />
-                  </Field>
-                  <Field label={s("script.async")}>
-                    <SwitchControl
-                      checked={item.async}
-                      onChange={(checked) =>
-                        updateScript(index, { async: checked })
-                      }
-                    />
-                  </Field>
-                  <Field label={s("script.defer")}>
-                    <SwitchControl
-                      checked={item.defer}
-                      onChange={(checked) =>
-                        updateScript(index, { defer: checked })
-                      }
-                    />
-                  </Field>
-                  <Field label={s("script.crossorigin")}>
-                    <Input
-                      value={item.crossorigin}
-                      placeholder={s("script.placeholder.crossorigin")}
-                      onChange={(event) =>
-                        updateScript(index, { crossorigin: event.target.value })
-                      }
-                    />
-                  </Field>
-                </>
-              ) : (
-                <Field label={s("script.code")}>
-                  <Textarea
-                    className="min-h-40 font-mono"
-                    value={item.code}
-                    placeholder={s("script.placeholder.code")}
-                    onChange={(event) =>
-                      updateScript(index, { code: event.target.value })
+              </CardTitle>
+              <CardAction className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => removeScript(index)}
+                >
+                  <Trash2Icon />
+                  {s("script.remove")}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => toggleScriptCollapsed(index)}
+                >
+                  <ChevronDownIcon
+                    className={cn(
+                      "transition-transform",
+                      collapsed && "-rotate-90"
+                    )}
+                  />
+                </Button>
+              </CardAction>
+            </CardHeader>
+            {collapsed ? null : (
+              <CardContent className="grid gap-5">
+                <Field label={s("script.enabled")}>
+                  <SwitchControl
+                    checked={item.enabled}
+                    onChange={(checked) =>
+                      updateScript(index, { enabled: checked })
                     }
                   />
                 </Field>
-              )}
-            </CardContent>
-          )}
-        </Card>
-      ))}
+                <Field label={s("script.type")}>
+                  <RadioGroup
+                    value={item.type}
+                    options={[
+                      ["external", s("script.external")],
+                      ["inline", s("script.inline")],
+                    ]}
+                    onChange={(value) =>
+                      updateScript(index, {
+                        type: value === "inline" ? "inline" : "external",
+                      })
+                    }
+                  />
+                </Field>
+                {item.type === "external" ? (
+                  <>
+                    <Field label={s("script.src")}>
+                      <Input
+                        value={item.src}
+                        placeholder={s("script.placeholder.src")}
+                        onChange={(event) =>
+                          updateScript(index, { src: event.target.value })
+                        }
+                      />
+                    </Field>
+                    <Field label={s("script.async")}>
+                      <SwitchControl
+                        checked={item.async}
+                        onChange={(checked) =>
+                          updateScript(index, { async: checked })
+                        }
+                      />
+                    </Field>
+                    <Field label={s("script.defer")}>
+                      <SwitchControl
+                        checked={item.defer}
+                        onChange={(checked) =>
+                          updateScript(index, { defer: checked })
+                        }
+                      />
+                    </Field>
+                    <Field label={s("script.crossorigin")}>
+                      <Input
+                        value={item.crossorigin}
+                        placeholder={s("script.placeholder.crossorigin")}
+                        onChange={(event) =>
+                          updateScript(index, {
+                            crossorigin: event.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+                  </>
+                ) : (
+                  <Field label={s("script.code")}>
+                    <Textarea
+                      className="min-h-40 font-mono"
+                      value={item.code}
+                      placeholder={s("script.placeholder.code")}
+                      onChange={(event) =>
+                        updateScript(index, { code: event.target.value })
+                      }
+                    />
+                  </Field>
+                )}
+              </CardContent>
+            )}
+          </Card>
+        )
+      })}
       <div className="flex flex-wrap gap-2 rounded-lg border bg-[var(--dashboard-panel)] px-5 py-4 shadow-xs">
         <Button
           variant="outline"
