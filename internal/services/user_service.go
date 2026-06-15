@@ -432,9 +432,30 @@ func (s *userService) ResetPassword(userId int64) (string, error) {
 	// 2. Generate a new random password
 	newPassword := str.GenerateRandomPassword()
 
-	// 3. Hash the new password and update database
-	err := s.UpdateColumn(userId, "password", passwd.EncodePassword(newPassword))
-	if err != nil {
+	// 3. Hash the new password, update database, and invalidate login tokens
+	if err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		activeTokens := repositories.UserTokenRepository.Find(ctx.Tx, sqls.NewCnd().
+			Eq("user_id", user.Id).
+			Eq("status", constants.StatusOk))
+
+		if err := repositories.UserRepository.UpdateColumn(ctx.Tx, user.Id, "password", passwd.EncodePassword(newPassword)); err != nil {
+			return err
+		}
+
+		if err := ctx.Tx.Model(&models.UserToken{}).
+			Where("user_id = ? AND status = ?", user.Id, constants.StatusOk).
+			Update("status", constants.StatusDeleted).Error; err != nil {
+			return err
+		}
+
+		ctx.RegisterCallback(func() {
+			cache.UserCache.Invalidate(user.Id)
+			for _, token := range activeTokens {
+				cache.UserTokenCache.Invalidate(token.Token)
+			}
+		})
+		return nil
+	}); err != nil {
 		return "", err
 	}
 
