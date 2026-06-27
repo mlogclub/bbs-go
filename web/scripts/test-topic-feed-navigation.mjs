@@ -71,8 +71,13 @@ assert.doesNotMatch(
 )
 assert.match(
   topicCss,
-  /\.topics-wrapper\s+\.topics-nav\s*\{[\s\S]*?align-self:\s*flex-start/,
-  "topics nav should not be stretched by the flex layout so sticky positioning remains stable"
+  /\.topics-wrapper\s+\.topics-nav\s*\{[\s\S]*?position:\s*sticky[\s\S]*?top:\s*calc\(52px \+ 1rem\)[\s\S]*?align-self:\s*flex-start/,
+  "topics nav wrapper should own sticky positioning so it is not constrained by a short child container"
+)
+assert.doesNotMatch(
+  topicCss,
+  /\.dock-nav\s*\{[\s\S]*?position:\s*sticky/,
+  "dock nav should not own sticky positioning inside the short wrapper"
 )
 
 for (const href of [

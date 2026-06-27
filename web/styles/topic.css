@@ -194,6 +194,8 @@
 
   .topics-wrapper .topics-nav {
     margin-right: 10px;
+    position: sticky;
+    top: calc(52px + 1rem);
     align-self: flex-start;
     flex-shrink: 0;
   }
@@ -203,8 +205,6 @@
   }
 
   .dock-nav {
-    position: sticky;
-    top: calc(52px + 1rem);
     max-height: calc(100vh - 52px - 2rem);
     overflow: hidden;
     border-radius: 12px;
