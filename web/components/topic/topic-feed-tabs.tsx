@@ -29,9 +29,12 @@ export function TopicFeedTabs({
   currentCategoryId: number
 }) {
   const { t } = useI18n()
+  const currentTab =
+    feedTabs.find((item) => item.id === currentCategoryId) || feedTabs[0]
 
   return (
-    <div className="flex items-center border-b border-border px-4 py-3">
+    <div className="flex justify-between px-4 py-3">
+      <div className="text-base font-bold">{t(currentTab.labelKey)}</div>
       <div className="inline-flex flex-wrap items-center gap-1 rounded-lg bg-muted p-1">
         {feedTabs.map((item) => {
           const selected = currentCategoryId === item.id
@@ -40,7 +43,7 @@ export function TopicFeedTabs({
               key={item.id}
               href={item.href}
               className={cn(
-                "inline-flex h-7 items-center rounded-md px-3 text-sm font-medium transition-colors",
+                "inline-flex h-5 items-center rounded-md px-3 text-sm font-medium transition-colors",
                 selected
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
