@@ -1,12 +1,17 @@
+"use client"
+
 import { CheckCircle2, CircleHelp, MessageCircle } from "lucide-react"
 import Link from "@/components/common/link"
 
+import { useAppConfig } from "@/components/app/app-provider"
 import { UserAvatar } from "@/components/common/avatar"
 import { TopicLikeButton } from "@/components/topic/topic-like-button"
 import { TopicVoteCard } from "@/components/topic/topic-vote-card"
 import type { Topic } from "@/lib/api/types"
 import { prettyDate } from "@/lib/format"
 import type { TFunction } from "@/lib/i18n"
+
+type TopicListVariant = "default" | "compact"
 
 function getTopicImageSizeClass(count: number) {
   if (count <= 1) {
@@ -22,15 +27,121 @@ export function TopicListItem({
   topic,
   showSticky,
   t,
+  variant,
 }: {
   topic: Topic
   showSticky?: boolean
   t: TFunction
+  variant?: TopicListVariant
 }) {
+  const config = useAppConfig()
+  const resolvedVariant: TopicListVariant =
+    variant || (config?.topicListStyle === "compact" ? "compact" : "default")
   const displayName =
     topic.user.nickname || topic.user.username || topic.user.id
   const topicHref = `/topic/${topic.id}`
   const imageSizeClass = getTopicImageSizeClass(topic.imageList?.length || 0)
+
+  if (resolvedVariant === "compact") {
+    const compactTitle =
+      topic.type === 1
+        ? topic.content || topic.summary || topic.title || "-"
+        : topic.title || topic.summary || "-"
+    const replyTime =
+      topic.updateTime && topic.updateTime !== topic.createTime
+        ? prettyDate(topic.updateTime, t)
+        : ""
+
+    return (
+      <li className="px-3 py-3 sm:px-4">
+        <div className="grid grid-cols-[minmax(0,1fr)_2.5rem] items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <UserAvatar
+              user={topic.user}
+              size={34}
+              className="shrink-0 rounded-lg bg-muted text-sm"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 items-center gap-1.5 leading-5">
+                {showSticky && topic.sticky ? (
+                  <span className="inline-flex shrink-0 items-center rounded-sm bg-orange-100 px-1.5 py-0.5 text-[11px] leading-none text-orange-700">
+                    {t("component.topicList.sticky")}
+                  </span>
+                ) : null}
+                {topic.type === 2 ? (
+                  <span
+                    className={`inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 text-[11px] leading-none font-medium ring-1 ${
+                      topic.qaStatus === "solved"
+                        ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                        : "bg-amber-50 text-amber-700 ring-amber-200"
+                    }`}
+                  >
+                    {topic.qaStatus === "solved" ? (
+                      <CheckCircle2 className="mr-1 h-3 w-3" />
+                    ) : (
+                      <CircleHelp className="mr-1 h-3 w-3" />
+                    )}
+                    {topic.qaStatus === "solved"
+                      ? t("component.topicList.qaSolved")
+                      : t("component.topicList.qaUnsolved")}
+                  </span>
+                ) : null}
+                <Link
+                  href={topicHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="line-clamp-1 min-w-0 text-sm font-medium break-all text-foreground hover:text-primary"
+                >
+                  {compactTitle}
+                </Link>
+              </div>
+              <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-xs leading-4 text-muted-foreground">
+                {topic.category ? (
+                  <>
+                    <Link
+                      href={`/topics/category/${topic.category.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex max-w-32 shrink-0 items-center truncate rounded-sm bg-muted px-1.5 py-0.5 text-[11px] leading-none text-muted-foreground hover:text-foreground"
+                    >
+                      <span className="truncate">{topic.category.name}</span>
+                    </Link>
+                    <span className="text-border">•</span>
+                  </>
+                ) : null}
+                <Link
+                  href={`/user/${topic.user.id}`}
+                  target="_blank"
+                  className="max-w-28 truncate hover:text-foreground"
+                >
+                  {displayName}
+                </Link>
+                <span className="text-border">•</span>
+                <span>{prettyDate(topic.createTime, t)}</span>
+                {replyTime ? (
+                  <>
+                    <span className="text-border">•</span>
+                    <span>
+                      {t("component.topicList.lastReply", { time: replyTime })}
+                    </span>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <Link
+            href={topicHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-7 min-w-9 items-center justify-center rounded-full bg-muted px-2 text-sm leading-none font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+            aria-label="comments"
+          >
+            {topic.commentCount || 0}
+          </Link>
+        </div>
+      </li>
+    )
+  }
 
   return (
     <li className="px-4 py-3">
@@ -129,7 +240,8 @@ export function TopicListItem({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block h-full w-full overflow-hidden rounded-sm bg-muted"
-                    >                      <img
+                    >
+                      <img
                         src={image.preview || image.url}
                         alt=""
                         className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"

@@ -55,6 +55,7 @@ func SysConfigConfigs(ctx *gin.Context) {
 		RecommendTags:              cache.SysConfigCache.GetStrArr(constants.SysConfigRecommendTags),
 		UrlRedirect:                services.SysConfigService.IsUrlRedirect(),
 		DefaultCategoryId:          services.SysConfigService.GetDefaultCategoryId(),
+		TopicListStyle:             services.SysConfigService.GetTopicListStyle(),
 		ArticlePending:             services.SysConfigService.IsArticlePending(),
 		TopicCaptcha:               services.SysConfigService.IsTopicCaptcha(),
 		UserObserveSeconds:         cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds),

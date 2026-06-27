@@ -347,8 +347,14 @@ export default function DashboardSettingsRoute() {
   const [confirmState, setConfirmState] =
     React.useState<ConfirmDialogState>(null)
   const [error, setError] = React.useState<string | null>(null)
-  const canView = userHasPermission(currentUser, PERMISSIONS.DASHBOARD_SETTING_VIEW)
-  const canUpdate = userHasPermission(currentUser, PERMISSIONS.DASHBOARD_SETTING_UPDATE)
+  const canView = userHasPermission(
+    currentUser,
+    PERMISSIONS.DASHBOARD_SETTING_VIEW
+  )
+  const canUpdate = userHasPermission(
+    currentUser,
+    PERMISSIONS.DASHBOARD_SETTING_UPDATE
+  )
   const canReindex = userHasPermission(
     currentUser,
     PERMISSIONS.DASHBOARD_SEARCH_REINDEX
@@ -586,6 +592,7 @@ export default function DashboardSettingsRoute() {
                 void saveSection("content", {
                   recommendTags: settings.recommendTags,
                   defaultCategoryId: settings.defaultCategoryId,
+                  topicListStyle: settings.topicListStyle,
                   urlRedirect: settings.urlRedirect,
                   enableHideContent: settings.enableHideContent,
                   enableQaBounty: settings.enableQaBounty,
@@ -849,9 +856,7 @@ function SearchIndexSettings({
           <div className="text-sm font-medium text-muted-foreground sm:text-right">
             {s("search.indexedContent")}
           </div>
-          <div className="text-sm">
-            {s("search.indexedContentAll")}
-          </div>
+          <div className="text-sm">{s("search.indexedContentAll")}</div>
         </div>
         {showStatus ? (
           <div className="grid gap-2 sm:grid-cols-[184px_minmax(0,520px)] sm:gap-4">
@@ -909,9 +914,7 @@ function SearchIndexSettings({
               disabled={saving || running}
               onClick={onReindex}
             >
-              <RefreshCwIcon
-                className={running ? "animate-spin" : undefined}
-              />
+              <RefreshCwIcon className={running ? "animate-spin" : undefined} />
               {running ? s("search.rebuilding") : s("search.rebuild")}
             </Button>
           </div>
@@ -955,9 +958,7 @@ function SitemapSettings({
           <div className="text-sm font-medium text-muted-foreground sm:text-right">
             {s("sitemap.content")}
           </div>
-          <div className="text-sm">
-            {s("sitemap.contentAll")}
-          </div>
+          <div className="text-sm">{s("sitemap.contentAll")}</div>
         </div>
         {showStatus ? (
           <div className="grid gap-2 sm:grid-cols-[184px_minmax(0,520px)] sm:gap-4">
@@ -1070,14 +1071,32 @@ function ContentSettings({
       </Field>
       <Field label={s("content.defaultCategoryId")}>
         <DashboardSelect
-          value={settings.defaultCategoryId as string | number | null | undefined}
+          value={
+            settings.defaultCategoryId as string | number | null | undefined
+          }
           options={categories.map((category) => ({
             label: String(category.name ?? category.title ?? category.id),
             value: Number(category.id),
           }))}
           placeholder={s("content.placeholder.defaultCategoryId")}
           onValueChange={(value) =>
-            update("defaultCategoryId", value === undefined ? undefined : Number(value))
+            update(
+              "defaultCategoryId",
+              value === undefined ? undefined : Number(value)
+            )
+          }
+        />
+      </Field>
+      <Field label={s("content.topicListStyle")}>
+        <DashboardSelect
+          value={getString(settings.topicListStyle) || "default"}
+          options={[
+            { label: s("content.topicListStyleDefault"), value: "default" },
+            { label: s("content.topicListStyleCompact"), value: "compact" },
+          ]}
+          allowClear={false}
+          onValueChange={(value) =>
+            update("topicListStyle", value || "default")
           }
         />
       </Field>

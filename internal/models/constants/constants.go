@@ -63,11 +63,17 @@ const (
 	SysConfigUploadConfig               = "uploadConfig"               // 上传配置
 	SysConfigAttachmentConfig           = "attachmentConfig"           // 附件配置（帖子附件）
 	SysConfigScriptInjections           = "scriptInjections"           // head脚本注入配置
+	SysConfigTopicListStyle             = "topicListStyle"             // 帖子列表样式
 	SysConfigEnableQaBounty             = "enableQaBounty"             // 是否开启问答悬赏
 	SysConfigQaBountyMin                = "qaBountyMin"                // 问答悬赏积分下限
 	SysConfigQaBountyMax                = "qaBountyMax"                // 问答悬赏积分上限
 	SysConfigQaBountyRequired           = "qaBountyRequired"           // 问答帖是否必填悬赏
 	SysConfigNotificationTypes          = "notificationTypes"          // 通知类型配置（站内信+邮件开关）
+)
+
+const (
+	TopicListStyleDefault = "default"
+	TopicListStyleCompact = "compact"
 )
 
 // EntityType

@@ -16,6 +16,7 @@ type SysConfigAdminResponse struct {
 	RecommendTags              []string                    `json:"recommendTags"`
 	UrlRedirect                bool                        `json:"urlRedirect"`
 	DefaultCategoryId          int64                       `json:"defaultCategoryId"`
+	TopicListStyle             string                      `json:"topicListStyle"`
 	ArticlePending             bool                        `json:"articlePending"`
 	TopicCaptcha               bool                        `json:"topicCaptcha"`
 	UserObserveSeconds         int                         `json:"userObserveSeconds"`
@@ -54,6 +55,7 @@ type SysConfigOpenResponse struct {
 	RecommendTags              []string          `json:"recommendTags"`
 	UrlRedirect                bool              `json:"urlRedirect"`
 	DefaultCategoryId          int64             `json:"defaultCategoryId"`
+	TopicListStyle             string            `json:"topicListStyle"`
 	ArticlePending             bool              `json:"articlePending"`
 	TopicCaptcha               bool              `json:"topicCaptcha"`
 	UserObserveSeconds         int               `json:"userObserveSeconds"`

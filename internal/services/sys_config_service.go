@@ -203,6 +203,19 @@ func (s *sysConfigService) GetDefaultCategoryId() int64 {
 	return cache.SysConfigCache.GetInt64(constants.SysConfigDefaultCategoryId)
 }
 
+func (s *sysConfigService) GetTopicListStyle() string {
+	return normalizeTopicListStyle(cache.SysConfigCache.GetStr(constants.SysConfigTopicListStyle))
+}
+
+func normalizeTopicListStyle(style string) string {
+	switch strings.TrimSpace(style) {
+	case constants.TopicListStyleCompact:
+		return constants.TopicListStyleCompact
+	default:
+		return constants.TopicListStyleDefault
+	}
+}
+
 func (s *sysConfigService) GetSiteNavs() []dto.ActionLink {
 	siteNavs := cache.SysConfigCache.GetStr(constants.SysConfigSiteNavs)
 	var siteNavsArr []dto.ActionLink

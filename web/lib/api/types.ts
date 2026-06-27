@@ -187,6 +187,7 @@ export interface SiteConfig {
   siteNotification?: string
   recommendTags?: string[]
   defaultCategoryId?: number
+  topicListStyle?: "default" | "compact" | string
   topicCaptcha?: boolean
   createTopicEmailVerified?: boolean
   enableHideContent?: boolean
