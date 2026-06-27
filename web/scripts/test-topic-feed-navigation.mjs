@@ -35,9 +35,9 @@ assert.equal(
   "TopicsNavContent should render a local all-categories entry"
 )
 assert.equal(
-  topicsNavSource.includes('href="/topics/category/newest"'),
+  topicsNavSource.includes('href="/topics"'),
   true,
-  "The local all-categories entry should link to the all latest feed"
+  "The local all-categories entry should link to the topics index"
 )
 assert.equal(
   topicsNavSource.includes('import { LayoutGridIcon } from "lucide-react"'),

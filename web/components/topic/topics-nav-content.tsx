@@ -69,7 +69,7 @@ export function TopicsNavContent({
               )}
               data-node-id="all"
             >
-              <Link href="/topics/category/newest">
+              <Link href="/topics">
                 <LayoutGridIcon
                   className="node-logo node-logo-icon"
                   aria-hidden="true"
