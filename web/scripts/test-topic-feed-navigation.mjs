@@ -8,6 +8,7 @@ const topicsNavSource = readFileSync(
   resolve(webRoot, "components/topic/topics-nav-content.tsx"),
   "utf8"
 )
+const topicCss = readFileSync(resolve(webRoot, "styles/topic.css"), "utf8")
 assert.equal(
   existsSync(feedTabsPath),
   true,
@@ -28,6 +29,51 @@ assert.match(
   /categories\.filter\(\(node\)\s*=>\s*node\.id\s*>\s*0\)/,
   "TopicsNavContent should hide built-in feed nodes from the left category nav"
 )
+assert.equal(
+  topicsNavSource.includes('t("pages.topics.allCategories")'),
+  true,
+  "TopicsNavContent should render a local all-categories entry"
+)
+assert.equal(
+  topicsNavSource.includes('href="/topics/category/newest"'),
+  true,
+  "The local all-categories entry should link to the all latest feed"
+)
+assert.equal(
+  topicsNavSource.includes('import { LayoutGridIcon } from "lucide-react"'),
+  true,
+  "The local all-categories entry should use a lucide icon"
+)
+assert.match(
+  topicsNavSource,
+  /data-node-id="all"[\s\S]*?<LayoutGridIcon[\s\S]*?className="node-logo node-logo-icon"/,
+  "The local all-categories entry should render the overview icon"
+)
+assert.match(
+  topicCss,
+  /\.node-logo-icon\s*\{/,
+  "lucide nav icons should be styled in topic.css"
+)
+assert.equal(
+  topicsNavSource.includes('"categories-divider"'),
+  true,
+  "The all-categories entry should be separated from real categories"
+)
+assert.match(
+  topicCss,
+  /\.categories-divider\s*\{/,
+  "categories divider should be styled in topic.css"
+)
+assert.doesNotMatch(
+  topicCss,
+  /\.categories-divider\s*\{[\s\S]*?margin:\s*8px\s+24px/,
+  "categories divider should span the full nav width without horizontal margin"
+)
+assert.match(
+  topicCss,
+  /\.topics-wrapper\s+\.topics-nav\s*\{[\s\S]*?align-self:\s*flex-start/,
+  "topics nav should not be stretched by the flex layout so sticky positioning remains stable"
+)
 
 for (const href of [
   "/topics/category/newest",
@@ -45,6 +91,13 @@ assert.equal(
   indexRouteSource.includes("<TopicFeedTabs currentCategoryId={0} />"),
   true,
   "Home topic list should show the feed tabs with latest selected"
+)
+assert.equal(
+  indexRouteSource.includes(
+    "<TopicsNavContent initialCategories={categories} currentCategoryId={0} />"
+  ),
+  true,
+  "Home topic list should mark all categories selected in the left nav"
 )
 assert.equal(
   dynamicListSource.includes("<TopicFeedTabs currentCategoryId={categoryId} />"),

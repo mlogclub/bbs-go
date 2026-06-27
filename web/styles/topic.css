@@ -194,6 +194,8 @@
 
   .topics-wrapper .topics-nav {
     margin-right: 10px;
+    align-self: flex-start;
+    flex-shrink: 0;
   }
 
   .topics-wrapper .topics-main {
@@ -251,16 +253,20 @@
     z-index: 1;
     display: flex;
     align-items: center;
-    padding: 8px 24px;
+    padding: 8px 18px;
     color: var(--foreground);
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 18px;
   }
 
   .categories-divider {
     height: 1px;
-    margin: 8px 24px;
+    margin: 8px 0;
     background: var(--border);
+  }
+
+  .dock-nav li.categories-divider::before {
+    display: none;
   }
 
   .node-logo {
@@ -275,6 +281,16 @@
     background-position: center;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+  }
+
+  .node-logo-icon {
+    background-color: transparent;
+    color: var(--muted-foreground);
+    padding: 3px;
+  }
+
+  .dock-nav li.active .node-logo-icon {
+    color: var(--foreground);
   }
 
   .node-name {

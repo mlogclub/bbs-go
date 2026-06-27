@@ -2,10 +2,12 @@
 
 import Link from "@/components/common/link"
 import * as React from "react"
+import { LayoutGridIcon } from "lucide-react"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { apiFetch } from "@/lib/api/client"
 import type { Category } from "@/lib/api/types"
+import { useI18n } from "@/lib/i18n/provider"
 import { cn } from "@/lib/utils"
 
 function nodeHref(node: Category) {
@@ -29,6 +31,7 @@ export function TopicsNavContent({
   currentCategoryId?: number
   currentRootCategoryId?: number
 }) {
+  const { t } = useI18n()
   const [categories, setCategories] = React.useState(initialCategories)
 
   React.useEffect(() => {
@@ -58,6 +61,27 @@ export function TopicsNavContent({
       <nav className="dock-nav">
         <ScrollArea className="topics-scroll-area">
           <ul>
+            <li
+              className={cn(
+                currentCategoryId !== undefined &&
+                  currentCategoryId <= 0 &&
+                  "active"
+              )}
+              data-node-id="all"
+            >
+              <Link href="/topics/category/newest">
+                <LayoutGridIcon
+                  className="node-logo node-logo-icon"
+                  aria-hidden="true"
+                />
+                <div className="node-name">
+                  {t("pages.topics.allCategories")}
+                </div>
+              </Link>
+            </li>
+            {/* {visibleCategories.length > 0 ? (
+              <li className="categories-divider" aria-hidden="true" />
+            ) : null} */}
             {visibleCategories.map((node) => {
               const active = isActiveNode(
                 node,

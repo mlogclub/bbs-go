@@ -20,9 +20,9 @@ export function SidebarBrand({
       <SidebarMenuItem>
         <SidebarMenuButton
           size="lg"
-          className="h-12 cursor-default rounded-lg border border-sidebar-border/70 bg-background/60 shadow-xs hover:bg-background/60 data-[state=open]:bg-background/60 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center"
+          className="h-12 cursor-default rounded-lg group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center"
         >
-          <div className="flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-sidebar-border dark:bg-sidebar-accent">
+          <div className="flex aspect-square size-9 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white dark:bg-sidebar-accent">
             <img
               src={logoSrc}
               alt={name}

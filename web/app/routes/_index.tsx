@@ -40,7 +40,7 @@ export function TopicListRoute({ title }: { title?: string }) {
   return (
     <MainShell aside={<HomeAside />}>
       <div className="topics-wrapper">
-        <TopicsNavContent initialCategories={categories} />
+        <TopicsNavContent initialCategories={categories} currentCategoryId={0} />
         <div className="topics-main">
           <div className="rounded-lg bg-background">
             <TopicFeedTabs currentCategoryId={0} />
