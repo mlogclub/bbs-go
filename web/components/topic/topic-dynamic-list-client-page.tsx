@@ -223,7 +223,7 @@ export function NodeTopicClientPage({
               currentCategoryId={categoryId}
             />
             {currentFilters.length > 0 ? (
-              <div className="flex justify-between px-4 py-3">
+              <div className="flex justify-between border-b border-border px-4 py-3">
                 <div className="text-base font-bold">
                   {currentFilterLabel}
                 </div>

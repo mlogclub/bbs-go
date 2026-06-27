@@ -33,7 +33,7 @@ export function TopicFeedTabs({
     feedTabs.find((item) => item.id === currentCategoryId) || feedTabs[0]
 
   return (
-    <div className="flex justify-between px-4 py-3">
+    <div className="flex justify-between border-b border-border px-4 py-3">
       <div className="text-base font-bold">{t(currentTab.labelKey)}</div>
       <div className="inline-flex flex-wrap items-center gap-1 rounded-lg bg-muted p-1">
         {feedTabs.map((item) => {
