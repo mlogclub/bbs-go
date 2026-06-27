@@ -1,6 +1,12 @@
 "use client"
 
-import { CheckCircle2, CircleHelp, MessageCircle } from "lucide-react"
+import {
+  CheckCircle2,
+  CircleHelp,
+  ImageIcon,
+  ListChecks,
+  MessageCircle,
+} from "lucide-react"
 import Link from "@/components/common/link"
 
 import { useAppConfig } from "@/components/app/app-provider"
@@ -21,6 +27,44 @@ function getTopicImageSizeClass(count: number) {
     return "h-[128px] w-[128px] sm:h-[180px] sm:w-[180px]"
   }
   return "h-[94px] w-[94px] sm:h-[120px] sm:w-[120px]"
+}
+
+function TopicContentMarks({ topic, t }: { topic: Topic; t: TFunction }) {
+  const imageCount = topic.type === 1 ? topic.imageList?.length || 0 : 0
+  const hasVote = Boolean(topic.vote)
+
+  if (!imageCount && !hasVote) {
+    return null
+  }
+
+  return (
+    <>
+      {imageCount ? (
+        <span
+          className="inline-flex h-[18px] shrink-0 items-center gap-1 rounded-sm bg-muted px-1.5 text-[11px] leading-none text-muted-foreground"
+          title={t("component.topicList.hasImages")}
+        >
+          <ImageIcon className="h-3 w-3" />
+          <span>
+            {imageCount > 1
+              ? t("component.topicList.imageMarkWithCount", {
+                  count: imageCount,
+                })
+              : t("component.topicList.imageMark")}
+          </span>
+        </span>
+      ) : null}
+      {hasVote ? (
+        <span
+          className="inline-flex h-[18px] shrink-0 items-center gap-1 rounded-sm bg-muted px-1.5 text-[11px] leading-none text-muted-foreground"
+          title={t("component.topicList.hasVote")}
+        >
+          <ListChecks className="h-3 w-3" />
+          <span>{t("component.topicList.voteMark")}</span>
+        </span>
+      ) : null}
+    </>
+  )
 }
 
 export function TopicListItem({
@@ -86,6 +130,7 @@ export function TopicListItem({
                       : t("component.topicList.qaUnsolved")}
                   </span>
                 ) : null}
+                <TopicContentMarks topic={topic} t={t} />
                 <Link
                   href={topicHref}
                   target="_blank"
