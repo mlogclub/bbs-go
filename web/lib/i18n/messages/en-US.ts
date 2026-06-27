@@ -1264,6 +1264,9 @@ const enUS = {
     },
     topics: {
       title: "Topics",
+      feedLatest: "Latest",
+      feedRecommend: "Featured",
+      feedFollowing: "Following",
       filterLatestPublish: "Newest",
       filterLatestReply: "Recently active",
       subCategories: "Subcategories",

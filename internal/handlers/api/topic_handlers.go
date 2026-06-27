@@ -67,10 +67,7 @@ func topicGetBuiltInCategories() []resp.CategoryResponse {
 // 设置置顶
 func CategoryNavs(ctx *gin.Context) {
 
-	categories := append(
-		topicGetBuiltInCategories(),
-		render.BuildCategoryResponses(services.CategoryService.GetTopLevelCategories())...,
-	)
+	categories := render.BuildCategoryResponses(services.CategoryService.GetTopLevelCategories())
 	ginx.WriteJSON(ctx, categories)
 
 }

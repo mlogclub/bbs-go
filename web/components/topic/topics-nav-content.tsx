@@ -8,21 +8,8 @@ import { apiFetch } from "@/lib/api/client"
 import type { Category } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
-function isBuiltInNode(node: Category) {
-  return node.id <= 0
-}
-
 function nodeHref(node: Category) {
-  if (node.id > 0) {
-    return `/topics/category/${node.id}`
-  }
-  if (node.id === 0) {
-    return "/topics/category/newest"
-  }
-  if (node.id === -1) {
-    return "/topics/category/recommend"
-  }
-  return "/topics/category/feed"
+  return `/topics/category/${node.id}`
 }
 
 function isActiveNode(
@@ -30,9 +17,6 @@ function isActiveNode(
   currentCategoryId?: number,
   currentRootCategoryId?: number
 ) {
-  if (isBuiltInNode(node)) {
-    return currentCategoryId === node.id
-  }
   return currentRootCategoryId === node.id
 }
 
@@ -67,18 +51,14 @@ export function TopicsNavContent({
     }
   }, [initialCategories.length])
 
+  const visibleCategories = categories.filter((node) => node.id > 0)
+
   return (
     <div className="topics-nav">
       <nav className="dock-nav">
         <ScrollArea className="topics-scroll-area">
           <ul>
-            {categories.map((node, index) => {
-              const previousNode = categories[index - 1]
-              const showDivider =
-                index > 0 &&
-                previousNode &&
-                isBuiltInNode(previousNode) &&
-                !isBuiltInNode(node)
+            {visibleCategories.map((node) => {
               const active = isActiveNode(
                 node,
                 currentCategoryId,
@@ -87,9 +67,6 @@ export function TopicsNavContent({
 
               return (
                 <React.Fragment key={node.id}>
-                  {showDivider ? (
-                    <li className="nodes-divider" aria-hidden="true" />
-                  ) : null}
                   <li className={cn(active && "active")} data-node-id={node.id}>
                     <Link href={nodeHref(node)}>
                       <i

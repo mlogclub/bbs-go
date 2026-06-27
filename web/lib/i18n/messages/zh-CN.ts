@@ -1242,6 +1242,9 @@ const zhCN = {
     },
     topics: {
       title: "话题",
+      feedLatest: "最新",
+      feedRecommend: "推荐",
+      feedFollowing: "关注",
       filterLatestPublish: "最新发布",
       filterLatestReply: "最新回复",
       subCategories: "子分类",

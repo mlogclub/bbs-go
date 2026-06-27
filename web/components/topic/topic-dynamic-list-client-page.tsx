@@ -8,6 +8,7 @@ import { LoadMore } from "@/components/common/load-more"
 import { HomeAside } from "@/components/layout/home-aside"
 import { MainShell } from "@/components/layout/main-shell"
 import { PageLoading } from "@/components/common/page-state"
+import { TopicFeedTabs } from "@/components/topic/topic-feed-tabs"
 import { TopicListItem } from "@/components/topic/topic-list-item"
 import { TopicsNavContent } from "@/components/topic/topics-nav-content"
 import { TopicSubCategoryNav } from "@/components/topic/topic-sub-category-nav"
@@ -213,6 +214,9 @@ export function NodeTopicClientPage({
             </div>
           ) : null}
           <div className="rounded-lg bg-background">
+            {categoryId <= 0 ? (
+              <TopicFeedTabs currentCategoryId={categoryId} />
+            ) : null}
             <TopicSubCategoryNav
               rootCategoryId={rootCategoryId}
               categories={subNodes}

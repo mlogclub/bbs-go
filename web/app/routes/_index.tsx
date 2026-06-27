@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/common/empty-state"
 import { LoadMore } from "@/components/common/load-more"
 import { HomeAside } from "@/components/layout/home-aside"
 import { MainShell } from "@/components/layout/main-shell"
+import { TopicFeedTabs } from "@/components/topic/topic-feed-tabs"
 import { TopicListItem } from "@/components/topic/topic-list-item"
 import { TopicsNavContent } from "@/components/topic/topics-nav-content"
 import { apiFetch } from "@/lib/api/client"
@@ -42,6 +43,7 @@ export function TopicListRoute({ title }: { title?: string }) {
         <TopicsNavContent initialCategories={categories} />
         <div className="topics-main">
           <div className="rounded-lg bg-background">
+            <TopicFeedTabs currentCategoryId={0} />
             <LoadMore<Topic>
               initialItems={topics.results}
               initialCursor={topics.cursor || ""}
