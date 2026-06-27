@@ -26,6 +26,8 @@ import (
 
 var TopicService = newTopicService()
 
+const topicListPageSize = 40
+
 func newTopicService() *topicService {
 	return &topicService{}
 }
@@ -271,7 +273,7 @@ func (s *topicService) GetTopicTags(topicId int64) []models.Tag {
 
 // GetTopics 帖子列表（最新、推荐、关注、节点）
 func (s *topicService) GetTopics(user *models.User, categoryId, cursor int64, qaStatus, sort string) (topics []models.Topic, nextCursor int64, hasMore bool) {
-	var limit int = 20
+	limit := topicListPageSize
 	if categoryId == constants.CategoryIdFollow {
 		if user != nil {
 			return s._GetFollowTopics(user.Id, cursor)
@@ -327,7 +329,7 @@ func (s *topicService) _GetCategoryTopics(categoryId, cursor int64, limit int, q
 
 // _GetFollowTopics 关注帖子列表
 func (s *topicService) _GetFollowTopics(userId int64, cursor int64) (topics []models.Topic, nextCursor int64, hasMore bool) {
-	var limit = 20
+	limit := topicListPageSize
 	cnd := sqls.NewCnd().Eq("user_id", userId)
 	cnd.Eq("data_type", constants.EntityTopic)
 	if cursor > 0 {
@@ -354,7 +356,7 @@ func (s *topicService) _GetFollowTopics(userId int64, cursor int64) (topics []mo
 
 // 指定标签下话题列表
 func (s *topicService) GetTagTopics(tagId, cursor int64) (topics []models.Topic, nextCursor int64, hasMore bool) {
-	limit := 20
+	limit := topicListPageSize
 	topicTags := repositories.TopicTagRepository.Find(sqls.DB(), sqls.NewCnd().
 		Eq("tag_id", tagId).
 		Eq("status", constants.StatusOk).
