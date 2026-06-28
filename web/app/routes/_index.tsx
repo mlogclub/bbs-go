@@ -49,6 +49,7 @@ export function TopicListRoute({ title }: { title?: string }) {
               initialCursor={topics.cursor || ""}
               initialHasMore={topics.hasMore}
               initialLoad={false}
+              autoLoadOnScroll
               resetKey="/api/topic/topics"
               labels={{
                 loadMore: t("common.loadMore.loadMore"),

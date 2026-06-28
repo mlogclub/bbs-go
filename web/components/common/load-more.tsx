@@ -28,6 +28,7 @@ export function LoadMore<T>({
   renderItems,
   renderEmpty,
   alwaysShowButton = false,
+  autoLoadOnScroll = false,
 }: {
   initialItems?: T[] | null
   initialCursor?: string
@@ -39,6 +40,7 @@ export function LoadMore<T>({
   renderItems: (items: T[]) => React.ReactNode
   renderEmpty?: () => React.ReactNode
   alwaysShowButton?: boolean
+  autoLoadOnScroll?: boolean
 }) {
   const safeInitialItems = Array.isArray(initialItems) ? initialItems : []
   const contentKey = React.useMemo(
@@ -71,6 +73,7 @@ export function LoadMore<T>({
       renderItems={renderItems}
       renderEmpty={renderEmpty}
       alwaysShowButton={alwaysShowButton}
+      autoLoadOnScroll={autoLoadOnScroll}
     />
   )
 }
@@ -85,6 +88,7 @@ function LoadMoreContent<T>({
   renderItems,
   renderEmpty,
   alwaysShowButton,
+  autoLoadOnScroll,
 }: {
   initialItems: T[]
   initialCursor?: string
@@ -95,6 +99,7 @@ function LoadMoreContent<T>({
   renderItems: (items: T[]) => React.ReactNode
   renderEmpty?: () => React.ReactNode
   alwaysShowButton: boolean
+  autoLoadOnScroll: boolean
 }) {
   const [cursor, setCursor] = React.useState(initialCursor || "")
   const [hasMore, setHasMore] = React.useState(
@@ -109,6 +114,7 @@ function LoadMoreContent<T>({
   const inFlightRef = React.useRef(false)
   const mountedRef = React.useRef(true)
   const loadPageRef = React.useRef(loadPage)
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
     loadPageRef.current = loadPage
@@ -180,6 +186,29 @@ function LoadMoreContent<T>({
     return () => window.clearTimeout(timer)
   }, [initialItems.length, initialLoad, loadMore, loaded, loading])
 
+  React.useEffect(() => {
+    if (!autoLoadOnScroll || !hasMore || loading) {
+      return
+    }
+    const sentinel = sentinelRef.current
+    if (!sentinel || typeof IntersectionObserver === "undefined") {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry?.isIntersecting) {
+          void loadMore()
+        }
+      },
+      { rootMargin: "160px 0px" }
+    )
+    observer.observe(sentinel)
+
+    return () => observer.disconnect()
+  }, [autoLoadOnScroll, hasMore, loadMore, loading])
+
   async function onLoadMore() {
     if (inFlightRef.current || !hasMore) {
       return
@@ -204,6 +233,9 @@ function LoadMoreContent<T>({
           labels={labels}
           onClick={onLoadMore}
         />
+      ) : null}
+      {autoLoadOnScroll ? (
+        <div ref={sentinelRef} aria-hidden="true" className="h-px" />
       ) : null}
       {error ? (
         <p className="-mt-4 pb-5 text-center text-xs text-destructive">

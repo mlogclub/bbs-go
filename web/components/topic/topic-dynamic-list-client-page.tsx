@@ -66,6 +66,7 @@ export function TopicTagClientPage({
               initialCursor={initialData?.topics?.cursor || "0"}
               initialHasMore={initialData?.topics?.hasMore || false}
               initialLoad={!initialData?.topics}
+              autoLoadOnScroll
               resetKey={`topic-tag:${tagId}`}
               labels={labels}
               loadPage={({ cursor }) =>
@@ -255,6 +256,7 @@ export function NodeTopicClientPage({
               initialCursor={initialData?.topics?.cursor || "0"}
               initialHasMore={initialData?.topics?.hasMore || false}
               initialLoad={!initialData?.topics}
+              autoLoadOnScroll
               resetKey={`category:${categoryId}:${currentNode?.type || ""}:${currentFilterValue}`}
               labels={labels}
               loadPage={({ cursor }) =>
