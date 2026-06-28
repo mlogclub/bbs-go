@@ -419,7 +419,11 @@ function MobileMenu({
           <span className="sr-only">{t("common.header.toggleMenu")}</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+      <SheetContent
+        side="right"
+        className="w-[300px] sm:w-[400px]"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <div className="mt-12 flex flex-col space-y-4">
           {user ? (
             <div className="flex items-center space-x-3 rounded-lg bg-accent/50 p-3">
