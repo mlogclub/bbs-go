@@ -202,6 +202,7 @@
 
   .topics-wrapper .topics-main {
     width: 100%;
+    min-width: 0;
   }
 
   .dock-nav {
@@ -211,6 +212,18 @@
     background: var(--background);
     width: 220px;
     transition: all 0.2s linear;
+  }
+
+  .dock-nav-mobile-row {
+    display: none;
+  }
+
+  .topics-mobile-category-more {
+    display: none;
+  }
+
+  .topics-mobile-category-list {
+    display: none;
   }
 
   .topics-scroll-area {
@@ -349,5 +362,180 @@
     color: #fff;
     font-size: 11px;
     line-height: 18px;
+  }
+
+  @media (max-width: 767px) {
+    .topics-wrapper {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .topics-wrapper .topics-nav {
+      display: block;
+      position: static;
+      width: 100%;
+      margin-right: 0;
+      align-self: stretch;
+    }
+
+    .dock-nav {
+      width: 100%;
+      height: 48px;
+      max-height: none;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .dock-nav-desktop-scroll {
+      display: none;
+    }
+
+    .dock-nav-mobile-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      height: 48px;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .topics-scroll-area {
+      width: 100%;
+      height: 32px;
+      max-height: none;
+    }
+
+    .dock-nav-scroll {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .dock-nav-scroll::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .dock-nav-scroll::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: var(--border);
+    }
+
+    .dock-nav-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .dock-nav-list {
+      display: flex;
+      flex-wrap: nowrap;
+      width: max-content;
+      min-width: max-content;
+      padding: 0;
+      gap: 4px;
+    }
+
+    .dock-nav li {
+      flex: 0 0 auto;
+      border-radius: 6px;
+    }
+
+    .dock-nav li::before {
+      border-radius: 6px;
+    }
+
+    .dock-nav a {
+      height: 32px;
+      gap: 5px;
+      padding: 0 10px;
+      font-size: 13px;
+      line-height: 32px;
+    }
+
+    .dock-nav .node-logo {
+      width: 18px;
+      height: 18px;
+      margin-right: 0;
+      border-radius: 4px;
+    }
+
+    .dock-nav .node-logo-icon {
+      padding: 2px;
+    }
+
+    .topics-mobile-category-more {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      gap: 3px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--muted);
+      color: var(--muted-foreground);
+      font-size: 13px;
+      line-height: 32px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .topics-mobile-category-more svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .topics-mobile-category-drawer {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .topics-mobile-category-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      max-height: min(56vh, 440px);
+      overflow-y: auto;
+      padding: 0 16px 16px;
+    }
+
+    .topics-mobile-category-item {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 10px;
+      border-radius: 8px;
+      background: var(--muted);
+      color: var(--foreground);
+      font-size: 14px;
+      line-height: 40px;
+    }
+
+    .topics-mobile-category-item.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .topics-mobile-category-item span:last-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topics-mobile-category-item .node-logo {
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
+    }
+
+    .topics-mobile-category-item .node-logo-placeholder {
+      background: color-mix(in srgb, var(--primary) 14%, var(--background));
+    }
   }
 }

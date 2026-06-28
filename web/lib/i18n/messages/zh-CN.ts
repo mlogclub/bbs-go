@@ -1249,6 +1249,7 @@ const zhCN = {
       filterLatestReply: "最新回复",
       subCategories: "子分类",
       allCategories: "全部",
+      moreCategories: "更多分类",
       moreSubCategories: "更多子分类",
     },
     topic: {

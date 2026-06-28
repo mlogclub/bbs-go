@@ -192,7 +192,7 @@ export function NodeTopicClientPage({
         />
         <div className="topics-main">
           {currentNode?.name ? (
-            <div className="mb-3 rounded-lg bg-background px-4 py-4">
+            <div className="mb-2 rounded-lg bg-background px-4 py-4">
               <div className="flex items-start gap-3">
                 {currentNode.logo ? (
                   <img

@@ -191,7 +191,7 @@
 
   @media screen and (max-width: 768px) {
     .main {
-      padding: 1rem 0.5rem 0 !important;
+      padding: 0.5rem 0.5rem 0 !important;
     }
 
     .topics-nav,

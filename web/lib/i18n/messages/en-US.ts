@@ -1271,6 +1271,7 @@ const enUS = {
       filterLatestReply: "Recently active",
       subCategories: "Subcategories",
       allCategories: "All",
+      moreCategories: "More categories",
       moreSubCategories: "More subcategories",
     },
     topic: {
