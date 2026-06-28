@@ -1,165 +1,122 @@
-[English](README.md) | [中文](README.zh-CN.md)
+[中文](README.md) | [English](README.en-US.md)
 
-# bbs-go
 
-A lightweight community and Q&A platform for forums, knowledge bases, and discussions.
+> 感谢您的支持与鼓励！如果您喜欢这个开源项目，不妨给它点个⭐️⭐️⭐️，您的星星是我们前进的动力 🙏🙏🙏
 
-It combines discussions, Q&A workflows, articles, comments, notifications, moderation, roles, an admin dashboard, and optional engagement mechanics such as tasks, points, levels, and badges. Use it when chat is too noisy, static docs are not interactive enough, or heavyweight forum suites feel like too much for your team.
+`bbs-go` 是一个轻量级社区和问答平台，适合搭建论坛、知识库和讨论社区。
 
-## Official Links
+## 官网
 
-- Website: [https://bbs-go.com](https://bbs-go.com)
-- Live demo: [https://bbs.bbs-go.com](https://bbs.bbs-go.com)
-- GitHub: [https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
-- GitHub Discussions: [https://github.com/mlogclub/bbs-go/discussions](https://github.com/mlogclub/bbs-go/discussions)
-- Docker Hub: [https://hub.docker.com/r/mlogclub/bbs-go](https://hub.docker.com/r/mlogclub/bbs-go)
+- 官网：[https://bbs-go.com](https://bbs-go.com)
+- 交流社区：[https://bbs.bbs-go.com](https://bbs.bbs-go.com)
+- Github：[https://github.com/mlogclub/bbs-go](https://github.com/mlogclub/bbs-go)
+- Gitee：[https://gitee.com/mlogclub/bbs-go](https://gitee.com/mlogclub/bbs-go)
 
-## Demo
+## 演示
 
-- Community frontend: <https://bbs.bbs-go.com>
-- Admin dashboard: <https://bbs.bbs-go.com/dashboard>
-- Admin demo access: contact <g330721072@gmail.com>
+- 前台: https://bbs.bbs-go.com
+- 后台: https://bbs.bbs-go.com/admin
+- 后台账号密码: 联系我们获取，联系方式：<https://bbs-go.com/docs/contact>
 
-## Quick Start with Docker Compose
+## 为什么选择 bbs-go
 
-bbs-go provides an official Docker image and Docker Compose deployment with built-in MySQL support.
+- **开箱可用**：论坛、问答、文章、评论、点赞收藏、关注消息等核心社区能力可直接使用。
+- **轻量完整**：适合搭建论坛、知识库、问答社区和讨论社区，不需要引入沉重的企业级系统。
+- **增长闭环**：内置任务、积分、等级、勋章，支持用户活跃和长期留存。
+- **运营友好**：提供内容治理、用户治理、权限治理与系统配置能力，方便持续运营。
+- **双语支持**：内置 `en-US` / `zh-CN`，适合面向不同语言用户的社区场景。
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.yml -o docker-compose.yml
-docker compose up -d
-```
+## 功能地图
 
-Then open:
+![bbs-go 功能概览](docs/images/features_zh.svg)
 
-- Site: <http://localhost:3000>
-- Admin dashboard: <http://localhost:3000/dashboard>
-- Install wizard: <http://localhost:3000/install>
+## 核心功能
 
-For production deployment options, environment variables, upgrades, and troubleshooting, see the Docker Hub page:
+### 用户侧
 
-<https://hub.docker.com/r/mlogclub/bbs-go>
+- 账号注册与登录（支持多种登录方式）
+- 用户资料维护与个人主页展示
+- 关注/粉丝关系管理
+- 站内消息与互动提醒
+- 积分记录与排行榜
 
-## Why Choose bbs-go
+### 内容侧
 
-- **Community knowledge ready**: Give members one searchable place for discussions, questions, answers, articles, announcements, and reusable knowledge.
-- **Deploy in minutes**: Use the official Docker image and Docker Compose setup for a simple self-hosted deployment.
-- **Lightweight but complete**: Cover discussions, Q&A, articles, profiles, search, and admin workflows without a heavy enterprise stack.
-- **Community engagement included**: Tasks, points, EXP, levels, rankings, and badges help communities create repeat engagement loops when needed.
-- **Operations ready**: Manage users, content, reports, keyword filters, roles, site settings, and audit logs from the dashboard.
-- **International by default**: Built-in `en-US` and `zh-CN` UI and server-message support.
+- 支持帖子、动态、文章发布与编辑
+- 评论、回复、点赞、收藏等完整互动链路
+- 标签与节点管理，便于内容组织和发现
+- 支持投票、隐藏内容等互动玩法
+- 站内搜索能力，提升内容检索效率
 
-## Typical Use Cases
+### 增长侧
 
-- **Public and private forums**: structured community discussions for products, interests, teams, or vertical communities.
-- **Q&A communities**: question-style topics, answers, comments, and solved/unsolved workflows.
-- **Knowledge-sharing communities**: articles plus searchable discussions, tags, and organized reusable knowledge.
-- **Product user communities**: support conversations, announcements, feedback, showcase posts, and user engagement.
-- **Internal team spaces**: private discussions and role-based knowledge sharing for small teams.
-- **Developer support hubs**: a searchable place for technical questions, guides, and best practices.
+- 每日签到，持续活跃激励
+- 任务体系（新手、每日、成就）
+- 积分与经验奖励机制
+- 等级成长配置
+- 勋章与荣誉体系
 
-## Comparison with Other Platforms
+### 运营侧
 
-This comparison is based on public product positioning and common use cases. The best choice depends on your team, stack, deployment model, and community goals.
+- 用户、帖子、评论、文章等统一治理
+- 举报处理与违禁词管理
+- 角色、菜单、接口权限分配
+- 系统参数与站点配置管理
+- 运营日志与行为留痕
 
-| Platform | Best for | Strengths | When bbs-go may fit better |
-| -------- | -------- | --------- | -------------------------- |
-| Discord / Slack | Real-time chat communities | Fast conversations and broad adoption | You need searchable, long-lived discussions and accepted answers instead of knowledge disappearing in chat |
-| GitHub Discussions | GitHub-centered project conversations | Close to code and contributors | You want an independent community space with articles, moderation, member profiles, and engagement tools outside GitHub |
-| Discourse | Mature large communities and advanced governance workflows | Strong ecosystem, extensive moderation tools, hosted and self-hosted options | You want a lighter self-hosted platform, an all-in-one Go-based release, and built-in forum + Q&A + knowledge publishing workflows |
-| Flarum / NodeBB | Modern forum communities | Polished forum UX and extension ecosystems | You need more built-in operations tools, Q&A flows, article-style publishing, and engagement mechanics without assembling many extensions |
-| Question2Answer | Dedicated Q&A websites | Focused Q&A model, points and ranking features, simple PHP/MySQL deployment | You need Q&A plus broader forum discussions, articles, moderation, member operations, and long-term community engagement tools |
+## 适用场景
 
-## Feature Map
+- 技术交流社区
+- 问答社区
+- 知识库
+- 兴趣爱好社群
+- 产品用户社区
+- 企业内部知识社区
+- 内容型会员社区
 
-![bbs-go feature overview](docs/images/features_en.svg)
+## 和同类产品对比
 
-## Core Features
+以下对比基于公开产品定位和常见使用场景。实际选择仍取决于团队技术栈、部署方式、社区规模和运营目标。
 
-### Member Experience
+| 产品 | 更适合 | 主要优势 | bbs-go 更适合的情况 |
+| ---- | ------ | -------- | ------------------- |
+| Discourse | 成熟大型社区和复杂治理流程 | 生态成熟、审核治理能力强、支持托管和自托管 | 希望使用更轻量的自托管平台、偏好 Go 技术栈，并需要论坛 + 问答 + 知识发布一体化能力 |
+| Flarum | 简洁现代的论坛社区，尤其适合 PHP 技术栈团队 | 界面简洁、核心轻量、扩展生态灵活 | 需要更完整的后台运营、问答流程、文章知识沉淀和用户成长激励，不希望大量依赖扩展拼装 |
+| NodeBB | 实时互动论坛，以及偏好 Node.js 技术栈的团队 | 实时互动体验、现代论坛界面、移动端体验较好 | 更偏好 Go 后端、轻量自托管部署和后台运营模型，而不是以实时互动作为核心卖点 |
+| Question2Answer | 纯问答网站 | 问答模型聚焦、支持积分排行、PHP/MySQL 部署简单 | 除了问答，还需要论坛讨论、文章知识库、内容治理、成员运营和长期社区激励 |
 
-- Account registration and login with multiple login methods
-- User profiles and personal homepages
-- Follow and follower relationships
-- In-app notifications and interaction reminders
-- Point records and leaderboards
+## 联系我
 
-### Content and Engagement
+### Discord
 
-- Publish and edit topics, feeds, and articles
-- Comments, replies, likes, and favorites
-- Tags and nodes for content organization and discovery
-- Voting and hidden content
-- Built-in search
+<https://discord.gg/TnzcSqKZyn>
 
-### Growth Mechanics
+### 邮箱
 
-- Daily check-in incentives
-- Configurable task system for new-user, daily, and achievement rewards
-- Points and EXP reward mechanisms
-- Level progression configuration
-- Badge and honor system
+<mlog1@qq.com>
 
-### Operations and Governance
+### QQ群
 
-- Unified management for users, topics, comments, and articles
-- Report handling and keyword filters
-- Role-based administration and permission-aware operations
-- Site configuration and system settings
-- Operation logs and audit trails
+![BBS-GO用户交流群](docs/images/qq.png)
 
-<!-- ## Screenshots
+### 微信
 
-![bbs-go feature overview](docs/images/features.jpg)
+![微信](docs/images/wechat.png)
 
-More English screenshots and short product GIFs are planned for the overseas launch materials. -->
+## 付费服务
 
-## Roadmap
+付费是为了项目能够更好的生存下去，请谅解。项目将一如既往的开源下去~
 
-### Now
+| 服务     | 价格   | 服务内容                                         |
+| -------- | ------ | ------------------------------------------------ |
+| 商用授权 | ￥1628 | 提供 bbs-go 商业使用授权                         |
+| 功能定制 | 面议   | 接受各种功能定制，只有你想不到的没有我们做不到的 |
 
-- Improve English docs, demo content, and GitHub onboarding
-- Improve Docker-based evaluation flow
-- Stabilize forum, Q&A, article, and dashboard workflows
+## bbs-go 是什么
 
-### Next
+`bbs-go` 是一个轻量级社区和问答平台，适合搭建论坛、知识库和讨论社区。
 
-- Better moderation and anti-spam tooling
-- Import/export utilities
-- Email notification improvements
-- More OAuth providers
-
-### Later
-
-- Plugin or extension system exploration
-- Managed hosting exploration
-- Advanced search and analytics
-- AI-assisted knowledge organization
-
-## Internationalization
-
-bbs-go includes English and Simplified Chinese language support:
-
-- `en-US`
-- `zh-CN`
-
-The admin dashboard and server-side messages are designed for English and Simplified Chinese deployments.
-
-## License and Commercial Use
-
-bbs-go is open source under the [GPLv3 License](../LICENSE).
-
-You may use, modify, and self-host bbs-go under the terms of GPLv3.
-
-If you want to embed bbs-go into a proprietary product, redistribute a modified version under a different license, or need custom commercial terms, please contact us for a commercial license.
-
-Commercial licensing, deployment support, customization, migration, and long-term maintenance are available by email: <g330721072@gmail.com>.
-
-## Community and Contact
-
-- Community questions: [GitHub Discussions](https://github.com/mlogclub/bbs-go/discussions)
-- Bugs and feature requests: [GitHub Issues](https://github.com/mlogclub/bbs-go/issues)
-- Commercial support: <g330721072@gmail.com>
-- Security reports: email <g330721072@gmail.com> with `[Security]` in the subject
+一句话概括：**轻量搭建论坛、问答、知识库和讨论社区**。
 
 ## Contributors
 
