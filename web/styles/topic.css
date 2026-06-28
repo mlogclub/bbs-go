@@ -236,7 +236,6 @@
     content: "";
     inset: 0;
     background-color: var(--topics-nav-color1);
-    box-shadow: 0 4px 4px var(--topics-nav-color2);
     transition: all 0.1s ease-out 0.05s;
   }
 
@@ -246,6 +245,11 @@
 
   .dock-nav li.active {
     background-color: var(--topics-nav-color3);
+  }
+
+  .dock-nav li.active a,
+  .dock-nav li:hover a {
+    color: var(--topics-nav-active-foreground);
   }
 
   .dock-nav a {
@@ -290,7 +294,11 @@
   }
 
   .dock-nav li.active .node-logo-icon {
-    color: var(--foreground);
+    color: var(--topics-nav-active-foreground);
+  }
+
+  .dock-nav li:hover .node-logo-icon {
+    color: var(--topics-nav-active-foreground);
   }
 
   .node-name {

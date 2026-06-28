@@ -1,13 +1,13 @@
 :root {
   --body-background: linear-gradient(136deg, #edf0ff99, #e7f6fa99);
-  --topics-nav-color1: #f7f9ff;
-  --topics-nav-color2: rgba(43, 89, 255, 0.06);
-  --topics-nav-color3: #fff7f7;
+  --topics-nav-color1: color-mix(in srgb, var(--sidebar-primary) 7%, var(--background));
+  --topics-nav-color3: color-mix(in srgb, var(--sidebar-primary) 11%, var(--background));
+  --topics-nav-active-foreground: var(--sidebar-primary);
 }
 
 .dark {
   --body-background: linear-gradient(136deg, #181818, #121212);
-  --topics-nav-color1: #0d1a29;
-  --topics-nav-color2: #3a2c2c;
-  --topics-nav-color3: #3a2c2c;
+  --topics-nav-color1: color-mix(in srgb, var(--sidebar-primary) 18%, var(--background));
+  --topics-nav-color3: color-mix(in srgb, var(--sidebar-primary) 24%, var(--background));
+  --topics-nav-active-foreground: var(--sidebar-primary);
 }
