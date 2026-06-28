@@ -29,6 +29,13 @@ function getTopicImageSizeClass(count: number) {
   return "h-[94px] w-[94px] sm:h-[120px] sm:w-[120px]"
 }
 
+function formatCompactTopicViewCount(viewCount?: number) {
+  if (!viewCount || viewCount <= 0) {
+    return "0"
+  }
+  return viewCount > 9999 ? "9999+" : String(viewCount)
+}
+
 function TopicContentMarks({ topic, t }: { topic: Topic; t: TFunction }) {
   const imageCount = topic.type === 1 ? topic.imageList?.length || 0 : 0
   const hasVote = Boolean(topic.vote)
@@ -98,7 +105,7 @@ export function TopicListItem({
 
     return (
       <li className="px-3 py-3 sm:px-4">
-        <div className="grid grid-cols-[minmax(0,1fr)_2.5rem] items-center gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
           <div className="flex min-w-0 items-center gap-3">
             <UserAvatar
               user={topic.user}
@@ -174,15 +181,12 @@ export function TopicListItem({
               </div>
             </div>
           </div>
-          <Link
-            href={topicHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-7 min-w-9 items-center justify-center rounded-full bg-muted px-2 text-sm leading-none font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
-            aria-label="comments"
+          <span
+            className="inline-flex h-7 min-w-9 items-center justify-center rounded-full bg-muted px-2 text-sm leading-none font-medium text-muted-foreground"
+            aria-label="views"
           >
-            {topic.commentCount || 0}
-          </Link>
+            {formatCompactTopicViewCount(topic.viewCount)}
+          </span>
         </div>
       </li>
     )

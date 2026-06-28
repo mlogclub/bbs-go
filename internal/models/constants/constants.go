@@ -6,6 +6,7 @@ const (
 	UploadMaxM                   = 10
 	UploadMaxBytes         int64 = 1024 * 1024 * 1024 * UploadMaxM
 	CookieTokenKey               = "bbsgo_token"
+	TopicListPageSize            = 30 // 帖子列表分页大小
 )
 
 // 昵称长度限制
