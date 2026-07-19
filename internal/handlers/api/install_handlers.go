@@ -4,6 +4,9 @@ import (
 	"bbs-go/internal/install"
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/locales"
+	"context"
+	"errors"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -29,19 +32,25 @@ func InstallTestDbConnection(ctx *gin.Context) {
 		return
 	}
 
-	// 检查是否已安装
 	if config.Instance.Installed {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("install.already_installed")))
 		return
 	}
 
-	if err := install.TestDbConnection(req); err != nil {
+	timeoutCtx, cancel := context.WithTimeout(ctx.Request.Context(), 10*time.Second)
+	defer cancel()
+
+	if err := install.TestDbConnection(timeoutCtx, req); err != nil {
+		// 判断是否因超时取消
+		if errors.Is(err, context.DeadlineExceeded) {
+			ginx.WriteJSON(ctx, ginx.ErrorMessage("database connection timeout, please check your network or firewall"))
+			return
+		}
 		ginx.WriteJSON(ctx, err)
 		return
 	}
 
 	ginx.WriteJSON(ctx, nil)
-
 }
 
 func InstallInstall(ctx *gin.Context) {

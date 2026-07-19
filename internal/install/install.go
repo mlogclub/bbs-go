@@ -13,7 +13,9 @@ import (
 	"bbs-go/internal/scheduler"
 	"bbs-go/internal/services"
 	"bbs-go/migrations"
+	"context"
 	"errors"
+	"fmt"
 	"log"
 	"log/slog"
 	"os"
@@ -27,6 +29,7 @@ import (
 	"github.com/mlogclub/simple/common/strs"
 	"github.com/mlogclub/simple/sqls"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 
 	// "gorm.io/driver/sqlite" // Sqlite driver based on CGO
 	"github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
@@ -41,22 +44,31 @@ var (
 )
 
 const (
+	// MySQL Docker 内置环境变量
 	DockerBuiltinMySQLEnv         = "BBSGO_INSTALL_DOCKER_BUILTIN_MYSQL"
 	DockerBuiltinMySQLHostEnv     = "BBSGO_DOCKER_BUILTIN_MYSQL_HOST"
 	DockerBuiltinMySQLPortEnv     = "BBSGO_DOCKER_BUILTIN_MYSQL_PORT"
 	DockerBuiltinMySQLDatabaseEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_DATABASE"
 	DockerBuiltinMySQLUsernameEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_USERNAME"
 	DockerBuiltinMySQLPasswordEnv = "BBSGO_DOCKER_BUILTIN_MYSQL_PASSWORD"
+
+	// PostgreSQL Docker 内置环境变量
+	DockerBuiltinPostgreSQLEnv         = "BBSGO_INSTALL_DOCKER_BUILTIN_POSTGRESQL"
+	DockerBuiltinPostgreSQLHostEnv     = "BBSGO_DOCKER_BUILTIN_POSTGRESQL_HOST"
+	DockerBuiltinPostgreSQLPortEnv     = "BBSGO_DOCKER_BUILTIN_POSTGRESQL_PORT"
+	DockerBuiltinPostgreSQLDatabaseEnv = "BBSGO_DOCKER_BUILTIN_POSTGRESQL_DATABASE"
+	DockerBuiltinPostgreSQLUsernameEnv = "BBSGO_DOCKER_BUILTIN_POSTGRESQL_USERNAME"
+	DockerBuiltinPostgreSQLPasswordEnv = "BBSGO_DOCKER_BUILTIN_POSTGRESQL_PASSWORD"
 )
 
 // 测试数据库连接
 type DbConfigReq struct {
-	Type     string `json:"type" form:"type"`                   // mysql | sqlite
-	Host     string `json:"host,omitempty" form:"host"`         // mysql
-	Port     string `json:"port,omitempty" form:"port"`         // mysql
-	Database string `json:"database,omitempty" form:"database"` // mysql
-	Username string `json:"username,omitempty" form:"username"` // mysql
-	Password string `json:"password,omitempty" form:"password"` // mysql
+	Type     string `json:"type" form:"type"`                   // mysql | postgresql | sqlite
+	Host     string `json:"host,omitempty" form:"host"`         // mysql | postgresql
+	Port     string `json:"port,omitempty" form:"port"`         // mysql | postgresql
+	Database string `json:"database,omitempty" form:"database"` // mysql | postgresql
+	Username string `json:"username,omitempty" form:"username"` // mysql | postgresql
+	Password string `json:"password,omitempty" form:"password"` // mysql | postgresql
 }
 
 // 执行安装
@@ -76,14 +88,18 @@ func (r DbConfigReq) GetConnStr() string {
 		r.Type = config.DbTypeMySQL
 	}
 	switch r.Type {
+	case config.DbTypeMySQL:
+		return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local", r.Username, r.Password, r.Host, r.Port, r.Database)
+	case config.DbTypePostgreSQL:
+		return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", r.Host, r.Port, r.Username, r.Password, r.Database)
 	case config.DbTypeSQLite:
 		return buildSqliteDSN()
 	default:
-		return r.Username + ":" + r.Password + "@tcp(" + r.Host + ":" + r.Port + ")/" + r.Database + "?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local"
+		return ""
 	}
 }
 
-func TestDbConnection(req DbConfigReq) error {
+func TestDbConnection(ctx context.Context, req DbConfigReq) error {
 	var dsn string
 	if IsDockerBuiltinMySQLInstall() {
 		req = DbConfigReq{
@@ -108,7 +124,7 @@ func TestDbConnection(req DbConfigReq) error {
 		if err != nil {
 			return err
 		}
-		if err = sqlDB.Ping(); err != nil {
+		if err = sqlDB.PingContext(ctx); err != nil {
 			return err
 		}
 		var name string
@@ -119,7 +135,28 @@ func TestDbConnection(req DbConfigReq) error {
 		if name != "" {
 			return errors.New("please use an empty database for installation")
 		}
-	default:
+
+	case config.DbTypePostgreSQL:
+		db, err := gorm.Open(postgres.Open(dsn))
+		if err != nil {
+			return err
+		}
+		sqlDB, err := db.DB()
+		if err != nil {
+			return err
+		}
+		if err = sqlDB.PingContext(ctx); err != nil {
+			return err
+		}
+		var tables []string
+		if err := db.Raw("SELECT tablename FROM pg_tables WHERE schemaname='public'").Scan(&tables).Error; err != nil {
+			return err
+		}
+		if len(tables) > 0 {
+			return errors.New("please use an empty database for installation")
+		}
+
+	default: // MySQL
 		db, err := gorm.Open(mysql.Open(dsn))
 		if err != nil {
 			return err
@@ -128,7 +165,7 @@ func TestDbConnection(req DbConfigReq) error {
 		if err != nil {
 			return err
 		}
-		if err = sqlDB.Ping(); err != nil {
+		if err = sqlDB.PingContext(ctx); err != nil {
 			return err
 		}
 		var tables []string
@@ -151,7 +188,8 @@ func Install(req InstallReq) error {
 			Type: config.DbTypeMySQL,
 		}
 	}
-	if err := TestDbConnection(req.DbConfig); err != nil {
+	// 传入 context
+	if err := TestDbConnection(context.Background(), req.DbConfig); err != nil {
 		return err
 	}
 	if err := WriteConfig(req); err != nil {
@@ -205,6 +243,7 @@ func InitConfig() {
 	}
 	config.Instance = cfg
 	ApplyDockerBuiltinMySQLConfig()
+	ApplyDockerBuiltinPostgreSQLConfig()
 }
 
 // ResolveSqlitePath 将配置的 sqlite 相对路径转换为绝对路径（相对 bbs-go.yaml 所在目录）
@@ -220,6 +259,8 @@ func InitDB() error {
 
 	var dialector gorm.Dialector
 	switch conf.Type {
+	case config.DbTypePostgreSQL:
+		dialector = postgres.Open(conf.Url)
 	case config.DbTypeSQLite:
 		dsn := conf.Url
 		dsn = buildSqliteDSN()
@@ -415,6 +456,15 @@ func IsDockerBuiltinMySQLInstall() bool {
 	}
 }
 
+func IsDockerBuiltinPostgreSQLInstall() bool {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(DockerBuiltinPostgreSQLEnv))) {
+	case "1", "true", "yes", "y", "on":
+		return true
+	default:
+		return false
+	}
+}
+
 func ApplyDockerBuiltinMySQLConfig() {
 	if !IsDockerBuiltinMySQLInstall() {
 		return
@@ -430,6 +480,22 @@ func ApplyDockerBuiltinMySQLConfig() {
 	}.GetConnStr()
 }
 
+func ApplyDockerBuiltinPostgreSQLConfig() {
+	if !IsDockerBuiltinPostgreSQLInstall() {
+		return
+	}
+
+	config.Instance.DB.Type = config.DbTypePostgreSQL
+	config.Instance.DB.Url = DbConfigReq{
+		Type:     config.DbTypePostgreSQL,
+		Host:     dockerBuiltinPostgreSQLEnv(DockerBuiltinPostgreSQLHostEnv, "postgresql"),
+		Port:     dockerBuiltinPostgreSQLEnv(DockerBuiltinPostgreSQLPortEnv, "5432"),
+		Database: dockerBuiltinPostgreSQLEnv(DockerBuiltinPostgreSQLDatabaseEnv, "bbsgo"),
+		Username: dockerBuiltinPostgreSQLEnv(DockerBuiltinPostgreSQLUsernameEnv, "bbsgo"),
+		Password: dockerBuiltinPostgreSQLEnv(DockerBuiltinPostgreSQLPasswordEnv, "bbsgo_password"),
+	}.GetConnStr()
+}
+
 func WriteRuntimeConfig(cfg *config.Config) error {
 	if !IsDockerBuiltinMySQLInstall() {
 		return config.WriteConfig(cfg)
@@ -441,6 +507,14 @@ func WriteRuntimeConfig(cfg *config.Config) error {
 }
 
 func dockerBuiltinMySQLEnv(key string, fallback string) string {
+	value := strings.TrimSpace(os.Getenv(key))
+	if value == "" {
+		return fallback
+	}
+	return value
+}
+
+func dockerBuiltinPostgreSQLEnv(key string, fallback string) string {
 	value := strings.TrimSpace(os.Getenv(key))
 	if value == "" {
 		return fallback

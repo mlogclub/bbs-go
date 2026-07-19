@@ -221,6 +221,7 @@ func getLogFilename() string {
 
 const (
 	DbTypeMySQL       = "mysql"
+	DbTypePostgreSQL  = "postgresql"
 	DbTypeSQLite      = "sqlite"
 	DefaultDBLogLevel = "warn"
 )
