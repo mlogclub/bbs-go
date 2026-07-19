@@ -25,7 +25,7 @@ import { ApiError, apiFetch } from "@/lib/api/client"
 import { createT, type Locale } from "@/lib/i18n"
 
 type Step = "welcome" | "database" | "site" | "admin" | "install" | "complete"
-type DbType = "mysql" | "sqlite"
+type DbType = "mysql" | "postgresql" | "sqlite"
 
 const avatarCount = 128
 const avatarBase = "/res/images/avatars"
@@ -396,7 +396,7 @@ export function InstallWizard({
                     {t("pages.install.database.type")}
                   </RequiredLabel>
                   <div className="flex items-center space-x-3">
-                    {(["mysql", "sqlite"] as const).map((type) => (
+                    {(["mysql", "postgresql", "sqlite"] as const).map((type) => (
                       <Button
                         key={type}
                         type="button"
@@ -410,12 +410,12 @@ export function InstallWizard({
                         disabled={dockerBuiltinMysql}
                         onClick={() => updateDbConfig({ type })}
                       >
-                        {type === "mysql" ? "MySQL" : "SQLite"}
+                        {type === "mysql" ? "MySQL" : type === "postgresql" ? "PostgreSQL" : "SQLite"}
                       </Button>
                     ))}
                   </div>
                 </div>
-                {effectiveDbType === "mysql" ? (
+                {(effectiveDbType === "mysql" || effectiveDbType === "postgresql") ? (
                   <>
                     {dockerBuiltinMysql ? (
                       <Alert className="border-blue-200 bg-blue-50 md:col-span-2">
