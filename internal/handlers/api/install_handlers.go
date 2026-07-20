@@ -18,9 +18,10 @@ func InstallStatus(ctx *gin.Context) {
 
 	cfg := config.Instance
 	ginx.WriteJSON(ctx, map[string]any{
-		"installed":          cfg.Installed,
-		"dockerBuiltinMysql": install.IsDockerBuiltinMySQLInstall(),
-		"dbType":             cfg.DB.Type,
+		"installed":           cfg.Installed,
+		"dockerBuiltinMysql":  install.IsDockerBuiltinMySQLInstall(),
+		"dockerBuiltinDbType": install.DockerBuiltinDBType(),
+		"dbType":              cfg.DB.Type,
 	})
 
 }

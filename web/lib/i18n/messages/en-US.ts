@@ -1519,7 +1519,8 @@ const enUS = {
           "Welcome to BBS-GO, a lightweight community and Q&A platform built with Go. Before you start, make sure you have:",
         requirements: {
           title: "Installation Requirements",
-          mysql: "MySQL (5.7+) or SQLite. MySQL is recommended for production.",
+          mysql:
+            "MySQL (5.7+), PostgreSQL, or SQLite. MySQL or PostgreSQL is recommended for production.",
           site: "A community name and description",
           admin: "An administrator username and password",
         },
@@ -1546,17 +1547,21 @@ const enUS = {
         password: "Password",
         passwordPlaceholder: "Database password",
         sqliteWarning:
-          "SQLite is suitable for local testing or small deployments. MySQL is recommended for production.",
+          "SQLite is suitable for local testing or small deployments. MySQL or PostgreSQL is recommended for production.",
         sqliteAutoPath:
           "The SQLite database file path will be handled by the server.",
         dockerBuiltinMysqlNotice:
           "Docker built-in MySQL is enabled. The database connection is configured automatically, so continue to the next step.",
+        dockerBuiltinNotice:
+          "Docker built-in {type} is enabled. The database connection is configured automatically, so continue to the next step.",
         validationError: "Please complete the database connection information.",
         testing: "Testing...",
         testConnection: "Test connection",
         connectSuccess: "Database connection successful",
         dockerBuiltinMysqlConnectSuccess:
           "Docker built-in MySQL connection successful",
+        dockerBuiltinConnectSuccess:
+          "Docker built-in {type} connection successful",
         connectFailed: "Database connection failed",
       },
       site: {
