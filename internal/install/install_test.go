@@ -2,6 +2,7 @@ package install
 
 import (
 	"bbs-go/internal/pkg/config"
+	"net/url"
 	"testing"
 
 	"gorm.io/gorm/logger"
@@ -63,6 +64,70 @@ func TestDockerBuiltinDBType(t *testing.T) {
 	})
 }
 
+func TestDbConfigReqGetConnStrPostgreSQLEscapesValues(t *testing.T) {
+	req := DbConfigReq{
+		Type:     config.DbTypePostgreSQL,
+		Host:     "localhost",
+		Port:     "5432",
+		Database: "bbs go",
+		Username: "bbs user",
+		Password: `pa ss'word\`,
+	}
+
+	dsn := req.GetConnStr()
+	parsed, err := url.Parse(dsn)
+	if err != nil {
+		t.Fatalf("expected valid postgresql dsn, got %q: %v", dsn, err)
+	}
+	if parsed.Scheme != "postgres" {
+		t.Fatalf("expected postgres scheme, got %q", parsed.Scheme)
+	}
+	if parsed.Hostname() != req.Host {
+		t.Fatalf("expected host %q, got %q", req.Host, parsed.Hostname())
+	}
+	if parsed.Port() != req.Port {
+		t.Fatalf("expected port %q, got %q", req.Port, parsed.Port())
+	}
+	if parsed.User.Username() != req.Username {
+		t.Fatalf("expected username %q, got %q", req.Username, parsed.User.Username())
+	}
+	password, ok := parsed.User.Password()
+	if !ok {
+		t.Fatal("expected password in postgresql dsn")
+	}
+	if password != req.Password {
+		t.Fatalf("expected password %q, got %q", req.Password, password)
+	}
+	if parsed.Path != "/"+req.Database {
+		t.Fatalf("expected database path %q, got %q", "/"+req.Database, parsed.Path)
+	}
+	if parsed.Query().Get("sslmode") != "disable" {
+		t.Fatalf("expected sslmode=disable, got query %q", parsed.RawQuery)
+	}
+}
+
+func TestDbConfigReqGetConnStrPostgreSQLIPv6Host(t *testing.T) {
+	req := DbConfigReq{
+		Type:     config.DbTypePostgreSQL,
+		Host:     "::1",
+		Port:     "5432",
+		Database: "bbsgo",
+		Username: "bbsgo",
+		Password: "secret",
+	}
+
+	parsed, err := url.Parse(req.GetConnStr())
+	if err != nil {
+		t.Fatalf("expected valid postgresql dsn: %v", err)
+	}
+	if parsed.Hostname() != req.Host {
+		t.Fatalf("expected host %q, got %q", req.Host, parsed.Hostname())
+	}
+	if parsed.Port() != req.Port {
+		t.Fatalf("expected port %q, got %q", req.Port, parsed.Port())
+	}
+}
+
 func TestApplyDockerBuiltinPostgreSQLConfig(t *testing.T) {
 	previousConfig := config.Instance
 	t.Cleanup(func() {
@@ -82,7 +147,7 @@ func TestApplyDockerBuiltinPostgreSQLConfig(t *testing.T) {
 	if got := config.Instance.DB.Type; got != config.DbTypePostgreSQL {
 		t.Fatalf("expected db type %q, got %q", config.DbTypePostgreSQL, got)
 	}
-	wantDSN := "host=pg port=15432 user=bbsgo_user password=bbsgo_secret dbname=bbsgo_test sslmode=disable"
+	wantDSN := "postgres://bbsgo_user:bbsgo_secret@pg:15432/bbsgo_test?sslmode=disable"
 	if got := config.Instance.DB.Url; got != wantDSN {
 		t.Fatalf("expected dsn %q, got %q", wantDSN, got)
 	}
