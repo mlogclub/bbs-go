@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"net"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -91,12 +93,30 @@ func (r DbConfigReq) GetConnStr() string {
 	case config.DbTypeMySQL:
 		return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&multiStatements=true&loc=Local", r.Username, r.Password, r.Host, r.Port, r.Database)
 	case config.DbTypePostgreSQL:
-		return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", r.Host, r.Port, r.Username, r.Password, r.Database)
+		return buildPostgreSQLDSN(r)
 	case config.DbTypeSQLite:
 		return buildSqliteDSN()
 	default:
 		return ""
 	}
+}
+
+func buildPostgreSQLDSN(r DbConfigReq) string {
+	host := r.Host
+	if r.Port != "" {
+		host = net.JoinHostPort(r.Host, r.Port)
+	}
+
+	dsn := url.URL{
+		Scheme: "postgres",
+		Host:   host,
+		Path:   "/" + r.Database,
+		User:   url.UserPassword(r.Username, r.Password),
+	}
+	query := dsn.Query()
+	query.Set("sslmode", "disable")
+	dsn.RawQuery = query.Encode()
+	return dsn.String()
 }
 
 func TestDbConnection(ctx context.Context, req DbConfigReq) error {
