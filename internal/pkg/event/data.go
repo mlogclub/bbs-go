@@ -92,3 +92,9 @@ type QaAnswerAcceptedEvent struct {
 	CommentId  int64 `json:"commentId"`
 	CreateTime int64 `json:"createTime"`
 }
+
+type MentionCreateEvent struct {
+	UserId     int64  `json:"userId"`
+	EntityType string `json:"entityType"`
+	EntityId   int64  `json:"entityId"`
+}

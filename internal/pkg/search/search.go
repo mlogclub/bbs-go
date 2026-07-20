@@ -348,7 +348,11 @@ func SearchUser(keyword string, page, limit int) (docs []UserDocument, paging *s
 	query.AddMust(bleve.NewMatchAllQuery())
 	query.AddMust(typeQuery(EntityTypeUser))
 	if strs.IsNotBlank(keyword) {
-		query.AddMust(keywordQuery(keyword, []string{"username", "nickname", "description"}))
+		userQuery := bleve.NewDisjunctionQuery(
+			prefixQuery(keyword, []string{"username", "nickname"}),
+			keywordQuery(keyword, []string{"description"}),
+		)
+		query.AddMust(userQuery)
 	}
 
 	searchRequest := bleve.NewSearchRequest(query)
@@ -427,6 +431,17 @@ func keywordQuery(keyword string, fields []string) blevequery.Query {
 	queries := make([]blevequery.Query, 0, len(fields))
 	for _, field := range fields {
 		q := bleve.NewMatchQuery(keyword)
+		q.SetField(field)
+		queries = append(queries, q)
+	}
+	return bleve.NewDisjunctionQuery(queries...)
+}
+
+
+func prefixQuery(keyword string, fields []string) blevequery.Query {
+	queries := make([]blevequery.Query, 0, len(fields))
+	for _, field := range fields {
+		q := bleve.NewPrefixQuery(keyword)
 		q.SetField(field)
 		queries = append(queries, q)
 	}

@@ -19,7 +19,8 @@ const (
 	TypeArticleComment   Type = 6 // 收到文章评论
 	TypeUserLevelUp      Type = 7 // 用户升级
 	TypeUserBadgeGrant   Type = 8 // 用户获得勋章
-	TypeQaAnswerAccepted Type = 9 // 回答被采纳为最佳答案
+	TypeQaAnswerAccepted Type = 9  // 回答被采纳为最佳答案
+	TypeMention          Type = 10 // 有人@了你
 )
 
 type TopicLikeExtraData struct {
@@ -62,4 +63,10 @@ type UserBadgeGrantExtraData struct {
 type QaAnswerAcceptedExtraData struct {
 	TopicId     int64 `json:"topicId"`
 	BountyScore int   `json:"bountyScore"`
+}
+
+// MentionExtraData @提及消息的扩展数据
+type MentionExtraData struct {
+	EntityType string `json:"entityType"` // 实体类型 topic / comment
+	EntityId   int64  `json:"entityId"`   // 实体ID
 }

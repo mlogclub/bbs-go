@@ -165,6 +165,9 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentReq) (*mode
 		CommentId: comment.Id,
 	})
 
+	// 处理 at 用户
+	MentionService.SendMentionNotificationsForContent(userId, constants.EntityComment, comment.Id, comment.ContentType, comment.Content)
+
 	return comment, nil
 }
 

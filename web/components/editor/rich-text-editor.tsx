@@ -17,6 +17,7 @@ import TaskItem from "@tiptap/extension-task-item"
 import Typography from "@tiptap/extension-typography"
 import HorizontalRule from "@tiptap/extension-horizontal-rule"
 import Suggestion, { exitSuggestion, type SuggestionKeyDownProps, type SuggestionProps } from "@tiptap/suggestion"
+import { PluginKey } from "prosemirror-state"
 import {
   AlignCenter,
   AlignLeft,
@@ -47,6 +48,8 @@ import {
 
 import { uploadEditorImage } from "@/components/editor/upload"
 import { useI18n } from "@/lib/i18n/provider"
+import { searchUsers } from "@/lib/api/users"
+import type { SearchUser } from "@/lib/api/types"
 import { useToastActions } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 
@@ -663,6 +666,204 @@ const SlashCommandMenu = React.forwardRef<SlashCommandMenuHandle, SlashCommandMe
   )
 })
 
+
+type MentionUserItem = {
+  username: string
+  nickname: string
+  avatar: string
+}
+
+type MentionMenuProps = SuggestionProps<MentionUserItem, MentionUserItem>
+
+type MentionMenuHandle = {
+  onKeyDown: (event: KeyboardEvent) => boolean
+}
+
+const MentionMenu = React.forwardRef<MentionMenuHandle, MentionMenuProps>(function MentionMenu({ items, query, command }, ref) {
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+
+  React.useEffect(() => {
+    setSelectedIndex(0)
+  }, [items, query])
+
+  React.useEffect(() => {
+    setSelectedIndex((index) => Math.min(index, Math.max(0, items.length - 1)))
+  }, [items])
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      onKeyDown(event) {
+        if (!items.length) {
+          return false
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault()
+          setSelectedIndex((index) => (index - 1 + items.length) % items.length)
+          return true
+        }
+        if (event.key === "ArrowDown" || event.key === "Tab") {
+          event.preventDefault()
+          setSelectedIndex((index) => {
+            if (event.shiftKey) {
+              return (index - 1 + items.length) % items.length
+            }
+            return (index + 1) % items.length
+          })
+          return true
+        }
+        if (event.key === "Enter") {
+          event.preventDefault()
+          command(items[selectedIndex])
+          return true
+        }
+        return false
+      },
+    }),
+    [command, items, selectedIndex]
+  )
+
+  return (
+    <div className="mention-menu" role="listbox" aria-label="Mention users">
+      {items.length ? (
+        <div className="mention-items-container">
+          {items.map((item, index) => (
+            <button
+              key={item.username}
+              type="button"
+              role="option"
+              aria-selected={index === selectedIndex}
+              className={cn("mention-item", index === selectedIndex && "is-selected")}
+              onMouseEnter={() => setSelectedIndex(index)}
+              onMouseDown={(event) => {
+                event.preventDefault()
+                command(item)
+              }}
+            >
+              <img className="mention-avatar" src={item.avatar || "/default-avatar.png"} alt="" />
+              <span className="mention-content">
+                <span className="mention-nickname">{item.nickname}</span>
+                <span className="mention-username">@{item.username}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="mention-no-results">No users found</div>
+      )}
+    </div>
+  )
+})
+
+function createMentionSuggestion() {
+  return Extension.create({
+    name: "at-mention",
+
+    addProseMirrorPlugins() {
+      const editor = this.editor
+      return [
+        Suggestion({
+          pluginKey: new PluginKey("mention-suggestion"),
+          editor,
+          char: "@",
+          allowSpaces: false,
+          command: ({ editor, range, props }: { editor: Editor; range: Range; props: MentionUserItem }) => {
+            // Insert @username text
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .insertContent(`@${props.username} `)
+              .run()
+          },
+          items: async ({ query }: { query: string }) => {
+            try {
+              const result = await searchUsers({ keyword: query })
+              const users = result?.results || []
+              return users
+                .map((u: SearchUser) => {
+                  const user = u.user || u
+                  return {
+                    username: (user as any).username || u.username || "",
+                    nickname: (user as any).nickname || u.nickname || "",
+                    avatar: (user as any).smallAvatar || (user as any).avatar || "",
+                  }
+                })
+                .filter((item: MentionUserItem) => item.username)
+                .slice(0, 8)
+            } catch {
+              return []
+            }
+          },
+          render: () => {
+            let renderer: ReactRenderer<MentionMenuHandle, MentionMenuProps> | null = null
+            let currentProps: SuggestionProps<MentionUserItem, MentionUserItem> | null = null
+
+            function syncPosition() {
+              if (renderer && currentProps) {
+                const rect = currentProps.clientRect?.()
+                if (!rect || !renderer.element) return
+                const gap = 8
+                const offset = 6
+                const popupWidth = renderer.element.offsetWidth || 280
+                const popupHeight = renderer.element.offsetHeight || 300
+                let left = rect.left
+                let top = rect.bottom + offset
+                if (left + popupWidth + gap > window.innerWidth) {
+                  left = window.innerWidth - popupWidth - gap
+                }
+                if (left < gap) left = gap
+                if (top + popupHeight + gap > window.innerHeight) {
+                  top = rect.top - popupHeight - offset
+                }
+                if (top < gap) top = gap
+                renderer.element.style.left = `${left}px`
+                renderer.element.style.top = `${top}px`
+              }
+            }
+
+            return {
+              onStart(props) {
+                currentProps = props
+                renderer = new ReactRenderer(MentionMenu, {
+                  editor: props.editor,
+                  props,
+                })
+                renderer.element.classList.add("mention-popup")
+                const portalTarget = document.fullscreenElement || document.body
+                portalTarget.appendChild(renderer.element)
+                syncPosition()
+                window.addEventListener("resize", syncPosition)
+                window.addEventListener("scroll", syncPosition, true)
+              },
+              onUpdate(props) {
+                currentProps = props
+                renderer?.updateProps(props)
+                syncPosition()
+              },
+              onKeyDown({ event, view }: SuggestionKeyDownProps) {
+                if (event.key === "Escape") {
+                  exitSuggestion(view)
+                  return true
+                }
+                return renderer?.ref?.onKeyDown(event) || false
+              },
+              onExit() {
+                window.removeEventListener("resize", syncPosition)
+                window.removeEventListener("scroll", syncPosition, true)
+                renderer?.destroy()
+                renderer?.element.remove()
+                renderer = null
+                currentProps = null
+              },
+            }
+          },
+        }),
+      ]
+    },
+  })
+}
+
 function createSlashSuggestion(labels: RichTextEditorLabels, locale: string) {
   return Extension.create({
     name: "slash-commands",
@@ -960,6 +1161,7 @@ export function RichTextEditor({
       Typography,
       HorizontalRule,
       createSlashSuggestion(labels, locale),
+      createMentionSuggestion(),
       Placeholder.configure({
         placeholder: labels.placeholder,
       }),

@@ -9,6 +9,7 @@ import (
 	"bbs-go/internal/pkg/ginx"
 	"bbs-go/internal/pkg/locales"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 	"unicode"
@@ -26,6 +27,44 @@ import (
 	"bbs-go/internal/models"
 	"bbs-go/internal/services"
 )
+
+
+// handleMentionLinks converts @username patterns in HTML to clickable user profile links.
+func handleMentionLinks(htmlContent string) string {
+	re := regexp.MustCompile(`@([\p{L}\p{N}_\-]{1,30})`)
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlContent))
+	if err != nil {
+		return htmlContent
+	}
+
+	doc.Find("*").Each(func(_ int, sel *goquery.Selection) {
+		if sel.Children().Length() > 0 {
+			return
+		}
+		html, err := sel.Html()
+		if err != nil || !strings.Contains(html, "@") {
+			return
+		}
+		newHtml := re.ReplaceAllStringFunc(html, func(match string) string {
+			username := match[1:]
+			user := services.UserService.GetByUsername(username)
+			if user == nil {
+				return match
+			}
+			userUrl := bbsurls.UserUrl(user.Id)
+			return fmt.Sprintf(`<a href="%s" class="mention-link">%s</a>`, userUrl, match)
+		})
+		if newHtml != html {
+			sel.SetHtml(newHtml)
+		}
+	})
+
+	result, err := doc.Find("body").Html()
+	if err != nil {
+		return htmlContent
+	}
+	return result
+}
 
 func xssProtection(htmlContent string) string {
 	ugcProtection := bluemonday.UGCPolicy() // 用户生成内容模式
@@ -101,6 +140,7 @@ func handleHtmlContentWithToc(htmlContent string, buildToc bool) (string, []resp
 	}
 
 	if htmlStr, err := doc.Find("body").Html(); err == nil {
+		htmlStr = handleMentionLinks(htmlStr)
 		return htmlStr, toc
 	}
 	return htmlContent, toc

@@ -142,6 +142,9 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*m
 		TopicType:  int(topic.Type),
 		CreateTime: topic.CreateTime,
 	})
+	// 处理@用户
+	MentionService.SendMentionNotificationsForContent(topic.UserId, constants.EntityTopic, topic.Id, topic.ContentType, topic.Content)
+
 	return topic, nil
 }
 

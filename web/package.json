@@ -52,6 +52,7 @@
     "lucide-react": "^1.14.0",
     "md-editor-rt": "^6.5.0",
     "next-themes": "^0.4.6",
+    "prosemirror-state": "^1.4.4",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-day-picker": "^10.0.1",

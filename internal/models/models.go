@@ -10,7 +10,7 @@ var Models = []interface{}{
 	&Migration{},
 	&UserRole{}, &Role{}, &Permission{}, &RolePermission{}, &DictType{}, &Dict{},
 
-	&User{}, &UserToken{}, &ThirdUser{}, &Tag{}, &Article{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &Category{},
+	&User{}, &UserToken{}, &ThirdUser{}, &Tag{}, &Article{}, &Mention{}, &ArticleTag{}, &Comment{}, &Favorite{}, &Topic{}, &Category{},
 	&TopicTag{}, &UserLike{}, &Message{}, &SysConfig{}, &Link{},
 	&TaskConfig{}, &UserTaskEvent{}, &UserTaskLog{},
 	&Badge{}, &UserBadge{},
@@ -175,6 +175,17 @@ type Article struct {
 	LikeCount    int64                 `gorm:"default:0" json:"likeCount" form:"likeCount"`                     // 点赞数量
 	CreateTime   int64                 `json:"createTime" form:"createTime"`                                    // 创建时间
 	UpdateTime   int64                 `json:"updateTime" form:"updateTime"`                                    // 更新时间
+}
+
+type Mention struct {
+	Model
+	UserId          int64  `gorm:"column:user_id;not null;index:idx_user_id"`    // 被 at 的用户
+	MentionByUserId int64  `gorm:"column:mention_by_user_id;not null"`           // 由谁 at
+	EntityType      string `gorm:"column:entity_type;not null;index:idx_entity"` // topic / comment
+	EntityId        int64  `gorm:"column:entity_id;not null;index:idx_entity"`   // 具体内容 ID
+	Status          int    `gorm:"column:status;not null;default:0"`             // 0-未读, 1-已读
+	CreateTime      int64  `gorm:"column:create_time;not null"`
+	UpdateTime      int64  `gorm:"column:update_time;not null"`
 }
 
 // 文章标签
