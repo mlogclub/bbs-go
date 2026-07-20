@@ -91,6 +91,5 @@ func (r *sysConfigRepository) GetByKey(db *gorm.DB, key string) *models.SysConfi
 	if len(key) == 0 {
 		return nil
 	}
-	// 兼容 PostgreSQL 数据库
-	return r.Take(db, "\"key\" = ?", key)
+	return r.Take(db, &models.SysConfig{Key: key})
 }
