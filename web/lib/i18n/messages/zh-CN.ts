@@ -1487,7 +1487,8 @@ const zhCN = {
           "欢迎使用 BBS-GO，这是一个基于Go语言开发的社区系统。在开始安装前，请确保您已经准备好以下内容：",
         requirements: {
           title: "安装要求",
-          mysql: "MySQL（5.7+）或 SQLite 数据库（生产环境建议使用 MySQL）",
+          mysql:
+            "MySQL（5.7+）、PostgreSQL 或 SQLite 数据库（生产环境建议使用 MySQL 或 PostgreSQL）",
           site: "已经规划好社区名称和描述",
           admin: "已准备好管理员账号和密码",
         },
@@ -1513,7 +1514,7 @@ const zhCN = {
         password: "密码",
         passwordPlaceholder: "数据库密码",
         sqliteWarning:
-          "SQLite 适合本地测试或小规模部署，生产环境建议使用 MySQL。",
+          "SQLite 适合本地测试或小规模部署，生产环境建议使用 MySQL 或 PostgreSQL。",
         sqliteAutoPath: "SQLite 数据库文件路径将由服务端自动处理。",
         dockerBuiltinMysqlNotice:
           "当前使用 Docker 内置 MySQL 部署，数据库连接由系统自动配置，安装时只需继续下一步。",

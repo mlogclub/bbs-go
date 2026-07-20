@@ -42,6 +42,12 @@ function defaultBaseURL() {
   return typeof window === "undefined" ? "/" : window.location.origin
 }
 
+function defaultPortForDbType(type: DbType) {
+  if (type === "postgresql") return "5432"
+  if (type === "mysql") return "3306"
+  return ""
+}
+
 export function InstallWizard({
   dockerBuiltinMysql = false,
 }: {
@@ -109,6 +115,12 @@ export function InstallWizard({
     if (dockerBuiltinMysql) return
     setDbConfig((current) => {
       const next = { ...current, ...values }
+      if (values.type && values.type !== current.type) {
+        const port = defaultPortForDbType(values.type)
+        if (port) {
+          next.port = port
+        }
+      }
       if (
         next.type === "sqlite" ||
         (next.host && next.port && next.database && next.username)
@@ -444,7 +456,11 @@ export function InstallWizard({
                       label={t("pages.install.database.port")}
                       id="db-port"
                       value={dockerBuiltinMysql ? "3306" : dbConfig.port}
-                      placeholder={t("pages.install.database.portPlaceholder")}
+                      placeholder={
+                        dockerBuiltinMysql
+                          ? "3306"
+                          : defaultPortForDbType(effectiveDbType)
+                      }
                       onChange={(port) => updateDbConfig({ port })}
                       disabled={dockerBuiltinMysql}
                     />
