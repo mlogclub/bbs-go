@@ -25,7 +25,7 @@ import { ApiError, apiFetch } from "@/lib/api/client"
 import { createT, type Locale } from "@/lib/i18n"
 
 type Step = "welcome" | "database" | "site" | "admin" | "install" | "complete"
-type DbType = "mysql" | "postgresql" | "sqlite"
+export type DbType = "mysql" | "postgresql" | "sqlite"
 
 const avatarCount = 128
 const avatarBase = "/res/images/avatars"
@@ -48,10 +48,22 @@ function defaultPortForDbType(type: DbType) {
   return ""
 }
 
+function defaultHostForDbType(type: DbType) {
+  if (type === "postgresql") return "postgresql"
+  if (type === "mysql") return "mysql"
+  return ""
+}
+
+function dbTypeLabel(type: DbType) {
+  if (type === "postgresql") return "PostgreSQL"
+  if (type === "mysql") return "MySQL"
+  return "SQLite"
+}
+
 export function InstallWizard({
-  dockerBuiltinMysql = false,
+  dockerBuiltinDbType,
 }: {
-  dockerBuiltinMysql?: boolean
+  dockerBuiltinDbType?: DbType
 }) {
   const [step, setStep] = React.useState<Step>("welcome")
   const [language, setLanguage] = React.useState<Locale>("en-US")
@@ -99,9 +111,10 @@ export function InstallWizard({
   ]
   const currentStepIndex = steps.findIndex((item) => item.key === step)
   const pageBlocking = testingConnection || installing
-  const effectiveDbType: DbType = dockerBuiltinMysql ? "mysql" : dbConfig.type
+  const dockerBuiltinDb = Boolean(dockerBuiltinDbType)
+  const effectiveDbType: DbType = dockerBuiltinDbType || dbConfig.type
   const isDbFormValid =
-    dockerBuiltinMysql ||
+    dockerBuiltinDb ||
     effectiveDbType === "sqlite" ||
     Boolean(
       dbConfig.host && dbConfig.port && dbConfig.database && dbConfig.username
@@ -112,7 +125,7 @@ export function InstallWizard({
     ) && adminInfo.password === adminInfo.passwordConfirm
 
   function updateDbConfig(values: Partial<typeof dbConfig>) {
-    if (dockerBuiltinMysql) return
+    if (dockerBuiltinDb) return
     setDbConfig((current) => {
       const next = { ...current, ...values }
       if (values.type && values.type !== current.type) {
@@ -133,7 +146,7 @@ export function InstallWizard({
   }
 
   function validateDbForm() {
-    if (dockerBuiltinMysql) {
+    if (dockerBuiltinDb) {
       return true
     }
     if (effectiveDbType === "sqlite") {
@@ -208,8 +221,10 @@ export function InstallWizard({
         },
       })
       setDbSuccess(
-        dockerBuiltinMysql
-          ? t("pages.install.database.dockerBuiltinMysqlConnectSuccess")
+        dockerBuiltinDb
+          ? t("pages.install.database.dockerBuiltinConnectSuccess", {
+              type: dbTypeLabel(effectiveDbType),
+            })
           : t("pages.install.database.connectSuccess")
       )
       if (nextStep) {
@@ -408,35 +423,38 @@ export function InstallWizard({
                     {t("pages.install.database.type")}
                   </RequiredLabel>
                   <div className="flex items-center space-x-3">
-                    {(["mysql", "postgresql", "sqlite"] as const).map((type) => (
-                      <Button
-                        key={type}
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        className={
-                          effectiveDbType === type
-                            ? "bg-primary text-white hover:bg-primary/90 hover:text-white"
-                            : ""
-                        }
-                        disabled={dockerBuiltinMysql}
-                        onClick={() => updateDbConfig({ type })}
-                      >
-                        {type === "mysql" ? "MySQL" : type === "postgresql" ? "PostgreSQL" : "SQLite"}
-                      </Button>
-                    ))}
+                    {(["mysql", "postgresql", "sqlite"] as const).map(
+                      (type) => (
+                        <Button
+                          key={type}
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className={
+                            effectiveDbType === type
+                              ? "bg-primary text-white hover:bg-primary/90 hover:text-white"
+                              : ""
+                          }
+                          disabled={dockerBuiltinDb}
+                          onClick={() => updateDbConfig({ type })}
+                        >
+                          {dbTypeLabel(type)}
+                        </Button>
+                      )
+                    )}
                   </div>
                 </div>
-                {(effectiveDbType === "mysql" || effectiveDbType === "postgresql") ? (
+                {effectiveDbType === "mysql" ||
+                effectiveDbType === "postgresql" ? (
                   <>
-                    {dockerBuiltinMysql ? (
+                    {dockerBuiltinDb ? (
                       <Alert className="border-blue-200 bg-blue-50 md:col-span-2">
                         <div className="flex gap-2">
                           <Database className="mt-1 h-4 w-4 text-blue-700" />
                           <AlertDescription className="text-blue-800">
-                            {t(
-                              "pages.install.database.dockerBuiltinMysqlNotice"
-                            )}
+                            {t("pages.install.database.dockerBuiltinNotice", {
+                              type: dbTypeLabel(effectiveDbType),
+                            })}
                           </AlertDescription>
                         </div>
                       </Alert>
@@ -445,56 +463,60 @@ export function InstallWizard({
                       required
                       label={t("pages.install.database.host")}
                       id="db-host"
-                      value={dockerBuiltinMysql ? "mysql" : dbConfig.host}
+                      value={
+                        dockerBuiltinDb
+                          ? defaultHostForDbType(effectiveDbType)
+                          : dbConfig.host
+                      }
                       placeholder={t("pages.install.database.hostPlaceholder")}
                       onChange={(host) => updateDbConfig({ host })}
                       help={t("pages.install.database.hostHelp")}
-                      disabled={dockerBuiltinMysql}
+                      disabled={dockerBuiltinDb}
                     />
                     <FormField
                       required
                       label={t("pages.install.database.port")}
                       id="db-port"
-                      value={dockerBuiltinMysql ? "3306" : dbConfig.port}
-                      placeholder={
-                        dockerBuiltinMysql
-                          ? "3306"
-                          : defaultPortForDbType(effectiveDbType)
+                      value={
+                        dockerBuiltinDb
+                          ? defaultPortForDbType(effectiveDbType)
+                          : dbConfig.port
                       }
+                      placeholder={defaultPortForDbType(effectiveDbType)}
                       onChange={(port) => updateDbConfig({ port })}
-                      disabled={dockerBuiltinMysql}
+                      disabled={dockerBuiltinDb}
                     />
                     <FormField
                       required
                       label={t("pages.install.database.name")}
                       id="db-name"
-                      value={dockerBuiltinMysql ? "bbsgo" : dbConfig.database}
+                      value={dockerBuiltinDb ? "bbsgo" : dbConfig.database}
                       placeholder={t("pages.install.database.namePlaceholder")}
                       onChange={(database) => updateDbConfig({ database })}
-                      disabled={dockerBuiltinMysql}
+                      disabled={dockerBuiltinDb}
                     />
                     <FormField
                       required
                       label={t("pages.install.database.username")}
                       id="db-user"
-                      value={dockerBuiltinMysql ? "bbsgo" : dbConfig.username}
+                      value={dockerBuiltinDb ? "bbsgo" : dbConfig.username}
                       placeholder={t(
                         "pages.install.database.usernamePlaceholder"
                       )}
                       onChange={(username) => updateDbConfig({ username })}
-                      disabled={dockerBuiltinMysql}
+                      disabled={dockerBuiltinDb}
                     />
                     <FormField
                       className="md:col-span-2"
                       type="password"
                       label={t("pages.install.database.password")}
                       id="db-password"
-                      value={dockerBuiltinMysql ? "********" : dbConfig.password}
+                      value={dockerBuiltinDb ? "********" : dbConfig.password}
                       placeholder={t(
                         "pages.install.database.passwordPlaceholder"
                       )}
                       onChange={(password) => updateDbConfig({ password })}
-                      disabled={dockerBuiltinMysql}
+                      disabled={dockerBuiltinDb}
                     />
                   </>
                 ) : (

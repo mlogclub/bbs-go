@@ -1,6 +1,6 @@
 import { Navigate } from "react-router"
 
-import { InstallWizard } from "@/components/install/install-wizard"
+import { InstallWizard, type DbType } from "@/components/install/install-wizard"
 import { apiFetch } from "@/lib/api/client"
 import { useI18n } from "@/lib/i18n/provider"
 import { noindexRouteMeta } from "@/lib/seo"
@@ -21,14 +21,13 @@ export default function InstallRoute() {
   useDocumentTitle(t("pages.install.title"))
   const { data, loading } = useClientData<{
     installed?: boolean
+    dockerBuiltinDbType?: DbType
     dockerBuiltinMysql?: boolean
     dbType?: string
-  }>(
-    "install-status",
-    () =>
-      apiFetch<{ installed?: boolean }>("/api/install/status").catch(() => ({
-        installed: true,
-      }))
+  }>("install-status", () =>
+    apiFetch<{ installed?: boolean }>("/api/install/status").catch(() => ({
+      installed: true,
+    }))
   )
 
   if (loading) {
@@ -40,5 +39,12 @@ export default function InstallRoute() {
   }
   if (data?.installed) return <Navigate to="/" replace />
 
-  return <InstallWizard dockerBuiltinMysql={Boolean(data?.dockerBuiltinMysql)} />
+  return (
+    <InstallWizard
+      dockerBuiltinDbType={
+        data?.dockerBuiltinDbType ||
+        (data?.dockerBuiltinMysql ? "mysql" : undefined)
+      }
+    />
+  )
 }

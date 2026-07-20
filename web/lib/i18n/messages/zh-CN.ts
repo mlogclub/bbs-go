@@ -1518,11 +1518,14 @@ const zhCN = {
         sqliteAutoPath: "SQLite 数据库文件路径将由服务端自动处理。",
         dockerBuiltinMysqlNotice:
           "当前使用 Docker 内置 MySQL 部署，数据库连接由系统自动配置，安装时只需继续下一步。",
+        dockerBuiltinNotice:
+          "当前使用 Docker 内置 {type} 部署，数据库连接由系统自动配置，安装时只需继续下一步。",
         validationError: "请完整填写数据库连接信息。",
         testing: "测试中...",
         testConnection: "测试连接",
         connectSuccess: "数据库连接成功",
         dockerBuiltinMysqlConnectSuccess: "Docker 内置 MySQL 连接成功",
+        dockerBuiltinConnectSuccess: "Docker 内置 {type} 连接成功",
         connectFailed: "数据库连接失败",
       },
       site: {

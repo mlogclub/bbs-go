@@ -18,6 +18,30 @@
 - 后台: https://bbs.bbs-go.com/admin
 - 后台账号密码: 联系我们获取，联系方式：<https://bbs-go.com/docs/contact>
 
+## Docker Compose 快速开始
+
+bbs-go 提供官方 Docker 镜像，并提供内置 MySQL 或 PostgreSQL 的 Docker Compose 部署方式。
+
+MySQL：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.yml -o docker-compose.yml
+docker compose up -d
+```
+
+PostgreSQL：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.postgresql.yml -o docker-compose.yml
+docker compose up -d
+```
+
+启动后访问：
+
+- 前台：<http://localhost:3000>
+- 后台：<http://localhost:3000/dashboard>
+- 安装向导：<http://localhost:3000/install>
+
 ## 为什么选择 bbs-go
 
 - **开箱可用**：论坛、问答、文章、评论、点赞收藏、关注消息等核心社区能力可直接使用。

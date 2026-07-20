@@ -22,10 +22,19 @@ It combines discussions, Q&A workflows, articles, comments, notifications, moder
 
 ## Quick Start with Docker Compose
 
-bbs-go provides an official Docker image and Docker Compose deployment with built-in MySQL support.
+bbs-go provides an official Docker image and Docker Compose deployments with built-in MySQL or PostgreSQL support.
+
+MySQL:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.yml -o docker-compose.yml
+docker compose up -d
+```
+
+PostgreSQL:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mlogclub/bbs-go/master/docker-compose.postgresql.yml -o docker-compose.yml
 docker compose up -d
 ```
 
