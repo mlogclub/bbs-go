@@ -1,0 +1,52 @@
+x-builtin-postgresql-env: &builtin-postgresql-env
+  POSTGRES_DB: ${BBSGO_DOCKER_POSTGRESQL_DATABASE:-bbsgo}
+  POSTGRES_USER: ${BBSGO_DOCKER_POSTGRESQL_USER:-bbsgo}
+  POSTGRES_PASSWORD: ${BBSGO_DOCKER_POSTGRESQL_PASSWORD:-bbsgo_password}
+
+services:
+  postgresql:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      <<: *builtin-postgresql-env
+      TZ: Asia/Shanghai
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  bbs-go:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: mlogclub/bbs-go:${BBSGO_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    volumes:
+      # bbs-go.yaml is stored in /app/data. Keep runtime files on the host
+      # so deleting/recreating the container does not reset the install config.
+      - ./docker-data-postgresql/data:/app/data
+      - ./docker-data-postgresql/logs:/app/logs
+      - ./docker-data-postgresql/uploads:/app/res/uploads
+    ports:
+      - "3000:3000"
+    environment:
+      BBSGO_ENV: prod
+      NODE_ENV: production
+      PORT: 3000
+      BBSGO_SERVER_URL: http://127.0.0.1:8082
+      BBSGO_INSTALL_DOCKER_BUILTIN_POSTGRESQL: "true"
+      BBSGO_DOCKER_BUILTIN_POSTGRESQL_HOST: postgresql
+      BBSGO_DOCKER_BUILTIN_POSTGRESQL_PORT: "5432"
+      BBSGO_DOCKER_BUILTIN_POSTGRESQL_DATABASE: ${BBSGO_DOCKER_POSTGRESQL_DATABASE:-bbsgo}
+      BBSGO_DOCKER_BUILTIN_POSTGRESQL_USERNAME: ${BBSGO_DOCKER_POSTGRESQL_USER:-bbsgo}
+      BBSGO_DOCKER_BUILTIN_POSTGRESQL_PASSWORD: ${BBSGO_DOCKER_POSTGRESQL_PASSWORD:-bbsgo_password}
+      TZ: Asia/Shanghai
+
+volumes:
+  postgresql-data:
