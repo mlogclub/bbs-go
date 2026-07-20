@@ -101,9 +101,9 @@ func (r DbConfigReq) GetConnStr() string {
 
 func TestDbConnection(ctx context.Context, req DbConfigReq) error {
 	var dsn string
-	if IsDockerBuiltinMySQLInstall() {
+	if builtinDBType := DockerBuiltinDBType(); builtinDBType != "" {
 		req = DbConfigReq{
-			Type: config.DbTypeMySQL,
+			Type: builtinDBType,
 		}
 		dsn = config.Instance.DB.Url
 	}
@@ -183,9 +183,9 @@ func Install(req InstallReq) error {
 	installMx.Lock()
 	defer installMx.Unlock()
 
-	if IsDockerBuiltinMySQLInstall() {
+	if builtinDBType := DockerBuiltinDBType(); builtinDBType != "" {
 		req.DbConfig = DbConfigReq{
-			Type: config.DbTypeMySQL,
+			Type: builtinDBType,
 		}
 	}
 	// 传入 context
@@ -217,7 +217,7 @@ func WriteConfig(req InstallReq) error {
 	cfg := config.Instance
 	cfg.Language = req.Language
 	cfg.IDCodec.Key = idcodec.GenerateRandomKey()
-	if !IsDockerBuiltinMySQLInstall() {
+	if !IsDockerBuiltinDBInstall() {
 		if req.DbConfig.Type == "" {
 			req.DbConfig.Type = config.DbTypeMySQL
 		}
@@ -465,6 +465,20 @@ func IsDockerBuiltinPostgreSQLInstall() bool {
 	}
 }
 
+func IsDockerBuiltinDBInstall() bool {
+	return DockerBuiltinDBType() != ""
+}
+
+func DockerBuiltinDBType() string {
+	if IsDockerBuiltinPostgreSQLInstall() {
+		return config.DbTypePostgreSQL
+	}
+	if IsDockerBuiltinMySQLInstall() {
+		return config.DbTypeMySQL
+	}
+	return ""
+}
+
 func ApplyDockerBuiltinMySQLConfig() {
 	if !IsDockerBuiltinMySQLInstall() {
 		return
@@ -497,13 +511,18 @@ func ApplyDockerBuiltinPostgreSQLConfig() {
 }
 
 func WriteRuntimeConfig(cfg *config.Config) error {
-	if !IsDockerBuiltinMySQLInstall() {
-		return config.WriteConfig(cfg)
+	return config.WriteConfig(runtimeConfigForWrite(cfg))
+}
+
+func runtimeConfigForWrite(cfg *config.Config) *config.Config {
+	builtinDBType := DockerBuiltinDBType()
+	if builtinDBType == "" {
+		return cfg
 	}
 	persisted := *cfg
-	persisted.DB.Type = config.DbTypeMySQL
+	persisted.DB.Type = builtinDBType
 	persisted.DB.Url = ""
-	return config.WriteConfig(&persisted)
+	return &persisted
 }
 
 func dockerBuiltinMySQLEnv(key string, fallback string) string {
