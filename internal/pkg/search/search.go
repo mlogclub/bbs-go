@@ -11,6 +11,7 @@ import (
 	"bbs-go/internal/repositories"
 	"html"
 	"log/slog"
+	"regexp"
 	"math"
 	"time"
 
@@ -479,7 +480,7 @@ func hitFields(fields map[string]interface{}, fragments map[string][]string) map
 	}
 	for field, values := range fragments {
 		if len(values) > 0 {
-			storedDoc[field] = values[0]
+			storedDoc[field] = stripHtmlTags(values[0])
 		}
 	}
 	return storedDoc
@@ -502,4 +503,11 @@ func normalizeTags(storedDoc map[string]interface{}) {
 		}
 		storedDoc["tags"] = tags
 	}
+}
+
+
+var stripHtmlRe = regexp.MustCompile(`<[^>]*>`)
+
+func stripHtmlTags(s string) string {
+	return stripHtmlRe.ReplaceAllString(s, "")
 }

@@ -9,6 +9,7 @@ import { apiFetch } from "@/lib/api/client"
 import type { ImageInfo } from "@/lib/api/types"
 import { useI18n } from "@/lib/i18n/provider"
 import { useToastActions } from "@/lib/toast"
+import { useMentionAutocomplete } from "@/hooks/use-mention-autocomplete"
 import { cn } from "@/lib/utils"
 
 export type TextEditorRef = {
@@ -57,6 +58,10 @@ export const TextEditor = React.forwardRef<
   const { catchError, msgWarning } = useToastActions()
   const wrapperRef = React.useRef<HTMLDivElement>(null)
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const mention = useMentionAutocomplete(textareaRef, (before, after) => {
+    onContentChange(before + after)
+  })
   const fileInputRef = React.useRef<HTMLInputElement>(null)
   const isOpeningImagePickerRef = React.useRef(false)
   const unlockImagePickerTimerRef = React.useRef<number | null>(null)

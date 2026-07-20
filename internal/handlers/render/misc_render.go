@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models/constants"
 	"bbs-go/internal/models/resp"
 	"bbs-go/internal/pkg/bbsurls"
+	"bbs-go/internal/pkg/idcodec"
 	"bbs-go/internal/pkg/event"
 	"bbs-go/internal/pkg/ginx"
 	"bbs-go/internal/pkg/locales"
@@ -51,7 +52,7 @@ func handleMentionLinks(htmlContent string) string {
 			if user == nil {
 				return match
 			}
-			userUrl := bbsurls.UserUrl(user.Id)
+			userUrl := "/user/" + idcodec.Encode(user.Id)
 			return fmt.Sprintf(`<a href="%s" class="mention-link">%s</a>`, userUrl, match)
 		})
 		if newHtml != html {
