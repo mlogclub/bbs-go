@@ -15,7 +15,7 @@
 ## 演示
 
 - 前台: https://bbs.bbs-go.com
-- 后台: https://bbs.bbs-go.com/admin
+- 后台: https://bbs.bbs-go.com/dashboard
 - 后台账号密码: 联系我们获取，联系方式：<https://bbs-go.com/docs/contact>
 
 ## Docker Compose 快速开始

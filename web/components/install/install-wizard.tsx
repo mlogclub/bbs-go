@@ -824,7 +824,7 @@ export function InstallWizard({
                   </Link>
                 </Button>
                 <Button asChild size="lg">
-                  <Link href="/admin">
+                  <Link href="/dashboard">
                     <Settings className="mr-2 h-4 w-4" />
                     {t("pages.install.complete.enterAdmin")}
                   </Link>
