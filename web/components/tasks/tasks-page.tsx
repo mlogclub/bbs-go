@@ -2,14 +2,7 @@
 
 import * as React from "react"
 import Link from "@/components/common/link"
-import {
-  ArrowRight,
-  CheckSquare,
-  ListChecks,
-  Medal,
-  Target,
-  Zap,
-} from "lucide-react"
+import { ArrowRight, Medal, Sparkles, Target, Zap } from "lucide-react"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { apiFetch } from "@/lib/api/client"
@@ -98,62 +91,61 @@ export function TasksPageContent({
   }, [])
 
   return (
-    <section className="rounded-lg bg-background px-3 py-2">
-      <div className="flex flex-col gap-3 border-b border-border pb-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-            {t("user.tasks.title")}
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {t("user.tasks.subtitle")}
-          </p>
+    <section className="rounded-md bg-background">
+      <Tabs
+        value={activeGroup}
+        onValueChange={setActiveGroup}
+        className="gap-0"
+      >
+        <div className="flex flex-col gap-3 border-b border-border px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <h1 className="text-base font-semibold text-foreground">
+                {t("user.tasks.title")}
+              </h1>
+              <span className="inline-flex items-center rounded-md border border-border bg-muted/40 px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                {stats.completed} / {stats.total}
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t("user.tasks.subtitle")}
+            </p>
+          </div>
+          <div className="flex justify-start lg:justify-end">
+            <TabsList aria-label="task groups">
+              {displayGroups.map((group) => (
+                <TabsTrigger key={group.key} value={group.key}>
+                  <span>{group.name || group.key}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-100">
-            <ListChecks className="h-3.5 w-3.5" />
-            {t("user.tasks.hero.total")} {stats.total}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-100">
-            <CheckSquare className="h-3.5 w-3.5" />
-            {t("user.tasks.hero.completed")} {stats.completed}
-          </span>
-        </div>
-      </div>
 
-      <div className="mt-4">
-        <Tabs value={activeGroup} onValueChange={setActiveGroup}>
-          <TabsList aria-label="task groups">
-            {displayGroups.map((group) => (
-              <TabsTrigger key={group.key} value={group.key}>
-                <span>{group.name || group.key}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        <div className="px-4 py-3">
           {displayGroups.map((group) => (
-            <TabsContent
-              key={group.key}
-              value={group.key}
-              className="space-y-3"
-            >
-              <TaskGrid tasks={tasksForGroup(currentTasks, group.key)} />
+            <TabsContent key={group.key} value={group.key}>
+              <TaskList tasks={tasksForGroup(currentTasks, group.key)} />
             </TabsContent>
           ))}
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </section>
   )
 }
 
-function TaskGrid({ tasks }: { tasks: TaskInfo[] }) {
+function TaskList({ tasks }: { tasks: TaskInfo[] }) {
   const { t } = useI18n()
 
   if (!tasks.length) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
-        <div className="mb-2 text-3xl">🪁</div>
-        <div className="mb-2 font-semibold">{t("user.tasks.emptyTitle")}</div>
+      <div className="rounded-md border border-dashed border-border bg-muted/30 p-8 text-center text-muted-foreground">
+        <Sparkles className="mx-auto mb-2 h-5 w-5" />
+        <div className="mb-2 text-sm font-semibold text-foreground">
+          {t("user.tasks.emptyTitle")}
+        </div>
         <Link
-          className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+          className="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition hover:opacity-90"
           href="/"
         >
           {t("user.tasks.emptyAction")}
@@ -163,7 +155,7 @@ function TaskGrid({ tasks }: { tasks: TaskInfo[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div className="divide-y divide-border/70">
       {tasks.map((task) => (
         <TaskCard key={task.id} task={task} />
       ))}
@@ -211,7 +203,7 @@ function TaskCard({ task }: { task: TaskInfo }) {
   const action = task.actionUrl ? (
     user ? (
       <Link
-        className="inline-flex items-center gap-1 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-md dark:bg-indigo-600 dark:hover:bg-indigo-500"
+        className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground transition hover:opacity-90"
         href={task.actionUrl}
       >
         <ArrowRight className="h-3.5 w-3.5" />
@@ -220,7 +212,7 @@ function TaskCard({ task }: { task: TaskInfo }) {
     ) : (
       <button
         type="button"
-        className="inline-flex items-center gap-1 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[11px] font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-md dark:bg-indigo-600 dark:hover:bg-indigo-500"
+        className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground transition hover:opacity-90"
         onClick={() => msgSignIn()}
       >
         <ArrowRight className="h-3.5 w-3.5" />
@@ -229,7 +221,7 @@ function TaskCard({ task }: { task: TaskInfo }) {
     )
   ) : (
     <span
-      className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold opacity-0"
+      className="inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium opacity-0"
       aria-hidden="true"
     >
       <ArrowRight className="h-3.5 w-3.5" />
@@ -238,75 +230,72 @@ function TaskCard({ task }: { task: TaskInfo }) {
   )
 
   return (
-    <div className="relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-100/70 bg-white/95 p-3.5 shadow-sm ring-1 ring-transparent transition hover:-translate-y-0.5 hover:shadow-md hover:ring-indigo-100 dark:border-slate-800/80 dark:bg-slate-900/80 dark:ring-slate-800/60">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-50/80 via-white/70 to-indigo-50/60 dark:from-slate-900/60 dark:via-slate-900/50 dark:to-indigo-900/40" />
-      <div className="relative flex items-start justify-between gap-2.5">
-        <div className="flex items-center gap-3">
-          <div className="space-y-1">
-            <h3 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
+    <div className="px-3 py-2.5 transition hover:bg-muted/30">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-sm font-semibold text-foreground">
               {task.title}
             </h3>
+            <span
+              className={cn(
+                "inline-flex items-center rounded-md px-1.5 py-0.5 text-[11px] font-medium",
+                kind === "done" &&
+                  "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+                kind === "progress" &&
+                  "bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300",
+                kind === "idle" && "bg-muted/40 text-muted-foreground"
+              )}
+            >
+              {statusLabel()}
+            </span>
+          </div>
+          <p className="mt-1 line-clamp-1 text-xs leading-5 text-muted-foreground">
+            {task.description}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            {task.score ? (
+              <RewardItem icon={<Target className="h-3.5 w-3.5" />}>
+                {t("user.tasks.reward.score", { score: task.score })}
+              </RewardItem>
+            ) : null}
+            {task.exp ? (
+              <RewardItem icon={<Zap className="h-3.5 w-3.5" />}>
+                {t("user.tasks.reward.exp", { exp: task.exp })}
+              </RewardItem>
+            ) : null}
+            {task.badgeId ? (
+              <RewardItem icon={<Medal className="h-3.5 w-3.5" />}>
+                {t("user.tasks.reward.badge")}
+              </RewardItem>
+            ) : null}
+            {finishLabel() ? <span>{finishLabel()}</span> : null}
           </div>
         </div>
-        <span
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold backdrop-blur",
-            kind === "done" &&
-              "border-emerald-300/70 bg-emerald-50/90 text-emerald-800 dark:border-emerald-700/80 dark:bg-emerald-900/40 dark:text-emerald-100",
-            kind === "progress" &&
-              "border-blue-300/70 bg-blue-50/90 text-blue-800 dark:border-blue-700/80 dark:bg-blue-900/40 dark:text-blue-100",
-            kind === "idle" &&
-              "border-slate-300/70 bg-slate-100/90 text-slate-700 dark:border-slate-700/80 dark:bg-slate-800/70 dark:text-slate-100"
-          )}
-        >
-          {statusLabel()}
-        </span>
-      </div>
-      <p className="relative line-clamp-2 min-h-[42px] text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
-        {task.description}
-      </p>
-      <div className="relative flex flex-wrap gap-1.5 text-[11px] text-slate-600 dark:text-slate-300">
-        {task.score ? (
-          <RewardPill icon={<Target className="h-3.5 w-3.5" />}>
-            {t("user.tasks.reward.score", { score: task.score })}
-          </RewardPill>
-        ) : null}
-        {task.exp ? (
-          <RewardPill icon={<Zap className="h-3.5 w-3.5" />}>
-            {t("user.tasks.reward.exp", { exp: task.exp })}
-          </RewardPill>
-        ) : null}
-        {task.badgeId ? (
-          <RewardPill icon={<Medal className="h-3.5 w-3.5" />}>
-            {t("user.tasks.reward.badge")}
-          </RewardPill>
-        ) : null}
-      </div>
-      <div className="relative mt-auto space-y-2.5">
-        <div className="flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
-          <span>{progressLabel()}</span>
-          <span className="flex items-center gap-1 font-semibold text-slate-800 dark:text-slate-100">
-            {progressPercent(task)}%
-          </span>
-        </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-indigo-500/80 to-emerald-400"
-            style={{ width: `${progressPercent(task)}%` }}
-          />
-        </div>
-        <div className="flex items-center justify-between gap-3 text-[11px] text-slate-500 dark:text-slate-400">
-          <span className="truncate">{finishLabel()}</span>
-          <div className="flex min-h-[26px] items-center justify-end">
-            {action}
+        <div className="w-full shrink-0 space-y-2 lg:w-56">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{progressLabel()}</span>
+            <span className="font-medium text-foreground">
+              {progressPercent(task)}%
+            </span>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className={cn(
+                "h-full rounded-full",
+                kind === "done" ? "bg-emerald-500" : "bg-primary"
+              )}
+              style={{ width: `${progressPercent(task)}%` }}
+            />
           </div>
         </div>
+        <div className="flex shrink-0 justify-end lg:w-24">{action}</div>
       </div>
     </div>
   )
 }
 
-function RewardPill({
+function RewardItem({
   icon,
   children,
 }: {
@@ -314,7 +303,7 @@ function RewardPill({
   children: React.ReactNode
 }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-slate-200/80 bg-white/70 px-2 py-0.5 font-semibold text-slate-700 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-100">
+    <span className="inline-flex items-center gap-1">
       {icon}
       {children}
     </span>
