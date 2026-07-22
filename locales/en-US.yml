@@ -210,6 +210,8 @@ message:
   comment_topic_reply_msg_title: "Someone replied to your topic"
   comment_article_reply_msg_title: "Someone replied to your article"
   comment_reply_msg_title: "Someone replied to your comment"
+  mention_msg_title: "mentioned you in a comment"
+  mention_in_topic_msg_title: "mentioned you in a post"
 
 email:
   new_message: "Notification"
@@ -224,6 +226,7 @@ email:
   user_badge_grant: "New Badge Unlocked"
   qa_answer_accepted: "Your answer was accepted as the best answer"
   qa_answer_accepted_with_bounty: "Your answer was accepted as the best answer, +%d points"
+  mention: "Someone @mentioned you"
   view_details: "View Details"
 
 task:

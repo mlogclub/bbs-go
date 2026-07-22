@@ -11,6 +11,7 @@ import (
 	"bbs-go/internal/repositories"
 	"html"
 	"log/slog"
+	"regexp"
 	"math"
 	"time"
 
@@ -348,7 +349,11 @@ func SearchUser(keyword string, page, limit int) (docs []UserDocument, paging *s
 	query.AddMust(bleve.NewMatchAllQuery())
 	query.AddMust(typeQuery(EntityTypeUser))
 	if strs.IsNotBlank(keyword) {
-		query.AddMust(keywordQuery(keyword, []string{"username", "nickname", "description"}))
+		userQuery := bleve.NewDisjunctionQuery(
+			prefixQuery(keyword, []string{"username", "nickname"}),
+			keywordQuery(keyword, []string{"description"}),
+		)
+		query.AddMust(userQuery)
 	}
 
 	searchRequest := bleve.NewSearchRequest(query)
@@ -433,6 +438,17 @@ func keywordQuery(keyword string, fields []string) blevequery.Query {
 	return bleve.NewDisjunctionQuery(queries...)
 }
 
+
+func prefixQuery(keyword string, fields []string) blevequery.Query {
+	queries := make([]blevequery.Query, 0, len(fields))
+	for _, field := range fields {
+		q := bleve.NewPrefixQuery(keyword)
+		q.SetField(field)
+		queries = append(queries, q)
+	}
+	return bleve.NewDisjunctionQuery(queries...)
+}
+
 func addTimeRangeQuery(query *blevequery.BooleanQuery, timeRange int) {
 	if timeRange == 0 {
 		return
@@ -464,7 +480,7 @@ func hitFields(fields map[string]interface{}, fragments map[string][]string) map
 	}
 	for field, values := range fragments {
 		if len(values) > 0 {
-			storedDoc[field] = values[0]
+			storedDoc[field] = stripHtmlTags(values[0])
 		}
 	}
 	return storedDoc
@@ -487,4 +503,11 @@ func normalizeTags(storedDoc map[string]interface{}) {
 		}
 		storedDoc["tags"] = tags
 	}
+}
+
+
+var stripHtmlRe = regexp.MustCompile(`<[^>]*>`)
+
+func stripHtmlTags(s string) string {
+	return stripHtmlRe.ReplaceAllString(s, "")
 }

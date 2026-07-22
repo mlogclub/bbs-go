@@ -198,6 +198,9 @@ func (s *articleService) Publish(userId int64, form req.CreateArticleReq) (artic
 		search.UpdateArticleIndex(article)
 	}
 
+	// 处理@用户
+	MentionService.SendMentionNotificationsForContent(userId, constants.EntityArticle, article.Id, article.ContentType, article.Content)
+
 	return
 }
 
