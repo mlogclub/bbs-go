@@ -187,7 +187,7 @@ func seedForLanguage() seedData {
 				{Key: constants.SysConfigSiteNavs, Value: []map[string]string{
 					{"title": "Topics", "url": "/topics"},
 					{"title": "Articles", "url": "/articles"},
-					{"title": "Tasks", "url": "/tasks"},
+					// {"title": "Tasks", "url": "/tasks"},
 				}, Name: "Site Navigation", Description: "Site Navigation"},
 				{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: "Default Category", Description: "Default Category"},
 				{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "User Login Validity Period (Days)", Description: "User Login Validity Period (Days)"},
@@ -223,7 +223,7 @@ func seedForLanguage() seedData {
 			{Key: constants.SysConfigSiteNavs, Value: []map[string]string{
 				{"title": "话题", "url": "/topics"},
 				{"title": "文章", "url": "/articles"},
-				{"title": "任务", "url": "/tasks"},
+				// {"title": "任务", "url": "/tasks"},
 			}, Name: "站点导航", Description: "站点导航"},
 			{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: "默认节点", Description: "默认节点"},
 			{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "用户登录有效期(天)", Description: "用户登录有效期(天)"},
