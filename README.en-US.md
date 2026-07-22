@@ -169,7 +169,3 @@ Commercial licensing, deployment support, customization, migration, and long-ter
 - Bugs and feature requests: [GitHub Issues](https://github.com/mlogclub/bbs-go/issues)
 - Commercial support: <g330721072@gmail.com>
 - Security reports: email <g330721072@gmail.com> with `[Security]` in the subject
-
-## Contributors
-
-<a href="https://github.com/mlogclub/bbs-go/graphs/contributors"><img src="https://opencollective.com/bbs-go/contributors.svg?width=890&button=false" /></a>

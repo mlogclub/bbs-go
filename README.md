@@ -142,6 +142,3 @@ docker compose up -d
 
 一句话概括：**轻量搭建论坛、问答、知识库和讨论社区**。
 
-## Contributors
-
-<a href="https://github.com/mlogclub/bbs-go/graphs/contributors"><img src="https://opencollective.com/bbs-go/contributors.svg?width=890&button=false" /></a>
