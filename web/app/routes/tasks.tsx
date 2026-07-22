@@ -44,8 +44,14 @@ export default function TasksRoute() {
   )
   return (
     <MainShell sideSize="320" aside={showInlineAside ? undefined : aside}>
-      {showInlineAside ? <div className="space-y-4">{aside}</div> : null}
-      <TasksPageContent groups={[]} tasks={[]} />
+      {showInlineAside ? (
+        <div className="space-y-4">
+          {aside}
+          <TasksPageContent groups={[]} tasks={[]} />
+        </div>
+      ) : (
+        <TasksPageContent groups={[]} tasks={[]} />
+      )}
     </MainShell>
   )
 }
