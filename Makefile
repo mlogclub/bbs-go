@@ -49,6 +49,7 @@ build-linux: web-build-spa
 release: web-build-spa
 	@echo "Building release binaries..."
 	@GOOS=linux GOARCH=amd64 $(GO) build -v -o $(APP)-linux-amd64 $(MAIN)
+	@GOOS=linux GOARCH=arm64 $(GO) build -v -o $(APP)-linux-arm64 $(MAIN)
 	@GOOS=darwin GOARCH=amd64 $(GO) build -v -o $(APP)-macos-amd64 $(MAIN)
 	@GOOS=darwin GOARCH=arm64 $(GO) build -v -o $(APP)-macos-arm64 $(MAIN)
 	@GOOS=windows GOARCH=amd64 $(GO) build -v -o $(APP)-windows-amd64.exe $(MAIN)
