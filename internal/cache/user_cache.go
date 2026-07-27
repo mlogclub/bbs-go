@@ -71,6 +71,7 @@ func (c *userCache) Get(userId int64) *models.User {
 
 func (c *userCache) Invalidate(userId int64) {
 	c.cache.Invalidate(userId)
+	c.scoreRankCache.Invalidate("data")
 }
 
 func (c *userCache) GetScoreRank() []models.User {
