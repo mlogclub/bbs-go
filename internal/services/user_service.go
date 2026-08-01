@@ -564,9 +564,10 @@ func (s *userService) IncrTopicCount(ctx *sqls.TxContext, userId int64) error {
 	return nil
 }
 
-// DecrTopicCount topic_count - 1
+// DecrTopicCount topic_count - 1（不低于 0）
 func (s *userService) DecrTopicCount(ctx *sqls.TxContext, userId int64) error {
-	if err := repositories.UserRepository.UpdateColumn(ctx.Tx, userId, "topic_count", gorm.Expr("topic_count - 1")); err != nil {
+	if err := repositories.UserRepository.UpdateColumn(ctx.Tx, userId, "topic_count",
+		gorm.Expr("CASE WHEN topic_count > 0 THEN topic_count - 1 ELSE 0 END")); err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 		return err
 	}
@@ -577,31 +578,19 @@ func (s *userService) DecrTopicCount(ctx *sqls.TxContext, userId int64) error {
 }
 
 // IncrCommentCount comment_count + 1
-func (s *userService) IncrCommentCount(userId int64) int {
-	t := repositories.UserRepository.Get(sqls.DB(), userId)
-	if t == nil {
-		return 0
-	}
-	commentCount := t.CommentCount + 1
-	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
+func (s *userService) IncrCommentCount(userId int64) {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count",
+		gorm.Expr("comment_count + 1")); err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		cache.UserCache.Invalidate(userId)
 	}
-	return commentCount
 }
 
 // DecrCommentCount comment_count - 1
 func (s *userService) DecrCommentCount(userId int64) {
-	t := repositories.UserRepository.Get(sqls.DB(), userId)
-	if t == nil {
-		return
-	}
-	commentCount := t.CommentCount - 1
-	if commentCount < 0 {
-		commentCount = 0
-	}
-	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count",
+		gorm.Expr("CASE WHEN comment_count > 0 THEN comment_count - 1 ELSE 0 END")); err != nil {
 		slog.Error(err.Error(), slog.Any("err", err))
 	} else {
 		cache.UserCache.Invalidate(userId)

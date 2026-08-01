@@ -119,6 +119,21 @@ func TestTopicService_Undelete_IncrementsTopicCount(t *testing.T) {
 	}
 }
 
+func TestTopicService_Undelete_ReviewTopicCountsAfterRestore(t *testing.T) {
+	setupTopicCountTestDB(t)
+	user := mustCreateUser(t, dates.NowTimestamp())
+	// 待审核话题发布时未计数，恢复（Undelete）为已发布后应计入
+	topic := mustCreateTopicWithStatus(t, user.Id, constants.StatusReview)
+	mustSetUserCount(t, user.Id, "topic_count", 0)
+
+	if err := TopicService.Undelete(topic.Id); err != nil {
+		t.Fatalf("undelete review topic: %v", err)
+	}
+	if got := getUserTopicCount(t, user.Id); got != 1 {
+		t.Fatalf("expected topic_count 1 after undelete review topic, got %d", got)
+	}
+}
+
 func TestTopicService_Audit_IncrementsTopicCountOnce(t *testing.T) {
 	setupTopicCountTestDB(t)
 	user := mustCreateUser(t, dates.NowTimestamp())

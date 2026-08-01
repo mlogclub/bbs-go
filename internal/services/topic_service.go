@@ -140,8 +140,8 @@ func (s *topicService) Undelete(id int64) error {
 		if err := TopicTagService.UndeleteByTopicId(ctx, id); err != nil {
 			return err
 		}
-		// 用户发帖计数 +1（恢复为已发布状态后计入）
-		if topic.Status == constants.StatusDeleted {
+		// 用户发帖计数 +1（此前非已发布状态未计入，进入已发布后计入）
+		if topic.Status != constants.StatusOk {
 			if err := UserService.IncrTopicCount(ctx, topic.UserId); err != nil {
 				return err
 			}
