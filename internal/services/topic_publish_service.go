@@ -103,9 +103,11 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*m
 			return err
 		}
 
-		// 用户计数
-		if err = UserService.IncrTopicCount(ctx, userId); err != nil {
-			return err
+		// 用户计数（待审核的话题不计入发帖数，审核通过后再计数）
+		if topic.Status == constants.StatusOk {
+			if err = UserService.IncrTopicCount(ctx, userId); err != nil {
+				return err
+			}
 		}
 
 		// 附件绑定（同一事务内校验与更新，避免 SQLite 卡住）

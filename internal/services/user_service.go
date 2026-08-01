@@ -564,6 +564,18 @@ func (s *userService) IncrTopicCount(ctx *sqls.TxContext, userId int64) error {
 	return nil
 }
 
+// DecrTopicCount topic_count - 1
+func (s *userService) DecrTopicCount(ctx *sqls.TxContext, userId int64) error {
+	if err := repositories.UserRepository.UpdateColumn(ctx.Tx, userId, "topic_count", gorm.Expr("topic_count - 1")); err != nil {
+		slog.Error(err.Error(), slog.Any("err", err))
+		return err
+	}
+	ctx.RegisterCallback(func() {
+		cache.UserCache.Invalidate(userId)
+	})
+	return nil
+}
+
 // IncrCommentCount comment_count + 1
 func (s *userService) IncrCommentCount(userId int64) int {
 	t := repositories.UserRepository.Get(sqls.DB(), userId)
@@ -577,6 +589,23 @@ func (s *userService) IncrCommentCount(userId int64) int {
 		cache.UserCache.Invalidate(userId)
 	}
 	return commentCount
+}
+
+// DecrCommentCount comment_count - 1
+func (s *userService) DecrCommentCount(userId int64) {
+	t := repositories.UserRepository.Get(sqls.DB(), userId)
+	if t == nil {
+		return
+	}
+	commentCount := t.CommentCount - 1
+	if commentCount < 0 {
+		commentCount = 0
+	}
+	if err := repositories.UserRepository.UpdateColumn(sqls.DB(), userId, "comment_count", commentCount); err != nil {
+		slog.Error(err.Error(), slog.Any("err", err))
+	} else {
+		cache.UserCache.Invalidate(userId)
+	}
 }
 
 // SendEmailVerifyEmail 发送邮箱验证邮件

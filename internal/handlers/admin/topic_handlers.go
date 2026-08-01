@@ -169,7 +169,7 @@ func TopicAudit(ctx *gin.Context) {
 		ginx.WriteJSON(ctx, ginx.ErrorMessage("id is required"))
 		return
 	}
-	err := services.TopicService.UpdateColumn(id, "status", constants.StatusOk)
+	err := services.TopicService.Audit(id)
 	if err != nil {
 		ginx.WriteJSON(ctx, err)
 		return

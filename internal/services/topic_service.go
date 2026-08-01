@@ -107,6 +107,12 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 		if err := AttachmentService.SoftDeleteByTopicId(ctx, topicId); err != nil {
 			return err
 		}
+		// 用户发帖计数 -1（仅当帖子此前处于已发布状态才计入过数量）
+		if topic.Status == constants.StatusOk {
+			if err := UserService.DecrTopicCount(ctx, topic.UserId); err != nil {
+				return err
+			}
+		}
 		return nil
 	})
 	if err != nil {
@@ -123,11 +129,46 @@ func (s *topicService) Delete(topicId, deleteUserId int64, r *http.Request) erro
 
 // Undelete 取消删除
 func (s *topicService) Undelete(id int64) error {
+	topic := s.Get(id)
+	if topic == nil {
+		return nil
+	}
 	err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		if err := repositories.TopicRepository.UpdateColumn(ctx.Tx, id, "status", constants.StatusOk); err != nil {
 			return err
 		}
 		if err := TopicTagService.UndeleteByTopicId(ctx, id); err != nil {
+			return err
+		}
+		// 用户发帖计数 +1（恢复为已发布状态后计入）
+		if topic.Status == constants.StatusDeleted {
+			if err := UserService.IncrTopicCount(ctx, topic.UserId); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	if err == nil {
+		search.UpdateTopicIndex(s.Get(id))
+	}
+	return err
+}
+
+// Audit 审核通过，将待审核（或已删除）的话题置为已发布，并同步用户发帖计数
+func (s *topicService) Audit(id int64) error {
+	topic := s.Get(id)
+	if topic == nil {
+		return errors.New(locales.Get("common.not_found"))
+	}
+	if topic.Status == constants.StatusOk {
+		return nil
+	}
+	err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
+		if err := repositories.TopicRepository.UpdateColumn(ctx.Tx, id, "status", constants.StatusOk); err != nil {
+			return err
+		}
+		// 用户发帖计数 +1（此前为待审核/已删除状态，未计入发帖数）
+		if err := UserService.IncrTopicCount(ctx, topic.UserId); err != nil {
 			return err
 		}
 		return nil

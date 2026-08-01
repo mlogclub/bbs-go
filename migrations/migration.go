@@ -114,4 +114,5 @@ func init() {
 	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
 	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)
 	register(15, "remove comment admin permissions", migrate_remove_comment_admin_permissions)
+	register(16, "sync user topic/comment counts", migrate_sync_user_topic_comment_counts)
 }
