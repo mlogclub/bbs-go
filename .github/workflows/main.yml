@@ -65,15 +65,14 @@ jobs:
           GOARCH: ${{ matrix.arch }}
           CGO_ENABLED: 0
         run: |
-          go build -v -trimpath -ldflags="-s -w" -o bbs-go-freebsd-${{ matrix.arch }} ./main.go
+          mkdir -p bbs-go-freebsd-${{ matrix.arch }}
+          go build -v -trimpath -ldflags="-s -w" -o bbs-go-freebsd-${{ matrix.arch }}/bbs-go ./main.go
 
       - name: Prepare release package
         id: package
         run: |
           PKG_DIR="bbs-go-freebsd-${{ matrix.arch }}"
           mkdir -p "$PKG_DIR"/{data,logs,res/uploads,defaults}
-
-          cp bbs-go-freebsd-${{ matrix.arch }} "$PKG_DIR/bbs-go"
 
           cp -r locales "$PKG_DIR/"
           cp -r res "$PKG_DIR/"
