@@ -530,7 +530,7 @@ const zhCN = {
         awsS3: "AWS S3",
         s3: "通用 S3",
         s3Tip:
-          "兼容 Cloudflare R2 / MinIO / RustFS 等 S3 协议存储。R2 的 Region 填 auto；MinIO/RustFS 通常需开启 PathStyle。",
+          "兼容 Cloudflare R2 / MinIO / RustFS 等 S3 协议存储。R2 的 Region 填 auto；MinIO/RustFS 通常需开启 PathStyle。Host/Endpoint 填写时无需带 https:// 也会自动补全。",
         host: "域名",
         bucket: "Bucket",
         endpoint: "Endpoint",

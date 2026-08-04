@@ -98,7 +98,7 @@ func (u *S3Uploader) initClient(cfg dto.UploadConfig) error {
 	}
 
 	u.client = s3.NewFromConfig(awsCfg, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String(strings.TrimRight(cfg.S3.Endpoint, "/"))
+		o.BaseEndpoint = aws.String(ensureScheme(strings.TrimRight(cfg.S3.Endpoint, "/")))
 		o.UsePathStyle = cfg.S3.PathStyle
 	})
 
@@ -128,10 +128,10 @@ func (u *S3Uploader) isCfgChange(cfg dto.UploadConfig) bool {
 //   - PathStyle=false: https://{bucket}.{endpoint-host}/{key}
 func S3ObjectURL(cfg dto.UploadConfig, key string) string {
 	if host := strings.TrimSpace(cfg.S3.Host); host != "" {
-		return bbsurls.UrlJoin(host, key)
+		return bbsurls.UrlJoin(ensureScheme(host), key)
 	}
 
-	endpoint := strings.TrimRight(strings.TrimSpace(cfg.S3.Endpoint), "/")
+	endpoint := ensureScheme(strings.TrimRight(strings.TrimSpace(cfg.S3.Endpoint), "/"))
 	if endpoint == "" {
 		return key
 	}
@@ -150,4 +150,17 @@ func S3ObjectURL(cfg dto.UploadConfig, key string) string {
 		scheme = "https"
 	}
 	return fmt.Sprintf("%s://%s.%s/%s", scheme, cfg.S3.Bucket, parsed.Host, key)
+}
+
+// ensureScheme 确保 URL 包含 scheme，缺失时默认 https。
+// 避免用户填写 r2fs.udiei.win 时生成无协议 URL，被浏览器当作相对路径解析。
+func ensureScheme(rawURL string) string {
+	rawURL = strings.TrimSpace(rawURL)
+	if rawURL == "" {
+		return rawURL
+	}
+	if strings.HasPrefix(rawURL, "http://") || strings.HasPrefix(rawURL, "https://") {
+		return rawURL
+	}
+	return "https://" + rawURL
 }
