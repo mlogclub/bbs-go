@@ -65,7 +65,7 @@ package: web-build-spa
 		GOOS=$$os GOARCH=$$arch $(GO) build -v -o "$$stage/$$binary" $(MAIN); \
 		cp -R locales "$$stage/locales"; \
 		cp -R res/images "$$stage/res/images"; \
-		tar -C "$(DIST_DIR)" -czf "$$name.tar.gz" "$$name"; \
+		(cd "$(DIST_DIR)" && tar -czf "$$name.tar.gz" "$$name"); \
 		rm -rf -- "$$stage"; \
 	done
 
