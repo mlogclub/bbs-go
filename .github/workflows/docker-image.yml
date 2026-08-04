@@ -54,13 +54,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: 将包可见性设为公开
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # 将包名转为小写（GHCR 要求）
-          PACKAGE_NAME=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
-          gh api -X PATCH /user/packages/container/${PACKAGE_NAME}/visibility \
-            -f visibility=public
