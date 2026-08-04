@@ -55,7 +55,7 @@ package: web-build-spa
 		set -- $$target; \
 		os=$$1; \
 		arch=$$2; \
-		name="$(APP)-$(GIT_REVISION)-$$os-$$arch"; \
+		name="$(APP)-$$os-$$arch-$(GIT_REVISION)"; \
 		stage="$(DIST_DIR)/$$name"; \
 		binary="$(APP)"; \
 		if [ "$$os" = "windows" ]; then binary="$$binary.exe"; fi; \
