@@ -49,6 +49,7 @@ const (
 	SysConfigUrlRedirect                = "urlRedirect"                // 是否开启链接跳转
 	SysConfigDefaultCategoryId          = "defaultCategoryId"          // 发帖默认节点
 	SysConfigArticlePending             = "articlePending"             // 是否开启文章审核
+	SysConfigTopicPending               = "topicPending"               // 是否开启帖子审核
 	SysConfigTopicCaptcha               = "topicCaptcha"               // 是否开启发帖验证码
 	SysConfigUserObserveSeconds         = "userObserveSeconds"         // 新用户观察期
 	SysConfigTokenExpireDays            = "tokenExpireDays"            // 登录Token有效天数
