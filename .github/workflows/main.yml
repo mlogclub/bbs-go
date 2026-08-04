@@ -1,4 +1,4 @@
-name: Build FreeBSD Binary
+name: Build Multi-Platform Binaries
 
 on:
   push:
@@ -10,12 +10,28 @@ permissions:
   contents: write
 
 jobs:
-  build-freebsd:
-    name: Build FreeBSD release package
+  build:
+    name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [amd64, arm64]
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: freebsd
+            goarch: amd64
+          - goos: freebsd
+            goarch: arm64
     env:
       GO_VERSION: '1.26'
       NODE_VERSION: '24'
@@ -59,19 +75,22 @@ jobs:
       - name: Download Go modules
         run: go mod download
 
-      - name: Build FreeBSD binary (${{ matrix.arch }})
+      - name: Build binary (${{ matrix.goos }}/${{ matrix.goarch }})
         env:
-          GOOS: freebsd
-          GOARCH: ${{ matrix.arch }}
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
         run: |
-          mkdir -p bbs-go-freebsd-${{ matrix.arch }}
-          go build -v -trimpath -ldflags="-s -w" -o bbs-go-freebsd-${{ matrix.arch }}/bbs-go ./main.go
+          PKG_DIR="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}"
+          BIN_NAME="bbs-go"
+          if [ "${{ matrix.goos }}" = "windows" ]; then BIN_NAME="bbs-go.exe"; fi
+          mkdir -p "$PKG_DIR"
+          go build -v -trimpath -ldflags="-s -w" -o "$PKG_DIR/$BIN_NAME" ./main.go
 
       - name: Prepare release package
         id: package
         run: |
-          PKG_DIR="bbs-go-freebsd-${{ matrix.arch }}"
+          PKG_DIR="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}"
           mkdir -p "$PKG_DIR"/{data,logs,res/uploads,defaults}
 
           cp -r locales "$PKG_DIR/"
@@ -80,20 +99,22 @@ jobs:
           cp docker/bbs-go-docker.yaml "$PKG_DIR/defaults/bbs-go.yaml"
           cp docker/entrypoint.sh "$PKG_DIR/"
 
-          ln -s data/bbs-go.yaml "$PKG_DIR/bbs-go.yaml" || true
+          # 复制一份默认配置到根目录，便于直接使用（Windows 下忽略链接错误）
+          ln -s data/bbs-go.yaml "$PKG_DIR/bbs-go.yaml" 2>/dev/null || cp "$PKG_DIR/defaults/bbs-go.yaml" "$PKG_DIR/bbs-go.yaml"
 
-          tar -czf "bbs-go-freebsd-${{ matrix.arch }}.tar.gz" -C "$PKG_DIR" .
-          echo "artifact=bbs-go-freebsd-${{ matrix.arch }}.tar.gz" >> $GITHUB_OUTPUT
+          ARCHIVE_NAME="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz"
+          tar -czf "$ARCHIVE_NAME" -C "$PKG_DIR" .
+          echo "artifact=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: bbs-go-freebsd-${{ matrix.arch }}
+          name: bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}
           path: ${{ steps.package.outputs.artifact }}
 
   release:
     name: Release to GitHub
-    needs: build-freebsd
+    needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
