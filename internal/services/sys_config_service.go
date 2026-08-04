@@ -195,6 +195,10 @@ func (s *sysConfigService) IsArticlePending() bool {
 	return cache.SysConfigCache.GetBool(constants.SysConfigArticlePending)
 }
 
+func (s *sysConfigService) IsTopicPending() bool {
+	return cache.SysConfigCache.GetBool(constants.SysConfigTopicPending)
+}
+
 func (s *sysConfigService) IsTopicCaptcha() bool {
 	return cache.SysConfigCache.GetBool(constants.SysConfigTopicCaptcha)
 }

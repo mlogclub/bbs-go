@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   CheckCircleIcon,
+  ClipboardCheckIcon,
   EyeIcon,
   ExternalLinkIcon,
   LightbulbIcon,
@@ -153,7 +154,7 @@ export default function DashboardTopicsRoute() {
   const { t } = useI18n()
   const currentUser = useCurrentUser()
   const [filters, setFilters] = React.useState<Record<string, AdminFormValue>>(
-    () => createAdminInitialFilters({ status: 0 }, 20)
+    () => createAdminInitialFilters({}, 20)
   )
   const [records, setRecords] = React.useState<TopicRecord[]>([])
   const [total, setTotal] = React.useState(0)
@@ -325,6 +326,20 @@ export default function DashboardTopicsRoute() {
           <Button onClick={() => void load()} disabled={loading}>
             <SearchIcon />
             {t("dashboard.actions.search")}
+          </Button>
+          <Button
+            variant={filters.status === 2 ? "default" : "outline"}
+            size="sm"
+            onClick={() =>
+              updateFilter(
+                "status",
+                filters.status === 2 ? undefined : 2
+              )
+            }
+            title={t("dashboard.actions.pendingReviewTooltip")}
+          >
+            <ClipboardCheckIcon />
+            {t("dashboard.actions.pendingReview")}
           </Button>
           <Button
             variant="outline"
