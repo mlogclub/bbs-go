@@ -147,6 +147,11 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*m
 
 // IsNeedReview 是否需要审核
 func (s *topicPublishService) _IsNeedReview(form req.CreateTopicReq) bool {
+	// 全局开启帖子审核
+	if SysConfigService.IsTopicPending() {
+		return true
+	}
+
 	if hits := ForbiddenWordService.Check(form.Title); len(hits) > 0 {
 		slog.Info("帖子标题命中违禁词", slog.String("hits", strings.Join(hits, ",")))
 		return true
