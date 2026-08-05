@@ -1,55 +1,71 @@
-name: Build and Push to GHCR
+name: Docker Image
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: '镜像标签（默认 latest，可输入版本号如 v1.2.3）'
-        required: false
-        default: 'latest'
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
-  packages: write
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ vars.DOCKERHUB_REPOSITORY }}
 
 jobs:
   build:
+    name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 代码
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 设置 QEMU（多架构支持）
+      - name: Validate Docker Hub repository
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -z "${IMAGE_NAME}" ]; then
+            echo "Repository variable DOCKERHUB_REPOSITORY is required, for example: mlogclub/bbs-go" >&2
+            exit 1
+          fi
+          if [ -z "${DOCKERHUB_USERNAME}" ]; then
+            echo "Secret DOCKERHUB_USERNAME is required" >&2
+            exit 1
+          fi
+          if [ -z "${DOCKERHUB_TOKEN}" ]; then
+            echo "Secret DOCKERHUB_TOKEN is required" >&2
+            exit 1
+          fi
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: 设置 Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 登录 GHCR
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 提取 Docker 元数据（标签）
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ github.event.inputs.tag }}
-            type=raw,value=latest,enable=${{ github.event.inputs.tag != 'latest' }}
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
 
-      - name: 构建并推送镜像
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           target: app
+          # platforms: linux/amd64,linux/arm64
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
