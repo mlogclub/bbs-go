@@ -545,7 +545,7 @@ const enUS = {
         awsS3: "AWS S3",
         s3: "Generic S3",
         s3Tip:
-          "S3-compatible storage such as Cloudflare R2 / MinIO / RustFS. Use Region 'auto' for R2; MinIO/RustFS usually require PathStyle.",
+          "S3-compatible storage such as Cloudflare R2 / MinIO / RustFS. Use Region 'auto' for R2; MinIO/RustFS usually require PathStyle. Host/Endpoint may be entered without https:// — it is auto-completed.",
         host: "Domain",
         bucket: "Bucket",
         endpoint: "Endpoint",
