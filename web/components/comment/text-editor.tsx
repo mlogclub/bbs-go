@@ -223,7 +223,7 @@ export const TextEditor = React.forwardRef<
         value={content}
         placeholder={t("component.textEditor.placeholder")}
         className={cn(
-          "block w-full flex-1 resize-none rounded-t-lg border-0 bg-muted p-2.5 font-[inherit] leading-[1.8] text-foreground outline-0 overscroll-contain",
+          "block min-h-0 w-full flex-1 resize-none rounded-t-lg border-0 bg-muted p-2.5 font-[inherit] leading-[1.8] text-foreground outline-0 overscroll-contain",
           isFocus && "bg-background"
         )}
         disabled={disabled}
@@ -250,7 +250,7 @@ export const TextEditor = React.forwardRef<
       />
       {showImageUpload ? (
         <div
-          className="flex h-[90px] flex-wrap gap-2 overflow-auto p-2.5"
+          className="flex h-[90px] shrink-0 flex-wrap gap-2 overflow-auto p-2.5"
           onMouseDown={(event) => event.preventDefault()}
         >
           {currentImages.map((image, index) => (
@@ -296,7 +296,7 @@ export const TextEditor = React.forwardRef<
       ) : null}
       <div
         className={cn(
-          "flex h-9 items-center justify-between rounded-b-lg bg-muted px-2.5 py-[3px]",
+          "flex h-9 shrink-0 items-center justify-between rounded-b-lg bg-muted px-2.5 py-[3px]",
           isFocus && "bg-background"
         )}
       >
