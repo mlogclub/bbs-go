@@ -1,15 +1,19 @@
-name: Docker Image
+name: Build and Push Docker Image
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 permissions:
   contents: read
+  packages: write
 
 env:
-  IMAGE_NAME: ${{ vars.DOCKERHUB_REPOSITORY }}
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
   build:
@@ -19,35 +23,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate Docker Hub repository
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: |
-          if [ -z "${IMAGE_NAME}" ]; then
-            echo "Repository variable DOCKERHUB_REPOSITORY is required, for example: mlogclub/bbs-go" >&2
-            exit 1
-          fi
-          if [ -z "${DOCKERHUB_USERNAME}" ]; then
-            echo "Secret DOCKERHUB_USERNAME is required" >&2
-            exit 1
-          fi
-          if [ -z "${DOCKERHUB_TOKEN}" ]; then
-            echo "Secret DOCKERHUB_TOKEN is required" >&2
-            exit 1
-          fi
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to Docker Hub
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
@@ -55,18 +42,15 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           target: app
-          # platforms: linux/amd64,linux/arm64
           platforms: linux/amd64
-          push: true
+          push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
