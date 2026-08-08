@@ -26,6 +26,7 @@ bbs-go.test.yaml
 
 .idea/*
 build/*
+dist/*
 
 cscope.files
 tags

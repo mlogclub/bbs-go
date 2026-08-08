@@ -119,6 +119,8 @@ const enUS = {
       title: "Actions",
       view: "View",
       audit: "Audit",
+      pendingReview: "Pending",
+      pendingReviewTooltip: "Filter pending-review articles for quick audit",
       resetPassword: "Reset password",
       recommend: "Feature",
       unrecommend: "Unfeature",
@@ -309,6 +311,7 @@ const enUS = {
       createArticleEmailVerified: "Article requires verified email",
       createCommentEmailVerified: "Comment requires verified email",
       articlePending: "Article review",
+      topicPending: "Topic review",
       userObserveSeconds: "New user observation seconds",
       emailNoticeIntervalSeconds: "Email interval seconds",
       emailWhitelist: "Email whitelist",
@@ -338,6 +341,7 @@ const enUS = {
       uploadAliyunOss: "Alibaba Cloud OSS",
       uploadTencentCos: "Tencent COS",
       uploadAwsS3: "AWS S3",
+      uploadS3: "Generic S3",
       aliyunOssHost: "Alibaba Cloud OSS host",
       aliyunOssBucket: "Alibaba Cloud OSS bucket",
       aliyunOssEndpoint: "Alibaba Cloud OSS endpoint",
@@ -349,6 +353,13 @@ const enUS = {
       awsS3Bucket: "AWS S3 bucket",
       awsAccessKeyId: "AWS access key ID",
       awsAccessKeySecret: "AWS access key secret",
+      s3Host: "S3 host",
+      s3Bucket: "S3 bucket",
+      s3Endpoint: "S3 endpoint",
+      s3Region: "S3 region",
+      s3AccessKeyId: "S3 access key ID",
+      s3AccessKeySecret: "S3 access key secret",
+      s3PathStyle: "S3 path-style",
       siteNavs: "Site navs",
       footerLinks: "Footer links",
       aboutPageConfig: "About page",
@@ -496,6 +507,9 @@ const enUS = {
         articlePending: "Article Review",
         articlePendingTooltip:
           "Whether to enable review after publishing articles",
+        topicPending: "Topic Review",
+        topicPendingTooltip:
+          "Whether to enable review after publishing topics/tweets/QA",
         userObserveSeconds: "User Observation Period (seconds)",
         userObserveSecondsTooltip:
           "During the observation period, users cannot post topics, tweets, etc. Set to 0 for no observation period.",
@@ -529,6 +543,9 @@ const enUS = {
         aliyunOss: "Alibaba Cloud OSS",
         tencentCos: "Tencent Cloud COS",
         awsS3: "AWS S3",
+        s3: "Generic S3",
+        s3Tip:
+          "S3-compatible storage such as Cloudflare R2 / MinIO / RustFS. Use Region 'auto' for R2; MinIO/RustFS usually require PathStyle. Host/Endpoint may be entered without https:// — it is auto-completed.",
         host: "Domain",
         bucket: "Bucket",
         endpoint: "Endpoint",
@@ -537,6 +554,9 @@ const enUS = {
         region: "Region",
         secretId: "SecretId",
         secretKey: "SecretKey",
+        pathStyle: "Path-Style Addressing",
+        pathStyleTooltip:
+          "Required by MinIO/RustFS; off by default for R2/AWS. When enabled the URL is {endpoint}/{bucket}/{key}.",
         imageStyleConfig: "Image Style Configuration",
         styleSplitter: "Style Splitter",
         styleAvatar: "Avatar Style",
@@ -563,6 +583,14 @@ const enUS = {
           awsBucket: "Enter Bucket name",
           awsAccessKeyId: "Enter AccessKey ID",
           awsSecretAccessKey: "Enter Secret Access Key",
+          s3Host:
+            "Object access URL prefix (custom domain / CDN / R2 public domain); derived from Endpoint+Bucket when empty",
+          s3Endpoint:
+            "Enter S3 API Endpoint, e.g.: https://<accountid>.r2.cloudflarestorage.com",
+          s3Region: "Region; use 'auto' for Cloudflare R2, 'us-east-1' for MinIO/RustFS",
+          s3Bucket: "Enter Bucket name",
+          s3AccessKeyId: "Enter AccessKey ID",
+          s3AccessKeySecret: "Enter AccessKey Secret",
         },
       },
       script: {

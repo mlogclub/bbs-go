@@ -7,6 +7,8 @@ GO ?= go
 PNPM ?= pnpm
 GOOS ?= $(shell $(GO) env GOOS)
 GOARCH ?= $(shell $(GO) env GOARCH)
+GIT_REVISION ?= g$(shell git rev-parse --short=8 HEAD 2>/dev/null || echo unknown)
+DIST_DIR := dist
 
 .DEFAULT_GOAL := help
 
@@ -19,7 +21,7 @@ help:
 	@echo "  make build          Build SPA and embed it into the Go binary"
 	@echo "  make build-go       Build Go binary, building SPA first only when missing"
 	@echo "  make build-linux    Build linux/amd64 binary with embedded SPA"
-	@echo "  make release        Build release binaries for linux, macOS, and Windows"
+	@echo "  make package        Build release packages for linux, macOS, and Windows"
 	@echo "  make run            Build SPA, then run the Go server"
 	@echo "  make run-go         Run the Go server, building SPA first only when missing"
 	@echo "  make dev            Clean outputs, then run Go and web dev servers"
@@ -45,14 +47,27 @@ build-linux: web-build-spa
 	@echo "Building $(APP)-linux-amd64..."
 	@GOOS=linux GOARCH=amd64 $(GO) build -v -o $(APP)-linux-amd64 $(MAIN)
 
-.PHONY: release
-release: web-build-spa
-	@echo "Building release binaries..."
-	@GOOS=linux GOARCH=amd64 $(GO) build -v -o $(APP)-linux-amd64 $(MAIN)
-	@GOOS=linux GOARCH=arm64 $(GO) build -v -o $(APP)-linux-arm64 $(MAIN)
-	@GOOS=darwin GOARCH=amd64 $(GO) build -v -o $(APP)-macos-amd64 $(MAIN)
-	@GOOS=darwin GOARCH=arm64 $(GO) build -v -o $(APP)-macos-arm64 $(MAIN)
-	@GOOS=windows GOARCH=amd64 $(GO) build -v -o $(APP)-windows-amd64.exe $(MAIN)
+.PHONY: package
+package: web-build-spa
+	@set -eu; \
+	mkdir -p $(DIST_DIR); \
+	for target in "linux amd64" "linux arm64" "darwin amd64" "darwin arm64" "windows amd64"; do \
+		set -- $$target; \
+		os=$$1; \
+		arch=$$2; \
+		name="$(APP)-$$os-$$arch-$(GIT_REVISION)"; \
+		stage="$(DIST_DIR)/$$name"; \
+		binary="$(APP)"; \
+		if [ "$$os" = "windows" ]; then binary="$$binary.exe"; fi; \
+		rm -rf -- "$$stage"; \
+		mkdir -p "$$stage/res"; \
+		echo "Building $$name..."; \
+		GOOS=$$os GOARCH=$$arch $(GO) build -v -o "$$stage/$$binary" $(MAIN); \
+		cp -R locales "$$stage/locales"; \
+		cp -R res/images "$$stage/res/images"; \
+		(cd "$(DIST_DIR)" && tar -czf "$$name.tar.gz" "$$name"); \
+		rm -rf -- "$$stage"; \
+	done
 
 .PHONY: run
 run: web-build-spa
@@ -81,6 +96,7 @@ check: test web-typecheck web-lint
 clean:
 	@echo "Cleaning Go binaries..."
 	@rm -f $(APP) $(APP)-linux-* $(APP)-macos-* $(APP)-windows-*.exe
+	@rm -rf -- $(DIST_DIR)
 
 .PHONY: clean-web
 clean-web:

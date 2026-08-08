@@ -55,6 +55,8 @@ func (s *uploadService) ObjectURL(key string) string {
 		return fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", cfg.TencentCos.Bucket, cfg.TencentCos.Region, key)
 	case dto.AwsS3:
 		return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", cfg.AwsS3.Bucket, cfg.AwsS3.Region, key)
+	case dto.S3:
+		return uploader.S3ObjectURL(cfg, key)
 	default:
 		return respath.UploadsURLPrefix + key
 	}
@@ -96,6 +98,7 @@ func (s *uploadService) getUploader() (uploader.Uploader, error) {
 		s.uploaderMap[dto.AliyunOss] = &uploader.AliyunOssUploader{}
 		s.uploaderMap[dto.TencentCos] = &uploader.TencentCosUploader{}
 		s.uploaderMap[dto.AwsS3] = &uploader.AwsS3Uploader{}
+		s.uploaderMap[dto.S3] = &uploader.S3Uploader{}
 	})
 	cfg := SysConfigService.GetUploadConfig()
 

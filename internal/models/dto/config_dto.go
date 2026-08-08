@@ -19,6 +19,7 @@ type SysConfigAdminResponse struct {
 	TopicListStyle             string                      `json:"topicListStyle"`
 	ArticlePending             bool                        `json:"articlePending"`
 	TopicCaptcha               bool                        `json:"topicCaptcha"`
+	TopicPending               bool                        `json:"topicPending"`
 	UserObserveSeconds         int                         `json:"userObserveSeconds"`
 	TokenExpireDays            int                         `json:"tokenExpireDays"`
 	CreateTopicEmailVerified   bool                        `json:"createTopicEmailVerified"`
@@ -58,6 +59,7 @@ type SysConfigOpenResponse struct {
 	TopicListStyle             string            `json:"topicListStyle"`
 	ArticlePending             bool              `json:"articlePending"`
 	TopicCaptcha               bool              `json:"topicCaptcha"`
+	TopicPending               bool              `json:"topicPending"`
 	UserObserveSeconds         int               `json:"userObserveSeconds"`
 	TokenExpireDays            int               `json:"tokenExpireDays"`
 	CreateTopicEmailVerified   bool              `json:"createTopicEmailVerified"`
@@ -185,6 +187,7 @@ const (
 	AliyunOss  UploadMethod = "AliyunOss"
 	TencentCos UploadMethod = "TencentCos"
 	AwsS3      UploadMethod = "AwsS3"
+	S3         UploadMethod = "S3"
 )
 
 type UploadConfig struct {
@@ -192,6 +195,7 @@ type UploadConfig struct {
 	AliyunOss          AliyunOssUploadConfig  `json:"aliyunOss"`
 	TencentCos         TencentCosUploadConfig `json:"tencentCos"`
 	AwsS3              AwsS3UploadConfig      `json:"awsS3"`
+	S3                 S3UploadConfig         `json:"s3"`
 }
 
 type SmtpConfig struct {
@@ -227,6 +231,17 @@ type AwsS3UploadConfig struct {
 	Bucket          string `json:"bucket"`
 	AccessKeyId     string `json:"accessKeyId"`
 	AccessKeySecret string `json:"accessKeySecret"`
+}
+
+// S3UploadConfig 通用 S3 兼容存储配置，兼容 Cloudflare R2 / MinIO / RustFS 等。
+type S3UploadConfig struct {
+	Host            string `json:"host"`        // 对象访问的 URL 前缀，留空时按 Endpoint+Bucket 推导
+	Bucket          string `json:"bucket"`     // 桶名称
+	Endpoint        string `json:"endpoint"`   // S3 API Endpoint，如 https://xxx.r2.cloudflarestorage.com
+	Region          string `json:"region"`     // 区域，Cloudflare R2 使用 auto
+	AccessKeyId     string `json:"accessKeyId"`
+	AccessKeySecret string `json:"accessKeySecret"`
+	PathStyle       bool   `json:"pathStyle"` // 是否使用 path-style 寻址（MinIO/RustFS 通常为 true，R2 为 false）
 }
 
 // AttachmentConfig 帖子附件配置（单 Key 存 JSON）

@@ -634,6 +634,7 @@ export default function DashboardSettingsRoute() {
                   createCommentEmailVerified:
                     settings.createCommentEmailVerified,
                   articlePending: settings.articlePending,
+                  topicPending: settings.topicPending,
                   userObserveSeconds: settings.userObserveSeconds,
                 })
               }
@@ -1587,6 +1588,7 @@ function SpamSettings({ settings, saving, s, update, onSave }: SettingsProps) {
         ["createArticleEmailVerified", "createArticleEmailVerified"],
         ["createCommentEmailVerified", "createCommentEmailVerified"],
         ["articlePending", "articlePending"],
+        ["topicPending", "topicPending"],
       ].map(([path, key]) => (
         <Field key={path} label={s(`spam.${key}`)}>
           <SwitchWithTooltip
@@ -1879,6 +1881,7 @@ function UploadSettings({
                 ["AliyunOss", s("upload.aliyunOss")],
                 ["TencentCos", s("upload.tencentCos")],
                 ["AwsS3", s("upload.awsS3")],
+                ["S3", s("upload.s3")],
               ]}
               showCheckbox
               onChange={(value) =>
@@ -1977,6 +1980,42 @@ function UploadSettings({
               />
             </Field>
           ))}
+        </ProviderCard>
+      ) : null}
+
+      {method === "S3" ? (
+        <ProviderCard title={s("upload.s3")}>
+          <Alert>
+            <AlertDescription>{s("upload.s3Tip")}</AlertDescription>
+          </Alert>
+          {[
+            ["host", "host", "s3Host"],
+            ["endpoint", "endpoint", "s3Endpoint"],
+            ["region", "region", "s3Region"],
+            ["bucket", "bucket", "s3Bucket"],
+            ["accessKeyId", "accessKeyId", "s3AccessKeyId"],
+            ["accessKeySecret", "accessKeySecret", "s3AccessKeySecret"],
+          ].map(([field, labelKey, placeholderKey]) => (
+            <Field key={field} label={s(`upload.${labelKey}`)}>
+              <Input
+                type={field === "accessKeySecret" ? "password" : "text"}
+                value={getString(getPathValue(config, `s3.${field}`))}
+                placeholder={s(`upload.placeholder.${placeholderKey}`)}
+                onChange={(event) =>
+                  update(`uploadConfig.s3.${field}`, event.target.value)
+                }
+              />
+            </Field>
+          ))}
+          <Field label={s("upload.pathStyle")}>
+            <SwitchWithTooltip
+              checked={Boolean(getPathValue(config, "s3.pathStyle"))}
+              tooltip={s("upload.pathStyleTooltip")}
+              onChange={(checked) =>
+                update("uploadConfig.s3.pathStyle", checked)
+              }
+            />
+          </Field>
         </ProviderCard>
       ) : null}
     </SettingsForm>

@@ -130,6 +130,10 @@ export async function apiFetch<T>(
   })
 
   if (!response.ok) {
+    if (response.status === INSTALL_REQUIRED_STATUS) {
+      handleInstallRequired()
+    }
+
     throw new ApiError(`${response.status} ${response.statusText}`, {
       status: response.status,
     })
@@ -142,10 +146,6 @@ export async function apiFetch<T>(
       envelope.errorCode !== undefined &&
       envelope.errorCode !== 0)
   if (failed) {
-    if (envelope.errorCode === -1) {
-      handleInstallRequired()
-    }
-
     throw new ApiError(envelope.message || "API request failed", {
       errorCode: envelope.errorCode,
       status: response.status,

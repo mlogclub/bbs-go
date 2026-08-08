@@ -1,0 +1,132 @@
+name: Build Multi-Platform Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: freebsd
+            goarch: amd64
+          - goos: freebsd
+            goarch: arm64
+    env:
+      GO_VERSION: '1.26'
+      NODE_VERSION: '24'
+      PNPM_VERSION: '10.30.2'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install frontend dependencies
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        working-directory: web
+        run: |
+          pnpm build:ssr
+          cp -R build build-ssr
+          pnpm build:spa
+          cp -R build/spa build-spa
+          rm -rf build
+          mv build-ssr build
+          mv build-spa build/spa
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Download Go modules
+        run: go mod download
+
+      - name: Build binary (${{ matrix.goos }}/${{ matrix.goarch }})
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          PKG_DIR="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}"
+          BIN_NAME="bbs-go"
+          if [ "${{ matrix.goos }}" = "windows" ]; then BIN_NAME="bbs-go.exe"; fi
+          mkdir -p "$PKG_DIR"
+          go build -v -trimpath -ldflags="-s -w" -o "$PKG_DIR/$BIN_NAME" ./main.go
+
+      - name: Prepare release package
+        id: package
+        run: |
+          PKG_DIR="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}"
+          mkdir -p "$PKG_DIR"/{data,logs,res/uploads,defaults}
+
+          cp -r locales "$PKG_DIR/"
+          cp -r res "$PKG_DIR/"
+          cp -r web/build "$PKG_DIR/build"
+          cp docker/bbs-go-docker.yaml "$PKG_DIR/defaults/bbs-go.yaml"
+          cp docker/entrypoint.sh "$PKG_DIR/"
+
+          # 复制一份默认配置到根目录，便于直接使用（Windows 下忽略链接错误）
+          ln -s data/bbs-go.yaml "$PKG_DIR/bbs-go.yaml" 2>/dev/null || cp "$PKG_DIR/defaults/bbs-go.yaml" "$PKG_DIR/bbs-go.yaml"
+
+          ARCHIVE_NAME="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz"
+          tar -czf "$ARCHIVE_NAME" -C "$PKG_DIR" .
+          echo "artifact=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ steps.package.outputs.artifact }}
+
+  release:
+    name: Release to GitHub
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.tar.gz
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
