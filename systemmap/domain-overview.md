@@ -7,13 +7,14 @@ last_verified: 2026-08-08
 ## 文档索引（index_updated: 2026-08-08）
 | 行号 | 主题 |
 |------|------|
-| L19-L27 |   一、项目定位与仓库关系 |
-| L28-L36 |   二、技术栈（重要认知，与旧版文档不同） |
-| L37-L46 |   三、CI/CD 与部署模型（2026-08-08 起） |
-| L47-L48 |   四、业务规则与已修复问题（本 fork 特有） |
-| L49-L60 |     4.1 用户发帖/评论计数一致性（PR #297） |
-| L61-L67 |     4.2 评论输入框 Firefox 显示 bug（PR #301） |
-| L68-L73 |   五、开发注意（本仓库约定） |
+| L20-L28 |   一、项目定位与仓库关系 |
+| L29-L37 |   二、技术栈（重要认知，与旧版文档不同） |
+| L38-L47 |   三、CI/CD 与部署模型（2026-08-08 起） |
+| L48-L57 |     3.1 fork 与上游的 CI/CD 关系（2026-08-08 merge 后） |
+| L58-L59 |   四、业务规则与已修复问题（本 fork 特有） |
+| L60-L71 |     4.1 用户发帖/评论计数一致性（PR #297） |
+| L72-L78 |     4.2 评论输入框 Firefox 显示 bug（PR #301） |
+| L79-L84 |   五、开发注意（本仓库约定） |
 <!-- __SYSMAP_INDEX_END__ -->
 
 ## 一、项目定位与仓库关系
@@ -43,6 +44,16 @@ last_verified: 2026-08-08
 - 回滚：`docker pull ghcr.io/aishangwuji/bbs-go:sha-<commit>` + `docker compose -f /opt/bbs-go/docker-compose.yml up -d --no-deps`。
 - 服务器架构细节（nginx SNI 分流、端口、证书等）：见服务器 `/opt/server-architecture.md`（每次改动服务器服务必须同步更新）。
 - 完整流程说明已写入仓库 `README.md` / `README.en-US.md`。
+
+### 3.1 fork 与上游的 CI/CD 关系（2026-08-08 merge 后）
+
+- 已 merge 上游 15 个提交，**无冲突**，自动合并 23 个文件。
+- merge 后保留三个 workflow：
+  - `docker-image.yml`：**我们的 GHCR 自动版**（push master 触发，merge 时 git 自动保留了 fork 版本，未被上游覆盖）——核心流水线。
+  - `ghcr.yml`：上游手动触发版（workflow_dispatch，可指定 tag 构建多版本）——保留，与自动版不冲突。
+  - `main.yml`：上游跨平台二进制发布版（打 v* tag 触发，发布 tar.gz 到 GitHub Release）——保留，供终端用户装包，不影响服务器部署。
+- **决策**：上游无 push-master 自动推 GHCR 的 workflow，因此我们的自动流水线不可被上游替代。merge 后必须保留 fork 版 `docker-image.yml`，否则 CI 失联、服务器无法自动部署。
+- merge 带入的上游新能力：通用 S3 兼容存储（`internal/pkg/uploader/s3_uploader.go`，支持 R2/MinIO/RustFS）、帖子审核开关（`SysConfigService.IsTopicPending`）、Makefile 打包目标、web/embed 路由优化、安装中间件专用状态码。
 
 ## 四、业务规则与已修复问题（本 fork 特有）
 
