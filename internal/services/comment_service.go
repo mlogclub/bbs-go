@@ -80,7 +80,16 @@ func (s *commentService) UpdateColumn(id int64, name string, value interface{}) 
 }
 
 func (s *commentService) Delete(id int64) error {
-	return repositories.CommentRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted)
+	comment := s.Get(id)
+	if comment == nil || comment.Status == constants.StatusDeleted {
+		return nil
+	}
+	if err := repositories.CommentRepository.UpdateColumn(sqls.DB(), id, "status", constants.StatusDeleted); err != nil {
+		return err
+	}
+	// 用户跟帖计数 -1
+	UserService.DecrCommentCount(comment.UserId)
+	return nil
 }
 
 func (s *commentService) DeleteByUser(user *models.User, id int64) error {

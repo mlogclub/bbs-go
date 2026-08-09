@@ -48,6 +48,44 @@ For production deployment options, environment variables, upgrades, and troubles
 
 <https://hub.docker.com/r/mlogclub/bbs-go>
 
+## CI/CD and Automated Deployment
+
+This project uses **GitHub Actions + GHCR (GitHub Container Registry)** for automated build and deployment, avoiding local compilation on low-spec servers (a 2-core/4G box often runs out of resources during `docker build`).
+
+### Pipeline Overview
+
+| Stage | Description |
+|-------|-------------|
+| Trigger | Pushing code to the `master` branch triggers the build |
+| Build location | GitHub Actions cloud (ubuntu-latest), reusing the multi-stage `Dockerfile` at repo root |
+| Artifact | Pushed to GHCR: `ghcr.io/<owner>/bbs-go:latest` and `ghcr.io/<owner>/bbs-go:sha-<commit>` |
+| Server deploy | No build on server; just `docker compose pull && up` |
+
+### Push and auto-build
+
+```bash
+git push origin master
+```
+
+Watch the Actions tab for build progress. A green checkmark means the image is on GHCR.
+
+### Deploy on the server (manual trigger, controllable and rollback-able)
+
+```bash
+# On the server (first deploy or every release)
+bash /opt/bbs-go/repo/deploy/remote-deploy.sh
+```
+
+The script runs: pull image → validate compose → recreate container → health check (up to 90s), printing container logs on failure. The server compose file is `/opt/bbs-go/docker-compose.yml` (image points to `ghcr.io/<owner>/bbs-go:latest`).
+
+### Rollback
+
+```bash
+# On the server: pull a previous image tag and recreate
+docker pull ghcr.io/<owner>/bbs-go:sha-<previous-good-commit>
+docker compose -f /opt/bbs-go/docker-compose.yml up -d --no-deps
+```
+
 ## Why Choose bbs-go
 
 - **Community knowledge ready**: Give members one searchable place for discussions, questions, answers, articles, announcements, and reusable knowledge.

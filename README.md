@@ -42,6 +42,46 @@ docker compose up -d
 - 后台：<http://localhost:3000/dashboard>
 - 安装向导：<http://localhost:3000/install>
 
+## CI/CD 与自动化部署
+
+本项目使用 **GitHub Actions + GHCR（GitHub Container Registry）** 实现自动化构建与部署，避免在低配服务器上本地编译（2核4G 下 `docker build` 容易资源不足）。
+
+### 工作流说明
+
+| 环节 | 说明 |
+|------|------|
+| 触发时机 | 推送代码到 `master` 分支即触发构建 |
+| 构建位置 | GitHub Actions 云端（ubuntu-latest，复用根目录 `Dockerfile` 多阶段构建） |
+| 产物去向 | 推送至 GHCR：`ghcr.io/<owner>/bbs-go:latest` 及 `ghcr.io/<owner>/bbs-go:sha-<commit>` |
+| 服务器部署 | 不构建，直接 `docker compose pull && up` 拉取镜像 |
+
+### 推送并自动构建
+
+```bash
+git push origin master
+```
+
+推送后可在仓库 Actions 页查看构建进度，绿勾表示镜像已推送到 GHCR。
+
+### 服务器上线部署（手动触发，可控可回滚）
+
+服务器拉取最新镜像并重建容器：
+
+```bash
+# 服务器上执行（首次或每次发布）
+bash /opt/bbs-go/repo/deploy/remote-deploy.sh
+```
+
+脚本会依次完成：拉取镜像 → 校验 compose → 重建容器 → 健康检查（最多 90 秒），失败时输出容器日志便于排查。对应服务器上的 compose 文件为 `/opt/bbs-go/docker-compose.yml`（镜像已指向 `ghcr.io/<owner>/bbs-go:latest`）。
+
+### 回滚
+
+```bash
+# 服务器上执行：拉取上一个可用镜像 tag 并重建
+docker pull ghcr.io/<owner>/bbs-go:sha-<上一个正常 commit>
+docker compose -f /opt/bbs-go/docker-compose.yml up -d --no-deps
+```
+
 ## 为什么选择 bbs-go
 
 - **开箱可用**：论坛、问答、文章、评论、点赞收藏、关注消息等核心社区能力可直接使用。

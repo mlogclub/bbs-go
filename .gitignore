@@ -49,3 +49,12 @@ bbs-go.db
 bbs-go.db*
 
 __debug_bin*
+
+# ===== 本 fork 私有内容（勿提交） =====
+# 本地 Agent 规则文件（系统级认知，不入库，不提交）
+AGENTS.md
+
+# 本地环境变量/密钥（*.yaml 已在上述声明，这里补 *.env 一族）
+.env
+.env.*
+!.env.example
