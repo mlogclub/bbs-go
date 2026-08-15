@@ -19,6 +19,7 @@ import (
 	"bbs-go/internal/pkg/params"
 
 	"github.com/mlogclub/simple/common/jsons"
+	"github.com/mlogclub/simple/web"
 
 	"bbs-go/internal/handlers/render"
 	"bbs-go/internal/services"
@@ -97,6 +98,7 @@ func ArticleCreate(ctx *gin.Context) {
 	}
 	form.Title = strings.TrimSpace(form.Title)
 	form.Content = strings.TrimSpace(form.Content)
+	form.Ip = web.GetRequestIP(ctx.Request)
 
 	if err := spam.CheckArticle(user, form); err != nil {
 		ginx.WriteJSON(ctx, err)

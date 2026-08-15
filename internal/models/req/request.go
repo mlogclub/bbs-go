@@ -66,6 +66,7 @@ type CreateArticleReq struct {
 	Cover       *ImageDTO             `json:"cover" form:"cover"`
 	Tags        []string              `json:"tags" form:"tags"`
 	SourceUrl   string                `json:"sourceUrl" form:"sourceUrl"`
+	Ip          string                `json:"ip" form:"ip"`
 }
 
 type ImageDTO struct {

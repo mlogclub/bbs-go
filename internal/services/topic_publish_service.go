@@ -71,12 +71,16 @@ func (s *topicPublishService) Publish(userId int64, form req.CreateTopicReq) (*m
 	if s._IsNeedReview(form) {
 		topic.Status = constants.StatusReview
 	}
-
 	if err := sqls.WithTransaction(func(ctx *sqls.TxContext) error {
 		var (
 			tagIds []int64
 			err    error
 		)
+		if needReview, checkErr := AntiAbuseService.CheckTopic(ctx.Tx, userId, form.Ip); checkErr != nil {
+			return checkErr
+		} else if needReview {
+			topic.Status = constants.StatusReview
+		}
 		// 帖子
 		if err = repositories.TopicRepository.Create(ctx.Tx, topic); err != nil {
 			return err

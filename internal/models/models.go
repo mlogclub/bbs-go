@@ -170,6 +170,7 @@ type Article struct {
 	Cover        string                `gorm:"type:text;" json:"cover" form:"cover"`                            // 封面图
 	Status       int                   `gorm:"type:int;index:idx_article_status" json:"status" form:"status"`   // 状态
 	SourceUrl    string                `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                     // 原文链接
+	Ip           string                `gorm:"size:128" json:"ip" form:"ip"`                                    // IP
 	ViewCount    int64                 `gorm:"not null;" json:"viewCount" form:"viewCount"`                     // 查看数量
 	CommentCount int64                 `gorm:"default:0" json:"commentCount" form:"commentCount"`               // 评论数量
 	LikeCount    int64                 `gorm:"default:0" json:"likeCount" form:"likeCount"`                     // 点赞数量

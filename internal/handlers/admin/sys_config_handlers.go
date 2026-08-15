@@ -59,6 +59,7 @@ func SysConfigConfigs(ctx *gin.Context) {
 		ArticlePending:             services.SysConfigService.IsArticlePending(),
 		TopicCaptcha:               services.SysConfigService.IsTopicCaptcha(),
 		TopicPending:               services.SysConfigService.IsTopicPending(),
+		AntiAbuseConfig:            services.SysConfigService.GetAntiAbuseConfig(),
 		UserObserveSeconds:         cache.SysConfigCache.GetInt(constants.SysConfigUserObserveSeconds),
 		TokenExpireDays:            services.SysConfigService.GetTokenExpireDays(),
 		CreateTopicEmailVerified:   services.SysConfigService.IsCreateTopicEmailVerified(),

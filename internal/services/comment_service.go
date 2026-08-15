@@ -143,8 +143,10 @@ func (s *commentService) Publish(userId int64, form req.CreateCommentReq) (*mode
 			slog.Error(err.Error(), slog.Any("err", err))
 		}
 	}
-
 	err := sqls.DB().Transaction(func(tx *gorm.DB) error {
+		if err := AntiAbuseService.CheckComment(tx, userId, form.Ip); err != nil {
+			return err
+		}
 		if err := repositories.CommentRepository.Create(tx, comment); err != nil {
 			return err
 		}

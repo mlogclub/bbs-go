@@ -636,6 +636,7 @@ export default function DashboardSettingsRoute() {
                   articlePending: settings.articlePending,
                   topicPending: settings.topicPending,
                   userObserveSeconds: settings.userObserveSeconds,
+                  antiAbuseConfig: settings.antiAbuseConfig,
                 })
               }
             />
@@ -1576,6 +1577,10 @@ function ChildrenTable({
 }
 
 function SpamSettings({ settings, saving, s, update, onSave }: SettingsProps) {
+  const antiAbuse = getObject(settings.antiAbuseConfig)
+  const userRateLimit = getObject(antiAbuse.user)
+  const ipRateLimit = getObject(antiAbuse.ip)
+
   return (
     <SettingsForm
       onSave={onSave}
@@ -1607,7 +1612,120 @@ function SpamSettings({ settings, saving, s, update, onSave }: SettingsProps) {
           onChange={(value) => update("userObserveSeconds", value)}
         />
       </Field>
+      <SectionTitle>{s("spam.frequencyTitle")}</SectionTitle>
+      <FrequencyLimitCard
+        title={s("spam.userRateLimit")}
+        config={userRateLimit}
+        s={s}
+        showAction
+        onChange={(path, value) =>
+          update(`antiAbuseConfig.user.${path}`, value)
+        }
+      />
+      <FrequencyLimitCard
+        title={s("spam.ipRateLimit")}
+        config={ipRateLimit}
+        s={s}
+        onChange={(path, value) => update(`antiAbuseConfig.ip.${path}`, value)}
+      />
     </SettingsForm>
+  )
+}
+
+function FrequencyLimitCard({
+  title,
+  config,
+  s,
+  showAction = false,
+  onChange,
+}: {
+  title: string
+  config: SettingsState
+  s: SettingsProps["s"]
+  showAction?: boolean
+  onChange: (path: string, value: SettingValue) => void
+}) {
+  const contentTypes = ["topic", "article", "comment"] as const
+  return (
+    <Field label={title} wide>
+      <Card
+        size="sm"
+        className="w-full gap-4 bg-[var(--dashboard-panel-muted)]/40 shadow-none"
+      >
+        <CardContent className="grid gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <SwitchControl
+              checked={Boolean(config.enabled)}
+              onChange={(checked) => onChange("enabled", checked)}
+            />
+            <span className="text-sm text-muted-foreground">
+              {s("spam.frequencyHint")}
+            </span>
+            {showAction ? (
+              <DashboardSelect
+                value={getString(config.action) || "reject"}
+                options={[
+                  { label: s("spam.actionReject"), value: "reject" },
+                  { label: s("spam.actionReview"), value: "review" },
+                ]}
+                allowClear={false}
+                onValueChange={(value) => onChange("action", value || "reject")}
+              />
+            ) : null}
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {contentTypes.map((contentType) => {
+              const rule = getObject(config[contentType])
+              return (
+                <div
+                  key={contentType}
+                  className="grid gap-2 rounded-md border bg-background p-3"
+                >
+                  <div className="text-sm font-medium">
+                    {s(`spam.${contentType}`)}
+                  </div>
+                  <label className="grid gap-1 text-xs text-muted-foreground">
+                    {s("spam.durationMinutes")}
+                    <Input
+                      type="number"
+                      min={1}
+                      max={10080}
+                      value={getNumber(rule.durationMinutes) || 10}
+                      onChange={(event) =>
+                        onChange(
+                          `${contentType}.durationMinutes`,
+                          Number(event.target.value || 0)
+                        )
+                      }
+                    />
+                  </label>
+                  <label className="grid gap-1 text-xs text-muted-foreground">
+                    {s("spam.maxCount")}
+                    <Input
+                      type="number"
+                      min={0}
+                      max={10000}
+                      value={getNumber(rule.maxCount)}
+                      onChange={(event) =>
+                        onChange(
+                          `${contentType}.maxCount`,
+                          Number(event.target.value || 0)
+                        )
+                      }
+                    />
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          {showAction ? (
+            <p className="text-xs text-muted-foreground">
+              {s("spam.reviewHint")}
+            </p>
+          ) : null}
+        </CardContent>
+      </Card>
+    </Field>
   )
 }
 

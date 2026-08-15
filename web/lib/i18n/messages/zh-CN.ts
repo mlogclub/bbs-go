@@ -482,7 +482,7 @@ const zhCN = {
         submit: "提交",
       },
       spam: {
-        title: "反作弊配置",
+        title: "反作弊与内容治理",
         topicCaptcha: "发帖验证码",
         topicCaptchaTooltip: "发帖时是否开启验证码校验",
         createTopicEmailVerified: "邮箱验证后发帖",
@@ -498,6 +498,18 @@ const zhCN = {
         userObserveSeconds: "用户观察期(秒)",
         userObserveSecondsTooltip:
           "观察期内用户无法发表话题、动态等内容，设置为 0 表示无观察期。",
+        frequencyTitle: "发布频控",
+        userRateLimit: "用户频控",
+        ipRateLimit: "IP 频控",
+        frequencyHint: "启用后按下方每类内容分别限制",
+        topic: "主题",
+        article: "文章",
+        comment: "评论",
+        durationMinutes: "时长（分钟）",
+        maxCount: "数量（0 表示不限制）",
+        actionReject: "命中后拒绝",
+        actionReview: "命中后进入审核",
+        reviewHint: "进入审核仅适用于主题和文章；评论命中时会直接拒绝。",
         submit: "提交",
       },
       login: {

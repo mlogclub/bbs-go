@@ -51,6 +51,7 @@ const (
 	SysConfigArticlePending             = "articlePending"             // 是否开启文章审核
 	SysConfigTopicPending               = "topicPending"               // 是否开启帖子审核
 	SysConfigTopicCaptcha               = "topicCaptcha"               // 是否开启发帖验证码
+	SysConfigAntiAbuseConfig            = "antiAbuseConfig"            // 用户/IP 发布频控
 	SysConfigUserObserveSeconds         = "userObserveSeconds"         // 新用户观察期
 	SysConfigTokenExpireDays            = "tokenExpireDays"            // 登录Token有效天数
 	SysConfigEnableHideContent          = "enableHideContent"          // 启用回复可见功能
