@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "镜像标签（默认 latest，可输入版本号如 v1.2.3）"
+        description: "Image tag (defaults to latest; enter a version such as v1.2.3)"
         required: false
         default: "latest"
 

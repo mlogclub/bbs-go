@@ -99,7 +99,8 @@ jobs:
           cp docker/bbs-go-docker.yaml "$PKG_DIR/defaults/bbs-go.yaml"
           cp docker/entrypoint.sh "$PKG_DIR/"
 
-          # 复制一份默认配置到根目录，便于直接使用（Windows 下忽略链接错误）
+          # Copy the default configuration to the package root for direct use.
+          # Ignore symlink errors on Windows.
           ln -s data/bbs-go.yaml "$PKG_DIR/bbs-go.yaml" 2>/dev/null || cp "$PKG_DIR/defaults/bbs-go.yaml" "$PKG_DIR/bbs-go.yaml"
 
           ARCHIVE_NAME="bbs-go-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz"
