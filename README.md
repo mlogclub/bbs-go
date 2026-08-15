@@ -44,15 +44,15 @@ docker compose up -d
 
 ## CI/CD 与自动化部署
 
-本项目使用 **GitHub Actions + GHCR（GitHub Container Registry）** 实现自动化构建与部署，避免在低配服务器上本地编译（2核4G 下 `docker build` 容易资源不足）。
+本项目使用 **GitHub Actions + GHCR（GitHub Container Registry）+ Docker Hub** 实现自动化构建与部署，避免在低配服务器上本地编译（2核4G 下 `docker build` 容易资源不足）。
 
 ### 工作流说明
 
 | 环节 | 说明 |
 |------|------|
-| 触发时机 | 推送代码到 `master` 分支即触发构建 |
+| 触发时机 | 推送代码到 `master` 分支或推送 `v*` 版本 tag 时触发构建 |
 | 构建位置 | GitHub Actions 云端（ubuntu-latest，复用根目录 `Dockerfile` 多阶段构建） |
-| 产物去向 | 推送至 GHCR：`ghcr.io/<owner>/bbs-go:latest` 及 `ghcr.io/<owner>/bbs-go:sha-<commit>` |
+| 产物去向 | 同时推送至 GHCR 和 Docker Hub；版本 tag `v4.4.5` 会生成 `v4.4.5`、`4.4.5` 和 `latest` |
 | 服务器部署 | 不构建，直接 `docker compose pull && up` 拉取镜像 |
 
 ### 推送并自动构建
@@ -61,7 +61,7 @@ docker compose up -d
 git push origin master
 ```
 
-推送后可在仓库 Actions 页查看构建进度，绿勾表示镜像已推送到 GHCR。
+推送后可在仓库 Actions 页查看构建进度，绿勾表示镜像已推送到 GHCR 和 Docker Hub。
 
 ### 服务器上线部署（手动触发，可控可回滚）
 
@@ -181,4 +181,3 @@ docker compose -f /opt/bbs-go/docker-compose.yml up -d --no-deps
 `bbs-go` 是一个轻量级社区和问答平台，适合搭建论坛、知识库和讨论社区。
 
 一句话概括：**轻量搭建论坛、问答、知识库和讨论社区**。
-

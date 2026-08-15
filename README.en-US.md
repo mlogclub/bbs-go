@@ -50,15 +50,15 @@ For production deployment options, environment variables, upgrades, and troubles
 
 ## CI/CD and Automated Deployment
 
-This project uses **GitHub Actions + GHCR (GitHub Container Registry)** for automated build and deployment, avoiding local compilation on low-spec servers (a 2-core/4G box often runs out of resources during `docker build`).
+This project uses **GitHub Actions + GHCR (GitHub Container Registry) + Docker Hub** for automated build and deployment, avoiding local compilation on low-spec servers (a 2-core/4G box often runs out of resources during `docker build`).
 
 ### Pipeline Overview
 
 | Stage | Description |
 |-------|-------------|
-| Trigger | Pushing code to the `master` branch triggers the build |
+| Trigger | Pushing code to `master` or a `v*` version tag triggers the build |
 | Build location | GitHub Actions cloud (ubuntu-latest), reusing the multi-stage `Dockerfile` at repo root |
-| Artifact | Pushed to GHCR: `ghcr.io/<owner>/bbs-go:latest` and `ghcr.io/<owner>/bbs-go:sha-<commit>` |
+| Artifact | Pushed to both GHCR and Docker Hub; version tag `v4.4.5` produces `v4.4.5`, `4.4.5`, and `latest` |
 | Server deploy | No build on server; just `docker compose pull && up` |
 
 ### Push and auto-build
@@ -67,7 +67,7 @@ This project uses **GitHub Actions + GHCR (GitHub Container Registry)** for auto
 git push origin master
 ```
 
-Watch the Actions tab for build progress. A green checkmark means the image is on GHCR.
+Watch the Actions tab for build progress. A green checkmark means the image is on both GHCR and Docker Hub.
 
 ### Deploy on the server (manual trigger, controllable and rollback-able)
 
