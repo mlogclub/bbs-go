@@ -7,6 +7,12 @@ on:
   pull_request:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "镜像标签（默认 latest，可输入版本号如 v1.2.3）"
+        required: false
+        default: "latest"
 
 permissions:
   contents: read
@@ -43,7 +49,9 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=sha
+            type=sha,enable=${{ github.event_name != 'workflow_dispatch' }}
+            type=raw,value=${{ inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=raw,value=latest,enable=${{ github.event_name == 'workflow_dispatch' && inputs.tag != 'latest' }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -51,6 +59,6 @@ jobs:
           context: .
           target: app
           platforms: linux/amd64
-          push: ${{ github.event_name == 'push' }}
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
