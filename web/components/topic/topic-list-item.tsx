@@ -225,11 +225,11 @@ export function TopicListItem({
               href={topicHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-[15px] leading-6 font-semibold break-all text-foreground sm:text-base"
+              className="block text-[15px] leading-6 font-semibold break-all text-foreground sm:text-base"
             >
               {topic.type === 2 ? (
                 <span
-                  className={`inline-flex h-5 items-center rounded-full px-2 text-[11px] leading-none font-medium ring-1 ${
+                  className={`relative -top-px mr-1 inline-flex h-5 items-center align-middle whitespace-nowrap rounded-md px-2 text-[11px] leading-none font-medium ring-1 ${
                     topic.qaStatus === "solved"
                       ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
                       : "bg-amber-50 text-amber-700 ring-amber-200"
@@ -246,7 +246,7 @@ export function TopicListItem({
                 </span>
               ) : null}
               {topic.type === 2 && topic.bountyScore ? (
-                <span className="inline-flex h-5 items-center rounded-full bg-amber-100 px-2 text-[11px] leading-none font-medium text-amber-800 ring-1 ring-amber-200">
+                <span className="relative -top-px mr-1 inline-flex h-5 items-center align-middle whitespace-nowrap rounded-md bg-amber-100 px-2 text-[11px] leading-none font-medium text-amber-800 ring-1 ring-amber-200">
                   {t("pages.topic.detail.bountyLabel", {
                     score: topic.bountyScore,
                   })}
