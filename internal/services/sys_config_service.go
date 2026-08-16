@@ -5,6 +5,7 @@ import (
 	"bbs-go/internal/models/dto"
 	"bbs-go/internal/pkg/locales"
 	"bbs-go/internal/pkg/msg"
+	"bbs-go/internal/pkg/oidc"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -99,6 +100,24 @@ func (s *sysConfigService) SetAll(configStr string) error {
 	if antiAbuseConfig := json.Get(constants.SysConfigAntiAbuseConfig); antiAbuseConfig.Exists() {
 		if err := validateAntiAbuseConfig(antiAbuseConfig.String()); err != nil {
 			return err
+		}
+	}
+	if loginConfig := json.Get(constants.SysConfigLoginConfig); loginConfig.Exists() {
+		var login dto.LoginConfig
+		if err := jsons.Parse(loginConfig.String(), &login); err != nil {
+			return errors.New("invalid login configuration")
+		}
+		seen := make(map[string]struct{})
+		for _, provider := range login.OIDCProviders {
+			if _, exists := seen[provider.Key]; exists {
+				return fmt.Errorf("duplicate OIDC provider key: %s", provider.Key)
+			}
+			seen[provider.Key] = struct{}{}
+			if provider.Enabled {
+				if err := oidc.ValidateProvider(provider); err != nil {
+					return err
+				}
+			}
 		}
 	}
 	return sqls.DB().Transaction(func(tx *gorm.DB) error {

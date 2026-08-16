@@ -1703,6 +1703,7 @@ const zhCN = {
       githubLogin: "GitHub 登录",
       githubLoginButton: "使用 GitHub 账号登录",
       githubLoggingIn: "登录中...",
+      oidcLoggingIn: "正在使用单点登录...",
       missingAuthParams: "缺少必要的授权参数，请重新登录",
       password: {
         usernamePlaceholder: "请输入用户名或邮箱",

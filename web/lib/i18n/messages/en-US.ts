@@ -1741,6 +1741,7 @@ const enUS = {
       githubLogin: "GitHub",
       githubLoginButton: "Sign in with GitHub",
       githubLoggingIn: "Signing in...",
+      oidcLoggingIn: "Signing in with single sign-on...",
       thirdPartyLogin: "Or continue with",
       missingAuthParams: "Missing authorization details. Please sign in again.",
       password: {

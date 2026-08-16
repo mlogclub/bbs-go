@@ -20,6 +20,13 @@ const callbacks = {
     successRedirect: null,
     failureRedirect: "/user/signin",
   },
+  oidc: {
+    kind: "login",
+    submitPath: "/api/login/oidc_login_submit",
+    loadingKey: "user.signin.oidcLoggingIn",
+    successRedirect: null,
+    failureRedirect: "/user/signin",
+  },
   google_bind: {
     kind: "bind",
     submitPath: "/api/login/google_bind",

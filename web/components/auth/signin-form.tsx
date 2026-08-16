@@ -99,7 +99,8 @@ function SigninFormContent({
   const thirdPartyEnabled = Boolean(
     loginConfig?.githubLogin?.enabled ||
     loginConfig?.googleLogin?.enabled ||
-    loginConfig?.weixinLogin?.enabled
+    loginConfig?.weixinLogin?.enabled ||
+    Boolean(loginConfig?.oidcProviders?.some((provider) => provider.enabled))
   )
 
   const { t } = useI18n()
@@ -439,6 +440,9 @@ function ThirdPartyLogin({
         {loginConfig?.googleLogin?.enabled ? (
           <OAuthButton provider="google" redirect={redirect} />
         ) : null}
+        {loginConfig?.oidcProviders?.filter((provider) => provider.enabled).map((provider) => (
+          <OIDCButton key={provider.key} provider={provider} redirect={redirect} />
+        ))}
         {loginConfig?.weixinLogin?.enabled ? (
           <Button
             type="button"
@@ -462,6 +466,22 @@ function ThirdPartyLogin({
         />
       ) : null}
     </div>
+  )
+}
+
+function OIDCButton({ provider, redirect }: { provider: { key: string; name: string }; redirect?: string }) {
+  const [loading, setLoading] = useState(false)
+  return (
+    <Button type="button" variant="outline" className="w-full" disabled={loading} onClick={async () => {
+      setLoading(true)
+      try {
+        const data = await apiFetch<{ authUrl?: string }>("/api/login/oidc_login_config", { params: { provider: provider.key, redirect: redirect || "/" } })
+        if (data.authUrl) window.location.href = data.authUrl
+        else setLoading(false)
+      } catch { setLoading(false) }
+    }}>
+      {loading ? "Signing in…" : `Sign in with ${provider.name}`}
+    </Button>
   )
 }
 

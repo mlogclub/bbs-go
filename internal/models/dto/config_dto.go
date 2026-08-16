@@ -101,11 +101,12 @@ type FooterLink struct {
 }
 
 type OpenLoginConfig struct {
-	PasswordLogin EnabledConfig `json:"passwordLogin"` // 密码登录
-	WeixinLogin   EnabledConfig `json:"weixinLogin"`   // 微信登录
-	SmsLogin      EnabledConfig `json:"smsLogin"`      // 短信登录
-	GoogleLogin   OAuthConfig   `json:"googleLogin"`   // Google登录
-	GithubLogin   EnabledConfig `json:"githubLogin"`   // GitHub登录
+	PasswordLogin EnabledConfig            `json:"passwordLogin"` // 密码登录
+	WeixinLogin   EnabledConfig            `json:"weixinLogin"`   // 微信登录
+	SmsLogin      EnabledConfig            `json:"smsLogin"`      // 短信登录
+	GoogleLogin   OAuthConfig              `json:"googleLogin"`   // Google登录
+	GithubLogin   EnabledConfig            `json:"githubLogin"`   // GitHub登录
+	OIDCProviders []OpenOIDCProviderConfig `json:"oidcProviders"` // 通用 OIDC 登录
 }
 
 type EnabledConfig struct {
@@ -115,6 +116,25 @@ type EnabledConfig struct {
 type OAuthConfig struct {
 	Enabled  bool   `json:"enabled"`
 	ClientId string `json:"clientId,omitempty"`
+}
+
+// OIDCProviderConfig is a generic OpenID Connect relying-party configuration.
+// The secret is deliberately omitted from the public site configuration.
+type OIDCProviderConfig struct {
+	Key                  string   `json:"key"`
+	Name                 string   `json:"name"`
+	Issuer               string   `json:"issuer"`
+	ClientId             string   `json:"clientId"`
+	ClientSecret         string   `json:"clientSecret"`
+	Scopes               []string `json:"scopes"`
+	Enabled              bool     `json:"enabled"`
+	RequireVerifiedEmail bool     `json:"requireVerifiedEmail"`
+}
+
+type OpenOIDCProviderConfig struct {
+	Key     string `json:"key"`
+	Name    string `json:"name"`
+	Enabled bool   `json:"enabled"`
 }
 
 // NoticeTypeConfig 某类消息的站内信/邮件开关
@@ -167,6 +187,10 @@ type LoginConfig struct {
 		ClientId     string `json:"clientId"`
 		ClientSecret string `json:"clientSecret"`
 	} `json:"githubLogin"`
+
+	// OIDCProviders supports Keycloak, Authentik and any provider exposing
+	// standard OpenID Connect Discovery metadata.
+	OIDCProviders []OIDCProviderConfig `json:"oidcProviders"`
 }
 
 type AliyunSmsConfig struct {
@@ -178,7 +202,15 @@ type AliyunSmsConfig struct {
 
 // IsAllDisabled 是否禁用了所有登录方式
 func (c *LoginConfig) IsAllDisabled() bool {
-	return !c.PasswordLogin.Enabled && !c.WeixinLogin.Enabled && !c.SmsLogin.Enabled && !c.GoogleLogin.Enabled && !c.GithubLogin.Enabled
+	if c.PasswordLogin.Enabled || c.WeixinLogin.Enabled || c.SmsLogin.Enabled || c.GoogleLogin.Enabled || c.GithubLogin.Enabled {
+		return false
+	}
+	for _, provider := range c.OIDCProviders {
+		if provider.Enabled {
+			return false
+		}
+	}
+	return true
 }
 
 type UploadMethod string

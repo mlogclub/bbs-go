@@ -60,6 +60,11 @@ func ConfigConfigs(ctx *gin.Context) {
 			},
 			ScriptInjections: services.SysConfigService.GetScriptInjections(),
 		}
+		for _, provider := range loginConfig.OIDCProviders {
+			if provider.Enabled {
+				sysConfig.LoginConfig.OIDCProviders = append(sysConfig.LoginConfig.OIDCProviders, dto.OpenOIDCProviderConfig{Key: provider.Key, Name: provider.Name, Enabled: true})
+			}
+		}
 		if loginConfig.GoogleLogin.Enabled {
 			sysConfig.LoginConfig.GoogleLogin.ClientId = loginConfig.GoogleLogin.ClientId
 		}
