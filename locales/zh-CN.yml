@@ -210,6 +210,8 @@ message:
   comment_topic_reply_msg_title: "回复了你的话题"
   comment_article_reply_msg_title: "回复了你的文章"
   comment_reply_msg_title: "回复了你的评论"
+  mention_msg_title: "在评论中@了你"
+  mention_in_topic_msg_title: "在帖子中@了你"
 
 email:
   new_message: "新消息提醒"
@@ -224,6 +226,7 @@ email:
   user_badge_grant: "获得新勋章"
   qa_answer_accepted: "你的回答被采纳为最佳答案"
   qa_answer_accepted_with_bounty: "你的回答被采纳为最佳答案，获得 %d 积分"
+  mention: "有人@了你"
   view_details: "点击查看详情"
 
 task:

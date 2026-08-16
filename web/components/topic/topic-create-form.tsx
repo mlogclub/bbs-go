@@ -27,6 +27,7 @@ import {
   getEditorSwitchConfirmMessage,
   type EditorMode,
 } from "@/lib/editor-mode"
+import { useMentionAutocomplete } from "@/hooks/use-mention-autocomplete"
 import type {
   ImageInfo,
   SiteConfig,
@@ -296,6 +297,11 @@ function SimpleTopicEditor({
   const { t } = useI18n()
   const { catchError } = useToastActions()
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const mention = useMentionAutocomplete(textareaRef, (before, after) => {
+    onContentChange(before + after)
+  })
   const [showImageUpload, setShowImageUpload] = React.useState(false)
   const [imageUploading, setImageUploading] = React.useState(false)
   const currentImages = imageList || []
@@ -374,7 +380,10 @@ function SimpleTopicEditor({
           placeholder={placeholder}
           style={{ minHeight: height, height }}
           disabled={disabled}
-          onInput={(event) => onContentChange(event.currentTarget.value)}
+          onInput={(event) => {
+            mention.onInput(event)
+            onContentChange(event.currentTarget.value)
+          }}
           onPaste={onPaste}
           onDrop={onDrop}
         />

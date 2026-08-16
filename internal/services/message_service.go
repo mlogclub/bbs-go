@@ -202,6 +202,8 @@ func (s *messageService) buildEmailNoticeFallbackTitle(t *models.Message) string
 			return locales.Getf("email.qa_answer_accepted_with_bounty", int(bountyScore))
 		}
 		return locales.Get("email.qa_answer_accepted")
+	case msg.TypeMention:
+		return locales.Get("email.mention")
 	}
 	return locales.Get("email.new_message")
 }
@@ -254,6 +256,12 @@ func (s *messageService) buildEmailNoticeDetailURL(t *models.Message) string {
 		return bbsurls.AbsUrl("/tasks")
 	case msg.TypeUserBadgeGrant:
 		return bbsurls.UserUrl(t.UserId) + "/badges"
+	case msg.TypeMention:
+		entityType := gjson.Get(t.ExtraData, "entityType")
+		entityId := gjson.Get(t.ExtraData, "entityId")
+		if entityType.String() == constants.EntityTopic {
+			return bbsurls.TopicUrl(entityId.Int())
+		}
 	}
 	return bbsurls.AbsUrl("/user/messages")
 }
