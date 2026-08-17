@@ -5,10 +5,9 @@ SPA_INDEX := $(WEB_DIR)/build/spa/index.html
 
 GO ?= go
 PNPM ?= pnpm
-GOOS ?= $(shell $(GO) env GOOS)
-GOARCH ?= $(shell $(GO) env GOARCH)
 GIT_REVISION ?= g$(shell git rev-parse --short=8 HEAD 2>/dev/null || echo unknown)
 DIST_DIR := dist
+PACKAGE_TARGETS := linux/amd64 linux/arm64 windows/amd64 windows/arm64 darwin/amd64 darwin/arm64 freebsd/amd64 freebsd/arm64
 
 .DEFAULT_GOAL := help
 
@@ -21,7 +20,9 @@ help:
 	@echo "  make build          Build SPA and embed it into the Go binary"
 	@echo "  make build-go       Build Go binary, building SPA first only when missing"
 	@echo "  make build-linux    Build linux/amd64 binary with embedded SPA"
-	@echo "  make package        Build release packages for linux, macOS, and Windows"
+	@echo "  make package        Build all release packages"
+	@echo "  make package GOOS=linux GOARCH=amd64"
+	@echo "                      Build one supported release package"
 	@echo "  make run            Build SPA, then run the Go server"
 	@echo "  make run-go         Run the Go server, building SPA first only when missing"
 	@echo "  make dev            Clean outputs, then run Go and web dev servers"
@@ -47,14 +48,34 @@ build-linux: web-build-spa
 	@echo "Building $(APP)-linux-amd64..."
 	@GOOS=linux GOARCH=amd64 $(GO) build -v -o $(APP)-linux-amd64 $(MAIN)
 
+.PHONY: validate-package-target
+validate-package-target:
+	@set -eu; \
+	os='$(strip $(GOOS))'; \
+	arch='$(strip $(GOARCH))'; \
+	if { [ -n "$$os" ] && [ -z "$$arch" ]; } || { [ -z "$$os" ] && [ -n "$$arch" ]; }; then \
+		echo "GOOS and GOARCH must be specified together" >&2; \
+		exit 1; \
+	fi; \
+	if [ -n "$$os" ]; then \
+		case " $(PACKAGE_TARGETS) " in \
+			*" $$os/$$arch "*) ;; \
+			*) echo "Unsupported package target: $$os/$$arch" >&2; \
+			   echo "Supported targets: $(PACKAGE_TARGETS)" >&2; \
+			   exit 1 ;; \
+		esac; \
+	fi
+
 .PHONY: package
-package: web-build-spa
+package: validate-package-target
+	@$(MAKE) web-build-spa
 	@set -eu; \
 	mkdir -p $(DIST_DIR); \
-	for target in "linux amd64" "linux arm64" "darwin amd64" "darwin arm64" "windows amd64"; do \
-		set -- $$target; \
-		os=$$1; \
-		arch=$$2; \
+	targets='$(PACKAGE_TARGETS)'; \
+	if [ -n '$(strip $(GOOS))' ]; then targets='$(strip $(GOOS))/$(strip $(GOARCH))'; fi; \
+	for target in $$targets; do \
+		os=$${target%/*}; \
+		arch=$${target#*/}; \
 		name="$(APP)-$$os-$$arch-$(GIT_REVISION)"; \
 		stage="$(DIST_DIR)/$$name"; \
 		binary="$(APP)"; \
