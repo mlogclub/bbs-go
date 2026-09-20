@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -41,9 +42,9 @@ type githubEmail struct {
 
 func NewGithubOAuth(clientId, clientSecret, redirectURI string) *GithubOAuth {
 	config := &oauth2.Config{
-		ClientID:     clientId,
-		ClientSecret: clientSecret,
-		RedirectURL:  redirectURI,
+		ClientID:     strings.TrimSpace(clientId),
+		ClientSecret: strings.TrimSpace(clientSecret),
+		RedirectURL:  strings.TrimSpace(redirectURI),
 		Scopes: []string{
 			"read:user",
 			"user:email",

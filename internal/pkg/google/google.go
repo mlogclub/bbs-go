@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -39,9 +40,9 @@ type GoogleOAuth struct {
 // NewGoogleOAuth 创建 Google OAuth 客户端
 func NewGoogleOAuth(clientId, clientSecret, redirectURI string) *GoogleOAuth {
 	config := &oauth2.Config{
-		ClientID:     clientId,
-		ClientSecret: clientSecret,
-		RedirectURL:  redirectURI,
+		ClientID:     strings.TrimSpace(clientId),
+		ClientSecret: strings.TrimSpace(clientSecret),
+		RedirectURL:  strings.TrimSpace(redirectURI),
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile",
