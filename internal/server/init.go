@@ -19,5 +19,9 @@ func Init() {
 			panic(err)
 		}
 		install.InitOthers()
+	} else {
+		if _, err := install.EnsureSetupToken(); err != nil {
+			panic(err)
+		}
 	}
 }

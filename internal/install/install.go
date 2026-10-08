@@ -15,6 +15,9 @@ import (
 	"bbs-go/internal/services"
 	"bbs-go/migrations"
 	"context"
+	"crypto/rand"
+	"crypto/subtle"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
@@ -84,6 +87,51 @@ type InstallReq struct {
 	Password        string          `json:"password" form:"password"`
 	Avatar          string          `json:"avatar" form:"avatar"`
 	Language        config.Language `json:"language" form:"language"`
+	// SetupToken 必须匹配启动时生成并写入 setupTokenFilename 的一次性令牌，
+	// 防止在合法运维人员完成安装之前，任何能访问该网络端口的人抢先安装并获得 owner 账号。
+	SetupToken string `json:"setupToken" form:"setupToken"`
+}
+
+const setupTokenFilename = "setup-token.txt"
+
+// EnsureSetupToken 在未安装状态下确保存在一次性安装令牌：若文件已存在则直接返回，
+// 否则生成一个随机令牌、以仅属主可读写的权限写入配置目录，并打印到日志，
+// 供运维人员从容器日志或挂载的数据卷中获取，用于完成 /api/install/install 调用。
+func EnsureSetupToken() (string, error) {
+	path := filepath.Join(config.GetConfigDir(), setupTokenFilename)
+	if existing, err := os.ReadFile(path); err == nil {
+		token := strings.TrimSpace(string(existing))
+		if token != "" {
+			return token, nil
+		}
+	}
+
+	buf := make([]byte, 32)
+	if _, err := rand.Read(buf); err != nil {
+		return "", err
+	}
+	token := hex.EncodeToString(buf)
+	if err := os.WriteFile(path, []byte(token), 0o600); err != nil {
+		return "", err
+	}
+	slog.Warn("Generated one-time installation setup token, required to complete /api/install/install",
+		slog.String("file", path), slog.String("token", token))
+	return token, nil
+}
+
+// VerifySetupToken 以常数时间比较调用方提交的令牌与磁盘上存储的一次性安装令牌。
+func VerifySetupToken(candidate string) bool {
+	path := filepath.Join(config.GetConfigDir(), setupTokenFilename)
+	expected, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	a := []byte(strings.TrimSpace(candidate))
+	b := []byte(strings.TrimSpace(string(expected)))
+	if len(a) == 0 || len(a) != len(b) {
+		return false
+	}
+	return subtle.ConstantTimeCompare(a, b) == 1
 }
 
 func (r DbConfigReq) GetConnStr() string {
@@ -201,6 +249,13 @@ func TestDbConnection(ctx context.Context, req DbConfigReq) error {
 }
 
 func Install(req InstallReq) error {
+	// Require the one-time setup token generated at startup (EnsureSetupToken),
+	// so an unauthenticated network caller cannot race the legitimate operator
+	// to claim the owner account on a freshly exposed, not-yet-configured instance.
+	if !VerifySetupToken(req.SetupToken) {
+		return errors.New("invalid or missing setup token")
+	}
+
 	// The initial administrator must follow the same password rules as other accounts.
 	// Reject invalid input before connecting to the database or writing configuration.
 	if err := validate.IsPassword(req.Password); err != nil {
@@ -260,7 +315,12 @@ func WriteConfig(req InstallReq) error {
 func WriteInstallSuccess() error {
 	cfg := config.Instance
 	cfg.Installed = true
-	return WriteRuntimeConfig(cfg)
+	if err := WriteRuntimeConfig(cfg); err != nil {
+		return err
+	}
+	// Single-use: remove the setup token now that installation has completed.
+	_ = os.Remove(filepath.Join(config.GetConfigDir(), setupTokenFilename))
+	return nil
 }
 
 func InitConfig() {
