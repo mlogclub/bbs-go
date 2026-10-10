@@ -95,13 +95,16 @@ func TestUserTokenService_SignoutAndDisableCacheInvalidation(t *testing.T) {
 			t.Fatalf("signout failed: %v", err)
 		}
 
+		// 等待 LoadingCache 异步事件循环完成 Invalidate 处理
+		time.Sleep(20 * time.Millisecond)
+
 		// 验证缓存已被失效：再次通过 UserTokenCache.Get 获取，将触发重载并拿到 StatusDeleted
 		afterSignoutToken := cache.UserTokenCache.Get(token)
 		if afterSignoutToken == nil {
 			t.Fatalf("expected token record reloaded, got nil")
 		}
 		if afterSignoutToken.Status != constants.StatusDeleted {
-			t.Fatalf("expected token status to be deleted (2) after signout, got: %d", afterSignoutToken.Status)
+			t.Fatalf("expected token status to be deleted (1) after signout, got: %d", afterSignoutToken.Status)
 		}
 
 		// 验证 GetCurrent 判定为未登录 (返回 nil)
