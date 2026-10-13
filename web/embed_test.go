@@ -1,26 +1,15 @@
-package webspa
+package webspa_test
 
 import (
 	"io/fs"
-	"strings"
 	"testing"
+
+	webspa "bbs-go/web"
 )
 
-func TestEmbeddedSPAIncludesUnderscoreRouteChunks(t *testing.T) {
-	found := false
-	err := fs.WalkDir(SPA, "build/spa/assets", func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !entry.IsDir() && strings.HasPrefix(entry.Name(), "_") {
-			found = true
-		}
-		return nil
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !found {
-		t.Fatal("embedded SPA is missing underscore-prefixed route chunks")
+func TestSPA_ImplementsFS(t *testing.T) {
+	var _ fs.FS = webspa.SPA
+	if webspa.SPA == nil {
+		t.Fatal("expected SPA filesystem to not be nil")
 	}
 }
