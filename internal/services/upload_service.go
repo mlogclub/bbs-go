@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/mlogclub/simple/common/strs"
@@ -14,6 +16,38 @@ import (
 	"bbs-go/internal/pkg/respath"
 	"bbs-go/internal/pkg/uploader"
 )
+
+// allowedImageContentTypes 允许上传的真实图片 MIME 类型，基于文件内容嗅探而非客户端
+// 声明的 Content-Type，防止以图片名义上传可在浏览器中被当作其他类型执行的内容（如 HTML）。
+// 不包含 image/svg+xml：SVG 可嵌入脚本，不属于安全的光栅图片格式。
+var allowedImageContentTypes = map[string]bool{
+	"image/jpeg":   true,
+	"image/png":    true,
+	"image/gif":    true,
+	"image/webp":   true,
+	"image/bmp":    true,
+	"image/x-icon": true,
+}
+
+// sniffImageContentType 读取数据前缀以嗅探真实内容类型并校验是否为允许的图片格式，
+// 而不是信任调用方传入的 contentType（可被客户端任意伪造）。返回嗅探到的 Content-Type
+// 与包含完整数据的可读流（供后续写入存储，不丢失已读取的前缀字节）。
+func sniffImageContentType(body io.Reader) (string, io.Reader, error) {
+	sniffBuf := make([]byte, 512)
+	n, err := io.ReadFull(body, sniffBuf)
+	if err != nil && err != io.ErrUnexpectedEOF && err != io.EOF {
+		return "", nil, err
+	}
+	sniffBuf = sniffBuf[:n]
+	detected := http.DetectContentType(sniffBuf)
+	if idx := strings.Index(detected, ";"); idx >= 0 {
+		detected = detected[:idx]
+	}
+	if !allowedImageContentTypes[detected] {
+		return "", nil, fmt.Errorf("unsupported file type: %s", detected)
+	}
+	return detected, io.MultiReader(bytes.NewReader(sniffBuf), body), nil
+}
 
 var UploadService = newUploadService()
 
@@ -63,19 +97,27 @@ func (s *uploadService) ObjectURL(key string) string {
 }
 
 // PutImage 上传图片（已有完整字节）；key 使用内容 MD5，供 CopyImage 等场景。
-func (s *uploadService) PutImage(data []byte, contentType string) (string, error) {
-	contentType = uploader.NormalizeImageContentType(contentType)
-	key := uploader.GenerateImageKey(data, contentType)
-	opts := &uploader.PutOptions{ContentType: contentType, ContentLength: int64(len(data))}
+// contentType 入参已不再使用调用方声明的值，实际类型通过内容嗅探得出。
+func (s *uploadService) PutImage(data []byte, _ string) (string, error) {
+	detectedType, _, err := sniffImageContentType(bytes.NewReader(data))
+	if err != nil {
+		return "", err
+	}
+	key := uploader.GenerateImageKey(data, detectedType)
+	opts := &uploader.PutOptions{ContentType: detectedType, ContentLength: int64(len(data))}
 	return s.putObject(key, bytes.NewReader(data), opts)
 }
 
 // PutImageStream 流式上传图片；key 使用 UUID，无需先读完整 body。
-func (s *uploadService) PutImageStream(body io.Reader, contentLength int64, contentType string) (string, error) {
-	contentType = uploader.NormalizeImageContentType(contentType)
-	key := uploader.GenerateImageKeyByContentType(contentType)
-	opts := &uploader.PutOptions{ContentType: contentType, ContentLength: contentLength}
-	return s.putObject(key, body, opts)
+// contentType 入参已不再使用调用方声明的值，实际类型通过内容嗅探得出。
+func (s *uploadService) PutImageStream(body io.Reader, contentLength int64, _ string) (string, error) {
+	detectedType, fullBody, err := sniffImageContentType(body)
+	if err != nil {
+		return "", err
+	}
+	key := uploader.GenerateImageKeyByContentType(detectedType)
+	opts := &uploader.PutOptions{ContentType: detectedType, ContentLength: contentLength}
+	return s.putObject(key, fullBody, opts)
 }
 
 func (s *uploadService) CopyImage(url string) (string, error) {
