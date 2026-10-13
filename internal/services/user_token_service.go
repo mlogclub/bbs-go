@@ -92,6 +92,14 @@ func (s *userTokenService) CheckLogin(ctx *gin.Context) (*models.User, error) {
 
 func (s *userTokenService) Signout(ctx *gin.Context) error {
 	token := s.GetUserToken(ctx)
+	if strs.IsBlank(token) {
+		return nil
+	}
+	defer func() {
+		cache.UserTokenCache.Invalidate(token)
+		ginx.RemoveCookie(ctx, constants.CookieTokenKey)
+	}()
+
 	userToken := repositories.UserTokenRepository.GetByToken(sqls.DB(), token)
 	if userToken == nil {
 		return nil
@@ -100,9 +108,9 @@ func (s *userTokenService) Signout(ctx *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	ginx.RemoveCookie(ctx, constants.CookieTokenKey)
 	return nil
 }
+
 
 func (s *userTokenService) GetUserToken(ctx *gin.Context) string {
 	if userToken, _ := params.Get(ctx, "userToken"); strs.IsNotBlank(userToken) {
@@ -141,13 +149,18 @@ func (s *userTokenService) Generate(userId int64) (string, error) {
 }
 
 func (s *userTokenService) Disable(token string) error {
+	if strs.IsBlank(token) {
+		return nil
+	}
 	t := repositories.UserTokenRepository.GetByToken(sqls.DB(), token)
 	if t == nil {
+		cache.UserTokenCache.Invalidate(token)
 		return nil
 	}
 	err := repositories.UserTokenRepository.UpdateColumn(sqls.DB(), t.Id, "status", constants.StatusDeleted)
-	if err != nil {
+	if err == nil {
 		cache.UserTokenCache.Invalidate(token)
 	}
 	return err
 }
+
