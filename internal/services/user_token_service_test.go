@@ -4,6 +4,7 @@ import (
 	"bbs-go/internal/cache"
 	"bbs-go/internal/models"
 	"bbs-go/internal/models/constants"
+	"bbs-go/internal/pkg/config"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -43,14 +44,29 @@ func setupUserTokenTestDB(t *testing.T) *gorm.DB {
 		_ = sqlDB.Close()
 	})
 
+	previousConfig := config.Instance
+	t.Cleanup(func() {
+		config.Instance = previousConfig
+	})
+	config.Instance = &config.Config{Language: config.LanguageZhCN}
+
 	sqls.SetDB(db)
 
 	if err := db.AutoMigrate(
 		&models.User{},
 		&models.UserToken{},
+		&models.SysConfig{},
 	); err != nil {
 		t.Fatalf("auto migrate: %v", err)
 	}
+
+	db.Create(&models.SysConfig{
+		Key:        "tokenExpireDays",
+		Value:      "7",
+		CreateTime: time.Now().UnixMilli(),
+		UpdateTime: time.Now().UnixMilli(),
+	})
+	cache.SysConfigCache.Invalidate("tokenExpireDays")
 
 	return db
 }
