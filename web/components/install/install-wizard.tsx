@@ -99,6 +99,7 @@ export function InstallWizard({
     password: "",
     passwordConfirm: "",
   })
+  const [setupToken, setSetupToken] = React.useState("")
   const [avatar, setAvatar] = React.useState(randomAvatar)
   const [dbError, setDbError] = React.useState("")
   const [dbSuccess, setDbSuccess] = React.useState("")
@@ -132,7 +133,10 @@ export function InstallWizard({
     )
   const isAdminFormValid =
     Boolean(
-      adminInfo.username && adminInfo.password && adminInfo.passwordConfirm
+      adminInfo.username &&
+      adminInfo.password &&
+      adminInfo.passwordConfirm &&
+      setupToken.trim()
     ) &&
     isPasswordValid(adminInfo.password) &&
     adminInfo.password === adminInfo.passwordConfirm
@@ -215,6 +219,10 @@ export function InstallWizard({
     }
     if (adminInfo.password !== adminInfo.passwordConfirm) {
       setAdminError(t("pages.install.admin.passwordMismatchError"))
+      return false
+    }
+    if (!setupToken.trim()) {
+      setAdminError(t("pages.install.admin.setupTokenError"))
       return false
     }
     setAdminError("")
@@ -312,6 +320,7 @@ export function InstallWizard({
           password: adminInfo.password,
           avatar,
           language,
+          setupToken: setupToken.trim(),
         }),
       })
       const data = (await response.json()) as {
@@ -325,7 +334,6 @@ export function InstallWizard({
       setInstallMessage(t("pages.install.install.completed"))
       window.setTimeout(() => setStep("complete"), 1000)
     } catch (error) {
-      setInstallProgress(100)
       setInstallFailed(true)
       setInstallMessage(
         error instanceof Error
@@ -712,6 +720,19 @@ export function InstallWizard({
                   setAdminError("")
                 }}
               />
+              <FormField
+                required
+                id="setup-token"
+                type="password"
+                label={t("pages.install.admin.setupToken")}
+                value={setupToken}
+                placeholder={t("pages.install.admin.setupTokenPlaceholder")}
+                help={t("pages.install.admin.setupTokenHelp")}
+                onChange={(value) => {
+                  setSetupToken(value)
+                  setAdminError("")
+                }}
+              />
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">
@@ -728,7 +749,8 @@ export function InstallWizard({
                   </Button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-primary/60 shadow-sm">                    <img
+                  <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-primary/60 shadow-sm">
+                    <img
                       src={avatar}
                       alt={t("pages.install.admin.avatar")}
                       className="h-full w-full object-cover"
@@ -749,7 +771,8 @@ export function InstallWizard({
                           : "bg-white ring-gray-200"
                       }`}
                       onClick={() => setAvatar(item)}
-                    >                      <img
+                    >
+                      <img
                         src={item}
                         alt={item}
                         className="h-full w-full object-cover"
@@ -785,22 +808,32 @@ export function InstallWizard({
           {step === "install" ? (
             <div className="space-y-3">
               <SectionTitle
-                title={t("pages.install.step.install")}
-                description={t("pages.install.install.description")}
+                title={
+                  installFailed
+                    ? t("pages.install.install.failed")
+                    : t("pages.install.step.install")
+                }
+                description={
+                  installFailed
+                    ? undefined
+                    : t("pages.install.install.description")
+                }
               />
-              <div className="space-y-3">
-                <div className="h-4 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className={`h-full ${installFailed ? "bg-destructive" : "bg-primary"}`}
-                    style={{ width: `${installProgress}%` }}
-                  />
+              {!installFailed ? (
+                <div className="space-y-3">
+                  <div className="h-4 w-full overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full bg-primary"
+                      style={{ width: `${installProgress}%` }}
+                    />
+                  </div>
+                  <div className="text-center">
+                    <span className="text-sm font-medium text-gray-700">
+                      {installProgress}%
+                    </span>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <span className="text-sm font-medium text-gray-700">
-                    {installProgress}%
-                  </span>
-                </div>
-              </div>
+              ) : null}
               <Alert
                 variant={installFailed ? "destructive" : "default"}
                 className={
@@ -820,6 +853,17 @@ export function InstallWizard({
                   </AlertDescription>
                 </div>
               </Alert>
+              {installFailed ? (
+                <FooterActions
+                  left={
+                    <BackButton
+                      size="lg"
+                      onClick={() => setStep("admin")}
+                      label={t("pages.install.buttons.previous")}
+                    />
+                  }
+                />
+              ) : null}
             </div>
           ) : null}
 

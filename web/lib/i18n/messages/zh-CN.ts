@@ -1597,6 +1597,11 @@ const zhCN = {
         passwordTooLongError: "管理员密码长度不能超过 1024 个字符。",
         confirmPasswordError: "请确认管理员密码。",
         passwordMismatchError: "两次输入的密码不一致。",
+        setupToken: "安装令牌",
+        setupTokenPlaceholder: "请输入安装令牌",
+        setupTokenHelp:
+          "请从服务端配置目录的 setup-token.txt 获取。Docker 部署可查看 /app/data/setup-token.txt。",
+        setupTokenError: "请输入安装令牌。",
       },
       install: {
         preparing: "准备安装...",

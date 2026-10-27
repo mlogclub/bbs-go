@@ -1637,6 +1637,11 @@ const enUS = {
           "Administrator password must be no more than 1024 characters long.",
         confirmPasswordError: "Please confirm admin password.",
         passwordMismatchError: "Passwords do not match.",
+        setupToken: "Setup token",
+        setupTokenPlaceholder: "Enter the setup token",
+        setupTokenHelp:
+          "Find it in setup-token.txt next to the server config file. For Docker, use /app/data/setup-token.txt.",
+        setupTokenError: "Enter the setup token.",
       },
       install: {
         preparing: "Preparing installation...",
