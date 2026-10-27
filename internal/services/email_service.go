@@ -93,10 +93,7 @@ func (s *emailService) sendEmail(to string, subject, html string, bizType string
 		ssl       = smtpConfig.SSL
 		addr      = net.JoinHostPort(host, port)
 		auth      = smtp.PlainAuth("", username, password, host)
-		tlsConfig = &tls.Config{
-			InsecureSkipVerify: true,
-			ServerName:         host,
-		}
+		tlsConfig = smtpTLSConfig(host)
 	)
 
 	e := email.NewEmail()
@@ -142,6 +139,11 @@ func (s *emailService) sendEmail(to string, subject, html string, bizType string
 		return sendErr
 	}
 	return nil
+}
+
+func smtpTLSConfig(host string) *tls.Config {
+	// Use the system trust store and verify the configured SMTP server's identity.
+	return &tls.Config{ServerName: host}
 }
 
 func (s *emailService) getSmtpConfig() (dto.SmtpConfig, error) {
