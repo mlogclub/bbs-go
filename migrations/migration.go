@@ -114,4 +114,5 @@ func init() {
 	register(12, "drop legacy api permission tables", migrate_drop_legacy_api_tables)
 	register(13, "drop legacy menu tables", migrate_drop_legacy_menu_tables)
 	register(15, "remove comment admin permissions", migrate_remove_comment_admin_permissions)
+	register(16, "backfill OIDC identity hashes", migrate_oidc_identity_hash)
 }

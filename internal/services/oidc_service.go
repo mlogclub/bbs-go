@@ -26,7 +26,7 @@ func OIDCProvider(key string) (dto.OIDCProviderConfig, bool) {
 func OIDCLogin(provider dto.OIDCProviderConfig, claims *oidc.Claims) (*models.User, error) {
 	db := sqls.DB()
 	var identity models.OIDCIdentity
-	err := db.Where("issuer = ? AND subject = ?", provider.Issuer, claims.Subject).First(&identity).Error
+	err := db.Where("identity_hash = ?", models.OIDCIdentityHash(provider.Issuer, claims.Subject)).First(&identity).Error
 	if err == nil {
 		return UserService.Get(identity.UserId), nil
 	}

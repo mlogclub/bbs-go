@@ -153,15 +153,16 @@ type ThirdUser struct {
 // stored; bbs-go creates its normal local session after a successful OIDC login.
 type OIDCIdentity struct {
 	Model
-	ProviderKey string `gorm:"size:64;not null;uniqueIndex:uk_oidc_issuer_subject" json:"providerKey"`
-	Issuer      string `gorm:"size:512;not null;uniqueIndex:uk_oidc_issuer_subject" json:"issuer"`
-	Subject     string `gorm:"size:512;not null;uniqueIndex:uk_oidc_issuer_subject" json:"subject"`
-	UserId      int64  `gorm:"not null;uniqueIndex:uk_oidc_user_provider" json:"userId"`
-	Email       string `gorm:"size:128" json:"email"`
-	Nickname    string `gorm:"size:64" json:"nickname"`
-	Avatar      string `gorm:"size:1024" json:"avatar"`
-	CreateTime  int64  `json:"createTime"`
-	UpdateTime  int64  `json:"updateTime"`
+	ProviderKey  string `gorm:"size:64;not null;uniqueIndex:uk_oidc_identity_hash" json:"providerKey"`
+	Issuer       string `gorm:"size:512;not null" json:"issuer"`
+	Subject      string `gorm:"size:512;not null" json:"subject"`
+	IdentityHash string `gorm:"size:64;uniqueIndex:uk_oidc_identity_hash" json:"-"`
+	UserId       int64  `gorm:"not null;uniqueIndex:uk_oidc_user_provider" json:"userId"`
+	Email        string `gorm:"size:128" json:"email"`
+	Nickname     string `gorm:"size:64" json:"nickname"`
+	Avatar       string `gorm:"size:1024" json:"avatar"`
+	CreateTime   int64  `json:"createTime"`
+	UpdateTime   int64  `json:"updateTime"`
 }
 
 // 标签
