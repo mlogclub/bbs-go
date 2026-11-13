@@ -4,6 +4,8 @@ import (
 	"bbs-go/internal/pkg/config"
 	"bbs-go/internal/pkg/validate"
 	"net/url"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"gorm.io/gorm/logger"
@@ -22,7 +24,13 @@ func TestInstallRejectsShortAdminPasswordBeforeDatabaseInitialization(t *testing
 		t.Fatal("expected the shared account password validator to reject a short password")
 	}
 
-	got := Install(InstallReq{Password: password})
+	// Satisfy the installation authorization check before exercising validation.
+	t.Chdir(t.TempDir())
+	const setupToken = "password-validation-test-token"
+	if err := os.WriteFile(filepath.Join(config.GetConfigDir(), setupTokenFilename), []byte(setupToken), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	got := Install(InstallReq{Password: password, SetupToken: setupToken})
 	if got == nil {
 		t.Fatal("expected installation to reject a short administrator password")
 	}

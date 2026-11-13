@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 import {
   ClipboardCheckIcon,
@@ -504,3 +506,6 @@ function FilterSelect({
     </div>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_ARTICLE_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_ARTICLE_VIEW).clientLoader

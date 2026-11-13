@@ -97,7 +97,7 @@ func Category(ctx *gin.Context) {
 	}
 	category := services.CategoryService.Get(categoryId)
 	if category == nil {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("common.not_found")))
 		return
 	}
 	ginx.WriteJSON(ctx, render.BuildCategoryWithChildren(category))
@@ -151,7 +151,7 @@ func TopicEditForm(ctx *gin.Context) {
 
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("common.not_found")))
 		return
 	}
 	if constants.IsTweetTopicType(topic.Type) {
@@ -201,7 +201,7 @@ func TopicEdit(ctx *gin.Context) {
 
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status != constants.StatusOk {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("common.not_found")))
 		return
 	}
 
@@ -293,7 +293,7 @@ func TopicDetail(ctx *gin.Context) {
 	topicId := idcodec.Decode(topicIdStr)
 	topic := services.TopicService.Get(topicId)
 	if topic == nil || topic.Status == constants.StatusDeleted {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("common.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("common.not_found")))
 		return
 	}
 
@@ -302,11 +302,11 @@ func TopicDetail(ctx *gin.Context) {
 	if topic.Status == constants.StatusReview {
 		if user != nil {
 			if topic.UserId != user.Id && !user.IsOwner() {
-				ginx.WriteJSON(ctx, ginx.ErrorCode(403, locales.Get("topic.under_review")))
+				ginx.WriteHttpStatusJSON(ctx, 403, ginx.ErrorCode(403, locales.Get("topic.under_review")))
 				return
 			}
 		} else {
-			ginx.WriteJSON(ctx, ginx.ErrorCode(403, locales.Get("topic.under_review")))
+			ginx.WriteHttpStatusJSON(ctx, 403, ginx.ErrorCode(403, locales.Get("topic.under_review")))
 			return
 		}
 	}

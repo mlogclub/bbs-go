@@ -52,7 +52,7 @@ func UserDetail(ctx *gin.Context) {
 		ginx.WriteJSON(ctx, render.BuildUserDetail(user))
 		return
 	}
-	ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("user.not_found")))
+	ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("user.not_found")))
 
 }
 

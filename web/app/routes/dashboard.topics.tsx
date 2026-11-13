@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 import {
   CheckCircleIcon,
@@ -779,3 +781,6 @@ function FilterSelect({
     </div>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_TOPIC_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_TOPIC_VIEW).clientLoader

@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 import {
   CheckIcon,
@@ -2930,3 +2932,6 @@ function TagsInput({
     </div>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_SETTING_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_SETTING_VIEW).clientLoader

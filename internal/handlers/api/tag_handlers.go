@@ -22,14 +22,14 @@ import (
 func TagDetail(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
-		ginx.WriteJSON(ctx, err)
+		ginx.WriteHttpStatusJSON(ctx, 400, ginx.ErrorCode(400, err.Error()))
 		return
 	}
 	tagId := id
 
 	tag := cache.TagCache.Get(tagId)
 	if tag == nil {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage("tag not found"))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, "tag not found"))
 		return
 	}
 	ginx.WriteJSON(ctx, render.BuildTag(tag))

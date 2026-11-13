@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 
 import {
@@ -288,3 +290,6 @@ function ReportTargetPreview({ target }: { target: Record<string, unknown> }) {
     </>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_USER_REPORT_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_USER_REPORT_VIEW).clientLoader

@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api/client"
+import { routeApiFetch as apiFetch } from "@/lib/api/client"
 import type { UserSummary } from "@/lib/api/types"
 
 export type UserProfileRouteData = {

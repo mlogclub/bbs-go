@@ -15,7 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestLegacyAdminRouteFallsBackToSPAWithoutDashboardRedirect(t *testing.T) {
+func TestLegacyAdminRouteReturnsNotFoundWithoutDashboardRedirect(t *testing.T) {
 	app := newRouter()
 
 	for _, path := range []string{"/admin", "/admin/users"} {
@@ -23,8 +23,8 @@ func TestLegacyAdminRouteFallsBackToSPAWithoutDashboardRedirect(t *testing.T) {
 		rec := httptest.NewRecorder()
 		app.ServeHTTP(rec, req)
 
-		if rec.Code != http.StatusOK {
-			t.Fatalf("%s status=%d want %d", path, rec.Code, http.StatusOK)
+		if rec.Code != http.StatusNotFound {
+			t.Fatalf("%s status=%d want %d", path, rec.Code, http.StatusNotFound)
 		}
 		if got := rec.Header().Get("Location"); got != "" {
 			t.Fatalf("%s Location=%q want empty", path, got)
@@ -44,7 +44,7 @@ func TestRouterNoRouteSeparatesAPIStaticAndSPA(t *testing.T) {
 		{method: http.MethodGet, path: "/api/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodGet, path: "/api/admin/not-exists", wantStatus: http.StatusNotFound, contentType: "application/json"},
 		{method: http.MethodPost, path: "/res/not-exists.png", wantStatus: http.StatusNotFound},
-		{method: http.MethodGet, path: "/assets/not-exists.css", wantStatus: http.StatusOK, contentType: "text/html"},
+		{method: http.MethodGet, path: "/assets/not-exists.css", wantStatus: http.StatusNotFound},
 	}
 
 	for _, tt := range tests {

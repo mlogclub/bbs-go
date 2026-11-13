@@ -34,3 +34,13 @@ export default function RedirectRoute() {
     </section>
   )
 }
+
+export function loader({ request }: { request: Request }) {
+  const url = new URL(request.url).searchParams.get("url") || ""
+  if (!/^https?:\/\//i.test(url)) {
+    throw new Response("Invalid redirect URL", { status: 400 })
+  }
+  return null
+}
+
+export const clientLoader = loader

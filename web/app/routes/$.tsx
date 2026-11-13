@@ -12,3 +12,9 @@ export function meta({
 export default function NotFoundRoute() {
   return <ErrorPage statusCode={404} />
 }
+
+export function loader() {
+  throw new Response("Not found", { status: 404 })
+}
+
+export const clientLoader = loader

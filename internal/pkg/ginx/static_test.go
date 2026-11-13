@@ -26,9 +26,9 @@ func TestDirHandlerWithSPA(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		{path: "/assets/not-exists.css", accept: "text/css,*/*;q=0.1", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-		{path: "/images/not-exists.png", accept: "image/avif,image/webp,image/png,image/*,*/*;q=0.8", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
-		{path: "/fonts/not-exists", accept: "*/*", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
+		{path: "/assets/not-exists.css", accept: "text/css,*/*;q=0.1", wantStatus: http.StatusNotFound},
+		{path: "/images/not-exists.png", accept: "image/avif,image/webp,image/png,image/*,*/*;q=0.8", wantStatus: http.StatusNotFound},
+		{path: "/fonts/not-exists", accept: "*/*", wantStatus: http.StatusNotFound},
 		{path: "/manifest", accept: "*/*", wantStatus: http.StatusOK, wantBody: "manifest content"},
 		{path: "/topic/123", accept: "text/html,application/xhtml+xml", wantStatus: http.StatusOK, wantBody: "<html>spa</html>"},
 	}
@@ -112,6 +112,38 @@ func TestHandleSPABuildsHandlerOnceAndKeepsNotFoundPrefixes(t *testing.T) {
 		}
 		if tt.wantBody != "" && strings.TrimSpace(rec.Body.String()) != tt.wantBody {
 			t.Fatalf("%s body=%q want %q", tt.path, strings.TrimSpace(rec.Body.String()), tt.wantBody)
+		}
+	}
+}
+
+func TestSPARouteManifestStatus(t *testing.T) {
+	root := t.TempDir()
+	for name, body := range map[string]string{"index.html": "<html>spa</html>", ".route-patterns.json": `["^/$", "^/topic/[^/]+/?$", "^/user/signin/callback/.*$"]`} {
+		if err := os.WriteFile(filepath.Join(root, name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	app := gin.New()
+	HandleSPA(app, SPAOptions{Root: root, DirOptions: DirOptions{SPA: true, IndexName: "index.html"}})
+	for _, tc := range []struct {
+		path   string
+		status int
+	}{
+		{"/", 200}, {"/topic/123", 200}, {"/missing", 404}, {"/assets/missing.js", 404},
+		{"/user/signin/callback/token.with.dots", 200},
+	} {
+		for _, method := range []string{http.MethodGet, http.MethodHead} {
+			rec := httptest.NewRecorder()
+			app.ServeHTTP(rec, httptest.NewRequest(method, tc.path, nil))
+			if rec.Code != tc.status {
+				t.Fatalf("%s %s: got %d want %d", method, tc.path, rec.Code, tc.status)
+			}
+			if method == http.MethodHead && rec.Body.Len() != 0 {
+				t.Fatal("HEAD must not have a response body")
+			}
+			if method == http.MethodGet && tc.path == "/missing" && rec.Body.String() != "<html>spa</html>" {
+				t.Fatal("missing route must retain the SPA error page shell")
+			}
 		}
 	}
 }

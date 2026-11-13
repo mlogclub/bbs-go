@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import {
   DashboardDataPage,
   type DashboardDataPageConfig,
@@ -36,3 +38,6 @@ export default function DashboardUserExpLogsRoute() {
 
   return <DashboardDataPage config={config} />
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_USER_EXP_LOG_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_USER_EXP_LOG_VIEW).clientLoader

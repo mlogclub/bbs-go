@@ -21,7 +21,10 @@ import { LayoutChrome } from "@/components/layout/layout-chrome"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { apiFetch } from "@/lib/api/client"
+import {
+  INSTALL_REQUIRED_STATUS,
+  routeApiFetch as apiFetch,
+} from "@/lib/api/client"
 import type { SiteConfig, UserSummary } from "@/lib/api/types"
 import { I18nProvider } from "@/lib/i18n/provider"
 import {
@@ -46,16 +49,31 @@ const GoogleOneTap = React.lazy(() =>
   }))
 )
 
+function allowInstall(error: unknown): null {
+  if (error instanceof Response && error.status === INSTALL_REQUIRED_STATUS)
+    return null
+  throw error
+}
+
 async function loadRootData(request: Request): Promise<RootLoaderData> {
+  // SPA builds render a static shell without a running API server.
+  if (process.env.BBSGO_WEB_SPA === "true") {
+    return {
+      config: null,
+      currentUser: null,
+      locale: "en-US",
+      unreadMessageCount: 0,
+    }
+  }
   const requestOptions = { request } as NonNullable<
     Parameters<typeof apiFetch>[1]
   > & { request: Request }
   const [config, currentUser] = await Promise.all([
     apiFetch<SiteConfig>("/api/config/configs", requestOptions).catch(
-      () => null
+      allowInstall
     ),
     apiFetch<UserSummary>("/api/user/current", requestOptions).catch(
-      () => null
+      allowInstall
     ),
   ])
 
@@ -237,7 +255,9 @@ export function ErrorBoundary() {
     error instanceof Error
       ? error.message
       : isRouteErrorResponse(error)
-        ? error.statusText
+        ? typeof error.data === "string"
+          ? error.data
+          : error.statusText
         : undefined
 
   return (

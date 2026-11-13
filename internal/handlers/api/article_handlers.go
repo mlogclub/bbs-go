@@ -53,14 +53,14 @@ func bindArticleForm(ctx *gin.Context) (req.CreateArticleReq, error) {
 func ArticleDetail(ctx *gin.Context) {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
-		ginx.WriteJSON(ctx, err)
+		ginx.WriteHttpStatusJSON(ctx, 400, ginx.ErrorCode(400, err.Error()))
 		return
 	}
 	articleId := id
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		ginx.WriteJSON(ctx, ginx.ErrorCode(404, locales.Get("article.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("article.not_found")))
 		return
 	}
 
@@ -70,11 +70,11 @@ func ArticleDetail(ctx *gin.Context) {
 	if article.Status == constants.StatusReview {
 		if user != nil {
 			if article.UserId != user.Id && !user.IsOwner() {
-				ginx.WriteJSON(ctx, ginx.ErrorCode(403, locales.Get("article.under_review")))
+				ginx.WriteHttpStatusJSON(ctx, 403, ginx.ErrorCode(403, locales.Get("article.under_review")))
 				return
 			}
 		} else {
-			ginx.WriteJSON(ctx, ginx.ErrorCode(403, locales.Get("article.under_review")))
+			ginx.WriteHttpStatusJSON(ctx, 403, ginx.ErrorCode(403, locales.Get("article.under_review")))
 			return
 		}
 	}
@@ -130,7 +130,7 @@ func ArticleEditForm(ctx *gin.Context) {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("article.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("article.not_found")))
 		return
 	}
 
@@ -187,7 +187,7 @@ func ArticleEdit(ctx *gin.Context) {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("article.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("article.not_found")))
 		return
 	}
 
@@ -223,7 +223,7 @@ func ArticleRemove(ctx *gin.Context) {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status == constants.StatusDeleted {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("article.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("article.not_found")))
 		return
 	}
 
@@ -275,7 +275,7 @@ func ArticleRedirect(ctx *gin.Context) {
 
 	article := services.ArticleService.Get(articleId)
 	if article == nil || article.Status != constants.StatusOk {
-		ginx.WriteJSON(ctx, ginx.ErrorMessage(locales.Get("article.not_found")))
+		ginx.WriteHttpStatusJSON(ctx, 404, ginx.ErrorCode(404, locales.Get("article.not_found")))
 		return
 	}
 	ginx.WriteJSON(ctx, map[string]any{"url": bbsurls.ArticleUrl(articleId)})

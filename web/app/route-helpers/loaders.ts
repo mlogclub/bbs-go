@@ -1,6 +1,6 @@
 import { redirect } from "react-router"
 
-import { apiFetch } from "@/lib/api/client"
+import { routeApiFetch as apiFetch } from "@/lib/api/client"
 import type { Article, PageData, Tag, Topic, Category } from "@/lib/api/types"
 
 import { getCurrentUser } from "./auth"
@@ -42,7 +42,7 @@ async function loadCategory(
   return apiFetch<Category>("/api/topic/category", {
     request,
     params: { categoryId },
-  }).catch(() => null)
+  })
 }
 
 async function loadTag(
@@ -50,7 +50,7 @@ async function loadTag(
   tagId: string | number | undefined
 ): Promise<Tag | null> {
   if (!tagId) return null
-  return apiFetch<Tag>(`/api/tag/${tagId}`, { request }).catch(() => null)
+  return apiFetch<Tag>(`/api/tag/${tagId}`, { request })
 }
 
 async function getCategoryFilters({

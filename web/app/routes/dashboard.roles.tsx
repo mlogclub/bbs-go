@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 import { ShieldCheckIcon } from "lucide-react"
 
@@ -403,3 +405,6 @@ function RolePermissionDrawer({
     </Drawer>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_ROLE_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_ROLE_VIEW).clientLoader

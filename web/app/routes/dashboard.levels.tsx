@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import * as React from "react"
 import { PlusIcon, RefreshCwIcon, SaveIcon, Trash2Icon } from "lucide-react"
 
@@ -259,3 +261,6 @@ export default function DashboardLevelsRoute() {
     </div>
   )
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_LEVEL_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_LEVEL_VIEW).clientLoader

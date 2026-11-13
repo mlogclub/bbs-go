@@ -1,11 +1,14 @@
 package ginx
 
 import (
+	"encoding/json"
+	"io"
 	"io/fs"
 	"log/slog"
 	"net/http"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -87,6 +90,20 @@ func NewSPAHandler(root string, embeddedFS fs.FS, embeddedRoot string, options D
 }
 
 func DirHandler(fileSystem http.FileSystem, options DirOptions) gin.HandlerFunc {
+	var routePatterns []*regexp.Regexp
+	if options.SPA {
+		if manifest, err := fileSystem.Open("/.route-patterns.json"); err == nil {
+			var patterns []string
+			if json.NewDecoder(manifest).Decode(&patterns) == nil {
+				for _, pattern := range patterns {
+					if compiled, err := regexp.Compile(pattern); err == nil {
+						routePatterns = append(routePatterns, compiled)
+					}
+				}
+			}
+			_ = manifest.Close()
+		}
+	}
 	return func(ctx *gin.Context) {
 		name := path.Clean(ctx.Request.URL.Path)
 		if name == "." || name == "/" {
@@ -135,7 +152,7 @@ func DirHandler(fileSystem http.FileSystem, options DirOptions) gin.HandlerFunc 
 			return
 		}
 
-		if options.SPA && options.IndexName != "" {
+		if options.SPA && options.IndexName != "" && !strings.HasPrefix(name, "/assets/") && !strings.HasPrefix(name, "/images/") && !strings.HasPrefix(name, "/fonts/") && (path.Ext(name) == "" || len(routePatterns) > 0) {
 			indexName := "/" + options.IndexName
 			indexFile, err := fileSystem.Open(indexName)
 			if err != nil {
@@ -151,6 +168,30 @@ func DirHandler(fileSystem http.FileSystem, options DirOptions) gin.HandlerFunc 
 			if err != nil {
 				ctx.AbortWithStatus(http.StatusInternalServerError)
 				return
+			}
+			if len(routePatterns) > 0 {
+				matched := false
+				for _, pattern := range routePatterns {
+					if pattern.MatchString(name) {
+						matched = true
+						break
+					}
+				}
+				if !matched {
+					body, err := io.ReadAll(indexFile)
+					if err != nil {
+						ctx.AbortWithStatus(http.StatusInternalServerError)
+						return
+					}
+					ctx.Header("Content-Type", "text/html; charset=utf-8")
+					if ctx.Request.Method == http.MethodHead {
+						ctx.Status(http.StatusNotFound)
+						ctx.Writer.WriteHeaderNow()
+						return
+					}
+					ctx.Data(http.StatusNotFound, "text/html; charset=utf-8", body)
+					return
+				}
 			}
 			serveFile(ctx, indexName, indexFile, indexInfo)
 			return

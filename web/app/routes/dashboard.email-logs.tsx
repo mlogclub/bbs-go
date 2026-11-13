@@ -1,5 +1,7 @@
 "use client"
 
+import { dashboardPageLoaders } from "../route-helpers/auth"
+
 import {
   DashboardDataPage,
   type DashboardDataPageConfig,
@@ -78,3 +80,6 @@ export default function DashboardEmailLogsRoute() {
 
   return <DashboardDataPage config={config} />
 }
+
+export const loader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_EMAIL_LOG_VIEW).loader
+export const clientLoader = dashboardPageLoaders(PERMISSIONS.DASHBOARD_EMAIL_LOG_VIEW).clientLoader

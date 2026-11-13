@@ -1,8 +1,8 @@
 import { redirect, type RouterContextProvider } from "react-router"
 
-import { apiFetch } from "@/lib/api/client"
+import { routeApiFetch as apiFetch } from "@/lib/api/client"
 import type { UserSummary } from "@/lib/api/types"
-import { userCanAccessDashboard } from "@/lib/auth/roles"
+import { userCanAccessDashboard, userHasPermission } from "@/lib/auth/roles"
 
 import { rootDataContext } from "./context"
 
@@ -23,9 +23,7 @@ export function buildSigninRedirect(requestOrUrl: Request | URL | string) {
 }
 
 export async function getCurrentUser(request?: Request) {
-  return apiFetch<UserSummary>("/api/user/current", { request }).catch(
-    () => null
-  )
+  return apiFetch<UserSummary>("/api/user/current", { request })
 }
 
 export async function requireUser({ request, context }: RequireUserArgs) {
@@ -73,4 +71,20 @@ export async function requireDashboardAdminClient({
     throw dashboardForbidden()
   }
   return user
+}
+
+export function dashboardPageLoaders(
+  permission: import("@/lib/auth/permissions.generated").PermissionCode
+) {
+  const check = async (args: RequireUserArgs, client: boolean) => {
+    const user = client
+      ? await requireDashboardAdminClient(args)
+      : await requireDashboardAdmin(args)
+    if (!userHasPermission(user, permission)) throw dashboardForbidden()
+    return null
+  }
+  return {
+    loader: (args: RequireUserArgs) => check(args, false),
+    clientLoader: (args: RequireUserArgs) => check(args, true),
+  }
 }

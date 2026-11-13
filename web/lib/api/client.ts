@@ -164,3 +164,30 @@ export function toFormData(values: Record<string, QueryValue>) {
   })
   return form
 }
+
+// Route loaders must throw Responses so the document status follows the API error.
+// Keep apiFetch's Error contract for forms and other interactive requests.
+export async function routeApiFetch<T>(
+  path: string,
+  options: ApiRequestOptions = {}
+): Promise<T> {
+  try {
+    return await apiFetch<T>(path, options)
+  } catch (error) {
+    if (!(error instanceof ApiError)) throw error
+    const code = error.errorCode
+    const status =
+      error.status && error.status >= 400
+        ? error.status
+        : code === 1
+          ? 401
+          : code === 2
+            ? 403
+            : code && code >= 400 && code <= 599
+              ? code
+              : 500
+    throw new Response(status >= 500 ? "Service unavailable" : error.message, {
+      status,
+    })
+  }
+}
