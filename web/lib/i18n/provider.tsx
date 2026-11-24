@@ -8,7 +8,6 @@ import { createI18nextInstance, type Locale, type TFunction } from "."
 const I18nContext = React.createContext<{
   locale: Locale
   t: TFunction
-  setLocale?: (locale: Locale) => void
 }>({
   locale: "en-US",
   t: (key) => key,
@@ -17,17 +16,15 @@ const I18nContext = React.createContext<{
 export function I18nProvider({
   children,
   locale = "en-US",
-  setLocale,
 }: {
   children: React.ReactNode
   locale?: Locale
-  setLocale?: (locale: Locale) => void
 }) {
   const [i18n] = React.useState(() => createI18nextInstance(locale))
 
   return (
     <I18nextProvider i18n={i18n}>
-      <I18nContextBridge locale={locale} setLocale={setLocale}>
+      <I18nContextBridge locale={locale}>
         {children}
       </I18nContextBridge>
     </I18nextProvider>
@@ -37,11 +34,9 @@ export function I18nProvider({
 function I18nContextBridge({
   children,
   locale,
-  setLocale,
 }: {
   children: React.ReactNode
   locale: Locale
-  setLocale?: (locale: Locale) => void
 }) {
   const { i18n, t: translate } = useTranslation()
 
@@ -60,7 +55,7 @@ function I18nContextBridge({
   )
 
   return (
-    <I18nContext.Provider value={{ locale, t, setLocale }}>
+    <I18nContext.Provider value={{ locale, t }}>
       {children}
     </I18nContext.Provider>
   )

@@ -61,7 +61,6 @@ const zhCN = {
     },
     header: {
       theme: "主题",
-      language: "语言",
       siteHome: "打开前台首页",
     },
     theme: {

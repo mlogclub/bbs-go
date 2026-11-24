@@ -15,7 +15,6 @@ import {
   InstallRequiredFallback,
   isInstallRequiredRouteError,
 } from "@/components/install/install-required-fallback"
-import { LanguageToggle } from "@/components/language-toggle"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import {
@@ -254,7 +253,6 @@ export default function DashboardLayout() {
                 </a>
               </Button>
               <ThemeToggle />
-              <LanguageToggle />
             </div>
           </header>
           <div className="min-h-0 flex-1 overflow-y-auto">

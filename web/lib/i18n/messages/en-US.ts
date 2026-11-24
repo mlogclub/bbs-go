@@ -61,7 +61,6 @@ const enUS = {
     },
     header: {
       theme: "Theme",
-      language: "Language",
       siteHome: "Open site home",
     },
     theme: {

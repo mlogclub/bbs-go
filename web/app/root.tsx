@@ -40,9 +40,6 @@ import type { RootLoaderData } from "./route-helpers/types"
 
 import "@/styles/globals.css"
 
-const LOCALE_STORAGE_KEY = "bbsgo-dashboard-locale"
-const LEGACY_LOCALE_STORAGE_KEY = "bbsgo-web-locale"
-
 const GoogleOneTap = React.lazy(() =>
   import("@/components/auth/google-one-tap").then((module) => ({
     default: module.GoogleOneTap,
@@ -205,53 +202,42 @@ export default function Root() {
   const loaderData = useLoaderData<typeof loader>()
   return (
     <AppProvider initialState={loaderData}>
-      <RootContent />
+      <SiteI18nProvider>
+        <RootContent />
+      </SiteI18nProvider>
     </AppProvider>
   )
 }
 
-function RootContent() {
+function SiteI18nProvider({ children }: { children: React.ReactNode }) {
   const config = useAppConfig()
-  const [localePreference, setLocalePreference] = React.useState<
-    RootLoaderData["locale"] | null
-  >(null)
-  const locale = localePreference ?? normalizeLocale(config?.language)
-
-  React.useEffect(() => {
-    const storedLocale =
-      window.localStorage.getItem(LOCALE_STORAGE_KEY) ||
-      window.localStorage.getItem(LEGACY_LOCALE_STORAGE_KEY)
-    if (storedLocale) setLocalePreference(normalizeLocale(storedLocale))
-  }, [])
+  const locale = normalizeLocale(config?.language)
 
   React.useEffect(() => {
     document.documentElement.lang = locale
   }, [locale])
 
-  const updateLocale = React.useCallback((nextLocale: typeof locale) => {
-    window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale)
-    window.localStorage.setItem(LEGACY_LOCALE_STORAGE_KEY, nextLocale)
-    setLocalePreference(nextLocale)
-  }, [])
+  return <I18nProvider locale={locale}>{children}</I18nProvider>
+}
 
+function RootContent() {
   return (
-    <I18nProvider locale={locale} setLocale={updateLocale}>
-      <ThemeProvider>
-        <TooltipProvider>
-          <RuntimeScriptInjections />
-          <GoogleOneTapGate />
-          <LayoutChrome>
-            <Outlet />
-          </LayoutChrome>
-          <Toaster position="top-center" />
-        </TooltipProvider>
-      </ThemeProvider>
-    </I18nProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <RuntimeScriptInjections />
+        <GoogleOneTapGate />
+        <LayoutChrome>
+          <Outlet />
+        </LayoutChrome>
+        <Toaster position="top-center" />
+      </TooltipProvider>
+    </ThemeProvider>
   )
 }
 
 export function ErrorBoundary() {
   const error = useRouteError()
+  const rootData = useRouteLoaderData<typeof loader>("root")
   const installRequired = isInstallRequiredRouteError(error)
   const statusCode = isRouteErrorResponse(error) ? error.status : 500
   const message =
@@ -264,14 +250,14 @@ export function ErrorBoundary() {
         : undefined
 
   return (
-    <I18nProvider locale="en-US">
-      <AppProvider
-        initialState={{
-          config: null,
-          currentUser: null,
-          unreadMessageCount: 0,
-        }}
-      >
+    <AppProvider
+      initialState={{
+        config: rootData?.config ?? null,
+        currentUser: null,
+        unreadMessageCount: 0,
+      }}
+    >
+      <SiteI18nProvider>
         <ThemeProvider>
           <TooltipProvider>
             <LayoutChrome>
@@ -284,7 +270,7 @@ export function ErrorBoundary() {
             <Toaster position="top-center" />
           </TooltipProvider>
         </ThemeProvider>
-      </AppProvider>
-    </I18nProvider>
+      </SiteI18nProvider>
+    </AppProvider>
   )
 }
