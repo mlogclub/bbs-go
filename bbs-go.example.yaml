@@ -2,6 +2,7 @@ Port: 8082 # 端口
 AllowedOrigins:
   - "*"
 Installed: false # 是否已完成安装
+Language: en-US # en-US / zh-CN / zh-TW
 
 # 数据下载 https://github.com/lionsoul2014/ip2region/tree/master/data
 IPLocator:

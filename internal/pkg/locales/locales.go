@@ -60,18 +60,21 @@ func getLocaleByFile(file string) string {
 }
 
 func Get(key string) string {
-	v, ok := viperInstances[string(config.Instance.Language)]
-	if !ok {
-		slog.Error("locale not found", "locale", config.Instance.Language)
-		return key
+	locale := config.Instance.Language
+	switch locale {
+	case config.LanguageZhTW:
+		for _, candidate := range []config.Language{locale, config.LanguageZhCN, config.DefaultLanguage} {
+			if v := viperInstances[string(candidate)]; v != nil && v.IsSet(key) {
+				return v.GetString(key)
+			}
+		}
+	default:
+		if v := viperInstances[string(locale)]; v != nil && v.IsSet(key) {
+			return v.GetString(key)
+		}
 	}
-
-	if !v.IsSet(key) {
-		slog.Warn("translation key not found", "key", key, "locale", config.Instance.Language)
-		return key
-	}
-
-	return v.GetString(key)
+	slog.Warn("translation key not found", "key", key, "locale", locale)
+	return key
 }
 
 func Getf(key string, args ...any) string {

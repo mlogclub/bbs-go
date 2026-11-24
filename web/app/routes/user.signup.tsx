@@ -11,7 +11,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Sign up", "注册")
+  return noindexRouteMeta(matches, "sign_up")
 }
 
 export default function SignupRoute() {

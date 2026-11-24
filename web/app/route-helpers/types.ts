@@ -1,6 +1,8 @@
 import type { SiteConfig, UserSummary } from "@/lib/api/types"
 
-export type AppLocale = "en-US" | "zh-CN"
+import type { Locale } from "@/lib/i18n"
+
+export type AppLocale = Locale
 
 export interface RootLoaderData {
   config: SiteConfig | null

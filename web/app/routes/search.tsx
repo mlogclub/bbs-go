@@ -70,8 +70,8 @@ export function meta({
   const searchParams = new URLSearchParams(location?.search || "")
   const keyword = searchParams.get("q") || searchParams.get("keyword") || ""
   const title = keyword
-    ? `${localizedTitle(rootData?.locale, "Search", "搜索")}: ${keyword}`
-    : localizedTitle(rootData?.locale, "Search", "搜索")
+    ? `${localizedTitle(rootData?.locale, "search")}: ${keyword}`
+    : localizedTitle(rootData?.locale, "search")
 
   return noindexMeta(rootData?.config, title)
 }

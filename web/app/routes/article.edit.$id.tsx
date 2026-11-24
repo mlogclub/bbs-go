@@ -27,7 +27,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Edit article", "编辑文章")
+  return noindexRouteMeta(matches, "edit_article")
 }
 
 export default function ArticleEditRoute() {

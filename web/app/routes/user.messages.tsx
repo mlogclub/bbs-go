@@ -18,7 +18,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Messages", "消息")
+  return noindexRouteMeta(matches, "messages")
 }
 
 export default function UserMessagesRoute() {

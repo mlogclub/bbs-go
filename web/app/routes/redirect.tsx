@@ -9,7 +9,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Redirect", "跳转")
+  return noindexRouteMeta(matches, "redirect")
 }
 
 export default function RedirectRoute() {

@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, apiFetch } from "@/lib/api/client"
 import { createT, type Locale } from "@/lib/i18n"
+import { useDocumentTitle } from "@/lib/use-document-title"
 
 type Step = "welcome" | "database" | "site" | "admin" | "install" | "complete"
 export type DbType = "mysql" | "postgresql" | "sqlite"
@@ -78,6 +79,17 @@ export function InstallWizard({
   const [step, setStep] = React.useState<Step>("welcome")
   const [language, setLanguage] = React.useState<Locale>("en-US")
   const t = React.useMemo(() => createT(language), [language])
+  useDocumentTitle(t("pages.install.title"))
+
+  React.useEffect(() => {
+    const root = document.documentElement
+    const previousLang = root.lang
+    root.lang = language
+    return () => {
+      root.lang = previousLang
+    }
+  }, [language])
+
   const [dbConfig, setDbConfig] = React.useState({
     type: "mysql" as DbType,
     host: "localhost",
@@ -406,6 +418,7 @@ export function InstallWizard({
                     [
                       ["en-US", t("pages.install.language.english")],
                       ["zh-CN", t("pages.install.language.chinese")],
+                      ["zh-TW", "繁體中文"],
                     ] as Array<[Locale, string]>
                   ).map(([value, label]) => (
                     <button

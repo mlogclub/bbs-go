@@ -34,7 +34,7 @@ export function meta({
   const rootData = rootDataFromMatches(matches)
   return pageMeta(
     rootData?.config,
-    localizedTitle(rootData?.locale, "Links", "友情链接"),
+    localizedTitle(rootData?.locale, "links"),
     { canonicalPath: location.pathname }
   )
 }

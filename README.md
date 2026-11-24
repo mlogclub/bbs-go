@@ -42,6 +42,10 @@ docker compose up -d
 - 后台：<http://localhost:3000/dashboard>
 - 安装向导：<http://localhost:3000/install>
 
+## 站点语言
+
+安装向导支持简体中文、繁體中文和 English。已有站点升级后，可在运行目录的 `bbs-go.yaml` 中设置 `language: zh-TW` 并重启服务。后台的页面内容设置支持分别填写三种语言的「关于」和页脚链接。已保存的导航名称、帖子和历史通知等内容保留原文。
+
 ## CI/CD 与自动化部署
 
 本项目使用 **GitHub Actions + GHCR（GitHub Container Registry）+ Docker Hub** 实现自动化构建与部署，避免在低配服务器上本地编译（2核4G 下 `docker build` 容易资源不足）。

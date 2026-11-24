@@ -83,7 +83,7 @@ func UserUpdate(ctx *gin.Context) {
 		minLength = constants.NicknameMinLengthEnUS
 		maxLength = constants.NicknameMaxLengthEnUS
 	)
-	if strings.EqualFold(string(config.Instance.Language), string(config.LanguageZhCN)) {
+	if config.Instance.Language == config.LanguageZhCN || config.Instance.Language == config.LanguageZhTW {
 		minLength = constants.NicknameMinLengthZhCN
 		maxLength = constants.NicknameMaxLengthZhCN
 	}

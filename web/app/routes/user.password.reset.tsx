@@ -11,7 +11,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Reset password", "重置密码")
+  return noindexRouteMeta(matches, "reset_password")
 }
 
 export default function ResetRoute() {

@@ -25,7 +25,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Account settings", "账号设置")
+  return noindexRouteMeta(matches, "account_settings")
 }
 
 export default function AccountRoute() {

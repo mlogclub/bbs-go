@@ -25,7 +25,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Profile", "个人资料")
+  return noindexRouteMeta(matches, "profile")
 }
 
 export default function ProfileRoute() {

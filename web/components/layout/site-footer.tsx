@@ -14,7 +14,8 @@ function localizedText(
     return ""
   }
 
-  return value[locale] || value["en-US"] || value["zh-CN"] || ""
+  const fallback = locale === "zh-TW" ? ["zh-CN", "en-US"] : ["en-US", "zh-CN"]
+  return [locale, ...fallback].map((key) => value[key]?.trim()).find(Boolean) || ""
 }
 
 function isInternalUrl(url: string | undefined) {

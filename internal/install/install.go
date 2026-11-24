@@ -262,6 +262,13 @@ func Install(req InstallReq) error {
 		return err
 	}
 
+	if req.Language == "" {
+		req.Language = config.DefaultLanguage
+	}
+	if !req.Language.IsValid() {
+		return errors.New(locales.Get("install.invalid_language"))
+	}
+
 	installMx.Lock()
 	defer installMx.Unlock()
 
@@ -450,37 +457,16 @@ func InitData(req InstallReq) error {
 	services.SysConfigService.Set(constants.SysConfigBaseURL, baseURL)
 
 	// 初始化默认欢迎帖子（按安装语言）
-	if err := initWelcomeTopic(req.Language, user.Id); err != nil {
+	if err := initWelcomeTopic(user.Id); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func initWelcomeTopic(language config.Language, userId int64) error {
-	var (
-		title   string
-		content string
-	)
-	if language == config.LanguageZhCN {
-		title = "欢迎来到 BBS-GO 社区"
-		content = `欢迎使用 **BBS-GO**！
-
-这是一个轻量、高性能、易扩展的社区系统。
-
-你可以发帖、评论、点赞，并通过任务系统获得积分与成长奖励。
-
-现在就开始发布你的第一篇帖子吧。`
-	} else {
-		title = "Welcome to the BBS-GO Community"
-		content = `Welcome to **BBS-GO**!
-
-A lightweight, high-performance, and extensible community platform.
-
-You can create topics, comment, like, and earn points through the task system.
-
-Start by publishing your first post.`
-	}
+func initWelcomeTopic(userId int64) error {
+	title := locales.Get("install.welcome_title")
+	content := locales.Get("install.welcome_content")
 
 	if services.TopicService.Take("user_id = ? and title = ?", userId, title) != nil {
 		return nil

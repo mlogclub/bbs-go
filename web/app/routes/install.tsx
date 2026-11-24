@@ -2,9 +2,7 @@ import { Navigate } from "react-router"
 
 import { InstallWizard, type DbType } from "@/components/install/install-wizard"
 import { apiFetch } from "@/lib/api/client"
-import { useI18n } from "@/lib/i18n/provider"
 import { noindexRouteMeta } from "@/lib/seo"
-import { useDocumentTitle } from "@/lib/use-document-title"
 
 import { useClientData } from "../route-helpers/client-hooks"
 
@@ -13,12 +11,10 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Install BBS-GO", "安装 BBS-GO")
+  return noindexRouteMeta(matches, "install_bbs_go")
 }
 
 export default function InstallRoute() {
-  const { t } = useI18n()
-  useDocumentTitle(t("pages.install.title"))
   const { data, loading } = useClientData<{
     installed?: boolean
     dockerBuiltinDbType?: DbType

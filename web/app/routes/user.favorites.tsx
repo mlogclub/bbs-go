@@ -18,7 +18,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Favorites", "收藏")
+  return noindexRouteMeta(matches, "favorites")
 }
 
 export default function UserFavoritesRoute() {

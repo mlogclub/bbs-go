@@ -3,13 +3,15 @@ import { initReactI18next } from "react-i18next"
 
 import enUS from "./messages/en-US"
 import zhCN from "./messages/zh-CN"
+import zhTW from "./messages/zh-TW"
 
-export type Locale = "en-US" | "zh-CN"
+export type Locale = keyof typeof messages
 export type TFunction = (key: string, params?: Record<string, string | number>) => string
 
 export const messages = {
   "en-US": enUS,
   "zh-CN": zhCN,
+  "zh-TW": zhTW,
 } as const
 
 export const supportedLocales = Object.keys(messages) as Locale[]
@@ -17,10 +19,11 @@ export const supportedLocales = Object.keys(messages) as Locale[]
 const resources = {
   "en-US": { translation: enUS },
   "zh-CN": { translation: zhCN },
+  "zh-TW": { translation: zhTW },
 }
 
 const i18nextOptions = {
-  fallbackLng: "en-US",
+  fallbackLng: { "zh-TW": ["zh-CN", "en-US"], default: ["en-US"] },
   supportedLngs: supportedLocales,
   defaultNS: "translation",
   interpolation: {
@@ -36,8 +39,8 @@ const i18nextOptions = {
   initAsync: false,
 } as const
 
-export function normalizeLocale(value: string | undefined | null): Locale {
-  return value === "zh-CN" ? "zh-CN" : "en-US"
+export function normalizeLocale(value: unknown): Locale {
+  return value === "zh-CN" || value === "zh-TW" ? value : "en-US"
 }
 
 export function createI18nextInstance(locale: Locale = "en-US"): I18nextInstance {
