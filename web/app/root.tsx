@@ -35,7 +35,7 @@ import { siteMeta } from "@/lib/seo"
 
 import type { Route } from "./+types/root"
 import { rootDataContext } from "./route-helpers/context"
-import { getBrowserLocale, normalizeLocale } from "./route-helpers/locale"
+import { normalizeLocale } from "./route-helpers/locale"
 import type { RootLoaderData } from "./route-helpers/types"
 
 import "@/styles/globals.css"
@@ -203,16 +203,26 @@ function RuntimeScriptInjections() {
 
 export default function Root() {
   const loaderData = useLoaderData<typeof loader>()
-  const [locale, setLocale] = React.useState(loaderData.locale)
+  return (
+    <AppProvider initialState={loaderData}>
+      <RootContent />
+    </AppProvider>
+  )
+}
+
+function RootContent() {
+  const config = useAppConfig()
+  const [localePreference, setLocalePreference] = React.useState<
+    RootLoaderData["locale"] | null
+  >(null)
+  const locale = localePreference ?? normalizeLocale(config?.language)
 
   React.useEffect(() => {
     const storedLocale =
       window.localStorage.getItem(LOCALE_STORAGE_KEY) ||
       window.localStorage.getItem(LEGACY_LOCALE_STORAGE_KEY)
-    setLocale(
-      normalizeLocale(storedLocale || getBrowserLocale(loaderData.locale))
-    )
-  }, [loaderData.locale])
+    if (storedLocale) setLocalePreference(normalizeLocale(storedLocale))
+  }, [])
 
   React.useEffect(() => {
     document.documentElement.lang = locale
@@ -221,28 +231,21 @@ export default function Root() {
   const updateLocale = React.useCallback((nextLocale: typeof locale) => {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale)
     window.localStorage.setItem(LEGACY_LOCALE_STORAGE_KEY, nextLocale)
-    setLocale(nextLocale)
+    setLocalePreference(nextLocale)
   }, [])
-
-  const appState = React.useMemo(
-    () => ({ ...loaderData, locale }),
-    [loaderData, locale]
-  )
 
   return (
     <I18nProvider locale={locale} setLocale={updateLocale}>
-      <AppProvider initialState={appState}>
-        <ThemeProvider>
-          <TooltipProvider>
-            <RuntimeScriptInjections />
-            <GoogleOneTapGate />
-            <LayoutChrome>
-              <Outlet />
-            </LayoutChrome>
-            <Toaster position="top-center" />
-          </TooltipProvider>
-        </ThemeProvider>
-      </AppProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <RuntimeScriptInjections />
+          <GoogleOneTapGate />
+          <LayoutChrome>
+            <Outlet />
+          </LayoutChrome>
+          <Toaster position="top-center" />
+        </TooltipProvider>
+      </ThemeProvider>
     </I18nProvider>
   )
 }
@@ -266,7 +269,6 @@ export function ErrorBoundary() {
         initialState={{
           config: null,
           currentUser: null,
-          locale: "en-US",
           unreadMessageCount: 0,
         }}
       >
