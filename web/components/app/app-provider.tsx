@@ -4,12 +4,10 @@ import * as React from "react"
 
 import { loadClientAppState } from "@/lib/app-state/client"
 import type { SiteConfig, UserSummary } from "@/lib/api/types"
-import type { Locale } from "@/lib/i18n"
 
 export type ClientAppState = {
   config: SiteConfig | null
   currentUser: UserSummary | null
-  locale: Locale
   unreadMessageCount: number
 }
 
@@ -79,14 +77,13 @@ export function AppProvider({
       config,
       currentUser,
       authChecked,
-      locale: initialState.locale,
       unreadMessageCount,
       isLogin: Boolean(currentUser),
       setConfig,
       setCurrentUser,
       setUnreadMessageCount,
     }),
-    [authChecked, config, currentUser, initialState.locale, unreadMessageCount]
+    [authChecked, config, currentUser, unreadMessageCount]
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
@@ -124,8 +121,4 @@ export function useIsLogin() {
 
 export function useAuthChecked() {
   return useAppState().authChecked
-}
-
-export function useAppLocale() {
-  return useAppState().locale
 }

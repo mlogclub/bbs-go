@@ -2,7 +2,7 @@
 
 import Link from "@/components/common/link"
 
-import { useAppConfig, useAppLocale } from "@/components/app/app-provider"
+import { useAppConfig } from "@/components/app/app-provider"
 import type { Locale } from "@/lib/i18n"
 import { useI18n } from "@/lib/i18n/provider"
 
@@ -23,8 +23,7 @@ function isInternalUrl(url: string | undefined) {
 
 export function SiteFooter() {
   const config = useAppConfig()
-  const locale = useAppLocale()
-  const { t } = useI18n()
+  const { locale, t } = useI18n()
   const links =
     config?.footerLinks?.filter(
       (item) => item.visible !== false && localizedText(item.text, locale)

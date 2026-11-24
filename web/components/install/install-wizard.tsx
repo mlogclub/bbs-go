@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "@/components/common/link"
 import {
   AlertCircle,
   Check,
@@ -885,16 +884,16 @@ export function InstallWizard({
               </div>
               <div className="flex justify-center space-x-4">
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/">
+                  <a href="/">
                     <Globe className="mr-2 h-4 w-4" />
                     {t("pages.install.complete.enterSite")}
-                  </Link>
+                  </a>
                 </Button>
                 <Button asChild size="lg">
-                  <Link href="/dashboard">
+                  <a href="/dashboard">
                     <Settings className="mr-2 h-4 w-4" />
                     {t("pages.install.complete.enterAdmin")}
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </div>
