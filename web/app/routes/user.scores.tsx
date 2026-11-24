@@ -18,7 +18,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Scores", "积分")
+  return noindexRouteMeta(matches, "scores")
 }
 
 export default function UserScoresRoute() {

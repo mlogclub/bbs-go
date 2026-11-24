@@ -10,6 +10,10 @@ import type {
   UserSummary,
 } from "@/lib/api/types"
 
+import { messages } from "@/lib/i18n"
+
+type MetaTitleKey = keyof typeof messages["en-US"]["meta"]
+
 type RouteMatch = {
   data?: unknown
   loaderData?: unknown
@@ -128,11 +132,10 @@ export function rootDataFromMatches(matches: RouteMatch[]) {
 }
 
 export function localizedTitle(
-  locale: RootLoaderData["locale"] | string | undefined,
-  enUS: string,
-  zhCN: string
+  locale: RootLoaderData["locale"] | undefined,
+  key: MetaTitleKey
 ) {
-  return locale === "en-US" ? enUS : zhCN
+  return messages[locale ?? "zh-CN"].meta[key]
 }
 
 export function tagKeywords(tags: Tag[] | null | undefined) {
@@ -250,13 +253,12 @@ export function noindexMeta(
 
 export function noindexRouteMeta(
   matches: RouteMatch[],
-  enUS: string,
-  zhCN: string
+  key: MetaTitleKey
 ) {
   const rootData = rootDataFromMatches(matches)
   return noindexMeta(
     rootData?.config,
-    localizedTitle(rootData?.locale, enUS, zhCN)
+    localizedTitle(rootData?.locale, key)
   )
 }
 

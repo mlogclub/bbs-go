@@ -27,6 +27,7 @@ type Language string
 
 const (
 	LanguageZhCN Language = "zh-CN"
+	LanguageZhTW Language = "zh-TW"
 	LanguageEnUS Language = "en-US"
 
 	DefaultLanguage = LanguageEnUS
@@ -34,7 +35,7 @@ const (
 
 func (l Language) IsValid() bool {
 	switch l {
-	case LanguageZhCN, LanguageEnUS:
+	case LanguageZhCN, LanguageZhTW, LanguageEnUS:
 		return true
 	}
 	return false
@@ -127,8 +128,8 @@ func ReadConfig() (cfg *Config, exists bool, err error) {
 			err = fmt.Errorf("fatal error unmarshal config: %w", err)
 			return
 		}
-		// 如果配置文件存在但没有语言设置，使用默认语言
-		if strs.IsBlank(string(cfg.Language)) {
+		// Use the default when the configured language is missing or unsupported.
+		if !cfg.Language.IsValid() {
 			cfg.Language = DefaultLanguage
 		}
 		SetDbDefaults(&cfg.DB)

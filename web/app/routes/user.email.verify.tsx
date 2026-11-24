@@ -10,7 +10,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Email verification", "邮箱验证")
+  return noindexRouteMeta(matches, "email_verification")
 }
 
 export default function EmailVerifyRoute() {

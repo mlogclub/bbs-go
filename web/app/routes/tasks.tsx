@@ -27,7 +27,7 @@ export function meta({
   const rootData = rootDataFromMatches(matches)
   return noindexMeta(
     rootData?.config,
-    localizedTitle(rootData?.locale, "Tasks", "任务")
+    localizedTitle(rootData?.locale, "tasks")
   )
 }
 

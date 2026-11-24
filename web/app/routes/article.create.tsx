@@ -21,7 +21,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Create article", "发布文章")
+  return noindexRouteMeta(matches, "create_article")
 }
 
 export default function ArticleCreateRoute() {

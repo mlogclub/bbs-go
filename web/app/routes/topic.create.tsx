@@ -26,7 +26,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Create topic", "发布话题")
+  return noindexRouteMeta(matches, "create_topic")
 }
 
 export default function TopicCreateRoute() {

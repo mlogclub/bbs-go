@@ -29,7 +29,7 @@ export function meta({
   const rootData = rootDataFromMatches(matches)
   return sitePageMeta(
     rootData?.config,
-    localizedTitle(rootData?.locale, "Articles", "文章"),
+    localizedTitle(rootData?.locale, "articles"),
     { canonicalPath: location.pathname }
   )
 }

@@ -32,7 +32,7 @@ export function meta({
   return tagPageMeta(
     rootData?.config,
     data?.tag,
-    localizedTitle(rootData?.locale, "Topics", "话题"),
+    localizedTitle(rootData?.locale, "topics"),
     location.pathname
   )
 }

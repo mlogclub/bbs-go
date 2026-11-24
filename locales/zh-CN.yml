@@ -177,6 +177,16 @@ xp:
   cannot_be_zero: "经验不能为0"
 
 install:
+  invalid_language: "不支持该语言"
+  welcome_title: "欢迎来到 BBS-GO 社区"
+  welcome_content: |-
+    欢迎使用 **BBS-GO**！
+
+    这是一个轻量、高性能、易扩展的社区系统。
+
+    你可以发帖、评论、点赞，并通过任务系统获得积分与成长奖励。
+
+    现在就开始发布你的第一篇帖子吧。
   already_installed: "系统已安装，无需重复安装"
 
 upload:
@@ -231,3 +241,15 @@ task:
     newbie: "新手任务"
     daily: "每日任务"
     achievement: "成就任务"
+
+task_event_type:
+  user.login: "每日登录"
+  checkin: "签到"
+  topic.create: "发帖"
+  qa.question.publish: "发布问题"
+  qa.answer.accept: "回答被采纳"
+  comment.create: "评论"
+  follow.create: "关注用户"
+  favorite.create: "收藏"
+  like.create: "点赞"
+  level.10: "达到等级 10"

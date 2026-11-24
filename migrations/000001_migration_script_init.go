@@ -208,25 +208,26 @@ func seedForLanguage() seedData {
 		}
 	}
 
+	chinese := chineseSeedText(lang)
 	return seedData{
 		Roles: []roleSeed{
-			{ID: 1, Type: constants.RoleTypeSystem, Name: "超级管理员", Code: constants.RoleOwner, SortNo: 0, Remark: "超级管理员拥有最高权限", Status: constants.StatusOk},
+			{ID: 1, Type: constants.RoleTypeSystem, Name: chinese("超级管理员", "站長"), Code: constants.RoleOwner, SortNo: 0, Remark: chinese("超级管理员拥有最高权限", "站長擁有最高權限"), Status: constants.StatusOk},
 		},
 		Categories: []categorySeed{
-			{ID: 1, Name: "默认节点", Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
+			{ID: 1, Name: chinese("默认节点", "預設節點"), Description: "", Logo: "", SortNo: 0, Status: constants.StatusOk},
 		},
 		SysConfigs: []sysConfigSeed{
-			{Key: constants.SysConfigSiteTitle, Value: "bbs-go演示站", Name: "站点标题", Description: "站点标题"},
-			{Key: constants.SysConfigSiteDescription, Value: "bbs-go，基于Go语言的开源社区系统", Name: "站点描述", Description: "站点描述"},
-			{Key: constants.SysConfigBaseURL, Value: "/", Name: "网站URL", Description: "网站URL"},
-			{Key: constants.SysConfigSiteKeywords, Value: []string{"bbs-go"}, Name: "站点关键字", Description: "站点关键字"},
+			{Key: constants.SysConfigSiteTitle, Value: "bbs-go演示站", Name: chinese("站点标题", "網站標題"), Description: chinese("站点标题", "網站標題")},
+			{Key: constants.SysConfigSiteDescription, Value: chinese("bbs-go，基于Go语言的开源社区系统", "bbs-go，基於Go語言的開源社群系統"), Name: chinese("站点描述", "網站描述"), Description: chinese("站点描述", "網站描述")},
+			{Key: constants.SysConfigBaseURL, Value: "/", Name: chinese("网站URL", "網站URL"), Description: chinese("网站URL", "網站URL")},
+			{Key: constants.SysConfigSiteKeywords, Value: []string{"bbs-go"}, Name: chinese("站点关键字", "網站關鍵字"), Description: chinese("站点关键字", "網站關鍵字")},
 			{Key: constants.SysConfigSiteNavs, Value: []map[string]string{
-				{"title": "话题", "url": "/topics"},
+				{"title": chinese("话题", "話題"), "url": "/topics"},
 				{"title": "文章", "url": "/articles"},
 				// {"title": "任务", "url": "/tasks"},
-			}, Name: "站点导航", Description: "站点导航"},
-			{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: "默认节点", Description: "默认节点"},
-			{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: "用户登录有效期(天)", Description: "用户登录有效期(天)"},
+			}, Name: chinese("站点导航", "網站導航"), Description: chinese("站点导航", "網站導航")},
+			{Key: constants.SysConfigDefaultCategoryId, Value: "1", Name: chinese("默认节点", "預設節點"), Description: chinese("默认节点", "預設節點")},
+			{Key: constants.SysConfigTokenExpireDays, Value: "365", Name: chinese("用户登录有效期(天)", "使用者登入有效期(天)"), Description: chinese("用户登录有效期(天)", "使用者登入有效期(天)")},
 			{Key: constants.SysConfigUrlRedirect, Value: "false"},
 			{Key: constants.SysConfigEnableHideContent, Value: "false"},
 			{Key: constants.SysConfigSiteLogo, Value: ""},
@@ -244,4 +245,12 @@ func seedForLanguage() seedData {
 			}},
 		},
 	}
+}
+
+// chineseSeedText selects localized defaults while preserving the shared seed values.
+func chineseSeedText(lang config.Language) func(simplified, traditional string) string {
+	if lang == config.LanguageZhTW {
+		return func(_, traditional string) string { return traditional }
+	}
+	return func(simplified, _ string) string { return simplified }
 }

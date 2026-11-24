@@ -16,7 +16,7 @@ export function meta({
   const rootData = rootDataFromMatches(matches)
   return sitePageMeta(
     rootData?.config,
-    localizedTitle(rootData?.locale, "Topics", "话题"),
+    localizedTitle(rootData?.locale, "topics"),
     { canonicalPath: location.pathname }
   )
 }

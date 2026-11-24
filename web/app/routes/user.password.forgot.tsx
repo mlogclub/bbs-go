@@ -9,7 +9,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Forgot password", "找回密码")
+  return noindexRouteMeta(matches, "forgot_password")
 }
 
 export default function ForgotRoute() {

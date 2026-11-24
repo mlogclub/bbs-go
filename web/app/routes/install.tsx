@@ -13,7 +13,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Install BBS-GO", "安装 BBS-GO")
+  return noindexRouteMeta(matches, "install_bbs_go")
 }
 
 export default function InstallRoute() {

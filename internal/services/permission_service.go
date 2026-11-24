@@ -64,8 +64,11 @@ func (s *permissionService) syncDefinitions(db *gorm.DB) error {
 		seen[seed.Code] = struct{}{}
 
 		name := seed.NameZh
-		if lang == config.LanguageEnUS {
+		switch lang {
+		case config.LanguageEnUS:
 			name = seed.NameEn
+		case config.LanguageZhTW:
+			name = seed.NameZhTW
 		}
 
 		permission := repositories.PermissionRepository.Take(db, "code = ?", seed.Code)

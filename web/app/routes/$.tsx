@@ -6,7 +6,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Not found", "页面不存在")
+  return noindexRouteMeta(matches, "not_found")
 }
 
 export default function NotFoundRoute() {

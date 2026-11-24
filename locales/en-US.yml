@@ -177,6 +177,16 @@ xp:
   cannot_be_zero: "XP cannot be zero"
 
 install:
+  invalid_language: "Unsupported language"
+  welcome_title: "Welcome to the BBS-GO Community"
+  welcome_content: |-
+    Welcome to **BBS-GO**!
+
+    A lightweight, high-performance, and extensible community platform.
+
+    You can create topics, comment, like, and earn points through the task system.
+
+    Start by publishing your first post.
   already_installed: "System already installed, no need to reinstall"
 
 upload:
@@ -231,3 +241,15 @@ task:
     newbie: "Getting started"
     daily: "Daily Tasks"
     achievement: "Achievement Journey"
+
+task_event_type:
+  user.login: "Daily login"
+  checkin: "Check-in"
+  topic.create: "Create topic"
+  qa.question.publish: "Publish question"
+  qa.answer.accept: "Answer accepted"
+  comment.create: "Create comment"
+  follow.create: "Follow user"
+  favorite.create: "Favorite"
+  like.create: "Like"
+  level.10: "Reach level 10"

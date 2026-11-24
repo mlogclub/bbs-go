@@ -32,7 +32,7 @@ export function meta({
   return userMeta(
     rootData?.config,
     data?.user,
-    localizedTitle(rootData?.locale, "Following", "关注"),
+    localizedTitle(rootData?.locale, "following"),
     location.pathname
   )
 }

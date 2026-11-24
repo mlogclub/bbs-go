@@ -66,10 +66,7 @@ type SettingValue =
 
 type SettingsState = Record<string, SettingValue>
 
-type LocalizedText = {
-  "zh-CN": string
-  "en-US": string
-}
+type LocalizedText = Record<string, string>
 
 type NavItem = {
   title: string
@@ -236,20 +233,25 @@ function createLocalizedText(value?: unknown): LocalizedText {
       ? (value as Record<string, unknown>)
       : {}
   return {
-    "zh-CN": typeof source["zh-CN"] === "string" ? source["zh-CN"] : "",
-    "en-US": typeof source["en-US"] === "string" ? source["en-US"] : "",
+    "zh-CN": "",
+    "zh-TW": "",
+    "en-US": "",
+    ...Object.fromEntries(
+      Object.entries(source).filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string"
+      )
+    ),
   }
 }
 
 function trimLocalizedText(value: LocalizedText): LocalizedText {
-  return {
-    "zh-CN": value["zh-CN"].trim(),
-    "en-US": value["en-US"].trim(),
-  }
+  return Object.fromEntries(
+    Object.entries(value).map(([locale, text]) => [locale, text.trim()])
+  )
 }
 
 function hasLocalizedText(value: LocalizedText) {
-  return Boolean(value["zh-CN"].trim() || value["en-US"].trim())
+  return Object.values(value).some((text) => text.trim() !== "")
 }
 
 function normalizeNavs(items: unknown): NavItem[] {
@@ -2489,6 +2491,14 @@ function PageSettings({
               onChange={(event) => updateAbout("zh-CN", event.target.value)}
             />
           </Field>
+          <Field label={s("page.zhTWContent")} wide>
+            <Textarea
+              className="min-h-52 w-full"
+              value={about["zh-TW"]}
+              placeholder={s("page.placeholder.aboutContent")}
+              onChange={(event) => updateAbout("zh-TW", event.target.value)}
+            />
+          </Field>
           <Field label={s("page.enUSContent")} wide>
             <Textarea
               className="min-h-52 w-full"
@@ -2550,6 +2560,17 @@ function PageSettings({
                       onChange={(event) =>
                         updateFooter(index, {
                           text: { ...item.text, "zh-CN": event.target.value },
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label={s("page.zhTWText")}>
+                    <Input
+                      value={item.text["zh-TW"]}
+                      placeholder={s("page.placeholder.linkText")}
+                      onChange={(event) =>
+                        updateFooter(index, {
+                          text: { ...item.text, "zh-TW": event.target.value },
                         })
                       }
                     />

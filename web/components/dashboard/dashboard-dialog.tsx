@@ -3,6 +3,7 @@
 import type * as React from "react"
 import { useState } from "react"
 
+import { useI18n } from "@/lib/i18n/provider"
 import { cn } from "@/lib/utils"
 import {
   Dialog,
@@ -61,6 +62,7 @@ function DashboardDialog({
   defaultFullscreen = false,
   bodyScrollable = true,
 }: DashboardDialogProps) {
+  const { t } = useI18n()
   const [fullscreen, setFullscreen] = useState(defaultFullscreen)
 
   function handleOpenChange(nextOpen: boolean) {
@@ -129,7 +131,7 @@ function DashboardDialog({
               >
                 {fullscreen ? <Minimize2Icon /> : <Maximize2Icon />}
                 <span className="sr-only">
-                  {fullscreen ? "退出全屏" : "全屏显示"}
+                  {t(fullscreen ? "dialog.exitFullscreen" : "dialog.fullscreen")}
                 </span>
               </Button>
             ) : null}
@@ -137,7 +139,7 @@ function DashboardDialog({
               <DialogClose asChild>
                 <Button type="button" variant="ghost" size="icon-sm">
                   <XIcon />
-                  <span className="sr-only">关闭</span>
+                  <span className="sr-only">{t("dialog.close")}</span>
                 </Button>
               </DialogClose>
             ) : null}

@@ -406,6 +406,7 @@ export function InstallWizard({
                     [
                       ["en-US", t("pages.install.language.english")],
                       ["zh-CN", t("pages.install.language.chinese")],
+                      ["zh-TW", "繁體中文"],
                     ] as Array<[Locale, string]>
                   ).map(([value, label]) => (
                     <button

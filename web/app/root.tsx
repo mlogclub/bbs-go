@@ -35,7 +35,7 @@ import { siteMeta } from "@/lib/seo"
 
 import type { Route } from "./+types/root"
 import { rootDataContext } from "./route-helpers/context"
-import { normalizeLocale } from "./route-helpers/locale"
+import { normalizeLocale } from "@/lib/i18n"
 import type { RootLoaderData } from "./route-helpers/types"
 
 import "@/styles/globals.css"

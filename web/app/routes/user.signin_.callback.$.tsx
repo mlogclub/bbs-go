@@ -17,7 +17,7 @@ export function meta({
 }: {
   matches: Array<{ data?: unknown; loaderData?: unknown }>
 }) {
-  return noindexRouteMeta(matches, "Signing in", "登录中")
+  return noindexRouteMeta(matches, "signing_in")
 }
 
 export default function SigninCallbackRoute() {

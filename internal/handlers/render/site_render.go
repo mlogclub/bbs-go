@@ -26,6 +26,11 @@ func getLocalizedText(text dto.LocalizedText) string {
 	if value := strings.TrimSpace(text[string(config.Instance.Language)]); value != "" {
 		return value
 	}
+	if config.Instance.Language == config.LanguageZhTW {
+		if value := strings.TrimSpace(text[string(config.LanguageZhCN)]); value != "" {
+			return value
+		}
+	}
 	if value := strings.TrimSpace(text[string(config.LanguageEnUS)]); value != "" {
 		return value
 	}
